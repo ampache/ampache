@@ -31,6 +31,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -74,7 +75,7 @@ final class ShoutCreator implements ShoutCreatorInterface
     public function create(
         User $user,
         library_item $libItem,
-        string $objectType,
+        LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
         int $offset
@@ -96,7 +97,7 @@ final class ShoutCreator implements ShoutCreatorInterface
         $this->userActivityPoster->post(
             $user->getId(),
             'shout',
-            $objectType,
+            $objectType->value,
             $objectId,
             $date->getTimestamp()
         );
@@ -121,7 +122,7 @@ final class ShoutCreator implements ShoutCreatorInterface
                     $message .= sprintf(
                         '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
                         $this->configContainer->getWebPath(),
-                        $objectType,
+                        $objectType->value,
                         $libItem->getId(),
                         $shout->getId()
                     );

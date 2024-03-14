@@ -272,7 +272,7 @@ class Broadcast extends database_object implements library_item
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string  $filter_type = null): array
     {
@@ -280,7 +280,7 @@ class Broadcast extends database_object implements library_item
         $medias = array();
         if ($filter_type === null || $filter_type === 'broadcast') {
             $medias[] = array(
-                'object_type' => 'broadcast',
+                'object_type' => LibraryItemEnum::BROADCAST,
                 'object_id' => $this->id
             );
         }

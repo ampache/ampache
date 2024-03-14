@@ -59,7 +59,7 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int
      * }>
      */
@@ -119,7 +119,7 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
@@ -127,7 +127,7 @@ abstract class playlist_object extends database_object implements library_item
             return array_filter(
                 $this->get_items(),
                 function (array $item) use ($filter_type): bool {
-                    return $item['object_type'] == $filter_type;
+                    return $item['object_type']->value === $filter_type;
                 }
             );
         } else {
@@ -283,18 +283,18 @@ abstract class playlist_object extends database_object implements library_item
             if ($count >= $limit) {
                 return $images;
             }
-            if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
-                if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                    $className = ObjectTypeToClassNameMapper::map($media['object_type']);
+            if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
+                if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
+                    $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
                     $libitem   = new $className($media['object_id']);
                     $parent    = $libitem->get_parent();
                     if ($parent !== null) {
                         $media = $parent;
                     }
                 }
-                $art = new Art($media['object_id'], $media['object_type']);
+                $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type'];
+                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
                 }
             }

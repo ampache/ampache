@@ -32,6 +32,7 @@ use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -125,7 +126,7 @@ final class ShareCreateMethod
 
             $share = $shareCreator->create(
                 $user,
-                $object_type,
+                LibraryItemEnum::from($object_type),
                 $object_id,
                 true,
                 $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),

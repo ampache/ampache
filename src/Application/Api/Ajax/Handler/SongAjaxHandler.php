@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -86,10 +87,10 @@ final class SongAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'shouts':
                 ob_start();
-                $type   = Core::get_request('object_type');
+                $type   = LibraryItemEnum::from(Core::get_request('object_type'));
                 $songid = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-                if ($type == "song" && $songid > 0) {
+                if ($type === LibraryItemEnum::SONG && $songid > 0) {
                     $media  = new Song($songid);
                     $shouts = $this->shoutRepository->getBy($type, $songid);
                     echo "<script>\r\n";

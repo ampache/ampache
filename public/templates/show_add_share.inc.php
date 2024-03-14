@@ -29,11 +29,18 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Video;
 
 /** @var bool $has_failed */
 /** @var string $message */
-/** @var Ampache\Repository\Model\Song|Ampache\Repository\Model\Album|Ampache\Repository\Model\AlbumDisk|Ampache\Repository\Model\Playlist|Ampache\Repository\Model\Video|Ampache\Repository\Model\Podcast_Episode $object */
-/** @var string $object_type */
+/** @var Song|Album|AlbumDisk|Playlist|Video|Podcast_Episode $object */
+/** @var LibraryItemEnum $object_type */
 /** @var string $token */
 /** @var bool $isZipable */
 
@@ -42,7 +49,7 @@ $allow_download = $_REQUEST['allow_download'] ?? false;
 
 Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
 <form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
-<input type="hidden" name="type" value="<?php echo scrub_out($object_type); ?>" />
+<input type="hidden" name="type" value="<?php echo $object_type->value; ?>" />
 <input type="hidden" name="id" value="<?php echo $object->getId(); ?>" />
 <table class="tabledata">
 <tr>
@@ -69,7 +76,7 @@ Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
     <td><?php echo T_('Allow Stream'); ?></td>
     <td><input type="checkbox" name="allow_stream" value="1" <?php echo ($allow_stream || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>
 </tr>
-<?php if ((in_array($object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $isZipable)) { ?>
+<?php if ((in_array($object_type, [LibraryItemEnum::SONG, LibraryItemEnum::VIDEO, LibraryItemEnum::PODCAST_EPISODE], true) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $isZipable)) { ?>
 <tr>
     <td><?php echo T_('Allow Download'); ?></td>
     <td><input type="checkbox" name="allow_download" value="1" <?php echo ($allow_download || Core::get_server('REQUEST_METHOD') === 'GET') ? 'checked' : ''; ?> /></td>

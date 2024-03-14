@@ -43,139 +43,267 @@ $web_path = (string)AmpConfig::get('web_path', '');
 $access50 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 
-<div id="jstreecontainer" role="main">
-    <div id="tree"></div>
-    <div id="data">
-        <div class="treecontent code" style="display:none;"><textarea id="code" readonly="readonly"></textarea></div>
-        <div class="treecontent folder" style="display:none;"></div>
-        <div class="treecontent image" style="display:none; position:relative;"><img src="" alt="" style="display:block; position:absolute; left:50%; top:50%; padding:0; max-height:90%; max-width:90%;" /></div>
-        <div class="treecontent default" style="text-align:center;"><?php echo T_('Target folder'); ?></div>
-    </div>
+<?php echo T_('Target folder'); ?>
+<div id="uploadtree" class="wb-alternate"></div>
+<div class="upload-actions">
+    <button onclick="UUTCreateNode()">
+        <?php echo Ui::get_material_symbol('folder'); ?>
+        <?php echo T_("New folder");?>
+    </button>
+    <button onclick="UUTRenameNode()">
+        <?php echo Ui::get_material_symbol('edit'); ?>
+        <?php echo T_("Rename");?>
+    </button>
+    <button onclick="UUTDeleteNode()">
+        <?php echo Ui::get_material_symbol('delete'); ?>
+        <?php echo T_("Delete");?>
+    </button>
+    <button onclick="UUTReload()">
+        <?php echo Ui::get_material_symbol('refresh'); ?>
+        <?php echo T_("Reload");?>
+    </button>
+    <button onclick="UUTCut()">
+        <?php echo Ui::get_material_symbol('cut'); ?>
+        <?php echo T_("Cut");?>
+    </button>
+    <button onclick="UUTCopy()">
+        <?php echo Ui::get_material_symbol('folder_copy'); ?>
+        <?php echo T_("Copy");?>
+    </button>
+    <button onclick="UUTPaste()">
+        <?php echo Ui::get_material_symbol('content_paste'); ?>
+        <?php echo T_("Paste");?>
+    </button>
 </div>
-<script src="<?php echo $web_path; ?>/lib/components/jstree/jstree.min.js"></script>
+
+<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/wunderbaum/wunderbaum.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/file-upload.css" type="text/css" media="screen" />
+<script src="<?php echo $web_path; ?>/lib/components/wunderbaum/wunderbaum.umd.min.js"></script>
+
 <script>
-$(window).resize(function () {
-    var h = Math.max($(window).height() - 0, 420);
-    $('#container, #data, #tree, #data .treecontent').height(100).filter('.default').css('lineHeight', '100px');
-}).resize();
-$(function () {
-    $('#tree')
-        .jstree({
-            'core' : {
-                'data' : {
-                    'url' : '<?php echo $ajaxfs; ?>?operation=get_node',
-                    'data' : function (node) {
-                        return { 'id' : node.id };
-                    }
-                },
-                'check_callback' : function(o, n, p, i, m) {
-                    if (m && m.dnd && m.pos !== 'i') { return false; }
-                    if (o === "move_node" || o === "copy_node") {
-                        if (this.get_node(n).parent === this.get_node(p).id) { return false; }
-                    }
-                    return true;
-                },
-                'themes' : {
-                    'responsive' : false,
-                    'variant' : 'small',
-                    'stripes' : true
-                }
+(function() {
+    let nodeBeingCut;
+    let nodeBeingCopied;
+
+    const tree = new mar10.Wunderbaum({
+        debugLevel: 0,
+        element: document.getElementById("uploadtree"),
+        source: '<?php echo $ajaxfs; ?>?operation=get_node&id=<?php echo urlencode("#"); ?>',
+        iconMap: {
+            "error": "uut-icon uut-warning",
+            "loading": "uut-icon uut-chevron-right wb-busy",
+            "noData": "uut-icon uut-help",
+            "expanderExpanded": "uut-icon uut-chevron-down",
+            "expanderCollapsed": "uut-icon uut-chevron-right",
+            "expanderLazy": "uut-icon uut-chevron-right wb-helper-lazy-expander",
+            "checkChecked": "uut-icon uut-check-box",
+            "checkUnchecked": "uut-icon uut-check-box-blank",
+            "checkUnknown": "uut-icon uut-indeterminate-check-box",
+            "radioChecked": "uut-icon uut-radio-button-checked",
+            "radioUnchecked": "uut-icon uut-radio-button",
+            "radioUnknown": "uut-icon uut-radio-button-partial",
+            "folder": "uut-icon uut-folder",
+            "folderOpen": "uut-icon uut-folder-open",
+            "folderLazy": "uut-icon uut-folder-special",
+            "doc": "uut-icon uut-description"
+        },
+        lazyLoad: function (e) {
+            return { url: `<?php echo $ajaxfs; ?>?operation=get_node&id=${e.node.key}` };
+        },
+        activate: function (e) {
+            document.getElementById("folder").value = e.node.key;
+        },
+        init: function (e) {
+            e.tree.setActiveNode("/");
+        },
+        beforeExpand: function (e) {
+            if (e.node.key === "/") return false;
+        },
+        dnd: {
+            autoExpandMS: 300,
+            preventNonNodes: true,
+            dragStart: () => {
+                return true;
             },
-            'sort' : function(a, b) {
-                return this.get_type(a) === this.get_type(b) ? (this.get_text(a) > this.get_text(b) ? 1 : -1) : (this.get_type(a) >= this.get_type(b) ? 1 : -1);
+            dragEnter: () => {
+                return true;
             },
-            'contextmenu' : {
-                'items' : function(node) {
-                    var tmp = $.jstree.defaults.contextmenu.items();
-                    delete tmp.create.action;
-                    tmp.create.label = "New";
-                    tmp.create.submenu = {
-                        "create_folder" : {
-                            "separator_after"    : true,
-                            "label"                : "Folder",
-                            "action"            : function (data) {
-                                var inst = $.jstree.reference(data.reference),
-                                    obj = inst.get_node(data.reference);
-                                inst.create_node(obj, { type : "default", text : "New folder" }, "last", function (new_node) {
-                                    setTimeout(function () { inst.edit(new_node); },0);
-                                });
-                            }
-                        }
-                    };
-                    if (this.get_type(node) === "file") {
-                        delete tmp.create;
-                    }
-                    return tmp;
-                }
+            drop: async (e) => {
+                let newParent = e.node;
+                let draggedItem = e.sourceNode;
+
+                moveNode(draggedItem, newParent);
             },
-            'types' : {
-                'default' : { 'icon' : 'folder' },
-                'file' : { 'valid_children' : [], 'icon' : 'file' }
-            },
-            'plugins' : ['state', 'dnd', 'sort', 'types', 'contextmenu', 'unique']
-        })
-        .on('delete_node.jstree', function (e, data) {
-            $.get('<?php echo $ajaxfs; ?>?operation=delete_node', { 'id' : data.node.id })
-                .fail(function () {
-                    data.instance.refresh();
-                });
-        })
-        .on('create_node.jstree', function (e, data) {
-            $.get('<?php echo $ajaxfs; ?>?operation=create_node', { 'type' : data.node.type, 'id' : data.node.parent, 'text' : data.node.text })
-                .done(function (d) {
-                    data.instance.set_id(data.node, d.id);
-                })
-                .fail(function () {
-                    data.instance.refresh();
-                });
-        })
-        .on('rename_node.jstree', function (e, data) {
-            $.get('<?php echo $ajaxfs; ?>?operation=rename_node', { 'id' : data.node.id, 'text' : data.text })
-                .done(function (d) {
-                    data.instance.set_id(data.node, d.id);
-                })
-                .fail(function () {
-                    data.instance.refresh();
-                });
-        })
-        .on('move_node.jstree', function (e, data) {
-            $.get('<?php echo $ajaxfs; ?>?operation=move_node', { 'id' : data.node.id, 'parent' : data.parent })
-                .done(function (d) {
-                    //data.instance.load_node(data.parent);
-                    data.instance.refresh();
-                })
-                .fail(function () {
-                    data.instance.refresh();
-                });
-        })
-        .on('copy_node.jstree', function (e, data) {
-            $.get('<?php echo $ajaxfs; ?>?operation=copy_node', { 'id' : data.original.id, 'parent' : data.parent })
-                .done(function (d) {
-                    //data.instance.load_node(data.parent);
-                    data.instance.refresh();
-                })
-                .fail(function () {
-                    data.instance.refresh();
-                });
-        })
-        .on('changed.jstree', function (e, data) {
-            if (data && data.selected && data.selected.length) {
-                $.get('<?php echo $ajaxfs; ?>?operation=get_content&id=' + data.selected.join(':'), function (d) {
-                    if (d && typeof d.type !== 'undefined') {
-                        $('#folder').val(d.content);
-                    }
-                });
-            } else {
-                $('#data .treecontent').hide();
-                $('#data .default').html('<?php echo T_('Target folder'); ?>').show();
+        },
+        edit: {
+            select: true,
+            trim: true,
+            apply: function (e) {
+                fetch(`<?php echo $ajaxfs; ?>?operation=rename_node&id=${e.node.key}&text=${encodeURIComponent(e.newValue)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(d => {
+                        // One day we can update the key with:
+                        // e.node.setKey(d.id, null);
+                        // but until then just refetch the parent and reset the focus to the new item
+                        e.node.parent.loadLazy(true)
+                            .then(() => {
+                                tree.findKey("/").setActive();
+                                tree.findKey(d.id)?.setActive();
+                            });
+                    })
+                    .catch(error => {
+                        e.node.setTitle(e.oldValue);
+                    });
             }
-        });
-});
+        }
+    });
+
+    function createNode() {
+        getActiveNode().setExpanded();
+
+        fetch('<?php echo $ajaxfs; ?>?operation=create_node&id=' + encodeURIComponent(getActiveNode().key) + '&text=<?php echo T_("New folder"); ?>')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                const newNode = await tree.findKey(d.id) || await getActiveNode().addNode({ title: 'New folder', key: d.id, children: [] }, 'prependChild');
+                setTimeout(function () {
+                    newNode.startEditTitle();
+                }, 100);
+            })
+    }
+
+    function renameNode() {
+        if (getActiveNode().key === "/") return;
+        getActiveNode().startEditTitle();
+    }
+
+    function deleteNode() {
+        if (getActiveNode().key === "/") return;
+
+        let confirmed = window.confirm("Do you want to proceed with this action?");
+
+        if (confirmed) {
+            fetch('<?php echo $ajaxfs; ?>?operation=delete_node&id=' + encodeURIComponent(getActiveNode().key))
+                .then(() => {
+                    let parent = getActiveNode().parent;
+                    getActiveNode().remove();
+                    parent.setActive();
+                })
+        }
+    }
+
+    function getActiveNode() {
+        return tree.activeNode || tree.findKey("/");
+    }
+
+    async function reloadTree() {
+        await tree.load(tree.options.source);
+        tree.setActiveNode("/");
+        nodeBeingCut = null;
+        nodeBeingCopied = null;
+    }
+
+    function moveNode(itemNode, destinationNode) {
+        let finalParent = destinationNode.key === "/" ? tree.root : destinationNode;
+
+        fetch(`<?php echo $ajaxfs; ?>?operation=move_node&id=${itemNode.key}&parent=${destinationNode.key}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                let sameNameExists = destinationNode.findDirectChild(itemNode.title);
+
+                if (!sameNameExists) {
+                    itemNode.moveTo(destinationNode, "appendChild");
+
+                    // One day we can update the key with:
+                    // e.node.setKey(d.id, null);
+                    // but until then just refetch the parent
+
+                    if (finalParent.isLazy()) {
+                        await finalParent.loadLazy(true);
+                    } else {
+                        await tree.load(tree.options.source);
+                    }
+
+                    finalParent?.setExpanded();
+                }
+            })
+            .catch(error => {
+                reloadTree();
+            });
+    }
+
+    function copyNode(itemNode, destinationNode) {
+        let finalParent = destinationNode.key === "/" ? tree.root : destinationNode;
+
+        fetch(`<?php echo $ajaxfs; ?>?operation=copy_node&id=${itemNode.key}&parent=${destinationNode.key}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(async (d) => {
+                if (finalParent.isLazy()) {
+                    await finalParent.loadLazy(true);
+                } else {
+                    await tree.load(tree.options.source);
+                }
+
+                finalParent?.setExpanded();
+            })
+            .catch(error => {
+                reloadTree();
+            });
+    }
+
+    function requestCut() {
+        nodeBeingCopied = null;
+        nodeBeingCut = getActiveNode();
+    }
+
+    function requestCopy() {
+        nodeBeingCut = null;
+        nodeBeingCopied = getActiveNode();
+    }
+
+    function requestPaste() {
+        // if cutting, perform move
+        if (nodeBeingCut) {
+            moveNode(nodeBeingCut, getActiveNode());
+            nodeBeingCut = null;
+        }
+
+        // if copying, perform copy
+        if (nodeBeingCopied) {
+            copyNode(nodeBeingCopied, getActiveNode());
+        }
+    }
+
+    // Expose functions globally
+    // UUT = user upload tree
+    window.UUTTree = tree;
+    window.UUTCreateNode = createNode;
+    window.UUTRenameNode = renameNode;
+    window.UUTDeleteNode = deleteNode;
+    window.UUTReload = reloadTree;
+    window.UUTCut = requestCut;
+    window.UUTCopy = requestCopy;
+    window.UUTPaste = requestPaste;
+})();
 </script>
 
 <table class="tabledata">
     <tr>
-    <h5><?php echo T_('Leave the artist and album fields blank to read file tags'); ?></h5>
+        <small>
+            <?php echo Ui::get_material_symbol('info'); ?>
+            <?php echo T_('Leave the artist and album fields blank to read file tags'); ?>
+        </small>
     </tr>
 </table>
 <table class="tabledata">
@@ -209,23 +337,20 @@ $(function () {
 </tr>
 <?php } ?>
 </table>
-<table class="tabledata">
-<tr>
-    <td>
-        <?php echo T_('Files'); ?>
-        <?php
-        if ($upload_max > 0) {
-            echo " (< " . Ui::format_bytes($upload_max) . ")";
-        } ?>
-        <br /><br />
-        <?php echo T_('Allowed file type'); ?>:<br />
-        <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
-    </td>
-</tr>
-</table>
 
+<?php echo T_('Files'); ?>
 <input type="file" class="filepond" name="upl" multiple>
 <input type="hidden" id="folder" name="folder" value="" />
+
+<small>
+    <?php
+    if ($upload_max > 0) {
+        echo T_('Max upload size') . ": " . Ui::format_bytes($upload_max) . "<br>";
+    } ?>
+    <?php echo T_('Allowed file type'); ?>:
+    <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
+</small>
+
 
 <script>
     FilePond?.create(document.querySelector('input[type="file"].filepond'), {

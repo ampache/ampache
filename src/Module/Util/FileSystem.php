@@ -111,27 +111,30 @@ class FileSystem
             if ($item == '.' || $item == '..' || $item === null) {
                 continue;
             }
-            $tmp = preg_match('([^ a-zа-я-_0-9.]+)ui', $item);
+            $tmp = preg_match('([^ a-zа-я-_0-9.()\[\]]+)ui', $item);
             if ($tmp === false || $tmp === 1) {
                 continue;
             }
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($fullPath)) {
                 $res[] = array(
-                    'text' => $item,
-                    'children' => true,
-                    'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item),
-                    'icon' => 'folder'
+                    'title' => $item,
+                    'key' => $this->id($fullPath),
+                    'lazy' => true
                 );
             }
         }
+        usort($res, function ($a, $b) {
+            return strcasecmp($a['title'], $b['title']);
+        });
         if ($with_root && $this->id($dir) === '/') {
             $res = array(
                 array(
-                    'text' => basename($this->base),
+                    'title' => basename($this->base),
                     'children' => $res,
-                    'id' => '/',
-                    'icon' => 'folder',
-                    'state' => array('opened' => true, 'disabled' => true)
+                    'key' => '/',
+                    'expanded' => true,
+                    'lazy' => true
                 )
             );
         }

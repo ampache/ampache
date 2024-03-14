@@ -4,9 +4,10 @@
 
 ### Added
 
+* Translations 2024-03
 * Lots more static typing on missing function returns
 * Dynamic properties on the Captcha classes
-* Add opml import for podcasts
+* Add opml import (and export) for podcasts
 * Database 600060
   * Update Last.FM plugin preferences that could be incorrect
   * Spell category and subcategory correctly
@@ -27,7 +28,7 @@
 ### Removed
 
 * Flattr service has shut down, so remove the plugin
-* php cs-cniffer from the project root and scrutinizer
+* php cs-sniffer from the project root and scrutinizer
 
 ### Fixed
 

@@ -97,9 +97,20 @@ class ShoutboxTest extends TestCase
     public static function setterGetterDataProvider(): Generator
     {
         yield ['getOffset', 'setOffset', 0, 666];
-        yield ['getObjectType', 'setObjectType', '', 'some-type'];
         yield ['getObjectId', 'setObjectId', 0, 666];
         yield ['isSticky', 'setSticky', false, true];
+    }
+
+    public function testGetObjectTypeReturnsSetValue(): void
+    {
+        $objectType = LibraryItemEnum::SONG;
+
+        $this->subject->setObjectType($objectType);
+
+        static::assertSame(
+            $objectType,
+            $this->subject->getObjectType()
+        );
     }
 
     public function testGetUserIdReturnsSetValue(): void

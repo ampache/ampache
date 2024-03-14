@@ -55,6 +55,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -1531,9 +1532,9 @@ class Subsonic_Api
         $bitRate = $input['bitRate'] ?? false;
         $media   = array();
         if (Subsonic_Xml_Data::_isSong($fileid)) {
-            $media['object_type'] = 'song';
+            $media['object_type'] = LibraryItemEnum::SONG;
         } elseif (Subsonic_Xml_Data::_isVideo($fileid)) {
-            $media['object_type'] = 'video';
+            $media['object_type'] = LibraryItemEnum::VIDEO;
         } else {
             self::_apiOutput(
                 $input,
@@ -1932,7 +1933,7 @@ class Subsonic_Api
                 $shares   = array();
                 $shares[] = $shareCreator->create(
                     $user,
-                    $object_type,
+                    LibraryItemEnum::from($object_type),
                     $object_id,
                     true,
                     Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD),

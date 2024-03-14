@@ -8346,6 +8346,11 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects class\\-string\\<Ampache\\\\Repository\\\\Model\\\\database_object\\>, class\\-string\\<Ampache\\\\Repository\\\\Model\\\\Media\\> given\\.$#"
+			count: 1
+			path: src/Module/Playback/Stream_Playlist.php
+
+		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$id has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
@@ -11556,6 +11561,11 @@ parameters:
 			path: src/Module/WebDav/WebDavFile.php
 
 		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects class\\-string\\<Ampache\\\\Repository\\\\Model\\\\database_object\\>, class\\-string\\<Ampache\\\\Repository\\\\Model\\\\Media\\> given\\.$#"
+			count: 1
+			path: src/Module/WebDav/WebDavFile.php
+
+		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:get_song_preview\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
@@ -12311,11 +12321,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -12357,11 +12362,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -12581,11 +12581,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:remove_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -12637,11 +12632,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
@@ -12961,11 +12951,6 @@ parameters:
 			path: src/Repository/Model/Clip.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
@@ -13106,11 +13091,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -13157,11 +13137,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -13391,11 +13366,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13412,11 +13382,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -13816,11 +13781,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent_array\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -13912,11 +13872,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -14021,11 +13976,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -14102,11 +14052,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -14216,11 +14161,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -14302,11 +14242,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -14526,11 +14461,6 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -14706,11 +14636,6 @@ parameters:
 			path: src/Repository/Model/playable_item.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playable_item.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
@@ -14737,11 +14662,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
 

@@ -33,6 +33,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
 /**
@@ -79,8 +80,9 @@ final class Localplay5Method
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = $input['type'] ? (string) $input['type'] : 'Song';
-                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+
+                if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;

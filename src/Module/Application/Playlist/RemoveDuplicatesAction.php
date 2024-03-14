@@ -69,11 +69,11 @@ final class RemoveDuplicatesAction implements ApplicationActionInterface
         $map          = [];
         $items        = $playlist->get_items();
         foreach ($items as $item) {
-            if (!array_key_exists($item['object_type'], $map)) {
-                $map[$item['object_type']] = [];
+            if (!array_key_exists($item['object_type']->value, $map)) {
+                $map[$item['object_type']->value] = [];
             }
-            if (!in_array($item['object_id'], $map[$item['object_type']])) {
-                $map[$item['object_type']][] = $item['object_id'];
+            if (!in_array($item['object_id'], $map[$item['object_type']->value])) {
+                $map[$item['object_type']->value][] = $item['object_id'];
             } else {
                 $tracks_to_rm[] = $item['track_id'];
             }
