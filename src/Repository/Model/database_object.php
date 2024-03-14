@@ -118,7 +118,7 @@ abstract class database_object
             return false;
         }
 
-        return array_key_exists($object_id, self::$object_cache[$index]);
+        return array_key_exists($object_id, self::$object_cache[$index]) && !empty(self::$object_cache[$index][$object_id]);
     }
 
     /**
@@ -126,12 +126,12 @@ abstract class database_object
      * This attempts to retrieve the specified object from the cache we've got here
      * @param string $index
      * @param int|string $object_id
-     * @return array|false
+     * @return array
      */
-    public static function get_from_cache($index, $object_id): array|false
+    public static function get_from_cache($index, $object_id)
     {
         // Check if the object is set
-        if (isset(self::$object_cache[$index][$object_id])) {
+        if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {
             self::$cache_hit++;
 
             return self::$object_cache[$index][$object_id];
