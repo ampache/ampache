@@ -14296,6 +14296,11 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getRssToken\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_avatar\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
