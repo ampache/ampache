@@ -412,7 +412,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->song->update_time) {
             $songprops[T_('Last Updated')] = get_datetime((int) $this->song->update_time);
         }
-        $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
+        $songprops[T_('Added')] = get_datetime($this->song->getAdditionTime());
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
             $songprops[T_('Played')] = $this->song->total_count;
         }

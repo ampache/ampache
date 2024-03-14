@@ -1744,7 +1744,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false', // XXX
             'dc:title' => self::_replaceSpecialSymbols($song->f_name),
-            'dc:date' => date("c", (int) $song->addition_time),
+            'dc:date' => $song->getAdditionTime()->format(DATE_ATOM),
             'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,

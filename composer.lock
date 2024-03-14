@@ -916,16 +916,16 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v10.47.0",
+            "version": "v10.48.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "7bc2e907285b6a38acb3b386dcc577b185bf3d73"
+                "reference": "36651526fa6bb5445ffc6d51899d80291f8e0486"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/7bc2e907285b6a38acb3b386dcc577b185bf3d73",
-                "reference": "7bc2e907285b6a38acb3b386dcc577b185bf3d73",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/36651526fa6bb5445ffc6d51899d80291f8e0486",
+                "reference": "36651526fa6bb5445ffc6d51899d80291f8e0486",
                 "shasum": ""
             },
             "require": {
@@ -967,11 +967,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-03-04T18:11:18+00:00"
+            "time": "2024-03-10T15:34:39+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v10.47.0",
+            "version": "v10.48.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1017,7 +1017,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v10.47.0",
+            "version": "v10.48.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1065,7 +1065,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v10.47.0",
+            "version": "v10.48.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1179,16 +1179,16 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "6.0.2",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221"
+                "reference": "786666ffb00f3e1ba499771e28cba8b62974c7dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/a735c8a811fee747d5ac939d01bd52d463f0c221",
-                "reference": "a735c8a811fee747d5ac939d01bd52d463f0c221",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/786666ffb00f3e1ba499771e28cba8b62974c7dd",
+                "reference": "786666ffb00f3e1ba499771e28cba8b62974c7dd",
                 "shasum": ""
             },
             "require": {
@@ -1224,9 +1224,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwilsson/spotify-web-api-php/issues",
-                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/6.0.2"
+                "source": "https://github.com/jwilsson/spotify-web-api-php/tree/6.0.3"
             },
-            "time": "2023-12-14T19:12:17+00:00"
+            "time": "2024-03-14T16:40:03+00:00"
         },
         {
             "name": "krixon/xbmc-php-rpc",
@@ -1849,7 +1849,6 @@
                 "requests",
                 "restful",
                 "web-scraper",
-                "web-scraping ",
                 "web-service",
                 "xml"
             ],
@@ -5167,7 +5166,7 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.7",
+            "version": "1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
@@ -5529,16 +5528,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.60",
+            "version": "1.10.62",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "95dcea7d6c628a3f2f56d091d8a0219485a86bbe"
+                "reference": "cd5c8a1660ed3540b211407c77abf4af193a6af9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/95dcea7d6c628a3f2f56d091d8a0219485a86bbe",
-                "reference": "95dcea7d6c628a3f2f56d091d8a0219485a86bbe",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cd5c8a1660ed3540b211407c77abf4af193a6af9",
+                "reference": "cd5c8a1660ed3540b211407c77abf4af193a6af9",
                 "shasum": ""
             },
             "require": {
@@ -5587,7 +5586,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-07T13:30:19+00:00"
+            "time": "2024-03-13T12:27:20+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -5641,16 +5640,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "11.0.1",
+            "version": "11.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "89702be0ad026873ef3a1605fe8726254eef4e2c"
+                "reference": "7e35a2cbcabac0e6865fd373742ea432a3c34f92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/89702be0ad026873ef3a1605fe8726254eef4e2c",
-                "reference": "89702be0ad026873ef3a1605fe8726254eef4e2c",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/7e35a2cbcabac0e6865fd373742ea432a3c34f92",
+                "reference": "7e35a2cbcabac0e6865fd373742ea432a3c34f92",
                 "shasum": ""
             },
             "require": {
@@ -5707,7 +5706,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/11.0.1"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/11.0.3"
             },
             "funding": [
                 {
@@ -5715,7 +5714,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-02T07:34:25+00:00"
+            "time": "2024-03-12T15:35:40+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -5964,16 +5963,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.0.4",
+            "version": "11.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3f4261269c91370e9b2b3f64cc76c617c442c35a"
+                "reference": "6af32d7938fc366f86e49a5f5ebb314018d1b1fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3f4261269c91370e9b2b3f64cc76c617c442c35a",
-                "reference": "3f4261269c91370e9b2b3f64cc76c617c442c35a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6af32d7938fc366f86e49a5f5ebb314018d1b1fb",
+                "reference": "6af32d7938fc366f86e49a5f5ebb314018d1b1fb",
                 "shasum": ""
             },
             "require": {
@@ -6044,7 +6043,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.6"
             },
             "funding": [
                 {
@@ -6060,7 +6059,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-29T16:21:10+00:00"
+            "time": "2024-03-12T15:40:01+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -6114,16 +6113,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "7596fa6da06c6a20c012efe6bb3d9188a9113b11"
+                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/7596fa6da06c6a20c012efe6bb3d9188a9113b11",
-                "reference": "7596fa6da06c6a20c012efe6bb3d9188a9113b11",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c59507a9090b465d65e1aceed91e5b81986e375b",
+                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b",
                 "shasum": ""
             },
             "require": {
@@ -6158,7 +6157,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.0.2"
+                "source": "https://github.com/rectorphp/rector/tree/1.0.3"
             },
             "funding": [
                 {
@@ -6166,7 +6165,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-03T12:32:31+00:00"
+            "time": "2024-03-14T15:04:18+00:00"
         },
         {
             "name": "sebastian/cli-parser",
