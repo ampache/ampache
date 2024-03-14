@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util\Rss;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Playback\Stream;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
@@ -37,12 +38,16 @@ use Ampache\Module\Util\Rss\Type\NowPlayingFeed;
 use Ampache\Module\Util\Rss\Type\RecentlyPlayedFeed;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Shoutbox;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
 
