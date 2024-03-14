@@ -1150,9 +1150,9 @@ class Search extends playlist_object
      * @param int $user_id
      * @return array
      */
-    public static function get_search_array($user_id = null): array
+    public static function get_search_array($user_id = 0): array
     {
-        if ($user_id === null) {
+        if ($user_id === 0) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
