@@ -27,8 +27,6 @@ namespace Ampache\Module\Util\Rss;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Module\Util\Rss\Surrogate\PlayableItemRssItemAdapter;
