@@ -1785,15 +1785,14 @@ class Song extends database_object implements
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return array{object_type: LibraryItemEnum, object_id: int}
      */
-    public function get_parent(): ?array
+    public function get_parent(): array
     {
-        return array(
-            'object_type' => 'album',
+        return [
+            'object_type' => LibraryItemEnum::ALBUM,
             'object_id' => $this->album
-        );
+        ];
     }
 
     /**
@@ -1840,14 +1839,14 @@ class Song extends database_object implements
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
         $medias = array();
         if ($filter_type === null || $filter_type === 'song') {
             $medias[] = array(
-                'object_type' => 'song',
+                'object_type' => LibraryItemEnum::SONG,
                 'object_id' => $this->id
             );
         }

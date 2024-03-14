@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -21,28 +23,27 @@
  *
  */
 
-namespace Ampache\Module\Shout;
+namespace Ampache\Repository\Model;
 
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\User;
-use PHPMailer\PHPMailer\Exception;
+use Ampache\Repository\Model\library_item as TITemType;
 
-interface ShoutCreatorInterface
+interface LibraryItemLoaderInterface
 {
     /**
-     * Creates a new shout item
+     * Loads a generic library-item
      *
-     * This will create a new shout item and inform the owning user about the shout (if enabled)
+     * Will try to load an item with the given object-type and -id.
+     * Supports the specification of a list of allowed classes/interfaces to check against.
      *
-     * @throws Exception
+     * @template TITemType of library_item
+     *
+     * @param list<class-string<TITemType>> $allowedItems List of all possible class-/interface-names
+     *
+     * @return null|TITemType
      */
-    public function create(
-        User $user,
-        library_item $libItem,
+    public function load(
         LibraryItemEnum $objectType,
-        string $text,
-        bool $isSticky,
-        int $offset
-    ): void;
+        int $objectId,
+        array $allowedItems = [library_item::class]
+    ): ?library_item;
 }

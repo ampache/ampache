@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Generator;
 use PDO;
@@ -79,12 +80,12 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
      * @return Generator<Shoutbox>
      */
     public function getBy(
-        string $objectType,
+        LibraryItemEnum $objectType,
         int $objectId
     ): Generator {
         $result = $this->connection->query(
             'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
-            [$objectType, $objectId]
+            [$objectType->value, $objectId]
         );
         $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
 
@@ -159,7 +160,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
                     $shout->getText(),
                     (int) $shout->isSticky(),
                     $shout->getObjectId(),
-                    $shout->getObjectType(),
+                    $shout->getObjectType()->value,
                     $shout->getOffset()
                 ]
             );
@@ -174,7 +175,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
                     $shout->getText(),
                     (int) $shout->isSticky(),
                     $shout->getObjectId(),
-                    $shout->getObjectType(),
+                    $shout->getObjectType()->value,
                     $shout->getOffset(),
                     $shout->getId()
                 ]

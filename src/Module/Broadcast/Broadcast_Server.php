@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
@@ -146,7 +147,7 @@ class Broadcast_Server implements MessageComponentInterface
     {
         $media   = array();
         $media[] = array(
-            'object_type' => 'song',
+            'object_type' => LibraryItemEnum::SONG,
             'object_id' => $song_id
         );
         $item          = Stream_Playlist::media_to_urlarray($media);

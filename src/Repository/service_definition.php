@@ -25,6 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\LibraryItemLoader;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+
 use function DI\autowire;
 
 return [
@@ -55,4 +58,5 @@ return [
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
     AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
+    LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
 ];

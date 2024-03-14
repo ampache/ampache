@@ -31,6 +31,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -97,10 +98,10 @@ final class ExternalShareAction implements ApplicationActionInterface
         }
         $plugin->load($user);
 
-        $type           = $this->requestParser->getFromRequest('type');
+        $type           = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
         $share_id       = $this->requestParser->getFromRequest('id');
         $secret         = $this->passwordGenerator->generate_token();
-        $allow_download = ($type == 'song' && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD)) ||
+        $allow_download = ($type === LibraryItemEnum::SONG && $this->functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD)) ||
             $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 
         $share_id = $this->shareCreator->create(
