@@ -273,6 +273,7 @@
                 "\" data-media_id=\"" + media.media_id +
                 "\" data-album_id=\"" + media.album_id +
                 "\" data-albumdisk_id=\"" + media.albumdisk_id +
+                "\" data-album_name=\"" + media.album_name +
                 "\" data-artist_id=\"" + media.artist_id +
                 "\" data-replaygain_track_gain=\"" + media.replaygain_track_gain +
                 "\" data-replaygain_track_peak=\"" + media.replaygain_track_peak +
