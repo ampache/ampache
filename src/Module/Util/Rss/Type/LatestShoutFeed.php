@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 
@@ -49,6 +50,7 @@ final readonly class LatestShoutFeed implements FeedTypeInterface
 
         $results = array();
 
+        /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
 
@@ -64,7 +66,7 @@ final readonly class LatestShoutFeed implements FeedTypeInterface
                     'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
-                    'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType(), null, 2),
+                    'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType()->value, null, 2),
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM)
                 );
