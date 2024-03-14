@@ -79,7 +79,7 @@ class AutoUpdate
             $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
             $pattern = '/ref: refs\/heads\/(.*)/';
             $matches = [];
-            if (preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('master', 'release5', 'release6'))) {
+            if (preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))) {
                 return (string)$matches[1];
             }
         }
