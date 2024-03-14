@@ -190,7 +190,12 @@ echo implode(',', $solutions); ?>",
                             navigator.mediaSession.metadata = new MediaMetadata({
                                 title: obj.title,
                                 artist: obj.artist,
-                                artwork: [{ src: currentjpitem.attr("data-poster") }]
+                                artwork: [{
+                                   src: currentjpitem.attr("data-poster"),
+                                   sizes: "96x96",
+                                   type: "image/png"
+                                }],
+                                album: currentjpitem.attr("data-album_name"),
                             });
                             navigator.mediaSession.playbackState = "playing";
                         }

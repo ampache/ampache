@@ -546,7 +546,7 @@ class Song extends database_object implements
      */
     private function has_info($song_id): array
     {
-        if (parent::is_cached('song', $song_id) && !empty(parent::get_from_cache('song', $song_id)['disk'])) {
+        if (parent::is_cached('song', $song_id)) {
             return parent::get_from_cache('song', $song_id);
         }
 
@@ -632,7 +632,7 @@ class Song extends database_object implements
      * @param string $select
      * @return array
      */
-    public function _get_ext_info($select = ''): array
+    public function _get_ext_info($select = '')
     {
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
@@ -643,7 +643,9 @@ class Song extends database_object implements
 
         $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
-
+        if (!$db_results) {
+            return array();
+        }
         $results = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('song_data', $song_id, $results);

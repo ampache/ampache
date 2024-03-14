@@ -9751,16 +9751,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#1 \\$min of function rand expects int, float given\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#2 \\$max of function rand expects int, float given\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\|false given\\.$#"
 			count: 3
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
@@ -14292,6 +14282,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) has parameter \\$catalog_filter_group with no type specified\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getRssToken\\(\\) should return string but returns string\\|null\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 

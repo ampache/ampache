@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -23,16 +23,9 @@ declare(strict_types=1);
  *
  */
 
-namespace Ampache\Module\Util\Rss;
+namespace Ampache\Module\Util\Rss\Type;
 
-interface AmpacheRssInterface
+interface FeedTypeInterface
 {
-    /**
-     * get_xml
-     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
-     * and then uses the xmlDATA class to build the document
-     *
-     * @param null|array{object_type: string, object_id: int} $params
-     */
-    public function get_xml(string $rssToken, string $type, ?array $params = null): string;
+    public function handle(): string;
 }
