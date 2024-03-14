@@ -9781,16 +9781,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#1 \\$min of function rand expects int, float given\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#2 \\$max of function rand expects int, float given\\.$#"
-			count: 4
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\|false given\\.$#"
 			count: 3
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
