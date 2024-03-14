@@ -76,6 +76,7 @@ if ($iframed || $isShare) { ?>
         jpmedia['artist_id'] = media['artist_id'];
         jpmedia['album_id'] = media['album_id'];
         jpmedia['albumdisk_id'] = media['albumdisk_id'];
+        jpmedia['album_name'] = media['album_name'];
         jpmedia['media_id'] = media['media_id'];
         jpmedia['media_type'] = media['media_type'];
         jpmedia['replaygain_track_gain'] = media['replaygain_track_gain'];
