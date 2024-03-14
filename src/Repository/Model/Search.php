@@ -1742,7 +1742,6 @@ class Search extends playlist_object
         foreach ($this->rules as $rule) {
             // @see search.js SearchRow.add(ruleType, operator, input, subtype)
             $javascript .= '<script>' . 'SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . $rule[2] . '", "' . scrub_out($rule[3]) . '"); </script>';
-
         }
 
         return $javascript;
