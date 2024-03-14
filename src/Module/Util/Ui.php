@@ -1195,7 +1195,7 @@ class Ui implements UiInterface
                 if (preg_match('/_pass$/', $name)) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . scrub_out($value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';
                 }
                 break;
         }

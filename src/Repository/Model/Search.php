@@ -1147,7 +1147,7 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param int $user_id
+     * @param int|null $user_id
      * @return array
      */
     public static function get_search_array($user_id = 0): array
