@@ -62,7 +62,7 @@ final class PlaylistSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             $where[] = "(`playlist`.`type` = 'public' OR `playlist`.`user` = " . $search_user_id . ")";
