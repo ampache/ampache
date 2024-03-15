@@ -79,6 +79,11 @@ foreach ($object_ids as $playlist_id) {
     }
     $libitem->format();
 
+    // Don't show playlist if private AND you're not an Admin AND not the owner
+    if ( ! Access::check('interface', 100) && $libitem->type == 'private' && $libitem->get_user_owner() != $user_id ) {
+        continue;
+    }
+
     // Don't show empty playlist if not admin or the owner
     if (Access::check('interface', 100) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
