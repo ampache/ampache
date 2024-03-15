@@ -61,8 +61,8 @@ final class ToggleFollow5Method
             $leader = User::get_from_username($username);
             if ($leader instanceof User) {
                 static::getUserFollowToggler()->toggle(
-                    $leader->getId(),
-                    $user->getId()
+                    $leader,
+                    $user
                 );
                 ob_end_clean();
                 Api5::message('follow toggled for: ' . $user->id, $input['api_format']);

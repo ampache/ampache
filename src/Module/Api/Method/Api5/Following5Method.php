@@ -71,7 +71,7 @@ final class Following5Method
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowing($leader->getId());
+        $results = static::getUserFollowerRepository()->getFollowing($leader);
         if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 
