@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -37,6 +38,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 /**
  * A collection of methods related to the user interface
@@ -47,12 +49,46 @@ class Ui implements UiInterface
     private static $_icon_cache;
     private static $_image_cache;
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer
     ) {
-        $this->configContainer = $configContainer;
+    }
+
+    /**
+     * This dumps out some html and an icon for the type of rss that we specify
+     *
+     * @param array<string, string>|null $params
+     */
+    public static function getRssLink(
+        RssFeedTypeEnum $type,
+        ?User $user = null,
+        string $title = '',
+        ?array $params = null
+    ): string {
+        $strparams = "";
+        if ($params != null && is_array($params)) {
+            foreach ($params as $key => $value) {
+                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
+            }
+        }
+
+        $rsstoken = '';
+        if ($user !== null) {
+            $rsstoken = "&rsstoken=" . $user->getRssToken();
+        }
+
+        $string = '<a class="nohtml" href="' . AmpConfig::get(
+            'web_path'
+        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon(
+            'feed',
+            T_('RSS Feed')
+        );
+        if (!empty($title)) {
+            $string .= ' &nbsp;' . $title;
+        }
+        $string .= '</a>';
+
+        return $string;
     }
 
     /**

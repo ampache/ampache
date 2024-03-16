@@ -36,12 +36,12 @@ interface GuiGatekeeperInterface
     ): bool;
 
     /**
-     * Returns the id of the currently logged in user
+     * Returns the id of the currently logged-in user
      */
     public function getUserId(): int;
 
     /**
-     * Returns the currently logged in user
+     * Returns the currently logged-in user
      */
     public function getUser(): ?User;
 }

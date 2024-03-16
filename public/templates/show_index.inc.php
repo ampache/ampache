@@ -80,7 +80,9 @@ if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
-<?php $user_id = Core::get_global('user')->id ?? -1;
+<?php
+    $user      = Core::get_global('user');
+    $user_id   = $user->id ?? -1;
     $ajax_page = 'index';
     if (AmpConfig::get('home_recently_played_all')) {
         $data = Stats::get_recently_played($user_id);

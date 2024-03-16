@@ -92,6 +92,7 @@ final class ShowDiskAction implements ApplicationActionInterface
                         $gatekeeper,
                         $albumDisk
                     ),
+                    'user' => $gatekeeper->getUser()
                 ]
             );
         }
