@@ -200,10 +200,10 @@ class Democratic extends Tmp_Playlist
      *
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
-     * @param int $limit
-     * @return array
+     *
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
-    public function get_items($limit = null): array
+    public function get_items(?int $limit = null): array
     {
         // Remove 'unconnected' users votes
         if (AmpConfig::get('demo_clear_sessions')) {
@@ -214,14 +214,18 @@ class Democratic extends Tmp_Playlist
         $sql = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`object_id`, `tmp_playlist_data`.`id` FROM `tmp_playlist_data` INNER JOIN `user_vote` ON `user_vote`.`object_id` = `tmp_playlist_data`.`id` WHERE `tmp_playlist_data`.`tmp_playlist` = ? GROUP BY 1, 2, 3 ORDER BY COUNT(*) DESC, MAX(`user_vote`.`date`), MAX(`tmp_playlist_data`.`id`) ";
 
         if ($limit !== null) {
-            $sql .= 'LIMIT ' . (string)($limit);
+            $sql .= 'LIMIT ' . $limit;
         }
 
         $db_results = Dba::read($sql, array($this->tmp_playlist));
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['id']) {
-                $results[] = $row;
+                $results[] = [
+                    'object_type' => LibraryItemEnum::from($row['object_type']),
+                    'object_id' => $row['object_id'],
+                    'id' => $row['id'],
+                ];
             }
         }
 

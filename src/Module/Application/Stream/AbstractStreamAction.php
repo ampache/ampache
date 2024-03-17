@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Stream;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -44,16 +45,10 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractStreamAction implements ApplicationActionInterface
 {
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
     protected function __construct(
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly LoggerInterface $logger,
+        private readonly ConfigContainerInterface $configContainer
     ) {
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -80,6 +75,8 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 
     /**
      * @throws ApplicationException
+     *
+     * @param list<array{object_type: LibraryItemEnum, object_id: int}> $mediaIds
      */
     protected function stream(
         array $mediaIds,

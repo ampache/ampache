@@ -2971,11 +2971,6 @@ parameters:
 			path: src/Module/Api/Method/PlaylistAddMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$song_ids of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) expects array, array\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistAddMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddSongMethod\\:\\:playlist_add_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddSongMethod.php
@@ -4939,11 +4934,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/StatisticGraph/ShowAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$mediaIds with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/AbstractStreamAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
@@ -13011,11 +13001,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:remove_vote\\(\\) has parameter \\$row_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -13052,6 +13037,11 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$vote_ids has no type specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Democratic.php
+
+		-
+			message: "#^Return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) should be compatible with return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int, track_id\\: int, track\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\)$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 
@@ -13241,27 +13231,12 @@ parameters:
 			path: src/Repository/Model/Personal_Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_details\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -14187,11 +14162,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:delete_track\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 

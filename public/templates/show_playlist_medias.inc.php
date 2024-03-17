@@ -25,11 +25,13 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+global $dic;
+$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
@@ -73,17 +75,16 @@ $count     = 1; ?>
                 if (!is_array($object)) {
                     $object = (array) $object;
                 }
-                $object_type = $object['object_type'];
-                if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $className = ObjectTypeToClassNameMapper::map($object_type);
-                    /** @var Ampache\Repository\Model\library_item $libitem */
-                    $libitem = new $className($object['object_id']);
-                    if ($libitem->isNew()) {
-                        continue;
-                    }
-                    if (method_exists($libitem, 'format')) {
-                        $libitem->format();
-                    }
+
+                $libitem = $libraryItemLoader->load(
+                    $object['object_type'],
+                    $object['object_id'],
+                );
+                if ($libitem !== null) {
+                    $libitem->format();
+
+                    $object_type = $object['object_type']->value;
+
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
