@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
@@ -61,16 +60,13 @@ final class ShowAction implements ApplicationActionInterface
         );
         $this->ui->showHeader();
 
-        if ($playlist->isNew()) {
+        if ($playlist->isNew() || !$playlist->has_access()) {
             $this->logger->warning(
                 'Requested a playlist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             echo T_('You have requested an object that does not exist');
         } else {
-            if (!$playlist->has_access()) {
-                throw new AccessDeniedException();
-            }
             $playlist->format();
             $object_ids = $playlist->get_items();
             $this->ui->show(
