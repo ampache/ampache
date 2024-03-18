@@ -38,10 +38,7 @@ final class TagSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
         $sql_logic_operator = $search->logic_operator;
-        $catalog_disable    = AmpConfig::get('catalog_disable');
-        $catalog_filter     = AmpConfig::get('catalog_filter');
 
         $where      = array();
         $table      = array();
@@ -65,11 +62,19 @@ final class TagSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'category':
-                    $where[]      = "`tag`.`category` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`tag`.`category` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`tag`.`category` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'title':
-                    $where[]      = "`tag`.`name` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`tag`.`name` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`tag`.`name` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

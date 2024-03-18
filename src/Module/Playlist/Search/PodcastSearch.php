@@ -67,7 +67,11 @@ final class PodcastSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[]      = "`podcast`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast`.`title` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'episode_count':
@@ -75,7 +79,11 @@ final class PodcastSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'podcast_episode':
-                    $where[]                 = "`podcast_episode`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast_episode`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast_episode`.`title` $operator_sql ?";
+                    }
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;

@@ -61,7 +61,11 @@ final class UserSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'username':
-                    $where[]      = "`user`.`username` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`user`.`username` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`user`.`username` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

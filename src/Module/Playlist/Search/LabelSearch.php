@@ -65,11 +65,19 @@ final class LabelSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[]      = "`label`.`name` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`label`.`name` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`label`.`name` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'category':
-                    $where[]      = "`label`.`category` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`label`.`category` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`label`.`category` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

@@ -78,6 +78,9 @@ final class SongSearch implements SearchInterface
                         case 'NOT LIKE':
                             $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                             break;
+                            case 'NOT SOUNDS LIKE':
+                                $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` SOUNDS LIKE ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
+                                break;
                         default:
                             $tag_string = "`song`.`id` IN (SELECT `tag_map`.`object_id` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id` = `tag`.`id` AND `tag`.`is_hidden` = 0 AND `tag`.`name` $operator_sql ? WHERE `tag_map`.`object_type`='song' AND `tag`.`id` IS NOT NULL)";
                     }
@@ -85,6 +88,8 @@ final class SongSearch implements SearchInterface
                     // we want AND NOT and like for this query to really exclude them
                     if (in_array($operator_sql, array('!=', 'NOT LIKE', 'NOT'))) {
                         $where[] = "NOT ((`artist`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) LIKE ?) OR (`album`.`name` LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) LIKE ?) OR (`song_data`.`comment` LIKE ? AND `song_data`.`comment` IS NOT NULL) OR (`song_data`.`label` LIKE ? AND `song_data`.`label` IS NOT NULL) OR `song`.`file` LIKE ? OR `song`.`title` LIKE ? OR " . $tag_string . ')';
+                    } elseif ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) OR (`album`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) SOUNDS LIKE ?) OR `song_data`.`comment` SOUNDS LIKE ? OR `song_data`.`label` SOUNDS LIKE ? OR `song`.`file` SOUNDS LIKE ? OR `song`.`title` SOUNDS LIKE ? OR " . $tag_string . ')';
                     } else {
                         $where[] = "((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) OR (`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) OR `song_data`.`comment` $operator_sql ? OR `song_data`.`label` $operator_sql ? OR `song`.`file` $operator_sql ? OR `song`.`title` $operator_sql ? OR " . $tag_string . ')';
                     }
@@ -95,7 +100,11 @@ final class SongSearch implements SearchInterface
                     $join['song_data'] = true;
                     break;
                 case 'title':
-                    $where[]      = "`song`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`title` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'genre':

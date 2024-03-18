@@ -67,11 +67,19 @@ final class PodcastEpisodeSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[]      = "`podcast_episode`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast_episode`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast_episode`.`title` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'podcast':
-                    $where[]         = "`podcast`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast`.`title` $operator_sql ?";
+                    }
                     $parameters[]    = $input;
                     $join['podcast'] = true;
                     break;

@@ -69,7 +69,11 @@ final class PlaylistSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'title':
-                    $where[]      = "`playlist`.`name` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`playlist`.`name` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`playlist`.`name` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'type':

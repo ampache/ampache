@@ -68,7 +68,11 @@ final class AlbumDiskSearch implements SearchInterface
             $group[]      = "`album`.`name`";
             switch ($rule[0]) {
                 case 'title':
-                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?)";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "(NOT (`album`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) SOUNDS LIKE ?))";
+                    } else {
+                        $where[] = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?)";
+                    }
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
                 case 'catalog':
