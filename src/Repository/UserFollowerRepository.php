@@ -25,22 +25,34 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
-use Ampache\Module\System\Dba;
+use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\User;
 
-final class UserFollowerRepository implements UserFollowerRepositoryInterface
+/**
+ * Manages database-access to the `user_follower`-table
+ */
+final readonly class UserFollowerRepository implements UserFollowerRepositoryInterface
 {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+    ) {
+    }
+
     /**
      * Get users following the user
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getFollowers(int $userId): array
+    public function getFollowers(User $user): array
     {
-        $sql        = "SELECT `user` FROM `user_follower` WHERE `follow_user` = ?";
-        $db_results = Dba::read($sql, [$userId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['user'];
+        $result = $this->connection->query(
+            'SELECT `user` FROM `user_follower` WHERE `follow_user` = ?',
+            [$user->getId()]
+        );
+
+        $results = [];
+        while ($userId = $result->fetchColumn()) {
+            $results[] = (int) $userId;
         }
 
         return $results;
@@ -49,15 +61,18 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
     /**
      * Get users followed by this user
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getFollowing(int $userId): array
+    public function getFollowing(User $user): array
     {
-        $sql        = "SELECT `follow_user` FROM `user_follower` WHERE `user` = ?";
-        $db_results = Dba::read($sql, [$userId]);
-        $results    = [];
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int) $row['follow_user'];
+        $result = $this->connection->query(
+            'SELECT `follow_user` FROM `user_follower` WHERE `user` = ?',
+            [$user->getId()]
+        );
+
+        $results = [];
+        while ($userId = $result->fetchColumn()) {
+            $results[] = (int) $userId;
         }
 
         return $results;
@@ -66,37 +81,44 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
     /**
      * Get if a user is followed by another user
      */
-    public function isFollowedBy(int $userId, int $followingUserId): bool
-    {
-        $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        $db_results = Dba::read($sql, array($followingUserId, $userId));
-
-        return Dba::num_rows($db_results) > 0;
+    public function isFollowedBy(
+        User $user,
+        User $followingUser,
+    ): bool {
+        return $this->connection->fetchOne(
+            'SELECT count(`id`) FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
+            [$followingUser->getId(), $user->getId()]
+        ) > 0;
     }
 
+    /**
+     * Adds an entry for a user following another user
+     */
     public function add(
-        int $userId,
-        int $followingUserId
+        User $user,
+        User $followingUser,
     ): void {
-        Dba::write(
-            "INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, ?)",
+        $this->connection->query(
+            'INSERT INTO `user_follower` (`user`, `follow_user`, `follow_date`) VALUES (?, ?, UNIX_TIMESTAMP())',
             [
-                $followingUserId,
-                $userId,
-                time()
+                $followingUser->getId(),
+                $user->getId(),
             ]
         );
     }
 
+    /**
+     * Deletes a user follow-entry
+     */
     public function delete(
-        int $userId,
-        int $followingUserId
+        User $user,
+        User $followingUser
     ): void {
-        Dba::write(
-            "DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?",
+        $this->connection->query(
+            'DELETE FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?',
             [
-                $followingUserId,
-                $userId,
+                $followingUser->getId(),
+                $user->getId(),
             ]
         );
     }

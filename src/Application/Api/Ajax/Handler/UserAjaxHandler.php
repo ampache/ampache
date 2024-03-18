@@ -66,12 +66,12 @@ final class UserAjaxHandler implements AjaxHandlerInterface
                     $fuser = new User($user_id);
                     if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
                         $this->followToggler->toggle(
-                            $user_id,
-                            Core::get_global('user')->getId()
+                            $fuser,
+                            Core::get_global('user')
                         );
                         $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
-                            $user_id,
-                            Core::get_global('user')->getId()
+                            $fuser,
+                            Core::get_global('user')
                         );
                     }
                 }

@@ -66,8 +66,8 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 }
     if (AmpConfig::get('sociable')) {
         echo $userFollowStateRenderer->render(
-            $client->getId(),
-            $current_user->getId()
+            $client,
+            $current_user
         );
 
         $plugins = Plugin::get_plugins(PluginTypeEnum::USER_FIELD_WIDGET); ?>
