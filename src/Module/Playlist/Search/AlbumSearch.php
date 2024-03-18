@@ -352,7 +352,11 @@ final class AlbumSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`album`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`album`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`album`.`mbid` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'mbid_song':
@@ -366,7 +370,11 @@ final class AlbumSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`song`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`mbid` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
@@ -381,7 +389,11 @@ final class AlbumSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]           = "`artist`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`artist`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`artist`.`mbid` $operator_sql ?";
+                    }
                     $parameters[]      = $input;
                     $join['album_map'] = true;
                     break;

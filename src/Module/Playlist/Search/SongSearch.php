@@ -171,7 +171,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`song_data`.`comment` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song_data`.`comment` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song_data`.`comment` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'label':
@@ -186,7 +190,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`song_data`.`label` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song_data`.`label` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song_data`.`label` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'lyrics':
@@ -201,7 +209,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`song_data`.`lyrics` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song_data`.`lyrics` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song_data`.`lyrics` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'played':
@@ -455,7 +467,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`song`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`mbid` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'mbid_album':
@@ -470,7 +486,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]      = "`album`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`album`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`album`.`mbid` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'mbid_artist':
@@ -484,7 +504,11 @@ final class SongSearch implements SearchInterface
                             break;
                         }
                     }
-                    $where[]        = "`artist`.`mbid` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`artist`.`mbid` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`artist`.`mbid` $operator_sql ?";
+                    }
                     $parameters[]   = $input;
                     $join['artist'] = true;
                     break;
