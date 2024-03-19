@@ -1190,8 +1190,6 @@ class Preference extends database_object
             'webplayer_flash',
             'webplayer_html5',
             'webplayer_pausetabs',
-            'write_id3',
-            'write_id3_art',
             'write_tags',
             'xml_rpc'
         );

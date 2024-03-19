@@ -180,7 +180,7 @@ Register as a new user if allowed. (Requires the username, password and email.)
 |------------|---------|-----------------------------------|---------:|
 | 'username' | string  | $username                         |       NO |
 | 'password' | string  | hash('sha256', $password)         |       NO |
-| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'email'    | string  | e.g. (user@gmail.com)             |       NO |
 | 'fullname' | string  |                                   |      YES |
 
 * return
@@ -1258,7 +1258,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in **API7** (Use list)
+**NOTE** This method is depreciated and will be removed in **API7** (Use list)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1730,6 +1730,26 @@ Edit a live_stream (radio station) object.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/live_stream_edit.xml)
 
+### now_playing
+
+Get what is currently being played by all users.
+
+* return
+
+```XML
+<root>
+    <now_playing>
+</root>
+```
+
+* throws
+
+```XML
+<root><error></root>
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.xml)
+
 ### playlists
 
 This returns playlists based on the specified filter
@@ -1787,7 +1807,7 @@ This returns a single playlist
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/playlist.xml)
 
-### playlist_add_song
+### playlist_add
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
@@ -1817,7 +1837,7 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 
 This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
 
-**DEVELOP** This method is depreciated and will be removed in **API7** (Use playlist_add)
+**NOTE** This method is depreciated and will be removed in **API7** (Use playlist_add)
 
 | Input    | Type    | Description                                                   | Optional |
 |----------|---------|---------------------------------------------------------------|---------:|
@@ -2454,21 +2474,21 @@ Each type is a grouping of object types so allow single search calls to be made
   * album
   * artist
 
-song_artist
+* song_artist
   * song
   * album
   * song_artist
 
-album_artist
+* album_artist
   * song
   * album
   * album_artist
   
-podcast
+* podcast
   * podcast
   * podcast_episode
 
-video
+* video
   * video
 
 | Input    | Type    | Description                                                                          | Optional |
@@ -3024,7 +3044,7 @@ Create a new user. (Requires the username, password and email.)
 |------------|---------|-----------------------------------|---------:|
 | 'username' | string  | $username                         |       NO |
 | 'password' | string  | hash('sha256', $password)         |       NO |
-| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'email'    | string  | e.g. (user@gmail.com)             |       NO |
 | 'fullname' | string  |                                   |      YES |
 | 'disable'  | boolean | `0`, `1`                          |      YES |
 | 'group'    | integer | Catalog filter group, default = 0 |      YES |
@@ -3083,7 +3103,7 @@ Update an existing user.
 |---------------------|---------|------------------------------------------|---------:|
 | 'username'          | string  | $username                                |       NO |
 | 'password'          | string  | hash('sha256', $password)                |      YES |
-| 'email'             | string  | e.g. user@gmail.com                      |      YES |
+| 'email'             | string  | e.g. (user@gmail.com)                    |      YES |
 | 'fullname'          | string  |                                          |      YES |
 | 'website'           | string  |                                          |      YES |
 | 'state'             | string  |                                          |      YES |
