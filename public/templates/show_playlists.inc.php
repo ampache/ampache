@@ -74,7 +74,7 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
-    if ($libitem->isNew()) {
+    if ($libitem->isNew() || !$playlist->has_access()) {
         continue;
     }
     $libitem->format();
