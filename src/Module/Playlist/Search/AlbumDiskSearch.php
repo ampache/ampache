@@ -75,13 +75,19 @@ final class AlbumDiskSearch implements SearchInterface
                     }
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
-                case 'catalog':
-                case 'year':
-                case 'release_type':
-                case 'release_status':
-                case 'barcode':
-                case 'catalog_number':
-                case 'version':
+                    case 'release_type':
+                    case 'release_status':
+                    case 'barcode':
+                    case 'catalog_number':
+                        if ($operator_sql === 'NOT SOUNDS LIKE') {
+                            $where[] = "NOT (`album`.`" . $rule[0] . "` SOUNDS LIKE ?)";
+                        } else {
+                            $where[] = "`album`.`" . $rule[0] . "` $operator_sql ?";
+                        }
+                        break;
+                    case 'catalog':
+                    case 'year':
+                    case 'version':
                     $where[]      = "`album`.`" . $rule[0] . "` $operator_sql ?";
                     $parameters[] = $input;
                     break;
@@ -101,7 +107,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]    = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT ((`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album')";
+                    } else {
+                        $where[] = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `favorite_album_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_album_" . $search_user_id . "`.`object_type` = 'album'";
+                    }
                     $parameters = array_merge($parameters, array($input, $input));
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
@@ -336,7 +346,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['album_map'] = true;
                     break;
                 case 'song':
-                    $where[]      = "`song`.`title` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`title` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`title` $operator_sql ?";
+                    }
                     $parameters   = array_merge($parameters, array($input));
                     $join['song'] = true;
                     break;

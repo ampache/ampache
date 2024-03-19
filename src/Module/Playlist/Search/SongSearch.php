@@ -144,6 +144,11 @@ final class SongSearch implements SearchInterface
                     $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     break;
                 case 'artist':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT ((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?))";
+                    } else {
+                        $where[] = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
+                    }
                     $where[]        = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
                     $parameters     = array_merge($parameters, array($input, $input));
                     $join['artist'] = true;
@@ -172,6 +177,13 @@ final class SongSearch implements SearchInterface
                     }
                     break;
                 case 'composer':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`" . $rule[0] . "` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`" . $rule[0] . "` $operator_sql ?";
+                    }
+                    $parameters[] = $input;
+                    break;
                 case 'year':
                 case 'track':
                 case 'catalog':
@@ -314,7 +326,11 @@ final class SongSearch implements SearchInterface
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='song' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `song`.`id` ";
                     break;
                 case 'favorite':
-                    $where[]      = "`song`.`title` $operator_sql ? AND `favorite_song_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_song_" . $search_user_id . "`.`object_type` = 'song'";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`title` SOUNDS LIKE ? AND `favorite_song_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_song_" . $search_user_id . "`.`object_type` = 'song')";
+                    } else {
+                        $where[] = "`song`.`title` $operator_sql ? AND `favorite_song_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_song_" . $search_user_id . "`.`object_type` = 'song'";
+                    }
                     $parameters[] = $input;
                     // flag once per user
                     if (!array_key_exists('favorite', $table)) {
