@@ -36,18 +36,12 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-final class StatsAjaxHandler implements AjaxHandlerInterface
+final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private PluginRetrieverInterface $pluginRetriever;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        PluginRetrieverInterface $pluginRetriever
+        private RequestParserInterface $requestParser,
+        private PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->requestParser   = $requestParser;
-        $this->pluginRetriever = $pluginRetriever;
     }
 
     public function handle(): void

@@ -32,7 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -66,6 +66,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
+/** @var User $current_user */
 $current_user = Core::get_global('user');
 $f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
@@ -204,7 +205,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'artist', 'object_id' => (string)$artist->id)); ?>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $current_user,
+                T_('RSS Feed'),
+                array('object_type' => 'artist', 'object_id' => (string)$artist->id)
+            ); ?>
         </li>
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
@@ -229,7 +235,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
             </a>
         </li>
 <?php }
-if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
+if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">

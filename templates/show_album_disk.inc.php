@@ -30,8 +30,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -47,6 +46,7 @@ use Ampache\Repository\Model\Userflag;
 global $dic;
 
 /** @var bool $isAlbumEditable */
+/** @var User $current_user */
 
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
@@ -61,7 +61,6 @@ $title    = ($albumDisk->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $albumDisk->get_f_artist_link()
     : scrub_out($f_name);
 
-$current_user      = Core::get_global('user');
 $access50          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $access25          = ($access50 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $show_direct_play  = AmpConfig::get('directplay');
@@ -169,7 +168,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id)); ?>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $current_user,
+                T_('RSS Feed'),
+                array('object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id)
+            ); ?>
         </li>
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || $access25) { ?>
@@ -191,7 +195,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user->id) || $access50) {
+        <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
             $saveorder = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>

@@ -35,14 +35,11 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
 use Generator;
 
-final class SongRepository implements SongRepositoryInterface
+final readonly class SongRepository implements SongRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
     public function __construct(
-        DatabaseConnectionInterface $connection
+        private DatabaseConnectionInterface $connection
     ) {
-        $this->connection = $connection;
     }
 
     /**
@@ -281,6 +278,22 @@ final class SongRepository implements SongRepositoryInterface
 
         while ($songId = $result->fetchColumn()) {
             yield (int) $songId;
+        }
+    }
+
+    /**
+     * Gets a list of the disabled songs for and returns an array of Songs
+     *
+     * @return Generator<Song>
+     */
+    public function getDisabled(): Generator
+    {
+        $result = $this->connection->query(
+            'SELECT `id` FROM `song` WHERE `enabled` = 0'
+        );
+
+        while ($rowId = $result->fetchColumn()) {
+            yield new Song((int) $rowId);
         }
     }
 }

@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -123,6 +124,8 @@ class ShowActionTest extends MockeryTestCase
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $album      = $this->mock(Album::class);
+        $user       = $this->createMock(User::class);
+
         $isEditAble = true;
 
         $albumId = 42;
@@ -141,6 +144,11 @@ class ShowActionTest extends MockeryTestCase
             ->with($albumId)
             ->once()
             ->andReturn($album);
+
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
 
         $album->shouldReceive('format')
             ->withNoArgs()
@@ -169,6 +177,7 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
+                    'user' => $user,
                 ]
             )
             ->once();
@@ -347,12 +356,13 @@ class ShowActionTest extends MockeryTestCase
     }
 
     private function createExpectations(
-        MockInterface $album,
-        GuiGatekeeperInterface $gatekeeper,
+        Album&MockInterface $album,
+        GuiGatekeeperInterface&MockInterface $gatekeeper,
         bool $isEditAble,
         string $templateName
     ): void {
         $request = $this->mock(ServerRequestInterface::class);
+        $user    = $this->createMock(User::class);
 
         $albumId = 42;
 
@@ -374,6 +384,11 @@ class ShowActionTest extends MockeryTestCase
             ->once()
             ->andReturnFalse();
 
+        $gatekeeper->shouldReceive('getUser')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($user);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -389,6 +404,7 @@ class ShowActionTest extends MockeryTestCase
                 [
                     'album' => $album,
                     'isAlbumEditable' => $isEditAble,
+                    'user' => $user,
                 ]
             )
             ->once();

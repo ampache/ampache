@@ -190,11 +190,20 @@ echo implode(',', $solutions); ?>",
                             navigator.mediaSession.metadata = new MediaMetadata({
                                 title: obj.title,
                                 artist: obj.artist,
-                                artwork: [{
-                                   src: currentjpitem.attr("data-poster"),
-                                   sizes: "96x96",
-                                   type: "image/png"
-                                }],
+                                artwork: [
+                                    {
+                                        src: currentjpitem.attr("data-poster"),
+                                        sizes: "96x96",
+                                        type: "image/png"
+                                    },
+                                    {
+                                        // Not the right size, but 256x256 is necessary for
+                                        // Android device to display the artwork
+                                        src: currentjpitem.attr("data-poster"),
+                                        sizes: "256x256",
+                                        type: "image/png"
+                                    }
+                                ],
                                 album: currentjpitem.attr("data-album_name"),
                             });
                             navigator.mediaSession.playbackState = "playing";
@@ -423,7 +432,7 @@ if (!$isVideo) {
 <div id="shouts_data"></div>
 <div class="jp-area<?php echo $areaClass; ?>">
     <div id="jp_container_1" class="<?php echo $containerClass; ?>">
-        <div class="jp-type-playlist" style="background: #191919"">
+        <div class="jp-type-playlist" style="background: #191919">
             <div id="jquery_jplayer_1" class="jp-jplayer <?php echo $playerClass; ?>" style="<?php echo $shareStyle; ?>"></div>
             <div class="jp-gui">
                 <?php if ($isVideo) { ?>

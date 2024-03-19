@@ -31,7 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -169,7 +169,12 @@ if ($show_playlist_add) {
 }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => (string)$album->id)); ?>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                ($current_user->id ?? -1),
+                T_('RSS Feed'),
+                array('object_type' => 'album', 'object_id' => (string)$album->id)
+            ); ?>
         </li>
 <?php }
 if (!AmpConfig::get('use_auth') || $access25) {

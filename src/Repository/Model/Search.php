@@ -1149,12 +1149,12 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param int $user_id
+     * @param int|null $user_id
      * @return array
      */
-    public static function get_search_array($user_id = null): array
+    public static function get_search_array($user_id = 0): array
     {
-        if ($user_id === null) {
+        if ($user_id === 0) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
@@ -1742,7 +1742,8 @@ class Search extends playlist_object
     {
         $javascript = "";
         foreach ($this->rules as $rule) {
-            $javascript .= '<script>' . 'SearchRow.add("' . $rule[0] . '","' . $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
+            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
+            $javascript .= '<script>' . 'SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
         }
 
         return $javascript;

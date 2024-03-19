@@ -49,6 +49,8 @@ use Ampache\Repository\MetadataRepositoryInterface;
 use Ampache\Repository\ShareRepositoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
+use DateTime;
+use DateTimeInterface;
 use PDOStatement;
 use Traversable;
 
@@ -66,25 +68,25 @@ class Song extends database_object implements
     public ?string $file;
     public int $catalog;
     public int $album;
-    public ?int $disk;
+    public ?int $disk = null;
     public int $year;
     public ?int $artist;
-    public ?string $title;
+    public ?string $title = null;
     public int $bitrate;
     public int $rate;
-    public ?string $mode;
+    public ?string $mode = null;
     public int $size;
     public int $time;
-    public ?int $track;
-    public ?string $mbid;
+    public ?int $track   = null;
+    public ?string $mbid = null;
     public bool $played;
     public bool $enabled;
     public int $update_time;
     public int $addition_time;
     public ?int $user_upload = null;
-    public ?int $license;
-    public ?string $composer;
-    public ?int $channels;
+    public ?int $license     = null;
+    public ?string $composer = null;
+    public ?int $channels    = null;
     public int $total_count;
     public int $total_skip;
 
@@ -214,7 +216,7 @@ class Song extends database_object implements
 
     public function getId(): int
     {
-        return (int)($this->id ?? 0);
+        return $this->id;
     }
 
     public function isNew(): bool
@@ -718,30 +720,6 @@ class Song extends database_object implements
             default:
                 return 'audio/mpeg';
         }
-    }
-
-    /**
-     * get_disabled
-     *
-     * Gets a list of the disabled songs for and returns an array of Songs
-     * @param int $count
-     * @return Song[]
-     */
-    public static function get_disabled($count = 0): array
-    {
-        $results = array();
-
-        $sql = "SELECT `id` FROM `song` WHERE `enabled`='0'";
-        if ($count) {
-            $sql .= " LIMIT $count";
-        }
-        $db_results = Dba::read($sql);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = new Song($row['id']);
-        }
-
-        return $results;
     }
 
     /**
@@ -2333,6 +2311,22 @@ class Song extends database_object implements
             'genre',
             'publisher'
         ];
+    }
+
+    /**
+     * Returns the path of the song
+     */
+    public function getFile(): string
+    {
+        return (string) $this->file;
+    }
+
+    /**
+     * Returns the date at which the song was first added
+     */
+    public function getAdditionTime(): DateTimeInterface
+    {
+        return new DateTime('@' . $this->addition_time);
     }
 
     /**

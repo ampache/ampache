@@ -27,6 +27,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Iterator;
 use Traversable;
 
 interface SongRepositoryInterface
@@ -117,4 +118,11 @@ interface SongRepositoryInterface
      * @return Traversable<int>
      */
     public function getByCatalog(?Catalog $catalog = null): Traversable;
+
+    /**
+     * Gets a list of the disabled songs for and returns an array of Songs
+     *
+     * @return Iterator<Song>
+     */
+    public function getDisabled(): Iterator;
 }

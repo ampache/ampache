@@ -27,30 +27,28 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\SongRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowDisabledAction implements ApplicationActionInterface
+/**
+ * Displays all disabled songs
+ */
+final readonly class ShowDisabledAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_disabled';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private SongRepositoryInterface $songRepository,
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,15 +66,10 @@ final class ShowDisabledAction implements ApplicationActionInterface
             return null;
         }
 
-        $songs = Song::get_disabled();
-        if (count($songs)) {
-            $this->ui->show(
-                'show_disabled_songs.inc.php',
-                ['songs' => $songs]
-            );
-        } else {
-            echo '<div class="error show-disabled">' . T_('No disabled Songs found') . '</div>';
-        }
+        $this->ui->show(
+            'show_disabled_songs.inc.php',
+            ['songs' => $this->songRepository->getDisabled()]
+        );
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

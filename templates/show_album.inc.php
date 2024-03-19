@@ -31,8 +31,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -50,6 +49,7 @@ global $dic;
 
 /** @var bool $isAlbumEditable */
 /** @var ContainerInterface $dic */
+/** @var User $current_user */
 
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
@@ -65,7 +65,6 @@ $title    = ($album->album_artist !== null)
     : scrub_out($f_name);
 
 
-$current_user      = Core::get_global('user');
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
@@ -170,7 +169,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         }
 if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), array('object_type' => 'album', 'object_id' => (string)$album->id)); ?>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $current_user,
+                T_('RSS Feed'),
+                array('object_type' => 'album', 'object_id' => (string)$album->id)
+            ); ?>
         </li>
         <?php }
 if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
@@ -192,7 +196,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             </li>
             <?php }
     }
-if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
     $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
