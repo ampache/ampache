@@ -173,7 +173,11 @@ final class PodcastEpisodeSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'file':
-                    $where[]      = "`podcast_episode`.`file` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast_episode`.`file` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast_episode`.`file` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

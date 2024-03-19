@@ -149,6 +149,11 @@ final class SongSearch implements SearchInterface
                     $join['artist'] = true;
                     break;
                 case 'album_artist':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "(NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `album_map`.`object_type` = 'album'))";
+                    } else {
+                        $where[] = "((`album_artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) $operator_sql ?))";
+                    }
                     $where[]               = "(`album_artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) $operator_sql ?)";
                     $parameters            = array_merge($parameters, array($input, $input));
                     $table['album']        = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
@@ -160,6 +165,12 @@ final class SongSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'file':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`$rule[0]` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`$rule[0]` $operator_sql ?";
+                    }
+                    break;
                 case 'composer':
                 case 'year':
                 case 'track':
@@ -419,10 +430,14 @@ final class SongSearch implements SearchInterface
                     }
                     break;
                 case 'playlist_name':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`playlist`.`name` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`playlist`.`name` $operator_sql ?";
+                    }
+                    $parameters[]          = $input;
                     $join['playlist']      = true;
                     $join['playlist_data'] = true;
-                    $where[]               = "`playlist`.`name` $operator_sql ?";
-                    $parameters[]          = $input;
                     break;
                 case 'playlist':
                     $where[]      = "`song`.`id` $operator_sql IN (SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_type` = 'song')";

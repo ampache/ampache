@@ -293,7 +293,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'playlist_name':
-                    $where[]      = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $operator_sql ?)";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` SOUNDS LIKE ?))";
+                    } else {
+                        $where[] = "`album`.`id` IN (SELECT `song`.`album` FROM `playlist_data` LEFT JOIN `playlist` ON `playlist_data`.`playlist` = `playlist`.`id` LEFT JOIN `song` ON `song`.`id` = `playlist_data`.`object_id` AND `playlist_data`.`object_type` = 'song' WHERE `playlist`.`name` $operator_sql ?)";
+                    }
                     $parameters[] = $input;
                     break;
                 case 'playlist':
@@ -301,6 +305,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'file':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`song`.`file` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`song`.`file` $operator_sql ?";
+                    }
                     $where[]      = "`song`.`file` $operator_sql ?";
                     $parameters[] = $input;
                     $join['song'] = true;
@@ -318,7 +327,11 @@ final class AlbumDiskSearch implements SearchInterface
                     break;
                 case 'artist':
                 case 'album_artist':
-                    $where[]           = "((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `album_map`.`object_type` = 'album')";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "(NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `album_map`.`object_type` = 'album'))";
+                    } else {
+                        $where[] = "((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `album_map`.`object_type` = 'album')";
+                    }
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;
@@ -328,7 +341,11 @@ final class AlbumDiskSearch implements SearchInterface
                     $join['song'] = true;
                     break;
                 case 'song_artist':
-                    $where[]           = "((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `album_map`.`object_type` = 'song')";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "(NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `album_map`.`object_type` = 'song'))";
+                    } else {
+                        $where[] = "((`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `album_map`.`object_type` = 'song')";
+                    }
                     $parameters        = array_merge($parameters, array($input, $input));
                     $join['album_map'] = true;
                     break;

@@ -184,7 +184,11 @@ final class PodcastSearch implements SearchInterface
                     $join['podcast_episode'] = true;
                     break;
                 case 'file':
-                    $where[]                 = "`podcast_episode`.`file` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`podcast_episode`.`file` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`podcast_episode`.`file` $operator_sql ?";
+                    }
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;

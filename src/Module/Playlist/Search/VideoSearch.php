@@ -67,6 +67,11 @@ final class VideoSearch implements SearchInterface
 
             switch ($rule[0]) {
                 case 'file':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`video`.`file` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`video`.`file` $operator_sql ?";
+                    }
                     $where[]      = "`video`.`file` $operator_sql ?";
                     $parameters[] = $input;
                     break;
