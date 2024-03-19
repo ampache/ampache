@@ -60,7 +60,7 @@ final class ShowAction implements ApplicationActionInterface
         );
         $this->ui->showHeader();
 
-        if ($playlist->isNew() || !$playlist->has_access()) {
+        if ($playlist->isNew() || (!$playlist->has_access() and $playlist->type === 'private')) {
             $this->logger->warning(
                 'Requested a playlist that does not exist',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
