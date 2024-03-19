@@ -1678,6 +1678,24 @@ Edit a live_stream (radio station) object.
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/live_stream_edit.json)
 
+### now_playing
+
+Get what is currently being played by all users.
+
+* return array
+
+```JSON
+"now_playing": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.xml)
+
 ### playlists
 
 This returns playlists based on the specified filter

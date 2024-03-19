@@ -40,7 +40,7 @@ final class NowPlayingMethod
     public const ACTION = 'now_playing';
 
     /**
-     * NowPlayingMethod
+     * now_playing
      * MINIMUM_API_VERSION=6.3.1
      *
      * Get what is currently being played by all users.
