@@ -142,7 +142,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'favorite':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist')";
+                        $where[] = "NOT ((`artist`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) SOUNDS LIKE ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist')";
                     } else {
                         $where[] = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?) AND `favorite_artist_" . $search_user_id . "`.`user` = " . $search_user_id . " AND `favorite_artist_" . $search_user_id . "`.`object_type` = 'artist'";
                     }
@@ -313,7 +313,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'album':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT ((`album`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `artist_map`.`artist_id` IS NOT NULL)";
+                        $where[] = "NOT ((`album`.`name` SOUNDS LIKE ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) SOUNDS LIKE ?) AND `artist_map`.`artist_id` IS NOT NULL)";
                     } else {
                         $where[] = "(`album`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) $operator_sql ?) AND `artist_map`.`artist_id` IS NOT NULL";
                     }
