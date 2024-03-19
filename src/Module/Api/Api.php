@@ -105,6 +105,7 @@ class Api
         Method\LiveStreamsMethod::ACTION => Method\LiveStreamsMethod::class,
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
+        Method\NowPlayingMethod::ACTION => Method\NowPlayingMethod::class,
         Method\PingMethod::ACTION => Method\PingMethod::class,
         Method\PlaylistAddMethod::ACTION => Method\PlaylistAddMethod::class,
         Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,

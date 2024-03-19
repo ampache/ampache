@@ -187,11 +187,20 @@ echo implode(',', $solutions); ?>",
                             navigator.mediaSession.metadata = new MediaMetadata({
                                 title: obj.title,
                                 artist: obj.artist,
-                                artwork: [{
-                                   src: currentjpitem.attr("data-poster"),
-                                   sizes: "96x96",
-                                   type: "image/png"
-                                }],
+                                artwork: [
+                                    {
+                                        src: currentjpitem.attr("data-poster"),
+                                        sizes: "96x96",
+                                        type: "image/png"
+                                    },
+                                    {
+                                        // Not the right size, but 256x256 is necessary for
+                                        // Android device to display the artwork
+                                        src: currentjpitem.attr("data-poster"),
+                                        sizes: "256x256",
+                                        type: "image/png"
+                                    }
+                                ],
                                 album: currentjpitem.attr("data-album_name"),
                             });
                             navigator.mediaSession.playbackState = "playing";
