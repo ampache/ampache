@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playlist\Search;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Search;
 
 final class TagSearch implements SearchInterface

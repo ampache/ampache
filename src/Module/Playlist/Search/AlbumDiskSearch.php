@@ -75,19 +75,19 @@ final class AlbumDiskSearch implements SearchInterface
                     }
                     $parameters = array_merge($parameters, array($input, $input));
                     break;
-                    case 'release_type':
-                    case 'release_status':
-                    case 'barcode':
-                    case 'catalog_number':
-                        if ($operator_sql === 'NOT SOUNDS LIKE') {
-                            $where[] = "NOT (`album`.`" . $rule[0] . "` SOUNDS LIKE ?)";
-                        } else {
-                            $where[] = "`album`.`" . $rule[0] . "` $operator_sql ?";
-                        }
-                        break;
-                    case 'catalog':
-                    case 'year':
-                    case 'version':
+                case 'release_type':
+                case 'release_status':
+                case 'barcode':
+                case 'catalog_number':
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`album`.`" . $rule[0] . "` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`album`.`" . $rule[0] . "` $operator_sql ?";
+                    }
+                    break;
+                case 'catalog':
+                case 'year':
+                case 'version':
                     $where[]      = "`album`.`" . $rule[0] . "` $operator_sql ?";
                     $parameters[] = $input;
                     break;
