@@ -42,7 +42,7 @@ final class SearchGroupMethod
     public const ACTION = 'search_group';
 
     /**
-     * search
+     * search_group
      * MINIMUM_API_VERSION=6.3.0
      *
      * Perform a search given passed rules and return matching objects in a group.

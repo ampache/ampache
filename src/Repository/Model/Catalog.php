@@ -3999,8 +3999,19 @@ abstract class Catalog extends database_object
                 break;
             case 'update_from':
                 $catalog_id  = 0;
-                $update_path = (string)($options['update_path'] ?? '/');
+                // clean deleted files
+                $clean_path = (string)($options['clean_path'] ?? '/');
+                if (strlen($clean_path) && $clean_path != '/') {
+                    $catalog_id = Catalog_local::get_from_path($clean_path);
+                    if (is_int($catalog_id)) {
+                        $catalog = self::create_from_id($catalog_id);
+                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $clean_path))) {
+                            self::update_catalog_map($catalog->gather_types);
+                        }
+                    }
+                }
                 // update_from_tags
+                $update_path = (string)($options['update_path'] ?? '/');
                 if (strlen($update_path) && $update_path != '/') {
                     if (is_int(Catalog_local::get_from_path($update_path))) {
                         $songs = self::get_ids_from_folder($update_path, 'song');
