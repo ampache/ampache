@@ -1672,7 +1672,7 @@ class Json_Data
      *
      * This handles creating an JSON document for a now_playing list
      *
-     * @param array $now_playing
+     * @param array $results
      */
     public static function now_playing(array $results): string
     {

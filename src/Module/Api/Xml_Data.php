@@ -1462,7 +1462,7 @@ class Xml_Data
      *
      * This handles creating a xml document for a now_playing list
      *
-     * @param array $now_playing
+     * @param array $results
      */
     public static function now_playing(array $results): string
     {

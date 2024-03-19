@@ -64,7 +64,7 @@ final class NowPlayingMethod
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::now_playing($results, $user);
+                echo Xml_Data::now_playing($results);
         }
 
         return true;
