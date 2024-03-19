@@ -1521,6 +1521,7 @@ class Search extends playlist_object
             case 'album_disk':
                 switch ($name) {
                     case 'name':
+                    case 'album':
                     case 'album_title':
                         $name = 'title';
                         break;
@@ -1529,6 +1530,7 @@ class Search extends playlist_object
                         break;
                     case 'album_artist':
                     case 'album_artist_title':
+                    case 'artist_title':
                         $name = 'artist';
                         break;
                     case 'tag':
@@ -1557,6 +1559,7 @@ class Search extends playlist_object
             case 'artist':
                 switch ($name) {
                     case 'name':
+                    case 'artist':
                     case 'artist_title':
                         $name = 'title';
                         break;
@@ -1590,6 +1593,9 @@ class Search extends playlist_object
                     case 'podcast_episode_title':
                         $name = 'podcast_episode';
                         break;
+                    case 'status':
+                        $name = 'state';
+                        break;
                 }
                 break;
             case 'podcast_episode':
@@ -1599,6 +1605,9 @@ class Search extends playlist_object
                         break;
                     case 'podcast_title':
                         $name = 'podcast';
+                        break;
+                    case 'status':
+                        $name = 'state';
                         break;
                 }
                 break;
