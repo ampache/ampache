@@ -38,7 +38,6 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Live_Stream;
@@ -1667,6 +1666,39 @@ class Json_Data
         }
 
         return $JSON;
+    }
+
+    /**
+     * now_playing
+     *
+     * This handles creating an JSON document for a now_playing list
+     *
+     * @param array $results
+     */
+    public static function now_playing(array $results): string
+    {
+        $JSON = [];
+        foreach ($results as $now_playing) {
+            $user = $now_playing['client'];
+            if ($user->isNew()) {
+                continue;
+            }
+            $media = $now_playing['media'];
+
+            $JSON[] = [
+                'id' => (string) $media->getId(),
+                'type' => (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)),
+                'client' => $now_playing['agent'],
+                'expire' => (int) $now_playing['expire'],
+                'user' => array(
+                    'id' => (string) $user->getId(),
+                    'username' => $user->getUsername()
+                )
+            ];
+        }
+        $output = array("now_playing" => $JSON);
+
+        return json_encode($output, JSON_PRETTY_PRINT);
     }
 
     /**

@@ -34,6 +34,7 @@ use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Search;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -1245,11 +1246,11 @@ class Ui implements UiInterface
             case 'personalfav_smartlist':
                 $ids       = explode(',', $value);
                 $options   = array();
-                $playlists = ($name == 'personalfav_smartlist') ? Playlist::get_details('search') : Playlist::get_details();
+                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_array() : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
                         $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
-                        $options[] = '<option value="' . $list_id . '"' . $selected . '>' . $list_name . '</option>';
+                        $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
                     }
                     echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 }
@@ -1269,7 +1270,7 @@ class Ui implements UiInterface
                 if (preg_match('/_pass$/', $name)) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . $value . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';
                 }
                 break;
         }

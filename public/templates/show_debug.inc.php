@@ -37,7 +37,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 
 $web_path    = (string)AmpConfig::get('web_path', '');
 // don't share the database password
-$configuration['database_password'] = '*********';
+$configuration['database_password'] = '******';
 // check your versions
 $current_version = AutoUpdate::get_current_version();
 $latest_version  = AutoUpdate::get_latest_version(); ?>
