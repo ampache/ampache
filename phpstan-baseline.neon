@@ -971,6 +971,16 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1062,6 +1072,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) should return array\\|string but returns string\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -2936,6 +2951,11 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\NowPlayingMethod\\:\\:now_playing\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/NowPlayingMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PingMethod\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PingMethod.php
@@ -4701,6 +4721,11 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -4727,6 +4752,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -13312,11 +13342,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_details\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 

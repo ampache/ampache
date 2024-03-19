@@ -91,7 +91,7 @@ var SearchRow = {
         switch(widget["0"]) {
             case "input":
                 inputNode.setAttribute("type", widget["1"]);
-                inputNode.setAttribute("value", input);
+                inputNode.setAttribute("value", SearchRow.decodeEntities(input));
                 break;
             case "select":
                 var optioncount = 0;
@@ -122,7 +122,7 @@ var SearchRow = {
                 inputNode.id = "rule_" + ruleNumber + "_input";
                 inputNode.name = "rule_" + ruleNumber + "_input";
                 inputNode.setAttribute("type", widget[1][1]);
-                inputNode.setAttribute("value", input);
+                inputNode.setAttribute("value", SearchRow.decodeEntities(input));
                 break;
         }
 
@@ -271,5 +271,10 @@ var SearchRow = {
         for (var i=0; i < sortArray.length; i++) {
             selectElement.options[i] = new Option(sortArray[i][0], sortArray[i][1], false, sortArray[i][2]);
         }
+    },
+    decodeEntities(encodedString) {
+        var tempElement = document.createElement('div');
+        tempElement.innerHTML = encodedString;
+        return tempElement.textContent || tempElement.innerText;
     }
 };

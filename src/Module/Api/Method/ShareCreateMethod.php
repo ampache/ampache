@@ -106,6 +106,7 @@ final class ShareCreateMethod
 
         $results = array();
         if (!$className || !$object_id) {
+            debug_event(self::class, 'ERROR ' . $object_type . ' className: ' . $className . ' object_id: ' . $object_id, 5);
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
