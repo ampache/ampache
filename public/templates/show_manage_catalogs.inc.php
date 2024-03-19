@@ -60,6 +60,10 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
+                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Clean deleted files in: %s'), '<span class="information">/data/myDeletedMusic</span>'); ?></td>
+                <td><input type="text" name="clean_path" value="/" /></td>
+            </tr>
+            <tr>
                 <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update existing files in: %s'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
                 <td><input type="text" name="update_path" value="/" /></td>
             </tr>

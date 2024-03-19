@@ -19,8 +19,8 @@ This is passed as a type argument and will only return this object in results
 * [song](https://ampache.org/api/advanced-search/song-advanced-search)
 * [album](https://ampache.org/api/advanced-search/album-advanced-search)
 * [artist](https://ampache.org/api/advanced-search/artist-advanced-search)
-* song_artist (**NOTE** same rules as artist but only returns song artists) (**Ampache develop**)
-* album_artist (**NOTE** same rules as artist but only returns album artists) (**Ampache develop**)
+* song_artist (**NOTE** same rules as artist but only returns song artists) (**5.5.2+**)
+* album_artist (**NOTE** same rules as artist but only returns album artists) (**5.5.2+**)
 * [label](https://ampache.org/api/advanced-search/label-advanced-search)
 * [playlist](https://ampache.org/api/advanced-search/playlist-advanced-search)
 * [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache 5.5.0+**)
@@ -70,9 +70,9 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | anywhere                 | Any searchable text                     | text              |                                 song                                  |
 | title                    | Title / Name                            | text              | song, album, artist, playlist, label, podcast, podcast_episode, genre |
 | name                     | (*Alias of title)                       |                   |                                                                       |
-| song                     | Song Title                              | text              |                             album, artist                             |
+| song                     | Song Title                              | text              |                          song, album, artist                          |
 | song_title               | (*Alias of song)                        |                   |                                                                       |
-| album                    | Album Title                             | text              |                             song, artist                              |
+| album                    | Album Title                             | text              |                          song, album, artist                          |
 | album_title              | (*Alias of album)                       |                   |                                                                       |
 | artist                   | Artist                                  | text              |                          song, album, artist                          |
 | artist_title             | (*Alias of artist)                      |                   |                                                                       |
@@ -80,9 +80,9 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | podcast_title            | (*Alias of podcast)                     |                   |                                                                       |
 | podcast_episode          | Podcast Episode                         | text              |                                podcast                                |
 | podcast_episode_title    | (*Alias of podcast_episode)             |                   |                                                                       |
-| album_artist             | Album Artist                            | text              |                                 song                                  |
+| album_artist             | Album Artist                            | text              |                              song, album                              |
 | album_artist_title       | (*Alias of album_artist)                |                   |                                                                       |
-| song_artist              | Song Artist                             | text              |                                 album                                 |
+| song_artist              | Song Artist                             | text              |                              song, album                              |
 | song_artist_title        | (*Alias of song_artist)                 |                   |                                                                       |
 | composer                 | Composer                                | text              |                                 song                                  |
 | track                    | Track                                   | numeric           |                                 song                                  |
@@ -95,6 +95,9 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | release_status           | Release Status                          | text              |                                 album                                 |
 | barcode                  | Barcode                                 | text              |                                 album                                 |
 | catalog_number           | Catalog Number                          | text              |                                 album                                 |
+| version                  | Release Version                         | text              |                                 album                                 |
+| release_comment          | (*Alias of version)                     |                   |                                                                       |
+| subtitle                 | (*Alias of version)                     |                   |                                                                       |
 | myrating                 | My Rating                               | numeric           |                          song, album, artist                          |
 | rating                   | Rating (Average)                        | numeric           |                          song, album, artist                          |
 | songrating               | My Rating (Song)                        | numeric           |                             album, artist                             |
@@ -103,11 +106,12 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | favorite                 | Favorites                               | text              |                          song, album, artist                          |
 | favorite_album           | Favorites (Album)                       | text              |                                 song                                  |
 | favorite_artist          | Favorites (Artist)                      | text              |                                 song                                  |
-| played_times             | # Played                                | numeric           |                          song, album, artist                          |
-| skipped_times            | # Skipped                               | numeric           |                                 song                                  |
-| play_skip_ratio          | Played/Skipped ratio                    | numeric           |                                 song                                  |
-| last_play                | My Last Play                            | days              |                          song, album, artist                          |
-| played                   | Played                                  | boolean           |                                 song                                  |
+| played_times             | # Played                                | numeric           |             song, album, artist, podcast, podcast_episode             |
+| skipped_times            | # Skipped                               | numeric           |                    song, podcast, podcast_episode                     |
+| play_skip_ratio          | Played/Skipped ratio                    | numeric           |                    song, podcast, podcast_episode                     |
+| last_play                | My Last Play                            | days              |             song, album, artist, podcast, podcast_episode             |
+| last_play_or_skip        | My Last Play OR skip                    | days              |             song, album, artist, podcast, podcast_episode             |
+| played                   | Played                                  | boolean           |             song, album, artist, podcast, podcast_episode             |
 | myplayed                 | Played by Me                            | boolean           |             song, album, artist, podcast, podcast_episode             |
 | myplayedalbum            | Played by Me (Album)                    | boolean           |                                 song                                  |
 | myplayedartist           | Played by Me (Artist)                   | boolean           |                              song, album                              |
@@ -120,7 +124,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | song_tag                 | (*Alias of song_genre)                  |                   |                                                                       |
 | album_genre              | Album Genre                             | tags              |                              song, album                              |
 | album_tag                | (*Alias of album_genre)                 |                   |                                                                       |
-| artist_genre             | Artist Genre                            | tags              |                                 song                                  |
+| artist_genre             | Artist Genre                            | tags              |                             song, artist                              |
 | artist_tag               | (*Alias of artist_genre)                |                   |                                                                       |
 | no_genre                 | No Genre                                | is_true           |                          song, album, artist                          |
 | no_tag                   | (*Alias of no_genre)                    |                   |                                                                       |
@@ -130,13 +134,14 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | label                    | Label                                   | text              |                                 song                                  |
 | license                  | Music License                           | boolean_numeric   |                                 song                                  |
 | playlist                 | Playlist                                | boolean_numeric   |                          song, album, artist                          |
-| smartplaylist            | Smart Playlist                          | boolean_subsearch |                                 song                                  |
+| smartplaylist            | Smart Playlist                          | boolean_subsearch |                              song, album                              |
 | playlist_name            | Playlist Name                           | text              |                          song, album, artist                          |
-| type                     | Playlist Type (private, public)         | text              |                               playlist                                |
+| type                     | Playlist Type (private, public)         | boolean_numeric   |                               playlist                                |
 | comment                  | Comment                                 | text              |                                 song                                  |
 | lyrics                   | Lyrics                                  | text              |                                 song                                  |
 | file                     | Filename                                | text              |         song, album, artist, video, podcast, podcast_episode          |
 | state                    | File state (completed, pending skipped) | boolean_numeric   |                       podcast, podcast_episode                        |
+| status                   | (*Alias of state)                       |                   |                                                                       |
 | bitrate                  | Bitrate                                 | numeric           |                                 song                                  |
 | added                    | Added                                   | date              |                    song, podcast, podcast_episode                     |
 | updated                  | Updated                                 | date              |                                 song                                  |
@@ -156,7 +161,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | possible_duplicate       | Possible Duplicate                      | is_true           |                          song, album, artist                          |
 | possible_duplicate_album | Possible Duplicate Albums               | is_true           |                          song, album, artist                          |
 | username                 | Username                                | text              |                                 user                                  |
-| category                 | Category                                | text              |                                 label                                 |
+| category                 | Category                                | text              |                              label, genre                             |
 
 ### Available operator values
 

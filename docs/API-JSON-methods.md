@@ -1221,7 +1221,7 @@ By default; get only the most recent bookmark. Use `all` to retrieve all media b
 
 This takes a collection of inputs and returns ID + name for the object type
 
-**DEVELOP** This method is depreciated and will be removed in **API7** (Use list OR index)
+**NOTE** This method is depreciated and will be removed in **API7** (Use list OR index)
 
 | Input         | Type       | Description                                                                                        | Optional |
 |---------------|------------|----------------------------------------------------------------------------------------------------|---------:|
@@ -1752,6 +1752,32 @@ This adds a song to a playlist. setting check=1 will not add duplicates to the p
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add.json)
+
+### playlist_add_song
+
+This adds a song to a playlist. setting check=1 will not add duplicates to the playlist
+
+**NOTE** This method is depreciated and will be removed in **API7** (Use playlist_add)
+
+| Input    | Type    | Description                                                   | Optional |
+|----------|---------|---------------------------------------------------------------|---------:|
+| 'filter' | string  | UID of Playlist                                               |       NO |
+| 'song'   | string  | UID of song to add to playlist                                |       NO |
+| 'check'  | boolean | `0`, `1` Whether to check and ignore duplicates (default = 0) |      YES |
+
+* return object
+
+```JSON
+"success": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_add_song.json)
 
 ### playlist_create
 
