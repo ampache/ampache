@@ -29,8 +29,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
@@ -41,6 +40,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var Ampache\Repository\Model\Podcast $podcast */
 /** @var array $object_ids */
 /** @var string $object_type */
+/** @var User $current_user */
 
 $access75 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER);
 $access50 = ($access75 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER));
@@ -98,8 +98,13 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
         <?php } ?>
     <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => (string)$podcast->getId())); ?>
-        </li>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $current_user,
+                T_('RSS Feed'),
+                array('object_type' => 'podcast', 'object_id' => (string)$podcast->getId())
+            ); ?>
+        /li>
         <?php } ?>
         <li>
             <a href="<?php echo $podcast->getWebsite(); ?>" target="_blank">

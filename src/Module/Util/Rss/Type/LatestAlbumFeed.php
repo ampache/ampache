@@ -30,13 +30,12 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\User;
 
 final readonly class LatestAlbumFeed implements FeedTypeInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private string $rsstoken
+        private User $user,
     ) {
     }
 
@@ -46,9 +45,7 @@ final readonly class LatestAlbumFeed implements FeedTypeInterface
      */
     public function handle(): string
     {
-        $user    = $this->rsstoken !== '' ? $this->userRepository->getByRssToken($this->rsstoken) : null;
-        $user_id = $user->id ?? 0;
-        $ids     = Stats::get_newest('album', 10, 0, 0, $user_id);
+        $ids = Stats::get_newest('album', 10, 0, 0, $this->user->getId());
 
         $results = array();
 

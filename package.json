@@ -21,7 +21,7 @@
   "scripts": {
     "postinstall": "npm-run-all copy:*",
     "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/lib/components/bootstrap",
-    "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/**/* public/lib/components/jquery-contextmenu",
+    "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/* public/lib/components/jquery-contextmenu",
     "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
     "copy:filepond": "copyfiles --up 3 node_modules/filepond/dist/filepond.min.js node_modules/filepond/dist/filepond.min.css public/lib/components/filepond",
     "copy:jscookie": "copyfiles --up 3 node_modules/js-cookie/src/js.cookie.js public/lib/components/js-cookie",

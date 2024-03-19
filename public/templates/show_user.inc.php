@@ -174,6 +174,7 @@ if ($current_list) {
 $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
+$user       = $client;
 if (AmpConfig::get('home_recently_played_all')) {
     $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
     require_once Ui::find_template('show_recently_played_all.inc.php');

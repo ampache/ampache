@@ -93,6 +93,7 @@ final class ShowAction implements ApplicationActionInterface
                         $gatekeeper,
                         $album
                     ),
+                    'user' => $gatekeeper->getUser()
                 ]
             );
         } else {
@@ -106,6 +107,7 @@ final class ShowAction implements ApplicationActionInterface
                         $gatekeeper,
                         $album
                     ),
+                    'user' => $gatekeeper->getUser()
                 ]
             );
         }

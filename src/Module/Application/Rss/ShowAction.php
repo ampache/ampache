@@ -31,36 +31,26 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Rss\AmpacheRssInterface;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-    private AmpacheRssInterface $ampacheRss;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        AmpacheRssInterface $ampacheRss
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
+        private AmpacheRssInterface $ampacheRss,
+        private UserRepositoryInterface $userRepository,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->ampacheRss      = $ampacheRss;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,17 +63,23 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type     = $this->requestParser->getFromRequest('type');
-        $rsstoken = $this->requestParser->getFromRequest('rsstoken');
-        $params   = null;
+        $type     = RssFeedTypeEnum::tryFrom($this->requestParser->getFromRequest('type')) ?? RssFeedTypeEnum::NOW_PLAYING;
+        $rssToken = $this->requestParser->getFromRequest('rsstoken');
 
-        if ($type === 'podcast') {
+        if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $params                = [];
             $params['object_type'] = $this->requestParser->getFromRequest('object_type');
             $params['object_id']   = (int) $this->requestParser->getFromRequest('object_id');
             if (empty($params['object_id'])) {
                 return null;
             }
+        } else {
+            $params = null;
+        }
+
+        $user = $this->userRepository->getByRssToken($rssToken);
+        if ($user === null) {
+            $user = new User(User::INTERNAL_SYSTEM_USER_ID);
         }
 
         return $this->responseFactory->createResponse()
@@ -97,7 +93,7 @@ final class ShowAction implements ApplicationActionInterface
             ->withBody(
                 $this->streamFactory->createStream(
                     $this->ampacheRss->get_xml(
-                        $rsstoken,
+                        $user,
                         $type,
                         $params
                     )
