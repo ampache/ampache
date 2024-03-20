@@ -60,7 +60,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
         if (!empty($objectIds)) {
             // We need to add them to the active playlist
             foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, $objectType);
+                Core::get_global('user')?->playlist->add_object($object_id, $objectType);
             }
         }
 

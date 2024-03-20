@@ -615,19 +615,15 @@ class Stats
      * get_object_history
      * This returns the objects that have happened for $user_id sometime after $time
      * used primarily by the democratic cooldown code
-     * @param int $user_id
      * @param int $time
      * @param bool $newest
      * @return array
      */
-    public static function get_object_history($user_id, $time, $newest = true): array
+    public static function get_object_history($time, $newest = true): array
     {
-        if (!in_array((string)$user_id, static::getUserRepository()->getValid())) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
-        }
-        $order = ($newest) ? 'DESC' : 'ASC';
-        $sql   = (AmpConfig::get('catalog_disable'))
+        $user_id = Core::get_global('user')->id ?? 0;
+        $order   = ($newest) ? 'DESC' : 'ASC';
+        $sql     = (AmpConfig::get('catalog_disable'))
             ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
             : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
         $sql .= (AmpConfig::get('catalog_filter') && $user_id > 0)
@@ -1068,7 +1064,7 @@ class Stats
             : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        $user_id       = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+        $user_id       = (int)(Core::get_global('user')?->getId());
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
             $sql .= "AND " . $sql_type . " NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ") ";
         }
@@ -1129,15 +1125,5 @@ class Stats
         global $dic;
 
         return $dic->get(UserActivityPosterInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

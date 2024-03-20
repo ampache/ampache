@@ -106,8 +106,8 @@ class AmpacheMatomo implements AmpachePluginInterface
         echo "var u='" . scrub_out($this->matomo_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'matomo.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if (Core::get_global('user')->id > 0) {
-            echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
+        if (Core::get_global('user')?->getId() > 0) {
+            echo "_paq.push(['setUserId', '" . Core::get_global('user')?->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);\n";

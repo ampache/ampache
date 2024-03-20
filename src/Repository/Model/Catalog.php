@@ -976,7 +976,7 @@ abstract class Catalog extends database_object
      *
      * Pull all the current catalogs and return an array of ids of what you find
      * @param string $filter_type
-     * @param int $user_id
+     * @param int|null $user_id
      * @param bool $query
      * @return int[]
      *
@@ -2150,7 +2150,7 @@ abstract class Catalog extends database_object
         $overwrites  = true;
         $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
-        $user        = (!empty(Core::get_global('user')))
+        $user        = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')
             : new User(-1);
 

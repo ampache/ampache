@@ -242,7 +242,7 @@ class Democratic extends Tmp_Playlist
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&demo_id=' . scrub_out((string)$this->id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . (string)$user?->id . '&demo_id=' . scrub_out((string)$this->id);
 
         return Stream_Url::format($link);
     }
@@ -278,7 +278,7 @@ class Democratic extends Tmp_Playlist
             return $data[0]['object_id'];
         } else {
             $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
-            if (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
+            if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->getId() > 0) {
                 $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')->id);
             }
             $sql .= " ORDER BY RAND() LIMIT 1";
@@ -321,7 +321,7 @@ class Democratic extends Tmp_Playlist
         // Convert cooldown time to a timestamp in the past
         $cool_time = time() - ($this->cooldown * 60);
 
-        return Stats::get_object_history(Core::get_global('user')->id, $cool_time);
+        return Stats::get_object_history($cool_time);
     }
 
     /**
@@ -356,7 +356,7 @@ class Democratic extends Tmp_Playlist
 
         /* Query vote table */
         $sql = "SELECT `tmp_playlist_data`.`object_id` FROM `user_vote` INNER JOIN `tmp_playlist_data` ON `tmp_playlist_data`.`id`=`user_vote`.`object_id` WHERE `tmp_playlist_data`.`object_type` = ? AND `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ? ";
-        if (Core::get_global('user')->id > 0) {
+        if (Core::get_global('user')?->getId() > 0) {
             $sql .= "AND `user_vote`.`user` = ? ";
             $params[] = Core::get_global('user')->id;
         } else {
@@ -404,7 +404,7 @@ class Democratic extends Tmp_Playlist
         /* Vote! */
         $time = time();
         $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) VALUES (?, ?, ?, ?)";
-        Dba::write($sql, array(Core::get_global('user')->id, $results['id'], $time, session_id()));
+        Dba::write($sql, array(Core::get_global('user')?->getId(), $results['id'], $time, session_id()));
 
         return true;
     }
@@ -420,7 +420,7 @@ class Democratic extends Tmp_Playlist
     {
         $sql    = "DELETE FROM `user_vote` WHERE `object_id` = ? ";
         $params = array($row_id);
-        if (Core::get_global('user')->id > 0) {
+        if (Core::get_global('user')?->getId() > 0) {
             $sql .= "AND `user` = ?";
             $params[] = Core::get_global('user')->id;
         } else {
@@ -525,7 +525,7 @@ class Democratic extends Tmp_Playlist
         $cool    = (int)$data['cooldown'];
         $level   = (int)$data['level'];
         $default = (int)$data['make_default'];
-        $user    = (int)Core::get_global('user')->id;
+        $user    = (int)Core::get_global('user')?->getId();
         if ($cool < 0 || $cool > 999999) {
             $cool = 1;
         }

@@ -110,7 +110,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_albums':
                 $albums = $this->albumRepository->getRandom(
-                    $user->id,
+                    $user->id ?? -1,
                     $moment
                 );
                 if (count($albums)) {
@@ -131,7 +131,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_album_disks':
                 $albumDisks = $this->albumRepository->getRandomAlbumDisk(
-                    $user->id,
+                    $user->id ?? -1,
                     $moment
                 );
                 if (count($albumDisks)) {
@@ -152,7 +152,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random_videos':
                 $videos = $this->videoRepository->getRandom(
-                    $user->id,
+                    $user->id ?? -1,
                     $moment
                 );
                 if (count($videos)) {

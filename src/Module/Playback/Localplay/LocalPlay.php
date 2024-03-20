@@ -170,7 +170,7 @@ class LocalPlay
 
         // If its our current player, reset player to nothing
         if (AmpConfig::get('localplay_controller') == $this->type) {
-            Preference::update('localplay_controller', Core::get_global('user')->id, '');
+            Preference::update('localplay_controller', Core::get_global('user')?->getId(), '');
         }
 
         return true;

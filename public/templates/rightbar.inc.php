@@ -41,9 +41,10 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
+$user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
 <script>
     function ToggleRightbarVisibility()
     {
@@ -81,7 +82,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
@@ -117,7 +118,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 
 <?php $objects = array();
 // FIXME :: this is kludgy
-if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
 } ?>
     <script>

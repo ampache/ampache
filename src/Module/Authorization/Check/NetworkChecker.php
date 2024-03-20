@@ -52,7 +52,7 @@ final class NetworkChecker implements NetworkCheckerInterface
      */
     public function check(
         AccessTypeEnum $type,
-        ?int $user = null,
+        ?int $userId = null,
         AccessLevelEnum $level = AccessLevelEnum::USER
     ): bool {
         if (!$this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
@@ -76,7 +76,7 @@ final class NetworkChecker implements NetworkCheckerInterface
             Core::get_user_ip(),
             $level,
             $type,
-            $user
+            $userId
         );
     }
 }

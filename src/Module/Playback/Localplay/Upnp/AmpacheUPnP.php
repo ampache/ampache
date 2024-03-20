@@ -28,6 +28,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -123,7 +124,7 @@ class AmpacheUPnP extends localplay_controller
     public function add_instance($data)
     {
         $sql     = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
@@ -212,7 +213,7 @@ class AmpacheUPnP extends localplay_controller
     public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (!$user instanceof User) {
             return false;
         }
         Preference::update('upnp_active', $user->id, $uid);

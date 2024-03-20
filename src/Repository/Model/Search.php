@@ -1112,14 +1112,13 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
-     * @param int $user_id
+     * @param int|null  $user_id
      * @return array
      */
     public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?: 0;
+            $user_id = (int)(Core::get_global('user')?->id);
         }
         $key = 'searches';
         if (parent::is_cached($key, $user_id)) {
@@ -1152,11 +1151,10 @@ class Search extends playlist_object
      * @param int|null $user_id
      * @return array
      */
-    public static function get_search_array($user_id = 0): array
+    public static function get_search_array($user_id = null): array
     {
-        if ($user_id === 0) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+        if ($user_id === null) {
+            $user_id = (int)(Core::get_global('user')?->id);
         }
         $key = 'searcharray';
         if (parent::is_cached($key, $user_id)) {
@@ -1380,7 +1378,7 @@ class Search extends playlist_object
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
             $sql .= (empty($sqltbl['where_sql']))
                 ? " WHERE "
@@ -1708,6 +1706,9 @@ class Search extends playlist_object
     public function create(): ?string
     {
         $user = Core::get_global('user');
+        if (!$user instanceof $user) {
+            return null;
+        }
         // Make sure we have a unique name
         if (empty($this->name)) {
             $this->name = $user->username . ' - ' . get_datetime(time());

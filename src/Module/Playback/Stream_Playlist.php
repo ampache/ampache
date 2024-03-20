@@ -76,13 +76,18 @@ class Stream_Playlist
             }
 
             $this->id = Stream::get_session();
-
             if (!Session::exists(AccessTypeEnum::STREAM->value, $this->id)) {
                 debug_event(self::class, 'Session::exists failed', 2);
 
                 return;
             }
-            $user              = Core::get_global('user');
+
+            $user = Core::get_global('user');
+            if (!$user instanceof User) {
+                debug_event(self::class, 'No User found', 2);
+
+                return;
+            }
             $this->user        = $user->id;
             $this->streamtoken = $user->streamtoken;
 

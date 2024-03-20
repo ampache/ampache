@@ -344,7 +344,7 @@ class Label extends database_object implements library_item
         $country       = $data['country'];
         $email         = $data['email'];
         $website       = $data['website'];
-        $user          = $data['user'] ?? Core::get_global('user')->id;
+        $user          = $data['user'] ?? Core::get_global('user')?->getId();
         $active        = $data['active'];
         $creation_date = $data['creation_date'] ?? time();
 

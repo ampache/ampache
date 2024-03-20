@@ -33,6 +33,7 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
@@ -283,7 +284,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function isEditable(): bool
     {
         return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+            ((Core::get_global('user') instanceof User && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
     public function getEditButtonTitle(): string
@@ -299,7 +300,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function canToggleState(): bool
     {
         return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
-            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+            ((Core::get_global('user') instanceof User && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
     }
 
     public function getToggleStateButton(): string

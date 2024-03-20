@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\RequestParser;
+use Ampache\Repository\Model\User;
 use Exception;
 
 /**
@@ -42,11 +42,11 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
-     * @return mixed
+     * @return User|null
      */
     public static function get_global($variable)
     {
-        return $GLOBALS[$variable] ?? '';
+        return $GLOBALS[$variable] ?? null;
     }
 
     /**

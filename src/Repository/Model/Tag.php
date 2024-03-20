@@ -194,7 +194,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')?->getId());
         } else {
             $uid = (int)($user);
         }
@@ -398,7 +398,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
         if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')?->getId());
         } else {
             $uid = (int)($user);
         }
@@ -693,7 +693,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
                 : "";
 
-            $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+            $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                 ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
                 : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ";
 
@@ -901,7 +901,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $uid = 0;
         if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')?->getId());
         }
 
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";

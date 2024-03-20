@@ -62,7 +62,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         // allow setting public or private for your imports
         $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $result = PlaylistImporter::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
+        $result = PlaylistImporter::import_playlist($filename, Core::get_global('user')?->getId(), $playlist_type);
 
         if ($result !== null) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];

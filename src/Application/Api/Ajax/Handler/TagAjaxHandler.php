@@ -74,7 +74,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'add_tag':
                 if (!static::can_edit_tag_map($type, $object_id, false)) {
-                    debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add unauthorized tag map', 1);
+                    debug_event('tag.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to add unauthorized tag map', 1);
 
                     return;
                 }
@@ -83,7 +83,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'add_tag_by_name':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to add new tag', 1);
+                    debug_event('tag.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to add new tag', 1);
 
                     return;
                 }
@@ -92,7 +92,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete tag', 1);
+                    debug_event('tag.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to delete tag', 1);
 
                     return;
                 }
@@ -104,7 +104,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
                 return;
             case 'remove_tag_map':
                 if (!static::can_edit_tag_map($type, $object_id, false)) {
-                    debug_event('tag.ajax', Core::get_global('user')->username . ' attempted to delete unauthorized tag map', 1);
+                    debug_event('tag.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to delete unauthorized tag map', 1);
 
                     return;
                 }
@@ -145,7 +145,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
     private static function can_edit_tag_map($object_type, $object_id, $user = true): bool
     {
         if ($user === true) {
-            $uid = (int)(Core::get_global('user')->id);
+            $uid = (int)(Core::get_global('user')?->getId());
         } else {
             $uid = (int)($user);
         }

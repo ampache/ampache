@@ -78,8 +78,8 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id  = Core::get_global('user')->id;
-            $fullname = Core::get_global('user')->fullname;
+            $user_id  = Core::get_global('user')?->getId();
+            $fullname = Core::get_global('user')?->fullname;
         }
 
         /* Update and reset preferences */

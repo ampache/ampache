@@ -37,6 +37,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,7 +66,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         if (
             (
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                Core::get_global('user')->id > 0
+                Core::get_global('user')->getId() ?? 0 > 0
             ) ||
             !$this->requestParser->verifyForm('update_user')
         ) {
@@ -74,6 +75,13 @@ final class UpdateUserAction implements ApplicationActionInterface
         // block updates from simple users
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === true) {
             throw new AccessDeniedException();
+        }
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
         }
 
         // Remove the value

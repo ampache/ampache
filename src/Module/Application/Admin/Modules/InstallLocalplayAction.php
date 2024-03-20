@@ -79,8 +79,8 @@ final class InstallLocalplayAction implements ApplicationActionInterface
         // Go ahead and enable Localplay (Admin->System) as we assume they want to do that
         // if they are enabling this
         Preference::update('allow_localplay_playback', -1, '1');
-        Preference::update('localplay_level', Core::get_global('user')->id, AccessLevelEnum::ADMIN->value);
-        Preference::update('localplay_controller', Core::get_global('user')->id, $localplay->type);
+        Preference::update('localplay_level', Core::get_global('user')?->getId(), AccessLevelEnum::ADMIN->value);
+        Preference::update('localplay_controller', Core::get_global('user')?->getId(), $localplay->type);
 
         /* Show Confirmation */
         $url   = sprintf('%s/admin/modules.php?action=show_localplay', $this->configContainer->getWebPath());

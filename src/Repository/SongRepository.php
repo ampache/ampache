@@ -51,7 +51,7 @@ final readonly class SongRepository implements SongRepositoryInterface
         int $albumId,
         int $limit = 0
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
 
         if ($limit) {
@@ -76,7 +76,7 @@ final readonly class SongRepository implements SongRepositoryInterface
         int $albumDiskId,
         int $limit = 0
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`disk`, `song`.`track`, `song`.`title` ";
 
         if ($limit) {
@@ -100,7 +100,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getByLabel(
         string $labelName
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id` WHERE `song_data`.`label` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
         $db_results = Dba::read($sql, [$labelName]);
@@ -120,7 +120,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getRandomByArtist(
         Artist $artist
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT DISTINCT `artist_map`.`object_id` AS `id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY RAND()";
 
         $db_results = Dba::read($sql, array($artist->getId()));
@@ -159,7 +159,7 @@ final readonly class SongRepository implements SongRepositoryInterface
         Artist $artist,
         int $count = 50
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT DISTINCT `song`.`id`, COUNT(`object_count`.`object_id`) AS `counting` FROM `song` LEFT JOIN `object_count` ON `object_count`.`object_id` = `song`.`id` AND `object_type` = 'song' LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` WHERE `artist_map`.`artist_id` = " . $artist->getId() . " AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") GROUP BY `song`.`id` ORDER BY count(`object_count`.`object_id`) DESC LIMIT " . (string)$count;
 
         $db_results = Dba::read($sql);
@@ -179,7 +179,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getByArtist(
         int $artistId
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`artist_id` = ? AND `artist_map`.`object_type` = 'song' AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`";
 
         $db_results = Dba::read($sql, array($artistId));
@@ -199,7 +199,7 @@ final readonly class SongRepository implements SongRepositoryInterface
     public function getAllByArtist(
         int $artistId
     ): array {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT DISTINCT `song`.`id`, `song`.`album`, `song`.`disk`, `song`.`track` FROM `song` LEFT JOIN `album` ON `song`.`album` = `album`.`id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `song`.`album`, `song`.`disk`, `song`.`track`;";
 
         $db_results = Dba::read($sql, array($artistId));

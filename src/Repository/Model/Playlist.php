@@ -176,9 +176,9 @@ class Playlist extends playlist_object
      * @param int|null $user_id
      * @return int[]
      */
-    public static function get_playlist_array($user_id = 0): array
+    public static function get_playlist_array($user_id = null): array
     {
-        if ($user_id === 0) {
+        if ($user_id === null) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
@@ -575,7 +575,7 @@ class Playlist extends playlist_object
      */
     private function _update_item($field, $value)
     {
-        if (Core::get_global('user')->id != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
         }
 
@@ -896,7 +896,7 @@ class Playlist extends playlist_object
             }
         }
         // look for public ones
-        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+        $user_id    = (int)(Core::get_global('user')?->getId());
         $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
         $db_results = Dba::read($sql, array($user_id));
         while ($row = Dba::fetch_assoc($db_results)) {
