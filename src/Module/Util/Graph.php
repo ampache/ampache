@@ -831,7 +831,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ) {
-        $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $user = Core::get_global('user');
         if (!$user instanceof User) {
             return false;

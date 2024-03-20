@@ -37,7 +37,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use Ampache\Repository\UserRepositoryInterface;
 use PDOStatement;
 
 /**
