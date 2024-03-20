@@ -72,7 +72,6 @@ final class VideoSearch implements SearchInterface
                     } else {
                         $where[] = "`video`.`file` $operator_sql ?";
                     }
-                    $where[]      = "`video`.`file` $operator_sql ?";
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

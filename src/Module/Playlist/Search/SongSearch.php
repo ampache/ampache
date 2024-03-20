@@ -153,7 +153,6 @@ final class SongSearch implements SearchInterface
                     } else {
                         $where[] = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
                     }
-                    $where[]        = "(`artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) $operator_sql ?)";
                     $parameters     = array_merge($parameters, array($input, $input));
                     $join['artist'] = true;
                     break;
@@ -163,7 +162,6 @@ final class SongSearch implements SearchInterface
                     } else {
                         $where[] = "((`album_artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) $operator_sql ?))";
                     }
-                    $where[]               = "(`album_artist`.`name` $operator_sql ? OR LTRIM(CONCAT(COALESCE(`album_artist`.`prefix`, ''), ' ', `album_artist`.`name`)) $operator_sql ?)";
                     $parameters            = array_merge($parameters, array($input, $input));
                     $table['album']        = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
                     $table['album_artist'] = "LEFT JOIN `artist` AS `album_artist` ON `album`.`album_artist` = `album_artist`.`id`";
