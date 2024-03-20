@@ -320,7 +320,6 @@ final class AlbumDiskSearch implements SearchInterface
                     } else {
                         $where[] = "`song`.`file` $operator_sql ?";
                     }
-                    $where[]      = "`song`.`file` $operator_sql ?";
                     $parameters[] = $input;
                     $join['song'] = true;
                     break;
