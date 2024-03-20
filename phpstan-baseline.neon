@@ -996,6 +996,16 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1087,6 +1097,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) should return array\\|string but returns string\\|false\\.$#"
+			count: 1
+			path: src/Module/Api/Json_Data.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects class\\-string\\<Ampache\\\\Repository\\\\Model\\\\database_object\\>, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -2961,12 +2976,22 @@ parameters:
 			path: src/Module/Api/Method/MethodInterface.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\NowPlayingMethod\\:\\:now_playing\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/NowPlayingMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PingMethod\\:\\:ping\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PingMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistAddMethod.php
+
+		-
+			message: "#^Parameter \\#1 \\$song_ids of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) expects array, array\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddMethod.php
 
@@ -4721,6 +4746,11 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -4747,6 +4777,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
+			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects class\\-string\\<Ampache\\\\Repository\\\\Model\\\\database_object\\>, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -4934,6 +4969,11 @@ parameters:
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/StatisticGraph/ShowAction.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$mediaIds with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Application/Stream/AbstractStreamAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
@@ -13001,6 +13041,11 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Democratic.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:remove_vote\\(\\) has parameter \\$row_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -13037,11 +13082,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$vote_ids has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) should be compatible with return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int, track_id\\: int, track\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\)$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 
@@ -13231,12 +13271,22 @@ parameters:
 			path: src/Repository/Model/Personal_Video.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Playlist.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Playlist.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_details\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -14162,6 +14212,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:delete_track\\(\\) has parameter \\$object_id with no type specified\\.$#"
+			count: 1
+			path: src/Repository/Model/Tmp_Playlist.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 

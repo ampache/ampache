@@ -67,8 +67,8 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 }
     if (AmpConfig::get('sociable')) {
         echo $userFollowStateRenderer->render(
-            $client->getId(),
-            $current_user->getId()
+            $client,
+            $current_user
         );
 
         $plugins = Plugin::get_plugins(PluginTypeEnum::USER_FIELD_WIDGET); ?>
@@ -175,6 +175,7 @@ if ($current_list) {
 $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
+$user       = $client;
 if (AmpConfig::get('home_recently_played_all')) {
     $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
     require_once Ui::find_template('show_recently_played_all.inc.php');

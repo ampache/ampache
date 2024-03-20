@@ -20,26 +20,19 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util\Rss;
+namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
-use Ampache\Repository\Model\User;
-
-interface AmpacheRssInterface
+/**
+ * Defines the available rss feed items
+ */
+enum RssFeedTypeEnum: string
 {
-    /**
-     * get_xml
-     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
-     * and then uses the xmlDATA class to build the document
-     *
-     * @param null|array{object_type: string, object_id: int} $params
-     */
-    public function get_xml(
-        User $user,
-        RssFeedTypeEnum $type,
-        ?array $params = null
-    ): string;
+    case NOW_PLAYING     = 'now_playing';
+    case RECENTLY_PLAYED = 'recently_played';
+    case LATEST_ALBUM    = 'latest_album';
+    case LATEST_ARTIST   = 'latest_artist';
+    case LATEST_SHOUT    = 'latest_shout';
+    case LIBRARY_ITEM    = 'library_item';
 }

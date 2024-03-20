@@ -178,8 +178,9 @@ class Playlist extends playlist_object
      */
     public static function get_playlist_array($user_id = 0): array
     {
-        if (!$user_id) {
-            $user_id = Core::get_global('user')->id ?? 0;
+        if ($user_id === 0) {
+            $user    = Core::get_global('user');
+            $user_id = $user->id ?? 0;
         }
         $key = 'playlistarray';
         if ($user_id > 0 && parent::is_cached($key, $user_id)) {
@@ -203,30 +204,6 @@ class Playlist extends playlist_object
         }
 
         parent::add_to_cache($key, $user_id, $results);
-
-        return $results;
-    }
-
-    /**
-     * get_details
-     * Returns a keyed array of playlist id and name accessible by the user.
-     * @param string $type
-     * @param int $user_id
-     * @return array
-     */
-    public static function get_details($type = 'playlist', $user_id = null): array
-    {
-        if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? -1;
-        }
-
-        $sql        = "SELECT `id`, `name` FROM `$type` WHERE (`user` = ? OR `type` = 'public') ORDER BY `name`";
-        $db_results = Dba::read($sql, array($user_id));
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = $row['name'];
-        }
 
         return $results;
     }

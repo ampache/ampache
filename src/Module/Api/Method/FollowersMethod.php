@@ -70,7 +70,7 @@ final class FollowersMethod
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowers($leadUser->getId());
+        $results = static::getUserFollowerRepository()->getFollowers($leadUser);
         if (empty($results)) {
             Api::empty('user', $input['api_format']);
 

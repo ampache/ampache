@@ -30,7 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -39,10 +39,11 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 /** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var User $user */
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('recently_played', $user_id) : '';
+$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');

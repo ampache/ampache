@@ -78,8 +78,8 @@ final readonly class ShowUserAction implements ApplicationActionInterface
                 [
                     'client' => $client,
                     'activities' => $this->useractivityRepository->getActivities($userId),
-                    'followers' => $this->userFollowerRepository->getFollowers($userId),
-                    'following' => $this->userFollowerRepository->getFollowing($userId),
+                    'followers' => $this->userFollowerRepository->getFollowers($client),
+                    'following' => $this->userFollowerRepository->getFollowing($client),
                     'userFollowStateRenderer' => $this->userFollowStateRenderer,
                     'userActivityRenderer' => $this->userActivityRenderer,
                     'libraryItemLoader' => $this->libraryItemLoader,
