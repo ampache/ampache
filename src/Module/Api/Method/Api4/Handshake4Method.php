@@ -113,7 +113,7 @@ final class Handshake4Method
                 ) {
                     debug_event(self::class, 'Login Failed: timestamp out of range ' . $timestamp . '/' . $now_time, 1);
                     AmpError::add('api', T_('Login Failed, timestamp is out of range'));
-                    Api4::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range'), '401', $input['api_format']);
+                    Api4::message('error', T_('Received Invalid Handshake') . ' - ' . T_('Login failed, timestamp is out of range') . ' (timestamp: ' . $timestamp . ' ' . T_('Server') . ': ' . $now_time . ')', '401', $input['api_format']);
 
                     return false;
                 }
