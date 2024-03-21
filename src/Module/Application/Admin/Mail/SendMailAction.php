@@ -36,6 +36,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -89,7 +90,12 @@ final class SendMailAction implements ApplicationActionInterface
             if ($this->requestParser->getFromRequest('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
-                $mailer->setSender(Core::get_global('user')->email, Core::get_global('user')->fullname);
+                $user = Core::get_global('user');
+                if ($user instanceof User) {
+                    $mailer->setSender((string)$user->email, (string)$user->get_fullname());
+                } else {
+                    $mailer->set_default_sender();
+                }
             }
 
             if ($mailer->send_to_group($this->requestParser->getFromRequest('to'))) {

@@ -32,6 +32,8 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -61,8 +63,9 @@ final class PlayItemAction extends AbstractStreamAction
         if (InterfaceImplementationChecker::is_playable_item($objectType)) {
             foreach ($objectIds as $object_id) {
                 $className = ObjectTypeToClassNameMapper::map($objectType);
-                $item      = new $className($object_id);
-                $mediaIds  = array_merge($mediaIds, $item->get_medias());
+                /** @var library_item $item */
+                $item     = new $className($object_id);
+                $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
@@ -71,11 +74,11 @@ final class PlayItemAction extends AbstractStreamAction
                         }
                     }
                 }
+                $user = Core::get_global('user');
                 // record this as a 'play' to help show usage and history for playlists and streams
-                if (!empty($mediaIds) && in_array($objectType, array('playlist', 'live_stream'))) {
-                    $user   = Core::get_global('user');
+                if ($user instanceof User && !empty($mediaIds) && in_array($objectType, array('playlist', 'live_stream'))) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType, $object_id, $user->id, $client, [], 'stream', time());
+                    Stats::insert($objectType, (int)$object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

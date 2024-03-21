@@ -171,7 +171,7 @@ if (AmpConfig::get('use_rss')) { ?>
         <li>
             <?php echo Ui::getRssLink(
                 RssFeedTypeEnum::LIBRARY_ITEM,
-                ($current_user->id ?? -1),
+                $current_user,
                 T_('RSS Feed'),
                 array('object_type' => 'album', 'object_id' => (string)$album->id)
             ); ?>

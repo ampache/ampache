@@ -59,7 +59,7 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         if (
             (
                 $owner_id < 1 ||
-                $owner_id != Core::get_global('user')->id
+                $owner_id != Core::get_global('user')?->getId()
             ) &&
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false
         ) {

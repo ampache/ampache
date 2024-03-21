@@ -176,9 +176,9 @@ class Playlist extends playlist_object
      * @param int|null $user_id
      * @return int[]
      */
-    public static function get_playlist_array($user_id = 0): array
+    public static function get_playlist_array($user_id = null): array
     {
-        if ($user_id === 0) {
+        if ($user_id === null) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
@@ -309,7 +309,7 @@ class Playlist extends playlist_object
             $params      = array($this->id);
 
             switch ($object_type) {
-                case "song":
+                case LibraryItemEnum::SONG:
                     $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter') && $user_id > 0) {
                         $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -317,7 +317,7 @@ class Playlist extends playlist_object
                     }
                     $sql .= 'ORDER BY `playlist_data`.`track`';
                     break;
-                case "podcast_episode":
+                case LibraryItemEnum::PODCAST_EPISODE:
                     $sql = 'SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
                     if (AmpConfig::get('catalog_filter') && $user_id > 0) {
                         $sql .= 'AND `playlist_data`.`object_type`="podcast_episode" AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
@@ -352,7 +352,7 @@ class Playlist extends playlist_object
      * get_random_items
      * This is the same as before but we randomize the buggers!
      * @param string|null $limit
-     * @return array
+     * @return list<array{object_type: LibraryItemEnum, object_id: int, track: int, track_id: int}>
      */
     public function get_random_items($limit = ''): array
     {
@@ -392,7 +392,7 @@ class Playlist extends playlist_object
             $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = array(
-                    'object_type' => $row['object_type'],
+                    'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => (int)$row['object_id'],
                     'track' => (int)$row['track'],
                     'track_id' => $row['id']
@@ -575,7 +575,7 @@ class Playlist extends playlist_object
      */
     private function _update_item($field, $value)
     {
-        if (Core::get_global('user')->id != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+        if (Core::get_global('user')?->getId() != $this->user && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             return false;
         }
 
@@ -614,18 +614,17 @@ class Playlist extends playlist_object
     }
 
     /**
-     * add_songs
-     * @param array $song_ids
+     * @param iterable<int> $song_ids
      * This takes an array of song_ids and then adds it to the playlist
      */
-    public function add_songs($song_ids = array()): bool
+    public function add_songs(iterable $song_ids = array()): bool
     {
-        $medias = array();
+        $medias = [];
         foreach ($song_ids as $song_id) {
-            $medias[] = array(
-                'object_type' => 'song',
+            $medias[] = [
+                'object_type' => LibraryItemEnum::SONG,
                 'object_id' => $song_id,
-            );
+            ];
         }
         if ($this->add_medias($medias)) {
             Catalog::update_mapping('playlist');
@@ -638,11 +637,11 @@ class Playlist extends playlist_object
 
     /**
      * add_medias
-     * @param array $medias
+     * @param array<array{object_type: LibraryItemEnum, object_id: int}> $medias
      */
-    public function add_medias($medias): bool
+    public function add_medias(array $medias): bool
     {
-        if (empty($medias)) {
+        if ($medias === []) {
             return false;
         }
 
@@ -660,14 +659,14 @@ class Playlist extends playlist_object
         $values     = array();
         foreach ($medias as $data) {
             if ($unique && in_array($data['object_id'], $track_data)) {
-                debug_event(self::class, "Can't add a duplicate " . $data['object_type'] . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+                debug_event(self::class, "Can't add a duplicate " . $data['object_type']->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 $count++;
                 $track = $base_track + $count;
                 $sql .= "(?, ?, ?, ?), ";
                 $values[] = $this->id;
                 $values[] = $data['object_id'];
-                $values[] = $data['object_type'];
+                $values[] = $data['object_type']->value;
                 $values[] = $track;
             } // if valid id
         } // end foreach medias
@@ -897,7 +896,7 @@ class Playlist extends playlist_object
             }
         }
         // look for public ones
-        $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
+        $user_id    = (int)(Core::get_global('user')?->getId());
         $sql        = "SELECT `id`, `name` FROM `search` WHERE (`type`='public' OR `user` = ?)";
         $db_results = Dba::read($sql, array($user_id));
         while ($row = Dba::fetch_assoc($db_results)) {

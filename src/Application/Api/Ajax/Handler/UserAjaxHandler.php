@@ -64,14 +64,15 @@ final class UserAjaxHandler implements AjaxHandlerInterface
             case 'flip_follow':
                 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) {
                     $fuser = new User($user_id);
-                    if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
+                    $user  = Core::get_global('user');
+                    if ($user instanceof User && $fuser->id > 0 && $user_id !== $user->getId()) {
                         $this->followToggler->toggle(
                             $fuser,
-                            Core::get_global('user')
+                            $user
                         );
                         $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
                             $fuser,
-                            Core::get_global('user')
+                            $user
                         );
                     }
                 }

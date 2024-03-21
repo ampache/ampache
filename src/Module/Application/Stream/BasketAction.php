@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -37,14 +38,11 @@ final class BasketAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'basket';
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer
     ) {
         parent::__construct($logger, $configContainer);
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -53,15 +51,18 @@ final class BasketAction extends AbstractStreamAction
             return null;
         }
 
+        /** @var User $user */
+        $user = Core::get_global('user');
+
         // Pull in our items (multiple types)
-        $mediaIds = Core::get_global('user')->playlist->get_items();
+        $mediaIds = $user->playlist?->get_items() ?? [];
 
         // Check to see if 'clear' was passed if it was then we need to reset the basket
         if (
             array_key_exists('playlist_method', $_REQUEST) && $_REQUEST['playlist_method'] == 'clear' ||
             $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_METHOD) === 'clear'
         ) {
-            Core::get_global('user')->playlist->clear();
+            $user->playlist?->clear() ?? [];
         }
 
         return $this->stream(

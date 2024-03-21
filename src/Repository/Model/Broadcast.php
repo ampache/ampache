@@ -150,7 +150,7 @@ class Broadcast extends database_object implements library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array(Core::get_global('user')->id, $name, $description);
+            $params = array(Core::get_global('user')?->getId(), $name, $description);
             Dba::write($sql, $params);
 
             return (int)Dba::insert_id();
@@ -362,7 +362,7 @@ class Broadcast extends database_object implements library_item
     public function show_action_buttons(): void
     {
         if ($this->id) {
-            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
+            if (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
                 echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
                 echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
             }

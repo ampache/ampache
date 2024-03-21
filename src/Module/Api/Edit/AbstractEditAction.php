@@ -37,6 +37,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -103,7 +104,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         }
 
         $level = AccessLevelEnum::CONTENT_MANAGER;
-        if ($libitem->get_user_owner() == Core::get_global('user')->id) {
+        if (Core::get_global('user') instanceof User && $libitem->get_user_owner() == Core::get_global('user')->id) {
             $level = AccessLevelEnum::USER;
         }
         if (Core::get_request('action') == 'show_edit_playlist') {

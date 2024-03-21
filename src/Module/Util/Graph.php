@@ -30,6 +30,7 @@ use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\User;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
@@ -830,11 +831,14 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ) {
-        $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-
+        $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return false;
+        }
         foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if ($plugin->_plugin->display_map($pts)) {
                     break;
                 }

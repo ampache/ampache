@@ -52,11 +52,11 @@ class Random
      */
     public static function artist(): int
     {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
             $sql .= "AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id) ";
         }
@@ -126,7 +126,7 @@ class Random
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $user_id = ($user instanceof User) ? $user->id : null;
+        $user_id = $user?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -160,6 +160,9 @@ class Random
         if (empty($user)) {
             $user = Core::get_global('user');
         }
+        if (!$user instanceof User) {
+            return array();
+        }
         $user_id   = $user->id;
         $data      = $user->get_recently_played('artist', 1);
         $where_sql = "";
@@ -170,7 +173,7 @@ class Random
         $sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty($user)) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
             $sql .= "AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id) ";
         }
         $sql .= "$where_sql ORDER BY RAND() LIMIT $limit";
@@ -423,7 +426,7 @@ class Random
     public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
     }

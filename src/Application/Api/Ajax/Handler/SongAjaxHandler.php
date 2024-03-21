@@ -64,7 +64,7 @@ final class SongAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'flip_state':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('song.ajax', Core::get_global('user')->username . ' attempted to change the state of a song', 1);
+                    debug_event('song.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to change the state of a song', 1);
 
                     return;
                 }

@@ -87,17 +87,17 @@ final class Session implements SessionInterface
             // Create the new user
             $GLOBALS['user'] = (array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata']))
                 ? User::get_from_username($_SESSION['userdata']['username'])
-                : '';
+                : null;
 
             // If the user ID doesn't exist deny them
-            $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+            $user_id = Core::get_global('user')?->getId();
             if (!$user_id && !$isDemoMode) {
                 $this->authenticationManager->logout(session_id());
 
                 return false;
             }
 
-            $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
+            $this->userRepository->updateLastSeen((int) Core::get_global('user')?->getId());
         } elseif (!$useAuth) {
             $auth                 = array();
             $auth['success']      = 1;
@@ -125,13 +125,13 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->fullname = $auth['fullname'];
                     $GLOBALS['user']->access   = (int)$auth['access'];
                 }
-                $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
+                $user_id = Core::get_global('user')?->getId();
                 if (!$user_id && !$isDemoMode) {
                     $this->authenticationManager->logout(session_id());
 
                     return false;
                 }
-                $this->userRepository->updateLastSeen((int) Core::get_global('user')->id);
+                $this->userRepository->updateLastSeen((int) Core::get_global('user')?->getId());
             }
         } else {
             // If Auth, but no session is set
@@ -141,7 +141,7 @@ final class Session implements SessionInterface
                 session_start();
                 self::createGlobalUser(new User($_SESSION['userdata']['uid']));
             } else {
-                $GLOBALS['user'] = '';
+                $GLOBALS['user'] = null;
             }
         } // If NO_SESSION passed
 

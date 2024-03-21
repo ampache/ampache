@@ -353,7 +353,7 @@ final class PlayAction implements ApplicationActionInterface
 
             // If require_session is set then we need to make sure we're legit
             if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
-                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id, AccessLevelEnum::GUEST)) {
+                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId(), AccessLevelEnum::GUEST)) {
                     $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -425,8 +425,8 @@ final class PlayAction implements ApplicationActionInterface
         // If they are using access lists let's make sure that they have enough access to play this mojo
         if (AmpConfig::get('access_control')) {
             if (
-                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')->id) &&
-                !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')->id)
+                !$this->networkChecker->check(AccessTypeEnum::STREAM, Core::get_global('user')?->getId()) &&
+                !$this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId())
             ) {
                 throw new AccessDeniedException(
                     sprintf('Streaming Access Denied: %s does not have stream level access', Core::get_user_ip())
@@ -581,7 +581,7 @@ final class PlayAction implements ApplicationActionInterface
             throw new AccessDeniedException(
                 sprintf(
                     'Stream control failed for user %s on %s',
-                    Core::get_global('user')->username,
+                    Core::get_global('user')?->username,
                     $media->get_stream_name()
                 )
             );

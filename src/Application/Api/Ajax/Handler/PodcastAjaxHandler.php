@@ -65,7 +65,7 @@ final class PodcastAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'sync':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('podcast.ajax', (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to sync podcast', 1);
+                    debug_event('podcast.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to sync podcast', 1);
 
                     return;
                 }

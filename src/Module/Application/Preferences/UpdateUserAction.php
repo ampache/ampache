@@ -37,6 +37,7 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -65,7 +66,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         if (
             (
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                Core::get_global('user')->id > 0
+                (int)(Core::get_global('user')?->getId()) > 0
             ) ||
             !$this->requestParser->verifyForm('update_user')
         ) {
@@ -75,13 +76,20 @@ final class UpdateUserAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SIMPLE_USER_MODE) === true) {
             throw new AccessDeniedException();
         }
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            $this->ui->showQueryStats();
+            $this->ui->showFooter();
+
+            return null;
+        }
 
         // Remove the value
         unset($_SESSION['forms']['account']);
 
         // Don't let them change access, or username here
         unset($_POST['access']);
-        $_POST['username'] = Core::get_global('user')->username;
+        $_POST['username'] = $user->username;
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
@@ -99,10 +107,10 @@ final class UpdateUserAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         /** @see User::update() */
-        if (!Core::get_global('user')->update($_POST)) {
+        if (!$user->update($_POST)) {
             AmpError::add('general', T_('Update failed'));
         } else {
-            Core::get_global('user')->upload_avatar();
+            $user->upload_avatar();
             display_notification(T_('User updated successfully'));
         }
 

@@ -512,7 +512,7 @@ if (!$isVideo) {
                     <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                         <div id="broadcast" class="broadcast action_button">
                             <?php if (AmpConfig::get('broadcast_by_default')) {
-                                $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')->id);
+                                $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
                                 if (count($broadcasts) < 1) {
                                     $broadcast_id = Broadcast::create(addslashes(T_('My Broadcast')));
                                 } else {

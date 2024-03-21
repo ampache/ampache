@@ -32,11 +32,19 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
-$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
+$user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
 <script>
     function ToggleRightbarVisibility()
     {
@@ -74,7 +82,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
@@ -110,7 +118,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 
 <?php $objects = array();
 // FIXME :: this is kludgy
-if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
 } ?>
     <script>
@@ -132,15 +140,19 @@ if (count($objects) > 100) {
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+global $dic;
+$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];
-    $type = array_shift($object_data);
-    if (in_array($type, $normal_array)) {
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var Ampache\Repository\Model\playable_item $object */
-        $object = new $className(array_shift($object_data)); ?>
+
+    $object = $libraryItemLoader->load(
+        $object_data['object_type'],
+        $object_data['object_id'],
+        [Broadcast::class, Democratic::class, Live_Stream::class, Podcast_Episode::class, Song::class, Song_Preview::class, Video::class,]
+    );
+    if ($object !== null) {
+        ?>
     <li>
       <?php echo $object->get_f_link();
         echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>

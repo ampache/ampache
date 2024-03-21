@@ -54,7 +54,7 @@ abstract class AbstractArtAction implements ApplicationActionInterface
         if (
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false && (
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
-                $item->get_user_owner() != Core::get_global('user')->id
+                $item->get_user_owner() != Core::get_global('user')?->getId()
             )
         ) {
             return null;

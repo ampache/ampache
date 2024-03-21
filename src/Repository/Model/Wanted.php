@@ -183,7 +183,7 @@ class Wanted extends database_object
                                 } else {
                                     $wanted->link .= "&artist_mbid=" . $lookupId;
                                 }
-                                $wanted->f_user        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->get_fullname() : '';
+                                $wanted->f_user        = Core::get_global('user')?->get_fullname() ?? '';
                                 $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                                 $wanted->f_artist_link = ($artist !== null)
                                     ? $artist->get_f_link()
@@ -204,14 +204,16 @@ class Wanted extends database_object
      */
     public function accept(): void
     {
-        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
+        if (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, array($this->mbid));
             $this->accepted = 1;
 
+            /** @var User $user */
+            $user = Core::get_global('user');
             foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
                     debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
@@ -227,7 +229,7 @@ class Wanted extends database_object
         if ($this->isNew() === false) {
             $result = '';
             if ($this->accepted === 0) {
-                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
+                if ((Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
                     $result .= Ajax::button(
                         '?page=index&action=accept_wanted&mbid=' . $this->mbid,
                         'enable',
@@ -237,7 +239,7 @@ class Wanted extends database_object
                 }
             }
             /** @var User|null $user */
-            $user = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
+            $user = (Core::get_global('user') instanceof User) ? Core::get_global('user') : null;
             if (
                 $user instanceof User &&
                 (
@@ -267,7 +269,8 @@ class Wanted extends database_object
         $this->songs = array();
 
         try {
-            if ($this->mbid !== null) {
+            $user = Core::get_global('user');
+            if ($user instanceof User && $this->mbid !== null) {
                 $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
                 // Set fresh data
                 $this->name = $group->title;
@@ -305,7 +308,7 @@ class Wanted extends database_object
                                 $song['file'] = null;
                                 foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
                                         if ($song['file'] != null) {
                                             break;

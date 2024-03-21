@@ -467,8 +467,8 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['catalognumber'] = $album->catalog_number;
         $meta['original_year'] = $album->original_year;
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) && $user instanceof User) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {
@@ -509,8 +509,8 @@ final class SongTagWriter implements SongTagWriterInterface
                 'ownerid' => "http://musicbrainz.org"
             ];
         }
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($user instanceof User && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {

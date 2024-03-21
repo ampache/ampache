@@ -64,7 +64,7 @@ final class EditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array

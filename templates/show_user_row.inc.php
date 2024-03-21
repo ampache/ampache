@@ -65,7 +65,7 @@ if ($libitem->fullname_public || Access::check(AccessTypeEnum::INTERFACE, Access
                 <?php
             }
         }
-if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
+if (Core::get_global('user') instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <td class="cel_follow"><?php echo $userFollowStateRenderer->render($libitem, Core::get_global('user')); ?></td>
             <?php } ?>
     <td class="cel_action">
