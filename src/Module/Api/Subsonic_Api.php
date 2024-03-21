@@ -113,7 +113,8 @@ class Subsonic_Api
         'song',
         'album',
         'share',
-        'entry'
+        'entry',
+        'similarArtist'
     ];
 
     /**
