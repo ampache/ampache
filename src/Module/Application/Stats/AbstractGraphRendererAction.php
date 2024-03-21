@@ -23,21 +23,25 @@
 
 namespace Ampache\Module\Application\Stats;
 
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\User;
 
-abstract class AbstractGraphRendererAction implements ApplicationActionInterface
+abstract readonly class AbstractGraphRendererAction implements ApplicationActionInterface
 {
+    protected function __construct(
+        private LibraryItemLoaderInterface $libraryItemLoader
+    ) {
+    }
+
     /**
      * @throws ApplicationException
      */
@@ -45,15 +49,20 @@ abstract class AbstractGraphRendererAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): void {
         $object_type = Core::get_request('object_type');
-        $object_id   = filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+        $object_id   = (int) filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
         $libitem  = null;
         $owner_id = 0;
-        if (($object_id) && (InterfaceImplementationChecker::is_library_item($object_type))) {
-            $className = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var library_item $libitem */
-            $libitem  = new $className($object_id);
-            $owner_id = $libitem->get_user_owner();
+
+        if ($object_id && $object_type !== '') {
+            $libitem = $this->libraryItemLoader->load(
+                LibraryItemEnum::from($object_type),
+                $object_id
+            );
+
+            if ($libitem !== null) {
+                $owner_id = $libitem->get_user_owner();
+            }
         }
 
         if (

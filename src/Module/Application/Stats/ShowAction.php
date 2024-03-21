@@ -33,31 +33,24 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction extends AbstractGraphRendererAction
+final readonly class ShowAction extends AbstractGraphRendererAction
 {
     public const REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private TalFactoryInterface $talFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        GuiFactoryInterface $guiFactory,
-        TalFactoryInterface $talFactory
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private GuiFactoryInterface $guiFactory,
+        private TalFactoryInterface $talFactory,
+        LibraryItemLoaderInterface $libraryItemLoader
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
-        $this->talFactory      = $talFactory;
+        parent::__construct(
+            $libraryItemLoader,
+        );
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
