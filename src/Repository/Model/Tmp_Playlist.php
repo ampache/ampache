@@ -144,7 +144,7 @@ class Tmp_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this Tmp_Playlist.
-     * @return array
+     * @return list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}>
      */
     public function get_items(): array
     {
@@ -166,7 +166,7 @@ class Tmp_Playlist extends database_object
         $count = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
             $items[] = array(
-                'object_type' => $results['object_type'],
+                'object_type' => LibraryItemEnum::from($results['object_type']),
                 'object_id' => $results['object_id'],
                 'track_id' => $results['id'],
                 'track' => $count++,
@@ -296,13 +296,11 @@ class Tmp_Playlist extends database_object
      * add_object
      * This adds the object of $this->object_type to this tmp playlist
      * it takes an optional type, default is song
-     * @param int $object_id
-     * @param string $object_type
      */
-    public function add_object($object_id, $object_type): bool
+    public function add_object(int $object_id, LibraryItemEnum $object_type): bool
     {
         $sql = "INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES (?, ?, ?)";
-        Dba::write($sql, array($object_id, $this->id, $object_type));
+        Dba::write($sql, array($object_id, $this->id, $object_type->value));
 
         return true;
     }

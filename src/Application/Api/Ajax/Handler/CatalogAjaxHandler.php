@@ -52,7 +52,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'flip_state':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
+                    debug_event('catalog.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
 
                     return;
                 }

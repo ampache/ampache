@@ -91,11 +91,11 @@ final class PlaylistAddMethod
             return false;
         }
 
-        $results = array();
+        $results = [];
         switch ($object_type) {
             case 'song':
                 /** @var Song $item */
-                $results = $item->getId();
+                $results = [$item->getId()];
                 break;
             case 'album':
             case 'artist':
@@ -105,7 +105,7 @@ final class PlaylistAddMethod
                 $results = $item->get_songs();
                 break;
         }
-        if (empty($results)) {
+        if ($results === []) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 

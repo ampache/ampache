@@ -487,7 +487,7 @@ class Query
     protected $_cache;
 
     /**
-     * @var int $user_id
+     * @var int|null $user_id
      */
     private $user_id;
 
@@ -506,7 +506,7 @@ class Query
 
             return;
         }
-        $this->user_id = (!empty(Core::get_global('user')))
+        $this->user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : null;
 
@@ -1829,7 +1829,7 @@ class Query
                         $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                        $user_id = (Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
                             : -1;
                         if ($value == 0) {
@@ -1862,7 +1862,7 @@ class Query
                         $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                         break;
                     case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
+                        $user_id = (Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
                             ? Core::get_global('user')->id
                             : -1;
                         if ($value == 0) {

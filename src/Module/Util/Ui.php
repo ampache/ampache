@@ -536,12 +536,14 @@ class Ui implements UiInterface
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
         }
-
-        $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
-        foreach ($plugins as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                $plugin->_plugin->display_on_footer();
+        $user = Core::get_global('user');
+        if ($user instanceof User) {
+            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
+            foreach ($plugins as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    $plugin->_plugin->display_on_footer();
+                }
             }
         }
 

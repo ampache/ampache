@@ -127,8 +127,12 @@ final class DefaultAction implements ApplicationActionInterface
             // Switch on the actions
             switch ($action) {
                 case 'tmp_playlist':
-                    $media_ids = Core::get_global('user')->playlist->get_items();
-                    $name      = Core::get_global('user')->username . ' - Playlist';
+                    $user = Core::get_global('user');
+                    if ($user instanceof User) {
+                        $user->load_playlist();
+                        $media_ids = $user->playlist?->get_items() ?? [];
+                        $name      = $user->username . ' - Playlist';
+                    }
                     break;
                 case 'browse':
                     $object_id        = (int)$this->requestParser->getFromRequest('browse_id');
@@ -169,7 +173,7 @@ final class DefaultAction implements ApplicationActionInterface
 
         if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
             $this->logger->notice(
-                'Access denied: Stream control failed for user ' . Core::get_global('user')->username,
+                'Access denied: Stream control failed for user ' . Core::get_global('user')?->username,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             throw new AccessDeniedException();

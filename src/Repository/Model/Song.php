@@ -1453,9 +1453,9 @@ class Song extends database_object implements
      */
     private static function _update_item($field, $value, $song_id, AccessLevelEnum $level, $check_owner = false)
     {
-        if ($check_owner && !empty(Core::get_global('user'))) {
+        if ($check_owner && Core::get_global('user') instanceof User) {
             $item = new Song($song_id);
-            if (isset($item->id) && $item->get_user_owner() == Core::get_global('user')->id) {
+            if (isset($item->id) && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
                 $level = AccessLevelEnum::USER;
             }
         }
@@ -1488,7 +1488,7 @@ class Song extends database_object implements
     {
         if ($check_owner) {
             $item = new Song($song_id);
-            if ($item->id && $item->get_user_owner() == Core::get_global('user')->id) {
+            if ($item->id && Core::get_global('user') instanceof User && $item->get_user_owner() == Core::get_global('user')->id) {
                 $level = AccessLevelEnum::USER;
             }
         }
@@ -1948,7 +1948,7 @@ class Song extends database_object implements
         }
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?? 0;
+            $uid = (int)(Core::get_global('user')->id ?? 0);
         }
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
@@ -1956,7 +1956,7 @@ class Song extends database_object implements
         }
         $downsample_remote = false;
         // enforce or disable transcoding depending on local network ACL
-        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, $uid, AccessLevelEnum::DEFAULT)) {
+        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, (int)$uid, AccessLevelEnum::DEFAULT)) {
             $downsample_remote = true;
             debug_event(self::class, "Transcoding due to downsample_remote", 3);
         }
@@ -2039,10 +2039,13 @@ class Song extends database_object implements
         if ($this->lyrics) {
             return array('text' => $this->lyrics);
         }
-
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return array();
+        }
         foreach (Plugin::get_plugins(PluginTypeEnum::LYRIC_RETRIEVER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
                 if ($lyrics) {
                     // save the lyrics if not set before

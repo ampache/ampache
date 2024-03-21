@@ -121,7 +121,7 @@ class Share extends database_object
     public function show_action_buttons(): void
     {
         if ($this->isNew() === false) {
-            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) || $this->user == (int)Core::get_global('user')->id) {
+            if (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user == (int)Core::get_global('user')->id)) {
                 if ($this->allow_download) {
                     echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
                 }
@@ -274,6 +274,7 @@ class Share extends database_object
             case LibraryItemEnum::ALBUM:
             case LibraryItemEnum::ALBUM_DISK:
             case LibraryItemEnum::PLAYLIST:
+                /** @var Album|AlbumDisk|Playlist $object */
                 $object = $this->getLibraryItemLoader()->load(
                     LibraryItemEnum::from((string) $this->object_type),
                     $this->object_id,
@@ -282,7 +283,7 @@ class Share extends database_object
 
                 return in_array(
                     $media_id,
-                    $object?->get_songs() ?? [],
+                    $object->get_songs(),
                     true
                 );
             default:
@@ -301,14 +302,14 @@ class Share extends database_object
             case LibraryItemEnum::ALBUM:
             case LibraryItemEnum::ALBUM_DISK:
             case LibraryItemEnum::PLAYLIST:
+                /** @var Album|AlbumDisk|Playlist $object */
                 $object = $this->getLibraryItemLoader()->load(
                     $objectType,
                     $this->object_id,
                     [Album::class, AlbumDisk::class, Playlist::class]
                 );
 
-                $medias = $object?->get_medias('song') ?? [];
-
+                $medias = $object->get_medias('song');
                 break;
             default:
                 $medias[] = [

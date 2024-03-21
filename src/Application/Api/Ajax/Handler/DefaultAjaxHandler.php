@@ -32,6 +32,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
@@ -94,6 +95,10 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $object_type = (empty($request_type))
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
+
+                /** @var User $user */
+                $user = Core::get_global('user');
+
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $object_id = ($request_id === 0)
                         ? (int)$this->requestParser->getFromRequest('object_id')
@@ -103,13 +108,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         /** @var playable_item $object */
                         $object = new $className($object_id);
                         $medias = $object->get_medias();
-                        $user   = Core::get_global('user');
-                        if ($user instanceof User) {
-                            $user->load_playlist();
-                            if ($user->playlist !== null) {
-                                $user->playlist->add_medias($medias);
-                            }
-                        }
+
+                        $user->load_playlist();
+                        $user->playlist?->add_medias($medias);
                     }
                 } else {
                     switch ($request_type) {
@@ -137,44 +138,44 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                                 shuffle($songs);
                             }
                             foreach ($songs as $object_id) {
-                                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                                $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
                             }
                             break;
                         case 'album_random':
                             $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
                             break;
                         case 'album_disk_random':
                             $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
                             $songs  = $this->songRepository->getRandomByGenre($object);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
                             break;
                         case 'artist_random':
                             $object    = new Artist($request_id);
                             $songs     = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
                             break;
                         case 'playlist_random':
                             $playlist = new Playlist($request_id);
                             $items    = $playlist->get_random_items();
                             foreach ($items as $item) {
-                                Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
+                                $user->playlist?->add_object($item['object_id'], $item['object_type']);
                             }
                             break;
                         case 'clear_all':
-                            Core::get_global('user')->playlist->clear();
+                            $user->playlist?->clear();
                             break;
                     }
                 }

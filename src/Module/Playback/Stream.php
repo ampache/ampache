@@ -306,8 +306,8 @@ class Stream
      */
     public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song'): string
     {
-        if (!empty(Core::get_global('transcode'))) {
-            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        if (!empty($GLOBALS['transcode'])) {
+            return $GLOBALS['transcode'][$source][$target][$player][$media_type] ?? '';
         }
 
         return '';
@@ -322,7 +322,7 @@ class Stream
      */
     public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
-        if (Core::get_global('transcode') == '') {
+        if (!is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = array();
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
@@ -630,8 +630,8 @@ class Stream
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             // We need to check only for users which have allowed view of personal info
             $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id && !empty(Core::get_global('user'))) {
-                $current_user = Core::get_global('user')->id;
+            if ($personal_info_id && Core::get_global('user') instanceof User) {
+                $current_user = Core::get_global('user')->getId();
                 $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }

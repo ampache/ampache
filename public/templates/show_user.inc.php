@@ -24,28 +24,29 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\User\Activity\UserActivityRendererInterface;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
+/** @var LibraryItemLoaderInterface $libaryItemLoader */
 /** @var User $client */
 /** @var int[] $following */
 /** @var int[] $followers */
@@ -157,11 +158,11 @@ if ($current_list) {
                     <tr>
                         <td>
         <?php foreach ($object_ids as $object_data) {
-            $type      = array_shift($object_data);
-            $className = ObjectTypeToClassNameMapper::map($type);
-            /** @var Ampache\Repository\Model\playable_item $object */
-            $object = new $className(array_shift($object_data));
-            echo $object->get_f_link(); ?>
+            $object = $libaryItemLoader->load(
+                $object_data['object_type'],
+                $object_data['object_id'],
+            );
+            echo $object?->get_f_link(); ?>
             <br />
             <?php
         } ?>

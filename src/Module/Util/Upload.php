@@ -79,7 +79,7 @@ class Upload
                 self::upload_script($targetdir, $targetfile);
 
                 $options                = array();
-                $options['user_upload'] = Core::get_global('user')->id;
+                $options['user_upload'] = Core::get_global('user')?->getId();
                 if (isset($_POST['license'])) {
                     $options['license'] = Core::get_post('license');
                 }
@@ -89,7 +89,7 @@ class Upload
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    $artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id);
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
                     if (!$artist_id) {
                         return self::rerror($targetfile);
                     }
@@ -340,7 +340,7 @@ class Upload
             }
         }
         if ($username === null) {
-            $username = Core::get_global('user')->username;
+            $username = Core::get_global('user')?->username;
         }
 
         $rootdir = "";

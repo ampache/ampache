@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -653,7 +654,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
  */
 function debug_event($type, $message, $level, $username = ''): bool
 {
-    if (!$username && Core::get_global('user')) {
+    if (!$username && Core::get_global('user') instanceof User) {
         $username = Core::get_global('user')->username;
     }
 

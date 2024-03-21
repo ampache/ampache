@@ -31,10 +31,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 
 final class RandomAjaxHandler implements AjaxHandlerInterface
@@ -65,14 +67,15 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'song':
                 $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), Core::get_global('user'));
-
-                if (!count($songs)) {
+                $user  = Core::get_global('user');
+                if (!count($songs) || $user === null) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
 
+                $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    Core::get_global('user')->playlist->add_object($song_id, 'song');
+                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -80,8 +83,9 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $album_id = $this->albumRepository->getRandom(
                     Core::get_global('user')->id ?? -1
                 );
+                $user = Core::get_global('user');
 
-                if (empty($album_id)) {
+                if (empty($album_id) || $user === null) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -89,8 +93,9 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $album = new Album($album_id[0]);
                 $songs = $this->songRepository->getByAlbum($album->id);
 
+                $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    Core::get_global('user')->playlist->add_object($song_id, 'song');
+                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -99,8 +104,9 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                     Core::get_global('user')->id ?? -1,
                     null
                 );
+                $user = Core::get_global('user');
 
-                if (empty($albumDisk_id)) {
+                if (empty($albumDisk_id) || $user === null) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -108,37 +114,44 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $albumDisk = new AlbumDisk($albumDisk_id[0]);
                 $songs     = $this->songRepository->getByAlbumDisk($albumDisk->id);
 
+                $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    Core::get_global('user')->playlist->add_object($song_id, 'song');
+                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'artist':
                 $artist_id = Random::artist();
+                $user      = Core::get_global('user');
 
-                if (!$artist_id) {
+                if (!$artist_id || $user === null) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
 
                 $songs = $this->songRepository->getByArtist($artist_id);
+
+                $user->load_playlist();
                 foreach ($songs as $song_id) {
-                    Core::get_global('user')->playlist->add_object($song_id, 'song');
+                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'playlist':
                 $playlist_id = Random::playlist();
+                $user        = Core::get_global('user');
 
-                if (!$playlist_id) {
+                if (!$playlist_id || $user === null) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
 
                 $playlist = new Playlist($playlist_id);
                 $items    = $playlist->get_items();
+
+                $user->load_playlist();
                 foreach ($items as $item) {
-                    Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
+                    $user->playlist?->add_object((int)$item['object_id'], $item['object_type']);
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -148,11 +161,13 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'advanced_random':
                 $object_ids = Random::advanced('song', $_POST);
+                $user       = Core::get_global('user');
 
                 // First add them to the active playlist
-                if (!empty($object_ids)) {
+                if (!empty($object_ids) && $user instanceof User) {
+                    $user->load_playlist();
                     foreach ($object_ids as $object_id) {
-                        Core::get_global('user')->playlist->add_object($object_id, 'song');
+                        $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
                     }
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');

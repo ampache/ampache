@@ -351,8 +351,8 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function play_url($additional_params = '', $player = '', $local = false): string
     {
-        $user_id = (!empty(Core::get_global('user')))
-            ? scrub_out(Core::get_global('user')->id)
+        $user_id = (Core::get_global('user') instanceof User)
+            ? (string)Core::get_global('user')->getId()
             : '-1';
         $type      = $this->type;
         $song_name = rawurlencode($this->get_artist_fullname() . " - " . $this->title . "." . $type);
@@ -366,9 +366,13 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function stream(): void
     {
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return;
+        }
         foreach (Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_STREAM_PROVIDER) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if ($plugin->_plugin->stream_song_preview($this->file)) {
                     break;
                 }

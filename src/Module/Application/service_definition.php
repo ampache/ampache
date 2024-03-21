@@ -169,8 +169,6 @@ return [
     Stream\DownloadAction::class => autowire(Stream\DownloadAction::class),
     Stream\DemocraticAction::class => autowire(Stream\DemocraticAction::class),
     Stream\PlaylistRandomAction::class => autowire(Stream\PlaylistRandomAction::class),
-    Stream\AlbumRandomAction::class => autowire(Stream\AlbumRandomAction::class),
-    Stream\ArtistRandomAction::class => autowire(Stream\ArtistRandomAction::class),
     Stream\PlayItemAction::class => autowire(Stream\PlayItemAction::class),
     Stream\PlayFavoriteAction::class => autowire(Stream\PlayFavoriteAction::class),
     Stream\RandomAction::class => autowire(Stream\RandomAction::class),

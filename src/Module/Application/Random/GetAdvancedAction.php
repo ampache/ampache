@@ -26,10 +26,12 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Random;
 
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Random;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,15 +54,20 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        $objectIds  = array();
         $objectType = ($_REQUEST['type'] == 'video')
-            ? 'video'
-            : 'song';
+            ? LibraryItemEnum::VIDEO
+            : LibraryItemEnum::SONG;
 
-        $objectIds = Random::advanced($objectType, $_POST);
-        if (!empty($objectIds)) {
-            // We need to add them to the active playlist
-            foreach ($objectIds as $object_id) {
-                Core::get_global('user')->playlist->add_object($object_id, $objectType);
+        $user = Core::get_global('user');
+        if ($user instanceof User) {
+            $user->load_playlist();
+            $objectIds = Random::advanced($objectType->value, $_POST);
+            if (!empty($objectIds)) {
+                // We need to add them to the active playlist
+                foreach ($objectIds as $object_id) {
+                    $user->playlist?->add_object($object_id, $objectType);
+                }
             }
         }
 

@@ -36,21 +36,22 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
-final class PlaylistAjaxHandler implements AjaxHandlerInterface
+final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
     public function handle(): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
+
+        /** @var User $user */
+        $user = Core::get_global('user');
 
         // Switch on the actions
         switch ($action) {
@@ -83,13 +84,13 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 // Only song item are supported with playlists
                 if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
                     if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-                        debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
+                        debug_event('playlist.ajax', 'Error:' . $user->username . ' does not have user access, unable to create playlist', 1);
                         break;
                     }
 
                     $name = $_REQUEST['name'] ?? '';
                     if (empty($name)) {
-                        $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
+                        $name = $user->username . ' - ' . get_datetime(time());
                     }
                     $playlist_id = (int)Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
@@ -122,7 +123,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
-                    $medias = Core::get_global('user')->playlist->get_items();
+                    $medias = $user->playlist?->get_items() ?? [];
                 }
 
                 if (count($medias) > 0) {

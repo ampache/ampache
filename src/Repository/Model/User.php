@@ -437,7 +437,7 @@ class User extends database_object
         if (empty(Core::get_global('user'))) {
             return false;
         }
-        if (!Core::get_global('user')->id) {
+        if (!Core::get_global('user')->getId()) {
             return false;
         }
 
@@ -1274,15 +1274,18 @@ class User extends database_object
             $avatar['url_mini'] .= '&thumb=5';
             $avatar['url_medium'] .= '&thumb=3';
         } else {
-            foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
-                $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                    $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
-                    if (!empty($avatar['url'])) {
-                        $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
-                        $avatar['url_medium'] = $plugin->_plugin->get_avatar_url($this, 64);
-                        $avatar['title'] .= ' (' . $plugin->_plugin->name . ')';
-                        break;
+            $user = Core::get_global('user');
+            if ($user instanceof User) {
+                foreach (Plugin::get_plugins(PluginTypeEnum::AVATAR_PROVIDER) as $plugin_name) {
+                    $plugin = new Plugin($plugin_name);
+                    if ($plugin->_plugin !== null && $plugin->load($user)) {
+                        $avatar['url'] = $plugin->_plugin->get_avatar_url($this);
+                        if (!empty($avatar['url'])) {
+                            $avatar['url_mini']   = $plugin->_plugin->get_avatar_url($this, 32);
+                            $avatar['url_medium'] = $plugin->_plugin->get_avatar_url($this, 64);
+                            $avatar['title'] .= ' (' . $plugin->_plugin->name . ')';
+                            break;
+                        }
                     }
                 }
             }
