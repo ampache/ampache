@@ -191,7 +191,7 @@ class Video extends database_object implements
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if (array_key_exists('id', $results)) {
-                $className = ObjectTypeToClassNameMapper::map(strtolower($dtype));
+                $className = ObjectTypeToClassNameMapper::map(strtolower($dtype->value));
 
                 return new $className($video_id);
             }
