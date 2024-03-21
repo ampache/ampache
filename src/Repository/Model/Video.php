@@ -187,11 +187,11 @@ class Video extends database_object implements
     public static function create_from_id($video_id): Video
     {
         foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
-            $sql        = "SELECT `id` FROM `" . strtolower((string) $dtype) . "` WHERE `id` = ?";
+            $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
             $db_results = Dba::read($sql, array($video_id));
             $results    = Dba::fetch_assoc($db_results);
             if (array_key_exists('id', $results)) {
-                $className = ObjectTypeToClassNameMapper::map(strtolower($dtype->value));
+                $className = ObjectTypeToClassNameMapper::map(strtolower($dtype));
 
                 return new $className($video_id);
             }
