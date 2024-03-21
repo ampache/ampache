@@ -94,9 +94,9 @@ if ($browse->is_show_header()) {
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'], 'delete', T_('Remove Vote'), 'remove_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'] . '&browse_id=' . $browse->getId(), 'delete', T_('Remove Vote'), 'delete_vote_' . $item['id']);
     } else {
-        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'remove_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'add_vote_' . $item['id']);
     } ?>
     </td>
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>

@@ -177,6 +177,7 @@ final class SongSearch implements SearchInterface
                     } else {
                         $where[] = "`song`.`$rule[0]` $operator_sql ?";
                     }
+                    $parameters[] = $input;
                     break;
                 case 'composer':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
