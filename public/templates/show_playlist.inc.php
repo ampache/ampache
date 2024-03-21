@@ -71,7 +71,7 @@ $playlist->display_art($thumb, false, false); ?>
 <?php } ?>
 <div id="information_actions">
     <ul>
-<?php if ((Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::CONTENT_MANAGER)) || $playlist->user == Core::get_global('user')->id)) { ?>
+<?php if (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::CONTENT_MANAGER) || $playlist->user == Core::get_global('user')->id)) { ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">

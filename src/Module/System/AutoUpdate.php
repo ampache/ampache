@@ -79,7 +79,7 @@ class AutoUpdate
             $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
             $pattern = '/ref: refs\/heads\/(.*)/';
             $matches = [];
-            if (preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))) {
+            if (is_string($current) && preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))) {
                 return (string)$matches[1];
             }
         }
@@ -135,7 +135,7 @@ class AutoUpdate
         }
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', Core::get_global('user')?->getId(), 1);
+            Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')?->getId()), 1);
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -154,7 +154,7 @@ class AutoUpdate
             // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
             $time       = time();
             $git_branch = self::is_force_git_branch();
-            Preference::update('autoupdate_lastcheck', Core::get_global('user')?->getId(), $time);
+            Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')?->getId()), $time);
             AmpConfig::set('autoupdate_lastcheck', $time, true);
 
             // Development version, get latest commit on develop branch
@@ -166,10 +166,10 @@ class AutoUpdate
                 }
                 if (!empty($commits)) {
                     $lastversion = $commits->sha;
-                    Preference::update('autoupdate_lastversion', Core::get_global('user')?->getId(), $lastversion);
+                    Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')?->getId()), $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')?->getId(), $available);
+                    Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')?->getId()), $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                     return $lastversion;
@@ -184,10 +184,10 @@ class AutoUpdate
                 $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
                 if (empty($str)) {
                     $lastversion = $release->name;
-                    Preference::update('autoupdate_lastversion', Core::get_global('user')?->getId(), $lastversion);
+                    Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')?->getId()), $lastversion);
                     AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                     $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')?->getId(), $available);
+                    Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')?->getId()), $available);
                     AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                     return $lastversion;
@@ -234,10 +234,10 @@ class AutoUpdate
     {
         $git_branch = self::is_force_git_branch();
         if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
-            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
+            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
-            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
+            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
         return '';
@@ -254,7 +254,7 @@ class AutoUpdate
             return AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
-        Preference::update('autoupdate_lastcheck', Core::get_global('user')?->getId(), $time);
+        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')?->getId()), $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;

@@ -227,7 +227,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'similar_now_playing':
                 $media_id = (int)$this->requestParser->getFromRequest('media_id');
                 if (AmpConfig::get('show_similar') && $media_id > 0 && array_key_exists('media_artist', $_REQUEST)) {
-                    $artists = Recommendation::get_artists_like($this->requestParser->getFromRequest('media_artist'), 3, false);
+                    $artists = Recommendation::get_artists_like((int)$this->requestParser->getFromRequest('media_artist'), 3, false);
                     $songs   = Recommendation::get_songs_like($media_id, 3);
                     ob_start();
                     require_once Ui::find_template('show_now_playing_similar.inc.php');
@@ -330,7 +330,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
-                    if ($walbum !== null) {
+                    if ($user instanceof User && $walbum !== null) {
                         $this->wantedManager->accept($walbum, $user);
 
                         $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
@@ -405,7 +405,9 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'slideshow':
                 ob_start();
-                $images = $this->slideshow->getCurrentSlideshow($user);
+                $images = ($user instanceof User)
+                    ? $this->slideshow->getCurrentSlideshow($user)
+                    : array();
                 if (count($images) > 0) {
                     $fsname = 'fslider_' . time();
                     echo "<div id='" . $fsname . "'>";

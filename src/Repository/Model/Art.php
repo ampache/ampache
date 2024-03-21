@@ -1389,11 +1389,15 @@ class Art extends database_object
         }
 
         if ($prettyPhoto) {
+            $user      = Core::get_global('user');
             $className = ObjectTypeToClassNameMapper::map($object_type);
             /** @var class-string<library_item> $className */
             $libitem = new $className($object_id);
             echo "<div class=\"item_art_actions\">";
-            if ((Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::CONTENT_MANAGER)) || (Core::get_global('user')->has_access(AccessLevelEnum::USER) && Core::get_global('user')->id == $libitem->get_user_owner())) {
+            if (
+                $user instanceof User &&
+                ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
+            ) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_icon('edit', T_('Edit/Find Art'));
                 echo "</a>";

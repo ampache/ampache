@@ -89,7 +89,7 @@ class Upload
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    $artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')?->getId());
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
                     if (!$artist_id) {
                         return self::rerror($targetfile);
                     }

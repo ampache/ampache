@@ -65,7 +65,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->set_active_instance($_REQUEST['instance']);
-                Preference::update('play_type', Core::get_global('user')?->getId(), $type);
+                Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $type);
 
                 // We should also refresh the sidebar
                 ob_start();

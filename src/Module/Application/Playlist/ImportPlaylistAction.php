@@ -31,6 +31,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -62,7 +63,10 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         // allow setting public or private for your imports
         $playlist_type = (string) filter_input(INPUT_POST, 'playlist_visibility', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $result = PlaylistImporter::import_playlist($filename, Core::get_global('user')?->getId(), $playlist_type);
+        $user   = Core::get_global('user');
+        $result = ($user instanceof User)
+            ? PlaylistImporter::import_playlist($filename, $user->getId(), $playlist_type)
+            : null;
 
         if ($result !== null) {
             $url   = 'show_playlist&amp;playlist_id=' . $result['id'];

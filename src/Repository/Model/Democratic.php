@@ -632,8 +632,8 @@ class Democratic extends Tmp_Playlist
         $index            = 1;
         $use_search       = AmpConfig::get('demo_use_search');
         $playlists        = ($use_search)
-            ? Search::get_search_array($user->id)
-            : Playlist::get_playlist_array($user->id);
+            ? Search::get_search_array($user?->id)
+            : Playlist::get_playlist_array($user?->id);
         $nb_items = count($playlists);
 
         foreach ($playlists as $key => $value) {

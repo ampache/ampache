@@ -66,7 +66,7 @@ final class UpdateUserAction implements ApplicationActionInterface
         if (
             (
                 $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false &&
-                Core::get_global('user')->getId() ?? 0 > 0
+                (int)(Core::get_global('user')?->getId()) > 0
             ) ||
             !$this->requestParser->verifyForm('update_user')
         ) {
@@ -89,7 +89,7 @@ final class UpdateUserAction implements ApplicationActionInterface
 
         // Don't let them change access, or username here
         unset($_POST['access']);
-        $_POST['username'] = Core::get_global('user')->username;
+        $_POST['username'] = $user->username;
 
         $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
         if (in_array('fullname', $mandatory_fields) && !$_POST['fullname']) {
@@ -107,10 +107,10 @@ final class UpdateUserAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
         /** @see User::update() */
-        if (!Core::get_global('user')->update($_POST)) {
+        if (!$user->update($_POST)) {
             AmpError::add('general', T_('Update failed'));
         } else {
-            Core::get_global('user')->upload_avatar();
+            $user->upload_avatar();
             display_notification(T_('User updated successfully'));
         }
 

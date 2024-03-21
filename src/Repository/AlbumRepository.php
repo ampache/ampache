@@ -142,10 +142,11 @@ final class AlbumRepository implements AlbumRepositoryInterface
     public function getSongsByAlbumDisk(
         int $albumDiskId
     ): array {
-        $userId = Core::get_global('user')?->getId();
+        $user   = Core::get_global('user');
+        $userId = $user?->getId();
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
-            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')?->getId()) . " ";
+        if (AmpConfig::get('catalog_filter') && $user instanceof User && $user->getId() > 0) {
+            $sql .= "AND" . Catalog::get_user_filter('song', $user->getId()) . " ";
         }
         $sql .= "ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumDiskId]);
@@ -242,7 +243,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return int[]
+     * @return array
      */
     public function getByArtist(
         int $artistId,
@@ -314,7 +315,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album only
      *
-     * @return int[]
+     * @return array
      */
     public function getAlbumByArtist(
         int $artistId,

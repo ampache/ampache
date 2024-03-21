@@ -77,7 +77,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 $current = AmpConfig::get('play_type');
 
                 // Go ahead and update their preference
-                if (Preference::update('play_type', Core::get_global('user')?->getId(), $new)) {
+                if (Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $new)) {
                     AmpConfig::set('play_type', $new, true);
                 }
 

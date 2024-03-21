@@ -92,18 +92,19 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
         if ($mediaIds !== [] || $urls !== []) {
+            $user = Core::get_global('user');
             if (!defined('NO_SESSION') && $streamType != 'democratic') {
                 if (!User::stream_control($mediaIds)) {
                     $this->logger->warning(
-                        'Stream control failed for user ' . Core::get_global('user')?->username,
+                        'Stream control failed for user ' . $user?->username,
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                     throw new AccessDeniedException();
                 }
             }
 
-            if (Core::get_global('user')?->getId() > -1) {
-                Session::update_username(Stream::get_session(), Core::get_global('user')?->username);
+            if ($user instanceof User && $user->getId() > -1) {
+                Session::update_username(Stream::get_session(), (string)$user->username);
             }
 
             $playlist = new Stream_Playlist();
