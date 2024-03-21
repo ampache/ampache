@@ -106,16 +106,68 @@ class Subsonic_Api
     ];
 
     private const ALWAYS_ARRAY = [
-        'musicFolder',
-        'channel',
-        'artist',
-        'child',
-        'song',
         'album',
-        'share',
+        'allowedUser',
+        'artist',
+        'audioTrack',
+        'bookmark',
+        'captions',
+        'channel',
+        'chatMessage',
+        'child',
+        'conversion',
         'entry',
-        'similarArtist'
+        'episode',
+        'folder',
+        'genre',
+        'index',
+        'internetRadioStation',
+        'match',
+        'musicFolder',
+        'playlist',
+        'share',
+        'shortcut',
+        'similarArtist',
+        'song',
+        'user',
+        'video'
     ];
+
+    private const ALWAYS_DOUBLE = [
+        'averageRating'
+    ];
+
+    private const ALWAYS_INTEGER = [
+        'albumCount',
+        'audioTrackId',
+        'bitRate',
+        'bookmarkPosition',
+        'code',
+        'count',
+        'current',
+        'currentIndex',
+        'discNumber',
+        'duration',
+        'folder',
+        'lastModified',
+        'maxBitRate',
+        'minutesAgo',
+        'offset',
+        'originalHeight',
+        'originalWidth',
+        'playCount',
+        'playerId',
+        'position',
+        'size',
+        'songCount',
+        'time',
+        'totalHits',
+        'track',
+        'userRating',
+        'visitCount',
+        'year'
+    ];
+
 
     /**
      * check_parameter
@@ -340,14 +392,10 @@ class Subsonic_Api
         $defaults = array(
             'namespaceSeparator' => ' :', // you may want this to be something other than a colon
             'attributePrefix' => '', // to distinguish between attributes and nodes with the same name
-            'alwaysArray' => array('musicFolder', 'channel', 'artist', 'child', 'song', 'album', 'share'), // array of xml tag names which should always become arrays
-            'alwaysDouble' => array('averageRating'),
-            'alwaysInteger' => array('albumCount', 'audioTrackId', 'bitRate', 'bookmarkPosition', 'code',
-                'count', 'current', 'currentIndex', 'discNumber', 'duration', 'folder',
-                'lastModified', 'maxBitRate', 'minutesAgo', 'offset', 'originalHeight',
-                'originalWidth', 'playCount', 'playerId', 'position', 'size', 'songCount',
-                'time', 'totalHits', 'track', 'userRating', 'visitCount', 'year'), // array of xml tag names which should always become integers
-            'autoArray' => true, // only create arrays for tags which appear more than once
+            'alwaysArray' => self::ALWAYS_ARRAY, // array of xml tag names which should always become arrays
+            'alwaysDouble' => self::ALWAYS_DOUBLE,  // array of xml tag names which should always become doubles
+            'alwaysInteger' => self::ALWAYS_INTEGER, // array of xml tag names which should always become integers
+            'autoArray' => true, // create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
