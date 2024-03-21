@@ -25,34 +25,32 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\User;
+use Generator;
 
-final readonly class LatestAlbumFeed implements FeedTypeInterface
+final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private User $user,
     ) {
     }
 
-    /**
-     * load_latest_album
-     * This loads in the latest added albums
-     */
-    public function handle(): string
+    protected function getTitle(): string
+    {
+        return T_('Newest Albums');
+    }
+
+    protected function getItems(): Generator
     {
         $ids = Stats::get_newest('album', 10, 0, 0, $this->user->getId());
-
-        $results = array();
 
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
 
-            $xml_array = array(
+            yield array(
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
@@ -60,16 +58,6 @@ final readonly class LatestAlbumFeed implements FeedTypeInterface
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time)
             );
-            $results[] = $xml_array;
-        } // end foreach
-
-        Xml_Data::set_type('rss');
-
-        return Xml_Data::rss_feed($results, $this->getTitle());
-    }
-
-    public function getTitle(): string
-    {
-        return AmpConfig::get('site_title') . ' - ' . T_('Newest Albums');
+        }
     }
 }

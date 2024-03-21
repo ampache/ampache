@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
+use PhpTal\PhpTalInterface;
+
 interface FeedTypeInterface
 {
-    public function handle(): string;
+    public function configureTemplate(PhpTalInterface $tal): void;
 }

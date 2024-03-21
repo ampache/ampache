@@ -25,19 +25,26 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Rss;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Rss\AmpacheRssInterface;
+use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
+use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
 final readonly class ShowAction implements ApplicationActionInterface
 {
@@ -47,9 +54,10 @@ final readonly class ShowAction implements ApplicationActionInterface
         private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
-        private StreamFactoryInterface $streamFactory,
-        private AmpacheRssInterface $ampacheRss,
         private UserRepositoryInterface $userRepository,
+        private TalFactoryInterface $talFactory,
+        private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
@@ -66,38 +74,50 @@ final readonly class ShowAction implements ApplicationActionInterface
         $type     = RssFeedTypeEnum::tryFrom($this->requestParser->getFromRequest('type')) ?? RssFeedTypeEnum::NOW_PLAYING;
         $rssToken = $this->requestParser->getFromRequest('rsstoken');
 
-        if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
-            $params                = [];
-            $params['object_type'] = $this->requestParser->getFromRequest('object_type');
-            $params['object_id']   = (int) $this->requestParser->getFromRequest('object_id');
-            if (empty($params['object_id'])) {
-                return null;
-            }
-        } else {
-            $params = null;
-        }
-
         $user = $this->userRepository->getByRssToken($rssToken);
         if ($user === null) {
             $user = new User(User::INTERNAL_SYSTEM_USER_ID);
         }
 
-        return $this->responseFactory->createResponse()
+        if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
+            $item = $this->libraryItemLoader->load(
+                LibraryItemEnum::from($this->requestParser->getFromRequest('object_type')),
+                (int) $this->requestParser->getFromRequest('object_id'),
+                [Album::class, Artist::class, Podcast::class]
+            );
+
+            if ($item === null) {
+                return null;
+            }
+
+            $handler = $this->rssFeedTypeFactory->createLibraryItemFeed($user, $item);
+        } else {
+            $handler = match ($type) {
+                default => $this->rssFeedTypeFactory->createNowPlayingFeed(),
+                RssFeedTypeEnum::RECENTLY_PLAYED => $this->rssFeedTypeFactory->createRecentlyPlayedFeed($user),
+                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user),
+                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user),
+                RssFeedTypeEnum::LATEST_SHOUT => $this->rssFeedTypeFactory->createLatestShoutFeed(),
+            };
+        }
+
+        $tal = $this->talFactory->createPhpTal();
+        $tal->setOutputMode(PHPTAL::XML);
+        $tal->setEncoding(AmpConfig::get('site_charset'));
+
+        $handler->configureTemplate($tal);
+
+        $response = $this->responseFactory->createResponse()
             ->withHeader(
                 'Content-Type',
                 sprintf(
                     'application/xml; charset=%s',
                     $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET)
                 )
-            )
-            ->withBody(
-                $this->streamFactory->createStream(
-                    $this->ampacheRss->get_xml(
-                        $user,
-                        $type,
-                        $params
-                    )
-                )
             );
+
+        $response->getBody()->write($tal->execute());
+
+        return $response;
     }
 }

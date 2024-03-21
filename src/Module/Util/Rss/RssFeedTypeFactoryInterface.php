@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,21 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss;
 
-use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Module\Util\Rss\Type\FeedTypeInterface;
+use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 
-interface AmpacheRssInterface
+interface RssFeedTypeFactoryInterface
 {
-    /**
-     * get_xml
-     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
-     * and then uses the xmlDATA class to build the document
-     *
-     * @param null|array{object_type: string, object_id: int} $params
-     */
-    public function get_xml(
-        User $user,
-        RssFeedTypeEnum $type,
-        ?array $params = null
-    ): string;
+    public function createLibraryItemFeed(User $user, playable_item $libraryItem): FeedTypeInterface;
+
+    public function createRecentlyPlayedFeed(User $user): FeedTypeInterface;
+
+    public function createNowPlayingFeed(): FeedTypeInterface;
+
+    public function createLatestAlbumFeed(User $user): FeedTypeInterface;
+
+    public function createLatestArtistFeed(User $user): FeedTypeInterface;
+
+    public function createLatestShoutFeed(): FeedTypeInterface;
 }
