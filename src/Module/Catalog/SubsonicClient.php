@@ -221,6 +221,8 @@ class SubsonicClient
                 "data" => $data
             );
         } else {
+            debug_event(self::class, 'parseResponse ERROR: ' . print_r($arr, true), 1);
+
             return $this->error("Invalid response from server!");
         }
     }
