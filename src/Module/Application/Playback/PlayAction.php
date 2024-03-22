@@ -97,9 +97,15 @@ final class PlayAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
+        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         ob_end_clean();
 
-        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        $use_auth         = AmpConfig::get('use_auth');
+        $can_share        = AmpConfig::get('share');
+        $player_customize = AmpConfig::get('transcode_player_customize');
+        $session_name     = AmpConfig::get('session_name');
+        $require_session  = AmpConfig::get('require_session');
+        $localnet_session = AmpConfig::get('require_localnet_session');
 
         /**
          * The following code takes a "beautiful" url, splits it into key/value pairs and
@@ -109,7 +115,6 @@ final class PlayAction implements ApplicationActionInterface
          * The reason for not trying to do the whole job in mod_rewrite is that there are typically
          * more than 10 arguments to this function now, and that's tricky with mod_rewrite's 10 arg limit
          */
-        $use_auth   = AmpConfig::get('use_auth');
         $slashcount = substr_count($_SERVER['QUERY_STRING'], '/');
         if ($slashcount > 2) {
             // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
@@ -197,11 +202,21 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
+        // make sure a download is recorded on cache events
         if ($cache == '1') {
             $action = 'download';
         }
-        $record_stats = true;
+        // disable share access if config is disabled
+        if (!$can_share && $share_id > 0) {
+            $this->logger->error(
+                'Enable: share to allow access to shares',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+            $share_id = 0;
+            $secret   = '';
+        }
         // allow disabling stat recording from the play url
+        $record_stats = true;
         if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
@@ -209,6 +224,7 @@ final class PlayAction implements ApplicationActionInterface
             );
             $record_stats = false;
         }
+
         $is_download   = ($action == 'download');
         $maxbitrate    = 0;
         $media_bitrate = 0;
@@ -216,7 +232,7 @@ final class PlayAction implements ApplicationActionInterface
         $quality       = 0;
         $time          = time();
 
-        if (AmpConfig::get('transcode_player_customize') && !$original) {
+        if ($player_customize && !$original) {
             // Trick to avoid LimitInternalRecursion reconfiguration
             $vsettings = scrub_in((string) filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
             if (!empty($vsettings)) {
@@ -319,7 +335,6 @@ final class PlayAction implements ApplicationActionInterface
             $user = User::get_from_username(Session::username($session_id));
         }
 
-        $session_name = AmpConfig::get('session_name');
         // Identify the user according to it's web session
         // We try to avoid the generic 'Ampache User' as much as possible
         if (!($user instanceof User) && array_key_exists($session_name, $_COOKIE) && Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$session_name])) {
@@ -352,8 +367,8 @@ final class PlayAction implements ApplicationActionInterface
             }
 
             // If require_session is set then we need to make sure we're legit
-            if (!$user_auth && $use_auth && AmpConfig::get('require_session')) {
-                if (!AmpConfig::get('require_localnet_session') && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId(), AccessLevelEnum::GUEST)) {
+            if (!$user_auth && $use_auth && $require_session) {
+                if (!$localnet_session && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')?->getId(), AccessLevelEnum::LEVEL_GUEST)) {
                     $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]

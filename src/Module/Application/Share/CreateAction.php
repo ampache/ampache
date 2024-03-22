@@ -28,60 +28,36 @@ namespace Ampache\Module\Application\Share;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Share\ShareCreatorInterface;
-use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Share\ShareCreatorInterface;
+use Ampache\Module\System\LegacyLogger;
+use Ampache\Module\User\PasswordGeneratorInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Video;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Share;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class CreateAction implements ApplicationActionInterface
+final readonly class CreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'create';
 
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private RequestParserInterface $requestParser;
-    private ShareCreatorInterface $shareCreator;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        LoggerInterface $logger,
-        PasswordGeneratorInterface $passwordGenerator,
-        ZipHandlerInterface $zipHandler,
-        RequestParserInterface $requestParser,
-        ShareCreatorInterface $shareCreator
+        private ConfigContainerInterface $configContainer,
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private PasswordGeneratorInterface $passwordGenerator,
+        private ZipHandlerInterface $zipHandler,
+        private RequestParserInterface $requestParser,
+        private ShareCreatorInterface $shareCreator,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
-        $this->logger            = $logger;
-        $this->passwordGenerator = $passwordGenerator;
-        $this->zipHandler        = $zipHandler;
-        $this->requestParser     = $requestParser;
-        $this->shareCreator      = $shareCreator;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -102,10 +78,13 @@ final class CreateAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
+        $object_type = LibraryItemEnum::from($_REQUEST['type'] ?? '');
+        $object_id   = (int) ($_REQUEST['id'] ?? 0);
+
         $share_id = $this->shareCreator->create(
             $user,
-            LibraryItemEnum::from($_REQUEST['type'] ?? ''),
-            (int)($_REQUEST['id'] ?? 0),
+            $object_type,
+            $object_id,
             (bool)($_REQUEST['allow_stream'] ?? 0),
             (bool)($_REQUEST['allow_download'] ?? 0),
             (int) $_REQUEST['expire'],
@@ -135,11 +114,13 @@ final class CreateAction implements ApplicationActionInterface
                 'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
-            $object_type = $_REQUEST['type'] ?? '';
-            $className   = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
-            $object = new $className((int)$_REQUEST['id']);
-            if ($object->isNew()) {
+
+            $object = $this->libraryItemLoader->load(
+                $object_type,
+                $object_id
+            );
+
+            if ($object === null) {
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Failed to create share'),
@@ -149,7 +130,7 @@ final class CreateAction implements ApplicationActionInterface
                 $object->format();
                 $message   = T_('Failed to create share');
                 $token     = $this->passwordGenerator->generate_token();
-                $isZipable = $this->zipHandler->isZipable($object_type);
+                $isZipable = $this->zipHandler->isZipable($object_type->value);
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [
