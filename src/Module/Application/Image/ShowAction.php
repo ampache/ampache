@@ -28,18 +28,19 @@ namespace Ampache\Module\Application\Image;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Art;
 use Ampache\Module\Application\ApplicationActionInterface;
-use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
@@ -51,40 +52,20 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_ACTION = 'show';
 
-    private RequestParserInterface $requestParser;
-
-    private AuthenticationManagerInterface $authenticationManager;
-
-    private ConfigContainerInterface $configContainer;
-
-    private Horde_Browser $horde_browser;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AuthenticationManagerInterface $authenticationManager,
-        ConfigContainerInterface $configContainer,
-        Horde_Browser $horde_browser,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        LoggerInterface $logger
+        private RequestParserInterface $requestParser,
+        private AuthenticationManagerInterface $authenticationManager,
+        private ConfigContainerInterface $configContainer,
+        private Horde_Browser $horde_browser,
+        private ResponseFactoryInterface $responseFactory,
+        private StreamFactoryInterface $streamFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
+        private LoggerInterface $logger
     ) {
-        $this->requestParser         = $requestParser;
-        $this->authenticationManager = $authenticationManager;
-        $this->configContainer       = $configContainer;
-        $this->horde_browser         = $horde_browser;
-        $this->responseFactory       = $responseFactory;
-        $this->streamFactory         = $streamFactory;
-        $this->logger                = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -177,8 +158,12 @@ final class ShowAction implements ApplicationActionInterface
         }
         if (!$typeManaged) {
             $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-            $className = ObjectTypeToClassNameMapper::map($type);
-            $item      = new $className($object_id);
+
+            $item = $this->libraryItemLoader->load(
+                LibraryItemEnum::from($type),
+                $object_id
+            );
+
             if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
                 $filename = $item->title;
             } elseif ($item instanceof Podcast) {
