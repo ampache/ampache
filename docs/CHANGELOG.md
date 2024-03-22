@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## Ampache 6.3.1
+
+### Changed
+
+* Show full playlist names on the personal favorite plugins (missing username)
+
+### Removed
+
+* Config options `write_id3` and `write_id3_art` don't do anything so remove them
+
+### Fixed
+
+* Add missing album name through browser Media Session API
+* Fixed PHP caching false values when expecint an int
+* Typo for disabled song display
+* Show the count of returned art in the log
+* Don't show private playlists on browse or direct link if you don't have access
+* Refresh Democratic playlist on vote
+* Preference text box possible XSS
+* Search
+  * Added some documented aliases for rules that were missed
+  * Fixed `NOT SOUNDS LIKE` responses
+  * Don't scrub search input in the SQL (parameters are sanitized)
+  * Rule input XSS in JS
+* Subsonic
+  * Array not set on some items in JSON responses
+
+## API 6.3.1
+
+### Added
+
+* API6
+  * New Method: now_playing (Get what is currently being played by all users.)
+
 ## Ampache 6.3.0
 
 ### Added
