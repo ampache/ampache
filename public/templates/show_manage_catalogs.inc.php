@@ -56,15 +56,15 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
     <form style="padding-left: 250px;" method="post" action="<?php echo $web_path; ?>/admin/catalog.php?action=update_from">
         <table class="tabledata2">
             <tr>
-                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>
+                <td><?php /* HINT: /media/path */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/media/path</span>'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Clean deleted files in: %s'), '<span class="information">/data/myDeletedMusic</span>'); ?></td>
+                <td><?php /* HINT: /media/path */ ?><?php printf(T_('Clean deleted files in: %s'), '<span class="information">/media/path</span>'); ?></td>
                 <td><input type="text" name="clean_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update existing files in: %s'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
+                <td><?php /* HINT: /media/path */ ?><?php printf(T_('Update existing files in: %s'), '<span class="information">/media/path</span>'); ?></td>
                 <td><input type="text" name="update_path" value="/" /></td>
             </tr>
             <tr>

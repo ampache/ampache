@@ -4008,8 +4008,42 @@ abstract class Catalog extends database_object
                     $catalog_id = Catalog_local::get_from_path($clean_path);
                     if (is_int($catalog_id)) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $clean_path))) {
-                            self::update_catalog_map($catalog->gather_types);
+                        if ($catalog !== null && $catalog->catalog_type == 'local') {
+                            switch ($catalog->gather_types) {
+                                case 'podcast':
+                                    $type      = 'podcast_episode';
+                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $className = Podcast_Episode::class;
+                                    break;
+                                case 'clip':
+                                case 'tvshow':
+                                case 'movie':
+                                case 'personal_video':
+                                    $type      = 'video';
+                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $className = Video::class;
+                                    break;
+                                case 'music':
+                                default:
+                                    $type      = 'song';
+                                    $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
+                                    $className = Song::class;
+                                    break;
+                            }
+                            $changed = 0;
+                            foreach ($file_ids as $file_id) {
+                                /** @var Song|Podcast_Episode|Video $className */
+                                $media = new $className($file_id);
+                                if ($media->file) {
+                                    /** @var Catalog_local $catalog */
+                                    if ($catalog->clean_file($media->file, $type)) {
+                                        $changed++;
+                                    }
+                                }
+                            }
+                            if ($changed > 0) {
+                                self::update_catalog_map($catalog->gather_types);
+                            }
                         }
                     }
                 }
