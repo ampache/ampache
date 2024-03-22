@@ -2,9 +2,14 @@
 
 ## Ampache 6.3.1
 
+### Added
+
+* Added an option to clean a folder path on the Show Catalogs page
+
 ### Changed
 
 * Show full playlist names on the personal favorite plugins (missing username)
+* Block direct stream for shared file when share is disabled
 
 ### Removed
 
