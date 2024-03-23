@@ -22,7 +22,7 @@
 * Typo for disabled song display
 * Show the count of returned art in the log
 * Don't show private playlists on browse or direct link if you don't have access
-* Refresh Democratic playlist on vote
+* Refresh Democratic playlist on vote removal, and clear the votes on `clear all`
 * Preference text box possible XSS
 * Search
   * Added some documented aliases for rules that were missed
