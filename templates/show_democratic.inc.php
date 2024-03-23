@@ -29,6 +29,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Democratic;
 
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var Democratic $democratic */
 
 /* HINT: Democratic Playlist Name */
@@ -53,7 +54,7 @@ Ui::show_box_top($string, 'info-box'); ?>
     <?php echo Ajax::button_with_text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
 </li>
 <li>
-    <?php echo Ajax::button_with_text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id, 'delete', T_('Clear Playlist'), 'clear_democratic'); ?>
+    <?php echo Ajax::button_with_text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id . '&browse_id=' . $browse->getId(), 'delete', T_('Clear Playlist'), 'clear_democratic'); ?>
 </li>
 <?php } ?>
 <?php } ?>
