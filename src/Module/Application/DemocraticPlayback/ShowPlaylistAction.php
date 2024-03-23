@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Song;
@@ -42,6 +43,8 @@ final class ShowPlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_playlist';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     private ConfigContainerInterface $configContainer;
@@ -49,10 +52,12 @@ final class ShowPlaylistAction implements ApplicationActionInterface
     private ModelFactoryInterface $modelFactory;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui,
         ConfigContainerInterface $configContainer,
         ModelFactoryInterface $modelFactory
     ) {
+        $this->requestParser   = $requestParser;
         $this->ui              = $ui;
         $this->configContainer = $configContainer;
         $this->modelFactory    = $modelFactory;
@@ -79,13 +84,14 @@ final class ShowPlaylistAction implements ApplicationActionInterface
         $democratic->set_parent();
         $democratic->format();
 
+        $browse = $this->modelFactory->createBrowse((int)$this->requestParser->getFromRequest('browse_id'));
+
         require_once Ui::find_template('show_democratic.inc.php');
 
         $objects = $democratic->get_items();
         Song::build_cache($democratic->object_ids);
         Democratic::build_vote_cache($democratic->vote_ids);
 
-        $browse = $this->modelFactory->createBrowse();
         $browse->set_type('democratic');
         $browse->set_static_content(false);
         $browse->save_objects($objects);
