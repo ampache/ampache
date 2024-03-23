@@ -109,7 +109,8 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
         if ($show_browse) {
             ob_start();
             $object_ids = $democratic->get_items();
-            $browse     = new Browse();
+            $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
+            $browse     = new Browse($browse_id);
             $browse->set_type('democratic');
             $browse->set_static_content(false);
             $browse->show_objects($object_ids);
