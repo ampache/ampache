@@ -65,4 +65,9 @@ interface library_item extends playable_item
      * @return int|false
      */
     public function update(array $data);
+
+    /**
+     * Returns the media-type of the library-item
+     */
+    public function getMediaType(): LibraryItemEnum;
 }

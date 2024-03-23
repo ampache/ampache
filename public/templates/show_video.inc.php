@@ -38,7 +38,6 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $video */
@@ -134,7 +133,7 @@ if (!$gart) {
 $videoprops[T_('Title')]  = scrub_out($fullname);
 $videoprops[T_('Length')] = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
-    require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
+    require Ui::find_template('show_partial_' . $video->getMediaType()->value . '.inc.php');
 }
 $videoprops[T_('Release Date')]  = scrub_out($video->f_release_date);
 $videoprops[T_('Codec')]         = scrub_out($video->f_codec);

@@ -132,4 +132,9 @@ class Personal_Video extends Video
 
         return $deleted;
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PERSONAL_VIDEO;
+    }
 }

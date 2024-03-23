@@ -1188,6 +1188,11 @@ class Video extends database_object implements
         return '';
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::VIDEO;
+    }
+
     /**
      * @deprecated
      */

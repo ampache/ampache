@@ -42,7 +42,6 @@ use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\Horde_Browser;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
@@ -1010,7 +1009,7 @@ final class PlayAction implements ApplicationActionInterface
                 );
             } else {
                 if (!$is_download && $record_stats) {
-                    Stream::insert_now_playing((int) $media->id, $user_id, (int) $media->time, $session_id, ObjectTypeToClassNameMapper::reverseMap(get_class($media)));
+                    Stream::insert_now_playing($media->getId(), $user_id, (int) $media->time, $session_id, $media->getMediaType()->value);
                 }
                 if (Core::get_server('REQUEST_METHOD') != 'HEAD') {
                     if ($is_download) {

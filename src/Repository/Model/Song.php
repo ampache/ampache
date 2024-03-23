@@ -2332,6 +2332,11 @@ class Song extends database_object implements
         return new DateTime('@' . $this->addition_time);
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::SONG;
+    }
+
     /**
      * @deprecated
      */

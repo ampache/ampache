@@ -110,4 +110,9 @@ interface Media
      * Returns the filename of the media-item
      */
     public function getFileName(): string;
+
+    /**
+     * Returns the media-type of the library-item
+     */
+    public function getMediaType(): LibraryItemEnum;
 }

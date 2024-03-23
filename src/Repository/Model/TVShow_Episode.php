@@ -315,4 +315,9 @@ class TVShow_Episode extends Video
 
         return $deleted;
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::TV_SHOW_EPISODE;
+    }
 }

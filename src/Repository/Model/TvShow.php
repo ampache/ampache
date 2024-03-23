@@ -515,6 +515,11 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         return $deleted;
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::TV_SHOW;
+    }
+
     /**
      * @deprecated
      */

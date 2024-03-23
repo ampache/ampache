@@ -1078,4 +1078,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::TAG;
+    }
 }

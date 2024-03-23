@@ -451,6 +451,11 @@ class TVShow_Season extends database_object implements
         return Dba::write($sql, array($tvshow_id, $season_id));
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::TV_SHOW_SEASON;
+    }
+
     /**
      * @deprecated
      */

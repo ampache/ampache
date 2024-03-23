@@ -1202,6 +1202,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         return (int)$disk;
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::ALBUM;
+    }
+
     /**
      * @deprecated
      */

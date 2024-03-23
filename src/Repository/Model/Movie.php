@@ -185,4 +185,9 @@ class Movie extends Video
 
         return $deleted;
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::MOVIE;
+    }
 }

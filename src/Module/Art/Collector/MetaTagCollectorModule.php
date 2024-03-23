@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
@@ -277,13 +276,16 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param Song|Video $media
      * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media, $data): array
+    private function gatherMediaTags(Song|Video $media, array $data): array
     {
-        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+        if ($media instanceof Song) {
+            $mtype = 'song';
+        } else {
+            $mtype = 'video';
+        }
         $images = self::gatherFileArt((string)$media->file);
 
         // stop collecting dupes for each album

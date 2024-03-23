@@ -644,6 +644,11 @@ class Podcast_Episode extends database_object implements
         return sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type);
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PODCAST_EPISODE;
+    }
+
     /**
      * @deprecated Inject dependency
      */
