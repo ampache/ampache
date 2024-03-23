@@ -62,12 +62,16 @@ final class VideoSearch implements SearchInterface
                     break;
                 }
             }
-            $input        = $search->filter_data(scrub_in((string)$rule[2]), $type, $operator);
+            $input        = $search->filter_data((string)$rule[2], $type, $operator);
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
                 case 'file':
-                    $where[]      = "`video`.`file` $operator_sql ?";
+                    if ($operator_sql === 'NOT SOUNDS LIKE') {
+                        $where[] = "NOT (`video`.`file` SOUNDS LIKE ?)";
+                    } else {
+                        $where[] = "`video`.`file` $operator_sql ?";
+                    }
                     $parameters[] = $input;
                     break;
             } // switch on ruletype

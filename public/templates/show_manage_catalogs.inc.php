@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 
 $web_path = (string)AmpConfig::get('web_path', ''); ?>
-<div id="information_actions">
+<div id="information_actions" style="height: 200px; width: 600px;">
     <ul style="float: left;">
         <li>
             <a class="option-list" href="<?php echo $web_path; ?>/admin/catalog.php?action=gather_media_art"><?php echo T_('Gather All Art'); ?></a>
@@ -54,14 +54,22 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         </li>
     </ul>
     <form style="padding-left: 250px;" method="post" action="<?php echo $web_path; ?>/admin/catalog.php?action=update_from">
-        <table class="tabledata2">
+        <table class="tabledata2" style="width: 100%;">
             <tr>
-                <td><?php /* HINT: /data/myNewMusic */ ?><?php printf(T_('Add new files from: %s'), '<span class="information">/data/myNewMusic</span>'); ?></td>
+                <td><?php echo T_('Add new files from:'); ?></td>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /data/myUpdatedMusic */ ?><?php printf(T_('Update existing files in: %s'), '<span class="information">/data/myUpdatedMusic</span>'); ?></td>
+                <td><?php /* HINT: /media/path */ ?><?php printf(T_('Clean deleted files in: %s'), '<span class="information">/media/path</span>'); ?></td>
+                <td><input type="text" name="clean_path" value="/" /></td>
+            </tr>
+            <tr>
+                <td><?php echo T_('Update existing files in:'); ?></td>
                 <td><input type="text" name="update_path" value="/" /></td>
+            </tr>
+            <tr>
+                <td><?php /* HINT: example path /media/music */ ?><?php echo T_('Example path:') ?></td>
+                <td style="padding-left: 10px;">/media/music</td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align:right;"><input type="submit" value="<?php echo T_('Update'); ?>" /></td>

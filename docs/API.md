@@ -17,9 +17,11 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 ## News
 
-API6 development has started but don't be alarmed! API5 is stable, not changing and like API3 and API4 will continue to be supported.
+Ampache 7 development has started!
 
-The goals of API6 are simply to extend on top of API5 and remove what's no longer needed. API5 docs have moved to the [archive](https://ampache.org/api/api-5) and API6 will become the default.
+The good news is that API6 will remain as the primary API for the next major version. This means **NO** breaking changes for the API!
+
+API6 will continue to be extended and developed as normal.
 
 ## Archived Version Documentation
 
@@ -46,6 +48,8 @@ API3 is not recommended for use outside of running old applications and it is re
 ## Sending Handshake Request
 
 Multiple authentication methods are available, described in the next sections.
+
+**NOTE** if you use a [Bearer Token](https://ampache.org/api/#http-header-authentication) you do not need to send a handshake request.
 
 ### User / Password
 
@@ -85,7 +89,7 @@ $key = hash('sha256', 'myapikey');
 $passphrase = hash('sha256', $user . $key);
 ```
 
-## HTTP Header Authentication
+### HTTP Header Authentication
 
 Ampache supports sending your auth parameter to the server using a Bearer Token.
 

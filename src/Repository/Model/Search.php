@@ -1147,12 +1147,12 @@ class Search extends playlist_object
     /**
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
-     * @param int $user_id
+     * @param int|null $user_id
      * @return array
      */
-    public static function get_search_array($user_id = null): array
+    public static function get_search_array($user_id = 0): array
     {
-        if ($user_id === null) {
+        if ($user_id === 0) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
@@ -1519,6 +1519,7 @@ class Search extends playlist_object
             case 'album_disk':
                 switch ($name) {
                     case 'name':
+                    case 'album':
                     case 'album_title':
                         $name = 'title';
                         break;
@@ -1527,6 +1528,7 @@ class Search extends playlist_object
                         break;
                     case 'album_artist':
                     case 'album_artist_title':
+                    case 'artist_title':
                         $name = 'artist';
                         break;
                     case 'tag':
@@ -1555,6 +1557,7 @@ class Search extends playlist_object
             case 'artist':
                 switch ($name) {
                     case 'name':
+                    case 'artist':
                     case 'artist_title':
                         $name = 'title';
                         break;
@@ -1588,6 +1591,9 @@ class Search extends playlist_object
                     case 'podcast_episode_title':
                         $name = 'podcast_episode';
                         break;
+                    case 'status':
+                        $name = 'state';
+                        break;
                 }
                 break;
             case 'podcast_episode':
@@ -1597,6 +1603,9 @@ class Search extends playlist_object
                         break;
                     case 'podcast_title':
                         $name = 'podcast';
+                        break;
+                    case 'status':
+                        $name = 'state';
                         break;
                 }
                 break;
@@ -1740,7 +1749,8 @@ class Search extends playlist_object
     {
         $javascript = "";
         foreach ($this->rules as $rule) {
-            $javascript .= '<script>' . 'SearchRow.add("' . $rule[0] . '","' . $rule[1] . '","' . $rule[2] . '", "' . $rule[3] . '"); </script>';
+            // @see search.js SearchRow.add(ruleType, operator, input, subtype)
+            $javascript .= '<script>' . 'SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
         }
 
         return $javascript;

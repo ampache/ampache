@@ -105,6 +105,7 @@ class Api
         Method\LiveStreamsMethod::ACTION => Method\LiveStreamsMethod::class,
         Method\LocalplayMethod::ACTION => Method\LocalplayMethod::class,
         Method\LocalplaySongsMethod::ACTION => Method\LocalplaySongsMethod::class,
+        Method\NowPlayingMethod::ACTION => Method\NowPlayingMethod::class,
         Method\PingMethod::ACTION => Method\PingMethod::class,
         Method\PlaylistAddMethod::ACTION => Method\PlaylistAddMethod::class,
         Method\PlaylistAddSongMethod::ACTION => Method\PlaylistAddSongMethod::class,
@@ -178,8 +179,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.3.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '630000'; // AMPACHE_VERSION
+    public static string $version         = '6.3.1'; // AMPACHE_VERSION
+    public static string $version_numeric = '631000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse

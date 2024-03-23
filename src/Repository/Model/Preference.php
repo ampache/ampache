@@ -251,7 +251,7 @@ class Preference extends database_object
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
         $pref_id = self::id_from_name($pref_name);
 
-        if (parent::is_cached('get_by_user-' . $pref_name, $user_id) && is_array((parent::get_from_cache('get_by_user-' . $pref_name, $user_id)))) {
+        if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
@@ -1190,8 +1190,6 @@ class Preference extends database_object
             'webplayer_flash',
             'webplayer_html5',
             'webplayer_pausetabs',
-            'write_id3',
-            'write_id3_art',
             'write_tags',
             'xml_rpc'
         );

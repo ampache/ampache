@@ -64,25 +64,25 @@ class Song extends database_object implements
     public ?string $file;
     public int $catalog;
     public int $album;
-    public ?int $disk;
+    public ?int $disk = null;
     public int $year;
     public ?int $artist;
-    public ?string $title;
+    public ?string $title = null;
     public int $bitrate;
     public int $rate;
-    public ?string $mode;
+    public ?string $mode = null;
     public int $size;
     public int $time;
-    public ?int $track;
-    public ?string $mbid;
+    public ?int $track   = null;
+    public ?string $mbid = null;
     public bool $played;
     public bool $enabled;
     public int $update_time;
     public int $addition_time;
     public ?int $user_upload = null;
-    public ?int $license;
-    public ?string $composer;
-    public ?int $channels;
+    public ?int $license     = null;
+    public ?string $composer = null;
+    public ?int $channels    = null;
     public int $total_count;
     public int $total_skip;
 
@@ -544,7 +544,7 @@ class Song extends database_object implements
      */
     private function has_info($song_id): array
     {
-        if (parent::is_cached('song', $song_id) && !empty(parent::get_from_cache('song', $song_id)['disk'])) {
+        if (parent::is_cached('song', $song_id)) {
             return parent::get_from_cache('song', $song_id);
         }
 
@@ -630,7 +630,7 @@ class Song extends database_object implements
      * @param string $select
      * @return array
      */
-    public function _get_ext_info($select = ''): array
+    public function _get_ext_info($select = '')
     {
         $song_id = (int) ($this->id);
         $columns = (!empty($select)) ? Dba::escape($select) : '*';
@@ -641,7 +641,9 @@ class Song extends database_object implements
 
         $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
         $db_results = Dba::read($sql, array($song_id));
-
+        if (!$db_results) {
+            return array();
+        }
         $results = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('song_data', $song_id, $results);

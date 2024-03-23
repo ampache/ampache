@@ -248,15 +248,6 @@ getid3_tag_order = "vorbiscomment,id3v2,id3v1,quicktime,matroska,ape,asf,avi,mpe
 ; DEFAULT: "false"
 ;getid3_detect_id3v2_encoding = "true"
 
-; This determines if we write the changes to files (as id3 tags) when modifying metadata, or only keep them in Ampache (the default).
-; DEFAULT: "false"
-;write_id3 = "true"
-
-; This determines if we write the changes to files (as id3 tags) when modifying album art, or only keep them in Ampache (the default)
-; as id3 metadata when updated.
-; DEFAULT: "false"
-;write_id3_art = "true"
-
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked)
 ; POSSIBLE VALUES (builtins): filename and getID3
