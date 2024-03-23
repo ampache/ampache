@@ -368,7 +368,7 @@ final class PlayAction implements ApplicationActionInterface
 
             // If require_session is set then we need to make sure we're legit
             if (!$user_auth && $use_auth && $require_session) {
-                if (!$localnet_session && $this->networkChecker->check(AccessLevelEnum::TYPE_NETWORK, Core::get_global('user')?->getId(), AccessLevelEnum::LEVEL_GUEST)) {
+                if (!$localnet_session && $this->networkChecker->check(AccessTypeEnum::NETWORK, Core::get_global('user')?->getId(), AccessLevelEnum::GUEST)) {
                     $this->logger->notice(
                         'Streaming access allowed for local network IP ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP),
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
