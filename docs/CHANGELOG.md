@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## Ampache 6.3.1
+
+### Added
+
+* Added an option to clean a folder path on the Show Catalogs page
+
+### Changed
+
+* Show full playlist names on the personal favorite plugins (missing username)
+* Block direct stream for shared file when share is disabled
+
+### Removed
+
+* Config options `write_id3` and `write_id3_art` don't do anything so remove them
+
+### Fixed
+
+* Add missing album name through browser Media Session API
+* Fixed PHP caching false values when expecint an int
+* Typo for disabled song display
+* Show the count of returned art in the log
+* Don't show private playlists on browse or direct link if you don't have access
+* Refresh Democratic playlist on vote
+* Preference text box possible XSS
+* Search
+  * Added some documented aliases for rules that were missed
+  * Fixed `NOT SOUNDS LIKE` responses
+  * Don't scrub search input in the SQL (parameters are sanitized)
+  * Rule input XSS in JS
+* Subsonic
+  * Array not set on some items in JSON responses
+
+## API 6.3.1
+
+### Added
+
+* API6
+  * New Method: now_playing (Get what is currently being played by all users.)
+
 ## Ampache 6.3.0
 
 ### Added
@@ -116,6 +155,7 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 * Verify catalog by song instead of album
 * Catalog verify will now use the config option `catalog_verify_by_time` and only check songs not updated since the last full verify
 * Don't update counts and collect garbage after updating individual songs
+* PlayAction stream_select will now block until there is data
 
 ### Fixed
 
@@ -132,6 +172,10 @@ Definitely set `catalog_verify_by_time` if you have a large catalog. This will a
 * Catalog update dates were set when the process was finished which negates `update_time` checks
 * Song `update_time` wasn't allowed to update
 * Check `update_time` in Catalog::count_table sql so you only verify what you need to
+* Transcode can't use range in headers
+* Empty result error on Stats::get_object_count
+* Subsonic
+  * Search2 and Search3 ignored musicFolderId
 
 ## API 6.2.1
 
