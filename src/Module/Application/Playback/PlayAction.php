@@ -724,7 +724,7 @@ final class PlayAction implements ApplicationActionInterface
             );
             // STUPID IE
             $media_name = str_replace(array('?', '/', '\\'), "_", $streamConfiguration['file_name']);
-            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string)$streamConfiguration['file_size']);
+            $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string)Core::get_filesize($stream_file));
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
