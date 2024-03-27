@@ -52,11 +52,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public ?string $prefix;
     public ?string $mbid; // MusicBrainz ID
     public int $year;
-    public int $disk_count;
+    public int $disk_count = 0;
     public ?string $mbid_group; // MusicBrainz Release Group ID
     public ?string $release_type;
     public ?int $album_artist;
-    public ?int $original_year;
+    public ?int $original_year = null;
     public ?string $barcode;
     public ?string $catalog_number;
     public ?string $version;
