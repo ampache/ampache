@@ -467,7 +467,7 @@ class Xml_Data
                                 $string .= "<song id=\"" . $song['object_id'] . "\"></song>\n";
                             }
                         } else {
-                            $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
+                            $sql        = "SELECT `playlist_data`.`id`, `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? ORDER BY `playlist_data`.`track`;";
                             $db_results = Dba::read($sql, array($object_id));
                             while ($row = Dba::fetch_assoc($db_results)) {
                                 $string .= "<" . $row['object_type'] . " id=\"" . $row['object_id'] . "\"></" . $row['object_type'] . ">\n";
