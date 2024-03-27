@@ -95,7 +95,7 @@ final class PlaylistAddMethod
         switch ($object_type) {
             case 'song':
                 /** @var Song $item */
-                $results = $item->getId();
+                $results = array($item->getId());
                 break;
             case 'album':
             case 'artist':
