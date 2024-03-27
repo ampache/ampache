@@ -2966,11 +2966,6 @@ parameters:
 			path: src/Module/Api/Method/PlaylistAddMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$song_ids of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) expects array, array\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/PlaylistAddMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddSongMethod\\:\\:playlist_add_song\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddSongMethod.php
