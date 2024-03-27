@@ -4741,11 +4741,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:rss_feed\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php

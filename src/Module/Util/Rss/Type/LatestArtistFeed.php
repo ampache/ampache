@@ -25,53 +25,40 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
+use Generator;
 
-final readonly class LatestArtistFeed implements FeedTypeInterface
+final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private User $user,
     ) {
     }
 
-    /**
-     * load_latest_artist
-     * This loads in the latest added artists
-     */
-    public function handle(): string
+    protected function getTitle(): string
     {
+        return T_('Recently Artists');
+    }
 
+    protected function getItems(): Generator
+    {
         $ids = Stats::get_newest('artist', 10, 0, 0, $this->user->getId());
-
-        $results = array();
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);
             $artist->format();
 
-            $xml_array = array(
-                'title' => $artist->get_fullname(),
+            yield array(
+                'title' => (string) $artist->get_fullname(),
                 'link' => $artist->get_link(),
-                'description' => $artist->summary,
+                'description' => (string) $artist->summary,
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
                 'pubDate' => ''
             );
-            $results[] = $xml_array;
-        } // end foreach
-
-        Xml_Data::set_type('rss');
-
-        return Xml_Data::rss_feed($results, $this->getTitle());
-    }
-
-    public function getTitle(): string
-    {
-        return AmpConfig::get('site_title') . ' - ' . T_('Newest Artists');
+        }
     }
 }

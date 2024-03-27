@@ -1115,12 +1115,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "a94fb704aee97e9b9d7b461eda6dc022f44805ed"
+                "reference": "449956e1269bcbdb60a7936222f1923817356779"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/a94fb704aee97e9b9d7b461eda6dc022f44805ed",
-                "reference": "a94fb704aee97e9b9d7b461eda6dc022f44805ed",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/449956e1269bcbdb60a7936222f1923817356779",
+                "reference": "449956e1269bcbdb60a7936222f1923817356779",
                 "shasum": ""
             },
             "require": {
@@ -1175,7 +1175,7 @@
                 "issues": "https://github.com/JamesHeinrich/getID3/issues",
                 "source": "https://github.com/JamesHeinrich/getID3/tree/master"
             },
-            "time": "2024-02-19T15:13:15+00:00"
+            "time": "2024-03-23T12:55:48+00:00"
         },
         {
             "name": "jwilsson/spotify-web-api-php",
@@ -5528,16 +5528,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.64",
+            "version": "1.10.65",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "fb9f270daffedcb5ff46275dcafe92538b1bc4bb"
+                "reference": "3c657d057a0b7ecae19cb12db446bbc99d8839c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/fb9f270daffedcb5ff46275dcafe92538b1bc4bb",
-                "reference": "fb9f270daffedcb5ff46275dcafe92538b1bc4bb",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3c657d057a0b7ecae19cb12db446bbc99d8839c6",
+                "reference": "3c657d057a0b7ecae19cb12db446bbc99d8839c6",
                 "shasum": ""
             },
             "require": {
@@ -5586,7 +5586,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-21T09:57:47+00:00"
+            "time": "2024-03-23T10:30:26+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -5963,16 +5963,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.0.7",
+            "version": "11.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "afa8d61ba7ae78da739938c999140eb767a1ad7f"
+                "reference": "48ea58408879a9aad630022186398364051482fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/afa8d61ba7ae78da739938c999140eb767a1ad7f",
-                "reference": "afa8d61ba7ae78da739938c999140eb767a1ad7f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/48ea58408879a9aad630022186398364051482fc",
+                "reference": "48ea58408879a9aad630022186398364051482fc",
                 "shasum": ""
             },
             "require": {
@@ -6043,7 +6043,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.8"
             },
             "funding": [
                 {
@@ -6059,7 +6059,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-21T07:33:30+00:00"
+            "time": "2024-03-22T04:21:01+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -6541,16 +6541,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "7.0.0",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "100d8b855d7180f79f9a9a5c483f2d960581c3ea"
+                "reference": "4eb3a442574d0e9d141aab209cd4aaf25701b09a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/100d8b855d7180f79f9a9a5c483f2d960581c3ea",
-                "reference": "100d8b855d7180f79f9a9a5c483f2d960581c3ea",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/4eb3a442574d0e9d141aab209cd4aaf25701b09a",
+                "reference": "4eb3a442574d0e9d141aab209cd4aaf25701b09a",
                 "shasum": ""
             },
             "require": {
@@ -6565,7 +6565,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "7.0-dev"
+                    "dev-main": "7.1-dev"
                 }
             },
             "autoload": {
@@ -6593,7 +6593,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/environment/issues",
                 "security": "https://github.com/sebastianbergmann/environment/security/policy",
-                "source": "https://github.com/sebastianbergmann/environment/tree/7.0.0"
+                "source": "https://github.com/sebastianbergmann/environment/tree/7.1.0"
             },
             "funding": [
                 {
@@ -6601,7 +6601,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-02-02T05:57:54+00:00"
+            "time": "2024-03-23T08:56:34+00:00"
         },
         {
             "name": "sebastian/exporter",

@@ -25,15 +25,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Generator;
 
-final readonly class LatestShoutFeed implements FeedTypeInterface
+final readonly class LatestShoutFeed extends AbstractGenericRssFeed
 {
     public function __construct(
         private ShoutRepositoryInterface $shoutRepository,
@@ -41,14 +40,14 @@ final readonly class LatestShoutFeed implements FeedTypeInterface
     ) {
     }
 
-    /**
-     * This loads in the latest added shouts
-     */
-    public function handle(): string
+    protected function getTitle(): string
+    {
+        return T_('Recently Shouts');
+    }
+
+    protected function getItems(): Generator
     {
         $shouts = $this->shoutRepository->getTop(10);
-
-        $results = array();
 
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
@@ -62,7 +61,7 @@ final readonly class LatestShoutFeed implements FeedTypeInterface
                 }
                 $user->format();
 
-                $xml_array = array(
+                yield array(
                     'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
@@ -70,17 +69,7 @@ final readonly class LatestShoutFeed implements FeedTypeInterface
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM)
                 );
-                $results[] = $xml_array;
             }
-        } // end foreach
-
-        Xml_Data::set_type('rss');
-
-        return Xml_Data::rss_feed($results, $this->getTitle());
-    }
-
-    public function getTitle(): string
-    {
-        return AmpConfig::get('site_title') . ' - ' . T_('Newest Shouts');
+        }
     }
 }
