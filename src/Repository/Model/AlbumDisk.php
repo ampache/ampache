@@ -542,6 +542,11 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         return 0;
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::ALBUM_DISK;
+    }
+
     /**
      * @deprecated
      */

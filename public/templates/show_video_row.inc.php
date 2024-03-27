@@ -36,7 +36,6 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */
@@ -49,7 +48,7 @@ use Ampache\Module\Util\Ui;
 /** @var string|null $video_type */
 
 if (!isset($video_type)) {
-    $video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem));
+    $video_type = $libitem->getMediaType()->value;
 } ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -89,7 +88,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     </span>
 </td>
 <?php
-if ($video_type != 'video') {
+if ($video_type !== 'video') {
     require Ui::find_template('show_partial_' . $video_type . '_row.inc.php');
 } ?>
 <td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>

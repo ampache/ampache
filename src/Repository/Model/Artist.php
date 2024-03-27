@@ -1030,6 +1030,11 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         self::update_table_counts();
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::ARTIST;
+    }
+
     /**
      * @deprecated
      */

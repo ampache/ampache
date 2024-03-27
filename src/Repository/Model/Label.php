@@ -441,6 +441,11 @@ class Label extends database_object implements library_item
         return false;
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::LABEL;
+    }
+
     /**
      * @deprecated inject dependency
      */

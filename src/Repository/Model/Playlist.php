@@ -978,4 +978,9 @@ class Playlist extends playlist_object
 
         return Dba::write($sql, $params);
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PLAYLIST;
+    }
 }
