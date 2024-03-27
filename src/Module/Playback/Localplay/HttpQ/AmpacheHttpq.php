@@ -27,6 +27,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -34,7 +36,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use PDOStatement;
 
 /**
@@ -479,27 +480,34 @@ class AmpacheHttpq extends localplay_controller
                     break;
                 default:
                     // If we don't know it, look up by filename
-                    $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $filename          = Dba::escape($entry['file']);
+                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $libraryItemLoader = $this->getLibraryItemLoader();
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media     = new $className($row['id']);
-                        $media->format();
-                        switch ($row['type']) {
-                            case 'song':
-                                /** @var Song $media */
-                                $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
-                                $data['link'] = $media->get_f_link();
-                                break;
-                            case 'live_stream':
-                                /** @var Live_Stream $media */
-                                $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $site_url";
-                                $data['link'] = $media->site_url;
-                                break;
-                        } // end switch on type
+                        $media = $libraryItemLoader->load(
+                            LibraryItemEnum::from($row['type']),
+                            $row['id'],
+                            [Song::class, Live_Stream::class]
+                        );
+
+                        if ($media !== null) {
+                            $media->format();
+                            switch ($row['type']) {
+                                case 'song':
+                                    /** @var Song $media */
+                                    $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                    $data['link'] = $media->get_f_link();
+                                    break;
+                                case 'live_stream':
+                                    /** @var Live_Stream $media */
+                                    $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                    $data['name'] = "$media->name $site_url";
+                                    $data['link'] = $media->site_url;
+                                    break;
+                            } // end switch on type
+                        }
                     } else {
                         $data['name'] = basename($data['raw']);
                         $data['link'] = basename($data['raw']);
@@ -562,5 +570,15 @@ class AmpacheHttpq extends localplay_controller
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
         return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
     }
 }

@@ -6526,11 +6526,6 @@ parameters:
 			path: src/Module/Cli/UpdateDbCommand.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
