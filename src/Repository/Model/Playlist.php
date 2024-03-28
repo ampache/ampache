@@ -590,8 +590,8 @@ class Playlist extends playlist_object
      */
     public function update_track_number($track_id, $index): void
     {
-        $sql = "REPLACE INTO `playlist_data` (`id`, `track`) VALUES (?, ?);";
-        Dba::write($sql, array($track_id, $index));
+        $sql = "UPDATE `playlist_data` SET `track` = ? WHERE `id` = ?";
+        Dba::write($sql, array($index, $track_id));
     }
 
     /**
@@ -953,7 +953,7 @@ class Playlist extends playlist_object
 
             //replace the last comma
             $sql = substr_replace($sql, "", -2);
-            $sql .= " ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
+            $sql .= "ON DUPLICATE KEY UPDATE `track`=VALUES(`track`)";
 
             // do this in one go
             Dba::write($sql);
