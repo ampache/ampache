@@ -41,7 +41,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     public int $id = 0;
     public int $album_id;
     public int $disk;
-    public int $disk_count;
+    public int $disk_count = 0;
     public ?int $time;
     public int $catalog;
     public int $song_count;
@@ -106,6 +106,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     public function __construct($album_disk_id = 0)
     {
         if (!$album_disk_id) {
+            $this->album = new Album();
+
             return;
         }
         $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
