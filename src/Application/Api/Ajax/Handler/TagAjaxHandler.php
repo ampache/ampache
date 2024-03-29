@@ -26,25 +26,26 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
-use Ampache\Module\System\Core;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 
 final readonly class TagAjaxHandler implements AjaxHandlerInterface
 {
     public function __construct(
         private RequestParserInterface $requestParser,
         private LabelRepositoryInterface $labelRepository,
+        private PrivilegeCheckerInterface $privilegeChecker,
     ) {
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results   = array();
         $action    = $this->requestParser->getFromRequest('action');
@@ -60,8 +61,8 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 $results['labels'] = $labels;
                 break;
             case 'delete':
-                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('tag.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to delete tag', 1);
+                if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+                    debug_event('tag.ajax', $user->getUsername() . ' attempted to delete tag', 1);
 
                     return;
                 }

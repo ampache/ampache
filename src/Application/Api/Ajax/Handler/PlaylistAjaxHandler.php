@@ -33,7 +33,6 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -45,13 +44,10 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
     ) {
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-
-        /** @var User $user */
-        $user = Core::get_global('user');
 
         // Switch on the actions
         switch ($action) {

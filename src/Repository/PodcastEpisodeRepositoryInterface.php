@@ -87,4 +87,9 @@ interface PodcastEpisodeRepositoryInterface
      * Cleans up orphaned episodes
      */
     public function collectGarbage(): void;
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode;
 }

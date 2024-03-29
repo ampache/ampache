@@ -31,17 +31,15 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-final class StreamAjaxHandler implements AjaxHandlerInterface
+final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');

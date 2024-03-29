@@ -29,32 +29,24 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
+final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
 {
-    private FunctionCheckerInterface $functionChecker;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        FunctionCheckerInterface $functionChecker,
-        ZipHandlerInterface $zipHandler,
-        ConfigContainerInterface $configContainer
+        private FunctionCheckerInterface $functionChecker,
+        private ZipHandlerInterface $zipHandler,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->functionChecker = $functionChecker;
-        $this->zipHandler      = $zipHandler;
-        $this->configContainer = $configContainer;
     }
 
     public function render(
-        string $object_type,
+        LibraryItemEnum $object_type,
         int $object_id
     ): string {
         $webPath = $this->configContainer->getWebPath();
@@ -63,7 +55,7 @@ final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         $link .= sprintf(
             '<li><a onclick="handleShareAction(\'%s/share.php?action=show_create&type=%s&id=%d\')">%s &nbsp;%s</a></li>',
             $webPath,
-            $object_type,
+            $object_type->value,
             $object_id,
             Ui::get_icon(
                 'share',
@@ -73,22 +65,22 @@ final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         );
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD)) {
             $dllink = '';
-            if ($object_type == 'song' || $object_type == 'video') {
+            if ($object_type === LibraryItemEnum::SONG || $object_type === LibraryItemEnum::VIDEO) {
                 $dllink = sprintf(
                     '%s/play/index.php?action=download&type=%s&oid=%d&uid=-1',
                     $webPath,
-                    $object_type,
+                    $object_type->value,
                     $object_id
                 );
             } else {
                 if (
                     $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-                    $this->zipHandler->isZipable($object_type)
+                    $this->zipHandler->isZipable($object_type->value)
                 ) {
                     $dllink = sprintf(
                         '%s/batch.php?action=%s&id=%d',
                         $webPath,
-                        $object_type,
+                        $object_type->value,
                         $object_id
                     );
                 }
@@ -120,7 +112,7 @@ final class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 '<a onclick="handleShareAction(\'%s/share.php?action=external_share&plugin=%s&type=%s&id=%d\')" target="_blank">%s</a>&nbsp;',
                 $webPath,
                 $plugin_name,
-                $object_type,
+                $object_type->value,
                 $object_id,
                 Ui::get_icon(
                     'share_' . strtolower((string)$plugin_name),
