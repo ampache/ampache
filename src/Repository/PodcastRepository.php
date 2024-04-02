@@ -35,18 +35,10 @@ use Generator;
  *
  * Tables: `podcast`, `podcast_episode`, `deleted_podcast_episodes`
  */
-final class PodcastRepository implements PodcastRepositoryInterface
+final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->modelFactory    = $modelFactory;
-        $this->connection      = $connection;
+    public function __construct(private ModelFactoryInterface $modelFactory, private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**

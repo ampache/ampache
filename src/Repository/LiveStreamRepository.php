@@ -36,18 +36,10 @@ use Ampache\Repository\Model\User;
  *
  * Tables: `live_stream`
  */
-final class LiveStreamRepository implements LiveStreamRepositoryInterface
+final readonly class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->modelFactory = $modelFactory;
-        $this->connection   = $connection;
+    public function __construct(private ModelFactoryInterface $modelFactory, private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**

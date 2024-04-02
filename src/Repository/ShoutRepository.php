@@ -41,16 +41,8 @@ use Psr\Log\LoggerInterface;
  */
 final class ShoutRepository extends BaseRepository implements ShoutRepositoryInterface
 {
-    protected DatabaseConnectionInterface $connection;
-
-    private LoggerInterface $logger;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection,
-        LoggerInterface $logger
-    ) {
-        $this->connection   = $connection;
-        $this->logger       = $logger;
+    public function __construct(protected DatabaseConnectionInterface $connection, private readonly LoggerInterface $logger)
+    {
     }
 
     /**
@@ -201,7 +193,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
             /** @var Shoutbox $shout */
             yield $shout;
 
-            $limit--;
+            --$limit;
 
             if ($limit < 1) {
                 break;
