@@ -26,11 +26,10 @@ namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Playlist;
 
 final class Migration600068 extends AbstractMigration
 {
-    protected array $changelog = ['Revert unique constraint `playlist_track_UN` on `playlist_data` table'];
+    protected array $changelog = ['Drop unique constraint `playlist_track_UN` on `playlist_data` table'];
 
     public function migrate(): void
     {
