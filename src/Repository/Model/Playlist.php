@@ -604,7 +604,7 @@ class Playlist extends playlist_object
         $tracks = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($tracks)) {
-            $this->update_track_number($row['id'], $index);
+            $this->update_track_number((int)$row['id'], $index);
             $index++;
         }
 
