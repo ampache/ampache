@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
@@ -44,14 +43,10 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
     ) {
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        /** @var User $user */
-        $user = (!empty(Core::get_global('user')))
-            ? Core::get_global('user')
-            : new User(-1);
 
         // Switch on the actions
         switch ($action) {

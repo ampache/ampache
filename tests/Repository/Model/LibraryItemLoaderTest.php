@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -87,6 +88,8 @@ class LibraryItemLoaderTest extends TestCase
         yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
 
         yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
+
+        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
     }
 
     public function testReturnsNullIfObjectWasNotFound(): void

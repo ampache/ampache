@@ -31,19 +31,16 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
-final class CatalogAjaxHandler implements AjaxHandlerInterface
+final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
@@ -52,7 +49,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'flip_state':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('catalog.ajax', (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
+                    debug_event('catalog.ajax', ($user->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
 
                     return;
                 }

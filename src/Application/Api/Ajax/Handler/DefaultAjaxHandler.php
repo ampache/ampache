@@ -43,25 +43,16 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class DefaultAjaxHandler implements AjaxHandlerInterface
+final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        private RequestParserInterface $requestParser,
+        private AlbumRepositoryInterface $albumRepository,
+        private SongRepositoryInterface $songRepository
     ) {
-        $this->requestParser   = $requestParser;
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results      = array();
         $request_id   = (int)$this->requestParser->getFromRequest('id');
@@ -75,12 +66,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'current_playlist':
                 if ($request_type == 'delete') {
-                    $user = Core::get_global('user');
-                    if ($user instanceof User) {
-                        $user->load_playlist();
-                        if ($user->playlist !== null) {
-                            $user->playlist->delete_track($request_id);
-                        }
+                    $user->load_playlist();
+                    if ($user->playlist !== null) {
+                        $user->playlist->delete_track($request_id);
                     }
                 } // end switch
 
@@ -95,9 +83,6 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                 $object_type = (empty($request_type))
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
-
-                /** @var User $user */
-                $user = Core::get_global('user');
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $object_id = ($request_id === 0)

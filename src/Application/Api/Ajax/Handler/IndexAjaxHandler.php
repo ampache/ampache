@@ -36,7 +36,6 @@ use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
@@ -49,49 +48,24 @@ use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 
-final class IndexAjaxHandler implements AjaxHandlerInterface
+final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private SlideshowInterface $slideshow;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private LabelRepositoryInterface $labelRepository;
-
-    private SongRepositoryInterface $songRepository;
-
-    private WantedRepositoryInterface $wantedRepository;
-
-    private VideoRepositoryInterface $videoRepository;
-
-    private WantedManagerInterface $wantedManager;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        SlideshowInterface $slideshow,
-        AlbumRepositoryInterface $albumRepository,
-        LabelRepositoryInterface $labelRepository,
-        SongRepositoryInterface $songRepository,
-        WantedRepositoryInterface $wantedRepository,
-        VideoRepositoryInterface $videoRepository,
-        WantedManagerInterface $wantedManager
+        private RequestParserInterface $requestParser,
+        private SlideshowInterface $slideshow,
+        private AlbumRepositoryInterface $albumRepository,
+        private LabelRepositoryInterface $labelRepository,
+        private SongRepositoryInterface $songRepository,
+        private WantedRepositoryInterface $wantedRepository,
+        private VideoRepositoryInterface $videoRepository,
+        private WantedManagerInterface $wantedManager
     ) {
-        $this->requestParser    = $requestParser;
-        $this->slideshow        = $slideshow;
-        $this->albumRepository  = $albumRepository;
-        $this->labelRepository  = $labelRepository;
-        $this->songRepository   = $songRepository;
-        $this->wantedRepository = $wantedRepository;
-        $this->videoRepository  = $videoRepository;
-        $this->wantedManager    = $wantedManager;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
-        $user    = Core::get_global('user');
         $moment  = (int) AmpConfig::get('of_the_moment');
         // filter album and video of the Moment instead of a hardcoded value
         if (!$moment > 0) {
@@ -287,7 +261,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $name = $this->requestParser->getFromRequest('name');
                     $year = (int) $this->requestParser->getFromRequest('year');
 
-                    if ($user instanceof User && !$this->wantedRepository->find($mbid, $user)) {
+                    if (!$this->wantedRepository->find($mbid, $user)) {
                         $this->wantedManager->add(
                             $user,
                             $mbid,
@@ -330,7 +304,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
                     $walbum = $this->wantedRepository->findByMusicBrainzId($mbid);
 
-                    if ($user instanceof User && $walbum !== null) {
+                    if ($walbum !== null) {
                         $this->wantedManager->accept($walbum, $user);
 
                         $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
@@ -405,9 +379,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'slideshow':
                 ob_start();
-                $images = ($user instanceof User)
-                    ? $this->slideshow->getCurrentSlideshow($user)
-                    : array();
+                $images = $this->slideshow->getCurrentSlideshow($user);
                 if (count($images) > 0) {
                     $fsname = 'fslider_' . time();
                     echo "<div id='" . $fsname . "'>";

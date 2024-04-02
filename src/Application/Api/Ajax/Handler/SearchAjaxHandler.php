@@ -44,29 +44,17 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
 
-final class SearchAjaxHandler implements AjaxHandlerInterface
+final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private MissingArtistFinderInterface $missingArtistFinder;
-
-    private LabelRepositoryInterface $labelRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        MissingArtistFinderInterface $missingArtistFinder,
-        LabelRepositoryInterface $labelRepository
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private MissingArtistFinderInterface $missingArtistFinder,
+        private LabelRepositoryInterface $labelRepository
     ) {
-        $this->requestParser       = $requestParser;
-        $this->configContainer     = $configContainer;
-        $this->missingArtistFinder = $missingArtistFinder;
-        $this->labelRepository     = $labelRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');

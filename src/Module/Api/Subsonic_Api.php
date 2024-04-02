@@ -35,11 +35,10 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Playback\Stream_Url;
-use Ampache\Module\Podcast\PodcastDeleterInterface;
-use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
-use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
+use Ampache\Module\Podcast\PodcastDeleterInterface;
+use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
@@ -58,7 +57,6 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
@@ -79,8 +77,8 @@ use DateTime;
 use DOMDocument;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use WpOrg\Requests\Requests;
 use SimpleXMLElement;
+use WpOrg\Requests\Requests;
 
 /**
  * Subsonic Class
@@ -2274,7 +2272,7 @@ class Subsonic_Api
             if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'downloadpodcastepisode');
             } else {
-                self::getPodcastEpisodeDownloader()->fetch($episode);
+                self::getPodcastSyncer()->syncEpisode($episode);
                 $response = Subsonic_Xml_Data::addSubsonicResponse('downloadpodcastepisode');
             }
         } else {
@@ -3251,16 +3249,6 @@ class Subsonic_Api
         global $dic;
 
         return $dic->get(PodcastCreatorInterface::class);
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getPodcastEpisodeDownloader(): PodcastEpisodeDownloaderInterface
-    {
-        global $dic;
-
-        return $dic->get(PodcastEpisodeDownloaderInterface::class);
     }
 
     /**

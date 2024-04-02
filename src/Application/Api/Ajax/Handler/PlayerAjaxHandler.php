@@ -30,26 +30,18 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
-final class PlayerAjaxHandler implements AjaxHandlerInterface
+final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
-
-    private UiInterface $ui;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
-        UiInterface $ui
+        private RequestParserInterface $requestParser,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private UiInterface $ui
     ) {
-        $this->requestParser    = $requestParser;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
-        $this->ui               = $ui;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
