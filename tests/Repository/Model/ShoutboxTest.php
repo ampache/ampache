@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository\Model;
 
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -36,14 +37,18 @@ class ShoutboxTest extends TestCase
 {
     private ShoutRepositoryInterface&MockObject $shoutRepository;
 
+    private UserRepositoryInterface&MockObject $userRepository;
+
     private Shoutbox $subject;
 
     protected function setUp(): void
     {
         $this->shoutRepository = $this->createMock(ShoutRepositoryInterface::class);
+        $this->userRepository  = $this->createMock(UserRepositoryInterface::class);
 
         $this->subject = new Shoutbox(
             $this->shoutRepository,
+            $this->userRepository,
         );
     }
 
@@ -133,6 +138,21 @@ class ShoutboxTest extends TestCase
         static::assertSame(
             $userId,
             $this->subject->getUserId()
+        );
+    }
+
+    public function testGetUserReturnsUser(): void
+    {
+        $user = $this->createMock(User::class);
+
+        $this->userRepository->expects(static::once())
+            ->method('findById')
+            ->with(0)
+            ->willReturn($user);
+
+        static::assertSame(
+            $user,
+            $this->subject->getUser()
         );
     }
 

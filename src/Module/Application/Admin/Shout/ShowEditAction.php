@@ -33,7 +33,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,28 +40,15 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Displays the shouts edit-view
  */
-final class ShowEditAction implements ApplicationActionInterface
+final readonly class ShowEditAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_edit';
 
-    private UiInterface $ui;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ShoutObjectLoaderInterface $shoutObjectLoader,
-        ShoutRepositoryInterface $shoutRepository
+        private UiInterface $ui,
+        private ShoutObjectLoaderInterface $shoutObjectLoader,
+        private ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui                = $ui;
-        $this->modelFactory      = $modelFactory;
-        $this->shoutObjectLoader = $shoutObjectLoader;
-        $this->shoutRepository   = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -85,11 +71,10 @@ final class ShowEditAction implements ApplicationActionInterface
         }
 
         // load the used who created the shout
-        $shoutUserId = $shout->getUserId();
+        $user = $shout->getUser();
 
-        $user = $this->modelFactory->createUser($shoutUserId);
-        if ($user->isNew()) {
-            throw new ObjectNotFoundException($shoutUserId);
+        if ($user === null) {
+            throw new ObjectNotFoundException();
         }
 
         $this->ui->showHeader();
