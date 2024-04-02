@@ -267,6 +267,14 @@ final class Versions
         600058 => Migration\V6\Migration600058::class,
         600059 => Migration\V6\Migration600059::class,
         600060 => Migration\V6\Migration600060::class,
+        600061 => Migration\V6\Migration600061::class,
+        600062 => Migration\V6\Migration600062::class,
+        600063 => Migration\V6\Migration600063::class,
+        600064 => Migration\V6\Migration600064::class,
+        600065 => Migration\V6\Migration600065::class,
+        600066 => Migration\V6\Migration600066::class,
+        600067 => Migration\V6\Migration600067::class,
+        600068 => Migration\V6\Migration600068::class,
     ];
 
     /**

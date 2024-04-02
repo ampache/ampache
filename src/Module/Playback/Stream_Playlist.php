@@ -277,9 +277,10 @@ class Stream_Playlist
         if (!$user) {
             $user = Core::get_global('user');
         }
-        $className   = get_class($object);
-        $type        = ObjectTypeToClassNameMapper::reverseMap($className);
-        $url['type'] = $type;
+
+        $type = $object->getMediaType();
+
+        $url['type'] = $type->value;
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
@@ -297,14 +298,11 @@ class Stream_Playlist
                     }
                 }
             } else {
-                if (in_array($type, array('song', 'podcast_episode', 'video'))) {
+                if (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
                     /** @var Song|Podcast_Episode|Video $object */
                     $url['url'] = (!empty($user))
                         ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
                         : $object->play_url($additional_params);
-                } elseif ($type == 'democratic') {
-                    /** @var Democratic $object */
-                    $url['url'] = $object->play_url();
                 } else {
                     $url['url'] = $object->play_url($additional_params);
                 }
@@ -316,7 +314,7 @@ class Stream_Playlist
             $url['author'] = 'Ampache';
             $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
-                case 'song':
+                case LibraryItemEnum::SONG:
                     /** @var Song $object */
                     $url['title']     = $object->title;
                     $url['author']    = $object->get_artist_fullname();
@@ -330,14 +328,14 @@ class Stream_Playlist
                     $url['codec']     = $object->type;
                     $url['track_num'] = (string)$object->track;
                     break;
-                case 'video':
+                case LibraryItemEnum::VIDEO:
                     /** @var Video $object */
                     $url['title']      = 'Video - ' . $object->title;
                     $url['author']     = $object->get_artist_fullname();
                     $url['resolution'] = $object->f_resolution;
                     $url['codec']      = $object->type;
                     break;
-                case 'live_stream':
+                case LibraryItemEnum::LIVE_STREAM:
                     /** @var Live_Stream $object */
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
@@ -347,13 +345,13 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->codec;
                     break;
-                case 'song_preview':
+                case LibraryItemEnum::SONG_PREVIEW:
                     /** @var Song_Preview $object */
                     $url['title']  = $object->title;
                     $url['author'] = $object->get_artist_fullname();
                     $url['codec']  = $object->type;
                     break;
-                case 'podcast_episode':
+                case LibraryItemEnum::PODCAST_EPISODE:
                     /** @var Podcast_Episode $object */
                     $url['title']     = $object->f_name;
                     $url['author']    = $object->getPodcastName();
@@ -660,10 +658,9 @@ class Stream_Playlist
             $result .= Xml_Data::keyed_array($xml, true);
         } // end foreach
 
-        Xml_Data::set_type('xspf');
-        $ret = Xml_Data::header($this->title);
+        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get('web_path') . "</info>\n<trackList>\n";
         $ret .= $result;
-        $ret .= Xml_Data::footer();
+        $ret .= "</trackList>\n</playlist>\n";
 
         echo $ret;
     }

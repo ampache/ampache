@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -87,6 +88,8 @@ class LibraryItemLoaderTest extends TestCase
         yield [LibraryItemEnum::LIVE_STREAM, LiveStreamRepositoryInterface::class, Live_Stream::class];
 
         yield [LibraryItemEnum::PODCAST, PodcastRepositoryInterface::class, Podcast::class];
+
+        yield[LibraryItemEnum::PODCAST_EPISODE, PodcastEpisodeRepositoryInterface::class, Podcast_Episode::class];
     }
 
     public function testReturnsNullIfObjectWasNotFound(): void

@@ -31,22 +31,19 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Core;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-final class LocalPlayAjaxHandler implements AjaxHandlerInterface
+final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');
@@ -65,7 +62,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->set_active_instance($_REQUEST['instance']);
-                Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $type);
+                Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar
                 ob_start();

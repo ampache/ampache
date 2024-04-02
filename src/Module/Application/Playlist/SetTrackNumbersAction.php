@@ -76,10 +76,10 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in((string) $data));
 
-            $this->logger->debug(
-                $key . '=' . Core::get_get($key),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
+            //$this->logger->debug(
+            //    $key . '=' . Core::get_get($key),
+            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            //);
         }
 
         if (array_key_exists('order', $_GET)) {
@@ -88,15 +88,16 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
             if ($track < 1) {
                 $track = 1;
             }
-            foreach ($songs as $song_id) {
-                if ($song_id != '') {
-                    $playlist->update_track_number((int) $song_id, $track);
+            foreach ($songs as $track_id) {
+                if ($track_id != '') {
+                    $playlist->update_track_number((int)$track_id, $track);
                     ++$track;
                 }
             }
-        } else {
-            $playlist->regenerate_track_numbers();
         }
+        // always regenerate the entire playlist
+        $playlist->regenerate_track_numbers();
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

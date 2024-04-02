@@ -20,21 +20,21 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util\Rss;
+namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Module\Util\Rss\Surrogate\RssItemInterface;
-use Ampache\Repository\Model\User;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface RssPodcastBuilderInterface
+/**
+ * Extend `time` column for the stream_playlist table
+ */
+final class Migration600063 extends AbstractMigration
 {
-    /**
-     * Returns the rss-podcast xml
-     */
-    public function build(
-        RssItemInterface $rssItemAdapter,
-        User $user
-    ): string;
+    protected array $changelog = ['Allow signed `user` column for the session_stream table'];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("ALTER TABLE `session_stream` MODIFY COLUMN `user` int(11) NOT NULL");
+    }
 }

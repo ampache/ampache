@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -25,27 +25,38 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Type;
 
-use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
+use Generator;
 
-final class RecentlyPlayedFeed implements FeedTypeInterface
+final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
 {
     public function __construct(
-        private readonly int $user_id
+        private User $user
     ) {
     }
 
-    /**
-     * load_recently_played
-     * This loads in the Recently Played information and formats it up real nice like
-     */
-    public function handle(): string
+    protected function getTitle(): string
     {
-        $results = array();
-        $data    = Stats::get_recently_played($this->user_id, 'stream', 'song');
+        return T_('Recently Played');
+    }
+
+    /**
+     * @return Generator<array{
+     *  title: string,
+     *  link: string,
+     *  description: string,
+     *  comments: string,
+     *  pubDate: string,
+     *  image?: string
+     * }>
+     */
+    protected function getItems(): Generator
+    {
+        $userId = $this->user->getId();
+
+        $data = Stats::get_recently_played($userId, 'stream', 'song');
 
         foreach ($data as $item) {
             $client = new User($item['user']);
@@ -53,29 +64,34 @@ final class RecentlyPlayedFeed implements FeedTypeInterface
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = ($this->user_id > 0) ? $this->user_id == $row_id : $has_allowed_recent;
+            $is_allowed_recent  = ($userId > 0) ? $userId == $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
-                $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->get_fullname() . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->get_album_fullname() . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
-                $xml_array = array(
-                    'title' => $song->get_fullname() . ' - ' . $song->get_artist_fullname() . ' - ' . $song->get_album_fullname(),
-                    'link' => str_replace('&amp;', '&', (string)$song->get_link()),
-                    'description' => $description,
+                yield array(
+                    'title' => sprintf(
+                        '%s - %s - %s',
+                        $song->get_fullname(),
+                        $song->get_artist_fullname(),
+                        $song->get_album_fullname()
+                    ),
+                    'link' => str_replace('&amp;', '&', $song->get_link()),
+                    'description' => sprintf(
+                        '<p>%s: %s</p><p>%s: %s</p><p>%s: %s</p><p>%s: %s</p><p>%s: %s</p>',
+                        T_('User'),
+                        $client->username,
+                        T_('Title'),
+                        $song->get_fullname(),
+                        T_('Artist'),
+                        $song->get_artist_fullname(),
+                        T_('Album'),
+                        $song->get_album_fullname(),
+                        T_('Play date'),
+                        get_datetime($item['date'])
+                    ),
                     'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
                 );
-                $results[] = $xml_array;
-                $pub_date  = (int)$item['date'];
             }
-        } // end foreach
-
-        Xml_Data::set_type('rss');
-
-        return Xml_Data::rss_feed($results, $this->getTitle());
-    }
-
-    public function getTitle(): string
-    {
-        return AmpConfig::get('site_title') . ' - ' . T_('Recently Played');
+        }
     }
 }

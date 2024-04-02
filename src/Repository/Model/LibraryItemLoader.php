@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -74,7 +75,7 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::PERSONAL_VIDEO => new Personal_Video($objectId),
             LibraryItemEnum::PLAYLIST => new Playlist($objectId),
             LibraryItemEnum::PODCAST => $this->dic->get(PodcastRepositoryInterface::class)->findById($objectId),
-            LibraryItemEnum::PODCAST_EPISODE => new Podcast_Episode($objectId),
+            LibraryItemEnum::PODCAST_EPISODE => $this->dic->get(PodcastEpisodeRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::SEARCH => new Search($objectId),
             LibraryItemEnum::SONG => new Song($objectId),
             LibraryItemEnum::SONG_PREVIEW => new Song_Preview($objectId),

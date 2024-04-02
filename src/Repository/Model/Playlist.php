@@ -606,7 +606,7 @@ class Playlist extends playlist_object
         $tracks = Dba::read($sql, array($this->id));
 
         while ($row = Dba::fetch_assoc($tracks)) {
-            $this->update_track_number($row['id'], $index);
+            $this->update_track_number((int)$row['id'], $index);
             $index++;
         }
 
@@ -655,7 +655,7 @@ class Playlist extends playlist_object
         $row        = Dba::fetch_assoc($db_results);
         $base_track = (int)($row['track'] ?? 0);
         $count      = 0;
-        $sql        = "INSERT INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
+        $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = array();
         foreach ($medias as $data) {
             if ($unique && in_array($data['object_id'], $track_data)) {
@@ -977,5 +977,10 @@ class Playlist extends playlist_object
         $params = array($new_object_id, $old_object_id, $object_type);
 
         return Dba::write($sql, $params);
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PLAYLIST;
     }
 }

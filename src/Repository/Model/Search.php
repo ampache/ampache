@@ -1868,6 +1868,11 @@ class Search extends playlist_object
         return $search;
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::SEARCH;
+    }
+
     /**
      * @deprecated
      */

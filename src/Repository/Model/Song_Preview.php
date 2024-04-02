@@ -502,6 +502,11 @@ class Song_Preview extends database_object implements Media, playable_item
         return '';
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::SONG_PREVIEW;
+    }
+
     /**
      * @deprecated inject dependency
      */

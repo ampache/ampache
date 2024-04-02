@@ -26,43 +26,28 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
-final class BrowseAjaxHandler implements AjaxHandlerInterface
+final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LiveStreamRepositoryInterface $liveStreamRepository;
-
-    private ShareUiLinkRendererInterface $shareUiLinkRenderer;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        LiveStreamRepositoryInterface $liveStreamRepository,
-        ShareUiLinkRendererInterface $shareUiLinkRenderer
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private LiveStreamRepositoryInterface $liveStreamRepository,
+        private ShareUiLinkRendererInterface $shareUiLinkRenderer
     ) {
-        $this->requestParser        = $requestParser;
-        $this->modelFactory         = $modelFactory;
-        $this->liveStreamRepository = $liveStreamRepository;
-        $this->shareUiLinkRenderer  = $shareUiLinkRenderer;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        if (!Core::is_session_started()) {
-            session_start();
-        }
-
         if (!defined('AJAX_INCLUDE')) {
             return;
         }
@@ -167,7 +152,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
+                        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
                             return;
                         }
                         $liveStreamId = (int) Core::get_request('id');
@@ -260,10 +245,10 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
-                $object_type = Core::get_request('object_type');
+                $object_type = LibraryItemEnum::tryFrom(Core::get_request('object_type')) ?? null;
                 $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-                if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
+                if ($object_type !== null && $object_id > 0) {
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;

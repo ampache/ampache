@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -71,7 +72,6 @@ class Xml_Data
     // This is added so that we don't pop any webservers
     private static ?int $limit  = 5000;
     private static int $offset  = 0;
-    private static string $type = '';
 
     /**
      * set_offset
@@ -99,24 +99,6 @@ class Xml_Data
         }
 
         self::$limit = (strtolower((string)$limit) == "none") ? null : (int)$limit;
-
-        return true;
-    }
-
-    /**
-     * set_type
-     *
-     * This sets the type of Xml_Data we are working on
-     *
-     * @param string $type Xml_Data type
-     */
-    public static function set_type($type): bool
-    {
-        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
-            return false;
-        }
-
-        self::$type = $type;
 
         return true;
     }
@@ -166,31 +148,6 @@ class Xml_Data
     public static function empty(): string
     {
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
-    }
-
-    /**
-     * header
-     *
-     * This returns the header
-     *
-     * @param string $title
-     * @see _header()
-     */
-    public static function header($title = null): string
-    {
-        return self::_header($title);
-    }
-
-    /**
-     * footer
-     *
-     * This returns the footer
-     *
-     * @see _footer()
-     */
-    public static function footer(): string
-    {
-        return self::_footer();
     }
 
     /**
@@ -1463,7 +1420,12 @@ class Xml_Data
      *
      * This handles creating a xml document for a now_playing list
      *
-     * @param array $results
+     * @param list<array{
+     *   media: library_item,
+     *   client: User,
+     *   agent: string,
+     *   expire: int
+     *  }> $results
      */
     public static function now_playing(array $results): string
     {
@@ -1475,7 +1437,7 @@ class Xml_Data
                 continue;
             }
             $media = $now_playing['media'];
-            $string .= "\t<now_playing id=\"" . $media->getId() . "\">\n" . "\t\t<type><![CDATA[" . (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)) . "]]></type>\n" . "\t\t<client><![CDATA[" . $now_playing['agent'] . "]]></client>\n" . "\t\t<expire>" . (int) $now_playing['expire'] . "</expire>\n" . "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n" . "\t</now_playing>\n";
+            $string .= "\t<now_playing id=\"" . $media->getId() . "\">\n" . "\t\t<type><![CDATA[" . $media->getMediaType()->value . "]]></type>\n" . "\t\t<client><![CDATA[" . $now_playing['agent'] . "]]></client>\n" . "\t\t<expire>" . (int) $now_playing['expire'] . "</expire>\n" . "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n" . "\t</now_playing>\n";
         }
 
         return self::output_xml($string);
@@ -1558,31 +1520,6 @@ class Xml_Data
     }
 
     /**
-     * rss_feed
-     *
-     * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
-     *
-     * @param array $data Keyed array of information to RSS'ify
-     * @param string $title RSS feed title
-     * @param int|null $date publish date
-     */
-    public static function rss_feed($data, $title, $date = null): string
-    {
-        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date !== null) {
-            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), true);
-        }
-
-        return self::_header() . $string . self::_footer();
-    }
-
-    /**
      * deleted
      *
      * This takes an array of deleted objects and return XML based on the type of object
@@ -1623,27 +1560,10 @@ class Xml_Data
      *
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
-     *
-     * @param string $title
      */
-    private static function _header($title = null): string
+    private static function _header(): string
     {
-        switch (self::$type) {
-            case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . ($title ?? T_("Ampache XSPF Playlist")) . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get('web_path') . "</info>\n<trackList>\n";
-                break;
-            case 'itunes':
-                $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
-                break;
-            case 'rss':
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n <!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r", time()) . "-->\n<rss version=\"2.0\">\n<channel>\n";
-                break;
-            default:
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
-                break;
-        } // end switch
-
-        return $header;
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
     }
 
     /**
@@ -1653,22 +1573,7 @@ class Xml_Data
      */
     private static function _footer(): string
     {
-        switch (self::$type) {
-            case 'itunes':
-                $footer = "\t\t</dict>\t\n</dict>\n</plist>\n";
-                break;
-            case 'xspf':
-                $footer = "</trackList>\n</playlist>\n";
-                break;
-            case 'rss':
-                $footer = "\n</channel>\n</rss>\n";
-                break;
-            default:
-                $footer = "\n</root>\n";
-                break;
-        } // end switch on type
-
-        return $footer;
+        return "\n</root>\n";
     }
 
     /**

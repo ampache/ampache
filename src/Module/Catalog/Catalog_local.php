@@ -787,19 +787,16 @@ class Catalog_local extends Catalog
     /**
      * _clean_chunk
      * This is the clean function and is broken into chunks to try to save a little memory
-     * @param $media_type
      * @param $chunk
      * @param $chunk_size
-     * @return array
+     * @return list<int>
      */
-    private function _clean_chunk($media_type, $chunk, $chunk_size): array
+    private function _clean_chunk(string $media_type, $chunk, $chunk_size): array
     {
         $dead  = array();
         $count = $chunk * $chunk_size;
 
-        $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
-
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT $count, $chunk_size;";
+        $sql        = "SELECT `id`, `file` FROM `$media_type` WHERE `catalog` = ? AND `file` IS NOT NULL LIMIT $count, $chunk_size;";
         $db_results = Dba::read($sql, array($this->catalog_id));
         while ($results = Dba::fetch_assoc($db_results)) {
             //debug_event('local.catalog', 'Cleaning check on ' . $results['file'] . ' (' . $results['id'] . ')', 5);
@@ -820,19 +817,16 @@ class Catalog_local extends Catalog
     /**
      * _check_chunk
      * This is the check function and is broken into chunks to try to save a little memory
-     * @param $media_type
      * @param $chunk
      * @param $chunk_size
-     * @return array
+     * @return list<string>
      */
-    private function _check_chunk($media_type, $chunk, $chunk_size): array
+    private function _check_chunk(string $media_type, $chunk, $chunk_size): array
     {
         $missing = array();
         $count   = $chunk * $chunk_size;
 
-        $tableName = ObjectTypeToClassNameMapper::reverseMap($media_type);
-
-        $sql        = "SELECT `id`, `file` FROM `$tableName` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
+        $sql        = "SELECT `id`, `file` FROM `$media_type` WHERE `catalog` = ? LIMIT $count, $chunk_size;";
         $db_results = Dba::read($sql, array($this->catalog_id));
 
         while ($results = Dba::fetch_assoc($db_results)) {

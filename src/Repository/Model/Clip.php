@@ -228,4 +228,9 @@ class Clip extends Video
 
         return false;
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::CLIP;
+    }
 }

@@ -431,4 +431,9 @@ class Broadcast extends database_object implements library_item
 
         return (string)$this->id;
     }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::BROADCAST;
+    }
 }

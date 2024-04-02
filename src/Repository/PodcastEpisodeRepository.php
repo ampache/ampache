@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -39,22 +39,13 @@ use Generator;
  *
  * Tables: `podcast_episode`
  */
-final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterface
+final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -231,5 +222,18 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         $this->connection->query(
             'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
         );
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode
+    {
+        $item = new Podcast_Episode($itemId);
+        if ($item->isNew()) {
+            return null;
+        }
+
+        return $item;
     }
 }

@@ -35,27 +35,19 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 
-final class SongAjaxHandler implements AjaxHandlerInterface
+final readonly class SongAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
-    private ShoutRendererInterface $shoutRenderer;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ShoutRepositoryInterface $shoutRepository,
-        ShoutRendererInterface $shoutRenderer
+        private RequestParserInterface $requestParser,
+        private ShoutRepositoryInterface $shoutRepository,
+        private ShoutRendererInterface $shoutRenderer
     ) {
-        $this->requestParser   = $requestParser;
-        $this->shoutRepository = $shoutRepository;
-        $this->shoutRenderer   = $shoutRenderer;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
         $action  = $this->requestParser->getFromRequest('action');

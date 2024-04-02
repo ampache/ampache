@@ -20,26 +20,21 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util\Rss;
+namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
-use Ampache\Repository\Model\User;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface AmpacheRssInterface
+/**
+ * Extend `time` column for the stream_playlist table
+ */
+final class Migration600061 extends AbstractMigration
 {
-    /**
-     * get_xml
-     * This returns the xmldocument for the current rss type, it calls a sub function that gathers the data
-     * and then uses the xmlDATA class to build the document
-     *
-     * @param null|array{object_type: string, object_id: int} $params
-     */
-    public function get_xml(
-        User $user,
-        RssFeedTypeEnum $type,
-        ?array $params = null
-    ): string;
+    protected array $changelog = ['Allow signed `user` column for the broadcast table'];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("ALTER TABLE `broadcast` MODIFY COLUMN `user` int(11) NOT NULL");
+    }
 }

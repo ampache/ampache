@@ -25,50 +25,37 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Album;
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Module\Util\Ui;
+use Ampache\Repository\AlbumRepositoryInterface;
+use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Random;
-use Ampache\Module\Util\Ui;
-use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class RandomAjaxHandler implements AjaxHandlerInterface
+final readonly class RandomAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        private RequestParserInterface $requestParser,
+        private AlbumRepositoryInterface $albumRepository,
+        private SongRepositoryInterface $songRepository
     ) {
-        $this->requestParser   = $requestParser;
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = array();
-        $songs   = array();
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {
             case 'song':
-                $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), Core::get_global('user'));
-                $user  = Core::get_global('user');
-                if (!count($songs) || $user === null) {
+                $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), $user);
+                if (!count($songs)) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -81,11 +68,10 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'album':
                 $album_id = $this->albumRepository->getRandom(
-                    Core::get_global('user')->id ?? -1
+                    $user->getId()
                 );
-                $user = Core::get_global('user');
 
-                if (empty($album_id) || $user === null) {
+                if (empty($album_id)) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -99,32 +85,9 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 }
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            case 'album_disk':
-                $albumDisk_id = $this->albumRepository->getRandomAlbumDisk(
-                    Core::get_global('user')->id ?? -1,
-                    null
-                );
-                $user = Core::get_global('user');
-
-                if (empty($albumDisk_id) || $user === null) {
-                    $results['rfc3514'] = '0x1';
-                    break;
-                }
-
-                $albumDisk = new AlbumDisk($albumDisk_id[0]);
-                $songs     = $this->songRepository->getByAlbumDisk($albumDisk->id);
-
-                $user->load_playlist();
-                foreach ($songs as $song_id) {
-                    $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
-                }
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
-                break;
             case 'artist':
                 $artist_id = Random::artist();
-                $user      = Core::get_global('user');
-
-                if (!$artist_id || $user === null) {
+                if (!$artist_id) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -139,9 +102,8 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'playlist':
                 $playlist_id = Random::playlist();
-                $user        = Core::get_global('user');
 
-                if (!$playlist_id || $user === null) {
+                if (!$playlist_id) {
                     $results['rfc3514'] = '0x1';
                     break;
                 }
@@ -159,34 +121,12 @@ final class RandomAjaxHandler implements AjaxHandlerInterface
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
                 $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
-            case 'advanced_random':
-                $object_ids = Random::advanced('song', $_POST);
-                $user       = Core::get_global('user');
-
-                // First add them to the active playlist
-                if (!empty($object_ids) && $user instanceof User) {
-                    $user->load_playlist();
-                    foreach ($object_ids as $object_id) {
-                        $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
-                    }
-                }
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
-
-                // Now setup the browse and show them below!
-                $browse = new Browse();
-                $browse->set_type('song');
-                $browse->save_objects($object_ids);
-                ob_start();
-                $browse->show_objects();
-                $results['browse'] = ob_get_contents();
-                ob_end_clean();
-                break;
             default:
                 $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

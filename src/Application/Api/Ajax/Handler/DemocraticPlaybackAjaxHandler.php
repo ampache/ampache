@@ -33,18 +33,16 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\User;
 
-final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
+final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
@@ -69,8 +67,8 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'delete':
-                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+                if ($user->has_access(AccessLevelEnum::MANAGER)) {
+                    echo xoutput_from_array(array('rfc3514' => '0x1'));
 
                     return;
                 }

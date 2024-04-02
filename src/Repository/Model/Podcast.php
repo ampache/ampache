@@ -547,6 +547,11 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return $this->getPodcastEpisodeRepository()->getEpisodes($this, $stateFilter);
     }
 
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PODCAST;
+    }
+
     /**
      * @deprecated Inject by constructor
      */

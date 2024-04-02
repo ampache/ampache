@@ -40,6 +40,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -1673,7 +1674,12 @@ class Json_Data
      *
      * This handles creating an JSON document for a now_playing list
      *
-     * @param array $results
+     * @param list<array{
+     *  media: library_item,
+     *  client: User,
+     *  agent: string,
+     *  expire: int
+     * }> $results
      */
     public static function now_playing(array $results): string
     {
@@ -1687,7 +1693,7 @@ class Json_Data
 
             $JSON[] = [
                 'id' => (string) $media->getId(),
-                'type' => (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)),
+                'type' => $media->getMediaType()->value,
                 'client' => $now_playing['agent'],
                 'expire' => (int) $now_playing['expire'],
                 'user' => array(

@@ -25,38 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss;
 
-use Ampache\Gui\TalFactoryInterface;
-use Ampache\Module\Util\Rss\Surrogate\RssItemInterface;
+use Ampache\Module\Util\Rss\Type\FeedTypeInterface;
+use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
-use PhpTal\PHPTAL;
 
-/**
- * Builds ths rss-podcast xml structure
- *
- * Uses phptal and a podcast-template to build the podcast xml
- */
-final class RssPodcastBuilder implements RssPodcastBuilderInterface
+interface RssFeedTypeFactoryInterface
 {
-    private TalFactoryInterface $talFactory;
+    public function createLibraryItemFeed(User $user, playable_item $libraryItem): FeedTypeInterface;
 
-    public function __construct(
-        TalFactoryInterface $talFactory
-    ) {
-        $this->talFactory   = $talFactory;
-    }
+    public function createRecentlyPlayedFeed(User $user): FeedTypeInterface;
 
-    /**
-     * Returns the rss-podcast xml
-     */
-    public function build(
-        RssItemInterface $rssItemAdapter,
-        User $user
-    ): string {
-        $tal = $this->talFactory->createPhpTal();
-        $tal->setOutputMode(PHPTAL::XML);
-        $tal->setTemplate((string) realpath(__DIR__ . '/../../../../resources/templates/rss/podcast.xml'));
-        $tal->set('THIS', $rssItemAdapter);
+    public function createNowPlayingFeed(): FeedTypeInterface;
 
-        return $tal->execute();
-    }
+    public function createLatestAlbumFeed(User $user): FeedTypeInterface;
+
+    public function createLatestArtistFeed(User $user): FeedTypeInterface;
+
+    public function createLatestShoutFeed(): FeedTypeInterface;
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -42,34 +42,16 @@ use SimpleXMLElement;
 /**
  * Provides functions for podcast-syncing
  */
-final class PodcastSyncer implements PodcastSyncerInterface
+final readonly class PodcastSyncer implements PodcastSyncerInterface
 {
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
-
-    private PodcastDeleterInterface $podcastDeleter;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        PodcastRepositoryInterface $podcastRepository,
-        ModelFactoryInterface $modelFactory,
-        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
-        PodcastDeleterInterface $podcastDeleter,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        ConfigContainerInterface $configContainer
+        private PodcastRepositoryInterface $podcastRepository,
+        private ModelFactoryInterface $modelFactory,
+        private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
+        private PodcastDeleterInterface $podcastDeleter,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->podcastRepository        = $podcastRepository;
-        $this->modelFactory             = $modelFactory;
-        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
-        $this->podcastDeleter           = $podcastDeleter;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->configContainer          = $configContainer;
     }
 
     /**
@@ -108,7 +90,15 @@ final class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * Sync all podcast-item within the given catalogs
+     * Syncs a single episode
+     */
+    public function syncEpisode(Podcast_Episode $episode): void
+    {
+        $this->podcastEpisodeDownloader->fetch($episode);
+    }
+
+    /**
+     * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
      *

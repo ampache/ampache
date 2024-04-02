@@ -2423,17 +2423,12 @@ abstract class Catalog extends database_object
      * update_media_from_tags
      * This is a 'wrapper' function calls the update function for the media
      * type in question
-     * @param Song|Video|Podcast_Episode $media
-     * @param array $gather_types
-     * @param string $sort_pattern
-     * @param string $rename_pattern
+     * @param list<string> $gather_types
      * @return array
      */
     public static function update_media_from_tags(
-        $media,
-        $gather_types = array('music'),
-        $sort_pattern = '',
-        $rename_pattern = ''
+        Song|Video|Podcast_Episode $media,
+        array $gather_types = ['music'],
     ): array {
         $array   = array();
         $catalog = self::create_from_id($media->catalog);
@@ -2447,13 +2442,12 @@ abstract class Catalog extends database_object
         // retrieve the file if needed
         $streamConfiguration = $catalog->prepare_media($media);
 
-        /** @var Song|Podcast_Episode|Video $media */
         if ($streamConfiguration === null) {
             $array['error'] = true;
 
             return $array;
         }
-        /** @var Song|Podcast_Episode|Video $media */
+
         if (empty($streamConfiguration['file_path']) || Core::get_filesize(Core::conv_lc_file($streamConfiguration['file_path'])) == 0) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading file ' . $streamConfiguration['file_path'], 2);
             $array['error'] = true;
@@ -2461,32 +2455,27 @@ abstract class Catalog extends database_object
             return $array;
         }
 
-        $type      = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
-        $functions = [
-            'song' => static function ($results, $media) {
-                return self::update_song_from_tags($results, $media);
-            },
-            'video' => static function ($results, $media) {
-                return self::update_video_from_tags($results, $media);
-            },
-            'podcast_episode' => static function ($results, $media) {
-                return self::update_podcast_episode_from_tags($results, $media);
-            },
-        ];
-
-        $callable = $functions[$type];
         // try and get the tags from your file
         debug_event(__CLASS__, 'Reading tags from ' . $streamConfiguration['file_path'], 4);
         $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
-        $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
+        $results   = $catalog->get_media_tags($media, $gather_types, '', '');
         // for files without tags try to update from their file name instead
         if ($media->id && in_array($extension, array('wav', 'shn'))) {
             // match against your catalog 'Filename Pattern' and 'Folder Pattern'
             $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
             $results = array_merge($results, $patres);
         }
-        /** @var array $update */
-        $update = $callable($results, $media);
+
+        if ($media instanceof Song) {
+            $update = self::update_song_from_tags($results, $media);
+        } elseif ($media instanceof Video) {
+            $update = self::update_video_from_tags($results, $media);
+        } elseif ($media instanceof Podcast_Episode) {
+            $update = self::update_podcast_episode_from_tags($results, $media);
+        } else {
+            $update = [];
+        }
+
         // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
         if ($catalog instanceof Catalog_Seafile) {
             $catalog->clean_tmp_file($streamConfiguration['file_path']);
@@ -2502,11 +2491,10 @@ abstract class Catalog extends database_object
      * static function.
      * FIXME: This is an ugly mess, this really needs to be consolidated and cleaned up.
      * @param array $results
-     * @param Song $song
      * @return array
      * @throws ReflectionException
      */
-    public static function update_song_from_tags($results, Song $song): array
+    public static function update_song_from_tags(array $results, Song $song): array
     {
         //debug_event(__CLASS__, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
@@ -2924,10 +2912,9 @@ abstract class Catalog extends database_object
 
     /**
      * @param array $results
-     * @param Video $video
      * @return array
      */
-    public static function update_video_from_tags($results, Video $video): array
+    public static function update_video_from_tags(array $results, Video $video): array
     {
         /* Setup the vars */
         $new_video                = new Video();
@@ -2975,10 +2962,9 @@ abstract class Catalog extends database_object
 
     /**
      * @param array $results
-     * @param Podcast_Episode $podcast_episode
      * @return array
      */
-    public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode): array
+    public static function update_podcast_episode_from_tags(array $results, Podcast_Episode $podcast_episode): array
     {
         $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
         Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id));
