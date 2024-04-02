@@ -812,7 +812,6 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
   `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `track` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `playlist_track_UN` (`playlist`,`track`),
   KEY `playlist` (`playlist`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1480,7 +1479,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600067'),
+('db_version', '600068'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
