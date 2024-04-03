@@ -43,8 +43,8 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
 {
     public function __construct(
         protected DatabaseConnectionInterface $connection,
-        private UserRepositoryInterface $userRepository,
-        private LoggerInterface $logger,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 

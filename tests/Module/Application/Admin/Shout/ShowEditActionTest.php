@@ -157,7 +157,6 @@ class ShowEditActionTest extends TestCase
     public function testRunRenders(): void
     {
         $shoutId = 666;
-        $userId  = 42;
 
         $shout       = $this->createMock(Shoutbox::class);
         $libraryItem = $this->createMock(library_item::class);
