@@ -30,12 +30,9 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\System\Core;
-use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 
 final class SetTrackNumbersAction implements ApplicationActionInterface
 {
@@ -47,18 +44,14 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
     private UiInterface $ui;
 
-    private LoggerInterface $logger;
-
     public function __construct(
         RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
-        UiInterface $ui,
-        LoggerInterface $logger
+        UiInterface $ui
     ) {
         $this->requestParser = $requestParser;
         $this->modelFactory  = $modelFactory;
         $this->ui            = $ui;
-        $this->logger        = $logger;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -75,11 +68,6 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
         // Retrieving final song order from url
         foreach ($_GET as $key => $data) {
             $_GET[$key] = unhtmlentities(scrub_in((string) $data));
-
-            //$this->logger->debug(
-            //    $key . '=' . Core::get_get($key),
-            //    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            //);
         }
 
         if (array_key_exists('order', $_GET)) {
