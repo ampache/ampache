@@ -72,7 +72,7 @@ final class PlaylistSongs4Method
         $items   = $playlist->get_items();
         $results = array();
         foreach ($items as $object) {
-            if ($object['object_type'] == 'song') {
+            if ($object['object_type']->value == 'song') {
                 $results[] = $object['object_id'];
             }
         } // end foreach

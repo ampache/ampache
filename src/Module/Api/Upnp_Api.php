@@ -41,11 +41,11 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
@@ -907,7 +907,7 @@ class Upnp_Api
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
-                                if ($item['object_type'] == 'song') {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
                                     $song->format();
                                     $mediaItems[] = self::_itemSong($song, $parent);
@@ -933,7 +933,7 @@ class Upnp_Api
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
-                                if ($item['object_type'] == 'song') {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
                                     $song->format();
                                     $mediaItems[] = self::_itemSong($song, $parent);

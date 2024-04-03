@@ -81,7 +81,7 @@ final class GetArt4Method
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']->value);
             if (!Art::has_db($item['object_id'], 'song')) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
