@@ -31,14 +31,10 @@ use Ampache\Repository\Model\UpdateInfoEnum;
 /**
  * Provides access to the `update_info` table
  */
-final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
+final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**

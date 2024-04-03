@@ -12197,16 +12197,6 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\<int\\<0, max\\>, int\\>\\|int\\.$#"
-			count: 2
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getAlbumByArtist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getByArtist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/AlbumRepository.php
 

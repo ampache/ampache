@@ -39,18 +39,10 @@ use DateTimeInterface;
  *
  * Tables: `share`
  */
-final class ShareRepository implements ShareRepositoryInterface
+final readonly class ShareRepository implements ShareRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
+    public function __construct(private DatabaseConnectionInterface $connection, private ConfigContainerInterface $configContainer)
+    {
     }
 
     /**

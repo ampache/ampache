@@ -38,18 +38,10 @@ use Generator;
  *
  * Table: `access_list`
  */
-final class AccessRepository implements AccessRepositoryInterface
+final readonly class AccessRepository implements AccessRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ModelFactoryInterface $modelFactory;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection,
-        ModelFactoryInterface $modelFactory
-    ) {
-        $this->connection   = $connection;
-        $this->modelFactory = $modelFactory;
+    public function __construct(private DatabaseConnectionInterface $connection, private ModelFactoryInterface $modelFactory)
+    {
     }
 
     /**

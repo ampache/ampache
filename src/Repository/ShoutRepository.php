@@ -199,7 +199,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
             /** @var Shoutbox $shout */
             yield $shout;
 
-            $limit--;
+            --$limit;
 
             if ($limit < 1) {
                 break;
