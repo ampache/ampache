@@ -325,6 +325,7 @@ class Stream
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
     }
+
     /**
      * start_transcode
      *
