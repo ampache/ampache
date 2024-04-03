@@ -94,7 +94,11 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $types = ['song', 'video', 'podcast_episode'];
+        $types = [
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($types as $type) {
             $this->connection->query(
                 sprintf(

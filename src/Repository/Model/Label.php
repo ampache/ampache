@@ -42,16 +42,27 @@ class Label extends database_object implements library_item
 
     /* Variables from DB */
     public int $id = 0;
-    public ?string $name;
-    public ?string $category;
-    public ?string $summary;
-    public ?string $address;
-    public ?string $email;
-    public ?string $website;
-    public ?int $user;
-    public ?int $creation_date;
-    public ?string $mbid; // MusicBrainz ID
-    public ?string $country;
+
+    public ?string $name = null;
+
+    public ?string $category = null;
+
+    public ?string $summary = null;
+
+    public ?string $address = null;
+
+    public ?string $email = null;
+
+    public ?string $website = null;
+
+    public ?int $user = null;
+
+    public ?int $creation_date = null;
+
+    // MusicBrainz ID
+    public ?string $mbid    = null;
+    public ?string $country = null;
+
     public bool $active;
 
     /**
@@ -65,10 +76,12 @@ class Label extends database_object implements library_item
      * @var null|string $f_link
      */
     public $f_link;
+
     /**
      * @var array $artists
      */
-    public $artists = array();
+    public $artists = [];
+
     /**
      * @var int $artists
      */
@@ -83,10 +96,8 @@ class Label extends database_object implements library_item
         if (!$label_id) {
             return;
         }
+
         $info = $this->get_info($label_id, static::DB_TABLENAME);
-        if (empty($info)) {
-            return;
-        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -129,21 +140,18 @@ class Label extends database_object implements library_item
         $this->get_artist_count();
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
-        $medias  = array();
+        $medias  = [];
         $artists = $this->get_artists();
         foreach ($artists as $artist_id) {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'artist',
                 'object_id' => $artist_id
-            );
+            ];
         }
 
-        return array('artist' => $medias);
+        return ['artist' => $medias];
     }
 
     public function get_default_art_kind(): string
@@ -164,7 +172,7 @@ class Label extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        if (!isset($this->f_name)) {
+        if ($this->f_name === null) {
             $this->f_name = $this->name;
         }
 
@@ -191,7 +199,7 @@ class Label extends database_object implements library_item
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $this->f_link = "<a href=\"" . $this->get_link() . "\" title=\"" . scrub_out($this->get_fullname()) . "\">" . scrub_out($this->get_fullname());
         }
 
@@ -200,18 +208,16 @@ class Label extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        $keywords          = array();
-        $keywords['label'] = array(
-            'important' => true,
-            'label' => T_('Label'),
-            'value' => $this->f_name
-        );
-
-        return $keywords;
+        return [
+            'label' => [
+                'important' => true,
+                'label' => T_('Label'),
+                'value' => $this->f_name
+            ]
+        ];
     }
 
     /**
@@ -219,14 +225,11 @@ class Label extends database_object implements library_item
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'song') {
-            $songs = static::getSongRepository()->getByLabel((string)$this->name);
+            $songs = $this->getSongRepository()->getByLabel((string)$this->name);
             foreach ($songs as $song_id) {
-                $medias[] = array(
-                    'object_type' => LibraryItemEnum::SONG,
-                    'object_id' => $song_id
-                );
+                $medias[] = ['object_type' => LibraryItemEnum::SONG, 'object_id' => $song_id];
             }
         }
 
@@ -253,23 +256,22 @@ class Label extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
-        $search                    = array();
+        $search                    = [];
         $search['type']            = "artist";
         $search['rule_0_input']    = $name;
         $search['rule_0_operator'] = 4;
         $search['rule_0']          = "title";
         $artists                   = Search::run($search);
 
-        $childrens = array();
+        $childrens = [];
         foreach ($artists as $artist_id) {
-            $childrens[] = array(
+            $childrens[] = [
                 'object_type' => 'artist',
                 'object_id' => $artist_id
-            );
+            ];
         }
 
         return $childrens;
@@ -277,7 +279,6 @@ class Label extends database_object implements library_item
 
     /**
      * update
-     * @param array $data
      * @return int|false
      */
     public function update(array $data)
@@ -298,7 +299,7 @@ class Label extends database_object implements library_item
         $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $mbid, strtolower($category), $summary, $address, $country, $email, $website, $active, $this->id));
+        Dba::write($sql, [$name, $mbid, strtolower((string) $category), $summary, $address, $country, $email, $website, $active, $this->id]);
 
         return $this->id;
     }
@@ -308,7 +309,7 @@ class Label extends database_object implements library_item
      */
     public static function helper(string $name): ?int
     {
-        $label_data = array(
+        $label_data = [
             'name' => $name,
             'mbid' => null,
             'category' => 'tag_generated',
@@ -319,16 +320,14 @@ class Label extends database_object implements library_item
             'website' => null,
             'active' => 1,
             'user' => 0,
-            'creation_date' => time()
-        );
+            'creation_date' => time(),
+        ];
 
         return self::create($label_data);
     }
 
     /**
      * create
-     * @param array $data
-     * @return int|null
      */
     public static function create(array $data): ?int
     {
@@ -349,7 +348,7 @@ class Label extends database_object implements library_item
         $creation_date = $data['creation_date'] ?? time();
 
         $sql = "INSERT INTO `label` (`name`, `mbid`, `category`, `summary`, `address`, `country`, `email`, `website`, `user`, `active`, `creation_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date));
+        Dba::write($sql, [$name, $mbid, $category, $summary, $address, $country, $email, $website, $user, $active, $creation_date]);
 
         $label_id = Dba::insert_id();
         if (!$label_id) {
@@ -367,11 +366,12 @@ class Label extends database_object implements library_item
     {
         if (empty($this->artists)) {
             $sql        = "SELECT `artist` FROM `label_asso` WHERE `label` = ?";
-            $db_results = Dba::read($sql, array($this->id));
-            $results    = array();
+            $db_results = Dba::read($sql, [$this->id]);
+            $results    = [];
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = (int)$row['artist'];
             }
+
             $this->artists = $results;
         }
 
@@ -383,7 +383,7 @@ class Label extends database_object implements library_item
      */
     public function get_artist_count(): int
     {
-        if (!isset($this->artist_count)) {
+        if ($this->artist_count === null) {
             $this->artist_count = count($this->get_artists());
         }
 
@@ -395,7 +395,6 @@ class Label extends database_object implements library_item
      * This returns a csv formatted version of the labels that we are given
      * @param array $labels
      * @param bool $link
-     * @return string
      */
     public static function get_display($labels, $link = false): string
     {
@@ -410,16 +409,16 @@ class Label extends database_object implements library_item
             if ($link) {
                 $results .= '<a href="' . $web_path . '/labels.php?action=show&label=' . $label_id . '" title="' . $value . '">';
             }
+
             $results .= $value;
             if ($link) {
                 $results .= '</a>';
             }
+
             $results .= ', ';
         }
 
-        $results = rtrim((string)$results, ', ');
-
-        return $results;
+        return rtrim($results, ', ');
     }
 
     /**
@@ -433,7 +432,7 @@ class Label extends database_object implements library_item
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
-            $params = array($new_object_id, $old_object_id);
+            $params = [$new_object_id, $old_object_id];
 
             return Dba::write($sql, $params);
         }
@@ -459,7 +458,7 @@ class Label extends database_object implements library_item
     /**
      * @deprecated inject dependency
      */
-    private static function getSongRepository(): SongRepositoryInterface
+    private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;
 

@@ -38,7 +38,7 @@ final class Migration360002 extends AbstractMigration
         'Change Tables to FULLTEXT() for improved searching',
         'Increase Filename lengths to 4096',
         'Remove useless KEY reference from ACL and Catalog tables',
-        'Add new Remote User / Remote Password fields to Catalog'
+        'Add new Remote User / Remote Password fields to Catalog',
     ];
 
     public function migrate(): void

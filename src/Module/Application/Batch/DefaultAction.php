@@ -161,7 +161,10 @@ final class DefaultAction implements ApplicationActionInterface
                             case 'video':
                                 $video = $this->modelFactory->createVideo($media_id);
                                 if ($video->isNew() === false) {
-                                    $media_ids[] = ['object_type' => 'Video', 'object_id' => $media_id];
+                                    $media_ids[] = [
+                                        'object_type' => 'Video',
+                                        'object_id' => $media_id
+                                    ];
                                 }
                                 break;
                         } // switch on type

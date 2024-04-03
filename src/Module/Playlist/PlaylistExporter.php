@@ -35,7 +35,11 @@ use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
-    public const VALID_FILE_EXTENSIONS = ['m3u', 'xspf', 'pls'];
+    public const VALID_FILE_EXTENSIONS = [
+        'm3u',
+        'xspf',
+        'pls',
+    ];
 
     public function export(
         Interactor $interactor,

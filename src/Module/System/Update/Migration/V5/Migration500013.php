@@ -37,7 +37,7 @@ final class Migration500013 extends AbstractMigration
 {
     protected array $changelog = [
         'Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)',
-        'Add username to the playlist table to stop pulling user all the time'
+        'Add username to the playlist table to stop pulling user all the time',
     ];
 
     public function migrate(): void

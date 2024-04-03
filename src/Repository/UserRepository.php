@@ -187,14 +187,36 @@ final readonly class UserRepository implements UserRepositoryInterface
     public function collectGarbage(): void
     {
         // simple deletion queries.
-        $user_tables = ['access_list', 'bookmark', 'broadcast', 'democratic', 'ip_history', 'object_count', 'playlist', 'rating', 'search', 'share', 'tag_map', 'user_activity', 'user_data', 'user_flag', 'user_preference', 'user_shout', 'user_vote', 'wanted'];
+        $user_tables = [
+            'access_list',
+            'bookmark',
+            'broadcast',
+            'democratic',
+            'ip_history',
+            'object_count',
+            'playlist',
+            'rating',
+            'search',
+            'share',
+            'tag_map',
+            'user_activity',
+            'user_data',
+            'user_flag',
+            'user_preference',
+            'user_shout',
+            'user_vote',
+            'wanted'
+        ];
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
 
         // reset their data to null if they've made custom changes
-        $user_tables = ['artist', 'label'];
+        $user_tables = [
+            'artist',
+            'label'
+        ];
         foreach ($user_tables as $table_id) {
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);

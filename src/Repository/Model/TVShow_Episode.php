@@ -31,15 +31,22 @@ class TVShow_Episode extends Video
 {
     protected const DB_TABLENAME = 'tvshow_episode';
 
-    public ?string $original_name;
+    public ?string $original_name = null;
+
     public int $season;
+
     public int $episode_number;
-    public ?string $summary;
+
+    public ?string $summary = null;
 
     public $f_link;
+
     public $f_season;
+
     public $f_season_link;
+
     public $f_tvshow;
+
     public $f_tvshow_link;
 
     /**
@@ -53,6 +60,7 @@ class TVShow_Episode extends Video
         if (!$episode_id) {
             return;
         }
+
         parent::__construct($episode_id);
 
         $info = $this->get_info($episode_id, static::DB_TABLENAME);
@@ -86,20 +94,22 @@ class TVShow_Episode extends Video
      * insert
      * Insert a new tv show episode and related entities.
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
         }
+
         $tags = $data['genre'];
 
         $tvshow = TvShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if (!empty($options) && $options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
+        if ($options !== null && $options !== [] && $options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
             $art = new Art((int)$tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
+
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if (!empty($options) && $options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
+        if ($options !== null && $options !== [] && $options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }
@@ -107,7 +117,7 @@ class TVShow_Episode extends Video
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $tag = trim((string)$tag);
-                if (!empty($tag)) {
+                if ($tag !== '' && $tag !== '0') {
                     Tag::add('tvshow_season', (int) $tvshow_season, $tag, false);
                     Tag::add('tvshow', (int) $tvshow, $tag, false);
                 }
@@ -130,13 +140,7 @@ class TVShow_Episode extends Video
     public static function create($data): int
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array(
-            $data['id'],
-            $data['original_name'],
-            $data['tvshow_season'],
-            $data['tvshow_episode'],
-            $data['summary']
-        ));
+        Dba::write($sql, [$data['id'], $data['original_name'], $data['tvshow_season'], $data['tvshow_episode'], $data['summary']]);
 
         return $data['id'];
     }
@@ -144,7 +148,6 @@ class TVShow_Episode extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a tv show episode entry
-     * @param array $data
      */
     public function update(array $data): int
     {
@@ -156,7 +159,7 @@ class TVShow_Episode extends Video
         $summary        = $data['summary'] ?? null;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
+        Dba::write($sql, [$original_name, $tvshow_season, $tvshow_episode, $summary, $this->id]);
 
         $this->original_name  = $original_name;
         $this->season         = $tvshow_season;
@@ -193,7 +196,7 @@ class TVShow_Episode extends Video
         $season->format();
 
         $value = $season->f_tvshow;
-        if ($this->episode_number) {
+        if ($this->episode_number !== 0) {
             $value .= ' - S' . sprintf('%02d', $season->season_number) . 'E' . sprintf('%02d', $this->episode_number);
         }
 
@@ -202,33 +205,17 @@ class TVShow_Episode extends Video
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        $keywords           = parent::get_keywords();
-        $keywords['tvshow'] = array(
-            'important' => true,
-            'label' => T_('TV Show'),
-            'value' => $this->f_tvshow
-        );
-        $keywords['tvshow_season'] = array(
-            'important' => false,
-            'label' => T_('Season'),
-            'value' => $this->f_season
-        );
-        if ($this->episode_number) {
-            $keywords['tvshow_episode'] = array(
-                'important' => false,
-                'label' => T_('Episode'),
-                'value' => $this->episode_number
-            );
+        $keywords                  = parent::get_keywords();
+        $keywords['tvshow']        = ['important' => true, 'label' => T_('TV Show'), 'value' => $this->f_tvshow];
+        $keywords['tvshow_season'] = ['important' => false, 'label' => T_('Season'), 'value' => $this->f_season];
+        if ($this->episode_number !== 0) {
+            $keywords['tvshow_episode'] = ['important' => false, 'label' => T_('Episode'), 'value' => $this->episode_number];
         }
-        $keywords['type'] = array(
-            'important' => false,
-            'label' => null,
-            'value' => 'tvshow'
-        );
+
+        $keywords['type'] = ['important' => false, 'label' => null, 'value' => 'tvshow'];
 
         return $keywords;
     }
@@ -238,22 +225,21 @@ class TVShow_Episode extends Video
      */
     public function get_parent(): ?array
     {
-        return array(
+        return [
             'object_type' => LibraryItemEnum::TV_SHOW_SEASON,
             'object_id' => $this->season
-        );
+        ];
     }
 
     /**
      * get_release_item_art
-     * @return array
      */
     public function get_release_item_art(): array
     {
-        return array(
+        return [
             'object_type' => 'tvshow_season',
             'object_id' => $this->season
-        );
+        ];
     }
 
     /**
@@ -261,7 +247,7 @@ class TVShow_Episode extends Video
      */
     public function get_description(): string
     {
-        if (!empty($this->summary)) {
+        if (isset($this->summary) && ($this->summary !== null && $this->summary !== '' && $this->summary !== '0')) {
             return $this->summary;
         }
 
@@ -283,16 +269,14 @@ class TVShow_Episode extends Video
         if (Art::has_db($this->id, 'video')) {
             $episode_id = $this->id;
             $type       = 'video';
+        } elseif (Art::has_db($this->season, 'tvshow_season')) {
+            $episode_id = $this->season;
+            $type       = 'tvshow_season';
         } else {
-            if (Art::has_db($this->season, 'tvshow_season')) {
-                $episode_id = $this->season;
-                $type       = 'tvshow_season';
-            } else {
-                $season = new TVShow_Season($this->season);
-                if (Art::has_db($season->tvshow, 'tvshow') || $force) {
-                    $episode_id = $season->tvshow;
-                    $type       = 'tvshow';
-                }
+            $season = new TVShow_Season($this->season);
+            if (Art::has_db($season->tvshow, 'tvshow') || $force) {
+                $episode_id = $season->tvshow;
+                $type       = 'tvshow';
             }
         }
 
@@ -310,7 +294,7 @@ class TVShow_Episode extends Video
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
         }
 
         return $deleted;

@@ -147,8 +147,8 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
             'podcast' => [
                 'important' => true,
                 'label' => T_('Podcast'),
-                'value' => $this->get_fullname()
-            ]
+                'value' => $this->get_fullname(),
+            ],
         ];
     }
 
@@ -196,24 +196,20 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
-        return array('podcast_episode' => $this->getEpisodeIds());
+        return ['podcast_episode' => $this->getEpisodeIds()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -221,23 +217,17 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'podcast_episode') {
             $episodes = $this->getEpisodeIds(PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
-                $medias[] = array(
-                    'object_type' => LibraryItemEnum::PODCAST_EPISODE,
-                    'object_id' => $episode_id
-                );
+                $medias[] = ['object_type' => LibraryItemEnum::PODCAST_EPISODE, 'object_id' => $episode_id];
             }
         }
 
         return $medias;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return null;
@@ -253,7 +243,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_description(): string
     {
-        if (!isset($this->f_description)) {
+        if ($this->f_description === null) {
             $this->f_description = scrub_out($this->description ?? '');
         }
 
@@ -527,9 +517,8 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      * update
      * This takes a key'd array of data and updates the current podcast
      * @param array<mixed> $data
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): never
     {
         throw new LogicException('Podcast::update is not in use');
     }

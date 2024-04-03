@@ -46,7 +46,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
-    private const BROWSE_TYPES = array(
+    private const BROWSE_TYPES = [
         'album',
         'album_disk',
         'artist',
@@ -77,8 +77,8 @@ class Browse extends Query
         'tvshow_season',
         'user',
         'video',
-        'wanted'
-    );
+        'wanted',
+    ];
 
     /**
      * @var int $duration
@@ -147,7 +147,7 @@ class Browse extends Query
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
-            $objects = array();
+            $objects = [];
         }
 
         return $objects;
@@ -165,12 +165,10 @@ class Browse extends Query
                 // Checking if value is suitable
                 $start = (int)$_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
-                    $set_page = floor($start / $this->get_offset());
-                    if ($this->get_total() > $this->get_offset()) {
-                        $total_pages = ceil($this->get_total() / $this->get_offset());
-                    } else {
-                        $total_pages = 0;
-                    }
+                    $set_page    = floor($start / $this->get_offset());
+                    $total_pages = $this->get_total() > $this->get_offset()
+                        ? ceil($this->get_total() / $this->get_offset())
+                        : 0;
 
                     if ($set_page >= 0 && $set_page <= $total_pages) {
                         $this->set_start($start);
@@ -189,9 +187,9 @@ class Browse extends Query
      * @param array $object_ids
      * @param bool|array|string $argument
      */
-    public function show_objects($object_ids = array(), $argument = false): void
+    public function show_objects($object_ids = [], $argument = false): void
     {
-        if ($this->is_simple() || !is_array($object_ids) || empty($object_ids)) {
+        if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
         } else {
             $this->save_objects($object_ids);
@@ -201,7 +199,7 @@ class Browse extends Query
         // simple browse because we've got too much here
         if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
-        } elseif (!count($object_ids)) {
+        } elseif ($object_ids === []) {
             $this->set_total(0);
         }
 
@@ -217,12 +215,12 @@ class Browse extends Query
         $match = '';
         // Format any matches we have so we can show them to the masses
         if ($filter_value = $this->get_filter('alpha_match')) {
-            $match = ' (' . (string)$filter_value . ')';
+            $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('starts_with')) {
-            $match = ' (' . (string)$filter_value . ')';
+            $match = ' (' . $filter_value . ')';
         } elseif ($filter_value = $this->get_filter('catalog')) {
             // Get the catalog title
-            $catalog = Catalog::create_from_id((int)((string)$filter_value));
+            $catalog = Catalog::create_from_id((int)($filter_value));
             if ($catalog !== null) {
                 $match = ' (' . $catalog->name . ')';
             }
@@ -240,17 +238,19 @@ class Browse extends Query
         debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
-        $hide_columns   = array();
+        $hide_columns   = [];
         $argument_param = '';
         if (is_array($argument)) {
             if (array_key_exists('hide', $argument) && is_array($argument['hide'])) {
                 $hide_columns = $argument['hide'];
             }
-            if (!empty($hide_columns)) {
+
+            if ($hide_columns !== []) {
                 $argument_param = '&hide=';
                 foreach ($hide_columns as $column) {
                     $argument_param .= scrub_in((string)$column) . ',';
                 }
+
                 $argument_param = rtrim($argument_param, ',');
             }
         } else {
@@ -276,10 +276,12 @@ class Browse extends Query
                     if (array_key_exists('title', $argument)) {
                         $box_title = $argument['title'];
                     }
+
                     if (array_key_exists('group_disks', $argument)) {
                         $group_release = (bool)$argument['group_disks'];
                     }
                 }
+
                 $box_req = Ui::find_template('show_albums.inc.php');
                 break;
             case 'album_disk':
@@ -289,10 +291,12 @@ class Browse extends Query
                     if (array_key_exists('title', $argument)) {
                         $box_title = $argument['title'];
                     }
+
                     if (array_key_exists('group_disks', $argument)) {
                         $group_release = (bool)$argument['group_disks'];
                     }
                 }
+
                 $box_req = Ui::find_template('show_album_disks.inc.php');
                 break;
             case 'user':
@@ -307,6 +311,7 @@ class Browse extends Query
                 } else {
                     $box_title = $this->get_title(T_('Artist') . $match);
                 }
+
                 Artist::build_cache($object_ids, true, $limit_threshold);
                 $box_req = Ui::find_template('show_artists.inc.php');
                 break;
@@ -348,6 +353,7 @@ class Browse extends Query
                         $shouts[] = $shout;
                     }
                 }
+
                 $box_req   = Ui::find_template('show_manage_shoutbox.inc.php');
                 break;
             case 'tag':
@@ -435,14 +441,12 @@ class Browse extends Query
                 $box_title = $this->get_title(T_('Podcast Episodes'));
                 $box_req   = Ui::find_template('show_podcast_episodes.inc.php');
                 break;
-        } // end switch on type
+        }
 
         Ajax::start_container($this->get_content_div(), 'browse_content');
-        if ($this->is_show_header()) {
-            if (isset($box_req) && !empty($box_title)) {
-                $this->set_title($box_title);
-                Ui::show_box_top($box_title, $class);
-            }
+        if ($this->is_show_header() && (isset($box_req) && !empty($box_title))) {
+            $this->set_title($box_title);
+            Ui::show_box_top($box_title, $class);
         }
 
         if (isset($box_req)) {
@@ -453,6 +457,7 @@ class Browse extends Query
             if (isset($box_req)) {
                 Ui::show_box_bottom();
             }
+
             if ($this->is_use_filters()) {
                 echo '<script>';
                 echo Ajax::action('?page=browse&action=get_filters&browse_id=' . $this->id . $argument_param, '');
@@ -461,12 +466,14 @@ class Browse extends Query
         } elseif (!$this->is_use_pages()) {
             $this->show_next_link($argument);
         }
+
         // hide the filter box on some pages
         if (!$this->is_use_filters()) {
             echo '<script>';
             echo Ajax::action('?page=browse&action=hide_filters', '');
             echo ';</script>';
         }
+
         Ajax::end_container();
     }
 
@@ -501,6 +508,7 @@ class Browse extends Query
 
             return;
         }
+
         if ($type === 'song_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_song_artist(true);
@@ -508,23 +516,26 @@ class Browse extends Query
 
             return;
         }
+
         if (self::is_valid_type($type)) {
             $name = 'browse_' . $type . '_pages';
             if ((isset($_COOKIE[$name]))) {
                 $this->set_use_pages(Core::get_cookie($name) == 'true');
             }
+
             $name = 'browse_' . $type . '_alpha';
             if ((isset($_COOKIE[$name]))) {
                 $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
-                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(
+                $default_alpha = (AmpConfig::get('libitem_browse_alpha')) ? explode(
                     ",",
-                    AmpConfig::get('libitem_browse_alpha')
-                );
+                    (string) AmpConfig::get('libitem_browse_alpha')
+                ) : [];
                 if (in_array($type, $default_alpha)) {
                     $this->set_use_alpha(true, false);
                 }
             }
+
             $name = 'browse_' . $type . '_grid_view';
             if ((isset($_COOKIE[$name]))) {
                 $this->set_grid_view(Core::get_cookie($name) == 'true');
@@ -543,14 +554,14 @@ class Browse extends Query
      */
     public function save_cookie_params($option, $value): void
     {
-        if ($this->get_type()) {
+        if ($this->get_type() !== '' && $this->get_type() !== '0') {
             $remember_length = time() + 31536000;
             $cookie_options  = [
                 'expires' => $remember_length,
                 'path' => (string)AmpConfig::get('cookie_path'),
                 'domain' => (string)AmpConfig::get('cookie_domain'),
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
-                'samesite' => 'Strict'
+                'samesite' => 'Strict',
             ];
             setcookie('browse_' . $this->get_type() . '_' . $option, $value, $cookie_options);
         }
@@ -583,6 +594,7 @@ class Browse extends Query
         if ($savecookie) {
             $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
         }
+
         $this->_state['use_pages'] = $use_pages;
     }
 
@@ -655,6 +667,7 @@ class Browse extends Query
         if ($savecookie) {
             $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
         }
+
         $this->_state['grid_view'] = $grid_view;
     }
 
@@ -676,6 +689,7 @@ class Browse extends Query
         if ($savecookie) {
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
         }
+
         $this->_state['use_alpha'] = $use_alpha;
 
         if ($use_alpha) {
@@ -694,6 +708,7 @@ class Browse extends Query
     {
         return make_bool($this->_state['use_alpha'] ?? false);
     }
+
     /**
      * Allow the current page to be save into the current session
      * @param bool $update_session

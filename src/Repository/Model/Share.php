@@ -51,21 +51,35 @@ class Share extends database_object
     ];
 
     public int $id = 0;
+
     public int $user;
-    public ?string $object_type;
+
+    public ?string $object_type = null;
+
     public int $object_id;
+
     public bool $allow_stream;
+
     public bool $allow_download;
+
     public int $expire_days;
+
     public int $max_counter;
-    public ?string $secret;
+
+    public ?string $secret = null;
+
     public int $counter;
+
     public int $creation_date;
+
     public int $lastvisit_date;
-    public ?string $public_url;
-    public ?string $description;
+
+    public ?string $public_url = null;
+
+    public ?string $description = null;
 
     public $f_name;
+
     /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 
@@ -78,6 +92,7 @@ class Share extends database_object
         if (!$share_id) {
             return;
         }
+
         $info = $this->get_info($share_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -120,14 +135,13 @@ class Share extends database_object
 
     public function show_action_buttons(): void
     {
-        if ($this->isNew() === false) {
-            if (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user == (int)Core::get_global('user')->id)) {
-                if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
-                }
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+        if ($this->isNew() === false && (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user === Core::get_global('user')->id))) {
+            if ($this->allow_download) {
+                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
             }
+
+            echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
+            echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
         }
     }
 
@@ -135,17 +149,20 @@ class Share extends database_object
     {
         return $this->getObject() !== null;
     }
+
     /**
      * @return Song|Artist|Album|playlist_object|null
      */
     private function getObject()
     {
         if ($this->object === null) {
-            $this->object = $this->getLibraryItemLoader()->load(
+            /** @var Song|Artist|Album|playlist_object|null $object */
+            $object = $this->getLibraryItemLoader()->load(
                 LibraryItemEnum::from((string) $this->object_type),
                 $this->object_id,
                 [Song::class, Artist::class, Album::class, playlist_object::class]
             );
+            $this->object = $object;
         }
 
         return $this->object ?? null;
@@ -182,8 +199,6 @@ class Share extends database_object
 
     /**
      * update
-     * @param array $data
-     * @param User $user
      * @return PDOStatement|bool
      */
     public function update(array $data, User $user)
@@ -195,14 +210,14 @@ class Share extends database_object
         $this->description    = $data['description'] ?? $this->description;
 
         $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
-        $params = array(
+        $params = [
             $this->max_counter,
             $this->expire_days,
             $this->allow_stream ? 1 : 0,
             $this->allow_download ? 1 : 0,
             $this->description,
-            $this->id
-        );
+            $this->id,
+        ];
         if (!$user->has_access(AccessLevelEnum::MANAGER)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
@@ -242,7 +257,7 @@ class Share extends database_object
             return false;
         }
 
-        if (!empty($this->secret) && $secret != $this->secret) {
+        if (isset($this->secret) && ($this->secret !== null && $this->secret !== '' && $this->secret !== '0') && $secret != $this->secret) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;
@@ -294,7 +309,7 @@ class Share extends database_object
     public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
-        $medias   = array();
+        $medias   = [];
 
         $objectType = $this->getObjectType();
 
@@ -318,6 +333,7 @@ class Share extends database_object
                 ];
                 break;
         }
+
         if (!empty($medias)) {
             $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
         }
@@ -325,9 +341,6 @@ class Share extends database_object
         return $playlist;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return $this->user;
@@ -370,9 +383,8 @@ class Share extends database_object
         if ($show_text) {
             $result .= sprintf('&nbsp;%s', T_('Share'));
         }
-        $result .= '</a>';
 
-        return $result;
+        return $result . '</a>';
     }
 
     public function getObjectType(): LibraryItemEnum

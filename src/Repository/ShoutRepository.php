@@ -99,7 +99,12 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
         ?string $objectType = null,
         ?int $objectId = null
     ): void {
-        $types = ['song', 'album', 'artist', 'label'];
+        $types = [
+            'song',
+            'album',
+            'artist',
+            'label'
+        ];
 
         if ($objectType !== null) {
             // @todo use php8+ enum to get rid of this check

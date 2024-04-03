@@ -52,7 +52,7 @@ final class Migration400000 extends AbstractMigration
         'Add name_track, name_artist, name_album to user_activity',
         'Add mbid_track, mbid_artist, mbid_album to user_activity',
         'Insert some decent SmartLists for a better default experience',
-        'Delete plex preferences from the server'
+        'Delete plex preferences from the server',
     ];
 
     public function migrate(): void

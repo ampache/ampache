@@ -35,7 +35,7 @@ final class Migration520000 extends AbstractMigration
 {
     protected array $changelog = [
         'Add ui options (\'api_enable_3\', \'api_enable_4\', \'api_enable_5\') to enable/disable specific API versions',
-        'Add ui option (\'api_force_version\') to force a specific API response (even if that version is disabled)'
+        'Add ui option (\'api_force_version\') to force a specific API response (even if that version is disabled)',
     ];
 
     public function migrate(): void

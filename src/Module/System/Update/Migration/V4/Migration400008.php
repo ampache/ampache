@@ -40,7 +40,10 @@ final class Migration400008 extends AbstractMigration
     {
         $this->updatePreferences('cron_cache', 'Cache computed SQL data (eg. media hits stats) using a cron', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog');
 
-        $tables    = ['cache_object_count', 'cache_object_count_run'];
+        $tables    = [
+            'cache_object_count',
+            'cache_object_count_run'
+        ];
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';

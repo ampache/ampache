@@ -126,7 +126,7 @@ class Api4
         'user_delete' => Method\Api4\UserDelete4Method::class,
         'user_update' => Method\Api4\UserUpdate4Method::class,
         'video' => Method\Api4\Video4Method::class,
-        'videos' => Method\Api4\Videos4Method::class
+        'videos' => Method\Api4\Videos4Method::class,
     ];
 
     public static string $auth_version = '350001';

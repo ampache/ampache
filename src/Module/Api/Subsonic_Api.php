@@ -134,9 +134,7 @@ class Subsonic_Api
         'video',
     ];
 
-    private const ALWAYS_DOUBLE = [
-        'averageRating',
-    ];
+    private const ALWAYS_DOUBLE = ['averageRating'];
 
     private const ALWAYS_INTEGER = [
         'albumCount',

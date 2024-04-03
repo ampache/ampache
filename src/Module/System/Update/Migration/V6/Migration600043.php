@@ -35,7 +35,7 @@ final class Migration600043 extends AbstractMigration
 {
     protected array $changelog = [
         'Set correct preference type for `use_play2`',
-        'Add user preference `jp_volume`, Default webplayer volume'
+        'Add user preference `jp_volume`, Default webplayer volume',
     ];
 
     public function migrate(): void
