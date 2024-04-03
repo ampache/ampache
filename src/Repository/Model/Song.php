@@ -2014,18 +2014,27 @@ class Song extends database_object implements
         }
 
         // if you transcode the media mime will change
-        if (AmpConfig::get('transcode') != 'never' && ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
+        if (
+            AmpConfig::get('transcode') != 'never' &&
+            ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))
+        ) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
+            $bitrate        = (int)AmpConfig::get('transcode_bitrate', 128) * 1000;
             $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
-            if ($transcode_type !== null && $transcode_type !== '' && $transcode_type !== '0' && $this->type !== $transcode_type) {
+            if (
+                $transcode_type !== null &&
+                $transcode_type !== '' &&
+                $transcode_type !== '0' &&
+                ($this->type !== $transcode_type || $bitrate < $this->bitrate)
+            ) {
                 $this->type    = $transcode_type;
-                $this->mime    = self::type_to_mime($this->type);
-                $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
-                $additional_params .= '&transcode_to=' . $transcode_type;
+                $this->mime    = self::type_to_mime($transcode_type);
+                $this->bitrate = $bitrate;
+                $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }
         }
 
