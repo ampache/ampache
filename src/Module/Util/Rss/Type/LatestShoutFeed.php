@@ -28,7 +28,6 @@ namespace Ampache\Module\Util\Rss\Type;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Generator;
 
@@ -42,7 +41,7 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
 
     protected function getTitle(): string
     {
-        return T_('Recently Shouts');
+        return T_('Recent Shouts');
     }
 
     protected function getItems(): Generator
@@ -54,21 +53,22 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
             $object = $this->shoutObjectLoader->loadByShout($shout);
 
             if ($object !== null) {
-                $object->format();
-                $user = new User($shout->getUserId());
-                if ($user->isNew()) {
+                $user = $shout->getUser();
+                if ($user === null) {
                     continue;
                 }
-                $user->format();
 
-                yield array(
-                    'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
+                $user->format();
+                $object->format();
+
+                yield [
+                    'title' => sprintf(T_('%s on %s'), $user->getUsername(), $object->get_fullname()),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
-                    'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType()->value, null, 2),
+                    'image' => (string) Art::url($shout->getObjectId(), $shout->getObjectType()->value, null, 2),
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM)
-                );
+                ];
             }
         }
     }

@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Repository\ShoutRepository;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
 
@@ -58,12 +59,12 @@ class Shoutbox extends BaseModel
     /** @var string|null Offset position in songs */
     private ?string $data = null;
 
-    private ShoutRepositoryInterface $shoutRepository;
+    private ?User $user_object = null;
 
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository
+        private readonly ShoutRepositoryInterface $shoutRepository,
+        private readonly UserRepositoryInterface $userRepository,
     ) {
-        $this->shoutRepository = $shoutRepository;
     }
 
     /**
@@ -191,9 +192,22 @@ class Shoutbox extends BaseModel
      */
     public function setUser(User $user): Shoutbox
     {
-        $this->user = $user->getId();
+        $this->user        = $user->getId();
+        $this->user_object = $user;
 
         return $this;
+    }
+
+    /**
+     * Returns the shout-creator user
+     */
+    public function getUser(): ?User
+    {
+        if ($this->user_object === null) {
+            $this->user_object = $this->userRepository->findById($this->user);
+        }
+
+        return $this->user_object;
     }
 
     /**
