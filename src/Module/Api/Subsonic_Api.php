@@ -103,7 +103,7 @@ class Subsonic_Api
         '_setHeader',
         '_setStar',
         '_updatePlaylist',
-        '_xml2json'
+        '_xml2json',
     ];
 
     private const ALWAYS_ARRAY = [
@@ -131,12 +131,10 @@ class Subsonic_Api
         'similarArtist',
         'song',
         'user',
-        'video'
+        'video',
     ];
 
-    private const ALWAYS_DOUBLE = [
-        'averageRating'
-    ];
+    private const ALWAYS_DOUBLE = ['averageRating'];
 
     private const ALWAYS_INTEGER = [
         'albumCount',
@@ -166,7 +164,7 @@ class Subsonic_Api
         'track',
         'userRating',
         'visitCount',
-        'year'
+        'year',
     ];
 
 
@@ -1684,7 +1682,7 @@ class Subsonic_Api
             $playlist  = new Search(Subsonic_Xml_Data::_getAmpacheId($sub_id), 'song', $user);
             $listitems = $playlist->get_items();
             $item      = (!empty($listitems)) ? $listitems[array_rand($listitems)] : array();
-            $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']) : null;
+            $art       = (!empty($item)) ? new Art($item['object_id'], $item['object_type']->value) : null;
             if ($art != null && $art->id == null) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, "album");

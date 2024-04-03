@@ -35,7 +35,7 @@ final class Migration400014 extends AbstractMigration
 {
     protected array $changelog = [
         'Add last_duration to playlist',
-        'Add time to artist and album'
+        'Add time to artist and album',
     ];
 
     public function migrate(): void

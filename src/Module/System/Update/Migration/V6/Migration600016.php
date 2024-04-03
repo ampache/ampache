@@ -35,7 +35,7 @@ final class Migration600016 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `object_type_IDX` to artist_map table',
-        'Add `object_type_IDX` to catalog_map table'
+        'Add `object_type_IDX` to catalog_map table',
     ];
 
     public function migrate(): void

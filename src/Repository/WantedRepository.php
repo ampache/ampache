@@ -37,14 +37,10 @@ use Ampache\Repository\Model\Wanted;
  *
  * @phpstan-import-type DatabaseRow from WantedRepositoryInterface
  */
-final class WantedRepository implements WantedRepositoryInterface
+final readonly class WantedRepository implements WantedRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**

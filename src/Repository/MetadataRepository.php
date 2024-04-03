@@ -36,18 +36,10 @@ use PDO;
  *
  * Tables: `metadata`
  */
-final class MetadataRepository implements MetadataRepositoryInterface
+final readonly class MetadataRepository implements MetadataRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection,
-        MetadataFieldRepositoryInterface $metadataFieldRepository
-    ) {
-        $this->connection              = $connection;
-        $this->metadataFieldRepository = $metadataFieldRepository;
+    public function __construct(private DatabaseConnectionInterface $connection, private MetadataFieldRepositoryInterface $metadataFieldRepository)
+    {
     }
 
     /**

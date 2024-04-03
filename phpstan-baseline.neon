@@ -6036,16 +6036,6 @@ parameters:
 			path: src/Module/Catalog/PlaylistImporter.php
 
 		-
-			message: "#^Cannot call method getBody\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Cannot call method getStatusCode\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
@@ -12202,16 +12192,6 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\<int\\<0, max\\>, int\\>\\|int\\.$#"
-			count: 2
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getAlbumByArtist\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getByArtist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/AlbumRepository.php
 
@@ -12791,11 +12771,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$_filecache type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -13018,11 +12993,6 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
 			path: src/Repository/Model/Label.php
 
 		-
@@ -13296,16 +13266,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13461,11 +13421,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_select\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -13482,11 +13437,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -13601,11 +13551,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'Running custom play…' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -13717,11 +13662,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function stripslashes expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -14066,11 +14006,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Parameter \\#2 \\$subject of function preg_split expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$f_name has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -14301,11 +14236,6 @@ parameters:
 			path: src/Repository/Model/Userflag.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -14416,23 +14346,13 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Video\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
 		-
 			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
-			count: 1
+			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-

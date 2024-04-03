@@ -41,7 +41,6 @@ interface Media
      * 'native' = can be streamed natively
      * 'transcode' = transcode required
      * @param string $player
-     * @return array
      */
     public function get_stream_types($player = null): array;
 
@@ -71,9 +70,8 @@ interface Media
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array;
+    public function get_transcode_settings($target = null, $player = null, $options = []): array;
 
     /**
      * getYear

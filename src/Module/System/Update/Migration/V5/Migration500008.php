@@ -34,7 +34,7 @@ final class Migration500008 extends AbstractMigration
 {
     protected array $changelog = [
         'Add filter_user to catalog table',
-        'Set a unique key on user_data'
+        'Set a unique key on user_data',
     ];
 
     public function migrate(): void
@@ -42,7 +42,10 @@ final class Migration500008 extends AbstractMigration
         Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;");
         $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;");
 
-        $tables = ['podcast', 'live_stream'];
+        $tables = [
+            'podcast',
+            'live_stream'
+        ];
         foreach ($tables as $type) {
             $this->updateDatabase("REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;");
         }

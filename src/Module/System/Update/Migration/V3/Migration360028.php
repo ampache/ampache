@@ -37,7 +37,7 @@ final class Migration360028 extends AbstractMigration
     protected array $changelog = [
         'Personal information: allow/disallow to show in now playing',
         'Personal information: allow/disallow to show in recently played',
-        'Personal information: allow/disallow to show time and/or agent in recently played'
+        'Personal information: allow/disallow to show time and/or agent in recently played',
     ];
 
     public function migrate(): void

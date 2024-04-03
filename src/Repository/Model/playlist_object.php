@@ -40,20 +40,32 @@ abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     public int $id = 0;
-    public ?string $name;
-    public ?int $user;
-    public ?string $username;
-    public ?string $type;
+
+    public ?string $name = null;
+
+    public ?int $user = null;
+
+    public ?string $username = null;
+
+    public ?string $type = null;
 
     public ?string $link       = null;
+
     public int $date           = 0;
+
     public ?int $last_duration = 0;
+
     public ?int $last_update   = 0;
-    public ?string $f_date;
-    public ?string $f_last_update;
-    public ?string $f_link;
-    public ?string $f_type;
-    public ?string $f_name;
+
+    public ?string $f_date = null;
+
+    public ?string $f_last_update = null;
+
+    public ?string $f_link = null;
+
+    public ?string $f_type = null;
+
+    public ?string $f_name = null;
 
     private ?bool $has_art = null;
 
@@ -78,7 +90,7 @@ abstract class playlist_object extends database_object implements library_item
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
         $this->get_f_link();
-        $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
+        $this->f_date        = $this->date !== 0 ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     }
 
@@ -107,15 +119,12 @@ abstract class playlist_object extends database_object implements library_item
         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             return true;
         }
+
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return false;
         }
-        // allow the owner
-        if ((Core::get_global('user') instanceof User && $this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
-            return true;
-        }
 
-        return false;
+        return (Core::get_global('user') instanceof User && $this->user == Core::get_global('user')->id) || ($this->user == $user_id);
     }
 
     /**
@@ -126,9 +135,7 @@ abstract class playlist_object extends database_object implements library_item
         if ($filter_type) {
             return array_filter(
                 $this->get_items(),
-                function (array $item) use ($filter_type): bool {
-                    return $item['object_type']->value === $filter_type;
-                }
+                static fn (array $item): bool => $item['object_type']->value === $filter_type
             );
         } else {
             return $this->get_items();
@@ -137,11 +144,10 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -210,9 +216,6 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
         return $this->get_items();
@@ -221,18 +224,14 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return $this->user;
@@ -275,7 +274,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         $medias   = $this->get_medias();
         $count    = 0;
-        $images   = array();
+        $images   = [];
         $title    = T_('Playlist Items');
         $web_path = AmpConfig::get('web_path');
         shuffle($medias);
@@ -283,6 +282,7 @@ abstract class playlist_object extends database_object implements library_item
             if ($count >= $limit) {
                 return $images;
             }
+
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
                 if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
                     $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
@@ -292,13 +292,15 @@ abstract class playlist_object extends database_object implements library_item
                         $media = $parent;
                     }
                 }
+
                 $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
                     $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
                 }
             }
-            $count++;
+
+            ++$count;
         }
 
         return $images;

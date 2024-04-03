@@ -446,6 +446,7 @@ final class Session implements SessionInterface
         // Switch on the type they pass
         switch ($type) {
             case 'api':
+            case 'rpc':
             case 'stream':
                 $sql = (AmpConfig::get('perpetual_api_session'))
                     ? "SELECT * FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND `type` in ('api', 'stream');"

@@ -1053,15 +1053,15 @@ class Json4_Data
         $JSON = [];
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user = new User($shout->getUserId());
+            $user = $shout->getUser();
 
             $JSON[] = [
                 'id' => (string) $shout->getId(),
                 'date' => $shout->getDate()->getTimestamp(),
                 'text' => $shout->getText(),
                 'user' => [
-                    'id' => (string)$user->getId(),
-                    'username' => $user->getUsername()
+                    'id' => (string) ($user?->getId() ?? 0),
+                    'username' => $user?->getUsername() ?? ''
                 ]
             ];
         }

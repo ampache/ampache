@@ -35,7 +35,7 @@ final class Migration500007 extends AbstractMigration
 {
     protected array $changelog = [
         'Add a \'Browse\' category to interface preferences',
-        'Add option (\'show_license\') for hiding license column in song rows'
+        'Add option (\'show_license\') for hiding license column in song rows',
     ];
 
     public function migrate(): void

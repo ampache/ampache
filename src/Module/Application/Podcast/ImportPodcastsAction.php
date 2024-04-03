@@ -52,7 +52,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
     /** @var list<string> */
     private const EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',
-        'text/xml'
+        'text/xml',
     ];
 
     public const REQUEST_KEY = 'import_podcasts';

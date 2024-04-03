@@ -35,7 +35,7 @@ final class Migration400007 extends AbstractMigration
 {
     protected array $changelog = [
         'Add ui option for skip_count display',
-        'Add ui option for displaying dates in a custom format'
+        'Add ui option for displaying dates in a custom format',
     ];
 
     public function migrate(): void

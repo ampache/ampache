@@ -82,7 +82,7 @@ class Daap_Api
         'daap.songyear',
         'daap.songdatakind',
         'daap.songdataurl',
-        'com.apple.itunes.norm-volume'
+        'com.apple.itunes.norm-volume',
     ];
 
     /**
@@ -476,7 +476,7 @@ class Daap_Api
                         $items    = $playlist->get_items();
                         $song_ids = array();
                         foreach ($items as $item) {
-                            if ($item['object_type'] == 'song') {
+                            if ($item['object_type']->value == 'song') {
                                 $song_ids[] = $item['object_id'];
                             }
                         }

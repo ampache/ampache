@@ -36,7 +36,7 @@ final class Migration360003 extends AbstractMigration
 {
     protected array $changelog = [
         'Add image table to store images',
-        'Drop album_data and artist_data'
+        'Drop album_data and artist_data',
     ];
 
     public function migrate(): void

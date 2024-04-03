@@ -37,11 +37,17 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     /* Variables from DB */
     private int $id = 0;
+
     private ?string $subject;
+
     private ?string $message;
+
     private int $from_user;
+
     private int $to_user;
+
     private bool $is_read;
+
     private ?int $creation_date;
 
 
@@ -53,6 +59,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
         if (!$pm_id) {
             return;
         }
+
         $info = $this->get_info($pm_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -76,13 +83,14 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getRecipientUserLink(): string
     {
-        $to_user = new User((int) $this->to_user);
+        $to_user = new User($this->to_user);
         if ($to_user->isNew()) {
             return '';
         }
+
         $to_user->format();
 
-        return (string)$to_user->get_f_link();
+        return $to_user->get_f_link();
     }
 
     public function getCreationDate(): int
@@ -117,12 +125,12 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     public function getRecipientUserId(): int
     {
-        return (int) $this->to_user;
+        return $this->to_user;
     }
 
     public function getSenderUserId(): int
     {
-        return (int) $this->from_user;
+        return $this->from_user;
     }
 
     public function getMessage(): string

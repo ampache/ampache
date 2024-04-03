@@ -33,14 +33,10 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 
-final class AlbumRepository implements AlbumRepositoryInterface
+final readonly class AlbumRepository implements AlbumRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -63,6 +59,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $userId
             );
         }
+
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',
             $count
@@ -101,6 +98,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
                 $userId
             );
         }
+
         $sql .= sprintf(
             'ORDER BY RAND() LIMIT %d',
             $count
@@ -148,6 +146,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_filter') && $user instanceof User && $user->getId() > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', $user->getId()) . " ";
         }
+
         $sql .= "ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumDiskId]);
 
@@ -173,6 +172,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
+
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumId]);
 
@@ -198,6 +198,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
             $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
         }
+
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumDiskId]);
 
@@ -243,7 +244,7 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return array
+     * @return list<int>|array<string, list<int>>
      */
     public function getByArtist(
         int $artistId,
@@ -255,43 +256,36 @@ final class AlbumRepository implements AlbumRepositoryInterface
         if ($catalogId !== null) {
             $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
+
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         $showAlbum     = AmpConfig::get('album_group');
-        switch ($sort_type) {
-            case 'name_asc':
-                $sql_sort = "`album`.`name` ASC";
-                break;
-            case 'name_desc':
-                $sql_sort = "`album`.`name` DESC";
-                break;
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
-            default:
-                $sql_sort = "`album`.`name`, $original_year";
-        }
+        $sql_sort      = match ($sort_type) {
+            'name_asc' => "`album`.`name` ASC",
+            'name_desc' => "`album`.`name` DESC",
+            'year_asc' => $original_year . ' ASC',
+            'year_desc' => $original_year . ' DESC',
+            default => '`album`.`name`, ' . $original_year,
+        };
 
         $sql = ($showAlbum)
-            ? "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort"
-            : "SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year ORDER BY $sql_sort, `album_disk`.`disk`";
-        $db_results = Dba::read($sql, array($artistId));
-        $results    = array();
+            ? sprintf('SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY %s', $catalog_where, $sql_sort)
+            : sprintf('SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, %s ORDER BY %s, `album_disk`.`disk`', $original_year, $catalog_where, $original_year, $sql_sort);
+        $db_results = Dba::read($sql, [$artistId]);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {
                 // We assume undefined release type is album
                 $rtype = $row['release_type'] ?? 'album';
                 if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
+                    $results[$rtype] = [];
                 }
+
                 $results[$rtype][] = (int)$row['id'];
 
                 $sort = (string)AmpConfig::get('album_release_type_sort');
-                if ($sort) {
-                    $results_sort = array();
+                if ($sort !== '' && $sort !== '0') {
+                    $results_sort = [];
                     $asort        = explode(',', $sort);
 
                     foreach ($asort as $rtype) {
@@ -315,66 +309,29 @@ final class AlbumRepository implements AlbumRepositoryInterface
      * gets the album ids that the artist is a part of
      * Return Album only
      *
-     * @return array
+     * @return list<int>
      */
     public function getAlbumByArtist(
         int $artistId,
-        ?int $catalogId = null,
-        bool $group_release_type = false
     ): array {
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if ($catalogId !== null) {
-            $catalog_where .= " AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
-        }
+
         $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
-        switch ($sort_type) {
-            case 'name_asc':
-                $sql_sort = "`album`.`name` ASC";
-                break;
-            case 'name_desc':
-                $sql_sort = "`album`.`name` DESC";
-                break;
-            case 'year_asc':
-                $sql_sort = "$original_year ASC";
-                break;
-            case 'year_desc':
-                $sql_sort = "$original_year DESC";
-                break;
-            default:
-                $sql_sort = "`album`.`name`, $original_year";
-        }
+        $sql_sort      = match ($sort_type) {
+            'name_asc' => "`album`.`name` ASC",
+            'name_desc' => "`album`.`name` DESC",
+            'year_asc' => $original_year . ' ASC',
+            'year_desc' => $original_year . ' DESC',
+            default => '`album`.`name`, ' . $original_year,
+        };
 
-        $sql        = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
-        $db_results = Dba::read($sql, array($artistId));
-        $results    = array();
+        $sql        = sprintf('SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? %s GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY %s', $catalog_where, $sql_sort);
+        $db_results = Dba::read($sql, [$artistId]);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            if ($group_release_type) {
-                // We assume undefined release type is album
-                $rtype = $row['release_type'] ?? 'album';
-                if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
-                }
-                $results[$rtype][] = (int)$row['id'];
-
-                $sort = (string)AmpConfig::get('album_release_type_sort');
-                if ($sort) {
-                    $results_sort = array();
-                    $asort        = explode(',', $sort);
-
-                    foreach ($asort as $rtype) {
-                        if (array_key_exists($rtype, $results)) {
-                            $results_sort[$rtype] = $results[$rtype];
-                            unset($results[$rtype]);
-                        }
-                    }
-
-                    $results = array_merge($results_sort, $results);
-                }
-            } else {
-                $results[] = (int)$row['id'];
-            }
+            $results[] = (int)$row['id'];
         }
 
         return $results;

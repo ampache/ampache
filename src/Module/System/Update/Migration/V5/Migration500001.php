@@ -39,7 +39,7 @@ final class Migration500001 extends AbstractMigration
         'Add `release_status`, `addition_time`, `catalog` to album table',
         'Add `mbid`, `country` and `active` to label table',
         'Fill the album `catalog` value using the song table',
-        'Fill the artist `album_count`, `album_group_count` and `song_count` values'
+        'Fill the artist `album_count`, `album_group_count` and `song_count` values',
     ];
 
     public function migrate(): void

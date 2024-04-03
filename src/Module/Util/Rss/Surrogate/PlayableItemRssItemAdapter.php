@@ -133,7 +133,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media === null) {
                 continue;
             }
-
+            /** @var Song|Podcast_Episode $media */
             $media->format();
 
             $data = [

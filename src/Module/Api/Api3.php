@@ -83,7 +83,7 @@ class Api3
         'url_to_song' => Method\Api3\UrlToSong3Method::class,
         'user' => Method\Api3\User3Method::class,
         'video' => Method\Api3\Video3Method::class,
-        'videos' => Method\Api3\Videos3Method::class
+        'videos' => Method\Api3\Videos3Method::class,
     ];
 
     public static string $auth_version = '350001';

@@ -35,7 +35,7 @@ final class Migration600024 extends AbstractMigration
 {
     protected array $changelog = [
         'Add ui option (\'show_subtitle\') Show Album subtitle on links (if available)',
-        'Add ui option (\'show_original_year\') Show Album original year on links (if available)'
+        'Add ui option (\'show_original_year\') Show Album original year on links (if available)',
     ];
 
     public function migrate(): void

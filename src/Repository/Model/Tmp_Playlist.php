@@ -41,12 +41,15 @@ class Tmp_Playlist extends database_object
 
     // Variables from the Database
     public int $id = 0;
-    public ?string $session;
-    public ?string $type;
-    public ?string $object_type;
+
+    public ?string $session = null;
+
+    public ?string $type = null;
+
+    public ?string $object_type = null;
 
     // Generated Elements
-    public $items = array();
+    public $items = [];
 
     /**
      * Constructor
@@ -65,6 +68,7 @@ class Tmp_Playlist extends database_object
         if (!$info) {
             return;
         }
+
         $this->id = (int)$playlist_id;
     }
 
@@ -87,11 +91,12 @@ class Tmp_Playlist extends database_object
     private function has_info($playlist_id): bool
     {
         $sql        = "SELECT * FROM `tmp_playlist` WHERE `id` = ?;";
-        $db_results = Dba::read($sql, array($playlist_id));
+        $db_results = Dba::read($sql, [$playlist_id]);
         $data       = Dba::fetch_assoc($db_results);
-        if (empty($data)) {
+        if ($data === []) {
             return false;
         }
+
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
@@ -104,20 +109,15 @@ class Tmp_Playlist extends database_object
      * This returns a playlist object based on the session that is passed to
      * us.  This is used by the load_playlist on user for the most part.
      * @param string $session_id
-     * @return Tmp_Playlist
      */
     public static function get_from_session($session_id): Tmp_Playlist
     {
         $sql        = "SELECT `id` FROM `tmp_playlist` WHERE `session` = ?";
-        $db_results = Dba::read($sql, array($session_id));
+        $db_results = Dba::read($sql, [$session_id]);
         $row        = Dba::fetch_row($db_results);
 
-        if (empty($row)) {
-            $row[0] = Tmp_Playlist::create(array(
-                'session_id' => $session_id,
-                'type' => 'user',
-                'object_type' => 'song'
-            ));
+        if ($row === []) {
+            $row[0] = Tmp_Playlist::create(['session_id' => $session_id, 'type' => 'user', 'object_type' => 'song']);
         }
 
         return new Tmp_Playlist((int)$row[0]);
@@ -132,9 +132,9 @@ class Tmp_Playlist extends database_object
     public static function get_from_username($username): ?int
     {
         $sql        = "SELECT `tmp_playlist`.`id` FROM `tmp_playlist` LEFT JOIN `session` ON `session`.`id`=`tmp_playlist`.`session` WHERE `session`.`username` = ? ORDER BY `session`.`expire` DESC";
-        $db_results = Dba::read($sql, array($username));
+        $db_results = Dba::read($sql, [$username]);
         $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
+        if ($results === []) {
             return null;
         }
 
@@ -153,24 +153,20 @@ class Tmp_Playlist extends database_object
         if (isset($_COOKIE[$session_name])) {
             // Select all objects for this session
             $sql .= "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, array($_COOKIE[$session_name]));
+            $db_results = Dba::read($sql, [$_COOKIE[$session_name]]);
         } else {
             // try to guess
             $sql .= "WHERE `tmp_playlist` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
         }
+
         //debug_event(self::class, 'get_items ' . $sql, 5);
 
         // Define the array
-        $items = array();
+        $items = [];
         $count = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
-            $items[] = array(
-                'object_type' => LibraryItemEnum::from($results['object_type']),
-                'object_id' => $results['object_id'],
-                'track_id' => $results['id'],
-                'track' => $count++,
-            );
+            $items[] = ['object_type' => LibraryItemEnum::from($results['object_type']), 'object_id' => $results['object_id'], 'track_id' => $results['id'], 'track' => $count++];
         }
 
         return $items;
@@ -183,10 +179,11 @@ class Tmp_Playlist extends database_object
     public function get_next_object(): ?int
     {
         $sql        = "SELECT `object_id` FROM `tmp_playlist_data` WHERE `tmp_playlist` = ? ORDER BY `id` LIMIT 1";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         if (!$db_results) {
             return null;
         }
+
         $results = Dba::fetch_assoc($db_results);
 
         return (int)$results['object_id'];
@@ -200,7 +197,7 @@ class Tmp_Playlist extends database_object
     public function count_items(): int
     {
         $sql        = "SELECT COUNT(`id`) FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?;";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         $row        = Dba::fetch_row($db_results);
 
         return (int)($row[0] ?? 0);
@@ -213,7 +210,7 @@ class Tmp_Playlist extends database_object
     public function clear(): bool
     {
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `tmp_playlist` = ?";
-        Dba::write($sql, array($this->id));
+        Dba::write($sql, [$this->id]);
 
         return true;
     }
@@ -228,7 +225,7 @@ class Tmp_Playlist extends database_object
     public static function create($data): ?string
     {
         $sql = "INSERT INTO `tmp_playlist` (`session`, `type`, `object_type`) VALUES (?, ?, ?)";
-        Dba::write($sql, array($data['session_id'], $data['type'], $data['object_type']));
+        Dba::write($sql, [$data['session_id'], $data['type'], $data['object_type']]);
 
         $tmp_id = Dba::insert_id();
         if (!$tmp_id) {
@@ -251,7 +248,7 @@ class Tmp_Playlist extends database_object
     public static function session_clean($sessid, $plist_id): void
     {
         $sql = "DELETE FROM `tmp_playlist` WHERE `session` = ? AND `id` != ?";
-        Dba::write($sql, array($sessid, $plist_id));
+        Dba::write($sql, [$sessid, $plist_id]);
 
         /* Remove associated tracks */
         self::prune_tracks();
@@ -300,7 +297,7 @@ class Tmp_Playlist extends database_object
     public function add_object(int $object_id, LibraryItemEnum $object_type): bool
     {
         $sql = "INSERT INTO `tmp_playlist_data` (`object_id`, `tmp_playlist`, `object_type`) VALUES (?, ?, ?)";
-        Dba::write($sql, array($object_id, $this->id, $object_type->value));
+        Dba::write($sql, [$object_id, $this->id, $object_type->value]);
 
         return true;
     }
@@ -324,7 +321,7 @@ class Tmp_Playlist extends database_object
     {
         /* delete the track its self */
         $sql = "DELETE FROM `tmp_playlist_data` WHERE `id` = ?";
-        Dba::write($sql, array($object_id));
+        Dba::write($sql, [$object_id]);
 
         return true;
     }

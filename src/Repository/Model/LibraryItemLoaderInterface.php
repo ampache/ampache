@@ -38,12 +38,10 @@ interface LibraryItemLoaderInterface
      * @template TITemType of library_item
      *
      * @param list<class-string<TITemType>> $allowedItems List of all possible class-/interface-names
-     *
-     * @return null|TITemType
      */
     public function load(
         LibraryItemEnum $objectType,
         int $objectId,
-        array $allowedItems = [library_item::class]
-    ): ?library_item;
+        array $allowedItems = [TITemType::class]
+    ): ?TITemType;
 }

@@ -34,7 +34,7 @@ final class Migration530015 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links',
-        'Fallback to Album Artist if both disabled'
+        'Fallback to Album Artist if both disabled',
     ];
 
     public function migrate(): void
