@@ -4911,11 +4911,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Application\\\\Playlist\\\\SetTrackNumbersAction\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Module/Application/Playlist/SetTrackNumbersAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
