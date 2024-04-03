@@ -821,6 +821,7 @@ class Json_Data
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->tags);
             $objArray['art']           = $art_url;
+            $objArray['has_art']       = $album->has_art();
             $objArray['flag']          = (bool)$flag->get_flag($user->getId());
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
@@ -1401,6 +1402,7 @@ class Json_Data
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
             $objArray['art']                   = $art_url;
+            $objArray['has_art']               = $song->has_art();
             $objArray['flag']                  = (bool)$flag->get_flag($user->getId());
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();
