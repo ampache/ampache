@@ -893,9 +893,9 @@ class Xml4_Data
         $string = "<shouts>\n";
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user  = new User($shout->getUserId());
+            $user = $shout->getUser();
             $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
-            if ($user->isNew() === false) {
+            if ($user !== null) {
                 $string .= "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n";
             }
             $string .= "\t</shout>\n";

@@ -6041,16 +6041,6 @@ parameters:
 			path: src/Module/Catalog/PlaylistImporter.php
 
 		-
-			message: "#^Cannot call method getBody\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Cannot call method getStatusCode\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php

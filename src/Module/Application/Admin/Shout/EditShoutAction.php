@@ -39,20 +39,14 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Edits a ShoutBox item
  */
-final class EditShoutAction implements ApplicationActionInterface
+final readonly class EditShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'edit_shout';
 
-    private UiInterface $ui;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository
+        private UiInterface $ui,
+        private ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui              = $ui;
-        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

@@ -41,8 +41,11 @@ use Psr\Log\LoggerInterface;
  */
 final class ShoutRepository extends BaseRepository implements ShoutRepositoryInterface
 {
-    public function __construct(protected DatabaseConnectionInterface $connection, private readonly LoggerInterface $logger)
-    {
+    public function __construct(
+        protected DatabaseConnectionInterface $connection,
+        private UserRepositoryInterface $userRepository,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -58,7 +61,10 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
      */
     protected function getPrototypeParameters(): array
     {
-        return [$this];
+        return [
+            $this,
+            $this->userRepository,
+        ];
     }
 
     protected function getTableName(): string
@@ -79,7 +85,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
             'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
             [$objectType->value, $objectId]
         );
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
 
         while ($shout = $result->fetch()) {
             yield $shout;
@@ -187,7 +193,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
     {
         $result = $this->connection->query('SELECT * FROM `user_shout` WHERE `sticky` = 1 ORDER BY `date` DESC');
 
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
 
         while ($shout = $result->fetch()) {
             /** @var Shoutbox $shout */
@@ -232,7 +238,7 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
             $params
         );
 
-        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, [$this]);
+        $result->setFetchMode(PDO::FETCH_CLASS, Shoutbox::class, $this->getPrototypeParameters());
 
         while ($shout = $result->fetch()) {
             /** @var Shoutbox $shout */

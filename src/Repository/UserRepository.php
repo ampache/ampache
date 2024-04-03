@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 
-final class UserRepository implements UserRepositoryInterface
+final readonly class UserRepository implements UserRepositoryInterface
 {
     /**
      * This returns a built user from a rsstoken
@@ -41,6 +41,19 @@ final class UserRepository implements UserRepositoryInterface
         $db_results = Dba::read($sql, [$rssToken]);
         if ($results = Dba::fetch_assoc($db_results)) {
             $user = new User((int) $results['id']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Finds a user by its id
+     */
+    public function findById(int $id): ?User
+    {
+        $user = new User($id);
+        if ($user->isNew()) {
+            return null;
         }
 
         return $user;

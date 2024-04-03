@@ -70,7 +70,7 @@
         "psr/log": "^3",
         "psr/simple-cache": "^3",
         "rmccue/requests": "^2.0",
-        "rsd/seafile-php-sdk": "^1",
+        "rsd/seafile-php-sdk": "^2",
         "sabre/dav": "^4",
         "scn/phptal": "^4",
         "shrikeh/teapot": "^2.3",
