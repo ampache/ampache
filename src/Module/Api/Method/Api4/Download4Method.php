@@ -55,7 +55,7 @@ final class Download4Method
         }
         $fileid       = $input['id'];
         $type         = $input['type'];
-        $format       = $input['format'];
+        $format       = $input['format'] ?? null; // mp3, flv or raw
         $transcode_to = $format && $format != 'raw';
 
         $url    = '';
