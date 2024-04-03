@@ -322,7 +322,7 @@ class Stream
      */
     public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
-        if (!is_array($GLOBALS['transcode'])) {
+        if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = array();
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
