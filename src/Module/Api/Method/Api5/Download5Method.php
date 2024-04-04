@@ -59,7 +59,7 @@ final class Download5Method
         }
         $object_id = (int) $input['id'];
         $type      = (string) $input['type'];
-        $format    = $input['format'];
+        $format    = $input['format'] ?? null; // mp3, flv or raw
 
         $params = '&client=api&action=download&cache=1';
         if ($format && in_array($type, array('song', 'search', 'playlist'))) {

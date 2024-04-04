@@ -3213,11 +3213,12 @@ Downloads a given media file. set format=raw to download the full file
 
 **NOTE** search and playlist will only download a random object from the list
 
-| Input    | Type    | Description                                                | Optional |
-|----------|---------|------------------------------------------------------------|---------:|
-| 'id'     | integer | $object_id                                                 |       NO |
-| 'type'   | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
-| 'format' | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
+| Input     | Type    | Description                                                | Optional |
+|-----------|---------|------------------------------------------------------------|---------:|
+| 'id'      | integer | $object_id                                                 |       NO |
+| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
+| 'bitrate' | integer | max bitrate for transcoding                                |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
 
 * return file (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)

@@ -373,8 +373,9 @@ class Democratic extends Tmp_Playlist
             $params[] = session_id();
         }
 
-        $db_results = Dba::read($sql, $params);
         /* If we find  row, they've voted!! */
+        $db_results = Dba::read($sql, $params);
+
         return (bool) Dba::num_rows($db_results);
     }
 

@@ -158,11 +158,13 @@ final readonly class ShowAction implements ApplicationActionInterface
         }
         if (!$typeManaged) {
             $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
-
-            $item = $this->libraryItemLoader->load(
-                LibraryItemEnum::from($type),
-                $object_id
-            );
+            $item      = match ($type) {
+                'user' => new User($object_id),
+                default => $this->libraryItemLoader->load(
+                    LibraryItemEnum::from($type),
+                    $object_id
+                ),
+            };
 
             if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
                 $filename = $item->title;

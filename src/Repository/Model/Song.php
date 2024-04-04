@@ -2016,7 +2016,7 @@ class Song extends database_object implements
         // if you transcode the media mime will change
         if (
             AmpConfig::get('transcode') != 'never' &&
-            ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))
+            ($downsample_remote || empty($additional_params) || (!strpos($additional_params, '&bitrate=') || !strpos($additional_params, '&format=')))
         ) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
