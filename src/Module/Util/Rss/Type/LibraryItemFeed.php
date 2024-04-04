@@ -36,7 +36,7 @@ final readonly class LibraryItemFeed implements FeedTypeInterface
     public function __construct(
         private ModelFactoryInterface $modelFactory,
         private LibraryItemLoaderInterface $libraryItemLoader,
-        private User $user,
+        private ?User $user,
         private playable_item $libraryItem
     ) {
     }

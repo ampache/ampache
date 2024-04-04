@@ -34,7 +34,7 @@ use Generator;
 final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 {
     public function __construct(
-        private User $user,
+        private ?User $user,
     ) {
     }
 
@@ -45,7 +45,7 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user->getId());
+        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user?->getId());
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);

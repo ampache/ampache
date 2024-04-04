@@ -889,13 +889,13 @@ class Stats
      * get_recently_played
      * This function returns the last X played media objects ('live_stream','podcast_episode','song','video')
      * It uses the popular threshold to figure out how many to pull it will only return unique object
-     * @param int $user_id
+     * @param null|int $user_id
      * @param string $count_type
      * @param string|null $object_type
      * @param bool $user_only
      * @return array
      */
-    public static function get_recently_played($user_id, $count_type = 'stream', $object_type = null, $user_only = false): array
+    public static function get_recently_played(?int $user_id, $count_type = 'stream', $object_type = null, $user_only = false): array
     {
         $personal_info_recent = 91;
         $personal_info_time   = 92;

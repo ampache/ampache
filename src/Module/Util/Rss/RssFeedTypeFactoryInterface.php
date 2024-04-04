@@ -31,15 +31,15 @@ use Ampache\Repository\Model\User;
 
 interface RssFeedTypeFactoryInterface
 {
-    public function createLibraryItemFeed(User $user, playable_item $libraryItem): FeedTypeInterface;
+    public function createLibraryItemFeed(?User $user, playable_item $libraryItem): FeedTypeInterface;
 
-    public function createRecentlyPlayedFeed(User $user): FeedTypeInterface;
+    public function createRecentlyPlayedFeed(?User $user): FeedTypeInterface;
 
     public function createNowPlayingFeed(): FeedTypeInterface;
 
-    public function createLatestAlbumFeed(User $user): FeedTypeInterface;
+    public function createLatestAlbumFeed(?User $user): FeedTypeInterface;
 
-    public function createLatestArtistFeed(User $user): FeedTypeInterface;
+    public function createLatestArtistFeed(?User $user): FeedTypeInterface;
 
     public function createLatestShoutFeed(): FeedTypeInterface;
 }
