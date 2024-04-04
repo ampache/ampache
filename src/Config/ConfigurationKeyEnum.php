@@ -209,4 +209,5 @@ final class ConfigurationKeyEnum
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
     public const ALBUM_ART_STORE_DISK                  = 'album_art_store_disk';
+    public const SHOW_SONG_ART                         = 'show_song_art';
 }
