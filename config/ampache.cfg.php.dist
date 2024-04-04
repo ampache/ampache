@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 69
+config_version = 70
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -1197,14 +1197,14 @@ transcode_input = "-i %FILE%"
 ; For each output format, you should provide the necessary arguments for
 ; your transcode_cmd.
 ; encode_args_TYPE = TRANSCODE_CMD_ARGS
-encode_args_mp3 = "-vn -b:a %BITRATE%K -c:a libmp3lame -f mp3 pipe:1"
-encode_args_ogg = "-vn -b:a %BITRATE%K -c:a libvorbis -f ogg pipe:1"
-encode_args_opus = "-vn -b:a %BITRATE%K -c:a libopus -compression_level 10 -f ogg pipe:1"
-encode_args_m4a = "-vn -b:a %BITRATE%K -c:a libfdk_aac -f adts pipe:1"
-encode_args_wav = "-vn -b:a %BITRATE%K -c:a pcm_s16le -f wav pipe:1"
-encode_args_flv = "-b:a %BITRATE%K -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
-encode_args_webm = "-b:a %BITRATE%K -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
-encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE%k -preset superfast -threads 0 pipe:1"
+encode_args_mp3 = "-vn -b:a %BITRATE% -c:a libmp3lame -f mp3 pipe:1"
+encode_args_ogg = "-vn -b:a %BITRATE% -c:a libvorbis -f ogg pipe:1"
+encode_args_opus = "-vn -b:a %BITRATE% -c:a libopus -compression_level 10 -f ogg pipe:1"
+encode_args_m4a = "-vn -b:a %BITRATE% -c:a libfdk_aac -f adts pipe:1"
+encode_args_wav = "-vn -b:a %BITRATE% -c:a pcm_s16le -f wav pipe:1"
+encode_args_flv = "-b:a %BITRATE% -ar 44100 -ac 2 -v 0 -f flv -c:v libx264 -preset superfast -threads 0 pipe:1"
+encode_args_webm = "-b:a %BITRATE% -f webm -c:v libvpx -preset superfast -threads 0 pipe:1"
+encode_args_ts = "-q %QUALITY% -s %RESOLUTION% -f mpegts -c:v libx264 -c:a libmp3lame -maxrate %MAXBITRATE% -preset superfast -threads 0 pipe:1"
 encode_args_ogv = "-codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 -f ogg pipe:1"
 
 ; Encoding arguments to retrieve an image from a single frame
