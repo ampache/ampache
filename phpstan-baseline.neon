@@ -4853,7 +4853,7 @@ parameters:
 		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
-			path: src/Module/Application/Image/ShowAction.php
+			path: src/Module/Application/Image/AbstractShowAction.php
 
 		-
 			message: "#^If condition is always true\\.$#"

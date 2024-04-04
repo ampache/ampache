@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Application\Image\ShowUserAvatarAction;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\AmpError;
@@ -1340,7 +1341,13 @@ class User extends database_object
         $avatar          = [];
         $avatar['title'] = T_('User avatar');
         if ($this->has_art()) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/image.php?object_type=user&object_id=' . $this->id;
+            $avatar['url'] = sprintf(
+                '%s/image.php?action=%s&object_id=%d',
+                $local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path'),
+                ShowUserAvatarAction::REQUEST_ACTION,
+                $this->id
+            );
+
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
             $avatar['url'] .= '&thumb=4';
