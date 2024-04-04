@@ -861,7 +861,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track): bool
     {
-        $sql = "REPLACE INTO `playlist_data` (`playlist`, `object_type`, `object_id`, `track`), VALUES (?, ?, ?, ?);";
+        $sql = "REPLACE INTO `playlist_data` (`playlist`, `object_type`, `object_id`, `track`) VALUES (?, ?, ?, ?);";
         Dba::write($sql, [$this->id, 'song', $object_id, $track]);
         debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
