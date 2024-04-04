@@ -217,7 +217,7 @@ class Stream_Playlist
     {
         $type      = $media['object_type'] ?? null;
         $object_id = $media['object_id'] ?? null;
-        if ($type === null || $object_id === null){
+        if ($type === null || $object_id === null) {
             return null;
         }
         $className = ObjectTypeToClassNameMapper::map($type);
