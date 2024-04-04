@@ -1,5 +1,42 @@
 # CHANGELOG
 
+## Ampache 6.3.2
+
+### Added
+
+* Database 600068
+  * Allow signed `user` column for the `broadcast`, `player_control`, `session_stream`, `share`, `user_activity`, `user_follower` and `user_vote` tables
+  * Revert unique constraint `playlist_track_UN` on `playlist_data` table
+* Config version 71
+  * Fix up bitrate encode_args
+
+### Fixed
+
+* Always get the current file size when downloading the raw file
+* AlbumDisk errors on unknown items
+* Album names being overwritten with artist names when missing tags
+* Regenerate playlist track numbers correctly for the full list
+* Also check the bitrate when transcoding instead of just formats
+* Don't use cached files if the bitrate doesn't match `transcode_rate`
+* Default config encode_args are putting bitrates into millions
+
+## API 6.3.2
+
+### Added
+
+* API6
+  * download: add bitrate parameter
+
+### Fixed
+
+* ALL
+  * Download method format parameter didn't have a fallback value
+* API6
+  * Playlists objects would not return duplicates items if allowed
+  * has_art property missing from songs and albums
+  * playlist_add: couldn't add a single item
+
+
 ## Ampache 6.3.1
 
 ### Added
