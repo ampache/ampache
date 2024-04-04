@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
@@ -46,9 +47,10 @@ final class DownloadMethod
      *
      * Downloads a given media file. set format=raw to download the full file
      *
-     * id     = (string) $song_id| $podcast_episode_id
-     * type   = (string) 'song', 'podcast_episode', 'search', 'playlist'
-     * format = (string) 'mp3', 'ogg', etc //optional
+     * id      = (string) $song_id| $podcast_episode_id
+     * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
+     * bitrate = (integer) max bitrate for transcoding, '128', '256' //optional SONG ONLY
+     * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
      */
     public static function download(array $input, User $user): bool
     {
@@ -57,13 +59,17 @@ final class DownloadMethod
 
             return false;
         }
-        $object_id = (int) $input['id'];
-        $type      = (string) $input['type'];
-        $format    = $input['format'] ?? null; // mp3, flv or raw
+        $object_id  = (int) $input['id'];
+        $type       = (string) $input['type'];
+        $maxBitRate = (int)($input['bitrate'] ?? 0);
+        $format     = $input['format'] ?? null; // mp3, flv or raw
 
         $params = '&client=api&action=download&cache=1';
         if ($format && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&format=' . $format;
+        }
+        if ($format != 'raw' && $maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
+            $params .= '&bitrate=' . $maxBitRate;
         }
         $url = '';
         if ($type == 'song') {
