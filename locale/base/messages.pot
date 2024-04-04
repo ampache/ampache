@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-03-22 21:48+1000\n"
+"POT-Creation-Date: 2024-04-04 17:39+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,7 +252,7 @@ msgstr ""
 #: ../../public/templates/show_album.inc.php:129
 #: ../../public/templates/show_artist_row.inc.php:56
 #: ../../public/templates/show_broadcast_row.inc.php:36
-#: ../../public/templates/show_democratic.inc.php:53
+#: ../../public/templates/show_democratic.inc.php:54
 #: ../../public/templates/show_html5_player.inc.php:44
 #: ../../public/templates/show_live_stream.inc.php:45
 #: ../../public/templates/show_live_stream_row.inc.php:41
@@ -564,7 +564,7 @@ msgstr ""
 #: ../../src/Gui/Song/SongViewAdapter.php:352
 #: ../../src/Gui/Song/SongViewAdapter.php:354
 #: ../../src/Module/Util/Rss/AmpacheRss.php:342
-#: ../../src/Repository/Model/AlbumDisk.php:266
+#: ../../src/Repository/Model/AlbumDisk.php:268
 #: ../../src/Repository/Model/Album.php:496
 #: ../../src/Repository/Model/Search.php:608
 msgid "Album"
@@ -597,7 +597,7 @@ msgstr ""
 #: ../../public/templates/show_tagcloud.inc.php:35
 #: ../../public/templates/show_wanted_albums.inc.php:42
 #: ../../src/Module/Util/Rss/AmpacheRss.php:342
-#: ../../src/Repository/Model/AlbumDisk.php:261
+#: ../../src/Repository/Model/AlbumDisk.php:263
 #: ../../src/Repository/Model/Album.php:491
 #: ../../src/Repository/Model/Artist.php:352
 #: ../../src/Repository/Model/Browse.php:308
@@ -941,7 +941,7 @@ msgid "Batch download"
 msgstr ""
 
 #: ../../public/templates/rightbar.inc.php:80
-#: ../../public/templates/show_democratic.inc.php:56
+#: ../../public/templates/show_democratic.inc.php:57
 #: ../../public/templates/show_localplay_status.inc.php:62
 msgid "Clear Playlist"
 msgstr ""
@@ -1464,8 +1464,8 @@ msgstr ""
 #: ../../public/templates/show_edit_catalog.inc.php:45
 #: ../../public/templates/show_song_previews.inc.php:37
 #: ../../src/Gui/Song/SongViewAdapter.php:359
-#: ../../src/Repository/Model/AlbumDisk.php:295
-#: ../../src/Repository/Model/AlbumDisk.php:308
+#: ../../src/Repository/Model/AlbumDisk.php:297
+#: ../../src/Repository/Model/AlbumDisk.php:310
 msgid "Disk"
 msgstr ""
 
@@ -1519,7 +1519,7 @@ msgstr ""
 #: ../../public/templates/show_top_tracks.inc.php:67
 #: ../../public/templates/show_wanted_albums.inc.php:43
 #: ../../src/Gui/Song/SongViewAdapter.php:361
-#: ../../src/Repository/Model/AlbumDisk.php:271
+#: ../../src/Repository/Model/AlbumDisk.php:273
 #: ../../src/Repository/Model/Album.php:501
 #: ../../src/Repository/Model/Search.php:613
 #: ../../src/Repository/Model/Search.php:825
@@ -3037,28 +3037,28 @@ msgid "Preference"
 msgstr ""
 
 #. HINT: Democratic Playlist Name
-#: ../../public/templates/show_democratic.inc.php:35
+#: ../../public/templates/show_democratic.inc.php:36
 #, php-format
 msgid "%s Playlist"
 msgstr ""
 
-#: ../../public/templates/show_democratic.inc.php:35
+#: ../../public/templates/show_democratic.inc.php:36
 #: ../../src/Repository/Model/Browse.php:370
 msgid "Democratic Playlist"
 msgstr ""
 
-#: ../../public/templates/show_democratic.inc.php:41
+#: ../../public/templates/show_democratic.inc.php:42
 #: ../../public/templates/show_manage_democratic.inc.php:39
 msgid "Cooldown"
 msgstr ""
 
-#: ../../public/templates/show_democratic.inc.php:47
 #: ../../public/templates/show_democratic.inc.php:48
+#: ../../public/templates/show_democratic.inc.php:49
 #: ../../public/templates/show_edit_democratic.inc.php:38
 msgid "Configure Democratic Playlist"
 msgstr ""
 
-#: ../../public/templates/show_democratic.inc.php:85
+#: ../../public/templates/show_democratic.inc.php:86
 msgid "Reload this page automatically"
 msgstr ""
 
@@ -4354,10 +4354,8 @@ msgstr ""
 msgid "Add new files from:"
 msgstr ""
 
-#. HINT: /media/path
 #: ../../public/templates/show_manage_catalogs.inc.php:63
-#, php-format
-msgid "Clean deleted files in: %s"
+msgid "Clean deleted files in:"
 msgstr ""
 
 #: ../../public/templates/show_manage_catalogs.inc.php:67
@@ -9695,12 +9693,12 @@ msgstr ""
 msgid "YOURLS API key"
 msgstr ""
 
-#: ../../src/Repository/Model/AlbumDisk.php:251
+#: ../../src/Repository/Model/AlbumDisk.php:253
 #: ../../src/Repository/Model/Album.php:481
 msgid "Album MusicBrainzID"
 msgstr ""
 
-#: ../../src/Repository/Model/AlbumDisk.php:256
+#: ../../src/Repository/Model/AlbumDisk.php:258
 #: ../../src/Repository/Model/Album.php:486
 msgid "Release Group MusicBrainzID"
 msgstr ""
