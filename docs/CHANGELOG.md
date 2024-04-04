@@ -36,7 +36,6 @@
   * has_art property missing from songs and albums
   * playlist_add: couldn't add a single item
 
-
 ## Ampache 6.3.1
 
 ### Added
