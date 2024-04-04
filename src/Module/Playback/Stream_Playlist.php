@@ -202,8 +202,8 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type: string,
-     *  object_id: int,
+     *  object_type?: string,
+     *  object_id?: int,
      *  client?: string,
      *  action?: string,
      *  cache?: string,
