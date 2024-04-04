@@ -48,7 +48,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     }
 
     public function createLibraryItemFeed(
-        User $user,
+        ?User $user,
         playable_item $libraryItem
     ): FeedTypeInterface {
         return new LibraryItemFeed(
@@ -60,7 +60,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     }
 
     public function createRecentlyPlayedFeed(
-        User $user
+        ?User $user
     ): FeedTypeInterface {
         return new RecentlyPlayedFeed(
             $user
@@ -73,7 +73,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     }
 
     public function createLatestAlbumFeed(
-        User $user
+        ?User $user
     ): FeedTypeInterface {
         return new LatestAlbumFeed(
             $user
@@ -81,7 +81,7 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     }
 
     public function createLatestArtistFeed(
-        User $user
+        ?User $user
     ): FeedTypeInterface {
         return new LatestArtistFeed(
             $user,
