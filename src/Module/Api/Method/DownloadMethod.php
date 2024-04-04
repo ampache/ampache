@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
