@@ -13401,6 +13401,16 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Random.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Random.php
+
+		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Repository/Model/Random.php
