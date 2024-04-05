@@ -62,6 +62,11 @@ final class GetAdvancedAction implements ApplicationActionInterface
             $user->load_playlist();
             $objectIds = Random::advanced($objectType->value, $_POST);
             if (!empty($objectIds)) {
+                // you need to add by the base child type song/video
+                $objectType = match ($objectType->value) {
+                    'album', 'artist' =>  LibraryItemEnum::SONG,
+                    default => $objectType,
+                };
                 // We need to add them to the active playlist
                 foreach ($objectIds as $object_id) {
                     $user->playlist?->add_object($object_id, $objectType);

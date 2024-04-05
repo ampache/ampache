@@ -136,12 +136,6 @@ foreach (array(64, 128, 256, 512, 1024) as $i) {
 <div id="browse">
 <?php
     if (!empty($object_ids)) {
-        // get the subitems from your search
-        $object_ids = match ($currentType) {
-            'album' =>  Random::get_songs('album', $object_ids),
-            'artist' => $object_ids = Random::get_songs('artist', $object_ids),
-            default => $object_ids,
-        };
         $browse = new Browse();
         $browse->set_type($browse_type);
         $browse->save_objects($object_ids);
