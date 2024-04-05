@@ -150,8 +150,8 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
     <script>
         $('.metadataAccordionButton').button().click(function() {
             $('.metadataAccordion').toggle();
-         //   $(this).hide();
-              $(this).text($(this).text() == 'More Metadata' ? 'Less Metadata' : 'More Metadata');
+            $(this).text($(this).text() == 'More Metadata' ? 'Less Metadata' : 'More Metadata');
+
             return false;
         });
     </script>

@@ -43,7 +43,7 @@ class Random
         'song',
         'album',
         'artist',
-         'video',
+        'video',
     ];
 
     /**
@@ -254,6 +254,18 @@ class Random
         $results = self::advanced_results($search['sql'], $search['parameters'], $data);
         //debug_event(self::class, 'advanced ' . print_r($search, true), 5);
 
+        return self::get_songs($type, $results);
+    }
+
+    /**
+     * get_songs
+     * This processes the results of a post from a form and returns an
+     * array of song items that were returned from said randomness
+     * @param string $type
+     * @param array $data
+     */
+    public static function get_songs($type, $results): array
+    {
         switch ($type) {
             case 'song':
             case 'video':
@@ -276,7 +288,6 @@ class Random
                 return [];
         }
     }
-
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it

@@ -89,10 +89,10 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
         <?php if (in_array('spotify', $art_order)) {
             if ($object_type == 'album') { ?>
         <tr>
-             <th class="center" rowspan="3" style>
+            <th class="center" rowspan="3" style>
                 <?php echo T_('Spotify Album Filters'); ?>
-             </th>
-         </tr>
+            </th>
+        </tr>
         <tr>
            <td>
                 <label id="gatherYear" for="yearFilter"><?php echo T_('Year'); ?> </label>
@@ -102,32 +102,32 @@ UI::show_box_top($art_type, 'box box_get_albumart'); ?>
           </tr>
           <tr>
           <td>
-             <label id="gatherLimit" for="searchLimit"> <?php echo T_('Limit'); ?></label>
+            <label id="gatherLimit" for="searchLimit"> <?php echo T_('Limit'); ?></label>
               <input type="number" id="searchLimit"
                 name="search_limit" required min="1" max="50" value="<?php echo $limit; ?>">
           </td>
           </tr>
             <?php } ?>
           <tr>
-             <?php if ($object_type == 'artist') { ?>
-             <td>
+            <?php if ($object_type == 'artist') { ?>
+            <td>
                <?php echo T_('Search Limit'); ?>
-             </td>
-             <td>
+            </td>
+            <td>
                   <input type="number" id="searchLimit"
                   name="search_limit" required min="1" max="50" value="<?php echo $limit; ?>">
               </td>
 
           <?php }
-             } else { ?>
+            } else { ?>
             <td>
             </td>
-            <?php } ?>
+        <?php } ?>
             <td>
             </td>
           </tr>
         </table>
-     <div class="formValidation">
+    <div class="formValidation">
         <input type="hidden" name="action" value="find_art" />
         <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
         <input type="hidden" name="object_id" value="<?php echo $object_id; ?>" />

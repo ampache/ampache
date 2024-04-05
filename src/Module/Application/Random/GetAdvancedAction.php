@@ -55,9 +55,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $objectIds  = array();
-        $objectType = ($_REQUEST['type'] == 'video')
-            ? LibraryItemEnum::VIDEO
-            : LibraryItemEnum::SONG;
+        $objectType = LibraryItemEnum::from($_REQUEST['type'] ?? 'song');
 
         $user = Core::get_global('user');
         if ($user instanceof User) {

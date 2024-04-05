@@ -13437,7 +13437,7 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
-			count: 1
+			count: 2
 			path: src/Repository/Model/Search.php
 
 		-

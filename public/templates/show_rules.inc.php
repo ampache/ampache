@@ -28,14 +28,14 @@ use Ampache\Repository\Model\Search;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-/** @var null|Search $playlist */
-
+/** @var null|string $currentType */
 $currentType = (isset($currentType))
     ? $currentType
     : Core::get_request('type');
 if (empty($currentType)) {
     $currentType = 'song';
 }
+/** @var null|Search $playlist */
 if (isset($playlist)) {
     $logic_operator = $playlist->logic_operator;
 } else {
@@ -49,26 +49,26 @@ $logic_operator = strtolower((string)$logic_operator); ?>
 <table class="tabledata">
 <tbody id="searchtable">
     <tr id="rules_operator">
-    <td><?php echo T_('Match'); ?></td>
+        <td><?php echo T_('Match'); ?></td>
         <td>
-                <select name="operator">
-                    <option value="and" <?php if ($logic_operator == 'and') {
-                        echo 'selected="selected"';
-                    } ?>><?php echo T_('all rules'); ?></option>
-                    <option value="or" <?php if ($logic_operator == 'or') {
-                        echo 'selected="selected"';
-                    } ?>><?php echo T_('any rule'); ?></option>
-                </select>
+            <select name="operator">
+                <option value="and" <?php if ($logic_operator == 'and') {
+                    echo 'selected="selected"';
+                } ?>><?php echo T_('all rules'); ?></option>
+                <option value="or" <?php if ($logic_operator == 'or') {
+                    echo 'selected="selected"';
+                } ?>><?php echo T_('any rule'); ?></option>
+            </select>
         </td>
-        </tr>
+    </tr>
     <tr id="rules_addrowbutton">
-    <td>
-        <a id="addrowbutton" href="javascript:void(0)">
-            <?php echo Ui::get_icon('add'); ?>
-        <?php echo T_('Add Another Rule'); ?>
-        </a>
-        <script>$('#addrowbutton').on('click', SearchRow.add);</script>
-    </td>
+        <td>
+            <a id="addrowbutton" href="javascript:void(0)">
+                <?php echo Ui::get_icon('add'); ?>
+            <?php echo T_('Add Another Rule'); ?>
+            </a>
+            <script>$('#addrowbutton').on('click', SearchRow.add);</script>
+        </td>
     </tr>
 </tbody>
 </table>
