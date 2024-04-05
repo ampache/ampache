@@ -64,7 +64,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
             if (!empty($objectIds)) {
                 // you need to add by the base child type song/video
                 $objectType = match ($objectType->value) {
-                    'album', 'artist' =>  LibraryItemEnum::SONG,
+                    'album', 'artist' => LibraryItemEnum::SONG,
                     default => $objectType,
                 };
                 // We need to add them to the active playlist
