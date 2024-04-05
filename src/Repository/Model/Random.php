@@ -262,7 +262,7 @@ class Random
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
      * @param string $type
-     * @param array $data
+     * @param array $results
      */
     public static function get_songs($type, $results): array
     {
@@ -404,7 +404,7 @@ class Random
             case 'album':
             case 'artist':
                 $sql = sprintf('SELECT `%s`.`id`, SUM(`song`.`size`) AS `size`, SUM(`%s`.`time`) AS `time` FROM `%s` ', $type, $type, $type);
-                if (!$search_info || !$search_info['join']['song']) {
+                if (!$search_info || !array_key_exists('join', $search_info) || !array_key_exists('song', $search_info)) {
                     $sql .= sprintf('LEFT JOIN `song` ON `song`.`%s`=`%s`.`id` ', $type, $type);
                 }
 
