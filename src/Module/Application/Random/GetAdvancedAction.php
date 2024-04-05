@@ -66,7 +66,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
                     case 'album':
                     case 'artist':
                         $objectType = 'song';
-                }; 
+                };
                 // We need to add them to the active playlist
                 foreach ($objectIds as $object_id) {
                     $user->playlist?->add_object($object_id, $objectType);

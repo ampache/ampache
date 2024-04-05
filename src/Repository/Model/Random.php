@@ -268,7 +268,7 @@ class Random
      * get_songs
      * This processes the results of a post from a form and returns an
      * array of song items that were returned from said randomness
-     * @param string $type 
+     * @param string $type
      * @param array $results
      */
     public static function get_songs($type, $results): array
