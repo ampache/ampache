@@ -47,6 +47,9 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
     ) {
     }
 
+    /**
+     * Creates the feed related to a certain library-item
+     */
     public function createLibraryItemFeed(
         ?User $user,
         playable_item $libraryItem
@@ -59,6 +62,9 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         );
     }
 
+    /**
+     * Creates a feed for recently played items
+     */
     public function createRecentlyPlayedFeed(
         ?User $user
     ): FeedTypeInterface {
@@ -67,11 +73,17 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         );
     }
 
+    /**
+     * Creates a feed for currently playing items
+     */
     public function createNowPlayingFeed(): FeedTypeInterface
     {
         return new NowPlayingFeed();
     }
 
+    /**
+     * Creates a feed for recent albums
+     */
     public function createLatestAlbumFeed(
         ?User $user
     ): FeedTypeInterface {
@@ -80,6 +92,9 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         );
     }
 
+    /**
+     * Creates a feed for recent artists
+     */
     public function createLatestArtistFeed(
         ?User $user
     ): FeedTypeInterface {
@@ -88,6 +103,9 @@ final readonly class RssFeedTypeFactory implements RssFeedTypeFactoryInterface
         );
     }
 
+    /**
+     * Creates a feed for recent shouts
+     */
     public function createLatestShoutFeed(): FeedTypeInterface
     {
         return new LatestShoutFeed(
