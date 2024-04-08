@@ -111,7 +111,10 @@ final class PlayerMethod
             Stream::insert_now_playing((int)$media->id, $user->getId(), ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
 
             // internal scrobbling (user_activity and object_count tables)
-            if ($media->set_played($user->id, $agent, array(), ($time - $position))) {
+            if (
+                $type === 'song' &&
+                $media->set_played($user->id, $agent, array(), ($time - $position))
+            ) {
                 // scrobble plugins
                 User::save_mediaplay($user, $media);
             }
