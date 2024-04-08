@@ -90,6 +90,7 @@ final class ObjectTypeToClassNameMapper
         Clip::class => 'clip',
         Movie::class => 'movie',
         Personal_Video::class => 'personal_video',
+        TvShow::class => 'tvshow',
         TVShow_Episode::class => 'tvshow_episode',
         TVShow_Season::class => 'tvshow_season',
         Video::class => 'video',
