@@ -1787,34 +1787,6 @@ class Subsonic_Xml_Data
     }
 
     /**
-     * _getCatalogData
-     * @param int $catalogId
-     * @param string $file_Path
-     * @return array
-     */
-    private static function _getCatalogData($catalogId, $file_Path): array
-    {
-        $results     = array();
-        $sqllook     = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?;';
-        $db_results  = Dba::read($sqllook, [$catalogId]);
-        $resultcheck = Dba::fetch_assoc($db_results);
-        if (!empty($resultcheck)) {
-            if ($resultcheck['catalog_type'] == 'seafile') {
-                $results['path'] = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file_Path;
-
-                return $results;
-            }
-            $sql             = 'SELECT `path` FROM `catalog_' . $resultcheck['catalog_type'] . '` WHERE `catalog_id` = ?';
-            $db_results      = Dba::read($sql, [$catalogId]);
-            $result          = Dba::fetch_assoc($db_results);
-            $catalog_path    = rtrim((string)$result['path'], "/");
-            $results['path'] = str_replace($catalog_path . "/", "", $file_Path);
-        }
-
-        return $results;
-    }
-
-    /**
      * Adds a child to an existing result xml structure
      */
     private static function addChildToResultXml(SimpleXMLElement $xml, string $qualifiedName, ?string $value = null): SimpleXMLElement
