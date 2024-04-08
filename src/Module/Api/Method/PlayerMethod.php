@@ -25,15 +25,17 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Api;
+use Ampache\Module\Api\Json_Data;
+use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Playback\Stream;
+use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Api\Api;
-use Ampache\Module\Playback\Stream;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
 /**
  * Class PlayerMethod
@@ -48,6 +50,7 @@ final class PlayerMethod
      * MINIMUM_API_VERSION=6.3.2
      *
      * Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)
+     * Return the `now_playing` state when completed
      *
      * filter  = (integer) $object_id
      * type    = (string)  $object_type ('song', 'live_stream', 'podcast_episode', 'video')
@@ -92,6 +95,7 @@ final class PlayerMethod
 
             return false;
         }
+
         /** @var Song|Live_Stream|Podcast_Episode|Video $media */
         $media = new $className($object_id);
         if ($media->isNew()) {
@@ -116,7 +120,26 @@ final class PlayerMethod
             Stream::delete_now_playing((string)$user->username, (int)$media->id, $type, $user->getId());
         }
 
-        Api::message('success', $input['api_format']);
+        // return the now playing state for that user
+        $results = Stream::get_now_playing($user->getId());
+        if (empty($results)) {
+            Api::empty('now_playing', $input['api_format']);
+
+            return false;
+        }
+
+        ob_end_clean();
+        switch ($input['api_format']) {
+            case 'json':
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
+                echo Json_Data::now_playing($results);
+                break;
+            default:
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
+                echo Xml_Data::now_playing($results);
+        }
 
         return true;
     }
