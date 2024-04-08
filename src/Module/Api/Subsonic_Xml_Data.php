@@ -451,7 +451,6 @@ class Subsonic_Xml_Data
         if ($song->isNew()) {
             return $xml;
         }
-        $catalogData = self::_getCatalogData($song->getCatalogId(), (string)$song->file);
 
         // Don't create entries for disabled songs
         if ($song->enabled) {
@@ -504,7 +503,8 @@ class Subsonic_Xml_Data
             }
             $xsong->addAttribute('suffix', (string)$song->type);
             $xsong->addAttribute('contentType', (string)$song->mime);
-            $file_path = (string)$catalogData['path'];
+            // Always return the original filename, not the transcoded one
+            $xsong->addAttribute('path', (string)$song->file);
             if (AmpConfig::get('transcode') != 'never') {
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
@@ -514,16 +514,11 @@ class Subsonic_Xml_Data
                     : Stream::get_transcode_format($song->type, null, 'api');
 
                 if (!empty($transcode_type) && $song->type !== $transcode_type) {
-                    // Return a file path relative to the catalog root path
-                    $xsong->addAttribute('path', (string)preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
                     // Set transcoding information
                     $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
-
-                    return $xsong;
                 }
             }
-            $xsong->addAttribute('path', $file_path);
 
             return $xsong;
         }
