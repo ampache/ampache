@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Image\ShowAction;
+use Ampache\Module\Application\Image\ShowUserAvatarAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
 
@@ -40,6 +41,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         ShowAction::REQUEST_ACTION => ShowAction::class,
+        ShowUserAvatarAction::REQUEST_ACTION => ShowUserAvatarAction::class,
     ],
     ShowAction::REQUEST_ACTION
 );

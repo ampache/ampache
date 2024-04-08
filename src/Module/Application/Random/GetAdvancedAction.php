@@ -55,15 +55,18 @@ final class GetAdvancedAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $objectIds  = array();
-        $objectType = ($_REQUEST['type'] == 'video')
-            ? LibraryItemEnum::VIDEO
-            : LibraryItemEnum::SONG;
+        $objectType = LibraryItemEnum::from($_REQUEST['type'] ?? 'song');
 
         $user = Core::get_global('user');
         if ($user instanceof User) {
             $user->load_playlist();
             $objectIds = Random::advanced($objectType->value, $_POST);
             if (!empty($objectIds)) {
+                // you need to add by the base child type song/video
+                $objectType = match ($objectType->value) {
+                    'album', 'artist' => LibraryItemEnum::SONG,
+                    default => $objectType,
+                };
                 // We need to add them to the active playlist
                 foreach ($objectIds as $object_id) {
                     $user->playlist?->add_object($object_id, $objectType);

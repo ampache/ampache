@@ -31,7 +31,6 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\Model\Album;
@@ -39,7 +38,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
 use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -51,7 +49,6 @@ final readonly class ShowAction implements ApplicationActionInterface
     public const REQUEST_KEY = 'show';
 
     public function __construct(
-        private RequestParserInterface $requestParser,
         private ConfigContainerInterface $configContainer,
         private ResponseFactoryInterface $responseFactory,
         private UserRepositoryInterface $userRepository,
@@ -71,18 +68,17 @@ final readonly class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type     = RssFeedTypeEnum::tryFrom($this->requestParser->getFromRequest('type')) ?? RssFeedTypeEnum::NOW_PLAYING;
-        $rssToken = $this->requestParser->getFromRequest('rsstoken');
+        $queryParams = $request->getQueryParams();
+
+        $type     = RssFeedTypeEnum::tryFrom($queryParams['type'] ?? '') ?? RssFeedTypeEnum::NOW_PLAYING;
+        $rssToken = $queryParams['rsstoken'] ?? '';
 
         $user = $this->userRepository->getByRssToken($rssToken);
-        if ($user === null) {
-            $user = new User(User::INTERNAL_SYSTEM_USER_ID);
-        }
 
         if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
             $item = $this->libraryItemLoader->load(
-                LibraryItemEnum::from($this->requestParser->getFromRequest('object_type')),
-                (int) $this->requestParser->getFromRequest('object_id'),
+                LibraryItemEnum::from($queryParams['object_type'] ?? ''),
+                (int) ($queryParams['object_id'] ?? 0),
                 [Album::class, Artist::class, Podcast::class]
             );
 

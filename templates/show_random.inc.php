@@ -40,31 +40,31 @@ $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
 $random_count = $_POST['limit'] ?? 1;
-$random_type  = (in_array($get_type, Random::VALID_TYPES))
+$currentType  = (in_array($get_type, Random::VALID_TYPES))
     ? $get_type
     : null;
-if (!$random_type) {
+if (!$currentType) {
     header("Location: " . $web_path . '/random.php?action=get_advanced&type=song');
 }
-$browse_type = ($random_type == 'video')
+$browse_type = ($currentType == 'video')
     ? 'video'
     : 'song';
 
 Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
-<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($random_type); ?>">
+<form id="random" method="post" enctype="multipart/form-data" action="<?php echo $web_path; ?>/random.php?action=get_advanced&type=<?php echo (string) scrub_out($currentType); ?>">
 <input type='hidden' name='random' value=1>
 <div class="category_options">
-    <a class="category <?php echo ($random_type == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
+    <a class="category <?php echo ($currentType == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=song">
         <?php echo T_('Songs'); ?>
     </a>
-    <a class="category <?php echo ($random_type == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=album">
+    <a class="category <?php echo ($currentType == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=album">
         <?php echo T_('Albums'); ?>
     </a>
-    <a class="category <?php echo ($random_type == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
+    <a class="category <?php echo ($currentType == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=artist">
         <?php echo T_('Artists'); ?>
     </a>
     <?php if (AmpConfig::get('allow_video') && $videoRepository->getItemCount(Video::class)) { ?>
-        <a class="category <?php echo ($random_type == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
+        <a class="category <?php echo ($currentType == 'video') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/random.php?action=advanced&type=video">
             <?php echo T_('Videos'); ?>
         </a>
     <?php } ?>
@@ -127,9 +127,7 @@ foreach (array(64, 128, 256, 512, 1024) as $i) {
         </td>
 </tr>
 </table>
-<?php $currentType = $browse_type;
-require Ui::find_template('show_rules.inc.php'); ?>
-
+<?php require Ui::find_template('show_rules.inc.php'); ?>
     <div class="formValidation">
         <input type="submit" value="<?php echo T_('Enqueue'); ?>" />
     </div>

@@ -43,7 +43,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
         private LibraryItemLoaderInterface $libraryItemLoader,
         private ModelFactoryInterface $modelFactory,
         private playable_item $playable,
-        private User $user
+        private ?User $user
     ) {
     }
 
@@ -153,7 +153,9 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media->mime) {
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;
-                $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                if ($this->user !== null) {
+                    $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                }
             }
 
             yield $data;

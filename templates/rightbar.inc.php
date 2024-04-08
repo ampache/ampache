@@ -123,10 +123,10 @@ if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::ge
 } ?>
     <script>
         <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
-             $("#content").removeClass("content-right-wild", 500);
-             $("#footer").removeClass("footer-wild", 500);
-             $("#rightbar").removeClass("hidden");
-             $("#rightbar").show("slow");
+            $("#content").removeClass("content-right-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
+            $("#rightbar").removeClass("hidden");
+            $("#rightbar").show("slow");
         <?php } else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);

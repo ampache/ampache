@@ -209,8 +209,8 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type: LibraryItemEnum,
-     *  object_id: int,
+     *  object_type?: LibraryItemEnum,
+     *  object_id?: int,
      *  client?: string,
      *  action?: string,
      *  cache?: string,
@@ -227,8 +227,11 @@ class Stream_Playlist
         ?User $user = null
     ): ?Stream_Url {
         // @todo use LibraryItemLoader
-        $type      = $media['object_type']->value;
-        $object_id = $media['object_id'];
+        $type      = $media['object_type']->value ?? null;
+        $object_id = $media['object_id'] ?? null;
+        if ($type === null || $object_id === null) {
+            return null;
+        }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var library_item $object */
         $object = new $className($object_id);

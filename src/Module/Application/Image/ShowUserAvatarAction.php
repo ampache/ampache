@@ -26,34 +26,27 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Image;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authentication\AuthenticationManagerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\LibraryItemLoaderInterface;
-use Ampache\Repository\Model\Podcast;
-use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Video;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
-final readonly class ShowAction extends AbstractShowAction
+final readonly class ShowUserAvatarAction extends AbstractShowAction
 {
-    public const REQUEST_ACTION = 'show';
+    public const REQUEST_ACTION = 'show_user_avatar';
 
     public function __construct(
+        private UserRepositoryInterface $userRepository,
         RequestParserInterface $requestParser,
         AuthenticationManagerInterface $authenticationManager,
-        private ConfigContainerInterface $configContainer,
+        ConfigContainerInterface $configContainer,
         Horde_Browser $horde_browser,
         ResponseFactoryInterface $responseFactory,
         StreamFactoryInterface $streamFactory,
-        private LibraryItemLoaderInterface $libraryItemLoader,
         LoggerInterface $logger
     ) {
         parent::__construct(
@@ -68,7 +61,7 @@ final readonly class ShowAction extends AbstractShowAction
     }
 
     /**
-     * @return null|array{
+     * @return array{
      *  0: string,
      *  1: int,
      *  2: string
@@ -76,44 +69,15 @@ final readonly class ShowAction extends AbstractShowAction
      */
     protected function getFileName(
         ServerRequestInterface $request,
-    ): ?array {
-        $queryParams = $request->getQueryParams();
+    ): array {
+        $objectId = (int) ($request->getQueryParams()['object_id'] ?? 0);
 
-        /**
-         * @deprecated FIXME: Legacy stuff - should be removed after a version or so
-         */
-        $objectType = $queryParams['object_type'] ??
-            ($this->configContainer->get(ConfigurationKeyEnum::SHOW_SONG_ART) ? 'song' : 'album');
-
-        if (!Art::is_valid_type($objectType)) {
-            return null;
-        }
-
-        $objectId = (int) ($queryParams['object_id'] ?? 0);
-
-        $item = $this->libraryItemLoader->load(
-            LibraryItemEnum::from($objectType),
-            $objectId
-        );
-
-        if ($item instanceof Song || $item instanceof Video || $item instanceof Podcast_Episode) {
-            $filename = $item->title;
-        } elseif ($item instanceof Podcast) {
-            $filename = $item->getTitle();
-        } else {
-            // Album || Artist || Broadcast || Label || License || Live_Stream || Wanted
-            $filename = $item->name ?? '';
-        }
-
-        if ($item instanceof Podcast_Episode) {
-            $objectId        = $item->podcast;
-            $objectType      = 'podcast';
-        }
+        $user = $this->userRepository->findById($objectId);
 
         return [
-            $filename,
+            (string) $user?->username,
             $objectId,
-            $objectType,
+            'user',
         ];
     }
 }

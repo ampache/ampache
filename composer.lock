@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "adhocore/cli",
-            "version": "v1.6.2",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adhocore/php-cli.git",
-                "reference": "34191315b0da20b9b4ecad783d91db992fa209a4"
+                "reference": "3fde60a838912e71c82ed0f48048685dc32dbc77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/34191315b0da20b9b4ecad783d91db992fa209a4",
-                "reference": "34191315b0da20b9b4ecad783d91db992fa209a4",
+                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/3fde60a838912e71c82ed0f48048685dc32dbc77",
+                "reference": "3fde60a838912e71c82ed0f48048685dc32dbc77",
                 "shasum": ""
             },
             "require": {
@@ -62,7 +62,7 @@
             ],
             "support": {
                 "issues": "https://github.com/adhocore/php-cli/issues",
-                "source": "https://github.com/adhocore/php-cli/tree/v1.6.2"
+                "source": "https://github.com/adhocore/php-cli/tree/v1.7.1"
             },
             "funding": [
                 {
@@ -74,7 +74,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-01-22T22:37:23+00:00"
+            "time": "2024-03-28T08:30:12+00:00"
         },
         {
             "name": "ampache/ampacheapi-php",
@@ -188,26 +188,26 @@
         },
         {
             "name": "clue/multicast-react",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clue/reactphp-multicast.git",
-                "reference": "a81d0b945a453548e573b2b644077036fa4e5601"
+                "reference": "b9c9509bcec391ff88c8a199da1a2aa488997464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/a81d0b945a453548e573b2b644077036fa4e5601",
-                "reference": "a81d0b945a453548e573b2b644077036fa4e5601",
+                "url": "https://api.github.com/repos/clue/reactphp-multicast/zipball/b9c9509bcec391ff88c8a199da1a2aa488997464",
+                "reference": "b9c9509bcec391ff88c8a199da1a2aa488997464",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3",
                 "react/datagram": "~1.0",
-                "react/event-loop": "^1.0 || ^0.5 || ^0.4 || ^0.3"
+                "react/event-loop": "^1.2"
             },
             "require-dev": {
                 "clue/hexdump": "0.2.*",
-                "phpunit/phpunit": "^9.3 ||^6.0 || ^5.7 || ^4.8.35"
+                "phpunit/phpunit": "^9.6 ||^6.0 || ^5.7 || ^4.8.36"
             },
             "suggest": {
                 "ext-sockets": "Requires PHP 5.4+ and the low level socket API for listening on multicast addresses (socket options to send IGMP announcements)"
@@ -239,7 +239,7 @@
             ],
             "support": {
                 "issues": "https://github.com/clue/reactphp-multicast/issues",
-                "source": "https://github.com/clue/reactphp-multicast/tree/v1.1.0"
+                "source": "https://github.com/clue/reactphp-multicast/tree/v1.2.0"
             },
             "funding": [
                 {
@@ -251,7 +251,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-12-06T15:24:48+00:00"
+            "time": "2024-04-05T12:49:27+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -4504,16 +4504,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v6.4.5",
+            "version": "v6.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "7fe30068e207d9c31c0138501ab40358eb2d49a4"
+                "reference": "f2591fd1f8c6e3734656b5d6b3829e8bf81f507c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/7fe30068e207d9c31c0138501ab40358eb2d49a4",
-                "reference": "7fe30068e207d9c31c0138501ab40358eb2d49a4",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/f2591fd1f8c6e3734656b5d6b3829e8bf81f507c",
+                "reference": "f2591fd1f8c6e3734656b5d6b3829e8bf81f507c",
                 "shasum": ""
             },
             "require": {
@@ -4567,7 +4567,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v6.4.5"
+                "source": "https://github.com/symfony/routing/tree/v6.4.6"
             },
             "funding": [
                 {
@@ -4583,7 +4583,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-27T12:33:30+00:00"
+            "time": "2024-03-28T13:28:49+00:00"
         },
         {
             "name": "teapot/status-code",
@@ -5845,16 +5845,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.0.9",
+            "version": "11.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "591bbfe416400385527d5086b346b92c06de404b"
+                "reference": "816cb6070af901c0548aa5f18f2132fd8a6e4ade"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/591bbfe416400385527d5086b346b92c06de404b",
-                "reference": "591bbfe416400385527d5086b346b92c06de404b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/816cb6070af901c0548aa5f18f2132fd8a6e4ade",
+                "reference": "816cb6070af901c0548aa5f18f2132fd8a6e4ade",
                 "shasum": ""
             },
             "require": {
@@ -5893,7 +5893,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "11.0-dev"
+                    "dev-main": "11.1-dev"
                 }
             },
             "autoload": {
@@ -5925,7 +5925,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.0.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.1.1"
             },
             "funding": [
                 {
@@ -5941,7 +5941,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T10:09:42+00:00"
+            "time": "2024-04-06T06:20:21+00:00"
         },
         {
             "name": "psr/event-dispatcher",
@@ -5995,16 +5995,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b"
+                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c59507a9090b465d65e1aceed91e5b81986e375b",
-                "reference": "c59507a9090b465d65e1aceed91e5b81986e375b",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
+                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
                 "shasum": ""
             },
             "require": {
@@ -6016,6 +6016,9 @@
                 "rector/rector-downgrade-php": "*",
                 "rector/rector-phpunit": "*",
                 "rector/rector-symfony": "*"
+            },
+            "suggest": {
+                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
             },
             "bin": [
                 "bin/rector"
@@ -6039,7 +6042,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.0.3"
+                "source": "https://github.com/rectorphp/rector/tree/1.0.4"
             },
             "funding": [
                 {
@@ -6047,7 +6050,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-14T15:04:18+00:00"
+            "time": "2024-04-05T09:01:07+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -7031,16 +7034,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v7.0.4",
+            "version": "v7.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "6b099f3306f7c9c2d2786ed736d0026b2903205f"
+                "reference": "fde915cd8e7eb99b3d531d3d5c09531429c3f9e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/6b099f3306f7c9c2d2786ed736d0026b2903205f",
-                "reference": "6b099f3306f7c9c2d2786ed736d0026b2903205f",
+                "url": "https://api.github.com/repos/symfony/console/zipball/fde915cd8e7eb99b3d531d3d5c09531429c3f9e5",
+                "reference": "fde915cd8e7eb99b3d531d3d5c09531429c3f9e5",
                 "shasum": ""
             },
             "require": {
@@ -7104,7 +7107,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v7.0.4"
+                "source": "https://github.com/symfony/console/tree/v7.0.6"
             },
             "funding": [
                 {
@@ -7120,7 +7123,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-22T20:27:20+00:00"
+            "time": "2024-04-01T11:04:53+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -7204,16 +7207,16 @@
         },
         {
             "name": "symfony/event-dispatcher-contracts",
-            "version": "v3.4.0",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "a76aed96a42d2b521153fb382d418e30d18b59df"
+                "reference": "4e64b49bf370ade88e567de29465762e316e4224"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/a76aed96a42d2b521153fb382d418e30d18b59df",
-                "reference": "a76aed96a42d2b521153fb382d418e30d18b59df",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/4e64b49bf370ade88e567de29465762e316e4224",
+                "reference": "4e64b49bf370ade88e567de29465762e316e4224",
                 "shasum": ""
             },
             "require": {
@@ -7260,7 +7263,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.4.0"
+                "source": "https://github.com/symfony/event-dispatcher-contracts/tree/v3.4.2"
             },
             "funding": [
                 {
@@ -7276,20 +7279,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T14:45:45+00:00"
+            "time": "2024-01-23T14:51:35+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v7.0.3",
+            "version": "v7.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "2890e3a825bc0c0558526c04499c13f83e1b6b12"
+                "reference": "408105dff4c104454100730bdfd1a9cdd993f04d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/2890e3a825bc0c0558526c04499c13f83e1b6b12",
-                "reference": "2890e3a825bc0c0558526c04499c13f83e1b6b12",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/408105dff4c104454100730bdfd1a9cdd993f04d",
+                "reference": "408105dff4c104454100730bdfd1a9cdd993f04d",
                 "shasum": ""
             },
             "require": {
@@ -7323,7 +7326,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v7.0.3"
+                "source": "https://github.com/symfony/filesystem/tree/v7.0.6"
             },
             "funding": [
                 {
@@ -7339,7 +7342,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-23T15:02:46+00:00"
+            "time": "2024-03-21T19:37:36+00:00"
         },
         {
             "name": "symfony/finder",
@@ -7849,16 +7852,16 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "fe07cbc8d837f60caf7018068e350cc5163681a0"
+                "reference": "11bbf19a0fb7b36345861e85c5768844c552906e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/fe07cbc8d837f60caf7018068e350cc5163681a0",
-                "reference": "fe07cbc8d837f60caf7018068e350cc5163681a0",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/11bbf19a0fb7b36345861e85c5768844c552906e",
+                "reference": "11bbf19a0fb7b36345861e85c5768844c552906e",
                 "shasum": ""
             },
             "require": {
@@ -7911,7 +7914,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/service-contracts/tree/v3.4.1"
+                "source": "https://github.com/symfony/service-contracts/tree/v3.4.2"
             },
             "funding": [
                 {
@@ -7927,7 +7930,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-26T14:02:43+00:00"
+            "time": "2023-12-19T21:51:00+00:00"
         },
         {
             "name": "symfony/stopwatch",

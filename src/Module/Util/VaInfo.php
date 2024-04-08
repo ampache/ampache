@@ -1590,9 +1590,9 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'creation_date':
-                    $parsed['release_date'] = strtotime(str_replace(" ", "", $data[0]));
+                    $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['release_date']);
+                        $data[0] = date('Y', $parsed['creation_date']);
                     }
                     $parsed['year'] = $data[0];
                     break;
@@ -1844,7 +1844,7 @@ final class VaInfo implements VaInfoInterface
             $episode = array();
             $tvyear  = array();
             $temp    = array();
-            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}|[1|2][0-9]{3}~", $filepath, $tvyear);
+            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}[^p]|[1|2][0-9]{3}[^p]~", $filepath, $tvyear);
             $results['year'] = (!empty($tvyear)) ? (int) $tvyear[0] : null;
 
             if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
