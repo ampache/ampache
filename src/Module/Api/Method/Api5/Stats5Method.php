@@ -112,7 +112,7 @@ final class Stats5Method
         switch ($filter) {
             case 'newest':
                 debug_event(self::class, 'stats newest', 5);
-                $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
+                $results = Stats::get_newest($type, $limit, $offset, 0, $user);
                 $offset  = 0;
                 $limit   = 0;
                 break;
@@ -141,7 +141,7 @@ final class Stats5Method
                 break;
             case 'flagged':
                 debug_event(self::class, 'stats flagged', 4);
-                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
+                $results = Userflag::get_latest($type, $user, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
                 break;
