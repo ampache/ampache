@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ * vim:set softtabstop=3 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2023
@@ -20,6 +20,7 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Ampache\Module\Util\Rss\Type;
@@ -30,31 +31,36 @@ use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use PhpTal\PhpTalInterface;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Configures a rss feed for a certain library-item
- */
-final readonly class LibraryItemFeed implements FeedTypeInterface
+class LibraryItemFeedTest extends TestCase
 {
-    public function __construct(
-        private ModelFactoryInterface $modelFactory,
-        private LibraryItemLoaderInterface $libraryItemLoader,
-        private ?User $user,
-        private playable_item $libraryItem
-    ) {
+    private LibraryItemFeed $subject;
+
+    protected function setUp(): void
+    {
+        $this->subject = new LibraryItemFeed(
+            $this->createMock(ModelFactoryInterface::class),
+            $this->createMock(LibraryItemLoaderInterface::class),
+            $this->createMock(User::class),
+            $this->createMock(playable_item::class)
+        );
     }
 
-    public function configureTemplate(PhpTalInterface $tal): void
+    public function testConfigureTemplatesConfigures(): void
     {
-        $tal->setTemplate((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/podcast.xml'));
-        $tal->set(
-            'THIS',
-            new PlayableItemRssItemAdapter(
-                $this->libraryItemLoader,
-                $this->modelFactory,
-                $this->libraryItem,
-                $this->user
-            ),
-        );
+        $tal = $this->createMock(PhpTalInterface::class);
+
+        $tal->expects(static::once())
+            ->method('setTemplate')
+            ->with((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/podcast.xml'));
+        $tal->expects(static::once())
+            ->method('set')
+            ->with(
+                'THIS',
+                self::isInstanceOf(PlayableItemRssItemAdapter::class)
+            );
+
+        $this->subject->configureTemplate($tal);
     }
 }

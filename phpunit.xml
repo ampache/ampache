@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
-	backupGlobals="true"
-	bootstrap="tests/bootstrap.php"
-	colors="true"
-	cacheResultFile="build/.phpunit.result.cache"
-	displayDetailsOnTestsThatTriggerDeprecations="true"
-	displayDetailsOnTestsThatTriggerErrors="true"
-	displayDetailsOnTestsThatTriggerNotices="true"
-	displayDetailsOnTestsThatTriggerWarnings="true"
-	displayDetailsOnIncompleteTests="true"
-	displayDetailsOnSkippedTests="true"
->
-    <testsuites>
-        <testsuite name="default">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-	<coverage cacheDirectory="build/coverageCache" />
-	<source restrictDeprecations="true"
-            restrictNotices="true"
-            restrictWarnings="true">
-		<include>
-			<directory>src</directory>
-		</include>
-		<exclude>
-			<directory suffix="service_definition.php">src</directory>
-		</exclude>
-	</source>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.1/phpunit.xsd"
+       backupGlobals="true"
+       bootstrap="tests/bootstrap.php"
+       colors="true"
+       cacheResultFile="build/.phpunit.result.cache"
+       displayDetailsOnTestsThatTriggerDeprecations="true"
+       displayDetailsOnTestsThatTriggerErrors="true"
+       displayDetailsOnTestsThatTriggerNotices="true"
+       displayDetailsOnTestsThatTriggerWarnings="true"
+       displayDetailsOnIncompleteTests="true"
+       displayDetailsOnSkippedTests="true"
+  >
+  <testsuites>
+    <testsuite name="default">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <coverage cacheDirectory="build/coverageCache"/>
+  <source restrictNotices="true" restrictWarnings="true" ignoreIndirectDeprecations="true">
+    <include>
+      <directory>src</directory>
+    </include>
+    <exclude>
+      <directory suffix="service_definition.php">src</directory>
+    </exclude>
+  </source>
 </phpunit>
