@@ -32,8 +32,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\User;
 
-$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
+$user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
 <script>
     function ToggleRightbarVisibility()
     {
@@ -107,15 +108,15 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 
 <?php $objects = array();
 // FIXME :: this is kludgy
-if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
 } ?>
     <script>
         <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
-             $("#content").removeClass("content-right-wild", 500);
-             $("#footer").removeClass("footer-wild", 500);
-             $("#rightbar").removeClass("hidden");
-             $("#rightbar").show("slow");
+            $("#content").removeClass("content-right-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
+            $("#rightbar").removeClass("hidden"); 
+            $("#rightbar").show("slow");
         <?php } else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);

@@ -202,8 +202,8 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type: string,
-     *  object_id: int,
+     *  object_type?: string,
+     *  object_id?: int,
      *  client?: string,
      *  action?: string,
      *  cache?: string,
@@ -215,8 +215,11 @@ class Stream_Playlist
      */
     public static function media_to_url(array $media, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
-        $type      = $media['object_type'];
-        $object_id = $media['object_id'];
+        $type      = $media['object_type'] ?? null;
+        $object_id = $media['object_id'] ?? null;
+        if ($type === null || $object_id === null) {
+            return null;
+        }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var library_item $object */
         $object = new $className($object_id);

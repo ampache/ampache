@@ -2309,7 +2309,7 @@ class Song extends database_object implements
     {
         if (
             AmpConfig::get('licensing') &&
-            $this->licenseObj !== null &&
+            $this->licenseObj === null &&
             $this->license !== null
         ) {
             $this->licenseObj = $this->getLicenseRepository()->findById($this->license);
