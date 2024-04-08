@@ -45,7 +45,7 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user?->getId());
+        $ids = Stats::get_newest('artist', 10, 0, 0, $this->user);
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);

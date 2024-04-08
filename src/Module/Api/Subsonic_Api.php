@@ -1178,17 +1178,17 @@ class Subsonic_Api
             case 'starred':
                 Subsonic_Xml_Data::addStarred(
                     $response,
-                    Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000),
-                    Userflag::get_latest('song', $user->id, 10000)
+                    Userflag::get_latest('artist', $user, 10000),
+                    Userflag::get_latest('album', $user, 10000),
+                    Userflag::get_latest('song', $user, 10000)
                 );
                 break;
             case 'starred2':
                 Subsonic_Xml_Data::addStarred2(
                     $response,
-                    Userflag::get_latest('artist', $user->id, 10000),
-                    Userflag::get_latest('album', $user->id, 10000),
-                    Userflag::get_latest('song', $user->id, 10000)
+                    Userflag::get_latest('artist', $user, 10000),
+                    Userflag::get_latest('album', $user, 10000),
+                    Userflag::get_latest('song', $user, 10000)
                 );
                 break;
         }
@@ -2988,7 +2988,7 @@ class Subsonic_Api
                 );
                 break;
             case "newest":
-                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId, $user->id);
+                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId, $user);
                 break;
             case "highest":
                 $albums = Rating::get_highest("album", $size, $offset, $user->id);
@@ -3000,7 +3000,7 @@ class Subsonic_Api
                 $albums = Stats::get_recent("album", $size, $offset);
                 break;
             case "starred":
-                $albums = Userflag::get_latest('album', 0, $size, $offset);
+                $albums = Userflag::get_latest('album', null, $size, $offset);
                 break;
             case "alphabeticalByName":
                 $albums = Catalog::get_albums($size, $offset, $catalogs);

@@ -33,27 +33,20 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class WrappedAction implements ApplicationActionInterface
+final readonly class WrappedAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'wrapped';
 
-    private ConfigContainerInterface $configContainer;
-
-    private RequestParserInterface $requestParser;
-
-    private UiInterface $ui;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        RequestParserInterface $requestParser,
-        UiInterface $ui
+        private ConfigContainerInterface $configContainer,
+        private RequestParserInterface $requestParser,
+        private UiInterface $ui,
+        private UserRepositoryInterface $userRepository,
     ) {
-        $this->configContainer = $configContainer;
-        $this->requestParser   = $requestParser;
-        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -64,7 +57,9 @@ final class WrappedAction implements ApplicationActionInterface
         session_start();
 
         $userId = (int)$this->requestParser->getFromRequest('user_id');
-        if ($userId === 0) {
+
+        $user = $this->userRepository->findById($userId);
+        if ($user === null) {
             throw new ObjectNotFoundException('user_id');
         }
         $year = $this->requestParser->getFromRequest('year');
@@ -83,8 +78,8 @@ final class WrappedAction implements ApplicationActionInterface
             [
                 'endTime' => $endTime,
                 'startTime' => $startTime,
-                'user_id' => $userId,
-                'year' => (string)date($year),
+                'user' => $user,
+                'year' => date($year),
             ]
         );
         $this->ui->showQueryStats();
