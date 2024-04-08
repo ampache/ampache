@@ -453,7 +453,6 @@ class Subsonic_Xml_Data
         if ($song->isNew()) {
             return $xml;
         }
-        $catalogData = self::_getCatalogData($song->getCatalogId(), (string)$song->file);
 
         // Don't create entries for disabled songs
         if ($song->enabled) {
@@ -506,7 +505,8 @@ class Subsonic_Xml_Data
             }
             $xsong->addAttribute('suffix', (string)$song->type);
             $xsong->addAttribute('contentType', (string)$song->mime);
-            $file_path = (string)$catalogData['path'];
+            // Always return the original filename, not the transcoded one
+            $xsong->addAttribute('path', (string)$song->file);
             if (AmpConfig::get('transcode') != 'never') {
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
@@ -516,16 +516,11 @@ class Subsonic_Xml_Data
                     : Stream::get_transcode_format($song->type, null, 'api');
 
                 if (!empty($transcode_type) && $song->type !== $transcode_type) {
-                    // Return a file path relative to the catalog root path
-                    $xsong->addAttribute('path', (string)preg_replace('"\.' . $song->type . '$"', '.' . $transcode_type, $file_path));
                     // Set transcoding information
                     $xsong->addAttribute('transcodedSuffix', $transcode_type);
                     $xsong->addAttribute('transcodedContentType', Song::type_to_mime($transcode_type));
-
-                    return $xsong;
                 }
             }
-            $xsong->addAttribute('path', $file_path);
 
             return $xsong;
         }
@@ -1791,34 +1786,6 @@ class Subsonic_Xml_Data
                 }
             }
         }
-    }
-
-    /**
-     * _getCatalogData
-     * @param int $catalogId
-     * @param string $file_Path
-     * @return array
-     */
-    private static function _getCatalogData($catalogId, $file_Path): array
-    {
-        $results     = array();
-        $sqllook     = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?;';
-        $db_results  = Dba::read($sqllook, [$catalogId]);
-        $resultcheck = Dba::fetch_assoc($db_results);
-        if (!empty($resultcheck)) {
-            if ($resultcheck['catalog_type'] == 'seafile') {
-                $results['path'] = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $file_Path;
-
-                return $results;
-            }
-            $sql             = 'SELECT `path` FROM `catalog_' . $resultcheck['catalog_type'] . '` WHERE `catalog_id` = ?';
-            $db_results      = Dba::read($sql, [$catalogId]);
-            $result          = Dba::fetch_assoc($db_results);
-            $catalog_path    = rtrim((string)$result['path'], "/");
-            $results['path'] = str_replace($catalog_path . "/", "", $file_Path);
-        }
-
-        return $results;
     }
 
     /**
