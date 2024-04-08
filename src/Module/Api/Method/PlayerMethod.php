@@ -31,7 +31,6 @@ use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
