@@ -2961,6 +2961,11 @@ parameters:
 			path: src/Module/Api/Method/PingMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlayerMethod\\:\\:player\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlayerMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddMethod.php
