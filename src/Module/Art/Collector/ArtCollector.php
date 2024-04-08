@@ -160,7 +160,7 @@ final class ArtCollector implements ArtCollectorInterface
             $results = array_merge($results, (array)$data);
         }
         $this->logger->notice(
-            'found ' . count($results) . 'results',
+            'found ' . count($results) . ' results',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
