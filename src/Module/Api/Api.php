@@ -128,6 +128,7 @@ class Api
         Method\PreferenceCreateMethod::ACTION => Method\PreferenceCreateMethod::class,
         Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
         Method\PreferenceEditMethod::ACTION => Method\PreferenceEditMethod::class,
+        Method\PlayerMethod::ACTION => Method\PlayerMethod::class,
         Method\RateMethod::ACTION => Method\RateMethod::class,
         Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,

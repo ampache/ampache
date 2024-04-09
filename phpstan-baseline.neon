@@ -2961,6 +2961,11 @@ parameters:
 			path: src/Module/Api/Method/PingMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlayerMethod\\:\\:player\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlayerMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddMethod.php
@@ -3857,11 +3862,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheIdArrays\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getCatalogData\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4919,6 +4919,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
+
+		-
+			message: "#^Cannot call method add_object\\(\\) on Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\|null\\.$#"
+			count: 1
+			path: src/Module/Application/Random/GetAdvancedAction.php
 
 		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
