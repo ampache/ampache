@@ -647,7 +647,7 @@ class Stats
      * @param string $input_type
      * @param int $threshold
      * @param string $count_type
-     * @param int $user_id
+     * @param int|null $user_id
      * @param bool $random
      * @param int $since
      * @param int $before
@@ -667,7 +667,7 @@ class Stats
         $type           = self::validate_type($input_type);
         $date           = $since ?: time() - (86400 * (int)$threshold);
         $catalog_filter = (AmpConfig::get('catalog_filter'));
-        $filter_id      = ($user_id ?? Core::get_global('user')->getId() ?? null);
+        $filter_id      = (int)($user_id ?? Core::get_global('user')->getId() ?? 0);
         if ($type == 'playlist' && !$addAdditionalColumns) {
             $sql = "SELECT `id` FROM `playlist`";
             if ($threshold > 0) {
@@ -744,7 +744,7 @@ class Stats
                 $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $filter_id);
             }
             $rating_filter = AmpConfig::get_rating_filter();
-            if ($rating_filter > 0 && $rating_filter <= 5 && $filter_id !== null) {
+            if ($rating_filter > 0 && $rating_filter <= 5 && $user_id > 0) {
                 $sql .= " AND `object_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`rating` <=" . $rating_filter . " AND `rating`.`user` = " . $user_id . ")";
             }
             $sql .= " AND `count_type` = '" . $count_type . "' GROUP BY $group, `object_count`.`object_type`, `object_count`.`count_type`";
