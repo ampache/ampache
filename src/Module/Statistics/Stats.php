@@ -644,6 +644,7 @@ class Stats
      * @param string $input_type
      * @param int $threshold
      * @param string $count_type
+     * @param User|null $user
      * @param bool $random
      * @param int $since
      * @param int $before
