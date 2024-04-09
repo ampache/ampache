@@ -14681,33 +14681,18 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$group has no value type specified in iterable type array\\.$#"
+			count: 3
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Cannot access property \\$media on array\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$martist has no value type specified in iterable type array\\.$#"
+			count: 3
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Cannot access property \\$name on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-groups on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
+			message: "#^PHPDoc tag @var for variable \\$release has no value type specified in iterable type array\\.$#"
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -14718,6 +14703,11 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^Variable \\$martist in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
