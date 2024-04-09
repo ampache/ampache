@@ -48,7 +48,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    public $overwrite_name;
+    public bool $overwrite_name = false;
 
     /**
      * Constructor
@@ -148,6 +148,19 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
             'releases'
         );
         try {
+            /**
+             * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
+             * @var object{
+             *     id: string,
+             *     artist-credit: array,
+             *     length: int,
+             *     disambiguation: string,
+             *     video: bool,
+             *     releases: array,
+             *     first-release-date: string,
+             *     title: string,
+             * } $track
+             */
             $track = $mbrainz->lookup('recording', $mbid, $includes);
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
@@ -193,7 +206,55 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         $results = array();
         if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
             try {
-                $results = $mbrainz->lookup($object_type, $object->mbid);
+                switch ($object_type) {
+                    case 'label':
+                        /**
+                         * https://musicbrainz.org/ws/2/label/b66d15cc-b372-4dc1-8cbd-efdeb02e23e7?fmt=json
+                         * @var object{
+                         *     isnis: array,
+                         *     id: string,
+                         *     label-code: ?string,
+                         *     type-id: string,
+                         *     disambiguation: string,
+                         *     area: object,
+                         *     life-span: object,
+                         *     name: string,
+                         *     country: string,
+                         *     sort-name: string,
+                         *     type: string,
+                         *     ipis: array,
+                         * } $results
+                         */
+                        $results = $mbrainz->lookup($object_type, $object->mbid);
+                        break;
+                    case 'artist':
+                        /**
+                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * @var object{
+                         *     sort-name: string,
+                         *     id: string,
+                         *     area: object,
+                         *     disambiguation: string,
+                         *     isnis: array,
+                         *     begin-area: ?string,
+                         *     name: string,
+                         *     ipis: array,
+                         *     release-groups: array,
+                         *     end-area: ?string,
+                         *     type: string,
+                         *     end_area: ?string,
+                         *     gender: ?string,
+                         *     life-span: object,
+                         *     gender-id: ?string,
+                         *     type-id: string,
+                         *     begin_area: ?string,
+                         *     country: string
+                         * } $results
+                         */
+                        $results = $mbrainz->lookup($object_type, $object->mbid);
+                        break;
+                    default:
+                }
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
@@ -204,10 +265,34 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                 $args = array($object_type => $object->get_fullname());
                 switch ($object_type) {
                     case 'label':
+                        /**
+                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * @var object{
+                         *     created: string,
+                         *     count: int,
+                         *     offset: int,
+                         *     labels: array,
+                         * } $results
+                         */
                         $results = $mbrainz->search(new LabelFilter($args), 1);
+                        if (isset($results->{'labels'}) && !empty($results->{'labels'})) {
+                            $results = $results->{'labels'}[0];
+                        }
                         break;
                     case 'artist':
+                        /**
+                         * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                         * @var object{
+                         *     created: string,
+                         *     count: int,
+                         *     offset: int,
+                         *     artists: array,
+                         * } $results
+                         */
                         $results = $mbrainz->search(new ArtistFilter($args), 1);
+                        if (isset($results->{'artists'}) && !empty($results->{'artists'})) {
+                            $results = $results->{'artists'}[0];
+                        }
                         break;
                     default:
                 }
@@ -216,9 +301,6 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
 
                 return false;
             }
-        }
-        if (is_array($results) && !empty($results)) {
-            $results = $results[0];
         }
         if (!empty($results)) {
             debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
@@ -284,15 +366,35 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         $data    = array();
         if (VaInfo::is_mbid($mbid)) {
             try {
+                /**
+                 * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+                 * @var object{
+                 *     sort-name: string,
+                 *     id: string,
+                 *     area: object,
+                 *     disambiguation: string,
+                 *     isnis: array,
+                 *     begin-area: ?string,
+                 *     name: string,
+                 *     ipis: array,
+                 *     release-groups: array,
+                 *     end-area: ?string,
+                 *     type: string,
+                 *     end_area: ?string,
+                 *     gender: ?string,
+                 *     life-span: object,
+                 *     gender-id: ?string,
+                 *     type-id: string,
+                 *     begin_area: ?string,
+                 *     country: string
+                 * } $results
+                 */
                 $results = $mbrainz->lookup('artist', $mbid);
             } catch (Exception $error) {
                 debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
                 return $data;
             }
-        }
-        if (is_array($results) && !empty($results)) {
-            $results = $results[0];
         }
         if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
             $data = array(
