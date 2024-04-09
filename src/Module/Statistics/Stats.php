@@ -671,8 +671,8 @@ class Stats
             }
             if ($catalog_filter && $filter_user !== null) {
                 $sql .= ($threshold > 0)
-                    ? " AND" . Catalog::get_user_filter($type, $user->getId())
-                    : " WHERE" . Catalog::get_user_filter($type, $user->getId());
+                    ? " AND" . Catalog::get_user_filter($type, $filter_user->getId())
+                    : " WHERE" . Catalog::get_user_filter($type, $filter_user->getId());
             }
             // playlist is now available in object_count too
             $sql .= "UNION SELECT `object_id` FROM `object_count` WHERE `object_type` = 'playlist'";
@@ -831,7 +831,7 @@ class Stats
         if ($input_type == 'album_artist') {
             $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` LEFT JOIN `artist` ON `artist`.`id` = `object_id` AND `object_type` = 'artist' WHERE `artist`.`album_count` > 0 AND `object_type` = 'artist' AND `count_type` = 'stream'" . $user_sql;
         }
-        if ($catalog_filter && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if ($catalog_filter && in_array($type, array('video', 'artist', 'album_artist', 'album', 'album_disk', 'song')) && $filter_user !== null) {

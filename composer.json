@@ -119,7 +119,7 @@
     "scripts": {
         "coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html build/coverage tests",
         "qa": "composer run-script syntax && composer run-script cs:check && composer run-script tests && composer run-script stan",
-        "stan": "resources/scripts/tests/stan.sh",
+        "stan": "vendor/bin/phpstan analyse",
         "stan-baseline": "vendor/bin/phpstan --generate-baseline",
         "tests": "vendor/bin/phpunit -c phpunit.xml",
         "syntax": "resources/scripts/tests/syntax.sh",

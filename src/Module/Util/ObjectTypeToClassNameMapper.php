@@ -46,6 +46,7 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\TvShow;
 use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
@@ -83,6 +84,7 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::SONG_PREVIEW->value => Song_Preview::class,
         ObjectTypeEnum::TAG_HIDDEN->value => Tag::class,
         ObjectTypeEnum::TAG->value => Tag::class,
+        ObjectTypeEnum::TV_SHOW->value => TVShow::class,
         ObjectTypeEnum::TV_SHOW_EPISODE->value => TVShow_Episode::class,
         ObjectTypeEnum::TV_SHOW_SEASON->value => TVShow_Season::class,
         ObjectTypeEnum::USER->value => User::class,
@@ -95,6 +97,7 @@ final class ObjectTypeToClassNameMapper
         Clip::class => ObjectTypeEnum::CLIP,
         Movie::class => ObjectTypeEnum::MOVIE,
         Personal_Video::class => ObjectTypeEnum::PERSONAL_VIDEO,
+        TVShow::class => ObjectTypeEnum::TV_SHOW,
         TVShow_Episode::class => ObjectTypeEnum::TV_SHOW_EPISODE,
         TVShow_Season::class => ObjectTypeEnum::TV_SHOW_SEASON,
         Video::class => ObjectTypeEnum::VIDEO,
