@@ -276,28 +276,30 @@ class Userflag extends database_object
      * get_latest_sql
      * Get the latest sql
      * @param string $input_type
-     * @param int $user_id
      * @param int $since
      * @param int $before
      */
-    public static function get_latest_sql($input_type, $user_id = null, $since = 0, $before = 0): string
-    {
+    public static function get_latest_sql(
+        $input_type,
+        ?User $user = null,
+        $since = 0,
+        $before = 0
+    ): string {
         $type    = Stats::validate_type($input_type);
-        $user_id = (int)($user_id);
         $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
         }
 
-        $sql .= ($user_id > 0)
-            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
+        $sql .= ($user !== null)
+            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user->getId() . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user_id);
+        if (AmpConfig::get('catalog_filter') && $user !== null) {
+            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user->getId());
         }
 
         if ($input_type == 'album_artist') {
@@ -325,14 +327,19 @@ class Userflag extends database_object
      * get_latest
      * Get the latest user flagged objects
      * @param string $type
-     * @param int $user_id
      * @param int $count
      * @param int $offset
      * @param int $since
      * @param int $before
      */
-    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0, $since = 0, $before = 0): array
-    {
+    public static function get_latest(
+        $type,
+        ?User $user = null,
+        $count = 0,
+        $offset = 0,
+        $since = 0,
+        $before = 0
+    ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
@@ -343,7 +350,7 @@ class Userflag extends database_object
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user_id, $since, $before);
+        $sql   = self::get_latest_sql($type, $user, $since, $before);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;

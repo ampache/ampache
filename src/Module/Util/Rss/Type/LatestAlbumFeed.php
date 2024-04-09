@@ -45,7 +45,7 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
 
     protected function getItems(): Generator
     {
-        $ids = Stats::get_newest('album', 10, 0, 0, $this->user?->getId());
+        $ids = Stats::get_newest('album', 10, 0, 0, $this->user);
 
         foreach ($ids as $albumid) {
             $album = new Album($albumid);

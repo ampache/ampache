@@ -116,7 +116,7 @@ final class StatsMethod
         switch ($filter) {
             case 'newest':
                 debug_event(self::class, 'stats newest', 5);
-                $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
+                $results = Stats::get_newest($type, $limit, $offset, 0, $user);
                 $offset  = 0;
                 $limit   = 0;
                 break;
@@ -139,13 +139,13 @@ final class StatsMethod
                 $newest  = $filter == 'recent';
                 $results = (array_key_exists('username', $input) || array_key_exists('user_id', $input))
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
-                    : Stats::get_recent($type, $limit, $offset, $newest);
+                    : Stats::get_recent($type, $limit, $offset, null, $newest);
                 $offset = 0;
                 $limit  = 0;
                 break;
             case 'flagged':
                 debug_event(self::class, 'stats flagged', 4);
-                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
+                $results = Userflag::get_latest($type, $user, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
                 break;
