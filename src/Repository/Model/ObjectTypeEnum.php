@@ -50,6 +50,7 @@ enum ObjectTypeEnum: string
     case SONG_PREVIEW    = 'song_preview';
     case TAG_HIDDEN      = 'tag_hidden';
     case TAG             = 'tag';
+    case TV_SHOW         = 'tvshow';
     case TV_SHOW_EPISODE = 'tvshow_episode';
     case TV_SHOW_SEASON  = 'tvshow_season';
     case USER            = 'user';
