@@ -109,7 +109,7 @@ final class Stats4Method
                 debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
                 if ($user->isNew()) {
-                    $results = Stats::get_recent($type, $limit, $offset, $newest);
+                    $results = Stats::get_recent($type, $limit, $offset, null, $newest);
                 } else {
                     $results = $user->get_recently_played($type, $limit, $offset, $newest);
                 }

@@ -135,7 +135,7 @@ final class Stats5Method
                 $newest  = $filter == 'recent';
                 $results = ($user->id)
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
-                    : Stats::get_recent($type, $limit, $offset, $newest);
+                    : Stats::get_recent($type, $limit, $offset, null, $newest);
                 $offset = 0;
                 $limit  = 0;
                 break;
