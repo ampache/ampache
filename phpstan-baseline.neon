@@ -8541,11 +8541,6 @@ parameters:
 			path: src/Module/Statistics/Stats.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_user\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
@@ -14137,11 +14132,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_catalogs\\(\\) has parameter \\$filter with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_favorites\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
