@@ -675,8 +675,8 @@ class Stats
             }
             if ($catalog_filter && $filter_id > 0) {
                 $sql .= ($threshold > 0)
-                    ? " AND" . Catalog::get_user_filter($type, $user_id)
-                    : " WHERE" . Catalog::get_user_filter($type, $user_id);
+                    ? " AND" . Catalog::get_user_filter($type, $filter_id)
+                    : " WHERE" . Catalog::get_user_filter($type, $filter_id);
             }
             // playlist is now available in object_count too
             $sql .= "UNION SELECT `object_id` FROM `object_count` WHERE `object_type` = 'playlist'";
@@ -684,7 +684,7 @@ class Stats
                 $sql .= " AND `date` >= '" . $date . "' ";
             }
             if ($catalog_filter && $filter_id > 0) {
-                $sql .= " AND" . Catalog::get_user_filter("object_count_" . $type, $user_id);
+                $sql .= " AND" . Catalog::get_user_filter("object_count_" . $type, $filter_id);
             }
             //debug_event(self::class, 'get_top_sql ' . $sql, 5);
 
