@@ -66,7 +66,7 @@ final class DemocraticMethod
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
                 $democratic->add_vote(array(
@@ -95,7 +95,7 @@ final class DemocraticMethod
                 $media     = new Song($object_id);
                 if ($media->isNew()) {
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                    Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
+                    Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
 
@@ -141,7 +141,7 @@ final class DemocraticMethod
                 }
                 break;
             default:
-                Api::error(T_('Invalid Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'method', $input['api_format']);
+                Api::error('Invalid Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'method', $input['api_format']);
                 break;
         }
 

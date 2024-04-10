@@ -63,7 +63,7 @@ final class LostPasswordMethod
     public static function handshake(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
-            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
         if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
             return false;
@@ -76,13 +76,13 @@ final class LostPasswordMethod
             // no resets for admin users
             if ($update_user->access == 100) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Api::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
                 return false;
             }
             if (empty($update_user->email)) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Bad Request: %s'), $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
+                Api::error(sprintf('Bad Request: %s', $user_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'email', $input['api_format']);
 
                 return false;
             }
@@ -96,7 +96,7 @@ final class LostPasswordMethod
 
             return true;
         }
-        Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+        Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
         return false;
     }

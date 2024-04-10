@@ -67,7 +67,7 @@ final class GoodbyeMethod
         }
         ob_end_clean();
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        Api::error(sprintf(T_('Bad Request: %s'), $input['auth']), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+        Api::error(sprintf('Bad Request: %s', $input['auth']), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
         return false;
     }

@@ -74,13 +74,13 @@ final class PlayerMethod
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'podcast_episode', 'video'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         if (!in_array(strtolower($state), array('play', 'pause', 'stop'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $state), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'state', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $state), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'state', $input['api_format']);
 
             return false;
         }
@@ -90,7 +90,7 @@ final class PlayerMethod
         $className = ObjectTypeToClassNameMapper::map($type);
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -99,7 +99,7 @@ final class PlayerMethod
         $media = new $className($object_id);
         if ($media->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
