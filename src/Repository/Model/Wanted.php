@@ -289,8 +289,13 @@ class Wanted extends database_object
         $this->songs = array();
 
         try {
-            $user = Core::get_global('user');
-            if ($user instanceof User && $this->mbid !== null) {
+            $user            = Core::get_global('user');
+            $preview_plugins = Plugin::get_plugins('get_song_preview');
+            if (
+                !empty($preview_plugins) &&
+                $user instanceof User &&
+                $this->mbid !== null
+            ) {
                 /**
                  * https://musicbrainz.org/ws/2/release-group/3bd76d40-7f0e-36b7-9348-91a33afee20e?inc=releases&fmt=json
                  * @var object{
@@ -361,7 +366,7 @@ class Wanted extends database_object
                                 }
 
                                 $song['file'] = null;
-                                foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
+                                foreach ($preview_plugins as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
                                     if ($plugin->_plugin !== null && $plugin->load($user)) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
