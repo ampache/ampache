@@ -76,7 +76,7 @@ final class ScrobbleMethod
         // validate supplied user
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $user_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'empty', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $user_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'empty', $input['api_format']);
 
             return false;
         }
@@ -84,7 +84,7 @@ final class ScrobbleMethod
         // validate minimum required options
         debug_event(self::class, 'scrobble searching for:' . $song_name . ' - ' . $artist_name . ' - ' . $album_name, 4);
         if (!$song_name || !$album_name || !$artist_name) {
-            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
+            Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
@@ -94,12 +94,12 @@ final class ScrobbleMethod
         $scrobble_id = Song::can_scrobble($song_name, $artist_name, $album_name, $song_mbid, $artist_mbid, $album_mbid);
 
         if ($scrobble_id === '') {
-            Api::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+            Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
         } else {
             $media = new Song((int) $scrobble_id);
             if ($media->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+                Api::error(sprintf('Not Found: %s', $scrobble_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                 return false;
             }
