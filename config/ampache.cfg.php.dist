@@ -407,13 +407,6 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: Ampache - Zip Batch Download
 ;file_zip_comment = "Ampache - Zip Batch Download"
 
-; Load the debug webplayer
-; This will load the *.js player instead of the *.min.js player
-; The unminified player has a lot of console.log() statements in the code.
-; You can make changes and then check how the player is functioning.
-; DEFAULT: "false"
-;webplayer_debug = "true"
-
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
 ; for each song. It requires transcode and encode_args_wav settings.
@@ -865,6 +858,19 @@ log_path = "/var/log/ampache"
 ; %name.%Y%m%d.log will create a different log file every day.
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
+
+; API Debug Handler
+; If this is enabled Ampache will not catch exceptions during API calls.
+; Used for development and not recommended for regular use.
+; DEFAULT: "false"
+;api_debug_handler = "true"
+
+; Load the debug webplayer
+; This will load the *.js player instead of the *.min.js player
+; The unminified player has a lot of console.log() statements in the code.
+; You can make changes and then check how the player is functioning.
+; DEFAULT: "false"
+;webplayer_debug = "true"
 
 ;#########################################################
 ; Encoding Settings                                      #

@@ -160,7 +160,10 @@ final class ApiHandler implements ApiHandlerInterface
         $input['api_version'] = $api_version;
 
         // Create a simplified session for header authenticated sessions
-        if ($header_auth && $user instanceof User) {
+        if (
+            $header_auth &&
+            $user instanceof User
+        ) {
             $data             = [];
             $data['username'] = $user->username;
             $data['type']     = 'header';
@@ -432,6 +435,47 @@ final class ApiHandler implements ApiHandlerInterface
                 }
         }
 
+        $debugHandler = $this->configContainer->get('api_debug_handler');
+        if ($debugHandler) {
+            return $this->_executeDebugHandler(
+                $gatekeeper,
+                $is_public,
+                $action,
+                $handlerClassName,
+                $input,
+                $user,
+                $response,
+                $output
+            );
+        }
+
+        return $this->_executeHandler(
+            $gatekeeper,
+            $api_version,
+            $is_public,
+            $action,
+            $handlerClassName,
+            $input,
+            $user,
+            $response,
+            $output
+        );
+    }
+
+    /**
+     * Run the default API handler with exception handling
+     */
+    private function _executeHandler(
+        Gatekeeper $gatekeeper,
+        int $api_version,
+        bool $is_public,
+        string $action,
+        string $handlerClassName,
+        array $input,
+        ?User $user,
+        ResponseInterface $response,
+        ApiOutputInterface $output
+    ): ?ResponseInterface {
         try {
             /**
              * This condition allows the `new` approach and the legacy one to co-exist.
@@ -444,7 +488,11 @@ final class ApiHandler implements ApiHandlerInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
 
-            if ($this->dic->has($handlerClassName) && $this->dic->get($handlerClassName) instanceof MethodInterface) {
+            if (
+                $user instanceof User &&
+                $this->dic->has($handlerClassName) &&
+                $this->dic->get($handlerClassName) instanceof MethodInterface
+            ) {
                 /** @var MethodInterface $handler */
                 $handler = $this->dic->get($handlerClassName);
 
@@ -574,6 +622,71 @@ final class ApiHandler implements ApiHandlerInterface
                         )
                     );
             }
+        }
+    }
+
+    /**
+     * Run the DEBUG API handler with NO exception handling!
+     * @throws ApiException|Throwable
+     */
+    private function _executeDebugHandler(
+        Gatekeeper $gatekeeper,
+        bool $is_public,
+        string $action,
+        string $handlerClassName,
+        array $input,
+        ?User $user,
+        ResponseInterface $response,
+        ApiOutputInterface $output
+    ): ?ResponseInterface {
+        /**
+         * This condition allows the `new` approach and the legacy one to co-exist.
+         * After implementing the MethodInterface in all api methods, the condition will be removed
+         *
+         * @todo cleanup
+         */
+        $this->logger->notice(
+            sprintf('DebugHandler: API function [%s]', $handlerClassName),
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+
+        if (
+            $user instanceof User &&
+            $this->dic->has($handlerClassName) &&
+            $this->dic->get($handlerClassName) instanceof MethodInterface
+        ) {
+            /** @var MethodInterface $handler */
+            $handler = $this->dic->get($handlerClassName);
+
+            $response = $handler->handle(
+                $gatekeeper,
+                $response,
+                $output,
+                $input,
+                $user
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return $response;
+        } else {
+            $params = [$input];
+
+            /** @var callable $callback */
+            $callback = [$handlerClassName, $action];
+
+            if (!$is_public) {
+                $params[] = $user;
+            }
+
+            call_user_func_array(
+                $callback,
+                $params
+            );
+
+            $gatekeeper->extendSession($input['auth']);
+
+            return null;
         }
     }
 }

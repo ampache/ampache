@@ -296,7 +296,12 @@ parameters:
 			path: src/Module/Api/Api5.php
 
 		-
-			message: "#^Parameter \\#5 \\$user of method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/ApiHandler.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
 
