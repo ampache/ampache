@@ -11711,21 +11711,6 @@ parameters:
 			path: src/Plugin/AmpacheMatomo.php
 
 		-
-			message: "#^Cannot access property \\$artist\\-credit on array\\.$#"
-			count: 3
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
-			count: 2
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
@@ -11746,8 +11731,13 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$overwrite_name has no type specified\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
+			count: 10
+			path: src/Plugin/AmpacheMusicBrainz.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$track has no value type specified in iterable type array\\.$#"
+			count: 2
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
@@ -14351,33 +14341,18 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
+			message: "#^PHPDoc tag @var for variable \\$group has no value type specified in iterable type array\\.$#"
+			count: 3
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$martist has no value type specified in iterable type array\\.$#"
+			count: 3
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$release has no value type specified in iterable type array\\.$#"
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$media on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$name on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-groups on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
-			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -14388,6 +14363,11 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^Variable \\$martist in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
