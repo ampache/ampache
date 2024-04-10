@@ -315,7 +315,7 @@ class Wanted extends database_object
 
         try {
             $user            = Core::get_global('user');
-            $preview_plugins = Plugin::get_plugins('get_song_preview');
+            $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (
                 !empty($preview_plugins) &&
                 $user instanceof User &&
