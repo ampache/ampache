@@ -275,6 +275,7 @@ final class Versions
         600066 => Migration\V6\Migration600066::class,
         600067 => Migration\V6\Migration600067::class,
         600068 => Migration\V6\Migration600068::class,
+        600069 => Migration\V6\Migration600069::class,
     ];
 
     /**
