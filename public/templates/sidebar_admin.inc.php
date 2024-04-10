@@ -111,7 +111,7 @@ use Ampache\Module\Util\Ui;
     <?php $categories = Preference::get_categories();
       foreach ($categories as $name) {
           $f_name = ucfirst($name); ?>
-      <li id="sb_admin_server_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&amp;tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
+      <li id="sb_admin_server_<?php echo $f_name; ?>"><a href="<?php echo $web_path; ?>/preferences.php?action=admin&tab=<?php echo $name; ?>"><?php echo T_($f_name); ?></a></li>
     <?php
       } ?>
     </ul>

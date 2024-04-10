@@ -75,7 +75,7 @@ final class EnableAction extends AbstractUserAction
             /* HINT: User Fullname */
             sprintf(T_('This will enable the user "%s"'), $user->getFullDisplayName()),
             sprintf(
-                'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                'admin/users.php?action=confirm_enable&user_id=%s',
                 $userId
             ),
             1,

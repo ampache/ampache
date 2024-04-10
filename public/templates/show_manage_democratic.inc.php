@@ -60,7 +60,7 @@ Ui::show_box_top(T_('Manage')); ?>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&amp;democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php
