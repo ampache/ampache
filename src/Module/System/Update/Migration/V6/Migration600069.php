@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600069 extends AbstractMigration
