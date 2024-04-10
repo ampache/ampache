@@ -85,7 +85,7 @@ config_version = 71
 ; Hostname of your database
 ; For socket authentication, set the path to socket file (e.g. /var/run/mysqld/mysqld.sock)
 ; DEFAULT: localhost
-database_hostname = localhost
+database_hostname = "localhost"
 
 ; Port to use when connecting to your database
 ; DEFAULT: none
@@ -93,17 +93,17 @@ database_hostname = localhost
 
 ; Name of your Ampache database
 ; DEFAULT: none
-database_name = ampache
+database_name = "ampache"
 
 ; Username for your Ampache database
 ; DEFAULT: none
-database_username = username
+database_username = "username"
 
 ; Password for your Ampache database, this can not be blank
 ; this is a 'forced' security precaution, the default value
 ; will not work (except if using socket authentication)
 ; DEFAULT: none
-database_password = password
+database_password = "password"
 
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
@@ -406,13 +406,6 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; to your zip files, this only applies if you've got allow_zip_downloads
 ; DEFAULT: Ampache - Zip Batch Download
 ;file_zip_comment = "Ampache - Zip Batch Download"
-
-; Load the debug webplayer
-; This will load the *.js player instead of the *.min.js player
-; The unminified player has a lot of console.log() statements in the code.
-; You can make changes and then check how the player is functioning.
-; DEFAULT: "false"
-;webplayer_debug = "true"
 
 ; Waveform
 ; This settings tells Ampache to attempt to generate a waveform
@@ -866,14 +859,27 @@ log_path = "/var/log/ampache"
 ; DEFAULT: %name.%Y%m%d.log
 log_filename = "%name.%Y%m%d.log"
 
+; API Debug Handler
+; If this is enabled Ampache will not catch exceptions during API calls.
+; Used for development and not recommended for regular use.
+; DEFAULT: "false"
+;api_debug_handler = "true"
+
+; Load the debug webplayer
+; This will load the *.js player instead of the *.min.js player
+; The unminified player has a lot of console.log() statements in the code.
+; You can make changes and then check how the player is functioning.
+; DEFAULT: "false"
+;webplayer_debug = "true"
+
 ;#########################################################
 ; Encoding Settings                                      #
 ;#########################################################
 
 ; Charset of generated HTML pages
 ; Default of UTF-8 should work for most people
-; DEFAULT: UTF-8
-site_charset = UTF-8
+; DEFAULT: "UTF-8"
+site_charset = "UTF-8"
 
 ; Locale Charset
 ; Local charset (mainly for file operations) if different
@@ -1133,17 +1139,17 @@ transcode_mp3 = "allowed"
 
 ; Default audio output format
 ; DEFAULT: none
-;encode_target = mp3
+;encode_target = "mp3"
 
 ; Default video output format
 ; DEFAULT: none
-;encode_video_target = webm
+;encode_video_target = "webm"
 
 ; Override the default output format on a per-type basis, for example,
 ; to stream lossless encoded files in lossy formats.
 ; encode_target_TYPE = TYPE
 ; DEFAULT: none
-;encode_target_flac = opus
+;encode_target_flac = "opus"
 
 ; Override the default TYPE transcoding behavior on a per-player basis, for example,
 ; to stream lossless using the api and lossy using the web interface.
@@ -1158,8 +1164,8 @@ transcode_mp3 = "allowed"
 ; encode_player_PLAYER_target = TYPE
 ; Valid PLAYER is: webplayer, api
 ; DEFAULT: none
-;encode_player_webplayer_target = mp3
-;encode_player_api_target = mp3
+;encode_player_webplayer_target = "mp3"
+;encode_player_api_target = "mp3"
 
 ; Allow clients to override transcode settings (output type, bitrate, codec ...)
 ; DEFAULT: "true"
@@ -1344,7 +1350,7 @@ send_full_stream = "webplayer"
 ; Secure SMTP
 ; POSSIBLE VALUES: ssl tls
 ; DEFAULT: none
-;mail_secure_smtp = tls
+;mail_secure_smtp = "tls"
 
 ; Enable SMTP authentication
 ; DEFAULT: "false"

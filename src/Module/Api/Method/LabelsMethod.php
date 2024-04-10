@@ -54,7 +54,7 @@ final class LabelsMethod
     public static function labels(array $input, User $user): bool
     {
         if (!AmpConfig::get('label')) {
-            Api::error(T_('Enable: label'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: label', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

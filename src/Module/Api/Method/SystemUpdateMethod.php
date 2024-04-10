@@ -61,7 +61,7 @@ final class SystemUpdateMethod
             Preference::translate_db();
             // check that the update completed or failed failed.
             if (AutoUpdate::is_update_available(true)) {
-                Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+                Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
                 Session::extend($input['auth'], 'api');
 
                 return false;

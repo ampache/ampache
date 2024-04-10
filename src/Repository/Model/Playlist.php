@@ -294,6 +294,9 @@ class Playlist extends playlist_object
      */
     public function get_items(): array
     {
+        if ($this->isNew()) {
+            return array();
+        }
         $results = array();
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;

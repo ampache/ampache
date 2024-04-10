@@ -55,7 +55,7 @@ final class PodcastCreateMethod
     public static function podcast_create(array $input, User $user): bool
     {
         if (!AmpConfig::get('podcast')) {
-            Api::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -69,7 +69,7 @@ final class PodcastCreateMethod
         $catalog = Catalog::create_from_id((int) ($input['catalog'] ?? 0));
 
         if ($catalog === null) {
-            Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -80,7 +80,7 @@ final class PodcastCreateMethod
                 $catalog
             );
         } catch (PodcastCreationException $e) {
-            Api::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
+            Api::error('Bad Request', '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

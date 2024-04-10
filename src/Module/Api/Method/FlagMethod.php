@@ -56,7 +56,7 @@ final class FlagMethod
     public static function flag(array $input, User $user): bool
     {
         if (!AmpConfig::get('ratings')) {
-            Api::error(T_('Enable: ratings'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: ratings', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -69,7 +69,7 @@ final class FlagMethod
         $flag      = (bool)($input['flag'] ?? false);
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -77,13 +77,13 @@ final class FlagMethod
         $className = ObjectTypeToClassNameMapper::map($type);
 
         if (!$className || !$object_id) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
         } else {
             /** @var library_item $item */
             $item = new $className($object_id);
             if ($item->isNew()) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+                Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
                 return false;
             }

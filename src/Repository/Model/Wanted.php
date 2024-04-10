@@ -122,6 +122,29 @@ class Wanted extends database_object
             $types = array();
         }
         try {
+            /**
+             * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
+             * @var object{
+             *     sort-name: string,
+             *     id: string,
+             *     area: object,
+             *     disambiguation: string,
+             *     isnis: array,
+             *     begin-area: ?string,
+             *     name: string,
+             *     ipis: array,
+             *     release-groups: array,
+             *     end-area: ?string,
+             *     type: string,
+             *     end_area: ?string,
+             *     gender: ?string,
+             *     life-span: object,
+             *     gender-id: ?string,
+             *     type-id: string,
+             *     begin_area: ?string,
+             *     country: string
+             * } $martist
+             */
             $martist = $mbrainz->lookup('artist', $lookupId, $includes);
             debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
         } catch (Exception $error) {
@@ -266,7 +289,27 @@ class Wanted extends database_object
         $this->songs = array();
 
         try {
-            if ($this->mbid !== null) {
+            $user            = Core::get_global('user');
+            $preview_plugins = Plugin::get_plugins('get_song_preview');
+            if (
+                !empty($preview_plugins) &&
+                $user instanceof User &&
+                $this->mbid !== null
+            ) {
+                /**
+                 * https://musicbrainz.org/ws/2/release-group/3bd76d40-7f0e-36b7-9348-91a33afee20e?inc=releases&fmt=json
+                 * @var object{
+                 *     primary-type-id: string,
+                 *     releases: array,
+                 *     first-release-date: string,
+                 *     secondary-type-ids: array,
+                 *     id: string,
+                 *     secondary-types: array,
+                 *     title: string,
+                 *     disambiguation: string,
+                 *     primary-type: string
+                 * } $group
+                 */
                 $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
                 // Set fresh data
                 $this->name = $group->title;
@@ -275,9 +318,30 @@ class Wanted extends database_object
                 // Load from database if already cached
                 $this->songs = Song_Preview::get_song_previews($this->mbid);
                 if (count($group->releases) > 0) {
+                    // Use the first release as reference for track content
                     $release_mbid = $group->releases[0]->id;
                     if (count($this->songs) == 0) {
-                        // Use the first release as reference for track content
+                        /**
+                         * https://musicbrainz.org/ws/2/release/d8de198d-2162-4264-9cfe-926d92c4c7ad?inc=recordings&fmt=json
+                         * @var object{
+                         *     id: string,
+                         *     media: array,
+                         *     barcode: string,
+                         *     date: string,
+                         *     status-id: string,
+                         *     asin: ?string,
+                         *     quality: string,
+                         *     title: string,
+                         *     cover-art-archive: object,
+                         *     release-events: array,
+                         *     packaging: string,
+                         *     disambiguation: string,
+                         *     text-representation: object,
+                         *     country: ?string,
+                         *     status: string,
+                         *     packaging-id: string,
+                         * } $release
+                         */
                         $release = $mbrainz->lookup('release', $release_mbid, array('recordings'));
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
@@ -302,17 +366,17 @@ class Wanted extends database_object
                                 }
 
                                 $song['file'] = null;
-                                foreach (Plugin::get_plugins('get_song_preview') as $plugin_name) {
+                                foreach ($preview_plugins as $plugin_name) {
                                     $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
                                         $song['file'] = $plugin->_plugin->get_song_preview($track->id, $artist_name, $track->title);
-                                        if ($song['file'] != null) {
+                                        if ($song['file'] !== null) {
                                             break;
                                         }
                                     }
                                 }
 
-                                if ($song != null) {
+                                if ($song['file'] !== null) {
                                     $this->songs[] = new Song_Preview(Song_Preview::insert($song));
                                 }
                             }

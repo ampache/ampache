@@ -73,7 +73,7 @@ final class PlaylistGenerateMethod
             : 'song';
         // confirm the correct data
         if (!in_array($format, array('song', 'index', 'id'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $format), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $format), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
