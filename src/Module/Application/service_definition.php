@@ -171,7 +171,6 @@ return [
     Stream\DemocraticAction::class => autowire(Stream\DemocraticAction::class),
     Stream\PlaylistRandomAction::class => autowire(Stream\PlaylistRandomAction::class),
     Stream\PlayItemAction::class => autowire(Stream\PlayItemAction::class),
-    Stream\PlayFavoriteAction::class => autowire(Stream\PlayFavoriteAction::class),
     Stream\RandomAction::class => autowire(Stream\RandomAction::class),
     Stream\TmpPlaylistAction::class => autowire(Stream\TmpPlaylistAction::class),
     Stream\BasketAction::class => autowire(Stream\BasketAction::class),

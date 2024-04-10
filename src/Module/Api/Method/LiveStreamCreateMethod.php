@@ -73,11 +73,11 @@ final class LiveStreamCreateMethod
         $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
         if (!$url) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $url), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $url), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 
             return false;
         }

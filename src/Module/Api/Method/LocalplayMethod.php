@@ -70,7 +70,7 @@ final class LocalplayMethod
         // Load their Localplay instance
         $localplay = new Localplay(AmpConfig::get('localplay_controller'));
         if (empty($localplay->type) || !$localplay->connect()) {
-            Api::error(T_('Unable to connect to localplay controller'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
+            Api::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
@@ -84,7 +84,7 @@ final class LocalplayMethod
                 $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
 
                 if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
-                    Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+                    Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;
                 }
@@ -143,7 +143,7 @@ final class LocalplayMethod
                 break;
             default:
                 // They are doing it wrong
-                Api::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
+                Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'command', $input['api_format']);
 
                 return false;
         } // end switch on command

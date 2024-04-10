@@ -34,7 +34,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\IpHistoryRepositoryInterface;
 use Ampache\Repository\UserRepositoryInterface;
@@ -384,41 +383,6 @@ class User extends database_object
             $key               = $row['name'];
             $this->prefs[$key] = $row['value'];
         }
-    }
-
-    /**
-     * get_favorites
-     * returns an array of your $type favorites
-     * @param string $type
-     */
-    public function get_favorites($type): array
-    {
-        $items   = [];
-        $count   = AmpConfig::get('popular_threshold', 10);
-        $results = Stats::get_user($count, $type, $this->id, 1);
-        foreach ($results as $row) {
-            $className = ObjectTypeToClassNameMapper::map($type);
-            /** @var Song|Album|Artist $data */
-            $data = new $className($row['object_id']);
-            if ($data->isNew()) {
-                continue;
-            }
-
-            $data->format();
-            if ($type == 'song') {
-                /** @var Song $data */
-                $data->count = $row['count'];
-            }
-
-            if ($type == 'artist') {
-                /** @var Artist $data */
-                $data->f_name = $data->f_link;
-            }
-
-            $items[] = $data;
-        }
-
-        return $items;
     }
 
     /**
