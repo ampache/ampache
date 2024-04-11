@@ -894,14 +894,12 @@ class Json_Data
 
             if ($songs) {
                 $items          = array();
-                $trackcount     = 1;
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
                     $items[] = array(
                         "id" => (string)$objects['object_id'],
-                        "playlisttrack" => $trackcount
+                        "playlisttrack" => $objects['track'],
                     );
-                    $trackcount++;
                 }
             } else {
                 $items = (int)($playitem_total ?? 0);
