@@ -27,6 +27,7 @@ namespace Ampache\Module\Util;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -71,9 +72,9 @@ final class ZipHandler implements ZipHandlerInterface
     ): ResponseInterface {
         $art      = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart   = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $filter   = preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $filter   = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
 
-        $name = sys_get_temp_dir() . '/' . uniqid('ampache-zip');
+        $name = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip');
 
         $this->zipFile = $name;
 
@@ -95,7 +96,7 @@ final class ZipHandler implements ZipHandlerInterface
                 $arc->addFile($file, $folder . '/' . basename($file));
             }
             if ($addart === true && !empty($folder) && !empty($artpath)) {
-                $arc->addFile($artpath, $folder . '/' . $art, );
+                $arc->addFile($artpath, $folder . '/' . $art);
             }
         }
         if (!empty($playlist)) {
