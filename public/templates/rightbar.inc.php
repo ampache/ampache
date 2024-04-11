@@ -130,7 +130,7 @@ if (count($objects) > 100) {
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video');
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];
