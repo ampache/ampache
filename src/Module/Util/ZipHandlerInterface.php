@@ -23,6 +23,8 @@
 
 namespace Ampache\Module\Util;
 
+use Psr\Http\Message\ResponseInterface;
+
 interface ZipHandlerInterface
 {
     /**
@@ -38,5 +40,10 @@ interface ZipHandlerInterface
      * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
      * @param bool $flat_path put the files into a single folder
      */
-    public function zip(string $name, array $media_files, bool $flat_path): void;
+    public function zip(
+        ResponseInterface $response,
+        string $name,
+        array $media_files,
+        bool $flat_path
+    ): ResponseInterface;
 }

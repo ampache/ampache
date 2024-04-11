@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f706cdd4b2a9d3546d44ab5dde86911",
+    "content-hash": "7209601dbf7d8aecbe8cd4ba03a0cd87",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -942,7 +942,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v10.48.4",
+            "version": "v10.48.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -997,7 +997,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v10.48.4",
+            "version": "v10.48.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1043,7 +1043,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v10.48.4",
+            "version": "v10.48.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1091,7 +1091,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v10.48.4",
+            "version": "v10.48.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1380,87 +1380,6 @@
                 "source": "https://github.com/laravel/serializable-closure"
             },
             "time": "2023-11-08T14:08:06+00:00"
-        },
-        {
-            "name": "maennchen/zipstream-php",
-            "version": "3.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/maennchen/ZipStream-PHP.git",
-                "reference": "b8174494eda667f7d13876b4a7bfef0f62a7c0d1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/b8174494eda667f7d13876b4a7bfef0f62a7c0d1",
-                "reference": "b8174494eda667f7d13876b4a7bfef0f62a7c0d1",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mbstring": "*",
-                "ext-zlib": "*",
-                "php-64bit": "^8.1"
-            },
-            "require-dev": {
-                "ext-zip": "*",
-                "friendsofphp/php-cs-fixer": "^3.16",
-                "guzzlehttp/guzzle": "^7.5",
-                "mikey179/vfsstream": "^1.6",
-                "php-coveralls/php-coveralls": "^2.5",
-                "phpunit/phpunit": "^10.0",
-                "vimeo/psalm": "^5.0"
-            },
-            "suggest": {
-                "guzzlehttp/psr7": "^2.4",
-                "psr/http-message": "^2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ZipStream\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Duncan",
-                    "email": "pabs@pablotron.org"
-                },
-                {
-                    "name": "Jonatan Männchen",
-                    "email": "jonatan@maennchen.ch"
-                },
-                {
-                    "name": "Jesse Donat",
-                    "email": "donatj@gmail.com"
-                },
-                {
-                    "name": "András Kolesár",
-                    "email": "kolesar@kolesar.hu"
-                }
-            ],
-            "description": "ZipStream is a library for dynamically streaming dynamic zip files from PHP without writing to the disk at all on the server.",
-            "keywords": [
-                "stream",
-                "zip"
-            ],
-            "support": {
-                "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
-                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.1.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/maennchen",
-                    "type": "github"
-                },
-                {
-                    "url": "https://opencollective.com/zipstream",
-                    "type": "open_collective"
-                }
-            ],
-            "time": "2023-06-21T14:59:35+00:00"
         },
         {
             "name": "mikealmond/musicbrainz",
@@ -1807,16 +1726,16 @@
         },
         {
             "name": "php-curl-class/php-curl-class",
-            "version": "9.19.1",
+            "version": "9.19.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-curl-class/php-curl-class.git",
-                "reference": "680afbcfd964f299fb320dba6c30f9930d1d478e"
+                "reference": "c41efeb4ea2dc3cf8f90f8f967b0fcf45a41e294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/680afbcfd964f299fb320dba6c30f9930d1d478e",
-                "reference": "680afbcfd964f299fb320dba6c30f9930d1d478e",
+                "url": "https://api.github.com/repos/php-curl-class/php-curl-class/zipball/c41efeb4ea2dc3cf8f90f8f967b0fcf45a41e294",
+                "reference": "c41efeb4ea2dc3cf8f90f8f967b0fcf45a41e294",
                 "shasum": ""
             },
             "require": {
@@ -1875,14 +1794,15 @@
                 "requests",
                 "restful",
                 "web-scraper",
+                "web-scraping ",
                 "web-service",
                 "xml"
             ],
             "support": {
                 "issues": "https://github.com/php-curl-class/php-curl-class/issues",
-                "source": "https://github.com/php-curl-class/php-curl-class/tree/9.19.1"
+                "source": "https://github.com/php-curl-class/php-curl-class/tree/9.19.2"
             },
-            "time": "2024-02-27T18:03:38+00:00"
+            "time": "2024-04-09T18:03:13+00:00"
         },
         {
             "name": "php-di/invoker",
@@ -8226,7 +8146,8 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-simplexml": "*",
-        "ext-xml": "*"
+        "ext-xml": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
