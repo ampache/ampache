@@ -54,6 +54,7 @@ final class PlaylistsMethod
      * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
+     * include     = (integer) 0,1, if true include playlist contents //optional
      */
     public static function playlists(array $input, User $user): bool
     {
@@ -61,6 +62,7 @@ final class PlaylistsMethod
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $filter     = (string)($input['filter'] ?? '');
         $show_dupes = (bool)($input['show_dupes'] ?? false);
+        $include    = (bool)($input['include'] ?? false);
 
         // regular playlists
         $results = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
@@ -80,12 +82,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::playlists($results, $user);
+                echo Json_Data::playlists($results, $user, $include);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::playlists($results, $user);
+                echo Xml_Data::playlists($results, $user, $include);
         }
 
         return true;

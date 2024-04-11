@@ -1032,8 +1032,9 @@ class Xml_Data
      *
      * @param array $playlists Playlist id's to include
      * @param User $user
+     * @param bool $songs
      */
-    public static function playlists($playlists, $user): string
+    public static function playlists($playlists, $user, $songs = false): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
@@ -1059,7 +1060,7 @@ class Xml_Data
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-                $playitem_total = $playlist->last_count;
+                $playitem_total = (int)$playlist->last_count;
             } else {
                 $playlist       = new Playlist($playlist_id);
                 $object_type    = 'playlist';
@@ -1068,6 +1069,17 @@ class Xml_Data
                 if ($hide_dupe_searches && $playlist->user == $user->getId()) {
                     $playlist_names[] = $playlist->name;
                 }
+            }
+            if ($songs) {
+                $items          = '';
+                $playlisttracks = $playlist->get_items();
+                foreach ($playlisttracks as $objects) {
+                    if ($objects['object_type'] === 'song') {
+                        $items .= "\t\t<playlisttrack id=\"" . $objects['object_id'] . "\">" . $objects['track'] . "</playlisttrack>\n";
+                    }
+                }
+            } else {
+                $items = $playitem_total;
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
@@ -1078,7 +1090,7 @@ class Xml_Data
             $flag        = new Userflag($playlist_id, $object_type);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . (int)$playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
