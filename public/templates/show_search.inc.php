@@ -53,27 +53,27 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=search&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
 <?php } ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=search&random_id=' . $playlist->id, 'shuffle', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'add', T_('Add All'), 'play_playlist'); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'new_window', T_('Add All To Temporary Playlist'), 'play_playlist'); ?>
         </li>
 <?php if ($playlist->has_access()) { ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $web_path; ?>/smartplaylist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('delete'); ?>
+                <?php echo Ui::get_material_symbol('close'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>

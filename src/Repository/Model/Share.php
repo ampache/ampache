@@ -137,11 +137,11 @@ class Share extends database_object
     {
         if ($this->isNew() === false && (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user === Core::get_global('user')->id))) {
             if ($this->allow_download) {
-                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
+                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }
 
-            echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-            echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+            echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
+            echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 
@@ -377,7 +377,7 @@ class Share extends database_object
             '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
             $object_type,
             $object_id,
-            Ui::get_icon('share', T_('Share'))
+            Ui::get_material_symbol('share', T_('Share'))
         );
 
         if ($show_text) {

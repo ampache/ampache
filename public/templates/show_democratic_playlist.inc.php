@@ -96,7 +96,7 @@ if ($browse->is_show_header()) {
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'] . '&browse_id=' . $browse->getId(), 'delete', T_('Remove Vote'), 'delete_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['id']);
     } else {
         echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'add_vote_' . $item['id']);
     } ?>
@@ -108,7 +108,7 @@ if ($browse->is_show_header()) {
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if ($access100) { ?>
     <td class="cel_admin">
-    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
+    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'close', T_('Delete'), 'delete_row_' . $item['id']); ?>
     </td>
     <?php } ?>
 </tr>

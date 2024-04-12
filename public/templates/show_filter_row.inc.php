@@ -40,11 +40,11 @@ $web_path = (string)AmpConfig::get('web_path', '');
 <td class="cel_action">
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
         <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&amp;filter_id=<?php echo $filter['id']; ?>&amp;filter_name=<?php echo $filter['name']; ?>">
-            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+            <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
         <?php if ($filter['id'] > 0) { ?>
            <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&amp;filter_name=<?php echo $filter['name']; ?>">
-               <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+               <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
            </a>
         <?php } ?>
     <?php } ?>

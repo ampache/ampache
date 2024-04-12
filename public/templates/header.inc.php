@@ -467,7 +467,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
-        <div id="notification" class="notification-out"><?php echo Ui::get_icon('info', T_('Information')); ?><span id="notification-content"></span></div>
+        <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
@@ -498,7 +498,7 @@ if ($is_session) {
                     <?php } ?>
                     <?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
-                            <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_icon('minimize', T_('Show/Hide Playlist')); ?></a>
+                            <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('featured_play_list', T_('Show/Hide Playlist')); ?></a>
                         </div>
                     <?php } ?>
                     <?php Ui::show_box_bottom(); ?>

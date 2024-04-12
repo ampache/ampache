@@ -36,9 +36,9 @@ use Ampache\Module\Util\Ui;
 <td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
 <td class="cel_action">
 <a id="<?php echo 'reply_pvmsg_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&reply_to=<?php echo $libitem->getId(); ?>">
-    <?php echo Ui::get_icon('mail', T_('Reply')); ?>
+    <?php echo Ui::get_material_symbol('mail', T_('Reply')); ?>
 </a>
 <a id="<?php echo 'delete_pvmsg_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=<?php echo $libitem->getId(); ?>">
-    <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+    <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
 </a>
 </td>

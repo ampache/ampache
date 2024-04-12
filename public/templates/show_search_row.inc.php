@@ -39,12 +39,12 @@ use Ampache\Module\Util\ZipHandlerInterface;
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay')) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id, 'play', T_('Play'), 'play_playlist_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id, 'play_circle', T_('Play'), 'play_playlist_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_next()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_playlist_' . $libitem->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=search&object_id=' . $libitem->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_playlist_' . $libitem->id);
             }
         } ?>
     </div>
@@ -52,9 +52,9 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_playlist"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
+        <?php echo Ajax::button('?action=basket&type=search&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_playlist_' . $libitem->id); ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'search', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
         </a>
     </span>
 </td>
@@ -68,13 +68,13 @@ use Ampache\Module\Util\ZipHandlerInterface;
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
                 <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
-                    <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                    <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
                 </a>
 <?php }
 if ($libitem->has_access()) { ?>
                 <a id="<?php echo 'edit_playlist_' . $libitem->id; ?>" onclick="showEditDialog('search_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_playlist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', 'smartplaylist_row_')">
-                    <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 </a>
-    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'delete', T_('Delete'), 'delete_playlist_' . $libitem->id);
+    <?php echo Ajax::button('?page=browse&action=delete_object&type=smartplaylist&id=' . $libitem->id, 'close', T_('Delete'), 'delete_playlist_' . $libitem->id);
 } ?>
 </td>

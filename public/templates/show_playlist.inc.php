@@ -75,19 +75,19 @@ $playlist->display_art($thumb, false, false); ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">
-                <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
+                <?php echo Ui::get_material_symbol('save', T_('Save Track Order')); ?>
                 <?php echo T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $web_path; ?>/playlist.php?action=sort_tracks&playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('sort', T_('Sort Tracks by Artist, Album, Song')); ?>
+                <?php echo Ui::get_material_symbol('sort_by_alpha', T_('Sort Tracks by Artist, Album, Song')); ?>
                 <?php echo T_('Sort Tracks by Artist, Album, Song'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $web_path; ?>/playlist.php?action=remove_duplicates&playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('wand', T_('Remove Duplicates')); ?>
+                <?php echo Ui::get_material_symbol('tab_close', T_('Remove Duplicates')); ?>
                 <?php echo T_('Remove Duplicates'); ?>
             </a>
         </li>
@@ -97,60 +97,60 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('playlist')) { ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=playlist&amp;id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+                <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
                 <?php echo T_('Batch download'); ?>
             </a>
         </li>
     <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
-                <?php echo UI::get_icon('share', T_('Share playlist')); ?>
+                <?php echo UI::get_material_symbol('share', T_('Share playlist')); ?>
         &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
         </a>
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play', T_('Play All'), 'directplay_full_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play_circle', T_('Play All'), 'directplay_full_' . $playlist->id); ?>
         </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_playlist_' . $playlist->id); ?>
         </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
     <?php } ?>
         <li>
-        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'random', T_('Random Play'), 'play_random_' . $playlist->id); ?>
+        <?php echo Ajax::button_with_text('?page=random&action=send_playlist&random_type=playlist&random_id=' . $playlist->id, 'shuffle', T_('Random Play'), 'play_random_' . $playlist->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'add', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=playlist&id=' . $playlist->id, 'new_window', T_('Add All to Temporary Playlist'), 'play_playlist'); ?>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'random', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
     <?php if ($playlist->has_access()) { ?>
         <?php $search_id = $playlist->has_search((int)$playlist->user);
         if ($search_id > 0) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/playlist.php?action=refresh_playlist&type=playlist&user_id=<?php echo $playlist->user; ?>&playlist_id=<?php echo $playlist->id; ?>&search_id=<?php echo $search_id; ?>">
-                    <?php echo Ui::get_icon('file_refresh'); ?>
+                    <?php echo Ui::get_material_symbol('sync_alt'); ?>
                     <?php echo T_('Refresh from Smartlist'); ?>
                 </a>
             </li>
         <?php } ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('playlist_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Playlist Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit'); ?>
             </a>
         </li>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/playlist.php?action=delete_playlist&playlist_id=<?php echo $playlist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to delete this Playlist?'); ?>');">
-                <?php echo Ui::get_icon('delete'); ?>
+                <?php echo Ui::get_material_symbol('close'); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>

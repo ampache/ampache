@@ -93,14 +93,14 @@ $t_logout          = T_('Log out'); ?>
     $className = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => AccessLevelEnum::GUEST);
+    $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'headphones', 'access' => AccessLevelEnum::GUEST);
     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) {
-        $sidebar_items[] = array('id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volumeup', 'access' => AccessLevelEnum::GUEST);
+        $sidebar_items[] = array('id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volume_up', 'access' => AccessLevelEnum::GUEST);
     }
     if ($is_session) {
-        $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => AccessLevelEnum::GUEST);
+        $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'page_info', 'access' => AccessLevelEnum::GUEST);
     }
-    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => AccessLevelEnum::MANAGER); ?>
+    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'dns', 'access' => AccessLevelEnum::MANAGER); ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check(AccessTypeEnum::INTERFACE, $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $className) ? ' active' : '';
@@ -115,14 +115,14 @@ $t_logout          = T_('Log out'); ?>
         </li>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
-            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_icon('lock', T_('Admin Disabled')) . "</li>";
+            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_material_symbol('lock', T_('Admin Disabled')) . "</li>";
         } ?>
     <?php
     } ?>
     <?php if ($is_session && !empty(Session::get())) { ?>
     <li id="sb_tab_logout" class="sb1">
         <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
-        <?php echo Ui::get_icon('logout', $t_logout); ?>
+        <?php echo Ui::get_material_symbol('logout', $t_logout); ?>
         </a>
     </li>
     <?php } ?>

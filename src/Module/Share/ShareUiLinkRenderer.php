@@ -57,7 +57,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
             $webPath,
             $object_type->value,
             $object_id,
-            Ui::get_icon(
+            Ui::get_material_symbol(
                 'share',
                 T_('Advanced Share')
             ),
@@ -96,7 +96,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 $link .= sprintf(
                     "<li><a class=\"nohtml\" href=\"%s\">%s &nbsp;%s</a></li>",
                     $dllink,
-                    Ui::get_icon(
+                    Ui::get_material_symbol(
                         'download',
                         T_('Temporary direct link')
                     ),

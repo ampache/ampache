@@ -61,7 +61,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
     </li>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li id="pl_add">
-            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
@@ -83,15 +83,15 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
         <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
-            <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+            <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
         </a>
     </li>
 <?php } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'close', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
-      <?php echo Ui::get_icon('add', T_('Add dynamic items')); ?>
+      <?php echo Ui::get_material_symbol('add_circle', T_('Add dynamic items')); ?>
         <ul id="rb_action_additems" class="submenu">
             <li>
                 <?php echo Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song'); ?>
@@ -155,7 +155,7 @@ foreach ($objects as $object_data) {
         ?>
     <li>
       <?php echo $object->get_f_link();
-        echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
+        echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'close', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
     }

@@ -55,10 +55,10 @@ if ($label->website) {
 } ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
+        <a href="https://www.google.com/search?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
         <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
+        <a href="https://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
+        <a href="https://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=label" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
     </div>
     <div id="artist_biography">
         <div class="item_info">
@@ -80,7 +80,7 @@ if ($label->website) {
             <?php if (AmpConfig::get('sociable')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">
-                    <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
+                    <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>
                     <?php echo T_('Post Shout'); ?>
                 </a>
             </li>
@@ -89,7 +89,7 @@ if ($label->website) {
         <?php if ($label->email) { ?>
         <li>
             <a href="mailto:<?php echo scrub_out($label->email); ?>">
-                <?php echo Ui::get_icon('mail', T_('Send E-mail')); ?>
+                <?php echo Ui::get_material_symbol('mail', T_('Send E-mail')); ?>
                 <?php echo T_('Send E-mail'); ?>
             </a>
         </li>
@@ -97,7 +97,7 @@ if ($label->website) {
         <?php if ($isLabelEditable) { ?>
         <li>
             <a id="<?php echo 'edit_label_' . $label->id; ?>" onclick="showEditDialog('label_row', '<?php echo $label->id; ?>', '<?php echo 'edit_label_' . $label->id; ?>', '<?php echo addslashes(T_('Label Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Label'); ?>
             </a>
         </li>
@@ -105,7 +105,7 @@ if ($label->website) {
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
             <a id="<?php echo 'delete_label_' . $label->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>

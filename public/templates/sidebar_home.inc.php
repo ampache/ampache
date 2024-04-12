@@ -124,7 +124,7 @@ $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['
     <li class="sb2_browse">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
+            <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
         <?php $text = (string)scrub_in(Core::get_request('action')) . '_ac';
 if ($text !== '_ac') {
@@ -165,7 +165,7 @@ if ($text !== '_ac') {
     <li class="sb2_dashboard">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
+            <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
         </h4>
         <ul class="sb3" id="sb_home_dashboard">
             <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
@@ -186,7 +186,7 @@ if ($text !== '_ac') {
         <li class="sb2_video">
             <h4 class="header">
                 <span class="sidebar-header-title"><?php echo $t_videos; ?></span>
-                <?php echo Ui::get_icon('all', $t_expander, 'home_video', 'header-img ' . $state_home_video); ?>
+                <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_video', 'header-img ' . $state_home_video); ?>
             </h4>
             <ul class="sb3" id="sb_home_video">
           <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
@@ -208,7 +208,7 @@ if ($text !== '_ac') {
     <li class="sb2_search">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'home_search', 'header-img ' . $state_home_search); ?>
+            <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_search', 'header-img ' . $state_home_search); ?>
         </h4>
         <ul class="sb3" id="sb_home_search">
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
@@ -234,7 +234,7 @@ if ($text !== '_ac') {
     <li class="sb2_playlist">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
+            <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
         </h4>
         <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
         <ul class="sb3" id="sb_home_playlist">
@@ -256,7 +256,7 @@ if ($text !== '_ac') {
     <li class="sb2_information">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
-            <?php echo Ui::get_icon('all', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
+            <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
         </h4>
         <ul class="sb3" id="sb_home_information">
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo $t_recent; ?></a></li>

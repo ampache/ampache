@@ -83,19 +83,19 @@ final readonly class ShoutRenderer implements ShoutRendererInterface
             if ($jsbuttons) {
                 $html .= Ajax::button(
                     '?page=stream&action=directplay&playtype=' . $shoutObjectType . '&' . $shoutObjectType . '_id=' . $shoutObjectId,
-                    'play',
+                    'play_circle',
                     T_('Play'),
                     'play_' . $shoutObjectType . '_' . $shoutObjectId
                 );
                 $html .= Ajax::button(
                     '?action=basket&type=' . $shoutObjectType . '&id=' . $shoutObjectId,
-                    'add',
+                    'new_window',
                     T_('Add'),
                     'add_' . $shoutObjectType . '_' . $shoutObjectId
                 );
             }
             if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
+                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
         }

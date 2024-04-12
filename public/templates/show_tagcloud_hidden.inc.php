@@ -65,11 +65,11 @@ $ui->show(
             <ul>
                 <li>
                     <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id']; ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_hidden_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
-                        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                        <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>
-                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_hidden_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>
