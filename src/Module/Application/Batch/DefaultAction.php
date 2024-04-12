@@ -28,7 +28,10 @@ namespace Ampache\Module\Application\Batch;
 use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -36,7 +39,6 @@ use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\LegacyLogger;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\SongRepositoryInterface;
@@ -57,12 +59,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
         private FunctionCheckerInterface $functionChecker,
         private SongRepositoryInterface $songRepository,
         private ResponseFactoryInterface $responseFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        ob_end_clean();
         if (
             !defined('NO_SESSION') &&
             !$this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
@@ -70,15 +72,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        /* Drop the normal Time limit constraints, this can take a while */
-        set_time_limit(0);
-
         $media_ids    = [];
         $default_name = 'Unknown';
         $name         = $default_name;
         $action       = $this->requestParser->getFromRequest('action');
         $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
-        $object_type  = ($action == 'browse')
+        $object_type  = $action === 'browse'
             ? $this->requestParser->getFromRequest('type')
             : $action;
 
@@ -90,28 +89,29 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-            $object_id = (int)$this->requestParser->getFromRequest('id');
-            $this->logger->debug(
-                'Requested item ' . $object_id,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-            );
 
-            $className = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var class-string<library_item> $className */
-            $libitem = new $className($object_id);
-            if ($libitem->isNew() === false) {
-                if (method_exists($libitem, 'format')) {
-                    $libitem->format();
-                }
-                $name      = (string)$libitem->get_fullname();
-                $media_ids = array_merge($media_ids, $libitem->get_medias());
+        $object_id = (int)$this->requestParser->getFromRequest('id');
+        $this->logger->debug(
+            'Requested item ' . $object_id,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
+
+        $libItem = $this->libraryItemLoader->load(
+            LibraryItemEnum::from($object_type),
+            $object_id,
+        );
+
+        if ($libItem instanceof playable_item) {
+            if (method_exists($libItem, 'format')) {
+                $libItem->format();
             }
+            $name      = (string)$libItem->get_fullname();
+            $media_ids = array_merge($media_ids, $libItem->get_medias());
         } else {
             // Switch on the actions
             switch ($action) {
                 case 'tmp_playlist':
-                    $user = Core::get_global('user');
+                    $user = $gatekeeper->getUser();
                     if ($user instanceof User) {
                         $user->load_playlist();
                         $media_ids = $user->playlist?->get_items() ?? [];
@@ -146,7 +146,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
                                 $video = $this->modelFactory->createVideo($media_id);
                                 if ($video->isNew() === false) {
                                     $media_ids[] = [
-                                        'object_type' => 'Video',
+                                        'object_type' => LibraryItemEnum::VIDEO,
                                         'object_id' => $media_id
                                     ];
                                 }
@@ -166,57 +166,41 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        // Write/close session data to release session lock for this script.
-        // This to allow other pages from the same session to be processed
-        // Do NOT change any session variable after this call
-        session_write_close();
-
-        // Take whatever we've got and send the zip
-        $media_files = $this->getMediaFiles($media_ids);
-        if (is_array($media_files['0'])) {
-            set_memory_limit($media_files['1'] + 32);
-
-            return $this->zipHandler->zip(
-                $this->responseFactory->createResponse(),
-                $name,
-                $media_files['0'],
-                $flat_path
-            );
-        }
-
-        return null;
+        return $this->zipHandler->zip(
+            $this->responseFactory->createResponse(),
+            $name,
+            $this->getMediaFiles($media_ids),
+            $flat_path
+        );
     }
 
     /**
      * Takes an array of media ids and returns an array of the actual filenames
      *
-     * @param array $media_ids Media IDs.
-     * @return array
+     * @param iterable<int|array{object_type: LibraryItemEnum, object_id: int}> $medias Media IDs.
+     * @return array{
+     *     files: array<string, list<string>>,
+     *     total_size: int
+     * }
      */
-    private function getMediaFiles(array $media_ids): array
+    private function getMediaFiles(iterable $medias): array
     {
         $media_files = [];
         $total_size  = 0;
-        foreach ($media_ids as $element) {
+        foreach ($medias as $element) {
             if (is_array($element)) {
-                if (isset($element['object_type'])) {
-                    $type    = $element['object_type']->value;
-                    $mediaid = $element['object_id'];
-                } else {
-                    $type    = array_shift($element);
-                    $mediaid = array_shift($element);
-                }
-                $className = ObjectTypeToClassNameMapper::map($type);
-                /** @var class-string<library_item> $className */
-                $media = new $className($mediaid);
+                $media = $this->libraryItemLoader->load(
+                    $element['object_type'],
+                    $element['object_id']
+                );
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
-            if ($media->isNew()) {
+            if ($media === null || $media->isNew()) {
                 continue;
             }
             if ($media->enabled) {
-                $total_size = ((int)$total_size) + ($media->size ?? 0);
+                $total_size += $media->size ?? 0;
                 $dirname    = '';
                 $parent     = $media->get_parent();
                 if ($parent != null) {
@@ -233,9 +217,9 @@ final readonly class DefaultAction implements ApplicationActionInterface
             }
         }
 
-        return array(
-            $media_files,
-            $total_size
-        );
+        return [
+            'files' => $media_files,
+            'total_size' => $total_size
+        ];
     }
 }

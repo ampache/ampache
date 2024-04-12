@@ -4846,16 +4846,6 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/Application/Image/AbstractShowAction.php
@@ -11424,16 +11414,6 @@ parameters:
 			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\ZipHandler\\:\\:zip\\(\\) has parameter \\$media_files with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\ZipHandlerInterface\\:\\:zip\\(\\) has parameter \\$media_files with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandlerInterface.php
 
 		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$catalog\\.$#"

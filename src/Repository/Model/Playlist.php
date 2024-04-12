@@ -351,7 +351,12 @@ class Playlist extends playlist_object
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = ['object_type' => LibraryItemEnum::from($row['object_type']), 'object_id' => (int)$row['object_id'], 'track' => (int)$row['track'], 'track_id' => $row['id']];
+                $results[] = [
+                    'object_type' => LibraryItemEnum::from($row['object_type']),
+                    'object_id' => (int)$row['object_id'],
+                    'track' => (int)$row['track'],
+                    'track_id' => $row['id']
+                ];
             }
         }
 

@@ -42,6 +42,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -558,7 +559,7 @@ class Xml_Data
                     $songs = ($include) ? $playlist->get_items() : array();
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     foreach ($songs as $song_id) {
-                        if ($song_id['object_type'] == 'song') {
+                        if ($song_id['object_type'] === LibraryItemEnum::SONG) {
                             $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $song_id['track'] . "</playlisttrack>\n";
                         }
                     }
@@ -1032,7 +1033,7 @@ class Xml_Data
                 $items          = '';
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
-                    if ($objects['object_type'] === 'song') {
+                    if ($objects['object_type'] === LibraryItemEnum::SONG) {
                         $items .= "\t\t<playlisttrack id=\"" . $objects['object_id'] . "\">" . $objects['track'] . "</playlisttrack>\n";
                     }
                 }
