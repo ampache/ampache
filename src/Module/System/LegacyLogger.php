@@ -185,7 +185,7 @@ final class LegacyLogger implements LoggerInterface
         $log_filename = str_replace("%Y", date('Y'), $log_filename);
         $log_filename = str_replace("%m", date('m'), $log_filename);
         $log_filename = str_replace("%d", date('d'), $log_filename);
-        $log_filename = $this->configContainer->get('log_path') . DIRECTORY_SEPARATOR . $log_filename;
+        $log_filename = rtrim($this->configContainer->get('log_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $log_filename;
         $log_line     = "$log_time [$username] ($event_name) -> $message\n";
 
         // Do the deed
