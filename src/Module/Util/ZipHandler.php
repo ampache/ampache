@@ -70,15 +70,18 @@ final class ZipHandler implements ZipHandlerInterface
         array $media_files,
         bool $flat_path
     ): ResponseInterface {
-        $art      = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $art_name = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
         $addart   = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
         $filter   = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment  = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 
         $arc = new ZipArchive();
         $arc->open($this->zipFile, ZipArchive::CREATE);
-        $arc->setArchiveComment((string) $this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT));
+        if (!empty($comment)) {
+            $arc->setArchiveComment($comment);
+        }
 
         $playlist = '';
         $folder   = '';
@@ -91,14 +94,18 @@ final class ZipHandler implements ZipHandlerInterface
                 $dirname = ($flat_path)
                     ? $filter
                     : dirname($file);
-                $artpath = $dirname . DIRECTORY_SEPARATOR . $art;
+                $artpath = $dirname . DIRECTORY_SEPARATOR . $art_name;
                 $folder  = explode(DIRECTORY_SEPARATOR, $dirname)[substr_count($dirname, DIRECTORY_SEPARATOR)];
                 $playlist .= $folder . DIRECTORY_SEPARATOR . basename($file) . "\n";
                 $arc->addEmptyDir($folder, ZipArchive::CREATE);
                 $arc->addFile($file, $folder . DIRECTORY_SEPARATOR . basename($file));
             }
-            if ($addart === true && !empty($folder) && is_file($artpath)) {
-                $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art);
+            if (
+                $addart === true &&
+                !empty($folder) &&
+                is_file($artpath)
+            ) {
+                $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
             }
         }
         if (!empty($playlist) && !empty($folder)) {
