@@ -17,18 +17,22 @@ These searches will now use to rules for that object type and then return the so
 ### Added
 
 * Translations 2024-04
-* Database 600069
+* rtrim slashes on some config variables in case you ignore the warning
+* Database 600070
   * Allow signed `user` column for `broadcast`, `player_control`, `session_stream`, `share`, `user_activity`, `user_follower` and `user_vote` tables
   * Revert unique constraint `playlist_track_UN` on `playlist_data` table
   * Extend `generator column` on `podcast` table to 128 characters
+  * Convert `object_type` to an enum on `playlist_data` table
 * Config version 71
   * Fix up bitrate encode_args
   * Add `api_debug_handler` run api commands without exception handling (At your own risk!)
   * Wrap default string config options in quotes
+  * Add a note about using a secure cookie prefix
 
 ### Changed
 
 * Stream Random action default fallback to `song`
+* Allow using `tmp_dir_path` for Dropbox catalog
 * Subsonic
   * Song file path is now always the original full file path
   * This was a relative path that was changed with transcoding mean the path nevers existed.
@@ -63,6 +67,7 @@ These searches will now use to rules for that object type and then return the so
   * New Method: player (Inform the server about the state of your client player)
     * Returns `now_playing` state on completion
   * download: add `bitrate` parameter
+  * playlists: add `include` parameter (**note** this can be massive and slow when searches are included)
 
 ### Fixed
 
