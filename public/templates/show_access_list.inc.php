@@ -79,8 +79,8 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
     <td><?php echo $access->getUserName(); ?></td>
     <td><?php echo $access->getTypeName(); ?></td>
     <td>
-        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
-        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_delete_record&amp;access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_delete_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
     <?php } ?>

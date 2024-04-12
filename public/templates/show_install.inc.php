@@ -53,7 +53,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 </div>
 <?php echo AmpError::display('general'); ?>
 <h2><?php echo T_('Insert Ampache Database'); ?></h2>
-<form role="form" class="form-horizontal" method="post" action="<?php echo $web_path . "/install.php?action=create_db&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data" autocomplete="off">
+<form role="form" class="form-horizontal" method="post" action="<?php echo $web_path . "/install.php?action=create_db&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data" autocomplete="off">
     <div class="form-group">
         <label for="local_db" class="col-sm-4 control-label"><?php echo T_('Desired Database Name'); ?></label>
         <div class="col-sm-8">

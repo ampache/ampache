@@ -258,7 +258,7 @@ class Song_Preview extends database_object implements Media, playable_item
         $this->f_artist = $this->get_artist_fullname();
 
         if ($this->artist) {
-            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&amp;artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
+            $this->f_artist_link = "<a href=\"" . AmpConfig::get('web_path') . "/artists.php?action=show&artist=" . $this->artist . "\" title=\"" . scrub_out($this->f_artist) . "\"> " . scrub_out($this->f_artist) . "</a>";
         } else {
             $wartist             = $this->getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
             $this->f_artist_link = $wartist['link'] ?? '';
@@ -267,7 +267,7 @@ class Song_Preview extends database_object implements Media, playable_item
         // Format the title
         $this->f_name_full  = $this->title;
         $this->f_name       = $this->title;
-        $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&amp;mbid=" . $this->album_mbid . "&amp;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
+        $this->f_album_link = "<a href=\"" . AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $this->album_mbid . "&;artist=" . $this->artist . "\" title=\"" . $this->f_album . "\">" . $this->f_album . "</a>";
         $this->get_f_link();
 
         // Format the track (there isn't really anything to do here)

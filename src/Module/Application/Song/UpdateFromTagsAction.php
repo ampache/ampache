@@ -76,7 +76,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
                 'catalog_id' => $song->getCatalogId(),
                 'type' => 'song',
                 'target_url' => sprintf(
-                    '%s/song.php?action=show&amp;song_id=%d',
+                    '%s/song.php?action=show&song_id=%d',
                     $this->configContainer->getWebPath(),
                     $songId
                 )
