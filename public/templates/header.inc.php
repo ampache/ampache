@@ -614,13 +614,12 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                     //if (!AmpConfig::get('hide_ampache_messages', false)) {
                     //    AutoUpdate::show_ampache_message();
                     //}
-                    if (AmpConfig::get('autoupdate')) {
-                        $current_version = AutoUpdate::get_current_version();
-                        $latest_version  = AutoUpdate::get_latest_version();
-                        if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
-                            AutoUpdate::show_new_version();
-                            echo '<br>';
-                        }
+                    if (
+                        AmpConfig::get('autoupdate') &&
+                        AutoUpdate::is_update_available()
+                    ) {
+                        AutoUpdate::show_new_version();
+                        echo '<br>';
                     }
                     if (Plugin::is_update_available()) {
                         Plugin::show_update_available();
