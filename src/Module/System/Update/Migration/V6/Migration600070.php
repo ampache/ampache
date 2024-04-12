@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,32 +20,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Util;
+namespace Ampache\Module\System\Update\Migration\V6;
 
-use Psr\Http\Message\ResponseInterface;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface ZipHandlerInterface
+final class Migration600070 extends AbstractMigration
 {
-    /**
-     * Check that an object type is allowed to be zipped.
-     */
-    public function isZipable(string $object_type): bool;
+    protected array $changelog = ['Convert `object_type` to an enum on `playlist_data` table'];
 
-    /**
-     * takes array of full paths to medias
-     * zips them and sends them
-     *
-     * @param string $name name of the zip file to be created
-     * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
-     * @param bool $flat_path put the files into a single folder
-     */
-    public function zip(
-        ResponseInterface $response,
-        string $name,
-        array $media_files,
-        bool $flat_path
-    ): ResponseInterface;
+    public function migrate(): void
+    {
+        $this->updateDatabase('UPDATE `playlist_data` SET `object_type` = \'song\' WHERE `object_type` IS NULL OR `object_type` NOT IN (\'broadcast\', \'democratic\', \'live_stream\', \'podcast_episode\', \'song\', \'song_preview\', \'video\');');
+        $this->updateDatabase('ALTER TABLE `playlist_data` MODIFY COLUMN `object_type` enum(\'broadcast\', \'democratic\', \'live_stream\', \'podcast_episode\', \'song\', \'song_preview\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
+    }
 }

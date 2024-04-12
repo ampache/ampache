@@ -1808,7 +1808,7 @@ class Song extends database_object implements
         if ($this->f_album_link === null) {
             $this->f_album_link = '';
             $web_path           = AmpConfig::get('web_path');
-            $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
+            $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
         }
 
         return $this->f_album_link;
@@ -1823,7 +1823,7 @@ class Song extends database_object implements
         if ($this->f_album_disk_link === null) {
             $this->f_album_disk_link = '';
             $web_path                = AmpConfig::get('web_path');
-            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&amp;album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
+            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 
         return $this->f_album_disk_link;

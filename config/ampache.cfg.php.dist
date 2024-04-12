@@ -75,7 +75,7 @@ config_version = 71
 ; DEFAULT: none
 ;local_web_path = "http://localhost/ampache"
 
-; The Ampache base URL is determinied from web requests.
+; The Ampache base URL is determined from web requests.
 ; When using CLI actions you don't send a web request meaning
 ; it can't be determined. This setting allows you to set a
 ; fallback when the base url can't be determined. Do not put a
@@ -154,17 +154,19 @@ stream_length = 7200
 remember_length = 604800
 
 ; Name of the Session/Cookie that will sent to the browser
-; default should be fine
-; DEFAULT: ampache
-session_name = ampache
+; If you are using session_cookiesecure add the prefix __Secure-
+; to restrict cookie access to HTTPS only (e.g. "__Secure-ampache")
+; (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#cookie-namecookie-value)
+; DEFAULT: "ampache"
+session_name = "ampache"
 
-; Lifetime of the Cookie, 0 == Forever (until browser close) , otherwise in terms of seconds
+; Lifetime of the Cookie, 0 == Forever (until browser close), otherwise in terms of seconds
 ; If you want cookies to last past a browser close set this to a value in seconds.
 ; DEFAULT: 0
 session_cookielife = 0
 
-; Is the cookie a "secure" cookie? This should only be set to 1 (true) if you are
-; running a secure site (HTTPS).
+; Create cookies with the "secure" flag.
+; Set to 1 (true) if you are running a secure site (HTTPS).
 ; DEFAULT: 0
 session_cookiesecure = 0
 
@@ -436,8 +438,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
-; Ampache which directory to save the temporary file to. Do not put a
-; trailing slash or this will not work.
+; Ampache which directory to save the temporary file to.
+; Do not put a trailing slash or this will not work.
 ; DEFAULT: "false"
 ;tmp_dir_path = "/tmp"
 

@@ -67,7 +67,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <?php global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('search')) { ?>
-                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&amp;id=<?php echo $libitem->id; ?>">
+                <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=search&id=<?php echo $libitem->id; ?>">
                     <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
                 </a>
 <?php }

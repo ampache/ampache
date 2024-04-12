@@ -763,7 +763,7 @@ class Stream
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get('web_path');
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = AmpConfig::get('fallback_url');
+            $web_path = rtrim(AmpConfig::get('fallback_url'), '/');
         }
 
         if (AmpConfig::get('force_http_play')) {

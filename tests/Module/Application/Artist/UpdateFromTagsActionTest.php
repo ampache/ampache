@@ -83,7 +83,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
                     'catalog_id' => null,
                     'type' => 'artist',
                     'target_url' => sprintf(
-                        '%s/artists.php?action=show&amp;artist=%d',
+                        '%s/artists.php?action=show&artist=%d',
                         $webPath,
                         $artistId
                     )

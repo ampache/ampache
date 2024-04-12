@@ -145,20 +145,20 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             $order = 'ASC';
     } ?>
         <li>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&amp;artist=<?php echo $artist->id; ?>">
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
                 <?php echo T_('Show Artist Songs'); ?>
             </a>
         </li>
         <li>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&amp;artist=<?php echo $artist->id; ?>">
+            <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show All')); ?>
                 <?php echo T_('Show All'); ?>
             </a>
         </li>
 <?php } else { ?>
         <li>
-            <a href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $artist->id; ?>">
+            <a href="<?php echo $web_path; ?>/artists.php?action=show&artist=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('view', T_('Show Albums')); ?>
                 <?php echo T_('Show Albums'); ?>
             </a>
@@ -189,14 +189,14 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
                 <?php echo T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&amp;artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
                 <?php echo T_('Update details from MusicBrainz'); ?>
             </a>
