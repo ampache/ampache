@@ -40,40 +40,24 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\SongRepositoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class DefaultAction implements ApplicationActionInterface
+final readonly class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LoggerInterface $logger;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        LoggerInterface $logger,
-        ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker,
-        SongRepositoryInterface $songRepository
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private LoggerInterface $logger,
+        private ZipHandlerInterface $zipHandler,
+        private FunctionCheckerInterface $functionChecker,
+        private SongRepositoryInterface $songRepository,
+        private ResponseFactoryInterface $responseFactory,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->modelFactory    = $modelFactory;
-        $this->logger          = $logger;
-        $this->zipHandler      = $zipHandler;
-        $this->functionChecker = $functionChecker;
-        $this->songRepository  = $songRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -191,7 +175,13 @@ final class DefaultAction implements ApplicationActionInterface
         $media_files = $this->getMediaFiles($media_ids);
         if (is_array($media_files['0'])) {
             set_memory_limit($media_files['1'] + 32);
-            $this->zipHandler->zip($name, $media_files['0'], $flat_path);
+
+            return $this->zipHandler->zip(
+                $this->responseFactory->createResponse(),
+                $name,
+                $media_files['0'],
+                $flat_path
+            );
         }
 
         return null;

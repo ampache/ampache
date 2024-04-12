@@ -11431,16 +11431,6 @@ parameters:
 			path: src/Module/Util/ZipHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function substr_count expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\ZipHandlerInterface\\:\\:zip\\(\\) has parameter \\$media_files with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/ZipHandlerInterface.php
