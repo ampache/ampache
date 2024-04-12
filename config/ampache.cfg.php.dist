@@ -70,7 +70,7 @@ config_version = 71
 ; DEFAULT: none
 ;local_web_path = "http://localhost/ampache"
 
-; The Ampache base URL is determinied from web requests.
+; The Ampache base URL is determined from web requests.
 ; When using CLI actions you don't send a web request meaning
 ; it can't be determined. This setting allows you to set a
 ; fallback when the base url can't be determined. Do not put a
@@ -433,8 +433,8 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
-; Ampache which directory to save the temporary file to. Do not put a
-; trailing slash or this will not work.
+; Ampache which directory to save the temporary file to.
+; Do not put a trailing slash or this will not work.
 ; DEFAULT: "false"
 ;tmp_dir_path = "/tmp"
 
