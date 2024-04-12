@@ -196,7 +196,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
         <?php } ?>
         <li>
-            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_disk_from_tags&amp;album_disk=<?php echo $albumDisk->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
+            <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_disk_from_tags&album_disk=<?php echo $albumDisk->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
                 <?php echo T_('Update from tags'); ?>
             </a>

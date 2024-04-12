@@ -123,7 +123,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
                     'catalog_id' => $catalogId,
                     'type' => 'album',
                     'target_url' => sprintf(
-                        '%s/albums.php?action=show&amp;album=%d',
+                        '%s/albums.php?action=show&album=%d',
                         $webPath,
                         $albumId
                     )

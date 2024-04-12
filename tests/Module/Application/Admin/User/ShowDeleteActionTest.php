@@ -192,7 +192,7 @@ class ShowDeleteActionTest extends MockeryTestCase
                 'Are You Sure?',
                 sprintf('This will permanently delete the user "%s"', $username),
                 sprintf(
-                    'admin/users.php?action=confirm_delete&amp;user_id=%s',
+                    'admin/users.php?action=confirm_delete&user_id=%s',
                     $userId
                 ),
                 1,

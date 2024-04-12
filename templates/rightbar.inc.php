@@ -72,7 +72,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
@@ -130,7 +130,7 @@ if (count($objects) > 100) {
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video');
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];

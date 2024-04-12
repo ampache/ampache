@@ -57,7 +57,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
             <td class="cel_type"><?php echo scrub_out($catalog->get_type()); ?></td>
             <td class="cel_description"><?php echo scrub_out($catalog->get_description()); ?></td>
             <td class="cel_version"><?php echo scrub_out($catalog->get_version()); ?></td>
-            <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&amp;type=<?php echo urlencode($catalog->get_type()); ?>"><?php echo $action_txt; ?></a></td>
+            <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&type=<?php echo urlencode($catalog->get_type()); ?>"><?php echo $action_txt; ?></a></td>
         </tr>
         <?php
         } if (!count($catalog_types)) { ?>

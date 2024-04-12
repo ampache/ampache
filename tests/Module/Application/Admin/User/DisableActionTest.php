@@ -192,7 +192,7 @@ class DisableActionTest extends MockeryTestCase
                 'Are You Sure?',
                 sprintf('This will disable the user "%s"', $username),
                 sprintf(
-                    'admin/users.php?action=confirm_disable&amp;user_id=%s',
+                    'admin/users.php?action=confirm_disable&user_id=%s',
                     $userId
                 ),
                 1,

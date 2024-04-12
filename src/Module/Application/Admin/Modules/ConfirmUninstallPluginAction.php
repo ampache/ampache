@@ -60,7 +60,7 @@ final class ConfirmUninstallPluginAction implements ApplicationActionInterface
 
         $plugin = scrub_in((string) $_REQUEST['plugin']);
         $url    = sprintf(
-            '%s/admin/modules.php?action=uninstall_plugin&amp;plugin=%s',
+            '%s/admin/modules.php?action=uninstall_plugin&plugin=%s',
             $this->configContainer->getWebPath(),
             $plugin
         );

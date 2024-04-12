@@ -24,6 +24,7 @@
 namespace Ampache\Module\Catalog;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
@@ -388,7 +389,7 @@ class Catalog_dropbox extends Catalog
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
         } else {
             $meta    = $dropbox->getMetadata($path);
-            $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File
             $this->download($dropbox, $path, -1, $outfile);
@@ -453,7 +454,7 @@ class Catalog_dropbox extends Catalog
             /* Create the vainfo object and get info */
             $readfile = true;
             $meta     = $dropbox->getMetadata($path);
-            $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+            $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File
             $res = $this->download($dropbox, $path, 40960, $outfile);
@@ -549,7 +550,7 @@ class Catalog_dropbox extends Catalog
                 $path     = $row['file'];
                 $filesize = 40960;
                 $meta     = $dropbox->getMetadata($path);
-                $outfile  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+                $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                 $res = $this->download($dropbox, $path, $filesize, $outfile);
                 if ($res) {
@@ -729,7 +730,7 @@ class Catalog_dropbox extends Catalog
         try {
             set_time_limit(0);
             $meta    = $dropbox->getMetadata((string)$media->file);
-            $outfile = sys_get_temp_dir() . '/' . $meta->getName();
+            $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
             // Download File
             $this->download($dropbox, $file, null, $outfile);
@@ -785,7 +786,7 @@ class Catalog_dropbox extends Catalog
             foreach ($songs as $song) {
                 if ($song->isNew() === false) {
                     $meta    = $dropbox->getMetadata((string)$song->file);
-                    $outfile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+                    $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
                     // Download File
                     $res = $this->download($dropbox, $song->file, 40960, $outfile);
