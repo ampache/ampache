@@ -53,14 +53,14 @@ if ($album != T_('Unknown (Orphaned)')) {
 
   <div class="np_cell">
       <label><?php echo T_('Album'); ?>:</label>
-      <a title="<?php echo $album; ?>" href="<?php echo $web_path; ?>/albums.php?action=show&amp;album=<?php echo $song->album; ?>">
+      <a title="<?php echo $album; ?>" href="<?php echo $web_path; ?>/albums.php?action=show&album=<?php echo $song->album; ?>">
               <?php echo $album; ?>
       </a>
   </div>
 
   <div class="np_cell">
       <label><?php echo T_('Artist'); ?>:</label>
-      <a title="<?php echo $artist; ?>" href="<?php echo $web_path; ?>/artists.php?action=show&amp;artist=<?php echo $song->artist; ?>">
+      <a title="<?php echo $artist; ?>" href="<?php echo $web_path; ?>/artists.php?action=show&artist=<?php echo $song->artist; ?>">
               <?php echo $artist; ?>
       </a>
   </div>

@@ -197,7 +197,7 @@ class EnableActionTest extends MockeryTestCase
                 'Are You Sure?',
                 sprintf('This will enable the user "%s"', $username),
                 sprintf(
-                    'admin/users.php?action=confirm_enable&amp;user_id=%s',
+                    'admin/users.php?action=confirm_enable&user_id=%s',
                     $userId
                 ),
                 1,

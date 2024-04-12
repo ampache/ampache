@@ -144,7 +144,7 @@ foreach ($data as $row) {
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($user_id > 0) { ?>
                     <td class="cel_username">
-                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&amp;user_id=<?php echo $row_user->id; ?>">
+                        <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $row_user->id; ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
                         </a>
                     </td>
@@ -195,7 +195,7 @@ foreach ($data as $row) {
     <?php
 $user_id_a = '';
 if (!empty($user_id)) {
-    $user_id_a = "&amp;user_id=" . scrub_out($user_id);
+    $user_id_a = "&user_id=" . scrub_out($user_id);
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>

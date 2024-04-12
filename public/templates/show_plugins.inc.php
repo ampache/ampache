@@ -49,14 +49,14 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 ? Plugin::get_plugin_version($plugin->_plugin->name)
                 : 0;
             if ($installed_version == 0) {
-                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {
-                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&amp;plugin=" . scrub_out($plugin_name) . "\">" .
+                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
                     $action .= '</br><a href="' . $web_path .
-                    '/admin/modules.php?action=upgrade_plugin&amp;plugin=' .
+                    '/admin/modules.php?action=upgrade_plugin&plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
             } ?>

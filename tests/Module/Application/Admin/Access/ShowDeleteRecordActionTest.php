@@ -142,7 +142,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
                 'Are You Sure?',
                 /* HINT: ACL Name */
                 sprintf('This will permanently delete the ACL "%s"', $accessName),
-                sprintf('admin/access.php?action=delete_record&amp;access_id=%d', $accessId),
+                sprintf('admin/access.php?action=delete_record&access_id=%d', $accessId),
                 1,
                 'delete_access'
             )

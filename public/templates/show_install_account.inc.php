@@ -53,7 +53,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
 </div>
     <?php echo AmpError::display('general'); ?>
     <h2><?php echo T_('Create Admin Account'); ?></h2>
-    <form method="post" action="<?php echo $web_path . "/install.php?action=create_account&amp;htmllang=$htmllang&amp;charset=$charset"; ?>" enctype="multipart/form-data">
+    <form method="post" action="<?php echo $web_path . "/install.php?action=create_account&htmllang=$htmllang&charset=$charset"; ?>" enctype="multipart/form-data">
 
 <div class="form-group">
     <label for="local_username" class="col-sm-3 control-label"><?php echo T_('Username'); ?></label>
