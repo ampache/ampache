@@ -352,12 +352,13 @@ div#autoupdate > span {
 
 #play_type_switch {
     margin-left: 50px;
+    margin-right: 4px;
 }
 
 #rightbar-minimize {
     position: absolute;
     top: 44px;
-    right: 2px;
+    right: 7px;
 }
 
 #sb_Subsearch form {

@@ -217,6 +217,14 @@ input[type=submit]:focus:active {
     color: #000;
 }
 
+#sidebar_home,
+#sidebar_localplay,
+#sidebar_preferences,
+#sidebar_admin,
+#sidebar_logout {
+    color: #000;
+}
+
 #sidebar-content,
 #sidebar-content-light,
 #sidebar-light {
