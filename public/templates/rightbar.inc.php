@@ -57,7 +57,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
 </script>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'play_circle', T_('Play'), 'rightbar_play'); ?>
     </li>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li id="pl_add">
