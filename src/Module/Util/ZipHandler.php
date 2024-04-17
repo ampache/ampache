@@ -70,10 +70,10 @@ final class ZipHandler implements ZipHandlerInterface
         array $files,
         bool $flat_path
     ): ResponseInterface {
-        $art_name     = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-        $addart       = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $archiveName  = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $comment      = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
+        $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
+        $archiveName = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment     = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
 
