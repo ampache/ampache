@@ -1124,6 +1124,9 @@ final class Play2Action implements ApplicationActionInterface
                     ? 2048
                     : min(2048, max(0, $stream_size - $bytes_streamed));
 
+                if ($read_size === 0) {
+                    break;
+                }
                 if ($buf = fread($filepointer, $read_size)) {
                     if ($transcode) {
                         $buf_all .= $buf;
