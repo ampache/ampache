@@ -58,12 +58,12 @@ if (!empty($videos)) {
         </div>
         <div class="play_video">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_album_' . $video->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play_circle', T_('Play'), 'play_album_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_video_' . $video->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
         </div>

@@ -134,14 +134,14 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                         echo '<td style="height: auto;">';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
-                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id, 'play', T_('Play'), 'play_playlist_' . $item[0]->id);
+                            echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id, 'play_circle', T_('Play'), 'play_playlist_' . $item[0]->id);
                             if (Stream_Playlist::check_autoplay_next()) {
-                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_playlist_' . $item[0]->id);
+                                echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_playlist_' . $item[0]->id);
                             }
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&append=true',
-                                    'play_add',
+                                    'playlist_add',
                                     T_('Play last'),
                                     'addplay_playlist_' . $item[0]->id
                                 );
@@ -153,7 +153,7 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                         if ($item[0] instanceof Search) {
                             echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $item[0]->id, 'random', T_('Random Play'), 'play_random_' . $item[0]->id);
                         }
-                        echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
+                        echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
                         echo '</td></tr>';

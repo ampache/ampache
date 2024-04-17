@@ -203,7 +203,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if (!isset($this->f_type)) {
-            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+            $this->f_type = ($this->type == 'private') ? Ui::get_material_symbol('lock', T_('Private')) : '';
         }
 
         return $this->f_type;

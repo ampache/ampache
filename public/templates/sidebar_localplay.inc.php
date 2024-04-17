@@ -55,7 +55,7 @@ if ($server_allow && $controller && $access_check) { ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo $t_localplay; ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'localplay_info', 'header-img ' . ((isset($_COOKIE['sb_localplay_info'])) ? $_COOKIE['sb_localplay_info'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_info', 'header-img ' . ((isset($_COOKIE['sb_localplay_info'])) ? $_COOKIE['sb_localplay_info'] : 'expanded')); ?>
       </h4>
     <ul class="sb3" id="sb_localplay_info">
 <?php if (Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER)) { ?>
@@ -69,7 +69,7 @@ if ($server_allow && $controller && $access_check) { ?>
   <li>
     <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'localplay_instance', 'header-img ' . ((isset($_COOKIE['sb_localplay_instance'])) ? $_COOKIE['sb_localplay_instance'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_instance', 'header-img ' . ((isset($_COOKIE['sb_localplay_instance'])) ? $_COOKIE['sb_localplay_instance'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_localplay_instance">
       <li id="sb_localplay_instance_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
@@ -91,7 +91,7 @@ if ($server_allow && $controller && $access_check) { ?>
   <li>
     <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Localplay Disabled'); ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'localplay_disabled', 'header-img ' . ((isset($_COOKIE['sb_localplay_disabled'])) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_disabled', 'header-img ' . ((isset($_COOKIE['sb_localplay_disabled'])) ? $_COOKIE['sb_localplay_disabled'] : 'expanded')); ?>
     </h4>
   </li>
   <?php if (!$server_allow) { ?>

@@ -80,8 +80,8 @@ class Ui implements UiInterface
 
         $string = '<a class="nohtml" href="' . AmpConfig::get(
             'web_path'
-        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon(
-            'feed',
+        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_material_symbol(
+            'rss_feed',
             T_('RSS Feed')
         );
         if (!empty($title)) {
@@ -388,7 +388,7 @@ class Ui implements UiInterface
             }
             $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
 
-            $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
+            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
         }
 
         return $tag;
@@ -408,14 +408,17 @@ class Ui implements UiInterface
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
         $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+
         if (empty($filesearch)) {
-            // if the theme is missing an icon. fall back to default images folder
-            $filename = 'icon_' . $name . '.png';
-            $path     = '/images/';
-        } else {
-            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
+            // if the theme is missing an icon, fall back to default images folder
+            $path       = '/images/';
+            $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+
+        $filename = (is_array($filesearch))
+            ? pathinfo($filesearch[0], PATHINFO_BASENAME)
+            : '/images/icon_error.svg'; // fall back to error icon if icon is missing
+        $url      = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
@@ -1266,7 +1269,7 @@ class Ui implements UiInterface
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
                 $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
             default:
                 if (preg_match('/_pass$/', $name)) {

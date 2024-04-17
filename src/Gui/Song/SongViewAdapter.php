@@ -115,7 +115,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_song_' . $songId
         );
@@ -127,7 +127,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_song_' . $songId
         );
@@ -139,7 +139,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true',
-            'play_add',
+            'playlist_add',
             T_('Play last'),
             'addplay_song_' . $songId
         );
@@ -168,7 +168,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=song&id=' . $songId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_song_' . $songId
         );
@@ -194,7 +194,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getPostShoutIcon(): string
     {
-        return Ui::get_icon('comment', T_('Post Shout'));
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
     }
 
     public function canShare(): bool
@@ -225,7 +225,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getExternalPlayIcon(): string
     {
-        return Ui::get_icon('link', T_('Link'));
+        return Ui::get_material_symbol('link', T_('Link'));
     }
 
     public function getDownloadUrl(): string
@@ -239,7 +239,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDownloadIcon(): string
     {
-        return Ui::get_icon('download', T_('Download'));
+        return Ui::get_material_symbol('download', T_('Download'));
     }
 
     public function canDisplayStats(): bool
@@ -274,11 +274,11 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDisplayStatsIcon(): string
     {
-        return Ui::get_icon('statistics', T_('Graphs'));
+        return Ui::get_material_symbol('bar_chart', T_('Graphs'));
     }
     public function getRefreshIcon(): string
     {
-        return Ui::get_icon('file_refresh', T_('Update from tags'));
+        return Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     }
 
     public function isEditable(): bool
@@ -294,7 +294,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function canToggleState(): bool
@@ -335,7 +335,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDeletionIcon(): string
     {
-        return Ui::get_icon('delete', T_('Delete'));
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function canBeDeleted(): bool
@@ -363,9 +363,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
+        $songprops[T_('Links')]         = "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
             "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
-            "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+            "&nbsp;<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
         if ($this->song->mbid) {
             $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         } else {
@@ -446,7 +446,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function canBeReordered(): bool
@@ -456,12 +456,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getReorderIcon(): string
     {
-        return Ui::get_icon('drag', T_('Reorder'));
+        return Ui::get_material_symbol('drag_indicator', T_('Reorder'));
     }
 
     public function getPreferencesIcon(): string
     {
-        return Ui::get_icon('preferences', T_('Song Information'));
+        return Ui::get_material_symbol('page_info', T_('Song Information'));
     }
 
     public function getTrackNumber(): string

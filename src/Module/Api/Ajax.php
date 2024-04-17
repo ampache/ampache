@@ -150,7 +150,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = Ui::get_icon($icon, $alt);
+        $string = Ui::get_material_symbol($icon, $alt);
 
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
@@ -184,7 +184,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $button = Ui::get_icon($icon, $text);
+        $button = Ui::get_material_symbol($icon, $text);
 
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $button . " " . $text . "</a>\n";
 

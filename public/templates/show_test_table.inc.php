@@ -191,7 +191,7 @@ if (!$environment->check_dependencies_folder()) { ?>
     <td><?php echo T_('Web Path'); ?></td>
     <td>
         <?php if ($results && check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_material_symbol('check_circle', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>

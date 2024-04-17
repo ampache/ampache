@@ -55,12 +55,12 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php if ($show_direct_play) {
-        echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id, 'play', T_('Play'), 'play_artist_' . $libitem->id);
+        echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id, 'play_circle', T_('Play'), 'play_artist_' . $libitem->id);
         if (Stream_Playlist::check_autoplay_next()) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_artist_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_artist_' . $libitem->id);
         }
         if (Stream_Playlist::check_autoplay_append()) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_artist_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=artist&object_id=' . $libitem->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_artist_' . $libitem->id);
         }
     } ?>
     </div>
@@ -74,10 +74,10 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
 <td class="cel_add">
     <span class="cel_item_add">
     <?php if ($show_playlist_add) {
-        echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
+        echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
         echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id; ?>')">
-                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php
     } ?>
@@ -108,17 +108,17 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $libitem->id; ?>">
-        <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
+        <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>
     </a>
     <?php }
     if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
         <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_')">
-        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+        <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
     <?php }
     if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_artist_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $libitem->id; ?>">
-            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
     <?php }
     } ?>

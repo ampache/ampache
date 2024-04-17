@@ -89,15 +89,15 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" /></td>
         </tr>
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -112,8 +112,8 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
             <td>
                 <?php echo T_('Stream Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -128,8 +128,8 @@ $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMI
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>

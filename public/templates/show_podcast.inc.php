@@ -74,24 +74,24 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId(), 'play', T_('Play All'), 'directplay_full_' . $podcast->getId()); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId(), 'play_circle', T_('Play All'), 'directplay_full_' . $podcast->getId()); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
-                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&playnext=true', 'play_next', T_('Play All Next'), 'addnext_podcast_' . $podcast->getId()); ?>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&playnext=true', 'menu_open', T_('Play All Next'), 'addnext_podcast_' . $podcast->getId()); ?>
             </li>
             <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&append=true', 'play_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->getId()); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->getId()); ?>
         </li>
         <?php } ?>
         <?php if ($access50) { ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo AmpConfig::get('web_path'); ?>/stats.php?action=graph&object_type=podcast&object_id=<?php echo $podcast->getId(); ?>">
-                    <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
+                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
                     <?php echo T_('Graphs'); ?>
                 </a>
             </li>
@@ -108,13 +108,13 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
         <?php } ?>
         <li>
             <a href="<?php echo $podcast->getWebsite(); ?>" target="_blank">
-                <?php echo Ui::get_icon('link', T_('Website')); ?>
+                <?php echo Ui::get_material_symbol('link', T_('Website')); ?>
                 <?php echo T_('Website'); ?>
             </a>
         </li>
         <li>
             <a id="<?php echo 'edit_podcast_' . $podcast->getId(); ?>" onclick="showEditDialog('podcast_row', '<?php echo $podcast->getId(); ?>', '<?php echo 'edit_podcast_' . $podcast->getId(); ?>', '<?php echo addslashes(T_('Podcast Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Podcast'); ?>
             </a>
         </li>
@@ -125,7 +125,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
         <?php if ($access75) { ?>
         <li>
             <a id="<?php echo 'delete_podcast_' . $podcast->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $podcast->getId(); ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>
