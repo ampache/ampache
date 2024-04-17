@@ -361,6 +361,10 @@ div#autoupdate > span {
     right: 7px;
 }
 
+#rightbar-minimize .material-symbol-dock_to_left {
+    color: #ccc;
+}
+
 #sb_Subsearch form {
     display: flex;
     gap: 4px;
