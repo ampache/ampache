@@ -248,6 +248,10 @@ input[type=submit]:focus:active {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
 }
 
+#sidebar-tabs .active > a {
+    color: #1990db;
+}
+
 #sidebar-tabs .sb2 li h4 {
     color: #111;
     background-color: #e3e3e3;
