@@ -1343,7 +1343,12 @@ class Search extends playlist_object
         $count      = 1;
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['object_id' => $row['id'], 'object_type' => LibraryItemEnum::from($this->objectType), 'track' => $count++, 'track_id' => $row['id']];
+            $results[] = [
+                'object_id' => $row['id'],
+                'object_type' => LibraryItemEnum::from($this->objectType),
+                'track' => $count++,
+                'track_id' => $row['id']
+            ];
         }
 
         $this->date = time();
