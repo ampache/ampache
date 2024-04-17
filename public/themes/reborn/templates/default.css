@@ -1902,6 +1902,12 @@ dl.media_details dd {
     line-height: 1;
 }
 
+.material-symbol-lock {
+    font-size: 15px;
+    line-height: 1;
+    vertical-align: top;
+}
+
 ol,
 ul,
 #rightbar ul {
