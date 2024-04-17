@@ -270,6 +270,10 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
+#rightbar #rb_action {
+    color: #ff9d00;
+}
+
 #rightbar #rb_current_playlist li {
     color: #fff;
 }
