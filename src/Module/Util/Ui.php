@@ -364,7 +364,11 @@ class Ui implements UiInterface
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
         $title    = $title ?? T_(ucfirst($name));
-        $icon_url = AmpConfig::get('web_path') . "/lib/components/material-symbols/" . $name . ".svg";
+        $svgPath  = '/lib/components/material-symbols/' . $name . '.svg';
+        $filename = (is_file(__DIR__ . '/../../../public' . $svgPath))
+            ? $svgPath
+            : '/images/icon_error.svg'; // fall back to error icon if icon is missing
+        $icon_url = AmpConfig::get('web_path') . $filename;
         $tag      = '';
         // load svg file
         $svgicon = simplexml_load_file($icon_url);
