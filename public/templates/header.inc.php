@@ -498,7 +498,7 @@ if ($is_session) {
                     <?php } ?>
                     <?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
-                            <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('featured_play_list', T_('Show/Hide Playlist')); ?></a>
+                            <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('hide', T_('Show/Hide Playlist')); ?></a>
                         </div>
                     <?php } ?>
                     <?php Ui::show_box_bottom(); ?>
