@@ -411,12 +411,12 @@ class Ui implements UiInterface
 
         if (empty($filesearch)) {
             // if the theme is missing an icon, fall back to default images folder
-            $path     = '/images/';
+            $path       = '/images/';
             $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         }
 
         $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        $url      = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
