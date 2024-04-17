@@ -229,6 +229,14 @@ input[type=submit]:focus:active {
     color: #fff;
 }
 
+#sidebar_home:hover,
+#sidebar_localplay:hover,
+#sidebar_preferences:hover,
+#sidebar_admin:hover,
+#sidebar_logout:hover {
+    color: #ffc466;
+}
+
 #sidebar-content,
 #sidebar-content-light,
 #sidebar-light {
