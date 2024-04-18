@@ -166,7 +166,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=playlist_random&id=' . $playlistId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_playlist_' . $playlistId
         );

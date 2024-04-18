@@ -283,7 +283,7 @@ foreach ($album->getDisks() as $album_disk) {
         }
     if ($show_playlist_add) {
         echo Ajax::button('?action=basket&type=album_disk&id=' . $album_disk->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $album_disk->id);
-        echo Ajax::button('?action=basket&type=album_disk_random&id=' . $album_disk->id, 'random', T_('Random to Temporary Playlist'), 'play_random_' . $album_disk->id);
+        echo Ajax::button('?action=basket&type=album_disk_random&id=' . $album_disk->id, 'shuffle', T_('Random to Temporary Playlist'), 'play_random_' . $album_disk->id);
     }
     if ($access25) {
         if ($can_shout) { ?>

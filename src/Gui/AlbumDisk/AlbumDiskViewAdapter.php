@@ -188,7 +188,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album_disk_random&id=' . $albumId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_album_disk_' . $albumId
         );

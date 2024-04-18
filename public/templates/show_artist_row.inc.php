@@ -75,7 +75,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
     <span class="cel_item_add">
     <?php if ($show_playlist_add) {
         echo Ajax::button('?action=basket&type=artist&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_artist_' . $libitem->id);
-        echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'random', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
+        echo Ajax::button('?action=basket&type=artist_random&id=' . $libitem->id, 'shuffle', T_('Random to Temporary Playlist'), 'random_artist_' . $libitem->id); ?>
             <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'artist', '<?php echo $libitem->id; ?>')">
                 <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             </a>
