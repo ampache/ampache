@@ -57,6 +57,7 @@ These searches will now use to rules for that object type and then return the so
 * Filter Random and Trending sections for catalog filters on dashboards
 * MusicBrainz lookups on Wanted files
 * Don't try to get playlist items when it's not a valid list
+* Send a 416 HTTP response when trying to stream nothing instead of looping forever
 
 ## API 6.4.0
 
