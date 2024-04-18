@@ -30,7 +30,7 @@ $web_path = (string)AmpConfig::get('web_path', '');
 /** @var Ampache\Repository\Model\Catalog $catalog */
 
 if ($catalog->enabled) {
-    $icon     = 'disable';
+    $icon     = 'unpublished';
     $icontext = T_('Disable');
 } else {
     $icon     = 'enable';

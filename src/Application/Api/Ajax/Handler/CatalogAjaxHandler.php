@@ -64,7 +64,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
                 // Return the new Ajax::button
                 $id = 'button_flip_state_' . $catalog->id;
                 if ($new_enabled) {
-                    $button     = 'disable';
+                    $button     = 'unpublished';
                     $buttontext = T_('Disable');
                 } else {
                     $button     = 'enable';

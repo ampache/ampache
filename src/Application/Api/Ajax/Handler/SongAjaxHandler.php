@@ -69,7 +69,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                 // Return the new Ajax::button
                 $id = 'button_flip_state_' . $song->id;
                 if ($new_enabled) {
-                    $button     = 'disable';
+                    $button     = 'unpublished';
                     $buttontext = T_('Disable');
                 } else {
                     $button     = 'enable';
