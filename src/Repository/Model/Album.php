@@ -261,7 +261,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
         $results = [];
         if (
-            (!isset($this->album_artist) || !$this->album_artist) &&
+            !$this->album_artist &&
             $this->song_artist_count == 1
         ) {
             $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
@@ -635,11 +635,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public function get_artists(): array
     {
-        if (!isset($this->album_artist) || !$this->album_artist) {
+        if (!$this->album_artist) {
             return [];
         }
 
-        if (!isset($this->album_artists) || empty($this->album_artists)) {
+        if (
+            $this->album_artists === null ||
+            $this->album_artists === []
+        ) {
             $this->album_artists = self::get_parent_array($this->id, $this->album_artist);
         }
 
@@ -666,11 +669,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             } elseif ($this->album_artist !== null) {
                 $this->f_artist_link = '';
                 $web_path            = AmpConfig::get('web_path');
-                if (!isset($this->album_artists) || !$this->album_artists) {
+                if (!$this->album_artists) {
                     $this->get_artists();
                 }
 
-                if (isset($this->album_artists)) {
+                if ($this->album_artists !== null) {
                     foreach ($this->album_artists as $artist_id) {
                         $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
                         $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
@@ -1037,6 +1040,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             foreach ($songs as $song_id) {
                 Song::update_utime($song_id);
             }
+
             if (!$cron_cache) {
                 Stats::garbage_collection();
                 Rating::garbage_collection();

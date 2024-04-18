@@ -63,10 +63,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     // MusicBrainz ID
     public ?string $mbid;
+
     public ?int $year;
 
     // MusicBrainz Release Group ID
     public ?string $mbid_group;
+
     public ?string $release_type;
 
     public ?int $album_artist;

@@ -75,6 +75,7 @@ class Search extends playlist_object
 
     // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
     public $rules;
+
     public ?string $logic_operator = 'AND';
 
     public ?int $random            = 0;
@@ -85,14 +86,18 @@ class Search extends playlist_object
 
     // the type of object you want to return (self::VALID_TYPES)
     public $objectType;
+
     // user running the search
     public $search_user;
+
     // rules that are available to the objectType (title, year, rating, etc)
     public $types     = [];
+
     // rule operator subtypes (numeric, text, boolean, etc)
     public $basetypes = [];
 
     private $searchType;
+
     // generate sql for the object type (Ampache\Module\Playlist\Search\*)
     private $stars;
 
@@ -1565,6 +1570,7 @@ class Search extends playlist_object
                         $name = 'mbid';
                         break;
                 }
+
                 break;
             case 'album':
             case 'album_disk':
@@ -1604,6 +1610,7 @@ class Search extends playlist_object
                         $name = 'version';
                         break;
                 }
+
                 break;
             case 'artist':
                 switch ($name) {
@@ -1633,6 +1640,7 @@ class Search extends playlist_object
                         $name = 'mbid';
                         break;
                 }
+
                 break;
             case 'podcast':
                 switch ($name) {
@@ -1646,6 +1654,7 @@ class Search extends playlist_object
                         $name = 'state';
                         break;
                 }
+
                 break;
             case 'podcast_episode':
                 switch ($name) {
@@ -1659,6 +1668,7 @@ class Search extends playlist_object
                         $name = 'state';
                         break;
                 }
+
                 break;
             case 'genre':
             case 'tag':
@@ -1667,6 +1677,7 @@ class Search extends playlist_object
                 if ($name === 'name') {
                     $name = 'title';
                 }
+
                 break;
         }
 
@@ -1867,9 +1878,7 @@ class Search extends playlist_object
      */
     public function filter_data(string $data, string $type, array $operator)
     {
-        if (array_key_exists('preg_match', $operator)) {
-            $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
-        }
+        $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
 
         if ($type == 'numeric' || $type == 'days') {
             return (int)($data);

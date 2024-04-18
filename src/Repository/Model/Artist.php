@@ -51,6 +51,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     // MusicBrainz ID
     public ?string $mbid    = null;
+
     public ?string $summary = null;
 
     public ?string $placeformed = null;
@@ -157,6 +158,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
         $this->time             = (int)$this->time;
         $this->catalog_id       = (int)$catalog_init;
         $this->get_fullname();

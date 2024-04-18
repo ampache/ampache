@@ -288,6 +288,7 @@ class Random
                 return [];
         }
     }
+
     /**
      * advanced_results
      * Run the query generated above by self::advanced so we can while it

@@ -309,9 +309,10 @@ class Playlist extends playlist_object
     public function get_items(): array
     {
         if ($this->isNew()) {
-            return array();
+            return [];
         }
-        $results = array();
+
+        $results = [];
         $user    = Core::get_global('user');
         $user_id = $user->id ?? 0;
 
@@ -693,6 +694,7 @@ class Playlist extends playlist_object
                 $values[] = $track;
             } // if valid id
         }
+
         if ($count !== 0 || $values !== []) {
             Dba::write(rtrim($sql, ', '), $values);
             debug_event(self::class, sprintf('Added %d tracks to playlist: ', $count) . $this->id, 5);
@@ -970,6 +972,7 @@ class Playlist extends playlist_object
             $results[] = ['id' => $row['id'], 'track' => $count];
             ++$count;
         }
+
         if ($results !== []) {
             $sql = "INSERT INTO `playlist_data` (`id`, `track`) VALUES ";
             foreach ($results as $data) {

@@ -283,7 +283,10 @@ class Plugin
             if ($plugin->_plugin !== null) {
                 $installed_version = self::get_plugin_version($plugin->_plugin->name);
                 // if any plugin needs an update then you need to update
-                if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
+                if (
+                    $installed_version > 0 &&
+                    $installed_version < $plugin->_plugin->version
+                ) {
                     return true;
                 }
             }
@@ -300,10 +303,16 @@ class Plugin
         foreach (array_keys(PluginEnum::LIST) as $name) {
             $plugin            = new Plugin($name);
             $installed_version = self::get_plugin_version($plugin->_plugin->name);
-            if ($installed_version > 0 && $installed_version < $plugin->_plugin->version && ($plugin->_plugin !== null && method_exists($plugin->_plugin, 'upgrade'))) {
-                if ($plugin->_plugin->upgrade()) {
-                    $plugin->set_plugin_version($plugin->_plugin->version);
-                }
+            if (
+                $installed_version > 0 &&
+                $installed_version < $plugin->_plugin->version &&
+                (
+                    $plugin->_plugin !== null &&
+                    method_exists($plugin->_plugin, 'upgrade')
+                ) &&
+                $plugin->_plugin->upgrade()
+            ) {
+                $plugin->set_plugin_version($plugin->_plugin->version);
             }
         }
     }

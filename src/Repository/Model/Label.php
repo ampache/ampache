@@ -61,6 +61,7 @@ class Label extends database_object implements library_item
 
     // MusicBrainz ID
     public ?string $mbid    = null;
+
     public ?string $country = null;
 
     public bool $active;

@@ -850,7 +850,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $ret = [];
         foreach ($taglist as $tag) {
             $tag = trim((string)$tag);
-            if (!($tag === '' || $tag === '0') && self::tag_exists($tag)) {
+            if (
+                $tag !== '' &&
+                $tag !== '0' &&
+                self::tag_exists($tag)
+            ) {
                 $ret[] = $tag;
             }
         }
