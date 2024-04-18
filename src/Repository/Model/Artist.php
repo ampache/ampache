@@ -432,8 +432,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         return [
             "id" => '',
-            "name" =>
-            '',
+            "name" => '',
             "prefix" => '',
             "basename" => ''
         ];

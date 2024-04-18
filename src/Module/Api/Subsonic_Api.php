@@ -131,7 +131,7 @@ class Subsonic_Api
         'similarArtist',
         'song',
         'users',
-        'video'
+        'video',
     ];
 
     private const ALWAYS_DOUBLE = ['averageRating'];
