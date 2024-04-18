@@ -1878,7 +1878,12 @@ class Search extends playlist_object
      */
     public function filter_data(string $data, string $type, array $operator)
     {
-        $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
+        if (
+            array_key_exists('preg_match', $operator) &&
+            array_key_exists('preg_replace', $operator)
+        ) {
+            $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
+        }
 
         if ($type == 'numeric' || $type == 'days') {
             return (int)($data);
