@@ -129,7 +129,7 @@ class Subsonic_Api
         'shortcut',
         'similarArtist',
         'song',
-        'user',
+        'users',
         'video'
     ];
 
