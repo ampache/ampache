@@ -130,8 +130,8 @@ class Subsonic_Api
         'shortcut',
         'similarArtist',
         'song',
-        'user',
-        'video',
+        'users',
+        'video'
     ];
 
     private const ALWAYS_DOUBLE = ['averageRating'];
