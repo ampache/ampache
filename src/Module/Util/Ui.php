@@ -365,9 +365,12 @@ class Ui implements UiInterface
     {
         $title    = $title ?? T_(ucfirst($name));
         $svgPath  = '/lib/components/material-symbols/' . $name . '.svg';
-        $filename = (is_file(__DIR__ . '/../../../public' . $svgPath))
-            ? $svgPath
-            : '/images/icon_error.svg'; // fall back to error icon if icon is missing
+        $filename = $svgPath;
+        if (!is_file(__DIR__ . '/../../../public' . $svgPath)) {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $filename = '/images/icon_error.svg';
+        }
         $icon_url = AmpConfig::get('web_path') . $filename;
         $tag      = '';
         // load svg file
@@ -419,10 +422,14 @@ class Ui implements UiInterface
             $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         }
 
-        $filename = (is_array($filesearch))
-            ? pathinfo($filesearch[0], PATHINFO_BASENAME)
-            : '/images/icon_error.svg'; // fall back to error icon if icon is missing
-        $url      = AmpConfig::get('web_path') . $path . $filename;
+        if (is_array($filesearch)) {
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
+        } else {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $filename = '/images/icon_error.svg';
+        }
+        $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
