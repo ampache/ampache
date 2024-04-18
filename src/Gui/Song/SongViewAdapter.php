@@ -311,7 +311,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             $icon     = 'unpublished';
             $icontext = T_('Disable');
         } else {
-            $icon     = 'enable';
+            $icon     = 'check_circle';
             $icontext = T_('Enable');
         }
 

@@ -67,7 +67,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
                     $button     = 'unpublished';
                     $buttontext = T_('Disable');
                 } else {
-                    $button     = 'enable';
+                    $button     = 'check_circle';
                     $buttontext = T_('Enable');
                 }
                 $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);

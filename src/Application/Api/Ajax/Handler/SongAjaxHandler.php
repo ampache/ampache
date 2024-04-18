@@ -72,7 +72,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                     $button     = 'unpublished';
                     $buttontext = T_('Disable');
                 } else {
-                    $button     = 'enable';
+                    $button     = 'check_circle';
                     $buttontext = T_('Enable');
                 }
                 $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);

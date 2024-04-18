@@ -33,7 +33,7 @@ if ($catalog->enabled) {
     $icon     = 'unpublished';
     $icontext = T_('Disable');
 } else {
-    $icon     = 'enable';
+    $icon     = 'check_circle';
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
