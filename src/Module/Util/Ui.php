@@ -369,7 +369,7 @@ class Ui implements UiInterface
         if (!is_file(__DIR__ . '/../../../public/' . $svgPath)) {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filename = '/images/icon_error.svg';
+            $filename = 'images/icon_error.svg';
         }
         $icon_url = AmpConfig::get('web_path') . '/' . $filename;
         $tag      = '';
