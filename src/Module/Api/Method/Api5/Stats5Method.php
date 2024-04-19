@@ -110,19 +110,16 @@ final class Stats5Method
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
             case 'newest':
-                debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'highest':
-                debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset, $user_id);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'frequent':
-                debug_event(self::class, 'stats frequent', 4);
                 $threshold = (int)AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
@@ -130,7 +127,6 @@ final class Stats5Method
                 break;
             case 'recent':
             case 'forgotten':
-                debug_event(self::class, 'stats ' . $filter, 4);
                 $newest  = $filter == 'recent';
                 $results = ($user->id)
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
@@ -139,14 +135,12 @@ final class Stats5Method
                 $limit  = 0;
                 break;
             case 'flagged':
-                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'random':
             default:
-                debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
                         $results = Random::get_default($limit, $user);
