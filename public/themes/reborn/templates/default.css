@@ -817,6 +817,7 @@ div#autoupdate > span {
 .topmenu-upload {
   height: 32px;
   width: 32px;
+  margin-bottom: -5px;
 }
 
 /* Localplay */
