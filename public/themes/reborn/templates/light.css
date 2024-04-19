@@ -280,7 +280,7 @@ input[type=submit]:focus:active {
 .topmenu-smartlist,
 .topmenu-tagcloud,
 .topmenu-upload {
-  fill: #ff9d00;
+  fill: #1990db;
 }
 
 .topmenu-album:hover,
@@ -292,7 +292,7 @@ input[type=submit]:focus:active {
 .topmenu-smartlist:hover,
 .topmenu-tagcloud:hover,
 .topmenu-upload:hover {
-  fill: #ffc466;
+  fill: #52aae4;
 }
 
 /* Localplay */
