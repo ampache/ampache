@@ -371,7 +371,7 @@ class Ui implements UiInterface
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
             $filename = '/images/icon_error.svg';
         }
-        $icon_url = AmpConfig::get('web_path') . $filename;
+        $icon_url = AmpConfig::get('web_path') . '/' . $filename;
         $tag      = '';
         // load svg file
         $svgicon = simplexml_load_file($icon_url);
