@@ -1110,7 +1110,13 @@ final class PlayAction implements ApplicationActionInterface
             return null;
         } elseif ($status > 0) {
             do {
-                $read_size = $transcode ? 2048 : min(2048, max(0, $stream_size - $bytes_streamed));
+                $read_size = $transcode
+                    ? 2048
+                    : min(2048, max(0, $stream_size - $bytes_streamed));
+
+                if ($read_size === 0) {
+                    break;
+                }
                 if ($buf = fread($filepointer, $read_size)) {
                     if ($send_all_in_once) {
                         $buf_all .= $buf;
@@ -1130,8 +1136,6 @@ final class PlayAction implements ApplicationActionInterface
             ob_flush();
             flush();
         }
-        // end output buffering
-        ob_end_flush();
 
         $real_bytes_streamed = $bytes_streamed;
         // Need to make sure enough bytes were sent.
@@ -1141,10 +1145,23 @@ final class PlayAction implements ApplicationActionInterface
             $bytes_streamed = $stream_size;
         }
 
+        // end output buffering
+        ob_end_flush();
+
         // close any leftover handle and processes
         fclose($filepointer);
         if ($transcode && isset($transcoder)) {
             Stream::kill_process($transcoder);
+        }
+
+        if ($bytes_streamed === 0 && $stream_size === 0) {
+            http_response_code(416);
+            $this->logger->debug(
+                'Stream ended: No bytes left to stream',
+                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            );
+
+            return null;
         }
 
         $this->logger->debug(

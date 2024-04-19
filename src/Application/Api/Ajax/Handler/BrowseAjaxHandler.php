@@ -109,7 +109,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_catalog($_SESSION['catalog']);
                 }
 
-                if (array_key_exists('sort', $_REQUEST) && $_REQUEST['sort']) {
+                if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
                     // Set the new sort value
                     $browse->set_sort($_REQUEST['sort']);
                 }
@@ -128,7 +128,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
-                if ($_REQUEST['sort']) {
+                if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
                     $browse->set_sort($_REQUEST['sort']);
                 }
 

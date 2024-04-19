@@ -57,6 +57,9 @@ These searches will now use to rules for that object type and then return the so
 * Filter Random and Trending sections for catalog filters on dashboards
 * MusicBrainz lookups on Wanted files
 * Don't try to get playlist items when it's not a valid list
+* Send a 416 HTTP response when trying to stream past the end of a song
+* Subsonic
+  * Sending a User as an array instead of Users
 
 ## API 6.4.0
 
@@ -298,7 +301,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
   * Add user preference `home_recently_played_all`, Show everything in the now playing box
   * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
   * Add `date` column to rating table
-  * Update link for FMPL license 
+  * Update link for FMPL license
 
 ### Changed
 
