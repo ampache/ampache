@@ -806,6 +806,19 @@ div#autoupdate > span {
     width: 130px;
 }
 
+.topmenu-album,
+.topmenu-artist,
+.topmenu-favorite,
+.topmenu-logout,
+.topmenu-playlist,
+.topmenu-radio,
+.topmenu-smartlist,
+.topmenu-tagcloud,
+.topmenu-upload {
+  height: 32px;
+  width: 32px;
+}
+
 /* Localplay */
 .active_instance {
     border: 1px solid;

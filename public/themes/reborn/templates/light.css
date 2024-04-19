@@ -271,6 +271,30 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
+.topmenu-album,
+.topmenu-artist,
+.topmenu-favorite,
+.topmenu-logout,
+.topmenu-playlist,
+.topmenu-radio,
+.topmenu-smartlist,
+.topmenu-tagcloud,
+.topmenu-upload {
+  fill: #ff9d00;
+}
+
+.topmenu-album:hover,
+.topmenu-artist:hover,
+.topmenu-favorite:hover,
+.topmenu-logout:hover,
+.topmenu-playlist:hover,
+.topmenu-radio:hover,
+.topmenu-smartlist:hover,
+.topmenu-tagcloud:hover,
+.topmenu-upload:hover {
+  fill: #ffc466;
+}
+
 /* Localplay */
 .active_instance {
     border-color: #000;

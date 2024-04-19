@@ -411,8 +411,8 @@ class Ui implements UiInterface
             return self::$_icon_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . 'images/icons/';
-        $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $path       = AmpConfig::get('theme_path') . '/images/icons/';
+        $filesearch = glob(__DIR__ . '/../../../public' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
 
         if (empty($filesearch)) {
             // if the theme is missing an icon, fall back to default images folder
@@ -449,7 +449,7 @@ class Ui implements UiInterface
             // load svg file
             $svgimage = simplexml_load_file($image_url);
             if ($svgimage !== false) {
-                $svgimage->addAttribute('class', 'image');
+                $svgimage->addAttribute('class', 'image $name');
 
                 if (empty($svgimage->title)) {
                     $svgimage->addChild('title', $title);
@@ -500,16 +500,20 @@ class Ui implements UiInterface
             return self::$_image_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . '/images/';
+        $path       = 'themes/' . AmpConfig::get('theme_name') . '/images/';
         $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            $path       = 'images/';
+            $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        }
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
-            $path     = '/images/';
+            $path     = 'images/';
         } else {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        $url = AmpConfig::get('web_path') . '/' . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
