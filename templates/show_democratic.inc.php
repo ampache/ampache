@@ -47,16 +47,16 @@ Ui::show_box_top($string, 'info-box'); ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
 <li>
     <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage">
-        <?php echo Ui::get_icon('server_lightning', T_('Configure Democratic Playlist')); ?>
+        <?php echo Ui::get_material_symbol('dns', T_('Configure Democratic Playlist')); ?>
         <?php echo T_('Configure Democratic Playlist'); ?>
     </a>
 </li>
 <?php if ($democratic->is_enabled()) { ?>
 <li>
-    <?php echo Ajax::button_with_text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
+    <?php echo Ajax::button_with_text('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'play_circle', T_('Play'), 'play_democratic'); ?>
 </li>
 <li>
-    <?php echo Ajax::button_with_text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id . '&browse_id=' . $browse->getId(), 'delete', T_('Clear Playlist'), 'clear_democratic'); ?>
+    <?php echo Ajax::button_with_text('?page=democratic&action=clear_playlist&democratic_id=' . $democratic->id . '&browse_id=' . $browse->getId(), 'close', T_('Clear Playlist'), 'clear_democratic'); ?>
 </li>
 <?php } ?>
 <?php } ?>

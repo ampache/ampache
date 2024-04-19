@@ -55,7 +55,7 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
         <?php echo T_("Rename");?>
     </button>
     <button onclick="UUTDeleteNode()">
-        <?php echo Ui::get_material_symbol('delete'); ?>
+        <?php echo Ui::get_material_symbol('close'); ?>
         <?php echo T_("Delete");?>
     </button>
     <button onclick="UUTReload()">

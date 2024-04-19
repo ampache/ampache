@@ -80,8 +80,8 @@ class Ui implements UiInterface
 
         $string = '<a class="nohtml" href="' . AmpConfig::get(
             'web_path'
-        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon(
-            'feed',
+        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_material_symbol(
+            'rss_feed',
             T_('RSS Feed')
         );
         if (!empty($title)) {
@@ -364,7 +364,14 @@ class Ui implements UiInterface
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
         $title    = $title ?? T_(ucfirst($name));
-        $icon_url = AmpConfig::get('web_path') . "/lib/components/material-symbols/" . $name . ".svg";
+        $svgPath  = 'lib/components/material-symbols/' . $name . '.svg';
+        $filename = $svgPath;
+        if (!is_file(__DIR__ . '/../../../' . $svgPath)) {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $filename = '/images/icon_error.svg';
+        }
+        $icon_url = AmpConfig::get('web_path') . $filename;
         $tag      = '';
         // load svg file
         $svgicon = simplexml_load_file($icon_url);
@@ -388,7 +395,7 @@ class Ui implements UiInterface
             }
             $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
 
-            $tag = explode("\n", (string)$svgicon->asXML(), 2)[1];
+            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
         }
 
         return $tag;
@@ -408,12 +415,19 @@ class Ui implements UiInterface
 
         $path       = AmpConfig::get('theme_path') . '/images/icons/';
         $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+
         if (empty($filesearch)) {
-            // if the theme is missing an icon. fall back to default images folder
-            $filename = 'icon_' . $name . '.png';
-            $path     = '/images/';
-        } else {
+            // if the theme is missing an icon, fall back to default images folder
+            $path       = '/images/';
+            $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        }
+
+        if (is_array($filesearch)) {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
+        } else {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $filename = '/images/icon_error.svg';
         }
         $url = AmpConfig::get('web_path') . $path . $filename;
         // cache the url so you don't need to keep searching
@@ -1266,7 +1280,7 @@ class Ui implements UiInterface
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
                 $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
             default:
                 if (preg_match('/_pass$/', $name)) {

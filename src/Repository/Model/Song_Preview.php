@@ -43,6 +43,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     // artist.id (Int)
     public ?int $artist         = null;
+
     public ?string $artist_mbid = null;
 
     public ?string $title = null;
@@ -51,6 +52,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     //  // MusicBrainz ID
     public ?string $mbid = null;
+
     public ?int $disk    = null;
 
     public ?int $track = null;

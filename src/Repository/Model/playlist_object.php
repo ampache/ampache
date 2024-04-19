@@ -72,7 +72,9 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * @return list<array{
      *  object_type: LibraryItemEnum,
-     *  object_id: int
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int
      * }>
      */
     abstract public function get_items(): array;
@@ -186,7 +188,7 @@ abstract class playlist_object extends database_object implements library_item
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $link_text    = scrub_out($this->get_fullname());
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
         }
@@ -200,8 +202,8 @@ abstract class playlist_object extends database_object implements library_item
     public function get_f_type(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_type)) {
-            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+        if ($this->f_type === null) {
+            $this->f_type = ($this->type == 'private') ? Ui::get_material_symbol('lock', T_('Private')) : '';
         }
 
         return $this->f_type;

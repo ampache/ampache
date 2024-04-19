@@ -135,7 +135,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_album_' . $albumId
         );
@@ -147,7 +147,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_album_' . $albumId
         );
@@ -159,7 +159,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
-            'play_add',
+            'playlist_add',
             T_('Play last'),
             'addplay_album_' . $albumId
         );
@@ -171,7 +171,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album&id=' . $albumId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_album_' . $albumId
         );
@@ -183,7 +183,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album_random&id=' . $albumId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_album_' . $albumId
         );
@@ -209,7 +209,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getPostShoutIcon(): string
     {
-        return Ui::get_icon('comment', T_('Post Shout'));
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
     }
 
     public function canShare(): bool
@@ -241,7 +241,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getBatchDownloadIcon(): string
     {
-        return Ui::get_icon('batch_download', T_('Batch download'));
+        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
     }
 
     public function isEditable(): bool
@@ -256,7 +256,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function getDeletionUrl(): string
@@ -271,7 +271,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getDeletionIcon(): string
     {
-        return Ui::get_icon('delete', T_('Delete'));
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function canBeDeleted(): bool
@@ -281,7 +281,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function getPlayedTimes(): int

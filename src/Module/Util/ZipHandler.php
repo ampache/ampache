@@ -61,21 +61,34 @@ final class ZipHandler implements ZipHandlerInterface
      * zips them, adds art and m3u, and sends them
      *
      * @param string $name name of the zip file to be created
-     * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
+     * @param array{total_size: int, files: iterable<iterable<string>>} $files array of full paths to medias to zip create w/ call to get_media_files
      * @param bool $flat_path put the files into a single folder
      */
     public function zip(
         ResponseInterface $response,
         string $name,
-        array $media_files,
+        array $files,
         bool $flat_path
     ): ResponseInterface {
-        $art_name = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
-        $addart   = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
-        $filter   = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-        $comment  = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
+        $art_name    = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_PREFERRED_FILENAME);
+        $addart      = $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ART_ZIP_ADD);
+        $archiveName = (string)preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+        $comment     = (string)$this->configContainer->get(ConfigurationKeyEnum::FILE_ZIP_COMMENT);
 
         $this->zipFile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . uniqid('ampache-zip-');
+
+        ob_end_clean();
+
+        /* Drop the normal Time limit constraints, this can take a while */
+        set_time_limit(0);
+
+        // Write/close session data to release session lock for this script.
+        // This to allow other pages from the same session to be processed
+        // Do NOT change any session variable after this call
+        session_write_close();
+
+        // Take whatever we've got and send the zip
+        set_memory_limit($files['total_size'] + 32);
 
         $arc = new ZipArchive();
         $arc->open($this->zipFile, ZipArchive::CREATE);
@@ -86,48 +99,47 @@ final class ZipHandler implements ZipHandlerInterface
         $playlist = '';
         $folder   = '';
         $artpath  = '';
-        foreach ($media_files as $files) {
-            foreach ($files as $file) {
+        foreach ($files['files'] as $file_list) {
+            foreach ($file_list as $file) {
                 if (!is_file($file)) {
                     continue;
                 }
                 $dirname = ($flat_path)
-                    ? $filter
+                    ? $archiveName
                     : dirname($file);
                 $artpath = $dirname . DIRECTORY_SEPARATOR . $art_name;
                 $folder  = explode(DIRECTORY_SEPARATOR, $dirname)[substr_count($dirname, DIRECTORY_SEPARATOR)];
                 $playlist .= $folder . DIRECTORY_SEPARATOR . basename($file) . "\n";
+
                 $arc->addEmptyDir($folder, ZipArchive::CREATE);
                 $arc->addFile($file, $folder . DIRECTORY_SEPARATOR . basename($file));
             }
-            if (
-                $addart === true &&
-                !empty($folder) &&
-                is_file($artpath)
-            ) {
-                $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
-            }
+        }
+        if (
+            $addart === true &&
+            !empty($folder) &&
+            is_file($artpath)
+        ) {
+            $arc->addFile($artpath, $folder . DIRECTORY_SEPARATOR . $art_name);
         }
         if (!empty($playlist) && !empty($folder)) {
             $arc->addEmptyDir($folder, ZipArchive::CREATE);
-            $arc->addFromString($filter . ".m3u", $playlist);
+            $arc->addFromString($archiveName . ".m3u", $playlist);
         }
-        $this->logger->debug(
-            'Sending Zip ' . $filter,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-        );
 
         $arc->close();
 
-        // Various different browsers dislike various characters here. Strip them all for safety.
-        $safeOutput = trim(str_replace(['"', "'", '\\', ';', "\n", "\r"], '', $filter . '.zip'));
+        $this->logger->debug(
+            'Sending Zip ' . $archiveName,
+            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+        );
 
-        // Check if we need to UTF-8 encode the filename
-        $urlencoded = rawurlencode($safeOutput);
+        // Various different browsers dislike various characters here. Strip them all for safety.
+        $normalizedArchiveName = trim(str_replace(['"', "'", '\\', ';', "\n", "\r"], '', $archiveName . '.zip'));
 
         return $response
             ->withHeader('Content-Type', 'application/zip')
-            ->withHeader('Content-Disposition', sprintf('attachment; filename*=UTF-8\'\'%s', $urlencoded))
+            ->withHeader('Content-Disposition', sprintf('attachment; filename*=UTF-8\'\'%s', rawurlencode($normalizedArchiveName)))
             ->withHeader('Pragma', 'public')
             ->withHeader('Cache-Control', 'public, must-revalidate')
             ->withHeader('Content-Transfer-Encoding', 'binary')

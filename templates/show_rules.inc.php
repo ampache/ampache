@@ -64,7 +64,7 @@ $logic_operator = strtolower((string)$logic_operator); ?>
     <tr id="rules_addrowbutton">
         <td>
             <a id="addrowbutton" href="javascript:void(0)">
-                <?php echo Ui::get_icon('add'); ?>
+                <?php echo Ui::get_material_symbol('add_circle'); ?>
             <?php echo T_('Add Another Rule'); ?>
             </a>
             <script>$('#addrowbutton').on('click', SearchRow.add);</script>

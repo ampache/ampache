@@ -136,16 +136,16 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $playnext = T_('Play next');
     $playlast = T_('Play last'); ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', $play, 'directplay_full_' . $album->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play_circle', $play, 'directplay_full_' . $album->id); ?>
         </li>
     <?php if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
-                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'play_next', $playnext, 'nextplay_album_' . $album->id); ?>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'menu_open', $playnext, 'nextplay_album_' . $album->id); ?>
             </li>
     <?php }
     if (Stream_Playlist::check_autoplay_append()) { ?>
             <li>
-                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'play_add', $playlast, 'addplay_album_' . $album->id); ?>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'playlist_add', $playlast, 'addplay_album_' . $album->id); ?>
             </li>
     <?php }
     }
@@ -154,14 +154,14 @@ if ($show_playlist_add) {
     $randtotemp = T_('Random to Temporary Playlist');
     $addtoexist = T_('Add to playlist'); ?>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add', $addtotemp, 'play_full_' . $album->id); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add_circle', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=album_random&id=' . $album->id, 'random', $randtotemp, 'play_random_' . $album->id); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=album_random&id=' . $album->id, 'shuffle', $randtotemp, 'play_random_' . $album->id); ?>
         </li>
         <li>
             <a id="<?php echo 'add_playlist_' . $album->id; ?>" onclick="showPlaylistDialog(event, 'album', '<?php echo $album->id; ?>')">
-                <?php echo Ui::get_icon('playlist_add', $addtoexist);
+                <?php echo Ui::get_material_symbol('playlist_add', $addtoexist);
     echo $addtoexist; ?>
             </a>
         </li>
@@ -182,7 +182,7 @@ if (!AmpConfig::get('use_auth') || $access25) {
         $postshout = T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_icon('comment', $postshout);
+                    <?php echo Ui::get_material_symbol('comment', $postshout);
         echo $postshout; ?>
                 </a>
             </li>
@@ -200,15 +200,15 @@ if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user-
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_icon('statistics', T_('Graphs'));
+                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
         echo T_('Graphs'); ?>
                 </a>
             </li>
     <?php } ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
-    echo T_('Update from tags'); ?>
+                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags')); ?>
+                <?php echo T_('Update from tags'); ?>
             </a>
         </li>
 <?php
@@ -218,14 +218,14 @@ if ($isAlbumEditable) {
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
-                        <?php echo Ui::get_icon('upload', $t_upload);
+                        <?php echo Ui::get_material_symbol('upload', $t_upload);
         echo $t_upload; ?>
                     </a>
                 </li>
     <?php } ?>
             <li>
                 <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
-                    <?php echo Ui::get_icon('edit', T_('Edit'));
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit'));
     echo T_('Edit Album'); ?>
                 </a>
             </li>
@@ -235,7 +235,7 @@ if ($zip_album) {
     $download = T_('Download'); ?>
             <li>
                 <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_icon('batch_download', $download);
+                    <?php echo Ui::get_material_symbol('folder_zip', $download);
     echo $download; ?>
                 </a>
             </li>
@@ -245,7 +245,7 @@ if (Catalog::can_remove($album)) {
     $delete = T_('Delete'); ?>
             <li>
                 <a id="<?php echo 'delete_album_' . $album->id; ?>" href="<?php echo $web_path; ?>/albums.php?action=delete&album_id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_icon('delete', $delete);
+                    <?php echo Ui::get_material_symbol('close', $delete);
     echo $delete; ?>
                 </a>
             </li>
@@ -273,28 +273,28 @@ foreach ($album->getDisks() as $album_disk) {
     <div class="album_group_disks_actions">
         <?php
         if ($show_direct_play) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id, 'play', T_('Play'), 'directplay_full_' . $album_disk->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id, 'play_circle', T_('Play'), 'directplay_full_' . $album_disk->id);
             if (Stream_Playlist::check_autoplay_next()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_disk_' . $album_disk->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_album_disk_' . $album_disk->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_disk_' . $album_disk->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_album_disk_' . $album_disk->id);
             }
         }
     if ($show_playlist_add) {
-        echo Ajax::button('?action=basket&type=album_disk&id=' . $album_disk->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album_disk->id);
-        echo Ajax::button('?action=basket&type=album_disk_random&id=' . $album_disk->id, 'random', T_('Random to Temporary Playlist'), 'play_random_' . $album_disk->id);
+        echo Ajax::button('?action=basket&type=album_disk&id=' . $album_disk->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $album_disk->id);
+        echo Ajax::button('?action=basket&type=album_disk_random&id=' . $album_disk->id, 'shuffle', T_('Random to Temporary Playlist'), 'play_random_' . $album_disk->id);
     }
     if ($access25) {
         if ($can_shout) { ?>
-                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
             <?php }
         if ($can_share) {
             echo Share::display_ui('album_disk', $album_disk->id, false);
         }
     }
     if ($zip_albumD) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_icon('batch_download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('folder_zip', T_('Download')); ?></a>
         <?php } ?>
     </div>
     <div id='reordered_list_<?php echo $album_disk->id; ?>'>

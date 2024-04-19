@@ -1430,10 +1430,10 @@ class Art extends database_object
                 ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
             ) {
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
-                echo Ui::get_icon('edit', T_('Edit/Find Art'));
+                echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
                 echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
-                echo Ui::get_icon('delete', T_('Reset Art'));
+                echo Ui::get_material_symbol('close', T_('Reset Art'));
                 echo "</a>";
             }
 

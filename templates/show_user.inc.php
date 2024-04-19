@@ -90,21 +90,21 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
         <?php echo $client->get_fullname(); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
-                <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
+                <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
-            <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
 
         <?php } ?>
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
-        <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
+        <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>
 <?php } ?>
 <?php if (AmpConfig::get('show_wrapped')) { ?>
-        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_icon('info', T_('Wrapped')); ?></a>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('info', T_('Wrapped')); ?></a>
 <?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>
@@ -115,7 +115,7 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
     <dt><?php echo T_('Activity'); ?></dt>
     <dd><?php echo $client->f_usage; ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
-            <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+            <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
         <?php } ?>
     </dd>
     <?php } ?>

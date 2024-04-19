@@ -53,12 +53,12 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     <div class="cel_play_hover">
     <?php
     if (AmpConfig::get('directplay')) {
-        echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId(), 'play', T_('Play'), 'play_playlist_' . $object_type . '_' . $libitem->getId());
+        echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId(), 'play_circle', T_('Play'), 'play_playlist_' . $object_type . '_' . $libitem->getId());
         if (Stream_Playlist::check_autoplay_next()) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_' . $object_type . '_' . $libitem->getId());
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $object_type . '_' . $libitem->getId());
         }
         if (Stream_Playlist::check_autoplay_append()) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&append=true', 'play_add', T_('Play last'), 'addplay_' . $object_type . '_' . $libitem->getId());
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&append=true', 'playlist_add', T_('Play last'), 'addplay_' . $object_type . '_' . $libitem->getId());
         }
     } ?>
     </div>
@@ -72,10 +72,10 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 <td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
-        <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'add', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
+        <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <a id="<?php echo 'add_playlist_' . $libitem->getId(); ?>" onclick="showPlaylistDialog(event, '<?php echo $object_type; ?>', '<?php echo $libitem->getId(); ?>')">
-                <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+                <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             </a>
         <?php } ?>
     </span>
@@ -96,7 +96,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) { ?>
     <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&<?php echo $object_type; ?>_id=<?php echo $libitem->getId(); ?>">
-        <?php echo Ui::get_icon('download', T_('Download')); ?>
+        <?php echo Ui::get_material_symbol('download', T_('Download')); ?>
     </a>
     <?php
     }
@@ -106,10 +106,10 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
         }
     }
     if (isset($playlist) && $playlist->has_access()) {
-        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
+        echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
-        <?php echo Ui::get_icon('drag', T_('Reorder')); ?>
+        <?php echo Ui::get_material_symbol('drag_indicator', T_('Reorder')); ?>
             </td>
     <?php
     }

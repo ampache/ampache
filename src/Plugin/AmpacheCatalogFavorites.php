@@ -129,14 +129,14 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button(
                                 '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
-                                'play',
+                                'play_circle',
                                 T_('Play'),
                                 'play_song_' . $userflag
                             );
                             if (Stream_Playlist::check_autoplay_next()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
-                                    'play_next',
+                                    'menu_open',
                                     T_('Play next'),
                                     'nextplay_song_' . $userflag
                                 );
@@ -144,13 +144,13 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                    'play_add',
+                                    'playlist_add',
                                     T_('Play last'),
                                     'addplay_song_' . $userflag
                                 );
                             }
                         }
-                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
+                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
                         echo '</span></td>';
                     }
                     echo '<td class=grid_cover>';

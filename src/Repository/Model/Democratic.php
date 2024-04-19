@@ -651,8 +651,6 @@ class Democratic extends Tmp_Playlist
             ++$index;
         }
 
-        $string .= "</select>\n";
-
-        return $string;
+        return $string . "</select>\n";
     }
 }

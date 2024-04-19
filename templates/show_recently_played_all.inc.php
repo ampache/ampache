@@ -126,12 +126,12 @@ foreach ($data as $row) {
                     <span class="cel_play_content">&nbsp;</span>
                     <div class="cel_play_hover">
                         <?php if (AmpConfig::get('directplay')) { ?>
-                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId(), 'play', T_('Play'), 'play_song_' . $count . '_' . $media->getId()); ?>
+                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId(), 'play_circle', T_('Play'), 'play_song_' . $count . '_' . $media->getId()); ?>
                             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $count . '_' . $media->getId()); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $count . '_' . $media->getId()); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&append=true', 'playlist_add', T_('Play last'), 'addplay_song_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -139,9 +139,9 @@ foreach ($data as $row) {
                 <td class="cel_song"><?php echo $media->get_f_link(); ?></td>
                 <td class="cel_add">
                 <span class="cel_item_add">
-                    <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
+                    <?php echo Ajax::button('?action=basket&type=' . $row['object_type'] . '&id=' . $media->getId(), 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $media->getId()); ?>
                     <a id="<?php echo 'add_playlist_' . $count . '_' . $media->getId(); ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $media->getId(); ?>')">
-                        <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>
                 </td>
@@ -159,12 +159,12 @@ foreach ($data as $row) {
                 <?php if ($is_admin) { ?>
                     <td class="cel_agent">
                     <?php if (!empty($agent)) {
-                        echo Ui::get_icon('info', $agent); ?>
+                        echo Ui::get_material_symbol('info', $agent); ?>
                         </td>
                     <?php
                     } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>

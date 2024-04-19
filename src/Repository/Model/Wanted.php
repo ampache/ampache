@@ -317,7 +317,7 @@ class Wanted extends database_object
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (
-                !empty($preview_plugins) &&
+                $preview_plugins !== [] &&
                 $user instanceof User &&
                 $this->mbid !== null
             ) {
@@ -335,7 +335,7 @@ class Wanted extends database_object
                  *     primary-type: string
                  * } $group
                  */
-                $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
+                $group = $mbrainz->lookup('release-group', $this->mbid, ['releases']);
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (strtotime((string) $group->{'first-release-date'}))
@@ -369,7 +369,7 @@ class Wanted extends database_object
                          *     packaging-id: string,
                          * } $release
                          */
-                        $release = $mbrainz->lookup('release', $release_mbid, array('recordings'));
+                        $release = $mbrainz->lookup('release', $release_mbid, ['recordings']);
 
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
@@ -447,7 +447,7 @@ class Wanted extends database_object
             scrub_out($this->name)
         );
 
-        if (isset($this->user)) {
+        if ($this->user !== null) {
             $user         = new User($this->user);
             $this->f_user = $user->get_fullname();
         }

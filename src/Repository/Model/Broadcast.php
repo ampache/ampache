@@ -368,8 +368,8 @@ class Broadcast extends database_object implements library_item
     public function show_action_buttons(): void
     {
         if ($this->id !== 0 && (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
-            echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-            echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+            echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
+            echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 
@@ -379,7 +379,7 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast_link(): string
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_material_symbol('cell_tower', T_('Broadcast')) . "</a>";
 
         return $link . "</div>";
     }

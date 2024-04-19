@@ -37,13 +37,13 @@ interface ZipHandlerInterface
      * zips them and sends them
      *
      * @param string $name name of the zip file to be created
-     * @param array $media_files array of full paths to medias to zip create w/ call to get_media_files
+     * @param array{total_size: int, files: iterable<iterable<string>>} $files array of full paths to medias to zip create w/ call to get_media_files
      * @param bool $flat_path put the files into a single folder
      */
     public function zip(
         ResponseInterface $response,
         string $name,
-        array $media_files,
+        array $files,
         bool $flat_path
     ): ResponseInterface;
 }

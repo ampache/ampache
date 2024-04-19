@@ -141,7 +141,14 @@ class Podcast_Episode extends database_object implements
         }
 
         $this->id = $episode_id;
-        if (isset($this->file) && ($this->file !== null && $this->file !== '' && $this->file !== '0')) {
+        if (
+            $this->file !== null &&
+            (
+                $this->file !== null &&
+                $this->file !== '' &&
+                $this->file !== '0'
+            )
+        ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
@@ -179,7 +186,14 @@ class Podcast_Episode extends database_object implements
         }
 
         // format the file
-        if (isset($this->file) && ($this->file !== null && $this->file !== '' && $this->file !== '0')) {
+        if (
+            $this->file !== null &&
+            (
+                $this->file !== null &&
+                $this->file !== '' &&
+                $this->file !== '0'
+            )
+        ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;

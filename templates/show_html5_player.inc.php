@@ -252,10 +252,10 @@ echo implode(',', $solutions); ?>",
                             echo "var titleobj = (typeof actiontype !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_' + currenttype + '&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\" title=\"' + obj.title + '\">' + obj.title + '</a>' : obj.title;";
                             echo "var artistobj = (currentjpitem.attr('data-artist_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/artists.php?action=show&artist=' + currentjpitem.attr('data-artist_id') + '\');\" title=\"' + obj.artist + '\">' + obj.artist + '</a>' : obj.artist;";
                             echo "var lyricsobj = (typeof actiontype !== 'undefined' && currenttype === 'song') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/' + currenttype + '.php?action=show_lyrics&' + currentobject + '=' + currentjpitem.attr('data-media_id') + '\');\">" . addslashes(T_('Show Lyrics')) . "</a>' : '';";
-                            echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
-                            echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_icon('album', $showalbum) . "</a> |' : '';";
+                            echo "var actionsobj = (currentjpitem.attr('data-album_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show&album=' + currentjpitem.attr('data-album_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_material_symbol('album', $showalbum) . "</a> |' : '';";
+                            echo "actionsobj += (currentjpitem.attr('data-albumdisk_id') !== 'undefined') ? '<a href=\"javascript:NavigateTo(\'" . $web_path . "/albums.php?action=show_disk&album_disk=' + currentjpitem.attr('data-albumdisk_id') + '\');\" title=\"" . $showalbum . "\">" . Ui::get_material_symbol('album', $showalbum) . "</a> |' : '';";
                             if (AmpConfig::get('sociable') && (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER))) {
-                                echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_icon('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
+                                echo "actionsobj += (typeof actiontype !== 'undefined') ? ' <a href=\"javascript:NavigateTo(\'" . $web_path . "/shout.php?action=show_add_shout&type=' + currenttype + '&id=' + currentjpitem.attr('data-media_id') + '\');\">" . Ui::get_material_symbol('comment', addslashes(T_('Post Shout'))) . "</a> |' : '';";
                             }
                             echo "actionsobj += '<div id=\'action_buttons\'></div>';";
                             if (AmpConfig::get('waveform')) {
@@ -532,31 +532,31 @@ if (!$isVideo) {
                         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
-                                    <?php echo Ui::get_icon('playlist_add_all', addslashes(T_('Add All to playlist'))); ?>
+                                    <?php echo Ui::get_material_symbol('playlist_add', addslashes(T_('Add All to playlist'))); ?>
                                 </a>
                             </div>
                         <?php } ?>
                         <div id="slideshow" class="slideshow action_button">
-                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_icon('image', addslashes(T_('Slideshow'))); ?></a>
+                            <a href="javascript:SwapSlideshow();"><?php echo Ui::get_material_symbol('slideshow', addslashes(T_('Slideshow'))); ?></a>
                         </div>
                         <div id="expandplaylistbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_icon('multilines', addslashes(T_('Expand/Collapse playlist'))); ?></a>
+                            <a href="javascript:TogglePlaylistExpand();"><?php echo Ui::get_material_symbol('expand_all', addslashes(T_('Expand/Collapse playlist'))); ?></a>
                         </div>
                         <div id="playlistloopbtn" class="action_button">
-                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_icon('playlist_loop', addslashes(T_('Loop Playlist'))); ?></a>
+                            <a href="javascript:TogglePlaylistLoop();"><?php echo Ui::get_material_symbol('laps', addslashes(T_('Loop Playlist'))); ?></a>
                         </div>
                         <?php if (AmpConfig::get('webplayer_html5')) { ?>
                             <div class="action_button">
-                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_icon('visualizer', addslashes(T_('Visualizer'))); ?></a>
+                                <a href="javascript:ShowVisualizer();"><?php echo Ui::get_material_symbol('bubble_chart', addslashes(T_('Visualizer'))); ?></a>
                             </div>
                             <div id="replaygainbtn" class="action_button">
-                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_icon($replaygain, addslashes(T_('ReplayGain'))); ?></a>
+                                <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', addslashes(T_('ReplayGain'))); ?></a>
                             </div>
-                            <div id="vizfullbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_icon('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
+                            <div id="vizfullbtn" class="action_button">
+                                <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
                             </div>
-                            <div id="equalizerbtn" class="action_button" style="visibility: hidden;">
-                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_icon('equalizer', addslashes(T_('Equalizer'))); ?></a>
+                            <div id="equalizerbtn" class="action_button">
+                                <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
                     <?php } ?>

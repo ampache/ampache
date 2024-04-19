@@ -214,7 +214,23 @@ input[type=submit]:focus:active {
 }
 
 #sidebar-header:hover {
+    color: #1990db;
+}
+
+#sidebar_home,
+#sidebar_localplay,
+#sidebar_preferences,
+#sidebar_admin,
+#sidebar_logout {
     color: #000;
+}
+
+#sidebar_home:hover,
+#sidebar_localplay:hover,
+#sidebar_preferences:hover,
+#sidebar_admin:hover,
+#sidebar_logout:hover {
+    color: #52aae4;
 }
 
 #sidebar-content,
@@ -230,6 +246,10 @@ input[type=submit]:focus:active {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#sidebar-tabs .active > a {
+    color: #1990db;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -264,6 +284,10 @@ input[type=submit]:focus:active {
     border-color: #d8d8d8;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #000;
+}
+
+#rightbar #rb_action {
+    color: #1990db;
 }
 
 #rightbar #rb_current_playlist li {
