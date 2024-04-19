@@ -420,14 +420,18 @@ class Ui implements UiInterface
             $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         }
 
-        if (is_array($filesearch)) {
+        if (!empty($filesearch) && is_file($filesearch[0])) {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         } else {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filename = 'images/icon_error.svg';
+            return __DIR__ . '/../../../public/images/icon_error.svg';
         }
-        $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+        if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
+            $url = $filesearch[0];
+        } else {
+            $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+        }
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
@@ -449,8 +453,6 @@ class Ui implements UiInterface
             // load svg file
             $svgimage = simplexml_load_file($image_url);
             if ($svgimage !== false) {
-                $svgimage->addAttribute('class', 'image ' . $name);
-
                 if (empty($svgimage->title)) {
                     $svgimage->addChild('title', $title);
                 } else {

@@ -271,27 +271,27 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
-.topmenu-album,
-.topmenu-artist,
-.topmenu-favorite,
-.topmenu-logout,
-.topmenu-playlist,
-.topmenu-radio,
-.topmenu-smartlist,
-.topmenu-tagcloud,
-.topmenu-upload {
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
   fill: #1990db;
 }
 
-.topmenu-album:hover,
-.topmenu-artist:hover,
-.topmenu-favorite:hover,
-.topmenu-logout:hover,
-.topmenu-playlist:hover,
-.topmenu-radio:hover,
-.topmenu-smartlist:hover,
-.topmenu-tagcloud:hover,
-.topmenu-upload:hover {
+.image-topmenu-album:hover,
+.image-topmenu-artist:hover,
+.image-topmenu-favorite:hover,
+.image-topmenu-logout:hover,
+.image-topmenu-playlist:hover,
+.image-topmenu-radio:hover,
+.image-topmenu-smartlist:hover,
+.image-topmenu-tagcloud:hover,
+.image-topmenu-upload:hover {
   fill: #52aae4;
 }
 

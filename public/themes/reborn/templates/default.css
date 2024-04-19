@@ -806,15 +806,15 @@ div#autoupdate > span {
     width: 130px;
 }
 
-.topmenu-album,
-.topmenu-artist,
-.topmenu-favorite,
-.topmenu-logout,
-.topmenu-playlist,
-.topmenu-radio,
-.topmenu-smartlist,
-.topmenu-tagcloud,
-.topmenu-upload {
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
   height: 32px;
   width: 32px;
   margin-bottom: -5px;
