@@ -449,7 +449,7 @@ class Ui implements UiInterface
             // load svg file
             $svgimage = simplexml_load_file($image_url);
             if ($svgimage !== false) {
-                $svgimage->addAttribute('class', 'image $name');
+                $svgimage->addAttribute('class', 'image ' . $name);
 
                 if (empty($svgimage->title)) {
                     $svgimage->addChild('title', $title);
