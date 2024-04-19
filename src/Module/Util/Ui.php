@@ -364,17 +364,15 @@ class Ui implements UiInterface
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
         $title    = $title ?? T_(ucfirst($name));
-        $svgPath  = 'lib/components/material-symbols/' . $name . '.svg';
-        $filename = $svgPath;
-        if (!is_file(__DIR__ . '/../../../' . $svgPath)) {
+        $filepath = __DIR__ . '/../../../lib/components/material-symbols/' . $name . '.svg';
+        if (!is_file($filepath)) {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filename = '/images/icon_error.svg';
+            $filepath = __DIR__ . '/../../../images/icon_error.svg';
         }
-        $icon_url = AmpConfig::get('web_path') . '/' . $filename;
-        $tag      = '';
+        $tag = '';
         // load svg file
-        $svgicon = simplexml_load_file($icon_url);
+        $svgicon = simplexml_load_file($filepath);
         if ($svgicon !== false) {
             if (empty($svgicon->title)) {
                 $svgicon->addChild('title', $title);
@@ -413,12 +411,12 @@ class Ui implements UiInterface
             return self::$_icon_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . '/images/icons/';
+        $path       = AmpConfig::get('theme_path') . 'images/icons/';
         $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
 
         if (empty($filesearch)) {
             // if the theme is missing an icon, fall back to default images folder
-            $path       = '/images/';
+            $path       = 'images/';
             $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
         }
 
@@ -427,9 +425,9 @@ class Ui implements UiInterface
         } else {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filename = '/images/icon_error.svg';
+            $filename = 'images/icon_error.svg';
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        $url = AmpConfig::get('web_path') . '/' . $path . $filename;
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
