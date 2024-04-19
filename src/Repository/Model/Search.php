@@ -514,7 +514,8 @@ class Search extends playlist_object
             'description' => T_('has not rated'),
             'sql' => 'unrated',
         ];
-        $this->basetypes['multiple']       = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
+
+        $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
     }
 
     /**
@@ -1871,8 +1872,8 @@ class Search extends playlist_object
      *  name: string,
      *  description: string,
      *  sql: string,
-     *  preg_match: string|array,
-     *  preg_replace: string|array,
+     *  preg_match?: string|array,
+     *  preg_replace?: string|array,
      * } $operator
      * @return bool|int|null|string
      */
