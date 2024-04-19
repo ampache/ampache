@@ -364,9 +364,9 @@ class Ui implements UiInterface
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
         $title    = $title ?? T_(ucfirst($name));
-        $svgPath  = '/lib/components/material-symbols/' . $name . '.svg';
+        $svgPath  = 'lib/components/material-symbols/' . $name . '.svg';
         $filename = $svgPath;
-        if (!is_file(__DIR__ . '/../../../public' . $svgPath)) {
+        if (!is_file(__DIR__ . '/../../../public/' . $svgPath)) {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
             $filename = '/images/icon_error.svg';
