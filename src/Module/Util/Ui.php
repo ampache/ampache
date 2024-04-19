@@ -372,7 +372,6 @@ class Ui implements UiInterface
         }
         $tag = '';
         // load svg file
-        $svgicon = simplexml_load_file($icon_url);
         $svgicon = simplexml_load_file($filepath);
         if ($svgicon !== false) {
             if (empty($svgicon->title)) {
