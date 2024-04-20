@@ -430,6 +430,7 @@ class Ui implements UiInterface
         } else {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+
             return __DIR__ . '/../../../resources/images/icon_error.svg';
         }
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
