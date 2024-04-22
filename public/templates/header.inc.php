@@ -556,11 +556,11 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
             (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-                <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
             <?php if (!AmpConfig::get('sidebar_hide_switcher', false)) {
+                echo '<div id="sidebar-header" class="' . ($isCollapsed ? 'sidebar-header-collapsed' : '') . '" >';
                 echo '<span id="sidebar-header-content"></span>';
+                echo '</div>';
             } ?>
-                </div>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once Ui::find_template('sidebar.inc.php'); ?>
                 </div>
