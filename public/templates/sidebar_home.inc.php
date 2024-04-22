@@ -165,7 +165,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
 <?php }
 if (
     User::is_registered() &&
-    !AmpConfig::get('sidebar_hide_dashboardv', false)
+    !AmpConfig::get('sidebar_hide_dashboard', false)
 ) { ?>
     <li class="sb2_dashboard">
         <h4 class="header">

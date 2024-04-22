@@ -553,10 +553,11 @@ if ($is_session) {
             <?php $sidebarLight = AmpConfig::get('sidebar_light');
 $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
             ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
-            (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
+            (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed"));
+$hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false); ?>
 
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-            <?php if (!AmpConfig::get('sidebar_hide_switcher', false)) {
+            <?php if (!$hideSwitcher) {
                 echo '<div id="sidebar-header" class="' . ($isCollapsed ? 'sidebar-header-collapsed' : '') . '" >';
                 echo '<span id="sidebar-header-content"></span>';
                 echo '</div>';
@@ -568,7 +569,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
                     <?php require_once Ui::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
-            <?php if (!AmpConfig::get('sidebar_hide_switcher', false)) { ?>
+            <?php if (!$hideSwitcher) { ?>
             <!-- Handle collapsed visibility -->
             <script>
             $('#sidebar-header').click(function(){
