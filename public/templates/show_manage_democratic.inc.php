@@ -31,6 +31,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var array $playlists */
 
+$web_path = AmpConfig::get('web_path');
 Ui::show_box_top(T_('Manage')); ?>
 <table class="tabledata striped-rows">
     <tr class="th-top">
@@ -60,7 +61,7 @@ Ui::show_box_top(T_('Manage')); ?>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
         <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo $web_path; ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php
@@ -72,6 +73,6 @@ Ui::show_box_top(T_('Manage')); ?>
 </table>
 <br />
 <div>
-    <a class="button" href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=show_create"><?php echo T_('Create Playlist'); ?></a>
+    <a class="button" href="<?php echo $web_path; ?>/democratic.php?action=show_create"><?php echo T_('Create Playlist'); ?></a>
 </div>
 <?php Ui::show_box_bottom(); ?>
