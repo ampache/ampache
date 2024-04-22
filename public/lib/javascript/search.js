@@ -99,7 +99,18 @@ var SearchRow = {
 
                 // Sort the keys based on their corresponding values in widget["1"]
                 keys.sort(function(a, b) {
-                    return widget["1"][a].localeCompare(widget["1"][b]);
+                    var valA = widget["1"][a];
+                    var valB = widget["1"][b];
+
+                    var intA = parseInt(valA, 10);
+                    var intB = parseInt(valB, 10);
+
+                    // Check if both values can be parsed as integers before sorting as strings
+                    if (!isNaN(intA) && !isNaN(intB)) {
+                        return intA - intB;
+                    } else {
+                        return valA.localeCompare(valB);
+                    }
                 });
 
                 // Now use jQuery.each
@@ -123,7 +134,9 @@ var SearchRow = {
                     inputNode.appendChild(option);
                     optioncount++;
                 });
-                SearchRow.sortSelect(inputNode, input);
+                if (types[ruleType].type !== "numeric") {
+                    SearchRow.sortSelect(inputNode, input);
+                }
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
