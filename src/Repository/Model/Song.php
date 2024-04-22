@@ -1987,7 +1987,14 @@ class Song extends database_object implements
         // if you transcode the media mime will change
         if (
             AmpConfig::get('transcode') != 'never' &&
-            ($downsample_remote || empty($additional_params) || (!strpos($additional_params, '&bitrate=') || !strpos($additional_params, '&format=')))
+            (
+                $downsample_remote ||
+                empty($additional_params) ||
+                (
+                    !strpos($additional_params, '&bitrate=') &&
+                    !strpos($additional_params, '&format=')
+                )
+            )
         ) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
@@ -2003,6 +2010,14 @@ class Song extends database_object implements
                 $this->type    = $transcode_type;
                 $this->mime    = self::type_to_mime($transcode_type);
                 $this->bitrate = $bitrate;
+
+                // replace duplicate/incorrect parameters on the additional params
+                $patterns = array(
+                    '/&format=[a-z]+/',
+                    '/&transcode_to=[a-z|0-9]+/',
+                    '/&bitrate=[0-9]+/',
+                );
+                $additional_params = preg_replace($patterns, '', $additional_params);
                 $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }
         }
