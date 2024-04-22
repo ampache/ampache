@@ -47,6 +47,7 @@ if (array_key_exists('argument', $_REQUEST)) {
     $argument = (string)scrub_in((string)$_REQUEST['argument']);
 }
 $f_name = (string)$label->get_fullname();
+$web_path = AmpConfig::get('web_path');
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";
@@ -77,7 +78,7 @@ if ($label->website) {
         <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
             <li>
-                <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $label->id; ?>">
                     <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
                     <?php echo T_('Post Shout'); ?>
                 </a>
@@ -102,7 +103,7 @@ if ($label->website) {
         <?php } ?>
         <?php if (Catalog::can_remove($label)) { ?>
         <li>
-            <a id="<?php echo 'delete_label_' . $label->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
+            <a id="<?php echo 'delete_label_' . $label->id; ?>" href="<?php echo $web_path; ?>/labels.php?action=delete&label_id=<?php echo $label->id; ?>">
                 <?php echo Ui::get_icon('delete', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>

@@ -32,9 +32,10 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Label $libitem */
 /** @var string $cel_cover */
 
-$name = scrub_out((string)$libitem->get_fullname()); ?>
+$name     = scrub_out((string)$libitem->get_fullname());
+$web_path = AmpConfig::get('web_path'); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php Art::display('label', $libitem->id, $name, 1, AmpConfig::get('web_path') . '/labels.php?action=show&label=' . $libitem->id); ?>
+    <?php Art::display('label', $libitem->id, $name, 1, $web_path . '/labels.php?action=show&label=' . $libitem->id); ?>
 </td>
 <td class="cel_label"><?php echo $libitem->get_f_link(); ?></td>
 <td class="cel_category"><?php echo $libitem->category; ?></td>
@@ -48,12 +49,12 @@ $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="cel_action">
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
     if (AmpConfig::get('sociable')) { ?>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $libitem->id; ?>">
+    <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
     </a>
     <?php }
     if (Catalog::can_remove($libitem)) { ?>
-        <a id="<?php echo 'delete_label_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=delete&label_id=<?php echo $libitem->id; ?>">
+        <a id="<?php echo 'delete_label_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/labels.php?action=delete&label_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_icon('delete', T_('Delete')); ?>
         </a>
     <?php }
