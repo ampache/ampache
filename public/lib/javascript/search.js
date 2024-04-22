@@ -123,7 +123,7 @@ var SearchRow = {
                     inputNode.appendChild(option);
                     optioncount++;
                 });
-                if (types[ruleType].name !== "numeric") {
+                if (types[ruleType].type !== "numeric") {
                     SearchRow.sortSelect(inputNode, input);
                 }
                 break;
