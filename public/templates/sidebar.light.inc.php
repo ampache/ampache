@@ -50,8 +50,11 @@ $is_session   = (User::is_registered() && !empty($current_user) && ($current_use
 $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
 $albumString  = (AmpConfig::get('album_group'))
     ? 'album'
-    : 'album_disk'; ?>
-<ul id="sidebar-light">
+    : 'album_disk';
+$sidebarLightString = AmpConfig::get('sidebar_light') && AmpConfig::get('sidebar_hide_switcher')
+    ? 'sidebar-light-default'
+    : 'sidebar-light'; ?>
+<ul id="<?php echo $sidebarLightString; ?>">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists; ?></a></li>
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums; ?></a></li>
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists; ?></a></li>
