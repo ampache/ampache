@@ -636,6 +636,10 @@ div#autoupdate > span {
     display: none !important;
 }
 
+#sidebar-content {
+    width: 148px;
+}
+
 #sidebar-content-light {
     padding: 0;
     display: none;
