@@ -121,7 +121,7 @@ $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['
     Ajax::end_container();
     echo "</li>";
 }
-if (AmpConfig::get('sidebar_hide_browse', false) === false) { ?>
+if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
     <li class="sb2_browse">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
@@ -163,7 +163,10 @@ if (AmpConfig::get('sidebar_hide_browse', false) === false) { ?>
         </ul>
     </li>
 <?php }
-if (User::is_registered() && AmpConfig::get('sidebar_hide_dashboardv', false) === false) { ?>
+if (
+    User::is_registered() &&
+    !AmpConfig::get('sidebar_hide_dashboardv', false)
+) { ?>
     <li class="sb2_dashboard">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
@@ -184,7 +187,10 @@ if (User::is_registered() && AmpConfig::get('sidebar_hide_dashboardv', false) ==
         </ul>
     </li>
 <?php } ?>
-<?php if ($allowVideo && AmpConfig::get('sidebar_hide_video', false) === false) { ?>
+<?php if (
+        $allowVideo &&
+        !AmpConfig::get('sidebar_hide_video', false)
+) { ?>
         <li class="sb2_video">
             <h4 class="header">
                 <span class="sidebar-header-title"><?php echo $t_videos; ?></span>
@@ -207,7 +213,7 @@ if (User::is_registered() && AmpConfig::get('sidebar_hide_dashboardv', false) ==
             </ul>
         </li>
 <?php } ?>
-<?php if (AmpConfig::get('sidebar_hide_search', false) === false) { ?>
+<?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
     <li class="sb2_search">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
@@ -234,7 +240,10 @@ if (User::is_registered() && AmpConfig::get('sidebar_hide_dashboardv', false) ==
         </ul>
     </li>
 <?php } ?>
-<?php if ($access25 && AmpConfig::get('sidebar_hide_playlist', false) === false) {  ?>
+<?php if (
+        $access25 &&
+        !AmpConfig::get('sidebar_hide_playlist', false)
+) {  ?>
     <li class="sb2_playlist">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
@@ -257,7 +266,7 @@ if (User::is_registered() && AmpConfig::get('sidebar_hide_dashboardv', false) ==
     <?php } ?>
     </li>
 <?php } ?>
-<?php if (AmpConfig::get('sidebar_hide_information', false) === false) { ?>
+<?php if (!AmpConfig::get('sidebar_hide_information', false)) { ?>
     <li class="sb2_information">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
