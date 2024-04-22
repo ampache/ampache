@@ -888,6 +888,13 @@ class Ui implements UiInterface
             case 'show_wrapped':
             case 'show_subtitle':
             case 'sidebar_light':
+            case 'sidebar_hide_browse':
+            case 'sidebar_hide_dashboard':
+            case 'sidebar_hide_information':
+            case 'sidebar_hide_playlist':
+            case 'sidebar_hide_search':
+            case 'sidebar_hide_switcher':
+            case 'sidebar_hide_video':
             case 'song_page_title':
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
