@@ -36,7 +36,8 @@ use Ampache\Module\Util\Ui;
 
 $total_images = count($images);
 $rows         = floor($total_images / 5);
-$count        = 0; ?>
+$count        = 0;
+$web_path     = AmpConfig::get('web_path'); ?>
 <?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
@@ -45,13 +46,13 @@ while ($count <= $rows) {
     $j=0;
     while ($j < 5) {
         $key        = $count * 5 + $j;
-        $image_url  = AmpConfig::get('web_path') . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20));
+        $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20));
         $dimensions = array('width' => 0, 'height' => 0);
         if (!empty($_SESSION['form']['images'][$key])) {
             $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         }
         if ((int) $dimensions['width'] == 0 || (int) $dimensions['height'] == 0) {
-            $image_url = AmpConfig::get('web_path') . '/images/blankalbum.png';
+            $image_url = $web_path . '/images/blankalbum.png';
         }
         if (!isset($images[$key])) {
             echo "<td>&nbsp;</td>\n";
@@ -62,7 +63,7 @@ while ($count <= $rows) {
                 <p>
                 <?php if (is_array($dimensions) && (!(int) $dimensions['width'] == 0 || !(int) $dimensions['height'] == 0)) { ?>
                 [<?php echo (int) ($dimensions['width']); ?>x<?php echo (int) ($dimensions['height']); ?>]
-                [<a href="<?php echo AmpConfig::get('web_path'); ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
+                [<a href="<?php echo $web_path; ?>/arts.php?action=select_art&image=<?php echo $key; ?>&object_type=<?php echo $object_type; ?>&object_id=<?php echo $object_id; ?>&burl=<?php echo base64_encode($burl); ?>"><?php echo T_('Select'); ?></a>]
                 <?php
                 } else { ?>
                 <span class="error"><?php echo T_('Invalid'); ?></span>

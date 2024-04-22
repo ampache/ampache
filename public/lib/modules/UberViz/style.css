@@ -6,6 +6,7 @@
 #uberviz #viz {
     position: fixed;
     background-color: #000;
+    z-index: 1000;
 }
 
 #uberviz #controls {

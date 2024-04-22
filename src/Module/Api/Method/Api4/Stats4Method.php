@@ -92,21 +92,17 @@ final class Stats4Method
 
         switch ($input['filter']) {
             case 'newest':
-                debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset);
                 break;
             case 'highest':
-                debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset);
                 break;
             case 'frequent':
-                debug_event(self::class, 'stats frequent', 4);
                 $threshold = AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 break;
             case 'recent':
             case 'forgotten':
-                debug_event(self::class, 'stats ' . $input['filter'], 4);
                 $newest = $input['filter'] == 'recent';
                 if ($user->isNew()) {
                     $results = Stats::get_recent($type, $limit, $offset, null, $newest);
@@ -115,12 +111,10 @@ final class Stats4Method
                 }
                 break;
             case 'flagged':
-                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user, $limit, $offset);
                 break;
             case 'random':
             default:
-                debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
                         $results = Random::get_default($limit, $user);
@@ -146,7 +140,6 @@ final class Stats4Method
             return false;
         }
 
-        debug_event(self::class, 'stats found results searching for ' . $type, 5);
         if ($type === 'song') {
             switch ($input['api_format']) {
                 case 'json':

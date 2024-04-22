@@ -32,9 +32,10 @@ use Ampache\Repository\Model\User;
 
 $threshold      = AmpConfig::get('stats_threshold', 7);
 $limit          = (int)AmpConfig::get('popular_threshold', 10);
+$web_path       = AmpConfig::get('web_path');
 
 require_once Ui::find_template('show_form_mashup.inc.php');
-echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=newest_" . $object_type . "\">";
+echo "<a href=\"" . $web_path . "/stats.php?action=newest_" . $object_type . "\">";
 Ui::show_box_top(T_('Newest'));
 echo "</a>";
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user);
@@ -69,7 +70,7 @@ Ui::show_box_bottom();
 if ($object_type == 'podcast_episode') {
     Ui::show_box_top(T_('Popular'));
 } else {
-    echo "<a href=\"" . AmpConfig::get('web_path') . "/stats.php?action=popular\">";
+    echo "<a href=\"" . $web_path . "/stats.php?action=popular\">";
     Ui::show_box_top(T_('Popular'));
     echo "</a>";
 }

@@ -47,6 +47,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_tags */
 /** @var string|null $video_type */
 
+$web_path = AmpConfig::get('web_path');
 if (!isset($video_type)) {
     $video_type = $libitem->getMediaType()->value;
 } ?>
@@ -117,7 +118,7 @@ if ($video_type !== 'video') {
 <a href="<?php echo $libitem->get_link(); ?>"><?php echo Ui::get_material_symbol('page_info', T_('Video Information')); ?></a>
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('sociable')) { ?>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
+        <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
     <?php
     }
 }
@@ -127,7 +128,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     }
 }
 if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
-    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
+    <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
 <?php }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <a id="<?php echo 'edit_video_' . $libitem->id; ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_video_' . $libitem->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', 'video_')">
@@ -136,7 +137,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
 <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?> /video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_video_' . $libitem->id; ?>" href="<?php echo $web_path; ?> /video.php?action=delete&video_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
 <?php } ?>
