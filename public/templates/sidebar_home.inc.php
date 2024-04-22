@@ -188,8 +188,8 @@ if (
     </li>
 <?php } ?>
 <?php if (
-        $allowVideo &&
-        !AmpConfig::get('sidebar_hide_video', false)
+    $allowVideo &&
+    !AmpConfig::get('sidebar_hide_video', false)
 ) { ?>
         <li class="sb2_video">
             <h4 class="header">
@@ -241,8 +241,8 @@ if (
     </li>
 <?php } ?>
 <?php if (
-        $access25 &&
-        !AmpConfig::get('sidebar_hide_playlist', false)
+    $access25 &&
+    !AmpConfig::get('sidebar_hide_playlist', false)
 ) {  ?>
     <li class="sb2_playlist">
         <h4 class="header">
