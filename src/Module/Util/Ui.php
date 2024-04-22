@@ -527,7 +527,10 @@ class Ui implements UiInterface
         } else {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
-        if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
+        if (
+            $filesearch &&
+            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+        ) {
             $url = $filesearch[0];
         } else {
             $url = AmpConfig::get('web_path') . '/' . $path . $filename;
