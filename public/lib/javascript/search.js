@@ -123,7 +123,9 @@ var SearchRow = {
                     inputNode.appendChild(option);
                     optioncount++;
                 });
-                SearchRow.sortSelect(inputNode, input);
+                if (types[ruleType].name !== "numeric") {
+                    SearchRow.sortSelect(inputNode, input);
+                }
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
