@@ -95,12 +95,20 @@ var SearchRow = {
                 break;
             case "select":
                 var optioncount = 0;
-                jQuery.each(widget["1"], function(i) {
+                var keys = Object.keys(widget["1"]);
+
+                // Sort the keys based on their corresponding values in widget["1"]
+                keys.sort(function(a, b) {
+                    return widget["1"][a].localeCompare(widget["1"][b]);
+                });
+
+                // Now use jQuery.each
+                jQuery.each(keys, function(i, key) {
                     var option = document.createElement("option");
                     var realValue = 0;
                     // only allow ints that parse as ints and match the input
-                    if (parseInt(widget["1"][i]) == widget["1"][i] && parseInt(i) === optioncount) {
-                        realValue = parseInt(widget["1"][i]);
+                    if (parseInt(widget["1"][key]) == widget["1"][key] && parseInt(i) === optioncount) {
+                        realValue = parseInt(widget["1"][key]);
                     }
                     else {
                         realValue = i;
@@ -111,11 +119,13 @@ var SearchRow = {
                         option.selected = false;
                     }
                     option.value = realValue;
-                    option.innerHTML = widget["1"][i];
+                    option.innerHTML = widget["1"][key];
                     inputNode.appendChild(option);
                     optioncount++;
                 });
-                SearchRow.sortSelect(inputNode, input);
+                if (types[ruleType].name !== "numeric") {
+                    SearchRow.sortSelect(inputNode, input);
+                }
                 break;
             case "subtypes":
                 inputNode = document.createElement(widget[1][0]);
