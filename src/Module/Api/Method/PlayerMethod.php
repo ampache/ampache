@@ -46,30 +46,27 @@ final class PlayerMethod
 
     /**
      * player
-     * MINIMUM_API_VERSION=6.3.2
+     * MINIMUM_API_VERSION=6.4.0
      *
      * Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)
      * Return the `now_playing` state when completed
      *
      * filter  = (integer) $object_id
-     * type    = (string)  $object_type ('song', 'podcast_episode', 'video')
-     * state   = (string)  'play', 'stop'
+     * type    = (string)  $object_type ('song', 'podcast_episode', 'video'), DEFAULT 'song'//optional
+     * state   = (string)  'play', 'stop', DEFAULT 'play' //optional
      * time    = (integer) current song time in whole seconds, DEFAULT 0 //optional
-     * client  = (string)  $agent //optional
+     * client  = (string)  $agent, DEFAULT 'api' //optional
      */
     public static function player(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'type', 'state'), self::ACTION)) {
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
         ob_end_clean();
         $object_id = (int)$input['filter'];
-        $type      = $input['type'];
-        $state     = $input['state'];
+        $type      = $input['type'] ?? 'song';
 
-        // validate client string or fall back to 'api'
-        $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'podcast_episode', 'video'))) {
@@ -78,15 +75,15 @@ final class PlayerMethod
 
             return false;
         }
-        if (!in_array(strtolower($state), array('play', 'pause', 'stop'))) {
+
+        $state = $input['state'] ?? 'play';
+        if (!in_array(strtolower($state), array('play', 'stop'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $state), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'state', $input['api_format']);
 
             return false;
         }
 
-        $time      = time();
-        $position  = (array_key_exists('time', $input) && is_numeric(scrub_in((string) $input['time']))) ? (int) scrub_in((string) $input['time']) : 0; //optional
         $className = ObjectTypeToClassNameMapper::map($type);
         if ($className === $type || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -103,6 +100,13 @@ final class PlayerMethod
 
             return false;
         }
+
+        $time     = time();
+        $position = (array_key_exists('time', $input) && is_numeric(scrub_in((string) $input['time'])))
+            ? (int) scrub_in((string) $input['time'])
+            : 0;
+        // validate client string or fall back to 'api'
+        $agent = scrub_in((string)($input['client'] ?? 'api'));
 
         if ($state === 'play') {
             // make sure the now_playing state is set

@@ -41,9 +41,10 @@ if (isset($playlist)) {
 } else {
     $logic_operator = Core::get_request('operator');
 }
-$logic_operator = strtolower((string)$logic_operator); ?>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search.js"></script>
-<script src="<?php echo AmpConfig::get('web_path'); ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
+$logic_operator = strtolower((string)$logic_operator);
+$web_path       = AmpConfig::get('web_path'); ?>
+<script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
+<script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
 <?php Ui::show_box_top(T_('Rules') . "...", 'box box_rules'); ?>
 <table class="tabledata">
