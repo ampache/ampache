@@ -44,6 +44,8 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_time */
 /** @var string $cel_counter */
+
+$web_path = AmpConfig::get('web_path');
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
@@ -65,7 +67,7 @@ if ($is_mashup) {
     $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
         <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
-    Art::display('podcast_episode', $libitem->id, $name, $thumb, AmpConfig::get('web_path') . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
+    Art::display('podcast_episode', $libitem->id, $name, $thumb, $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
 } ?>
@@ -105,7 +107,7 @@ if ($show_ratings) { ?>
     <?php } ?>
 <td class="cel_action">
     <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($libitem->file)) { ?>
-            <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
 <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
@@ -118,7 +120,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
     <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
-    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
+    <a id="<?php echo 'delete_podcast_episode_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
         <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
     <?php } ?>

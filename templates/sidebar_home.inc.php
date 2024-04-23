@@ -115,53 +115,58 @@ $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['
     : 'collapsed';
 ?>
 <ul class="sb2" id="sb_home">
-    <?php if (AmpConfig::get('browse_filter')) {
-        echo "<li>";
-        Ajax::start_container('browse_filters');
-        Ajax::end_container();
-        echo "</li>";
-    } ?>
+<?php if (AmpConfig::get('browse_filter')) {
+    echo "<li>";
+    Ajax::start_container('browse_filters');
+    Ajax::end_container();
+    echo "</li>";
+}
+if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
     <li class="sb2_browse">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
         </h4>
         <?php $text = (string)scrub_in(Core::get_request('action')) . '_ac';
-if ($text !== '_ac') {
-    ${$text} = ' selected="selected"';
-} ?>
+    if ($text !== '_ac') {
+        ${$text} = ' selected="selected"';
+    } ?>
         <ul class="sb3" id="sb_home_browse">
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs; ?></a></li>
             <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
-            <?php if ($showArtist) { ?>
+<?php if ($showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=artist"><?php echo $t_artists; ?></a></li>
-            <?php } ?>
-            <?php if ($showAlbumArtist || !$showArtist) { ?>
+<?php } ?>
+<?php if ($showAlbumArtist || !$showArtist) { ?>
                 <li id="sb_home_browse_artist"><a href="<?php echo $web_path; ?>/browse.php?action=album_artist"><?php echo $t_a_artists; ?></a></li>
-            <?php } ?>
-            <?php if ($allowLabel) { ?>
+<?php } ?>
+<?php if ($allowLabel) { ?>
                 <li id="sb_home_browse_label"><a href="<?php echo $web_path; ?>/browse.php?action=label"><?php echo $t_labels; ?></a></li>
-            <?php } ?>
-            <?php if (AmpConfig::get('broadcast')) { ?>
+<?php } ?>
+<?php if (AmpConfig::get('broadcast')) { ?>
                 <li id="sb_home_browse_broadcast"><a href="<?php echo $web_path; ?>/browse.php?action=broadcast"><?php echo $t_broadcasts; ?></a></li>
-            <?php } ?>
-            <?php if (AmpConfig::get('live_stream')) { ?>
+<?php } ?>
+<?php if (AmpConfig::get('live_stream')) { ?>
                 <li id="sb_home_browse_radioStation"><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo $t_radioStations; ?></a></li>
-            <?php } ?>
-            <?php if ($allowPodcast) { ?>
+<?php } ?>
+<?php if ($allowPodcast) { ?>
                 <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast"><?php echo $t_podcasts; ?></a></li>
                 <li id="sb_home_browse_podcast"><a href="<?php echo $web_path; ?>/browse.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
-            <?php } ?>
-            <?php if ($allowVideo) { ?>
+<?php } ?>
+<?php if ($allowVideo) { ?>
                 <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
                 <?php } ?>
         <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo $t_genres; ?></a></li>
-            <?php if ($allow_upload) { ?>
+<?php if ($allow_upload) { ?>
               <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
-            <?php } ?>
+<?php } ?>
         </ul>
     </li>
-    <?php if (User::is_registered()) { ?>
+<?php }
+if (
+    User::is_registered() &&
+    !AmpConfig::get('sidebar_hide_dashboard', false)
+) { ?>
     <li class="sb2_dashboard">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
@@ -170,41 +175,45 @@ if ($text !== '_ac') {
         <ul class="sb3" id="sb_home_dashboard">
             <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
             <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
-            <?php if ($access25) { ?>
+    <?php if ($access25) { ?>
             <li id="sb_home_dashboard_playlists"><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo $t_playlists; ?></a></li>
-            <?php } ?>
-            <?php if ($allowPodcast) { ?>
+    <?php } ?>
+    <?php if ($allowPodcast) { ?>
                 <li id="sb_home_dashboard_podcast_episodes"><a href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
-            <?php } ?>
-            <?php if ($allowVideo) { ?>
-                <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos; ?></a></li>
-            <?php } ?>
-        </ul>
-    </li>
     <?php } ?>
     <?php if ($allowVideo) { ?>
+                <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos; ?></a></li>
+    <?php } ?>
+        </ul>
+    </li>
+<?php } ?>
+<?php if (
+    $allowVideo &&
+    !AmpConfig::get('sidebar_hide_video', false)
+) { ?>
         <li class="sb2_video">
             <h4 class="header">
                 <span class="sidebar-header-title"><?php echo $t_videos; ?></span>
                 <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_video', 'header-img ' . $state_home_video); ?>
             </h4>
             <ul class="sb3" id="sb_home_video">
-          <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
+    <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
                 <li id="sb_home_video_clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo $t_musicClips; ?></a></li>
-          <?php } ?>
-          <?php if ($videoRepository->getItemCount(TVShow_Episode::class)) { ?>
+    <?php } ?>
+    <?php if ($videoRepository->getItemCount(TVShow_Episode::class)) { ?>
                 <li id="sb_home_video_tvShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo $t_tvShows; ?></a></li>
-          <?php } ?>
-          <?php if ($videoRepository->getItemCount(Movie::class)) { ?>
+    <?php } ?>
+    <?php if ($videoRepository->getItemCount(Movie::class)) { ?>
                 <li id="sb_home_video_movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo $t_movies; ?></a></li>
-          <?php } ?>
-          <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
+    <?php } ?>
+    <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
                 <li id="sb_home_video_personal"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo $t_personalVideos; ?></a></li>
-          <?php } ?>
+    <?php } ?>
                 <li id="sb_home_video_tagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo $t_genres; ?></a></li>
             </ul>
         </li>
-    <?php } ?>
+<?php } ?>
+<?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
     <li class="sb2_search">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
@@ -214,45 +223,50 @@ if ($text !== '_ac') {
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
-          <?php if ($allowLabel) { ?>
+    <?php if ($allowLabel) { ?>
               <li id="sb_home_search_label"><a href="<?php echo $web_path; ?>/search.php?type=label"><?php echo $t_labels; ?></a></li>
-          <?php } ?>
-          <?php if ($access25) { ?>
+    <?php } ?>
+    <?php if ($access25) { ?>
               <li id="sb_home_search_playlist"><a href="<?php echo $web_path; ?>/search.php?type=playlist"><?php echo $t_playlists; ?></a></li>
-          <?php } ?>
-          <?php if ($allowPodcast) { ?>
+    <?php } ?>
+    <?php if ($allowPodcast) { ?>
               <li id="sb_home_search_podcast"><a href="<?php echo $web_path; ?>/search.php?type=podcast"><?php echo $t_podcasts; ?></a></li>
               <li id="sb_home_search_podcast_episode"><a href="<?php echo $web_path; ?>/search.php?type=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
-          <?php } ?>
-          <?php if ($allowVideo) { ?>
+    <?php } ?>
+    <?php if ($allowVideo) { ?>
               <li id="sb_home_search_video"><a href="<?php echo $web_path; ?>/search.php?type=video"><?php echo $t_videos; ?></a></li>
-          <?php } ?>
+    <?php } ?>
               <li id="sb_home_random_advanced"><a href="<?php echo $web_path; ?>/random.php?action=advanced&type=song"><?php echo $t_random; ?></a></li>
         </ul>
     </li>
-    <?php if ($access25) { ?>
+<?php } ?>
+<?php if (
+    $access25 &&
+    !AmpConfig::get('sidebar_hide_playlist', false)
+) {  ?>
     <li class="sb2_playlist">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
         </h4>
-        <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
+    <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
         <ul class="sb3" id="sb_home_playlist">
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_playlist_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo $t_smartPlaylists; ?></a></li>
-            <?php if ($allowDemocratic) { ?>
+        <?php if ($allowDemocratic) { ?>
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>
-            <?php } ?>
-            <?php if ($server_allow && $controller) { ?>
-            <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller'));
-                $current_instance = $localplay->current_instance();
-                $class            = $current_instance ? '' : ' class="active_instance"'; ?>
-                <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>
-            <?php } ?>
-        </ul>
         <?php } ?>
-    </li>
+        <?php if ($server_allow && $controller) { ?>
+            <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller'));
+            $current_instance     = $localplay->current_instance();
+            $class                = $current_instance ? '' : ' class="active_instance"'; ?>
+                <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>
+        <?php } ?>
+        </ul>
     <?php } ?>
+    </li>
+<?php } ?>
+<?php if (!AmpConfig::get('sidebar_hide_information', false)) { ?>
     <li class="sb2_information">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
@@ -262,21 +276,22 @@ if ($text !== '_ac') {
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_<?php echo $albumString; ?>"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo $t_popular; ?></a></li>
-            <?php if (User::is_registered()) { ?>
-                <?php if (AmpConfig::get('ratings')) { ?>
+    <?php if (User::is_registered()) { ?>
+        <?php if (AmpConfig::get('ratings')) { ?>
                 <li id="sb_home_information_highest"><a href="<?php echo $web_path; ?>/stats.php?action=highest_<?php echo $albumString; ?>"><?php echo $t_topRated; ?></a></li>
                 <li id="sb_home_information_userFlag"><a href="<?php echo $web_path; ?>/stats.php?action=userflag_<?php echo $albumString; ?>"><?php echo $t_favorites; ?></a></li>
-                <?php } ?>
-                <?php if (AmpConfig::get('wanted')) { ?>
+        <?php } ?>
+        <?php if (AmpConfig::get('wanted')) { ?>
                 <li id="sb_home_information_wanted"><a href="<?php echo $web_path; ?>/stats.php?action=wanted"><?php echo $t_wanted; ?></a></li>
-                <?php } ?>
-                <?php if (AmpConfig::get('share')) { ?>
+        <?php } ?>
+        <?php if (AmpConfig::get('share')) { ?>
                 <li id="sb_home_information_share"><a href="<?php echo $web_path; ?>/stats.php?action=share"><?php echo $t_shares; ?></a></li>
                 <?php } ?>
-                <?php if ($access50) { ?>
+        <?php if ($access50) { ?>
                     <li id="sb_home_information_statistic"><a href="<?php echo $web_path; ?>/stats.php?action=show"><?php echo $t_statistics; ?></a></li>
-                <?php } ?>
-            <?php } ?>
+        <?php } ?>
+    <?php } ?>
         </ul>
     </li>
+<?php } ?>
 </ul>

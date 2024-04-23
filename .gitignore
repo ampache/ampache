@@ -20,7 +20,8 @@ node_modules/
 .maintenance
 play/.htaccess
 rest/.htaccess
-lib/components/
+lib/components
+lib/javascript/custom.js
 client
 newclient
 core
@@ -28,6 +29,7 @@ develop
 master
 foam
 ample
+resources/images/material-symbols
 storage/
 tmp/
 vendor/

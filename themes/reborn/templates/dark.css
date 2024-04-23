@@ -275,6 +275,30 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  fill: #ff9d00;
+}
+
+.image-topmenu-album:hover,
+.image-topmenu-artist:hover,
+.image-topmenu-favorite:hover,
+.image-topmenu-logout:hover,
+.image-topmenu-playlist:hover,
+.image-topmenu-radio:hover,
+.image-topmenu-smartlist:hover,
+.image-topmenu-tagcloud:hover,
+.image-topmenu-upload:hover {
+  fill: #ffc466;
+}
+
 /* Localplay */
 .active_instance {
     border-color: #fff;

@@ -636,6 +636,10 @@ div#autoupdate > span {
     display: none !important;
 }
 
+#sidebar-content {
+    width: 148px;
+}
+
 #sidebar-content-light {
     padding: 0;
     display: none;
@@ -647,12 +651,26 @@ div#autoupdate > span {
     position: fixed;
     left: 0;
     margin: 17px auto 5px 5px;
-    padding: 10px 0 10px 0;
+    padding: 5px 0 10px 0;
+    text-align: center;
+}
+
+#sidebar-light-default {
+    border: 2px solid;
+    border-color: #d8d8d8;
+    background: #f8f8f8;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 70px;
+    position: fixed;
+    left: 0;
+    margin: 0 auto 5px 5px;
+    padding: 5px 0 10px 0;
     text-align: center;
 }
 
 #sidebar-light li {
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 #sidebar-light img {
@@ -804,6 +822,20 @@ div#autoupdate > span {
 
 #sidebar-tabs #catalog_select {
     width: 130px;
+}
+
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  height: 32px;
+  width: 32px;
+  margin-bottom: -5px;
 }
 
 /* Localplay */

@@ -72,6 +72,11 @@ These searches will now use to rules for that object type and then return the so
   * download: add `bitrate` parameter
   * playlists: add `include` parameter (**note** this can be massive and slow when searches are included)
 
+### Changed
+
+* API6
+  * Do not translate API `errorMessage` strings [ampache.org](https://ampache.org/api/api-errors)
+
 ### Fixed
 
 * ALL
@@ -83,11 +88,6 @@ These searches will now use to rules for that object type and then return the so
   * Playlists objects would not return duplicates items if allowed
   * has_art property missing from songs and albums
   * playlist_add: couldn't add a single item
-
-### Removed
-
-* API6
-  * Do not translate API `errorMessage` strings [ampache.org](https://ampache.org/api/api-errors)
 
 ## Ampache 6.3.1
 

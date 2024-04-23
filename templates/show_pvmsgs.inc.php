@@ -31,7 +31,8 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$thcount = 5; ?>
+$thcount  = 5;
+$web_path = AmpConfig::get('web_path'); ?>
 <script>
     function getSelectionArray()
     {
@@ -44,10 +45,10 @@ $thcount = 5; ?>
 </script>
 <div id="information_actions">
     <ul>
-        <li><a href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message"><?php echo Ui::get_material_symbol('mail', T_('Compose')); ?> <?php echo T_('Compose a New Message'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Mark as Read'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Mark as Unread'); ?></a></li>
-        <li><a href="javascript:NavigateTo('<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
+        <li><a href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message"><?php echo Ui::get_material_symbol('mail', T_('Compose')); ?> <?php echo T_('Compose a New Message'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $web_path; ?>/pvmsg.php?action=set_is_read&read=1&msgs=' + getSelectionArray());"><?php echo T_('Mark as Read'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $web_path; ?>/pvmsg.php?action=set_is_read&read=0&msgs=' + getSelectionArray());"><?php echo T_('Mark as Unread'); ?></a></li>
+        <li><a href="javascript:NavigateTo('<?php echo $web_path; ?>/pvmsg.php?action=delete&msgs=' + getSelectionArray());"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?> <?php echo T_('Delete'); ?></a></li>
     </ul>
 </div>
 <?php if ($browse->is_show_header()) {

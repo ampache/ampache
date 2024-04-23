@@ -33,7 +33,7 @@ After each release, a documentation page will be created to allow pruning old fe
 
 Ampache supports the last major release of each API version. You can also check out the [past releases](https://ampache.org/api/versions/) page for some historical detail but **DO NOT** use these pages as a guide for API development.
 
-## Changelog API develop
+## API Changelog
 
 Take a look at the [API Changelog](https://ampache.org/api/api-changelog) to keep an eye on changes between versions
 
@@ -222,8 +222,8 @@ All Auth methods return HTTP 200 responses
 * handshake
 * goodbye
 * ping
-* register **Api6**
-* lost_password **Api6.1**
+* register
+* lost_password **Ampache 6.1.0+**
 
 ### Non-Data Methods
 
@@ -246,17 +246,18 @@ All Data methods return HTTP 200 responses
 * artist
 * artist_albums
 * artist_songs
+* bookmark **Ampache 6.1.0+**
 * bookmark_create
 * bookmark_delete
 * bookmark_edit
-* browse **Api6**
+* browse
 * catalogs
 * catalog
 * catalog_action
-* catalog_add **Api6**
-* catalog_delete **Api6**
+* catalog_add
+* catalog_delete
 * catalog_file
-* catalog_folder **Api6**
+* catalog_folder
 * deleted_podcast_episodes
 * deleted_songs
 * deleted_videos
@@ -272,6 +273,7 @@ All Data methods return HTTP 200 responses
 * get_bookmark
 * get_indexes
 * get_similar
+* index **Ampache 6.3.0+**
 * labels
 * label
 * label_artists
@@ -279,14 +281,17 @@ All Data methods return HTTP 200 responses
 * licenses
 * license
 * license_songs
-* list **Api6** (Replaces get_indexes)
+* list (Replaces get_indexes)
 * live_streams
 * live_stream
-* live_stream_create **Api6**
-* live_stream_delete **Api6**
-* live_stream_edit **Api6**
+* live_stream_create
+* live_stream_delete
+* live_stream_edit
+* now_playing **Ampache 6.3.1+**
+* player **Ampache 6.4.0+**
 * playlists
 * playlist
+* playlist_add **Ampache 6.3.0+**
 * playlist_add_song
 * playlist_create
 * playlist_delete
@@ -308,6 +313,8 @@ All Data methods return HTTP 200 responses
 * rate
 * record_play
 * scrobble
+* search_group **Ampache 6.3.0+**
+* search  **Ampache 6.3.0+** (alias for [advanced_search](https://ampache.org/api/api-advanced-search))
 * search_songs
 * shares
 * share
@@ -330,9 +337,11 @@ All Data methods return HTTP 200 responses
 * user
 * user_create
 * user_delete
-* user_edit **Api6** (Replaces user_update)
-* user_update
+* user_edit (Replaces user_update)
+* user_playlists **Ampache 6.3.0+**
 * user_preference
+* user_smartlists **Ampache 6.3.0+**
+* user_update
 * videos
 * video
 
@@ -340,11 +349,15 @@ All Data methods return HTTP 200 responses
 
 All binary methods will not return XML/JSON responses. they will either return the requested file/data or an HTTP error code.
 
+For information about about how playback works and what a client can expect from Ampache check out [API Media Methods](https://ampache.org/api/api-media-methods)
+
 @return (HTTP 200 OK)
 
 @throws (HTTP 400 Bad Request)
 
 @throws (HTTP 404 Not Found)
+
+@throws (HTTP 416 Range Not Satisfiable)
 
 * download
 * get_art

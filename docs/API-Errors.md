@@ -6,14 +6,16 @@ description: "API documentation"
 
 Ampache's API errors are loosely based around the HTTP status codes. All errors are returned in the form of an XML/JSON Document however the string error message provided is translated into the language of the Ampache server in question. All services should only use the code value.
 
-For Ampache5 error codes are changing and expanding on the information available to the user/client/application that caused the error.
+For API6 error codes are changing and expanding on the information available to the user/client/application that caused the error.
 
-An Ampache5 error has the following parts:
+An API6 error has the following parts:
 
 * errorCode: numeric code
 * errorAction: method that caused the error
 * errorType: further information such as the type of data missing or access level required
-* errorMessage: translated error message
+* errorMessage: error message (US English string Ampache 6.4.0+ **OR** Translated string Ampache 6.0.0 => 6.3.1)
+
+**NOTE** Prior to Ampache 6.4.0 the API errorMessage text was translated into the server locale. All future versions will not translate the string.
 
 ## Rules Regarding errors
 

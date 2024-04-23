@@ -495,17 +495,17 @@ if ($is_session) {
                                 / <a href="<?php echo $web_path; ?>/register.php" class="nohtml"><?php echo T_('Register'); ?></a>
                         <?php } ?>
                         </span>
-                    <?php } ?>
-                    <?php if ($site_ajax) { ?>
+<?php } ?>
+<?php if ($site_ajax) { ?>
                         <div id="rightbar-minimize">
                             <a href="javascript:ToggleRightbarVisibility();"><?php echo Ui::get_material_symbol('dock_to_left', T_('Show/Hide Playlist')); ?></a>
                         </div>
-                    <?php } ?>
-                    <?php Ui::show_box_bottom(); ?>
+<?php } ?>
+<?php Ui::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
             </div><!-- End header -->
 
-            <?php if (AmpConfig::get('topmenu')) { ?>
+<?php if (AmpConfig::get('topmenu')) { ?>
             <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/index.php">
@@ -549,16 +549,21 @@ if ($is_session) {
                 </div>
                 <?php } ?>
             </div>
-            <?php } ?>
-            <?php $sidebarLight = AmpConfig::get('sidebar_light');
-$isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
-            ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
-            (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")); ?>
-
+<?php }
+$sidebarLight = AmpConfig::get('sidebar_light');
+$hideSwitcher = AmpConfig::get('sidebar_hide_switcher', false);
+$isCollapsed  = (
+    ($sidebarLight && $hideSwitcher) ||
+    ($sidebarLight && (!isset($_COOKIE['sidebar_state']))) ||
+    ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
+    (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
+); ?>
             <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
-                <div id="sidebar-header" class="<?php echo $isCollapsed ? 'sidebar-header-collapsed' : ''; ?>" >
-                    <span id="sidebar-header-content"></span>
-                </div>
+            <?php if (!$hideSwitcher) {
+                echo '<div id="sidebar-header" class="' . ($isCollapsed ? 'sidebar-header-collapsed' : '') . '" >';
+                echo '<span id="sidebar-header-content"></span>';
+                echo '</div>';
+            } ?>
                 <div id="sidebar-content" class="<?php echo $isCollapsed ? 'sidebar-content-collapsed' : ''; ?>" >
                     <?php require_once Ui::find_template('sidebar.inc.php'); ?>
                 </div>
@@ -566,6 +571,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
                     <?php require_once Ui::find_template('sidebar.light.inc.php'); ?>
                 </div>
             </div>
+            <?php if (!$hideSwitcher) { ?>
             <!-- Handle collapsed visibility -->
             <script>
             $('#sidebar-header').click(function(){
@@ -597,6 +603,7 @@ $isCollapsed                    = (($sidebarLight && (!isset($_COOKIE['sidebar_s
                 Cookies.set('sidebar_state', newstate, {<?php echo $cookie_string; ?>});
             });
             </script>
+            <?php } ?>
             <div id="rightbar" class="rightbar-fixed">
                 <?php require_once Ui::find_template('rightbar.inc.php'); ?>
             </div>

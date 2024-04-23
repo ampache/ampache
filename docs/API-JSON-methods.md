@@ -14,6 +14,9 @@ Binary methods will also return:
 
 * HTTP 400 responses for a bad or incomplete request
 * HTTP 404 responses where the requests data was not found
+* HTTP 416 responses where the stream is unable to return the requested content-range
+
+For information about about how playback works and what a client can expect from Ampache check out [API Media Methods](https://ampache.org/api/api-media-methods)
 
 ## Auth Methods
 
@@ -170,7 +173,7 @@ Register as a new user if allowed. (Requires the username, password and email.)
 |------------|---------|-----------------------------------|---------:|
 | 'username' | string  | $username                         |       NO |
 | 'password' | string  | hash('sha256', $password)         |       NO |
-| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'email'    | string  | e.g. `user@gmail.com`             |       NO |
 | 'fullname' | string  |                                   |      YES |
 
 * return object
@@ -1694,7 +1697,35 @@ Get what is currently being played by all users.
 "error": ""
 ```
 
-[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.xml)
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/now_playing.json)
+
+### player
+
+Inform the server about the state of your client. (Song you are playing, Play/Pause state, etc.)
+
+Return the `now_playing` state when completed
+
+| Input    | Type    | Description                                          | Optional |
+|----------|---------|------------------------------------------------------|---------:|
+| 'filter' | string  | $object_id currently playing/stopping                |       NO |
+| 'type'   | string  | `song`, `video`, `podcast_episode` (Default: `song`) |      YES |
+| 'state'  | string  | `play`, `stop` (Default: `play`)                     |      YES |
+| 'time'   | integer | current play time in whole seconds (Default: 0)      |      YES |
+| 'client' | string  | agent/client name                                    |      YES |
+
+* return array
+
+```JSON
+"now_playing": []
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/player.json)
 
 ### playlists
 
@@ -2371,21 +2402,21 @@ Each type is a grouping of object types so allow single search calls to be made
   * album
   * artist
 
-song_artist
+* song_artist
   * song
   * album
   * song_artist
 
-album_artist
+* album_artist
   * song
   * album
   * album_artist
   
-podcast
+* podcast
   * podcast
   * podcast_episode
 
-video
+* video
   * video
 
 | Input    | Type    | Description                                                                          | Optional |
@@ -2397,7 +2428,6 @@ video
 | random   | boolean | `0`, `1` (random order of results; default to 0)                                     |      YES |
 | 'offset' | integer | Return results starting from this index position                                     |      YES |
 | 'limit'  | integer | Maximum number of results to return                                                  |      YES |
-
 
 * return array
 
@@ -2992,7 +3022,7 @@ Create a new user. (Requires the username, password and email.)
 |------------|---------|-----------------------------------|---------:|
 | 'username' | string  | $username                         |       NO |
 | 'password' | string  | hash('sha256', $password)         |       NO |
-| 'email'    | string  | e.g. user@gmail.com               |       NO |
+| 'email'    | string  | e.g. `user@gmail.com`             |       NO |
 | 'fullname' | string  |                                   |      YES |
 | 'disable'  | boolean | `0`, `1`                          |      YES |
 | 'group'    | integer | Catalog filter group, default = 0 |      YES |
@@ -3047,7 +3077,7 @@ Update an existing user.
 |---------------------|---------|------------------------------------------|---------:|
 | 'username'          | string  | $username                                |       NO |
 | 'password'          | string  | hash('sha256', $password)                |      YES |
-| 'email'             | string  | e.g. user@gmail.com                      |      YES |
+| 'email'             | string  | e.g. `user@gmail.com`                    |      YES |
 | 'fullname'          | string  |                                          |      YES |
 | 'website'           | string  |                                          |      YES |
 | 'state'             | string  |                                          |      YES |

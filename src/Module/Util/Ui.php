@@ -364,11 +364,11 @@ class Ui implements UiInterface
     public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
     {
         $title    = $title ?? T_(ucfirst($name));
-        $filepath = __DIR__ . '/../../../lib/components/material-symbols/' . $name . '.svg';
+        $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
         if (!is_file($filepath)) {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filepath = __DIR__ . '/../../../images/icon_error.svg';
+            $filepath = __DIR__ . '/../../../resources/images/icon_error.svg';
         }
         $tag = '';
         // load svg file
@@ -416,18 +416,28 @@ class Ui implements UiInterface
 
         if (empty($filesearch)) {
             // if the theme is missing an icon, fall back to default images folder
-            $path       = 'images/';
-            $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+            $path = 'images/';
+            // check private resources folder for svg files
+            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . 'icon_' . $name . '.svg', GLOB_BRACE);
+            if (empty($filesearch)) {
+                // finally fall back to the public images folder
+                $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+            }
         }
 
-        if (is_array($filesearch)) {
+        if (!empty($filesearch) && is_file($filesearch[0])) {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         } else {
             // fall back to error icon if icon is missing
             debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
-            $filename = 'images/icon_error.svg';
+
+            return __DIR__ . '/../../../resources/images/icon_error.svg';
         }
-        $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+        if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
+            $url = $filesearch[0];
+        } else {
+            $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+        }
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
@@ -449,8 +459,6 @@ class Ui implements UiInterface
             // load svg file
             $svgimage = simplexml_load_file($image_url);
             if ($svgimage !== false) {
-                $svgimage->addAttribute('class', 'image');
-
                 if (empty($svgimage->title)) {
                     $svgimage->addChild('title', $title);
                 } else {
@@ -500,16 +508,33 @@ class Ui implements UiInterface
             return self::$_image_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . '/images/';
+        // always check themes first
+        $path       = 'themes/' . AmpConfig::get('theme_name') . '/images/';
         $filesearch = glob(__DIR__ . '/../../../' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            $path = 'images/';
+            // check private resources folder for svg files
+            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg', GLOB_BRACE);
+            if (empty($filesearch)) {
+                // finally fall back to the public images folder
+                $filesearch = glob(__DIR__ . '/../../../' . $path . $name . '.{svg,png}', GLOB_BRACE);
+            }
+        }
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
-            $path     = '/images/';
+            $path     = 'images/';
         } else {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        if (
+            $filesearch &&
+            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+        ) {
+            $url = $filesearch[0];
+        } else {
+            $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+        }
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
@@ -866,6 +891,13 @@ class Ui implements UiInterface
             case 'show_wrapped':
             case 'show_subtitle':
             case 'sidebar_light':
+            case 'sidebar_hide_browse':
+            case 'sidebar_hide_dashboard':
+            case 'sidebar_hide_information':
+            case 'sidebar_hide_playlist':
+            case 'sidebar_hide_search':
+            case 'sidebar_hide_switcher':
+            case 'sidebar_hide_video':
             case 'song_page_title':
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
