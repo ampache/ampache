@@ -19,12 +19,12 @@ This is passed as a type argument and will only return this object in results
 * [song](https://ampache.org/api/advanced-search/song-advanced-search)
 * [album](https://ampache.org/api/advanced-search/album-advanced-search)
 * [artist](https://ampache.org/api/advanced-search/artist-advanced-search)
-* song_artist (**NOTE** same rules as artist but only returns song artists) (**5.5.2+**)
-* album_artist (**NOTE** same rules as artist but only returns album artists) (**5.5.2+**)
+* song_artist (**NOTE** same rules as artist but only returns song artists)
+* album_artist (**NOTE** same rules as artist but only returns album artists)
 * [label](https://ampache.org/api/advanced-search/label-advanced-search)
 * [playlist](https://ampache.org/api/advanced-search/playlist-advanced-search)
-* [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search) (**Ampache 5.5.0+**)
-* [podcast_episode](https://ampache.org/api/advanced-search/podcast-episode-advanced-search) (**Ampache 5.5.0+**)
+* [podcast](https://ampache.org/api/advanced-search/podcast-advanced-search)
+* [podcast_episode](https://ampache.org/api/advanced-search/podcast-episode-advanced-search)
 * [genre](https://ampache.org/api/advanced-search/genre-advanced-search)
 * tag (*Alias of genre)
 * [user](https://ampache.org/api/advanced-search/user-advanced-search)
@@ -161,7 +161,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | possible_duplicate       | Possible Duplicate                      | is_true           |                          song, album, artist                          |
 | possible_duplicate_album | Possible Duplicate Albums               | is_true           |                          song, album, artist                          |
 | username                 | Username                                | text              |                                 user                                  |
-| category                 | Category                                | text              |                              label, genre                             |
+| category                 | Category                                | text              |                             label, genre                              |
 
 ### Available operator values
 
