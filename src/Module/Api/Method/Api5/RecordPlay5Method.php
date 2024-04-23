@@ -48,7 +48,7 @@ final class RecordPlay5Method
      *
      * id     = (integer) $object_id
      * user   = (integer|string) $user_id OR $username //optional
-     * client = (string) $agent //optional
+     * client = (string) $agent Default: 'api' //optional
      * date   = (integer) UNIXTIME() //optional
      */
     public static function record_play(array $input, User $user): bool
