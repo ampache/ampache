@@ -47,10 +47,11 @@ php7.4 /usr/local/bin/composer install
 php8.0 /usr/local/bin/composer install
 ```
 
-* Install npm packages
+* Install npm packages & build javascript files
 
 ```shell
 npm install
+npm run build
 ```
 
 * Remove broken symbolic links

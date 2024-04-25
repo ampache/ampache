@@ -24,7 +24,7 @@
 /* Filters */
 /***********/
 
-function showFilters(element) {
+export function showFilters(element) {
     var link = $(".browse-options-link");
     link.hide();
     var content = $(".browse-options-content");
@@ -37,14 +37,14 @@ function showFilters(element) {
 
 
 var closeplaylist;
-function overlayclickclose() {
+export function overlayclickclose() {
     if (closeplaylist) {
         $("#playlistdialog").dialog("close");
     }
     closeplaylist = 1;
 }
 
-function showPlaylistDialog(e, item_type, item_ids) {
+export function showPlaylistDialog(e, item_type, item_ids) {
     $("#playlistdialog").dialog("close");
 
     var parent = this;
@@ -85,12 +85,12 @@ function showPlaylistDialog(e, item_type, item_ids) {
     closeplaylist = 0;
 }
 
-function handlePlaylistAction(url, id) {
+export function handlePlaylistAction(url, id) {
     ajaxPut(url, id);
     $("#playlistdialog").dialog("close");
 }
 
-function createNewPlaylist(title, url, id) {
+export function createNewPlaylist(title, url, id) {
     var plname = window.prompt(title, "");
     if (plname !== null) {
         url += "&name=" + plname;
@@ -99,7 +99,7 @@ function createNewPlaylist(title, url, id) {
 }
 
 var closeshare;
-function shoverlayclickclose(e) {
+export function shoverlayclickclose(e) {
     if (closeshare) {
         $("#sharedialog").dialog("close");
     }
@@ -111,7 +111,7 @@ function shoverlayclickclose(e) {
 /************************************************************/
 
 var closebroadcasts;
-function showBroadcastsDialog(e) {
+export function showBroadcastsDialog(e) {
     $("#broadcastsdialog").dialog("close");
 
     var parent = this;
@@ -151,14 +151,14 @@ function showBroadcastsDialog(e) {
     closebroadcasts = 0;
 }
 
-function broverlayclickclose() {
+export function broverlayclickclose() {
     if (closebroadcasts) {
         $("#broadcastsdialog").dialog("close");
     }
     closebroadcasts = 1;
 }
 
-function handleBroadcastAction(url, id) {
+export function handleBroadcastAction(url, id) {
     ajaxPut(url, id);
     $("#broadcastsdialog").dialog("close");
 }
@@ -167,7 +167,7 @@ function handleBroadcastAction(url, id) {
 /* Dialog selection to start a broadcast */
 /************************************************************/
 
-function showShareDialog(e, object_type, object_id) {
+export function showShareDialog(e, object_type, object_id) {
     $("#sharedialog").dialog("close");
 
     var parent = this;
@@ -207,7 +207,7 @@ function showShareDialog(e, object_type, object_id) {
     closeshare = 0;
 }
 
-function handleShareAction(url) {
+export function handleShareAction(url) {
     window.open(url);
     $("#sharedialog").dialog("close");
 }
@@ -219,7 +219,7 @@ function handleShareAction(url) {
 var tag_choices;
 var label_choices;
 
-function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_row_prefix, argument_string) {
+export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_row_prefix, argument_string) {
     var parent = this;
     parent.editFormId = "form#" + edit_form_id;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_object&id=" + edit_id + "&type=" + edit_type;
@@ -331,7 +331,7 @@ $(window).resize(function() {
     $("#editdialog").dialog("option", "position", {my: "center", at: "center", of: window});
 });
 
-function check_inline_song_edit(type, song) {
+export function check_inline_song_edit(type, song) {
     var source = "#" + type + "_select_" + song;
     if ($(source + " option:selected").val() == -1) {
         $(source).fadeOut(600, function() {
@@ -348,7 +348,7 @@ function check_inline_song_edit(type, song) {
 /*   Sortable table  */
 /*********************/
 
-function sortPlaylistRender() {
+export function sortPlaylistRender() {
     var eles = $("tbody[id^=\"sortableplaylist_\"]");
     if (eles !== null) {
         var len = eles.length;
@@ -365,7 +365,7 @@ $(document).ready(function () {
     sortPlaylistRender();
 });
 
-function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshAction) {
+export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshAction) {
     var parent = this;
     parent.itemId = itemId;
     parent.refreshAction = refreshAction;
@@ -407,7 +407,7 @@ function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshActio
     }
 }
 
-function getPagePlaySettings() {
+export function getPagePlaySettings() {
     var settings = "";
     var stg_subtitle = document.getElementById("play_setting_subtitle");
     if (typeof(stg_subtitle) !== "undefined" && stg_subtitle !== null) {
@@ -419,18 +419,18 @@ function getPagePlaySettings() {
     return settings;
 }
 
-function geolocate_user_callback(position) {
+export function geolocate_user_callback(position) {
     var url = jsAjaxUrl + "?page=stats&action=geolocation&latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
     $.get(url);
 }
 
-function geolocate_user() {
+export function geolocate_user() {
     if(navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(geolocate_user_callback);
     }
 }
 
-function show_selected_license_link(license_select) {
+export function show_selected_license_link(license_select) {
     var license = $("#" + license_select + " option:selected");
     var link = license.attr("data-link");
     if (typeof(link) !== "undefined") {
