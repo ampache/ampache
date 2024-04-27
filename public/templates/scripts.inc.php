@@ -29,11 +29,11 @@ use Ampache\Module\Util\Ui;
 use Idleberg\ViteManifest\Manifest;
 
 global $dic;
-$web_path       = (string)AmpConfig::get('web_path', '');
-$environment    = $dic->get(EnvironmentInterface::class);
+$web_path          = (string)AmpConfig::get('web_path', '');
+$environment       = $dic->get(EnvironmentInterface::class);
 $manifest          = __DIR__ . '/../dist/.vite/manifest.json';
 $entrypoint        = false;
-if (file_exists($manifest )) {
+if (file_exists($manifest)) {
     $vm            = new Manifest($manifest, "");
     $entrypoint    = $vm->getEntrypoint("src/js/main.js");
 }

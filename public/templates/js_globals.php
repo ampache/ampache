@@ -24,7 +24,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\Model\Preference;
 
