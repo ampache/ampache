@@ -257,6 +257,11 @@ final class Environment implements EnvironmentInterface
     {
         // the default vite port is hardcoded for simplicity
         $handle = curl_init('http://localhost:5173/' . $entry);
+
+        if ($handle === false) {
+            return false;
+        }
+
         curl_setopt_array($handle, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_NOBODY => true,
