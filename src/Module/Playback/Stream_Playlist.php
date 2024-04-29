@@ -53,6 +53,20 @@ use Ampache\Repository\Model\Video;
  */
 class Stream_Playlist
 {
+    private const STREAM_PLAYLIST_ROW = [
+        'sid' => null,
+        'url' => "",
+        'info_url' => null,
+        'image_url' => null,
+        'title' => null,
+        'author' => null,
+        'album' => null,
+        'type' => null,
+        'time' => null,
+        'codec' => null,
+        'track_num' => 0,
+    ];
+
     public $id;
 
     /** @var list<Stream_Url> */
@@ -264,7 +278,7 @@ class Stream_Playlist
     private static function media_object_to_url(Media $object, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
     {
         $surl = null;
-        $url  = array();
+        $url  = self::STREAM_PLAYLIST_ROW;
         if (!$user) {
             $user = Core::get_global('user');
         }
@@ -323,10 +337,11 @@ class Stream_Playlist
                     break;
                 case 'video':
                     /** @var Video $object */
-                    $url['title']      = 'Video - ' . $object->title;
-                    $url['author']     = $object->get_artist_fullname();
-                    $url['resolution'] = $object->f_resolution;
-                    $url['codec']      = $object->type;
+                    $url['title']     = 'Video - ' . $object->title;
+                    $url['author']    = $object->get_artist_fullname();
+                    $url['info_url']  = $object->get_f_link();
+                    $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
+                    $url['codec']     = $object->type;
                     break;
                 case 'live_stream':
                     /** @var Live_Stream $object */
