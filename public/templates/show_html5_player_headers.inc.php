@@ -85,6 +85,7 @@ if ($iframed || $isShare) { ?>
         jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
         jpmedia['r128_track_gain'] = media['r128_track_gain'];
         jpmedia['r128_album_gain'] = media['r128_album_gain'];
+        jpmedia['duration'] = media['duration'];
 
         return jpmedia;
     }
