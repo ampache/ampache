@@ -311,6 +311,7 @@ class WebPlayer
                 $json['replaygain_album_peak'] = $media->replaygain_album_peak;
                 $json['r128_track_gain']       = $media->r128_track_gain;
                 $json['r128_album_gain']       = $media->r128_album_gain;
+                $json['duration']              = $media->time;
 
                 // this should probably only be in songs
                 if ($media->type != $types['real']) {
