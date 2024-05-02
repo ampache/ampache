@@ -41,9 +41,6 @@ if ($iframed || $isShare) { ?>
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
     <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
     <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
     <script>
         var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
         var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
@@ -85,6 +82,7 @@ if ($iframed || $isShare) { ?>
         jpmedia['replaygain_album_peak'] = media['replaygain_album_peak'];
         jpmedia['r128_track_gain'] = media['r128_track_gain'];
         jpmedia['r128_album_gain'] = media['r128_album_gain'];
+        jpmedia['duration'] = media['duration'];
 
         return jpmedia;
     }

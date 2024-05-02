@@ -235,8 +235,8 @@ require_localnet_session = "true"
 ; Add a STREAMTOKEN to the account when a new user is created
 ; Streamtoken's allow a user to play without having a valid session (links do not expire)
 ; https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams
-; DEFAULT: "false"
-;user_create_streamtoken = "true"
+; DEFAULT: "true"
+user_create_streamtoken = "true"
 
 ;#########################################################
 ; Metadata                                               #

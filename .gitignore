@@ -5,7 +5,10 @@
 .vscode/
 .buildpath
 .env
+.maintenance
 .pc
+.php-cs-fixer.cache
+.phpunit.result.cache
 .project
 bootstrap/
 build/
@@ -17,12 +20,12 @@ log/
 logs/
 nbproject/
 node_modules/
-.maintenance
 play/.htaccess
 rest/.htaccess
+client
+dist/
 lib/components
 lib/javascript/custom.js
-client
 newclient
 core
 develop
@@ -50,6 +53,3 @@ web.config
 *.swp
 *.v11.suo
 *~
-.php-cs-fixer.cache
-.phpunit.result.cache
-/public
