@@ -50,3 +50,4 @@ web.config
 *.v11.suo
 *~
 .php-cs-fixer.cache
+/resources/images/material-symbols
