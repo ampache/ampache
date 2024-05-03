@@ -166,7 +166,7 @@ class AutoUpdate
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
         $time       = time();
         $git_branch = self::is_force_git_branch();
-        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')?->getId()), $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         // Development version, get latest commit on develop branch
