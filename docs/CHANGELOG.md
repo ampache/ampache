@@ -59,6 +59,7 @@ These searches will now use to rules for that object type and then return the so
 * Don't try to get playlist items when it's not a valid list
 * Send a 416 HTTP response when trying to stream past the end of a song
 * Stream_playlist columns could be inconsistent with different media types in a list
+* Compare Ampache version string is actually higher using version_compare() instead a not equals comparison
 * webplayer
   * Send the Song time to the player to stop all these wild numbers
 * Subsonic
