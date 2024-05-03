@@ -135,10 +135,3 @@ foreach ($object_ids as $song_id) {
         <?php } ?>
     </tbody>
 </table>
-
-<script>
-    var index = 1;
-    var indexes = $("#similar_songs_<?php echo $artist->id; ?> .cel_play_content").each(function() {
-        $(this).html(index++);
-    });
-</script>
