@@ -70,3 +70,27 @@ $(document).ready(function() {
         }
     }
 });
+
+// RIGHTBAR
+export function ToggleRightbarVisibility()
+{
+    if ($("#rightbar").is(":visible")) {
+        $("#rightbar").slideUp();
+    } else {
+        $("#rightbar").slideDown();
+    }
+}
+
+// kick off opening the rightbar on a full page refresh
+$(document).ready(function() {
+    if (jsBasketCount > 0 || jsAmpConfigPlayType === "localplay") {
+        $("#content").removeClass("content-right-wild", 500);
+        $("#footer").removeClass("footer-wild", 500);
+        $("#rightbar").removeClass("hidden");
+        $("#rightbar").show("slow");
+    } else {
+        $("#content").addClass("content-right-wild", 500);
+        $("#footer").addClass("footer-wild", 500);
+        $("#rightbar").hide("slow");
+    }
+});

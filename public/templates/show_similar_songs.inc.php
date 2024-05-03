@@ -53,7 +53,7 @@ $hide_year    = in_array('cel_year', $hide_columns);
 $hide_drag    = in_array('cel_drag', $hide_columns);
 $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
 ?>
-<table id="similar_tracks" class="tabledata striped-rows">
+<table id="similar_songs" class="tabledata striped-rows">
     <thead>
     <tr class="th-top">
         <th class="cel_play essential"></th>
