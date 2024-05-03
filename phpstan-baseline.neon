@@ -8711,16 +8711,6 @@ parameters:
 			path: src/Module/System/AutoUpdate.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/AutoUpdate.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
 			message: "#^Comparison operation \"\\<\" between int\\<0, max\\> and 0 is always false\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
