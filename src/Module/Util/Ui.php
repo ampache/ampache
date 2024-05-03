@@ -411,7 +411,7 @@ class Ui implements UiInterface
             return self::$_icon_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . 'images/icons/';
+        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         $filesearch = glob(__DIR__ . '/../../../' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
 
         if (empty($filesearch)) {
@@ -509,7 +509,7 @@ class Ui implements UiInterface
         }
 
         // always check themes first
-        $path       = 'themes/' . AmpConfig::get('theme_name') . '/images/';
+        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         $filesearch = glob(__DIR__ . '/../../../' . $path . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             $path = 'images/';
@@ -1202,7 +1202,7 @@ class Ui implements UiInterface
                 break;
             case 'theme_color':
                 // This include a two-step configuration (first change theme and save, then change theme color and save)
-                $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+                $theme_cfg = get_theme(AmpConfig::get('theme_name', 'reborn'));
                 if ($theme_cfg !== null) {
                     echo "<select name=\"$name\">\n";
                     foreach ($theme_cfg['colors'] as $color) {
