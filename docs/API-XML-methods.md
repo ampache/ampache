@@ -1,6 +1,6 @@
 ---
-title: "API6 XML Methods"
-metaTitle: "API6 XML Methods"
+title: "XML Methods"
+metaTitle: "XML Methods"
 description: "API documentation"
 ---
 
