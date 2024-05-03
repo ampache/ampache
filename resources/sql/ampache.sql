@@ -17,10 +17,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Mar 13, 2024 at 09:48 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
--- PHP Version: 8.2.16
+-- Host: 192.168.1.9
+-- Generation Time: May 03, 2024 at 01:47 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1
+-- PHP Version: 8.2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -809,7 +809,7 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `playlist` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `object_id` int(11) UNSIGNED DEFAULT NULL,
-  `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `object_type` enum('broadcast','democratic','live_stream','podcast_episode','song','song_preview','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `track` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `playlist` (`playlist`)
@@ -831,7 +831,7 @@ CREATE TABLE IF NOT EXISTS `podcast` (
   `description` varchar(4096) DEFAULT NULL,
   `language` varchar(5) DEFAULT NULL,
   `copyright` varchar(255) DEFAULT NULL,
-  `generator` varchar(64) DEFAULT NULL,
+  `generator` varchar(128) DEFAULT NULL,
   `lastbuilddate` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `lastsync` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -1479,7 +1479,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600068'),
+('db_version', '600070'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
