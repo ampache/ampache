@@ -34,8 +34,8 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '6.3.1'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '69';
+    private const VERSION        = '6.4.0'; // AMPACHE_VERSION
+    private const CONFIG_VERSION = '71';
     private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';

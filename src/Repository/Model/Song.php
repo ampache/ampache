@@ -1765,7 +1765,7 @@ class Song extends database_object implements
         if (!isset($this->f_album_link)) {
             $this->f_album_link = '';
             $web_path           = AmpConfig::get('web_path');
-            $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&amp;album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
+            $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
         }
 
         return $this->f_album_link;
@@ -1780,7 +1780,7 @@ class Song extends database_object implements
         if (!isset($this->f_album_disk_link)) {
             $this->f_album_disk_link = '';
             $web_path                = AmpConfig::get('web_path');
-            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&amp;album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
+            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 
         return $this->f_album_disk_link;
@@ -1985,18 +1985,40 @@ class Song extends database_object implements
         }
 
         // if you transcode the media mime will change
-        if (AmpConfig::get('transcode') != 'never' && ($downsample_remote || empty($additional_params) || (!strpos($additional_params, 'action=download') && !strpos($additional_params, 'format=raw')))) {
+        if (
+            AmpConfig::get('transcode') != 'never' &&
+            (
+                $downsample_remote ||
+                empty($additional_params) ||
+                (
+                    !strpos($additional_params, '&bitrate=') &&
+                    !strpos($additional_params, '&format=')
+                )
+            )
+        ) {
             $cache_path     = (string)AmpConfig::get('cache_path', '');
             $cache_target   = (string)AmpConfig::get('cache_target', '');
             $file_target    = Catalog::get_cache_path($this->id, $this->catalog, $cache_path, $cache_target);
+            $bitrate        = (int)AmpConfig::get('transcode_bitrate', 128) * 1000;
             $transcode_type = ($file_target !== null && is_file($file_target))
                 ? $cache_target
                 : Stream::get_transcode_format($this->type, null, $player);
-            if (!empty($transcode_type) && $this->type !== $transcode_type) {
+            if (
+                !empty($transcode_type) &&
+                ($this->type !== $transcode_type || $bitrate < $this->bitrate)
+            ) {
                 $this->type    = $transcode_type;
-                $this->mime    = self::type_to_mime($this->type);
-                $this->bitrate = ((int)AmpConfig::get('transcode_bitrate', 128)) * 1000;
-                $additional_params .= '&transcode_to=' . $transcode_type;
+                $this->mime    = self::type_to_mime($transcode_type);
+                $this->bitrate = $bitrate;
+
+                // replace duplicate/incorrect parameters on the additional params
+                $patterns = array(
+                    '/&format=[a-z]+/',
+                    '/&transcode_to=[a-z|0-9]+/',
+                    '/&bitrate=[0-9]+/',
+                );
+                $additional_params = preg_replace($patterns, '', $additional_params);
+                $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }
         }
 
@@ -2302,7 +2324,7 @@ class Song extends database_object implements
     {
         if (
             AmpConfig::get('licensing') &&
-            $this->licenseObj !== null &&
+            $this->licenseObj === null &&
             $this->license !== null
         ) {
             $this->licenseObj = $this->getLicenseRepository()->findById($this->license);

@@ -8,11 +8,15 @@
 
 ## News
 
-Ampache6 is [HERE!](https://github.com/ampache/ampache/releases/tag/6.2.1)
+Ampache6 is [here!](https://github.com/ampache/ampache/releases/)
 
-Ampache7 development is going to begin shortly keep an eye out for a patch7 branch!
+Ampache7 development has begun on the patch7 branch!
 
-Ampache7 will continue to use **API6** and will not make any breaking changes to the API.
+This branch will become release7 and replace the develop and master branches.
+
+Information and changes for this major release are being recorded in the wiki [here.](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
+
+Ampache7 will continue to use **API6** and will not make any breaking changes to that [API.](https://ampache.org/api/)
 
 ## Basics
 
@@ -40,7 +44,7 @@ You get the latest version with recent changes and fixes but maybe in an unstabl
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f995711a30364908968bf0efb3e7e257)](https://app.codacy.com/gh/ampache/ampache)
 [![Code Climate](https://codeclimate.com/github/ampache/ampache/badges/gpa.svg)](https://codeclimate.com/github/ampache/ampache)
 
-If you want to run the last stable version [release4](https://github.com/ampache/ampache/archive/release4.tar.gz) is still available
+If you want to run the last stable version [release5](https://github.com/ampache/ampache/archive/release5.tar.gz) is still available
 
 ## Installation
 
@@ -73,11 +77,13 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * intl
   * simplexml
   * curl
+  * zip (Ampache 7.0.0 and higher)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
   * php-dom
   * php-intl
+  * php-zip
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 
@@ -102,7 +108,7 @@ Ampache includes some [external modules](https://github.com/ampache/ampache/blob
 Ampache is currently translated (at least partially) into the
 following languages. If you are interested in updating an existing
 translation, simply visit us on [Transifex](https://www.transifex.com/ampache/ampache).
-If you prefer it old school or want to work offline, take a look at [/locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
+If you prefer it old school or want to work offline, take a look at [locale/base/TRANSLATIONS](https://github.com/ampache/ampache/blob/develop/locale/base/TRANSLATIONS.md)
 for more instructions.
 
 Translation progress so far:

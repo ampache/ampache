@@ -1,5 +1,98 @@
 # CHANGELOG
 
+## Ampache 6.4.0
+
+Work on Ampache7 is ongoing.
+
+Check out the [wiki](https://github.com/ampache/ampache/wiki/ampache7-for-admins) for information as some changes will be backported to Ampache6.
+
+There has been a change to the way Random Searches work for Artist and Albums
+These searches will now use to rules for that object type and then return the songs contained in those objects
+
+* For example
+  * You search using `random.php?action=advanced&type=album`
+  * You search `album_rating == 5` and the `Item count` is set to 1
+  * The search will find 1 album that is rated 5 and return **all** the songs in that album
+
+### Added
+
+* Translations 2024-05
+* rtrim slashes on some config variables in case you ignore the warning
+* Database 600070
+  * Allow signed `user` column for `broadcast`, `player_control`, `session_stream`, `share`, `user_activity`, `user_follower` and `user_vote` tables
+  * Revert unique constraint `playlist_track_UN` on `playlist_data` table
+  * Extend `generator column` on `podcast` table to 128 characters
+  * Convert `object_type` to an enum on `playlist_data` table
+* Config version 71
+  * Fix up bitrate encode_args
+  * Add `api_debug_handler` run api commands without exception handling (At your own risk!)
+  * Wrap default string config options in quotes
+  * Add a note about using a secure cookie prefix
+
+### Changed
+
+* Stream Random action default fallback to `song`
+* Allow using `tmp_dir_path` for Dropbox catalog
+* Subsonic
+  * Song file path is now always the original full file path
+  * This was a relative path that was changed with transcoding mean the path nevers existed.
+* Random search (`random.php?action=advanced`) `artist` and `album` actions have been changed to use their object rules
+  * The returned results are still song objects but the searches are done using their rule set
+
+### Fixed
+
+* Always get the current file size when downloading the raw file
+* AlbumDisk errors on unknown items
+* Album names being overwritten with artist names when missing tags
+* Regenerate playlist track numbers correctly for the full list
+* Also check the bitrate when transcoding instead of just formats
+* Don't use cached files if the bitrate doesn't match `transcode_rate`
+* Default config encode_args are putting bitrates into millions
+* URL links generated with `&amp;` that were causing errors
+* Song license display
+* Check Stream_Playlist::media_to_url() to ensure valid media
+* File naming fixes to stop matching year on 1080p
+* ObjectTypeToClassNameMapper missing `tvshow` class
+* Allow `composer stan` to run on Windows
+* Filter Random and Trending sections for catalog filters on dashboards
+* MusicBrainz lookups on Wanted files
+* Don't try to get playlist items when it's not a valid list
+* Send a 416 HTTP response when trying to stream past the end of a song
+* Stream_playlist columns could be inconsistent with different media types in a list
+* Compare Ampache version string is actually higher using version_compare() instead a not equals comparison
+* webplayer
+  * Send the Song time to the player to stop all these wild numbers
+* Subsonic
+  * Sending a User as an array instead of Users
+
+## API 6.4.0
+
+### Added
+
+* API6
+  * Downgrade any API7 calls to API6 [wiki](https://github.com/ampache/ampache/wiki/ampache7-for-admins#there-is-no-api7-only-api6-and-5-4-and-3-too)
+  * New Method: player (Inform the server about the state of your client player)
+    * Returns `now_playing` state on completion
+  * download: add `bitrate` parameter
+  * playlists: add `include` parameter (**note** this can be massive and slow when searches are included)
+
+### Changed
+
+* API6
+  * Do not translate API `errorMessage` strings [ampache.org](https://ampache.org/api/api-errors)
+
+### Fixed
+
+* ALL
+  * Download method format parameter didn't have a fallback value
+* API4
+  * playlist: error check for missing/deleted playlists
+  * playlist_songs: error check for missing/deleted playlists
+* API6
+  * Playlists objects would not return duplicates items if allowed
+  * has_art property missing from songs and albums
+  * playlist_add: couldn't add a single item
+
 ## Ampache 6.3.1
 
 ### Added
@@ -212,7 +305,7 @@ As an end of year bonus you can access your own Ampache Wrapped from the user pa
   * Add user preference `home_recently_played_all`, Show everything in the now playing box
   * Add user preference `show_wrapped`, Access your personal "Spotify Wrapped" from your user page
   * Add `date` column to rating table
-  * Update link for FMPL license 
+  * Update link for FMPL license
 
 ### Changed
 
@@ -2060,7 +2153,7 @@ Check out the docs for multi API support at [ampache.org](https://ampache.org/ap
 * NEW API functions
   * Api::live_stream (get a radio stream by id)
   * Api::live_streams
-* Api::stream Added type 'podcast_episode' ('podcast' to be removed in Ampache 6)
+* Api::stream Added type 'podcast_episode' ('podcast' to be removed in Ampache6)
 * Add 'time' and 'size' to all podcast_episode responses
 
 ### Changed

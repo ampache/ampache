@@ -65,7 +65,7 @@ final class ImportPlaylistAction implements ApplicationActionInterface
         $result = PlaylistImporter::import_playlist($filename, Core::get_global('user')->id, $playlist_type);
 
         if ($result !== null) {
-            $url   = 'show_playlist&amp;playlist_id=' . $result['id'];
+            $url   = 'show_playlist&playlist_id=' . $result['id'];
             $title = T_('No Problem');
             $body  = basename($_FILES['filename']['name']);
             $body .= '<br />' .

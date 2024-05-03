@@ -68,19 +68,19 @@ final class PreferenceCreateMethod
         // if you found the preference or it's a system preference; don't add it.
         if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }
         $type = (string) $input['type'];
         if (!in_array(strtolower($type), array('boolean', 'integer', 'string', 'special'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $category = (string) $input['category'];
         if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'category', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'category', $input['api_format']);
 
             return false;
         }
@@ -94,7 +94,7 @@ final class PreferenceCreateMethod
         $results = Preference::get($pref_name, -1);
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'system', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $pref_name), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

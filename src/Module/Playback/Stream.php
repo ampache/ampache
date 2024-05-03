@@ -325,6 +325,7 @@ class Stream
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
     }
+
     /**
      * start_transcode
      *
@@ -591,6 +592,22 @@ class Stream
     }
 
     /**
+     * delete_now_playing
+     *
+     * This will insert the Now Playing data.
+     * @param string $sid
+     * @param int $object_id
+     * @param string $type
+     * @param int $uid
+     */
+    public static function delete_now_playing($sid, $object_id, $type, $uid): void
+    {
+        // Clear the now playing entry for this item
+        $sql = "DELETE FROM `now_playing` WHERE `id` = ?, `object_id` = ?, `object_type` = ?, `user` = ?;";
+        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid));
+    }
+
+    /**
      * clear_now_playing
      *
      * There really isn't anywhere else for this function, shouldn't have
@@ -744,7 +761,7 @@ class Stream
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get('web_path');
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = AmpConfig::get('fallback_url');
+            $web_path = rtrim(AmpConfig::get('fallback_url'), '/');
         }
 
         if (AmpConfig::get('force_http_play')) {

@@ -37,6 +37,7 @@ use Ampache\Repository\Model\Tag;
 global $dic;
 $metadataManager = $dic->get(MetadataManagerInterface::class);
 
+/** @var Song $libitem */
 ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -50,7 +51,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
                     <td>
-                        <?php show_artist_select('artist', $libitem->artist, true, $libitem->id); ?>
+                        <?php show_artist_select('artist', (int) $libitem->artist, true, $libitem->id); ?>
                         <div id="artist_select_song_<?php echo $libitem->id; ?>">
                             <?php echo Ajax::observe('artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("artist", ' . $libitem->id . ')'); ?>
                         </div>
@@ -149,8 +150,8 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
     <script>
         $('.metadataAccordionButton').button().click(function() {
             $('.metadataAccordion').toggle();
-         //   $(this).hide();
-              $(this).text($(this).text() == 'More Metadata' ? 'Less Metadata' : 'More Metadata');
+            $(this).text($(this).text() == 'More Metadata' ? 'Less Metadata' : 'More Metadata');
+
             return false;
         });
     </script>

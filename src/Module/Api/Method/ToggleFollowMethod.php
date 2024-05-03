@@ -50,7 +50,7 @@ final class ToggleFollowMethod
     public static function toggle_follow(array $input, User $user): bool
     {
         if (!AmpConfig::get('sociable')) {
-            Api::error(T_('Enable: sociable'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: sociable', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

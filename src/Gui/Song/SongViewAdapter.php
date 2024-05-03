@@ -214,7 +214,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     public function getExternalPlayUrl(): string
     {
         return $this->song->play_url(
-            '&action=download&cache=1',
+            '',
             '',
             false,
             Core::get_global('user')->id ?? 0

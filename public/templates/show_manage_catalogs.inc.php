@@ -60,7 +60,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 <td><input type="text" name="add_path" value="/" /></td>
             </tr>
             <tr>
-                <td><?php /* HINT: /media/path */ ?><?php printf(T_('Clean deleted files in: %s'), '<span class="information">/media/path</span>'); ?></td>
+                <td><?php echo T_('Clean deleted files in:'); ?></td>
                 <td><input type="text" name="clean_path" value="/" /></td>
             </tr>
             <tr>

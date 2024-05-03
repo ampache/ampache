@@ -280,8 +280,9 @@
                 "\" data-replaygain_album_gain=\"" + media.replaygain_album_gain +
                 "\" data-replaygain_album_peak=\"" + media.replaygain_album_peak +
                 "\" data-r128_track_gain=\"" + media.r128_track_gain +
-                "\" data-r128_album_gain=\"" + media.r128_album_gain + "\"" +
-                "><div>";
+                "\" data-r128_album_gain=\"" + media.r128_album_gain +
+                "\" data-duration=\"" + media.duration +
+                "\"><div>";
 
             // Create image
             // listItem += "<img class=\"cover\" src=\"" + media.cover + "\" alt=\"" + media.title + "\"/>";

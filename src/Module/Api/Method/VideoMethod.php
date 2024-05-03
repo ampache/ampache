@@ -50,7 +50,7 @@ final class VideoMethod
     public static function video(array $input, User $user): bool
     {
         if (!AmpConfig::get('allow_video')) {
-            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
@@ -61,7 +61,7 @@ final class VideoMethod
         $video     = new Video($object_id);
         if ($video->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
         }

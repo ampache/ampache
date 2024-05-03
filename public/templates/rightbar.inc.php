@@ -32,8 +32,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\User;
 
-$user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
+$user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
 <script>
     function ToggleRightbarVisibility()
     {
@@ -71,7 +72,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&amp;id=<?php echo Core::get_global('user')->playlist->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')->playlist->id; ?>">
             <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
         </a>
     </li>
@@ -107,15 +108,15 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 
 <?php $objects = array();
 // FIXME :: this is kludgy
-if (!defined('NO_SONGS') && !empty(Core::get_global('user')) && Core::get_global('user')->playlist) {
+if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
 } ?>
     <script>
         <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
-             $("#content").removeClass("content-right-wild", 500);
-             $("#footer").removeClass("footer-wild", 500);
-             $("#rightbar").removeClass("hidden");
-             $("#rightbar").show("slow");
+            $("#content").removeClass("content-right-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
+            $("#rightbar").removeClass("hidden"); 
+            $("#rightbar").show("slow");
         <?php } else { ?>
             $("#content").addClass("content-right-wild", 500);
             $("#footer").addClass("footer-wild", 500);
@@ -129,7 +130,7 @@ if (count($objects) > 100) {
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video', 'random');
+$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video');
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];

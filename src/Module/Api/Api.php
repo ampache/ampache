@@ -128,6 +128,7 @@ class Api
         Method\PreferenceCreateMethod::ACTION => Method\PreferenceCreateMethod::class,
         Method\PreferenceDeleteMethod::ACTION => Method\PreferenceDeleteMethod::class,
         Method\PreferenceEditMethod::ACTION => Method\PreferenceEditMethod::class,
+        Method\PlayerMethod::ACTION => Method\PlayerMethod::class,
         Method\RateMethod::ACTION => Method\RateMethod::class,
         Method\RecordPlayMethod::ACTION => Method\RecordPlayMethod::class,
         Method\RegisterMethod::ACTION => Method\RegisterMethod::class,
@@ -179,8 +180,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.3.1'; // AMPACHE_VERSION
-    public static string $version_numeric = '631000'; // AMPACHE_VERSION
+    public static string $version         = '6.4.0'; // AMPACHE_VERSION
+    public static string $version_numeric = '640000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse

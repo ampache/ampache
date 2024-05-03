@@ -76,19 +76,19 @@ final class StatsMethod
         }
         // do you allow video?
         if (!AmpConfig::get('allow_video') && $type == 'video') {
-            Api::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         if (!AmpConfig::get('podcast') && ($type == 'podcast' || $type == 'podcast_episode')) {
-            Api::error(T_('Enable: podcast'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+            Api::error('Enable: podcast', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -106,7 +106,7 @@ final class StatsMethod
         }
         if (!$user instanceof User || $user->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -114,19 +114,16 @@ final class StatsMethod
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
             case 'newest':
-                debug_event(self::class, 'stats newest', 5);
                 $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'highest':
-                debug_event(self::class, 'stats highest', 4);
                 $results = Rating::get_highest($type, $limit, $offset, $user_id);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'frequent':
-                debug_event(self::class, 'stats frequent', 4);
                 $threshold = (int)AmpConfig::get('stats_threshold', 7);
                 $results   = Stats::get_top($type, $limit, $threshold, $offset);
                 $offset    = 0;
@@ -134,7 +131,6 @@ final class StatsMethod
                 break;
             case 'recent':
             case 'forgotten':
-                debug_event(self::class, 'stats ' . $filter, 4);
                 $newest  = $filter == 'recent';
                 $results = (array_key_exists('username', $input) || array_key_exists('user_id', $input))
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
@@ -143,14 +139,12 @@ final class StatsMethod
                 $limit  = 0;
                 break;
             case 'flagged':
-                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user_id, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
                 break;
             case 'random':
             default:
-                debug_event(self::class, 'stats random ' . $type, 4);
                 switch ($type) {
                     case 'song':
                         $results = Random::get_default($limit, $user);

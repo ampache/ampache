@@ -294,7 +294,7 @@ class Json_Data
                                 );
                             }
                         } else {
-                            $sql        = "SELECT DISTINCT `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ?;";
+                            $sql        = "SELECT `playlist_data`.`id`, `playlist_data`.`object_id`, `playlist_data`.`object_type` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? ORDER BY `playlist_data`.`track`;";
                             $db_results = Dba::read($sql, array($object_id));
                             while ($row = Dba::fetch_assoc($db_results)) {
                                 $output[$object_id][] = array(
@@ -819,6 +819,7 @@ class Json_Data
             $objArray['type']          = $album->release_type;
             $objArray['genre']         = self::genre_array($album->tags);
             $objArray['art']           = $art_url;
+            $objArray['has_art']       = $album->has_art();
             $objArray['flag']          = (bool)$flag->get_flag($user->getId());
             $objArray['rating']        = $user_rating;
             $objArray['averagerating'] = $rating->get_average_rating();
@@ -893,14 +894,12 @@ class Json_Data
 
             if ($songs) {
                 $items          = array();
-                $trackcount     = 1;
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
                     $items[] = array(
                         "id" => (string)$objects['object_id'],
-                        "playlisttrack" => $trackcount
+                        "playlisttrack" => $objects['track'],
                     );
-                    $trackcount++;
                 }
             } else {
                 $items = (int)($playitem_total ?? 0);
@@ -1399,6 +1398,7 @@ class Json_Data
             $objArray['size']                  = (int)$song->size;
             $objArray['mbid']                  = $song->mbid;
             $objArray['art']                   = $art_url;
+            $objArray['has_art']               = $song->has_art();
             $objArray['flag']                  = (bool)$flag->get_flag($user->getId());
             $objArray['rating']                = $user_rating;
             $objArray['averagerating']         = $rating->get_average_rating();

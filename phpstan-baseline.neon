@@ -296,7 +296,12 @@ parameters:
 			path: src/Module/Api/Api5.php
 
 		-
-			message: "#^Parameter \\#5 \\$user of method Ampache\\\\Module\\\\Api\\\\Method\\\\MethodInterface\\:\\:handle\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeDebugHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/ApiHandler.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\ApiHandler\\:\\:_executeHandler\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/ApiHandler.php
 
@@ -2961,12 +2966,12 @@ parameters:
 			path: src/Module/Api/Method/PingMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlayerMethod\\:\\:player\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Method/PlaylistAddMethod.php
+			path: src/Module/Api/Method/PlayerMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$song_ids of method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) expects array, array\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistAddMethod\\:\\:playlist_add\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistAddMethod.php
 
@@ -3862,11 +3867,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getAmpacheIdArrays\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:_getCatalogData\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4924,6 +4924,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/PrivateMessage/AddMessageAction.php
+
+		-
+			message: "#^Cannot call method add_object\\(\\) on Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\|null\\.$#"
+			count: 1
+			path: src/Module/Application/Random/GetAdvancedAction.php
 
 		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
@@ -8706,16 +8711,6 @@ parameters:
 			path: src/Module/System/AutoUpdate.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/AutoUpdate.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
 			message: "#^Comparison operation \"\\<\" between int\\<0, max\\> and 0 is always false\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
@@ -11851,21 +11846,6 @@ parameters:
 			path: src/Plugin/AmpacheMatomo.php
 
 		-
-			message: "#^Cannot access property \\$artist\\-credit on array\\.$#"
-			count: 3
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
-			count: 2
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheMusicBrainz.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:get_artist\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheMusicBrainz.php
@@ -11886,8 +11866,13 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheMusicBrainz\\:\\:\\$overwrite_name has no type specified\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
+			count: 10
+			path: src/Plugin/AmpacheMusicBrainz.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$track has no value type specified in iterable type array\\.$#"
+			count: 2
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
@@ -13641,6 +13626,16 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Random.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Random.php
+
+		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Repository/Model/Random.php
@@ -14671,33 +14666,18 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Cannot access property \\$first\\-release\\-date on array\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$group has no value type specified in iterable type array\\.$#"
+			count: 3
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Cannot access property \\$media on array\\.$#"
-			count: 1
+			message: "#^PHPDoc tag @var for variable \\$martist has no value type specified in iterable type array\\.$#"
+			count: 3
 			path: src/Repository/Model/Wanted.php
 
 		-
-			message: "#^Cannot access property \\$name on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$release\\-groups on array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$releases on array\\.$#"
+			message: "#^PHPDoc tag @var for variable \\$release has no value type specified in iterable type array\\.$#"
 			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Cannot access property \\$title on array\\.$#"
-			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-
@@ -14708,6 +14688,11 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^Variable \\$martist in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-

@@ -75,7 +75,7 @@ final class DisableAction extends AbstractUserAction
             /* HINT: User Fullname */
             sprintf(T_('This will disable the user "%s"'), $user->getFullDisplayName()),
             sprintf(
-                'admin/users.php?action=confirm_disable&amp;user_id=%s',
+                'admin/users.php?action=confirm_disable&user_id=%s',
                 $userId
             ),
             1,

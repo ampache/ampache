@@ -61,7 +61,7 @@ final class PlaylistRemoveSongMethod
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {
             if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
                 $playlist->delete_all();
@@ -69,7 +69,7 @@ final class PlaylistRemoveSongMethod
             } elseif (array_key_exists('song', $input)) {
                 $track = (int) scrub_in((string) $input['song']);
                 if (!$playlist->has_item($track)) {
-                    Api::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+                    Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
                     return false;
                 }
@@ -79,7 +79,7 @@ final class PlaylistRemoveSongMethod
             } elseif (array_key_exists('track', $input)) {
                 $track = (int) scrub_in((string) $input['track']);
                 if (!$playlist->has_item(null, $track)) {
-                    Api::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
+                    Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
 
                     return false;
                 }

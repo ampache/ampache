@@ -65,13 +65,13 @@ final class PlaylistAddMethod
 
         // confirm the correct data
         if (!$playlist->has_access($user->id) && $user->access !== 100) {
-            Api::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
         if (!in_array(strtolower($object_type), array('song', 'album', 'artist', 'playlist'))) {
-            Api::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
@@ -86,7 +86,7 @@ final class PlaylistAddMethod
         $item = new $className((int)$object_id);
         if ($item->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
+            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'id', $input['api_format']);
 
             return false;
         }
@@ -95,7 +95,7 @@ final class PlaylistAddMethod
         switch ($object_type) {
             case 'song':
                 /** @var Song $item */
-                $results = $item->getId();
+                $results = array($item->getId());
                 break;
             case 'album':
             case 'artist':
@@ -107,7 +107,7 @@ final class PlaylistAddMethod
         }
         if (empty($results)) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            Api::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
+            Api::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 
             return false;
         }

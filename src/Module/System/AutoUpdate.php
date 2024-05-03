@@ -79,7 +79,11 @@ class AutoUpdate
             $current = file_get_contents(__DIR__ . '/../../../.git/HEAD');
             $pattern = '/ref: refs\/heads\/(.*)/';
             $matches = [];
-            if (preg_match($pattern, $current, $matches) && !in_array((string)$matches[1], array('master', 'release5', 'release6'))) {
+            if (
+                is_string($current) &&
+                preg_match($pattern, $current, $matches) &&
+                !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))
+            ) {
                 return (string)$matches[1];
             }
         }
@@ -135,7 +139,7 @@ class AutoUpdate
         }
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, 1);
+            Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), 1);
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -149,49 +153,62 @@ class AutoUpdate
     public static function get_latest_version($force = false): string
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
-        // Forced or last check expired, check latest version from GitHub
-        if ($force || self::lastcheck_expired()) {
-            // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
-            $time       = time();
-            $git_branch = self::is_force_git_branch();
-            Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
-            AmpConfig::set('autoupdate_lastcheck', $time, true);
 
-            // Development version, get latest commit on develop branch
-            if (self::is_develop() || $git_branch !== '') {
-                if (self::is_develop() || $git_branch == 'develop') {
-                    $commits = self::github_request('/commits/develop');
-                } else {
-                    $commits = self::github_request('/commits/' . $git_branch);
-                }
-                if (!empty($commits)) {
-                    $lastversion = $commits->sha;
-                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
-                    AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
-                    AmpConfig::set('autoupdate_lastversion_new', $available, true);
+        // Don't spam the GitHub API
+        if (
+            $force === false ||
+            self::lastcheck_expired() === false
+        ) {
+            return $lastversion;
+        }
 
-                    return $lastversion;
-                }
+
+        // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
+        $time       = time();
+        $git_branch = self::is_force_git_branch();
+        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        AmpConfig::set('autoupdate_lastcheck', $time, true);
+
+        // Development version, get latest commit on develop branch
+        if (
+            self::is_develop() ||
+            $git_branch !== ''
+        ) {
+            if (
+                self::is_develop() ||
+                $git_branch == 'develop'
+            ) {
+                $commits = self::github_request('/commits/develop');
+            } else {
+                $commits = self::github_request('/commits/' . $git_branch);
             }
-            // Otherwise it is stable version, get latest tag
-            $tags = self::github_request('/tags');
-            if (!$tags) {
+            if (!empty($commits)) {
+                $lastversion = $commits->sha;
+                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                AmpConfig::set('autoupdate_lastversion', $lastversion, true);
+                $available = self::is_update_available(true);
+                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                AmpConfig::set('autoupdate_lastversion_new', $available, true);
+
                 return $lastversion;
             }
-            foreach ($tags as $release) {
-                $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
-                if (empty($str)) {
-                    $lastversion = $release->name;
-                    Preference::update('autoupdate_lastversion', Core::get_global('user')->id, $lastversion);
-                    AmpConfig::set('autoupdate_lastversion', $lastversion, true);
-                    $available = self::is_update_available(true);
-                    Preference::update('autoupdate_lastversion_new', Core::get_global('user')->id, $available);
-                    AmpConfig::set('autoupdate_lastversion_new', $available, true);
+        }
+        // Otherwise it is stable version, get latest tag
+        $tags = self::github_request('/tags');
+        if (!$tags) {
+            return $lastversion;
+        }
+        foreach ($tags as $release) {
+            $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
+            if (empty($str)) {
+                $lastversion = $release->name;
+                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                AmpConfig::set('autoupdate_lastversion', $lastversion, true);
+                $available = self::is_update_available(true);
+                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
-                    return $lastversion;
-                }
+                return $lastversion;
             }
         }
 
@@ -233,11 +250,14 @@ class AutoUpdate
     public static function get_current_commit(): string
     {
         $git_branch = self::is_force_git_branch();
-        if ($git_branch !== '' && is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)) {
-            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
+        if (
+            $git_branch !== '' &&
+            is_readable(__DIR__ . '/../../../.git/refs/heads/' . $git_branch)
+        ) {
+            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/' . $git_branch));
         }
         if (self::is_branch_develop_exists()) {
-            return trim(file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
+            return trim((string)file_get_contents(__DIR__ . '/../../../.git/refs/heads/develop'));
         }
 
         return '';
@@ -249,25 +269,49 @@ class AutoUpdate
      */
     public static function is_update_available($force = false): bool
     {
-        $current = self::get_current_version();
-        if (!$force || (!self::lastcheck_expired())) {
-            return AmpConfig::get('autoupdate_lastversion_new', false);
+        if (
+            $force === false ||
+            self::lastcheck_expired() === false
+        ) {
+            return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
-        Preference::update('autoupdate_lastcheck', Core::get_global('user')->id, $time);
+        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;
         $git_branch = self::is_force_git_branch();
+        $current    = self::get_current_version();
         $latest     = self::get_latest_version($force);
 
         debug_event(self::class, 'Checking latest version online...', 5);
-        if ($current != $latest && !empty($current)) {
-            if (self::is_develop() || $git_branch !== '') {
+        if (
+            !empty($current) &&
+            $current !== $latest
+        ) {
+            if (
+                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
+                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest)
+            ) {
+                $cpart = explode('-', $current);
+                $lpart = explode('-', $latest);
+
+                // work around any possible mistakes in the order
+                $current = ($cpart[0] == 'release') ? $cpart[1] : $cpart[0];
+                $latest  = ($lpart[0] == 'release') ? $lpart[1] : $lpart[0];
+                // returns -1 if the first version is lower than the second, (e.g. version_compare(6.3.3, 7.0.0) = -1)
+                $available = (version_compare($current, $latest) === -1);
+            } elseif (
+                self::is_develop() ||
+                $git_branch !== ''
+            ) {
                 $ccommit = AmpConfig::get($current) ?? self::github_request('/commits/' . $current);
                 $lcommit = AmpConfig::get($latest) ?? self::github_request('/commits/' . $latest);
 
-                if (!empty($ccommit) && !empty($lcommit)) {
+                if (
+                    !empty($ccommit) &&
+                    !empty($lcommit)
+                ) {
                     // Comparison based on commit date
                     $ctime = strtotime($ccommit->commit->author->date);
                     $ltime = strtotime($lcommit->commit->author->date);
@@ -276,15 +320,6 @@ class AutoUpdate
 
                     $available = ($ctime < $ltime);
                 }
-            } else {
-                $cpart = explode('-', $current);
-                $lpart = explode('-', $latest);
-
-                // work around any possible mistakes in the order
-                $current = ($cpart[0] == 'release') ? $cpart[1] : $cpart[0];
-                $latest  = ($lpart[0] == 'release') ? $lpart[1] : $lpart[0];
-
-                $available = (version_compare($current, $latest) < 0);
             }
         }
 
@@ -312,7 +347,16 @@ class AutoUpdate
     {
         $current = self::get_current_version();
         $latest  = self::get_latest_version();
-        if ($current === $latest) {
+
+        // Don't show anything if the current version is newer than the second, (e.g. version_compare(7.0.0, 6.9.0) = 1)
+        if (
+            preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
+            preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest) &&
+            version_compare($current, $latest) === 1
+        ) {
+            echo '<div id="autoupdate">';
+            echo '</div>';
+
             return;
         }
         $git_branch    = self::is_force_git_branch();
