@@ -16,7 +16,7 @@ These searches will now use to rules for that object type and then return the so
 
 ### Added
 
-* Translations 2024-04
+* Translations 2024-05
 * rtrim slashes on some config variables in case you ignore the warning
 * Database 600070
   * Allow signed `user` column for `broadcast`, `player_control`, `session_stream`, `share`, `user_activity`, `user_follower` and `user_vote` tables
