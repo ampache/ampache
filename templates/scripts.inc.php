@@ -34,8 +34,8 @@ $environment       = $dic->get(EnvironmentInterface::class);
 $manifest          = __DIR__ . '/../dist/.vite/manifest.json';
 $entrypoint        = false;
 if (file_exists($manifest)) {
-    $vm            = new Manifest($manifest, "");
-    $entrypoint    = $vm->getEntrypoint("src/js/main.js");
+    $vm         = new Manifest($manifest, "");
+    $entrypoint = $vm->getEntrypoint("src/js/main.js", false);
 }
 ?>
 

@@ -245,6 +245,10 @@ input[type=submit]:focus:active {
     background-color: #1a1a1a;
 }
 
+#sidebar-light-default {
+    border-color: hsl(0, 0%, 30%);
+    background: #1a1a1a;
+}
 /* Tabs content */
 #sidebar-page {
     background-color: rgba(0, 0, 0, 0.15);
