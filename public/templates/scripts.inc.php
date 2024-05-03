@@ -36,6 +36,7 @@ $entrypoint        = false;
 if (file_exists($manifest)) {
     $vm            = new Manifest($manifest, "");
     $entrypoint    = $vm->getEntrypoint("src/js/main.js");
+    $entrypoint    = $vm->getEntrypoint("src/js/main.js", false);
 }
 ?>
 
