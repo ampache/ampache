@@ -81,8 +81,8 @@ export function ToggleRightbarVisibility()
     }
 }
 
-// kick off opening the rightbar on a full page refresh
-$(document).ready(function() {
+// kick off toggling the rightbar when it is loaded
+export function RightbarInit() {
     if (jsBasketCount > 0 || jsAmpConfigPlayType === "localplay") {
         $("#content").removeClass("content-right-wild", 500);
         $("#footer").removeClass("footer-wild", 500);
@@ -93,4 +93,4 @@ $(document).ready(function() {
         $("#footer").addClass("footer-wild", 500);
         $("#rightbar").hide("slow");
     }
-});
+}

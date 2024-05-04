@@ -152,3 +152,12 @@ if (isset($truncated)) { ?>
 if (count($objects)) {
     Stream::run_playlist_method();
 } ?>
+
+<script>
+    $(document).ready(function() {
+        // necessary evils for time being
+        jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
+        jsBasketCount = <?php echo (Core::get_global('user') instanceof User && Core::get_global('user')->playlist) ? count(Core::get_global('user')->playlist->get_items()) : 0; ?>;
+        RightbarInit();
+    });
+</script>
