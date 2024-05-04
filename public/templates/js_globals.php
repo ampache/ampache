@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 global $dic;
 $web_path         = (string)AmpConfig::get('web_path', '');
@@ -54,7 +55,7 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
     var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')); ?>";
     var jsCookieString = jsAmpConfigCookieSecure ? "expires: 30, path: '/', secure: true, samesite: 'Strict'" : "expires: 30, path: '/', samesite: 'Strict'";
-    var jsBasketCount = parseInt(<?php echo count(Core::get_global('user')->playlist->get_items());?>);
+    var jsBasketCount = <?php echo (Core::get_global('user') instanceof User && Core::get_global('user')->playlist) ? count(Core::get_global('user')->playlist->get_items()) : 0; ?>
 
     // Strings
     var jsHomeTitle = "<?php echo addslashes(T_('Home')); ?>";
