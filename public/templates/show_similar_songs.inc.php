@@ -53,7 +53,7 @@ $hide_year    = in_array('cel_year', $hide_columns);
 $hide_drag    = in_array('cel_drag', $hide_columns);
 $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
 ?>
-<table id="top_tracks_<?php echo $artist->id; ?>" class="tabledata striped-rows">
+<table id="similar_songs" class="tabledata striped-rows">
     <thead>
     <tr class="th-top">
         <th class="cel_play essential"></th>
@@ -135,10 +135,3 @@ foreach ($object_ids as $song_id) {
         <?php } ?>
     </tbody>
 </table>
-
-<script>
-    var index = 1;
-    var indexes = $("#similar_songs_<?php echo $artist->id; ?> .cel_play_content").each(function() {
-        $(this).html(index++);
-    });
-</script>
