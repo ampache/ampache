@@ -129,13 +129,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
                     display_notification(T_('Added to playlist'));
-                    $results['rfc3514'] = ob_get_clean();
+                    $results['reload'] = ob_get_clean();
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         }
 
