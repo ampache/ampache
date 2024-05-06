@@ -109,7 +109,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     if (AmpConfig::get('play_type') == 'localplay') {
                         $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
-                    $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+                    $results['reload'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 }
                 break;
             case 'basket':
@@ -127,7 +127,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';
-                $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+                $results['reload'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 break;
             default:
                 break;

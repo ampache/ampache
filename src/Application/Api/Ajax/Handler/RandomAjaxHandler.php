@@ -115,7 +115,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'send_playlist':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
+                $results['reload']            = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             default:
                 break;

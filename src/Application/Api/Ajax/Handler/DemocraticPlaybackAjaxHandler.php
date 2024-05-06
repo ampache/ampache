@@ -80,7 +80,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 }
 
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
+                $results['reload']            = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
