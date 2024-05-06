@@ -49,7 +49,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
             case 'set_play_type':
                 // Make sure they have the rights to do this
                 if (!Preference::has_access('play_type')) {
-                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -59,7 +58,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     case 'democratic':
                         $key = 'allow_' . Core::get_post('type') . '_playback';
                         if (!AmpConfig::get($key)) {
-                            $results['rfc3514'] = '0x1';
                             break 2;
                         }
                         $new = Core::get_post('type');
@@ -68,7 +66,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         $new = 'web_player';
                         break;
                     default:
-                        $results['rfc3514'] = '0x1';
                         break 2;
                 } // end switch
 
@@ -83,7 +80,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 }
 
-                $results['rfc3514'] = '0x0';
                 break;
             case 'directplay':
                 $object_type = Core::get_request('object_type');
@@ -134,7 +130,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

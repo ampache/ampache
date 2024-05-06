@@ -135,7 +135,6 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         }
 

@@ -297,8 +297,6 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'search_random':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
-
                     return;
                 }
 
@@ -306,7 +304,6 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                 $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 
