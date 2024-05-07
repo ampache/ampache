@@ -100,7 +100,7 @@ final class StreamMethod
             $media = new Song($object_id);
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
-        if ($type == 'podcast_episode') {
+        if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
             $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
         }
