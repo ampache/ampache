@@ -45,6 +45,16 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
 $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
+<script>
+    function ToggleRightbarVisibility()
+    {
+        if ($("#rightbar").is(":visible")) {
+            $("#rightbar").slideUp();
+        } else {
+            $("#rightbar").slideDown();
+        }
+    }
+</script>
 <ul id="rb_action">
     <li>
         <?php echo Ajax::button('?page=stream&action=basket', 'play_circle', T_('Play'), 'rightbar_play'); ?>
@@ -110,7 +120,20 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 // FIXME :: this is kludgy
 if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
-}
+} ?>
+    <script>
+        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
+            $("#content").removeClass("content-right-wild", 500);
+            $("#footer").removeClass("footer-wild", 500);
+            $("#rightbar").removeClass("hidden");
+            $("#rightbar").show("slow");
+        <?php } else { ?>
+            $("#content").addClass("content-right-wild", 500);
+            $("#footer").addClass("footer-wild", 500);
+            $("#rightbar").hide("slow");
+        <?php } ?>
+    </script>
+<?php
 // Limit the number of objects we show here
 if (count($objects) > 100) {
     $truncated = (count($objects) - 100);
@@ -152,12 +175,3 @@ if (isset($truncated)) { ?>
 if (count($objects)) {
     Stream::run_playlist_method();
 } ?>
-
-<script>
-    $(document).ready(function() {
-        // necessary evils for time being
-        jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
-        jsBasketCount = <?php echo (Core::get_global('user') instanceof User && Core::get_global('user')->playlist) ? count(Core::get_global('user')->playlist->get_items()) : 0; ?>;
-        RightbarInit();
-    });
-</script>

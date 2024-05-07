@@ -51,10 +51,16 @@ $(function() {
 });
 
 $(document).ready(function(){
+    $("a[rel^='prettyPhoto']").prettyPhoto({
+        social_tools: false,
+        deeplinking: false
+    });
     if (jsAmpConfigGeolocation) {
         geolocate_user();
     }
+});
 
+$(document).ready(function(){
     if (jsAmpConfigLibitemContextmenu) {
         function libitem_action(item, action)
         {

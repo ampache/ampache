@@ -40,22 +40,17 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsAmpConfigCookieSecure = "<?php echo make_bool(AmpConfig::get('cookie_secure')); ?>";
     var jsAmpConfigGeolocation = "<?php echo make_bool(AmpConfig::get('geolocation')); ?>";
     var jsAmpConfigLibitemContextmenu = "<?php echo make_bool(AmpConfig::get('libitem_contextmenu')); ?>";
-    var jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
     var jsAmpConfigSlideshowTime = "<?php echo make_bool(AmpConfig::get('slideshow_time')); ?>";
     var jsAmpConfigSidebarHideSwitcher = "<?php echo make_bool(AmpConfig::get('sidebar_hide_switcher', false)); ?>";
 
     // Preferences
     var jsPrefExistsFlickrApiKey = "<?php echo Preference::exists('flickr_api_key'); ?>";
 
-    // Misc
     var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";
     var jsWebPath = "<?php echo $web_path; ?>";
     var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
     var jsSiteTitle = "<?php echo addslashes(AmpConfig::get('site_title', '')); ?>";
     var jsCookieString = jsAmpConfigCookieSecure ? "expires: 30, path: '/', secure: true, samesite: 'Strict'" : "expires: 30, path: '/', samesite: 'Strict'";
-    var jsBasketCount = 0; // updated in rightbar.inc.php after ajax load
-
-    // Strings
     var jsHomeTitle = "<?php echo addslashes(T_('Home')); ?>";
     var jsUploadTitle = "<?php echo addslashes(T_('Upload')); ?>";
     var jsLocalplayTitle = "<?php echo addslashes(T_('Localplay')); ?>";
