@@ -45,6 +45,7 @@ final class DownloadMethod
      * MINIMUM_API_VERSION=400001
      *
      * Downloads a given media file. set format=raw to download the full file
+     * Search and Playlist will only stream a random object not the whole thing
      *
      * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
