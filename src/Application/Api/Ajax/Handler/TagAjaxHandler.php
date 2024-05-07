@@ -83,6 +83,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 // Retrieve current objects of type based on combined filters
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

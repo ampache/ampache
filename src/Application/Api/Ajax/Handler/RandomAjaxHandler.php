@@ -56,6 +56,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
             case 'song':
                 $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), $user);
                 if (!count($songs)) {
+                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -71,6 +72,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 );
 
                 if (empty($album_id)) {
+                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -86,6 +88,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
             case 'artist':
                 $artist_id = Random::artist();
                 if (!$artist_id) {
+                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -101,6 +104,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 $playlist_id = Random::playlist();
 
                 if (!$playlist_id) {
+                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -115,9 +119,10 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'send_playlist':
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
-                $results['reload']            = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
+                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

@@ -68,6 +68,8 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 break;
             case 'delete':
                 if ($user->has_access(AccessLevelEnum::MANAGER)) {
+                    echo xoutput_from_array(array('rfc3514' => '0x1'));
+
                     return;
                 }
 
@@ -76,14 +78,18 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 break;
             case 'send_playlist':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+
                     return;
                 }
 
                 $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-                $results['reload']            = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
+                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
                 if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
+                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+
                     return;
                 }
 
@@ -94,6 +100,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 $show_browse = true;
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

@@ -93,5 +93,7 @@ final readonly class PodcastAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
         }
+
+        echo xoutput_from_array(['rfc3514' => '0x1']);
     }
 }

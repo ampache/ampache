@@ -74,6 +74,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

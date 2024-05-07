@@ -101,6 +101,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                 $results['shouts_data'] = ob_get_clean();
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

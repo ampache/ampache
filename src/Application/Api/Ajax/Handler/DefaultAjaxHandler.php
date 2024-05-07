@@ -76,6 +76,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'basket_refresh':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
+                $results['rfc3514']  = '0x0';
                 break;
             case 'basket':
                 // Handle the users basketcases...
@@ -177,6 +178,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
+                } else {
+                    $results['rfc3514'] = '0x1';
                 }
                 break;
             case 'set_userflag':
@@ -191,6 +194,8 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
+                } else {
+                    $results['rfc3514'] = '0x1';
                 }
                 break;
             case 'action_buttons':
@@ -209,6 +214,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 ob_end_clean();
                 break;
             default:
+                $results['rfc3514'] = '0x1';
                 break;
         } // end switch action
 

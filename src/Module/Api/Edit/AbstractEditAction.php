@@ -113,6 +113,8 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
         // Make sure they got them rights
         if (!Access::check(AccessTypeEnum::INTERFACE, $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
+            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+
             return null;
         }
 
