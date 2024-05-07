@@ -48,7 +48,7 @@ final class StreamMethod
      * Takes the file id in parameter with optional max bit rate, file format, time offset, size and estimate content length option.
      * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id|$podcast_episode_id
+     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
@@ -62,8 +62,18 @@ final class StreamMethod
 
             return false;
         }
+
+        $object_id = (int)$input['id'];
         $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
+
+        if (
+            $object_id === 0 &&
+            ($type == 'playlist' || $type == 'search')
+        ) {
+            // The API can use searches as playlists so check for those too
+            $object_id = (int)str_replace('smart_', '', $input['id']);
+            $type      = 'search';
+        }
 
         $maxBitRate    = (int)($input['bitrate'] ?? 0);
         $format        = $input['format'] ?? null; // mp3, flv or raw
