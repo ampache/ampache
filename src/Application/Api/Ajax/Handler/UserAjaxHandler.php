@@ -72,7 +72,6 @@ final readonly class UserAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 
