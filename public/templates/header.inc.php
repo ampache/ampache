@@ -105,6 +105,7 @@ $albumString = (AmpConfig::get('album_group'))
 
         <!-- rfc3514 implementation -->
         <div id="rfc3514" style="display:none;">0x0</div>
+        <div id="reloader" style="display:none;"></div>
         <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
