@@ -46,8 +46,9 @@ final class DownloadMethod
      * MINIMUM_API_VERSION=400001
      *
      * Downloads a given media file. set format=raw to download the full file
+     * Search and Playlist will only stream a random object not the whole thing
      *
-     * id      = (string) $song_id| $podcast_episode_id
+     * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding, '128', '256' //optional SONG ONLY
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
@@ -59,12 +60,22 @@ final class DownloadMethod
 
             return false;
         }
-        $object_id  = (int) $input['id'];
-        $type       = (string) $input['type'];
+
+        $object_id = (int) $input['id'];
+        $type      = (string) $input['type'];
+
+        if (
+            $object_id === 0 &&
+            ($type == 'playlist' || $type == 'search')
+        ) {
+            // The API can use searches as playlists so check for those too
+            $object_id = (int)str_replace('smart_', '', $input['id']);
+            $type      = 'search';
+        }
+
         $maxBitRate = (int)($input['bitrate'] ?? 0);
         $format     = $input['format'] ?? null; // mp3, flv or raw
-
-        $params = '&client=api&action=download&cache=1';
+        $params     = '&client=api&action=download&cache=1';
         if ($format && in_array($type, array('song', 'search', 'playlist'))) {
             $params .= '&format=' . $format;
         }

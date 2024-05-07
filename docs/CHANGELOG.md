@@ -35,7 +35,7 @@ These searches will now use to rules for that object type and then return the so
 * Allow using `tmp_dir_path` for Dropbox catalog
 * Subsonic
   * Song file path is now always the original full file path
-  * This was a relative path that was changed with transcoding mean the path nevers existed.
+  * This was a relative path that was changed with transcoding meaning the path never existed.
 * Random search (`random.php?action=advanced`) `artist` and `album` actions have been changed to use their object rules
   * The returned results are still song objects but the searches are done using their rule set
 
