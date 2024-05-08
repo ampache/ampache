@@ -1529,7 +1529,14 @@ abstract class Catalog extends database_object
                 $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'playlist_search':
-                $sql = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist_search` WHERE `id` IN (" . implode(",", $objects) . ");";
+                $object_string = '';
+                foreach ($objects as $playlist_id) {
+                    $object_string .= (is_numeric($playlist_id))
+                        ? $playlist_id . ", "
+                        : "'" . $playlist_id . "', ";
+                }
+                $object_string = rtrim($object_string, ', ');
+                $sql = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist` WHERE `id` IN (" . $object_string . ");";
                 break;
             default:
                 return array();
