@@ -1529,17 +1529,7 @@ abstract class Catalog extends database_object
                 $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             case 'playlist_search':
-                $empty_playlist = empty($objects['playlist']);
-                $empty_search   = empty($objects['search']);
-                if (!$empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects['playlist']) . ") UNION SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_search && !$empty_playlist) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
-                } else {
-                    return array();
-                }
+                $sql = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist_search` WHERE `id` IN (" . implode(",", $objects) . ");";
                 break;
             default:
                 return array();

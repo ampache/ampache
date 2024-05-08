@@ -823,6 +823,7 @@ class Query
         switch ($type) {
             case 'user':
             case 'video':
+            case 'playlist_search':
             case 'playlist':
             case 'playlist_media':
             case 'smartplaylist':
@@ -1156,6 +1157,10 @@ class Query
                 case 'playlist':
                     $this->set_select("`playlist`.`id`");
                     $sql = "SELECT %%SELECT%% FROM `playlist` ";
+                    break;
+                case 'playlist_search':
+                    $this->set_select("`playlist_search`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `search`) AS `playlist_search` ";
                     break;
                 case 'smartplaylist':
                     $this->set_select('`search`.`id`');
@@ -1821,6 +1826,7 @@ class Query
                         break;
                 } // end filter
                 break;
+            case 'playlist_search':
             case 'playlist':
                 switch ($filter) {
                     case 'exact_match':
@@ -2377,6 +2383,7 @@ class Query
                         break;
                 } // end switch
                 break;
+            case 'playlist_search':
             case 'playlist':
                 switch ($field) {
                     case 'date':
