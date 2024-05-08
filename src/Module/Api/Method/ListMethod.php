@@ -85,7 +85,6 @@ final class ListMethod
 
             return false;
         }
-        $hide = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
         if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
@@ -94,7 +93,16 @@ final class ListMethod
         }
         $browse = Api::getBrowse();
         $browse->reset_filters();
-        if ($album_artist) {
+
+        $name_type = $type;
+        $hide      = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $name_type = 'playlist_search';
+            $browse->set_type('playlist_search');
+        } elseif ($album_artist) {
             $browse->set_type('album_artist');
         } elseif ($song_artist) {
             $browse->set_type('song_artist');
@@ -108,28 +116,18 @@ final class ListMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        $name_type = $type;
-        if ($type == 'playlist') {
+        if ($type === 'playlist') {
             $browse->set_filter('playlist_type', 1);
-            if (!$hide) {
-                $name_type = 'playlist_search';
-                $objects   = array(
-                    'playlist' => $browse->get_objects(),
-                    'search' => Playlist::get_smartlists($user->id)
-                );
-            } else {
-                $objects = $browse->get_objects();
-            }
-        } else {
-            $objects = $browse->get_objects();
         }
+
+        $objects = $browse->get_objects();
         if (empty($objects)) {
             Api::empty($type, $input['api_format']);
 
             return false;
         }
 
-        $results = Catalog::get_name_array($objects, $name_type);
+        $results = Catalog::get_name_array($objects, $name_type, 'name');
 
         ob_end_clean();
         switch ($input['api_format']) {

@@ -92,7 +92,7 @@ final class BrowseMethod
                 $objects = array_merge($objects, User::get_user_catalogs($user->id, 'personal_video'));
             }
             $child_type = 'catalog';
-            $results    = Catalog::get_name_array($objects, 'catalog');
+            $results    = Catalog::get_name_array($objects, 'catalog', 'name');
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
             if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
@@ -144,7 +144,7 @@ final class BrowseMethod
 
                 return false;
             }
-            $results = Catalog::get_name_array($objects, $output_type);
+            $results = Catalog::get_name_array($objects, $output_type, 'name');
         } else {
             if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
                 return false;
@@ -211,7 +211,7 @@ final class BrowseMethod
 
                 return false;
             }
-            $results = Catalog::get_name_array($objects, $output_type);
+            $results = Catalog::get_name_array($objects, $output_type, 'name');
         }
 
         ob_end_clean();
