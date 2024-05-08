@@ -65,6 +65,8 @@ class Query
             'add_lt',
             'alpha_match',
             'artist',
+            'album_artist',
+            'song_artist',
             'catalog',
             'catalog_enabled',
             'exact_match',
@@ -1587,7 +1589,13 @@ class Query
                         }
                         break;
                     case 'artist':
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . ") AND ";
+                        break;
+                    case 'album_artist':
                         $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
+                        break;
+                    case 'song_artist':
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'song') AND ";
                         break;
                     case 'add_lt':
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
@@ -1658,7 +1666,13 @@ class Query
                         }
                         break;
                     case 'artist':
-                        $filter_sql = " `artist`.`id` = '" . Dba::escape($value) . "' AND ";
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . ") AND ";
+                        break;
+                    case 'album_artist':
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
+                        break;
+                    case 'song_artist':
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'song') AND ";
                         break;
                     case 'add_lt':
                         $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
