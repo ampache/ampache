@@ -1413,6 +1413,7 @@ class Search extends playlist_object
      * get_songs
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
+     * @return int[]
      */
     public function get_songs(): array
     {
@@ -1440,7 +1441,7 @@ class Search extends playlist_object
 
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

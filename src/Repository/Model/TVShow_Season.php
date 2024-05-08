@@ -97,7 +97,7 @@ class TVShow_Season extends database_object implements
     /**
      * get_songs
      * gets all episodes for this tv show season
-     * @return array
+     * @return int[]
      */
     public function get_episodes(): array
     {
@@ -109,7 +109,7 @@ class TVShow_Season extends database_object implements
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

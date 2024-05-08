@@ -70,7 +70,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public int $song_artist_count;
 
     public ?string $link = null;
+    /** @var int[] $album_artists */
     public ?array $album_artists;
+    /** @var int[] $song_artists */
     public ?array $song_artists;
     /** @var int $total_duration */
     public $total_duration;
@@ -572,7 +574,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item album_artists array
-     * @return array
+     * @return int[]
      */
     public function get_artists(): array
     {
@@ -588,7 +590,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item song_artists array
-     * @return array
+     * @return int[]
      */
     public function get_song_artists(): array
     {
@@ -693,7 +695,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param int $album_id
      * @param int $primary_id
      * @param string $object_type
-     * @return array
+     * @return int[]
      */
     public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
     {
@@ -702,7 +704,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $db_results = Dba::read($sql, array($object_type, $album_id));
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
         $primary = ((int)$primary_id > 0)
             ? array((int)$primary_id)
