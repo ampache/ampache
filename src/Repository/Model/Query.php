@@ -1169,8 +1169,8 @@ class Query
                     $sql = "SELECT %%SELECT%% FROM `playlist` ";
                     break;
                 case 'playlist_search':
-                    $this->set_select("`playlist_search`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `search`) AS `playlist_search` ";
+                    $this->set_select("`playlist`.`id`");
+                    $sql = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `search`) AS `playlist` ";
                     break;
                 case 'smartplaylist':
                     $this->set_select('`search`.`id`');
