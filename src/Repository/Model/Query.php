@@ -285,6 +285,16 @@ class Query
             'rating',
             'user_flag'
         ),
+        'playlist_search' => array(
+            'date',
+            'last_update',
+            'name',
+            'type',
+            'user',
+            'username',
+            'rating',
+            'user_flag'
+        ),
         'smartplaylist' => array(
             'date',
             'last_update',
