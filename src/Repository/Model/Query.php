@@ -1589,7 +1589,7 @@ class Query
                         }
                         break;
                     case 'artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . ") AND ";
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "') AND ";
                         break;
                     case 'album_artist':
                         $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
@@ -1665,7 +1665,7 @@ class Query
                         }
                         break;
                     case 'artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . ") AND ";
+                        $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "') AND ";
                         break;
                     case 'album_artist':
                         $filter_sql = " `album`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
