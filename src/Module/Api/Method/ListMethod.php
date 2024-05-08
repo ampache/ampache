@@ -127,7 +127,7 @@ final class ListMethod
             return false;
         }
 
-        $results = Catalog::get_name_array($objects, $name_type);
+        $results = Catalog::get_name_array($objects, $name_type, 'name');
 
         ob_end_clean();
         switch ($input['api_format']) {
