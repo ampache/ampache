@@ -53,6 +53,7 @@ class Browse extends Query
         'broadcast',
         'catalog',
         'clip',
+        'playlist_search',
         'democratic',
         'label',
         'license',

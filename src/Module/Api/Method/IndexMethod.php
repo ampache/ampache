@@ -102,7 +102,13 @@ final class IndexMethod
         } else {
             $browse = Api::getBrowse();
             $browse->reset_filters();
-            if ($album_artist) {
+            if (
+                $type === 'playlist' &&
+                $hide === false
+            ) {
+                $name_type = 'playlist_search';
+                $browse->set_type('playlist_search');
+            } elseif ($album_artist) {
                 $browse->set_type('album_artist');
             } elseif ($song_artist) {
                 $browse->set_type('song_artist');
@@ -117,14 +123,9 @@ final class IndexMethod
             Api::set_filter('update', $input['update'] ?? '', $browse);
             if ($type == 'playlist') {
                 $browse->set_filter('playlist_type', 1);
-                if (!$hide) {
-                    $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
-                } else {
-                    $results = $browse->get_objects();
-                }
-            } else {
-                $results = $browse->get_objects();
             }
+
+            $results = $browse->get_objects();
         }
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
