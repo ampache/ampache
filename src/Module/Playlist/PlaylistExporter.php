@@ -68,17 +68,16 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = Catalog::get_artists();
                 break;
             case 'smartlists':
-                if ((int)$playlistId < 1) {
+                if ($userId > 0) {
                     $ids = Playlist::get_smartlists($userId);
                 } else {
-                    $ids = array($playlistId);
+                    $ids = array((int)str_replace('smart_', '', $playlistId));
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
-                    $searchId = (int)str_replace('smart_', '', $playlist_id);
                     $playlist = ($user->id)
-                        ? new Search($searchId, 'song', $user)
-                        : new Search($searchId);
+                        ? new Search($playlist_id, 'song', $user)
+                        : new Search($playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
@@ -86,7 +85,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'playlists':
             default:
-                if ((int)$playlistId < 1) {
+                if ($userId > 0) {
                     $ids = Playlist::get_playlists($userId);
                 } else {
                     $ids = array((int)$playlistId);

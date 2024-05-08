@@ -311,7 +311,7 @@ class Userflag extends database_object
      * @param int $offset
      * @param int $since
      * @param int $before
-     * @return array
+     * @return int[]
      */
     public static function get_latest($type, $user_id = null, $count = 0, $offset = 0, $since = 0, $before = 0): array
     {
@@ -336,7 +336,7 @@ class Userflag extends database_object
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

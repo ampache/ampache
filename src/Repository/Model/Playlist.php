@@ -215,7 +215,7 @@ class Playlist extends playlist_object
      * @param bool $includePublic
      * @param bool $includeHidden
      * @param bool $userOnly
-     * @return array
+     * @return int[]
      */
     public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
     {
@@ -258,7 +258,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         if (empty($playlist_name)) {
@@ -409,6 +409,7 @@ class Playlist extends playlist_object
      * get_songs
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
+     * @return int[]
      */
     public function get_songs(): array
     {
@@ -427,7 +428,7 @@ class Playlist extends playlist_object
         // debug_event(__CLASS__, "get_songs(): " . $sql, 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         } // end while
 
         return $results;
