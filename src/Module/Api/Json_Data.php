@@ -804,6 +804,11 @@ class Json_Data
                     $album_artists[] = Artist::get_name_array_by_id($artist_id);
                 }
                 $objArray['artists'] = $album_artists;
+                $song_artists        = array();
+                foreach ($album->get_song_artists() as $artist_id) {
+                    $song_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['songartists'] = $song_artists;
             }
 
             // Handle includes

@@ -181,7 +181,7 @@ final class BrowseMethod
                     /** @var Artist $item */
                     $output_type = 'album';
                     $browse->set_type('album');
-                    $browse->set_filter('artist', $item->getId());
+                    $browse->set_filter('album_artist', $item->getId());
                     break;
                 case 'album':
                     /** @var Album $item */

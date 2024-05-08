@@ -71,6 +71,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public ?string $link = null;
     public ?array $album_artists;
+    public ?array $song_artists;
     /** @var int $total_duration */
     public $total_duration;
     /** @var int $catalog_id */
@@ -586,6 +587,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * Get item song_artists array
+     * @return array
+     */
+    public function get_song_artists(): array
+    {
+        if (empty($this->song_artists)) {
+            $this->song_artists = self::get_parent_array($this->id, 0, 'song');
+        }
+
+        return $this->song_artists ?? array();
+    }
+
+    /**
      * getYear
      */
     public function getYear(): string
@@ -678,13 +692,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get parent album artists.
      * @param int $album_id
      * @param int $primary_id
+     * @param string $object_type
      * @return array
      */
-    public static function get_parent_array($album_id, $primary_id): array
+    public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
     {
         $results    = array();
-        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
-        $db_results = Dba::read($sql, array($album_id));
+        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
+        $db_results = Dba::read($sql, array($object_type, $album_id));
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = $row['object_id'];

@@ -1000,6 +1000,10 @@ class Xml_Data
             foreach ($album->get_artists() as $artist_id) {
                 $album_artists[] = Artist::get_name_array_by_id($artist_id);
             }
+            $song_artists = array();
+            foreach ($album->get_song_artists() as $artist_id) {
+                $song_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
 
             $rating      = new Rating($album_id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1013,6 +1017,9 @@ class Xml_Data
                 foreach ($album_artists as $album_artist) {
                     $string .= "\t<artist id=\"" . $album_artist['id'] . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
                 }
+            }
+            foreach ($song_artists as $song_artist) {
+                $string .= "\t<songartist id=\"" . $song_artist['id'] . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</songartist>\n";
             }
             // Handle includes
             $songs = ($include && in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
