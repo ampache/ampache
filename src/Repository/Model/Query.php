@@ -2739,7 +2739,7 @@ class Query
 
         $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         $this->save_objects($results);
