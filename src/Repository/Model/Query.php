@@ -279,29 +279,32 @@ class Query
             'date',
             'last_update',
             'name',
+            'rating',
             'type',
             'user',
             'username',
-            'rating',
             'user_flag'
         ),
         'playlist_search' => array(
             'date',
             'last_update',
             'name',
+            'rating',
             'type',
             'user',
             'username',
-            'rating',
             'user_flag'
         ),
         'smartplaylist' => array(
             'date',
             'last_update',
             'name',
+            'limit',
+            'random',
+            'rating',
+            'type',
             'user',
             'username',
-            'rating',
             'user_flag'
         ),
         'shoutbox' => array(
@@ -2418,8 +2421,10 @@ class Query
                 switch ($field) {
                     case 'date':
                     case 'last_update':
-                    case 'type':
+                    case 'limit':
+                    case 'random':
                     case 'name':
+                    case 'type':
                     case 'user':
                     case 'username':
                         $sql = "`search`.`$field`";
