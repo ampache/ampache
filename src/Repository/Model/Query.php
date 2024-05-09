@@ -300,6 +300,7 @@ class Query
             'last_update',
             'name',
             'limit',
+            'random',
             'rating',
             'type',
             'user',
@@ -2421,6 +2422,7 @@ class Query
                     case 'date':
                     case 'last_update':
                     case 'limit':
+                    case 'random':
                     case 'name':
                     case 'type':
                     case 'user':
