@@ -299,6 +299,7 @@ class Query
             'date',
             'last_update',
             'name',
+            'limit',
             'rating',
             'type',
             'user',
@@ -2419,6 +2420,7 @@ class Query
                 switch ($field) {
                     case 'date':
                     case 'last_update':
+                    case 'limit':
                     case 'name':
                     case 'type':
                     case 'user':
