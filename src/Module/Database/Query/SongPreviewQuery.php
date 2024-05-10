@@ -35,6 +35,13 @@ final class SongPreviewQuery implements QueryInterface
     /** @var string */
     protected $base = "";
 
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+    );
+
     /**
      * get_select
      *
@@ -53,6 +60,17 @@ final class SongPreviewQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

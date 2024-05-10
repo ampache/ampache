@@ -30,6 +30,30 @@ use Ampache\Repository\Model\Query;
 
 final class PodcastEpisodeQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'podcast',
+        'alpha_match',
+        'exact_match',
+        'regex_match',
+        'regex_not_match',
+        'starts_with',
+        'unplayed'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'podcast',
+        'title',
+        'category',
+        'author',
+        'time',
+        'pubdate',
+        'state',
+        'random',
+        'rating',
+        'user_flag'
+    );
+
     /** @var string */
     protected $select = "`podcast_episode`.`id`";
 
@@ -54,6 +78,17 @@ final class PodcastEpisodeQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

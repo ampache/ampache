@@ -72,412 +72,6 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
-    private const ALLOWED_FILTERS = array(
-        'song' => array(
-            'add_gt',
-            'add_lt',
-            'album',
-            'album_disk',
-            'alpha_match',
-            'artist',
-            'catalog',
-            'catalog_enabled',
-            'disk',
-            'enabled',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'tag',
-            'unplayed',
-            'update_gt',
-            'update_lt'
-        ),
-        'album' => array(
-            'add_gt',
-            'add_lt',
-            'alpha_match',
-            'artist',
-            'album_artist',
-            'song_artist',
-            'catalog',
-            'catalog_enabled',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'tag',
-            'unplayed',
-            'update_gt',
-            'update_lt'
-        ),
-        'artist' => array(
-            'add_gt',
-            'add_lt',
-            'album_artist',
-            'alpha_match',
-            'catalog',
-            'catalog_enabled',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'tag',
-            'unplayed',
-            'update_gt',
-            'update_lt',
-        ),
-        'live_stream' => array(
-            'alpha_match',
-            'catalog_enabled',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with'
-        ),
-        'playlist' => array(
-            'alpha_match',
-            'exact_match',
-            'playlist_type',
-            'regex_match',
-            'regex_not_match',
-            'starts_with'
-        ),
-        'smartplaylist' => array(
-            'alpha_match',
-            'exact_match',
-            'playlist_type',
-            'regex_match',
-            'regex_not_match',
-            'starts_with'
-        ),
-        'tag' => array(
-            'alpha_match',
-            'exact_match',
-            'hidden',
-            'object_type',
-            'regex_match',
-            'regex_not_match',
-            'tag'
-        ),
-        'video' => array(
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'tag'
-        ),
-        'license' => array(
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with'
-        ),
-        'tvshow' => array(
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'year_eq',
-            'year_gt',
-            'year_lt'
-        ),
-        'tvshow_season' => array(
-            'season_eq',
-            'season_gt',
-            'season_lt'
-        ),
-        'catalog' => array(
-            'gather_types'
-        ),
-        'user' => array(
-            'starts_with'
-        ),
-        'label' => array(
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with'
-        ),
-        'pvmsg' => array(
-            'alpha_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'to_user',
-            'user'
-        ),
-        'follower' => array(
-            'to_user',
-            'user'
-        ),
-        'podcast' => array(
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'unplayed'
-        ),
-        'podcast_episode' => array(
-            'podcast',
-            'alpha_match',
-            'exact_match',
-            'regex_match',
-            'regex_not_match',
-            'starts_with',
-            'unplayed'
-        )
-    );
-
-    private const ALLOWED_SORTS = [
-        'song' => array(
-            'title',
-            'year',
-            'track',
-            'time',
-            'composer',
-            'total_count',
-            'total_skip',
-            'album',
-            'album_disk',
-            'artist',
-            'random',
-            'rating',
-            'user_flag'
-        ),
-        'album' => array(
-            'album_artist',
-            'artist',
-            'barcode',
-            'catalog_number',
-            'generic_artist',
-            'name',
-            'name_year',
-            'name_original_year',
-            'original_year',
-            'random',
-            'release_status',
-            'release_type',
-            'disk',
-            'song_count',
-            'subtitle',
-            'time',
-            'total_count',
-            'version',
-            'year',
-            'rating',
-            'user_flag'
-        ),
-        'album_disk' => array(
-            'album_artist',
-            'artist',
-            'barcode',
-            'disksubtitle',
-            'catalog_number',
-            'generic_artist',
-            'name',
-            'name_year',
-            'name_original_year',
-            'original_year',
-            'random',
-            'release_status',
-            'release_type',
-            'song_count',
-            'subtitle',
-            'time',
-            'total_count',
-            'year',
-            'rating',
-            'user_flag'
-        ),
-        'artist' => array(
-            'name',
-            'album',
-            'placeformed',
-            'yearformed',
-            'song_count',
-            'album_count',
-            'total_count',
-            'random',
-            'rating',
-            'time',
-            'user_flag'
-        ),
-        'playlist' => array(
-            'date',
-            'last_update',
-            'name',
-            'rating',
-            'type',
-            'user',
-            'username',
-            'user_flag'
-        ),
-        'playlist_search' => array(
-            'date',
-            'last_update',
-            'name',
-            'rating',
-            'type',
-            'user',
-            'username',
-            'user_flag'
-        ),
-        'smartplaylist' => array(
-            'date',
-            'last_update',
-            'name',
-            'limit',
-            'random',
-            'rating',
-            'type',
-            'user',
-            'username',
-            'user_flag'
-        ),
-        'shoutbox' => array(
-            'date',
-            'user',
-            'sticky'
-        ),
-        'live_stream' => array(
-            'name',
-            'call_sign',
-            'frequency'
-        ),
-        'tag' => array(
-            'tag',
-            'name'
-        ),
-        'catalog' => array(
-            'name'
-        ),
-        'user' => array(
-            'fullname',
-            'username',
-            'last_seen',
-            'create_date'
-        ),
-        'video' => array(
-            'title',
-            'resolution',
-            'length',
-            'codec',
-            'random',
-            'rating',
-            'user_flag'
-        ),
-        'wanted' => array(
-            'user',
-            'accepted',
-            'artist',
-            'name',
-            'year'
-        ),
-        'share' => array(
-            'object',
-            'object_type',
-            'user',
-            'creation_date',
-            'lastvisit_date',
-            'counter',
-            'max_counter',
-            'allow_stream',
-            'allow_download',
-            'expire'
-        ),
-        'broadcast' => array(
-            'name',
-            'user',
-            'started',
-            'listeners'
-        ),
-        'license' => array(
-            'name'
-        ),
-        'tvshow' => array(
-            'name',
-            'year'
-        ),
-        'tvshow_season' => array(
-            'season',
-            'tvshow'
-        ),
-        'tvshow_episode' => array(
-            'title',
-            'resolution',
-            'length',
-            'codec',
-            'episode',
-            'season',
-            'tvshow'
-        ),
-        'movie' => array(
-            'title',
-            'resolution',
-            'length',
-            'codec',
-            'release_date'
-        ),
-        'clip' => array(
-            'title',
-            'artist',
-            'resolution',
-            'length',
-            'codec',
-            'release_date'
-        ),
-        'personal_video' => array(
-            'title',
-            'location',
-            'resolution',
-            'length',
-            'codec',
-            'release_date'
-        ),
-        'label' => array(
-            'name',
-            'category',
-            'user'
-        ),
-        'pvmsg' => array(
-            'subject',
-            'to_user',
-            'creation_date',
-            'is_read'
-        ),
-        'follower' => array(
-            'user',
-            'follow_user',
-            'follow_date'
-        ),
-        'podcast' => array(
-            'title',
-            'website',
-            'episodes',
-            'random',
-            'rating',
-            'user_flag'
-        ),
-        'podcast_episode' => array(
-            'podcast',
-            'title',
-            'category',
-            'author',
-            'time',
-            'pubdate',
-            'state',
-            'random',
-            'rating',
-            'user_flag'
-        )
-    ];
-
     private const SORT_STATE = [
         'year' => 'ASC',
         'original_year' => 'ASC',
@@ -852,7 +446,75 @@ class Query
      */
     public static function get_allowed_filters($type): array
     {
-        return self::ALLOWED_FILTERS[$type] ?? [];
+        switch ($type) {
+            case 'album':
+                return AlbumQuery::FILTERS;
+            case 'album_disk':
+                return AlbumDiskQuery::FILTERS;
+            case 'artist':
+                return ArtistQuery::FILTERS;
+            case 'broadcast':
+                return BroadcastQuery::FILTERS;
+            case 'catalog':
+                return CatalogQuery::FILTERS;
+            case 'clip':
+                return ClipQuery::FILTERS;
+            case 'democratic':
+                return DemocraticQuery::FILTERS;
+            case 'follower':
+                return FollowerQuery::FILTERS;
+            case 'label':
+                return LabelQuery::FILTERS;
+            case 'license':
+                return LicenseQuery::FILTERS;
+            case 'live_stream':
+                return LiveStreamQuery::FILTERS;
+            case 'movie':
+                return MovieQuery::FILTERS;
+            case 'personal_video':
+                return PersonalVideoQuery::FILTERS;
+            case 'playlist_localplay':
+                return PlaylistLocalplayQuery::FILTERS;
+            case 'playlist_media':
+                return PlaylistMediaQuery::FILTERS;
+            case 'playlist_search':
+                return PlaylistSearchQuery::FILTERS;
+            case 'playlist':
+                return PlaylistQuery::FILTERS;
+            case 'podcast_episode':
+                return PodcastEpisodeQuery::FILTERS;
+            case 'podcast':
+                return PodcastQuery::FILTERS;
+            case 'pvmsg':
+                return PvmsgQuery::FILTERS;
+            case 'share':
+                return ShareQuery::FILTERS;
+            case 'shoutbox':
+                return ShoutboxQuery::FILTERS;
+            case 'smartplaylist':
+                return SmartPlaylistQuery::FILTERS;
+            case 'song_preview':
+                return SongPreviewQuery::FILTERS;
+            case 'song':
+                return SongQuery::FILTERS;
+            case 'tag_hidden':
+            case 'tag':
+                return TagQuery::FILTERS;
+            case 'tvshow_episode':
+                return TvshowEpisodeQuery::FILTERS;
+            case 'tvshow_season':
+                return TvshowSeasonQuery::FILTERS;
+            case 'tvshow':
+                return TvshowQuery::FILTERS;
+            case 'user':
+                return UserQuery::FILTERS;
+            case 'video':
+                return VideoQuery::FILTERS;
+            case 'wanted':
+                return WantedQuery::FILTERS;
+        }
+
+        return [];
     }
 
     /**
@@ -988,8 +650,14 @@ class Query
      */
     public function set_sort($sort, $order = ''): bool
     {
-        // If it's not in our list, smeg off!
-        if (!empty($this->get_type()) && !in_array($sort, self::ALLOWED_SORTS[$this->get_type()])) {
+        // Don't allow pointless sorts
+        if (
+            !empty($this->get_type()) &&
+            $this->queryType !== null &&
+            !in_array($sort, $this->queryType->get_sorts())
+        ) {
+            debug_event(self::class, 'IGNORED set_sort ' . $this->get_type() . ': ' . $sort, 5);
+
             return false;
         }
 
@@ -1398,7 +1066,7 @@ class Query
      * _get_having_sql
      * this returns the having sql stuff, if we've got anything
      */
-    public function _get_having_sql(): string
+    private function _get_having_sql(): string
     {
         return $this->_state['having'];
     }

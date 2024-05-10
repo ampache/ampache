@@ -29,6 +29,13 @@ use Ampache\Repository\Model\Query;
 
 final class DemocraticQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+    );
+
     /** @var string */
     protected $select = "";
 
@@ -53,6 +60,17 @@ final class DemocraticQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

@@ -29,6 +29,16 @@ use Ampache\Repository\Model\Query;
 
 final class ShoutboxQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'date',
+        'user',
+        'sticky'
+    );
+
     /** @var string */
     protected $select = "`user_shout`.`id`";
 
@@ -53,6 +63,17 @@ final class ShoutboxQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**
