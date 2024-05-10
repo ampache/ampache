@@ -30,6 +30,22 @@ use Ampache\Repository\Model\Query;
 
 final class TagQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'alpha_match',
+        'exact_match',
+        'hidden',
+        'object_type',
+        'regex_match',
+        'regex_not_match',
+        'tag'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'tag',
+        'name'
+    );
+
     /** @var string */
     protected $select = "`tag`.`id`";
 
@@ -54,6 +70,17 @@ final class TagQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

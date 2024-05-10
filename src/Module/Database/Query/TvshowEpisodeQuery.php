@@ -29,6 +29,20 @@ use Ampache\Repository\Model\Query;
 
 final class TvshowEpisodeQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'title',
+        'resolution',
+        'length',
+        'codec',
+        'episode',
+        'season',
+        'tvshow'
+    );
+
     /** @var string */
     protected $select = "`tvshow_episode`.`id`";
 
@@ -53,6 +67,17 @@ final class TvshowEpisodeQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

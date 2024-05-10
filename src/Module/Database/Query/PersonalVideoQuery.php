@@ -29,6 +29,19 @@ use Ampache\Repository\Model\Query;
 
 final class PersonalVideoQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'title',
+        'location',
+        'resolution',
+        'length',
+        'codec',
+        'release_date'
+    );
+
     /** @var string */
     protected $select = "`personal_video`.`id`";
 
@@ -53,6 +66,17 @@ final class PersonalVideoQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

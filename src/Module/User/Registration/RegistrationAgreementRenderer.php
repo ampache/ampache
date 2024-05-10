@@ -36,6 +36,7 @@ final class RegistrationAgreementRenderer implements RegistrationAgreementRender
     ) {
         $this->filePath = $filePath;
     }
+
     /**
      * Renders the registration agreement (if available))
      */

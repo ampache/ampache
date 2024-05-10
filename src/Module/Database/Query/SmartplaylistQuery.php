@@ -31,6 +31,29 @@ use Ampache\Repository\Model\Query;
 
 final class SmartplaylistQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'alpha_match',
+        'exact_match',
+        'playlist_type',
+        'regex_match',
+        'regex_not_match',
+        'starts_with'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'date',
+        'last_update',
+        'name',
+        'limit',
+        'random',
+        'rating',
+        'type',
+        'user',
+        'username',
+        'user_flag'
+    );
+
     /** @var string */
     protected $select = "`search`.`id`";
 
@@ -55,6 +78,17 @@ final class SmartplaylistQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

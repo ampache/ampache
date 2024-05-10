@@ -29,6 +29,17 @@ use Ampache\Repository\Model\Query;
 
 final class BroadcastQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'name',
+        'user',
+        'started',
+        'listeners'
+    );
+
     /** @var string */
     protected $select = "`broadcast`.`id`";
 
@@ -53,6 +64,17 @@ final class BroadcastQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

@@ -29,6 +29,23 @@ use Ampache\Repository\Model\Query;
 
 final class ShareQuery implements QueryInterface
 {
+    public const FILTERS = array(
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'object',
+        'object_type',
+        'user',
+        'creation_date',
+        'lastvisit_date',
+        'counter',
+        'max_counter',
+        'allow_stream',
+        'allow_download',
+        'expire'
+    );
+
     /** @var string */
     protected $select = "`share`.`id`";
 
@@ -53,6 +70,17 @@ final class ShareQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

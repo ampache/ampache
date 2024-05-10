@@ -695,6 +695,7 @@ class Browse extends Query
     {
         return make_bool($this->_state['use_alpha'] ?? false);
     }
+
     /**
      * Allow the current page to be save into the current session
      * @param bool $update_session

@@ -30,6 +30,49 @@ use Ampache\Repository\Model\Query;
 
 final class AlbumDiskQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'add_gt',
+        'add_lt',
+        'alpha_match',
+        'artist',
+        'album_artist',
+        'song_artist',
+        'catalog',
+        'catalog_enabled',
+        'exact_match',
+        'regex_match',
+        'regex_not_match',
+        'starts_with',
+        'tag',
+        'unplayed',
+        'update_gt',
+        'update_lt'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'album_artist',
+        'artist',
+        'barcode',
+        'disksubtitle',
+        'catalog_number',
+        'generic_artist',
+        'name',
+        'name_year',
+        'name_original_year',
+        'original_year',
+        'random',
+        'release_status',
+        'release_type',
+        'song_count',
+        'subtitle',
+        'time',
+        'total_count',
+        'year',
+        'rating',
+        'user_flag'
+    );
+
     /** @var string */
     protected $select = "`album_disk`.`id`";
 
@@ -54,6 +97,17 @@ final class AlbumDiskQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

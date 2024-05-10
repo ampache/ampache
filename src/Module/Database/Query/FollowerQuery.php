@@ -29,6 +29,18 @@ use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'to_user',
+        'user'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'user',
+        'follow_user',
+        'follow_date'
+    );
+
     /** @var string */
     protected $select = "`user_follower`.`id`";
 
@@ -53,6 +65,17 @@ final class FollowerQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

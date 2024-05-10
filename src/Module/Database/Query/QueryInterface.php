@@ -57,6 +57,14 @@ interface QueryInterface
     ): string;
 
     /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array;
+
+    /**
      * get_sql_sort
      *
      * Sorting SQL for ORDER BY
