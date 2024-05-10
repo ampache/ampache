@@ -92,8 +92,8 @@ class Query
      */
     public $catalog;
 
-    /** @var int $user_id */
-    public $user_id;
+    /** @var int|null $user_id */
+    public $user_id = null;
 
     /**
      * @var array $_state
