@@ -13501,6 +13501,16 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -13526,16 +13536,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:post_process\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -13547,6 +13547,11 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$_state type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
+			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$queryType has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
