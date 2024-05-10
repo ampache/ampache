@@ -324,16 +324,6 @@ class Query
             'username',
             'user_flag'
         ],
-        'playlist_search' => [
-            'date',
-            'last_update',
-            'name',
-            'rating',
-            'type',
-            'user',
-            'username',
-            'user_flag'
-        ],
         'smartplaylist' => [
             'date',
             'last_update',
@@ -1217,7 +1207,7 @@ class Query
         $filtered = array();
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if (array_key_exists('id', $data) && $this->_logic_filter($data['id'])) {
+            if (array_key_exists('id', $data)) {
                 $filtered[] = $data['id'];
             }
         }
@@ -1489,21 +1479,6 @@ class Query
         }
 
         return $this->queryType->get_sql_filter($this, $filter, $value);
-    }
-
-    /**
-     * _logic_filter
-     * This runs the filters that we can't easily apply
-     * to the sql so they have to be done after the fact
-     * these should be limited as they are often intensive and
-     * require additional queries per object... :(
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    private function _logic_filter($object_id): bool
-    {
-        return true;
-        // TODO, this must be old so probably not needed
     }
 
     /**
