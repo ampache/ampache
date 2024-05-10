@@ -30,6 +30,38 @@ use Ampache\Repository\Model\Query;
 
 final class ArtistQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'add_gt',
+        'add_lt',
+        'album_artist',
+        'alpha_match',
+        'catalog',
+        'catalog_enabled',
+        'exact_match',
+        'regex_match',
+        'regex_not_match',
+        'starts_with',
+        'tag',
+        'unplayed',
+        'update_gt',
+        'update_lt',
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'name',
+        'album',
+        'placeformed',
+        'yearformed',
+        'song_count',
+        'album_count',
+        'total_count',
+        'random',
+        'rating',
+        'time',
+        'user_flag'
+    );
+
     /** @var string */
     protected $select = "`artist`.`id`";
 
@@ -54,6 +86,17 @@ final class ArtistQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

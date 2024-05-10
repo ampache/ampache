@@ -30,6 +30,23 @@ use Ampache\Repository\Model\Query;
 
 final class PvmsgQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'alpha_match',
+        'regex_match',
+        'regex_not_match',
+        'starts_with',
+        'to_user',
+        'user'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'subject',
+        'to_user',
+        'creation_date',
+        'is_read'
+    );
+
     /** @var string */
     protected $select = "`user_pvmsg`.`id`";
 
@@ -54,6 +71,17 @@ final class PvmsgQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**

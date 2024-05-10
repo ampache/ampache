@@ -30,6 +30,18 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
+    public const FILTERS = array(
+        'starts_with'
+    );
+
+    /** @var string[] $sorts */
+    protected array $sorts = array(
+        'fullname',
+        'username',
+        'last_seen',
+        'create_date'
+    );
+
     /** @var string */
     protected $select = "`user`.`id`";
 
@@ -54,6 +66,17 @@ final class UserQuery implements QueryInterface
     public function get_base_sql(): string
     {
         return $this->base;
+    }
+
+    /**
+     * get_sorts
+     *
+     * List of valid sorts for this query
+     * @return string[]
+     */
+    public function get_sorts(): array
+    {
+        return $this->sorts;
     }
 
     /**
