@@ -26,6 +26,39 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Database\Query\AlbumDiskQuery;
+use Ampache\Module\Database\Query\AlbumQuery;
+use Ampache\Module\Database\Query\ArtistQuery;
+use Ampache\Module\Database\Query\BroadcastQuery;
+use Ampache\Module\Database\Query\CatalogQuery;
+use Ampache\Module\Database\Query\ClipQuery;
+use Ampache\Module\Database\Query\DemocraticQuery;
+use Ampache\Module\Database\Query\FollowerQuery;
+use Ampache\Module\Database\Query\LabelQuery;
+use Ampache\Module\Database\Query\LicenseQuery;
+use Ampache\Module\Database\Query\LiveStreamQuery;
+use Ampache\Module\Database\Query\MovieQuery;
+use Ampache\Module\Database\Query\PersonalVideoQuery;
+use Ampache\Module\Database\Query\PlaylistLocalplayQuery;
+use Ampache\Module\Database\Query\PlaylistMediaQuery;
+use Ampache\Module\Database\Query\PlaylistQuery;
+use Ampache\Module\Database\Query\PlaylistSearchQuery;
+use Ampache\Module\Database\Query\PodcastEpisodeQuery;
+use Ampache\Module\Database\Query\PodcastQuery;
+use Ampache\Module\Database\Query\PvmsgQuery;
+use Ampache\Module\Database\Query\QueryInterface;
+use Ampache\Module\Database\Query\ShareQuery;
+use Ampache\Module\Database\Query\ShoutboxQuery;
+use Ampache\Module\Database\Query\SmartplaylistQuery;
+use Ampache\Module\Database\Query\SongPreviewQuery;
+use Ampache\Module\Database\Query\SongQuery;
+use Ampache\Module\Database\Query\TagQuery;
+use Ampache\Module\Database\Query\TvshowEpisodeQuery;
+use Ampache\Module\Database\Query\TvshowQuery;
+use Ampache\Module\Database\Query\TvshowSeasonQuery;
+use Ampache\Module\Database\Query\UserQuery;
+use Ampache\Module\Database\Query\VideoQuery;
+use Ampache\Module\Database\Query\WantedQuery;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -465,6 +498,9 @@ class Query
      */
     public $catalog;
 
+    /** @var int $user_id */
+    public $user_id;
+
     /**
      * @var array $_state
      */
@@ -496,15 +532,11 @@ class Query
         'use_pages' => false
     );
 
-    /**
-     * @var array $_cache
-     */
+    /** @var array $_cache */
     protected $_cache;
 
-    /**
-     * @var int $user_id
-     */
-    private $user_id;
+    /** @var QueryInterface|null $queryType */
+    private $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**
      * constructor
@@ -834,44 +866,109 @@ class Query
     public function set_type($type, $custom_base = ''): void
     {
         switch ($type) {
-            case 'user':
-            case 'video':
-            case 'playlist_search':
-            case 'playlist':
-            case 'playlist_media':
-            case 'smartplaylist':
-            case 'song':
-            case 'catalog':
             case 'album':
-            case 'album_disk':
-            case 'artist':
-            case 'tag':
-            case 'tag_hidden':
-            case 'playlist_localplay':
-            case 'shoutbox':
-            case 'live_stream':
-            case 'democratic':
-            case 'wanted':
-            case 'share':
-            case 'song_preview':
-            case 'broadcast':
-            case 'license':
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-            case 'movie':
-            case 'personal_video':
-            case 'clip':
-            case 'label':
-            case 'pvmsg':
-            case 'follower':
-            case 'podcast':
-            case 'podcast_episode':
-                // Set it
-                $this->_state['type'] = $type;
-                $this->set_base_sql(true, $custom_base);
+                $this->queryType = new AlbumQuery();
                 break;
-        } // end type whitelist
+            case 'album_disk':
+                $this->queryType = new AlbumDiskQuery();
+                break;
+            case 'artist':
+                $this->queryType = new ArtistQuery();
+                break;
+            case 'broadcast':
+                $this->queryType = new BroadcastQuery();
+                break;
+            case 'catalog':
+                $this->queryType = new CatalogQuery();
+                break;
+            case 'clip':
+                $this->queryType = new ClipQuery();
+                break;
+            case 'democratic':
+                $this->queryType = new DemocraticQuery();
+                break;
+            case 'follower':
+                $this->queryType = new FollowerQuery();
+                break;
+            case 'label':
+                $this->queryType = new LabelQuery();
+                break;
+            case 'license':
+                $this->queryType = new LicenseQuery();
+                break;
+            case 'live_stream':
+                $this->queryType = new LiveStreamQuery();
+                break;
+            case 'movie':
+                $this->queryType = new MovieQuery();
+                break;
+            case 'personal_video':
+                $this->queryType = new PersonalVideoQuery();
+                break;
+            case 'playlist_localplay':
+                $this->queryType = new PlaylistLocalplayQuery();
+                break;
+            case 'playlist_media':
+                $this->queryType = new PlaylistMediaQuery();
+                break;
+            case 'playlist_search':
+                $this->queryType = new PlaylistSearchQuery();
+                break;
+            case 'playlist':
+                $this->queryType = new PlaylistQuery();
+                break;
+            case 'podcast_episode':
+                $this->queryType = new PodcastEpisodeQuery();
+                break;
+            case 'podcast':
+                $this->queryType = new PodcastQuery();
+                break;
+            case 'pvmsg':
+                $this->queryType = new PvmsgQuery();
+                break;
+            case 'share':
+                $this->queryType = new ShareQuery();
+                break;
+            case 'shoutbox':
+                $this->queryType = new ShoutboxQuery();
+                break;
+            case 'smartplaylist':
+                $this->queryType = new SmartPlaylistQuery();
+                break;
+            case 'song_preview':
+                $this->queryType = new SongPreviewQuery();
+                break;
+            case 'song':
+                $this->queryType = new SongQuery();
+                break;
+            case 'tag_hidden':
+            case 'tag':
+                $this->queryType = new TagQuery();
+                break;
+            case 'tvshow_episode':
+                $this->queryType = new TvshowEpisodeQuery();
+                break;
+            case 'tvshow_season':
+                $this->queryType = new TvshowSeasonQuery();
+                break;
+            case 'tvshow':
+                $this->queryType = new TvshowQuery();
+                break;
+            case 'user':
+                $this->queryType = new UserQuery();
+                break;
+            case 'video':
+                $this->queryType = new VideoQuery();
+                break;
+            case 'wanted':
+                $this->queryType = new WantedQuery();
+                break;
+        }
+        if ($this->queryType !== null) {
+            // Set it
+            $this->_state['type'] = $type;
+            $this->_set_base_sql(true, $custom_base);
+        }
     }
 
     /**
@@ -917,7 +1014,7 @@ class Query
         $this->_state['sort']        = array();
         $this->_state['sort'][$sort] = $order;
 
-        $this->resort_objects();
+        $this->_resort_objects();
 
         return true;
     }
@@ -1109,11 +1206,11 @@ class Query
             $results[] = $data;
         }
 
-        $results  = $this->post_process($results);
+        $results  = $this->_post_process($results);
         $filtered = array();
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if (array_key_exists('id', $data) && $this->logic_filter($data['id'])) {
+            if (array_key_exists('id', $data) && $this->_logic_filter($data['id'])) {
                 $filtered[] = $data['id'];
             }
         } // end while
@@ -1125,179 +1222,66 @@ class Query
     }
 
     /**
-     * set_base_sql
+     * _set_base_sql
      * This saves the base sql statement we are going to use.
      * @param bool $force
      * @param string $custom_base
      */
-    private function set_base_sql($force = false, $custom_base = ''): bool
+    private function _set_base_sql($force = false, $custom_base = ''): void
     {
         // Only allow it to be set once
         if (!empty((string)$this->_state['base']) && !$force) {
-            return true;
+            return;
         }
 
         // Custom sql base
         if ($force && !empty($custom_base)) {
             $this->_state['custom'] = true;
-            $sql                    = $custom_base;
+            $this->_state['base']   = $custom_base;
         } else {
-            switch ($this->get_type()) {
-                case 'album':
-                    $this->set_select("`album`.`id`");
-                    $sql = "SELECT %%SELECT%% AS `id` FROM `album` ";
-                    break;
-                case 'album_disk':
-                    $this->set_select("`album_disk`.`id`");
-                    $sql = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
-                    break;
-                case 'artist':
-                    $this->set_select("`artist`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `artist` ";
-                    break;
-                case 'catalog':
-                    $this->set_select("`artist`.`name`");
-                    $sql = "SELECT %%SELECT%% FROM `artist` ";
-                    break;
-                case 'user':
-                    $this->set_select("`user`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `user` ";
-                    break;
-                case 'live_stream':
-                    $this->set_select("`live_stream`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `live_stream` ";
-                    break;
-                case 'playlist':
-                    $this->set_select("`playlist`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `playlist` ";
-                    break;
-                case 'playlist_search':
-                    $this->set_select("`playlist`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `search`) AS `playlist` ";
-                    break;
-                case 'smartplaylist':
-                    $this->set_select('`search`.`id`');
-                    $sql = "SELECT %%SELECT%% FROM `search` ";
-                    break;
-                case 'shoutbox':
-                    $this->set_select("`user_shout`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `user_shout` ";
-                    break;
-                case 'video':
-                    $this->set_select("`video`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `video` ";
-                    break;
-                case 'tag':
-                    $this->set_select("`tag`.`id`");
-                    $this->set_filter('hidden', 0);
-                    $sql = "SELECT %%SELECT%% FROM `tag` ";
-                    break;
-                case 'tag_hidden':
-                    $this->set_select("`tag`.`id`");
-                    $this->set_filter('hidden', 1);
-                    $sql = "SELECT %%SELECT%% FROM `tag` ";
-                    break;
-                case 'wanted':
-                    $this->set_select("`wanted`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `wanted` ";
-                    break;
-                case 'share':
-                    $this->set_select("`share`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `share` ";
-                    break;
-                case 'broadcast':
-                    $this->set_select("`broadcast`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `broadcast` ";
-                    break;
-                case 'license':
-                    $this->set_select("`license`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `license` ";
-                    break;
-                case 'tvshow':
-                    $this->set_select("`tvshow`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow` ";
-                    break;
-                case 'tvshow_season':
-                    $this->set_select("`tvshow_season`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow_season` ";
-                    break;
-                case 'tvshow_episode':
-                    $this->set_select("`tvshow_episode`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `tvshow_episode` ";
-                    break;
-                case 'movie':
-                    $this->set_select("`movie`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `movie` ";
-                    break;
-                case 'clip':
-                    $this->set_select("`clip`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `clip` ";
-                    break;
-                case 'personal_video':
-                    $this->set_select("`personal_video`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `personal_video` ";
-                    break;
-                case 'label':
-                    $this->set_select("`label`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `label` ";
-                    break;
-                case 'pvmsg':
-                    $this->set_select("`user_pvmsg`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `user_pvmsg` ";
-                    break;
-                case 'follower':
-                    $this->set_select("`user_follower`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `user_follower` ";
-                    break;
-                case 'podcast':
-                    $this->set_select("`podcast`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `podcast` ";
-                    break;
-                case 'podcast_episode':
-                    $this->set_select("`podcast_episode`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `podcast_episode` ";
-                    break;
-                case 'playlist_media':
-                    $sql = '';
-                    break;
-                case 'song':
-                default:
-                    $this->set_select("`song`.`id`");
-                    $sql = "SELECT %%SELECT%% FROM `song` ";
-                    break;
-            } // end base sql
+            // TODO we should remove this default fallback and rely on set_type()
+            if ($this->queryType === null) {
+                $this->queryType = new SongQuery();
+            }
+            $this->_state['select'][] = $this->queryType->get_select();
+
+            // tag state should be set as they aren't really separate objects
+            if ($this->get_type() === 'tag_hidden') {
+                $this->set_filter('hidden', 1);
+            }
+            if ($this->get_type() === 'tag') {
+                $this->set_filter('hidden', 0);
+            }
+
+            $this->_state['base'] = $this->queryType->get_base_sql();
         }
-
-        $this->_state['base'] = $sql;
-
-        return true;
     }
 
     /**
-     * get_select
+     * _get_select
      * This returns the selects in a format that is friendly for a sql
      * statement.
      */
-    private function get_select(): string
+    private function _get_select(): string
     {
         return implode(", ", $this->_state['select'] ?? array());
     }
 
     /**
-     * get_base_sql
+     * _get_base_sql
      * This returns the base sql statement all parsed up, this should be
      * called after all set operations.
      */
-    private function get_base_sql(): string
+    private function _get_base_sql(): string
     {
-        return str_replace("%%SELECT%%", $this->get_select(), ($this->_state['base'] ?? ''));
+        return str_replace("%%SELECT%%", $this->_get_select(), ($this->_state['base'] ?? ''));
     }
 
     /**
-     * get_filter_sql
+     * _get_filter_sql
      * This returns the filter part of the sql statement
      */
-    private function get_filter_sql(): string
+    private function _get_filter_sql(): string
     {
         if (!is_array($this->_state['filter'])) {
             return '';
@@ -1307,7 +1291,7 @@ class Query
         $sql  = "WHERE";
 
         foreach ($this->_state['filter'] as $key => $value) {
-            $sql .= $this->sql_filter($key, $value);
+            $sql .= $this->_sql_filter($key, $value);
         }
 
         if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
@@ -1353,10 +1337,10 @@ class Query
     }
 
     /**
-     * get_sort_sql
+     * _get_sort_sql
      * Returns the sort sql part
      */
-    private function get_sort_sql(): string
+    private function _get_sort_sql(): string
     {
         if (empty($this->_state['sort'])) {
             return '';
@@ -1365,7 +1349,7 @@ class Query
         $sql = 'ORDER BY ';
 
         foreach ($this->_state['sort'] as $key => $value) {
-            $sql .= $this->sql_sort($key, $value);
+            $sql .= $this->_sql_sort($key, $value);
         }
 
         $sql = rtrim((string)$sql, 'ORDER BY ');
@@ -1375,10 +1359,10 @@ class Query
     }
 
     /**
-     * get_limit_sql
+     * _get_limit_sql
      * This returns the limit part of the sql statement
      */
-    private function get_limit_sql(): string
+    private function _get_limit_sql(): string
     {
         $start  = $this->get_start();
         $offset = $this->get_offset();
@@ -1390,10 +1374,10 @@ class Query
     }
 
     /**
-     * get_join_sql
+     * _get_join_sql
      * This returns the joins that this browse may need to work correctly
      */
-    private function get_join_sql(): string
+    private function _get_join_sql(): string
     {
         if (empty($this->_state['join']) || !is_array($this->_state['join'])) {
             return '';
@@ -1411,10 +1395,10 @@ class Query
     }
 
     /**
-     * get_having_sql
+     * _get_having_sql
      * this returns the having sql stuff, if we've got anything
      */
-    public function get_having_sql(): string
+    public function _get_having_sql(): string
     {
         return $this->_state['having'];
     }
@@ -1428,18 +1412,18 @@ class Query
      */
     public function get_sql($limit = true): string
     {
-        $sql        = $this->get_base_sql();
+        $sql        = $this->_get_base_sql();
         $filter_sql = "";
         $join_sql   = "";
         $having_sql = "";
         $order_sql  = "";
         if (!$this->_state['custom']) {
-            $filter_sql = $this->get_filter_sql();
-            $order_sql  = $this->get_sort_sql();
-            $join_sql   = $this->get_join_sql();
-            $having_sql = $this->get_having_sql();
+            $filter_sql = $this->_get_filter_sql();
+            $order_sql  = $this->_get_sort_sql();
+            $join_sql   = $this->_get_join_sql();
+            $having_sql = $this->_get_having_sql();
         }
-        $limit_sql = $limit ? $this->get_limit_sql() : '';
+        $limit_sql = $limit ? $this->_get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
@@ -1452,12 +1436,12 @@ class Query
     }
 
     /**
-     * post_process
+     * _post_process
      * This does some additional work on the results that we've received
      * before returning them. TODO this is only for tags/genres? should do this in the select/return if possible
      * @param array $data
      */
-    private function post_process($data): array
+    private function _post_process($data): array
     {
         $tags = $this->_state['filter']['tag'] ?? '';
 
@@ -1484,700 +1468,24 @@ class Query
     }
 
     /**
-     * sql_filter
+     * _sql_filter
      * This takes a filter name and value and if it is possible
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
      * @param string $filter
      * @param mixed $value
      */
-    private function sql_filter($filter, $value): string
+    private function _sql_filter($filter, $value): string
     {
-        $filter_sql = '';
-        switch ($this->get_type()) {
-            case 'song':
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
+        if ($this->queryType === null) {
+            return '';
+        }
 
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
-                        }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `song`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `song`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
-                        if ($this->catalog != 0) {
-                            $filter_sql .= " `song`.`catalog` = '" . $this->catalog . "' AND ";
-                        }
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `song`.`played`='0' AND ";
-                        }
-                        break;
-                    case 'album':
-                        $filter_sql = " `song`.`album` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'album_disk':
-                        $this->set_join_and('LEFT', '`album_disk`', '`album_disk`.`album_id`', '`song`.`album`', '`album_disk`.`disk`', '`song`.`disk`', 100);
-                        $filter_sql = " `album_disk`.`id` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'disk':
-                        $filter_sql = " `song`.`disk` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'artist':
-                        $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_lt':
-                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_gt':
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_lt':
-                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_gt':
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $filter_sql = " `song`.`catalog` = '$value' AND ";
-                        }
-                        break;
-                    case 'catalog_enabled':
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                    case 'enabled':
-                        $filter_sql = " `song`.`enabled`= '$value' AND ";
-                        break;
-                } // end list of sqlable filters
-                break;
-            case 'album':
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
-
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
-                        }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $this->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
-                        $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        if ($this->catalog != 0) {
-                            $filter_sql .= "`album`.`catalog` = '" . $this->catalog . "' AND ";
-                        }
-                        break;
-                    case 'artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";
-                        break;
-                    case 'album_artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'album') AND ";
-                        break;
-                    case 'song_artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `album_map`.`object_type` = 'song') AND ";
-                        break;
-                    case 'add_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $filter_sql = " (`album`.`catalog` = '$value') AND ";
-                        }
-                        break;
-                    case 'catalog_enabled':
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `album`.`total_count`='0' AND ";
-                        }
-                        break;
-                }
-                break;
-            case 'album_disk':
-                $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
-
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
-                        }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `album`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `album`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $this->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
-                        $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        if ($this->catalog != 0) {
-                            $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
-                        }
-                        break;
-                    case 'artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "') AND ";
-                        break;
-                    case 'album_artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'album') AND ";
-                        break;
-                    case 'song_artist':
-                        $filter_sql = " `album`.`id` IN (SELECT `album_id` FROM `album_map` WHERE `album_map`.`object_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'song') AND ";
-                        break;
-                    case 'add_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'catalog':
-                        if ($value != 0) {
-                            $filter_sql = " (`album_disk`.`catalog` = '$value') AND ";
-                        }
-                        break;
-                    case 'catalog_enabled':
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `album_disk`.`total_count`='0' AND ";
-                        }
-                        break;
-                }
-                $filter_sql .= " `album`.`id` IS NOT NULL AND ";
-                break;
-            case 'artist':
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
-
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
-                        }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `artist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `artist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $this->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
-                        $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        if ($this->catalog != 0) {
-                            $filter_sql .= "`song`.`catalog` = '" . $this->catalog . "' AND ";
-                        }
-                        break;
-                    case 'add_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'add_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_lt':
-                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` <= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'update_gt':
-                        $this->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
-                        $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'catalog':
-                        $type = '\'artist\'';
-                        if ($this->get_filter('album_artist')) {
-                            $type = '\'album_artist\'';
-                        }
-                        if ($this->get_filter('song_artist')) {
-                            $type = '\'song_artist\'';
-                        }
-                        if ($value != 0) {
-                            $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
-                            $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
-                        }
-                        break;
-                    case 'catalog_enabled':
-                        $type = '\'artist\'';
-                        if ($this->get_filter('album_artist')) {
-                            $type = '\'album_artist\'';
-                        }
-                        if ($this->get_filter('song_artist')) {
-                            $type = '\'song_artist\'';
-                        }
-                        $this->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                    case 'album_artist':
-                        $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album') AND ";
-                        break;
-                    case 'song_artist':
-                        $filter_sql = " `artist`.`id` IN (SELECT `artist_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'song') AND ";
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `artist`.`total_count`='0' AND ";
-                        }
-                        break;
-                } // end filter
-                break;
-            case 'live_stream':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `live_stream`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `live_stream`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `live_stream`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'catalog_enabled':
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
-                        $filter_sql = " `catalog`.`enabled` = '1' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'playlist_search':
-            case 'playlist':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `playlist`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `playlist`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                            ? Core::get_global('user')->id
-                            : -1;
-                        if ($value == 0) {
-                            $filter_sql = " (`playlist`.`user`='$user_id') AND ";
-                        } else {
-                            $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
-                        }
-                        break;
-                } // end filter
-                break;
-            case 'smartplaylist':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `search`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `search`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'playlist_type':
-                        $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                            ? Core::get_global('user')->id
-                            : -1;
-                        if ($value == 0) {
-                            $filter_sql = " (`search`.`user`='$user_id') AND ";
-                        } else {
-                            $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`='$user_id') AND ";
-                        }
-                        break;
-                } // end switch on $filter
-                break;
-            case 'tag':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `tag`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'tag':
-                        $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'hidden':
-                        $filter_sql = " `tag`.`is_hidden` = " . Dba::escape($value) . " AND ";
-                        break;
-                } // end filter
-                break;
-            case 'video':
-                switch ($filter) {
-                    case 'tag':
-                        $this->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
-                        $filter_sql = "`tag_map`.`object_type`='" . $this->get_type() . "' AND (";
-
-                        foreach ($value as $tag_id) {
-                            $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
-                        }
-                        $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `video`.`title` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `video`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `video`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'license':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `license`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `license`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `license`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `license`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'tvshow':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `tvshow`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `tvshow`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'year_lt':
-                        $filter_sql = " `tvshow`.`year` < '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'year_gt':
-                        $filter_sql = " `tvshow`.`year` > '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'year_eq':
-                        $filter_sql = " `tvshow`.`year` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `tvshow`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'tvshow_season':
-                switch ($filter) {
-                    case 'season_lt':
-                        $filter_sql = " `tvshow_season`.`season_number` < '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'season_gt':
-                        $filter_sql = " `tvshow_season`.`season_number` > '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'season_eq':
-                        $filter_sql = " `tvshow_season`.`season_number` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'catalog':
-                switch ($filter) {
-                    case 'gather_types':
-                        $filter_sql = " `catalog`.`gather_types` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'user':
-                switch ($filter) {
-                    case 'starts_with':
-                        $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
-                        break;
-                } // end filter
-                break;
-            case 'label':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `label`.`name` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `label`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `label`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'pvmsg':
-                switch ($filter) {
-                    case 'alpha_match':
-                        $filter_sql = " `user_pvmsg`.`subject` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `user_pvmsg`.`subject` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `user_pvmsg`.`subject` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'user':
-                        $filter_sql = " `user_pvmsg`.`from_user` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'to_user':
-                        $filter_sql = " `user_pvmsg`.`to_user` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'follower':
-                switch ($filter) {
-                    case 'user':
-                        $filter_sql = " `user_follower`.`user` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'to_user':
-                        $filter_sql = " `user_follower`.`follow_user` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                } // end filter
-                break;
-            case 'podcast':
-                switch ($filter) {
-                    case 'exact_match':
-                        $filter_sql = " `podcast`.`title` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `podcast`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `podcast`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `podcast`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `podcast`.`total_count`='0' AND ";
-                        }
-                        break;
-                } // end filter
-                break;
-            case 'podcast_episode':
-                switch ($filter) {
-                    case 'catalog':
-                        $this->set_join('LEFT', '`podcast`', '`podcast`.`id`', '`podcast_episode`.`podcast`', 100);
-                        $this->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
-                        if ($value != 0) {
-                            $filter_sql = " `podcast`.`catalog` = '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'podcast':
-                        $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'exact_match':
-                        $filter_sql = " `podcast_episode`.`title` = '" . Dba::escape($value) . "' AND ";
-                        break;
-                    case 'alpha_match':
-                        $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'regex_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `podcast_episode`.`title` REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'regex_not_match':
-                        if (!empty($value)) {
-                            $filter_sql = " `podcast_episode`.`title` NOT REGEXP '" . Dba::escape($value) . "' AND ";
-                        }
-                        break;
-                    case 'starts_with':
-                        $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
-                        break;
-                    case 'unplayed':
-                        if ((int)$value == 1) {
-                            $filter_sql = " `podcast_episode`.`played`='0' AND ";
-                        }
-                        break;
-                } // end filter
-                break;
-        } // end switch on type
-
-        return $filter_sql;
+        return $this->queryType->get_sql_filter($this, $filter, $value);
     }
 
     /**
-     * logic_filter
+     * _logic_filter
      * This runs the filters that we can't easily apply
      * to the sql so they have to be done after the fact
      * these should be limited as they are often intensive and
@@ -2186,13 +1494,13 @@ class Query
      * @param int $object_id
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function logic_filter($object_id): bool
+    private function _logic_filter($object_id): bool
     {
         return true; // TODO, this must be old so probably not needed
     }
 
     /**
-     * sql_sort
+     * _sql_sort
      * This builds any order bys we need to do
      * to sort the results as best we can, there is also
      * a logic based sort that will come later as that's
@@ -2200,474 +1508,28 @@ class Query
      * @param string $field
      * @param string $order
      */
-    private function sql_sort($field, $order): string
+    private function _sql_sort($field, $order): string
     {
         if ($order != 'DESC') {
             $order = 'ASC';
         }
+
         // random sorting
         if ($field === 'random') {
             return "RAND()";
         }
 
-        // Depending on the type of browsing we are doing we can apply
-        // different filters that apply to different fields
-        switch ($this->get_type()) {
-            case 'song':
-                switch ($field) {
-                    case 'title':
-                    case 'year':
-                    case 'track':
-                    case 'time':
-                    case 'composer':
-                    case 'total_count':
-                    case 'total_skip':
-                        $sql = "`song`.`$field`";
-                        break;
-                    case 'album':
-                        $sql   = "`album`.`name` $order, `song`.`track`";
-                        $order = '';
-                        $this->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
-                        break;
-                    case 'album_disk':
-                        $sql   = "`album`.`name` $order, `album_disk`.`disk`, `song`.`track`";
-                        $order = '';
-                        $this->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
-                        $this->set_join('LEFT', '`album_disk`', '`album`.`id`', '`album_disk`.`album_id`', 100);
-                        break;
-                    case 'artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', "`artist`", "`artist`.`id`", "`song`.`artist`", 100);
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                } // end switch
-                break;
-            case 'album':
-                switch ($field) {
-                    case 'name':
-                        $sql = "`album`.`name`";
-                        break;
-                    case 'name_original_year':
-                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`)";
-                        break;
-                    case 'name_year':
-                        $sql = "`album`.`name` $order, `album`.`year`";
-                        break;
-                    case 'generic_artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join(
-                            'LEFT',
-                            '`artist`',
-                            'COALESCE(`album`.`album_artist`, `song`.`artist`)',
-                            '`artist`.`id`',
-                            100
-                        );
-                        break;
-                    case 'album_artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
-                        break;
-                    case 'artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'original_year':
-                        $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
-                        break;
-                    case 'year':
-                        $sql = "`album`.`year` $order, `album`.`addition_time`";
-                        break;
-                    case 'disk_count':
-                    case 'song_count':
-                    case 'total_count':
-                    case 'release_type':
-                    case 'release_status':
-                    case 'barcode':
-                    case 'catalog_number':
-                    case 'subtitle':
-                    case 'time':
-                    case 'version':
-                        $sql = "`album`.`$field`";
-                        break;
-                } // end switch
-                break;
-            case 'album_disk':
-                $this->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 100);
-                switch ($field) {
-                    case 'name':
-                        $sql   = "`album`.`name` $order, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                    case 'name_original_year':
-                        $sql = "`album`.`name` $order, IFNULL(`album`.`original_year`, `album`.`year`) $order, `album_disk`.`disk`";
-                        break;
-                    case 'name_year':
-                        $sql   = "`album`.`name` $order, `album`.`year` $order, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                    case 'generic_artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join(
-                            'LEFT',
-                            '`artist`',
-                            'COALESCE(`album`.`album_artist`, `song`.`artist`)',
-                            '`artist`.`id`',
-                            100
-                        );
-                        break;
-                    case 'album_artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
-                        break;
-                    case 'artist':
-                        $sql = "`artist`.`name`";
-                        $this->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
-                        $this->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'original_year':
-                        $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                    case 'year':
-                        $sql   = "`album`.`year` $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                    case 'disksubtitle':
-                    case 'song_count':
-                    case 'total_count':
-                    case 'time':
-                        $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                    case 'release_type':
-                    case 'release_status':
-                    case 'barcode':
-                    case 'catalog_number':
-                    case 'subtitle':
-                        $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
-                        $order = '';
-                        break;
-                } // end switch
-                break;
-            case 'artist':
-                switch ($field) {
-                    case 'name':
-                    case 'placeformed':
-                    case 'yearformed':
-                    case 'song_count':
-                    case 'album_count':
-                    case 'total_count':
-                    case 'time':
-                        $sql = "`artist`.`$field`";
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                } // end switch
-                break;
-            case 'playlist_search':
-            case 'playlist':
-                switch ($field) {
-                    case 'date':
-                    case 'last_update':
-                    case 'name':
-                    case 'type':
-                    case 'user':
-                    case 'username':
-                        $sql = "`playlist`.`$field`";
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "'playlist'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                } // end switch
-                break;
-            case 'smartplaylist':
-                switch ($field) {
-                    case 'date':
-                    case 'last_update':
-                    case 'limit':
-                    case 'random':
-                    case 'name':
-                    case 'type':
-                    case 'user':
-                    case 'username':
-                        $sql = "`search`.`$field`";
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`search`.`id`", "`rating`.`object_type`", "'search'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`search`.`id`", "`user_flag`.`object_type`", "'search'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                } // end switch on $field
-                break;
-            case 'live_stream':
-                switch ($field) {
-                    case 'name':
-                    case 'codec':
-                        $sql = "`live_stream`.`$field`";
-                        break;
-                } // end switch
-                break;
-            case 'tag':
-                switch ($field) {
-                    case 'tag':
-                        $sql = "`tag`.`id`";
-                        break;
-                    case 'name':
-                        $sql = "`tag`.`name`";
-                        break;
-                } // end switch
-                break;
-            case 'user':
-                switch ($field) {
-                    case 'username':
-                    case 'fullname':
-                    case 'last_seen':
-                    case 'create_date':
-                        $sql = "`user`.`$field`";
-                        break;
-                } // end switch
-                break;
-            case 'video':
-                $sql = $this->sql_sort_video($field, $order);
-                break;
-            case 'wanted':
-                switch ($field) {
-                    case 'name':
-                    case 'artist':
-                    case 'year':
-                    case 'user':
-                    case 'accepted':
-                        $sql = "`wanted`.`$field`";
-                        break;
-                } // end switch on field
-                break;
-            case 'share':
-                switch ($field) {
-                    case 'object':
-                        $sql = "`share`.`object_type`, `share`.`object.id`";
-                        break;
-                    case 'user':
-                    case 'object_type':
-                    case 'creation_date':
-                    case 'lastvisit_date':
-                    case 'counter':
-                    case 'max_counter':
-                    case 'allow_stream':
-                    case 'allow_download':
-                    case 'expire':
-                        $sql = "`share`.`$field`";
-                        break;
-                } // end switch on field
-                break;
-            case 'broadcast':
-                switch ($field) {
-                    case 'name':
-                    case 'user':
-                    case 'started':
-                    case 'listeners':
-                        $sql = "`broadcast`.`$field`";
-                        break;
-                } // end switch on field
-                break;
-            case 'license':
-                switch ($field) {
-                    case 'name':
-                        $sql = "`license`.`name`";
-                        break;
-                }
-                break;
-            case 'tvshow':
-                switch ($field) {
-                    case 'name':
-                    case 'year':
-                        $sql = "`tvshow`.`$field`";
-                        break;
-                }
-                break;
-            case 'tvshow_season':
-                switch ($field) {
-                    case 'season':
-                        $sql = "`tvshow_season`.`season_number`";
-                        break;
-                    case 'tvshow':
-                        $sql = "`tvshow`.`name`";
-                        $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
-                        break;
-                }
-                break;
-            case 'tvshow_episode':
-                switch ($field) {
-                    case 'episode':
-                        $sql = "`tvshow_episode`.`episode_number`";
-                        break;
-                    case 'season':
-                        $sql = "`tvshow_season`.`season_number`";
-                        $this->set_join(
-                            'LEFT',
-                            '`tvshow_season`',
-                            '`tvshow_episode`.`season`',
-                            '`tvshow_season`.`id`',
-                            100
-                        );
-                        break;
-                    case 'tvshow':
-                        $sql = "`tvshow`.`name`";
-                        $this->set_join(
-                            'LEFT',
-                            '`tvshow_season`',
-                            '`tvshow_episode`.`season`',
-                            '`tvshow_season`.`id`',
-                            100
-                        );
-                        $this->set_join('LEFT', '`tvshow`', '`tvshow_season`.`tvshow`', '`tvshow`.`id`', 100);
-                        break;
-                    default:
-                        $sql = $this->sql_sort_video($field, $order, 'tvshow_episode');
-                        break;
-                }
-                break;
-            case 'movie':
-                $sql = $this->sql_sort_video($field, $order, 'movie');
-                break;
-            case 'clip':
-                switch ($field) {
-                    case 'location':
-                        $sql = "`clip`.`artist`";
-                        break;
-                    default:
-                        $sql = $this->sql_sort_video($field, $order, 'clip');
-                        break;
-                }
-                break;
-            case 'personal_video':
-                switch ($field) {
-                    case 'location':
-                        $sql = "`personal_video`.`location`";
-                        break;
-                    default:
-                        $sql = $this->sql_sort_video($field, $order, 'personal_video');
-                        break;
-                }
-                break;
-            case 'label':
-                switch ($field) {
-                    case 'name':
-                    case 'category':
-                    case 'user':
-                        $sql = "`label`.`$field`";
-                        break;
-                }
-                break;
-            case 'pvmsg':
-                switch ($field) {
-                    case 'subject':
-                    case 'to_user':
-                    case 'creation_date':
-                    case 'is_read':
-                        $sql = "`user_pvmsg`.`$field`";
-                        break;
-                }
-                break;
-            case 'follower':
-                switch ($field) {
-                    case 'user':
-                    case 'follow_user':
-                    case 'follow_date':
-                        $sql = "`user_follower`.`$field`";
-                        break;
-                }
-                break;
-            case 'podcast':
-                switch ($field) {
-                    case 'title':
-                    case 'website':
-                    case 'episodes':
-                        $sql = "`podcast`.`$field`";
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast`.`id`", "`rating`.`object_type`", "'podcast'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast`.`id`", "`user_flag`.`object_type`", "'podcast'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                }
-                break;
-            case 'podcast_episode':
-                switch ($field) {
-                    case 'podcast':
-                    case 'title':
-                    case 'category':
-                    case 'author':
-                    case 'time':
-                    case 'pubdate':
-                    case 'state':
-                        $sql = "`podcast_episode`.`$field`";
-                        break;
-                    case 'rating':
-                        $sql = "`rating`.`rating` $order, `rating`.`date`";
-                        $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$this->user_id, 100);
-                        break;
-                    case 'user_flag':
-                        $sql = "`user_flag`.`date`";
-                        $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$this->user_id, 100);
-                        break;
-                }
-                break;
-        } // end switch
-
-        if (isset($sql) && !empty($sql)) {
-            return "$sql $order,";
+        if ($this->queryType === null) {
+            return '';
         }
 
-        return "";
+        return $this->queryType->get_sql_sort($this, $field, $order);
     }
 
     /**
      * sql_sort_video
      */
-    private function sql_sort_video(string $field, string $order, ?string $table = 'video'): string
+    public function sql_sort_video(string $field, string $order, ?string $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
@@ -2706,12 +1568,12 @@ class Query
     }
 
     /**
-     * resort_objects
+     * _resort_objects
      * This takes the existing objects, looks at the current
      * sort method and then re-sorts them This is internally
      * called by the set_sort() function
      */
-    private function resort_objects(): bool
+    private function _resort_objects(): bool
     {
         // There are two ways to do this.. the easy way...
         // and the vollmer way, hopefully we don't have to
@@ -2738,14 +1600,14 @@ class Query
 
             $where_sql .= ")";
 
-            $sql = $this->get_base_sql();
+            $sql = $this->_get_base_sql();
 
             $group_sql = " GROUP BY `" . $this->get_type() . '`.`id`';
             $order_sql = " ORDER BY ";
 
             // There should only be one of these in a browse
             foreach ($this->_state['sort'] as $key => $value) {
-                $sql_sort = $this->sql_sort($key, $value);
+                $sql_sort = $this->_sql_sort($key, $value);
                 $order_sql .= $sql_sort;
                 $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
             }
@@ -2753,11 +1615,11 @@ class Query
             $order_sql = rtrim((string)$order_sql, "ORDER BY ");
             $order_sql = rtrim((string)$order_sql, ",");
 
-            $sql = $sql . $this->get_join_sql() . $where_sql . $group_sql . $order_sql;
+            $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
 
         $db_results = Dba::read($sql);
-        //debug_event(self::class, "resort_objects: " . $sql, 5);
+        //debug_event(self::class, "_resort_objects: " . $sql, 5);
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
