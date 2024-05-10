@@ -13551,11 +13551,6 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Query\\:\\:\\$queryType has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:advanced\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Random.php

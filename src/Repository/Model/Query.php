@@ -535,7 +535,7 @@ class Query
     /** @var array $_cache */
     protected $_cache;
 
-    /** @var QueryInterface|null $user_id */
+    /** @var QueryInterface|null $queryType */
     private $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**
@@ -1477,6 +1477,10 @@ class Query
      */
     private function _sql_filter($filter, $value): string
     {
+        if ($this->queryType === null) {
+            return '';
+        }
+
         return $this->queryType->get_sql_filter($this, $filter, $value);
     }
 
@@ -1509,9 +1513,14 @@ class Query
         if ($order != 'DESC') {
             $order = 'ASC';
         }
+
         // random sorting
         if ($field === 'random') {
             return "RAND()";
+        }
+
+        if ($this->queryType === null) {
+            return '';
         }
 
         return $this->queryType->get_sql_sort($this, $field, $order);
