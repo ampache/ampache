@@ -76,7 +76,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&playnext=true', 'menu_open', T_('Play next'), 'addnext_podcast_episode_' . $episode->id); ?>
             <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $episode->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $episode->id); ?>
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=podcast_episode&id=' . $episode->id, 'new_window', T_('Add to Temporary Playlist'), 'add_podcast_episode_' . $episode->id); ?>

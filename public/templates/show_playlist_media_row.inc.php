@@ -58,7 +58,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
             echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $object_type . '_' . $libitem->getId());
         }
         if (Stream_Playlist::check_autoplay_append()) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&append=true', 'playlist_add', T_('Play last'), 'addplay_' . $object_type . '_' . $libitem->getId());
+            echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $libitem->getId() . '&append=true', 'low_priority', T_('Play last'), 'addplay_' . $object_type . '_' . $libitem->getId());
         }
     } ?>
     </div>

@@ -50,7 +50,7 @@ use Ampache\Module\Util\Ui;
                 echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_podcast_' . $libitem->getId());
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->getId() . '&append=true', 'playlist_add', T_('Play last'), 'addplay_podcast_' . $libitem->getId());
+                echo Ajax::button('?page=stream&action=directplay&object_type=podcast&object_id=' . $libitem->getId() . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_' . $libitem->getId());
             }
         } ?>
     </div>

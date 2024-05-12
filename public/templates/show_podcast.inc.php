@@ -84,7 +84,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
             <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_podcast_' . $podcast->getId()); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=podcast&object_id=' . $podcast->getId() . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_podcast_' . $podcast->getId()); ?>
         </li>
         <?php } ?>
         <?php if ($access50) { ?>

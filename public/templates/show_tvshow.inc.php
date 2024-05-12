@@ -82,7 +82,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
         </li>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>

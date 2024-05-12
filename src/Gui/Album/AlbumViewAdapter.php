@@ -159,7 +159,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
-            'playlist_add',
+            'low_priority',
             T_('Play last'),
             'addplay_album_' . $albumId
         );

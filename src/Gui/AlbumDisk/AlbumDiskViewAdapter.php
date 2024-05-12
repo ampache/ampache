@@ -164,7 +164,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId . '&append=true',
-            'playlist_add',
+            'low_priority',
             T_('Play last'),
             'addplay_album_' . $albumId
         );

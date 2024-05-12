@@ -120,7 +120,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
     <?php } ?>
         <li>

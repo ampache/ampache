@@ -145,7 +145,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php }
             if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'playlist_add', $playlast, 'addplay_album_' . $album->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'low_priority', $playlast, 'addplay_album_' . $album->id); ?>
         </li>
             <?php } ?>
         <?php

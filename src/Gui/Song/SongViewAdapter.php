@@ -139,7 +139,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true',
-            'playlist_add',
+            'low_priority',
             T_('Play last'),
             'addplay_song_' . $songId
         );

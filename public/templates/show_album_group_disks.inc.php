@@ -145,7 +145,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <?php }
     if (Stream_Playlist::check_autoplay_append()) { ?>
             <li>
-                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'playlist_add', $playlast, 'addplay_album_' . $album->id); ?>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'low_priority', $playlast, 'addplay_album_' . $album->id); ?>
             </li>
     <?php }
     }
@@ -278,7 +278,7 @@ foreach ($album->getDisks() as $album_disk) {
                 echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_album_disk_' . $album_disk->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_album_disk_' . $album_disk->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $album_disk->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_album_disk_' . $album_disk->id);
             }
         }
     if ($show_playlist_add) {

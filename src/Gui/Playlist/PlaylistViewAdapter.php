@@ -142,7 +142,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&append=true',
-            'playlist_add',
+            'low_priority',
             T_('Play last'),
             'addplay_playlist_' . $playlistId
         );

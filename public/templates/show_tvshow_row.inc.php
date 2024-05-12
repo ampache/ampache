@@ -52,7 +52,7 @@ use Ampache\Module\Util\Ui;
                 echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_tvshow_' . $libitem->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $libitem->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_tvshow_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=tvshow&object_id=' . $libitem->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_tvshow_' . $libitem->id);
             }
         } ?>
     </div>

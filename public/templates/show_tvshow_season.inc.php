@@ -77,7 +77,7 @@ if (Stream_Playlist::check_autoplay_next()) { ?>
 <?php } ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
         </li>
 <?php }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>

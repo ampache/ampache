@@ -62,7 +62,7 @@ if (!empty($albumDisks)) {
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumDisk->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_album_disk_' . $albumDisk->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumDisk->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_album_disk_' . $albumDisk->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumDisk->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_album_disk_' . $albumDisk->id); ?>
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=album_disk&id=' . $albumDisk->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $albumDisk->id); ?>
