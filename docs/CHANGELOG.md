@@ -1,5 +1,49 @@
 # CHANGELOG
 
+## Ampache 6.5.0
+
+This release has focused on cleaning up the Query class to allow more options for API clients
+
+Ampache uses the Query class to create 'browses'. A browse is a query that allows filtering and sorting data.
+
+This release has made greater use of browses reducing reliance on customizing mini functions to provide the same information.
+
+### Added
+
+* Add `songs_artsts` to album objects
+* Add `playlist_search` as a browse type. (combined playlists and smartlists)
+* Allow sorting playlists by `type`
+* Allow sorting searches by `type`, `limit` and `random` if enabled
+
+### Changed
+
+* Extract the Query class into individual classes
+
+### Removed
+
+* Removed incorrect browse sorts and filters.
+
+### Fixed
+
+* Playlist Exporter wasn't checking user id correctly
+* Catalog browses using incorrect column
+
+## API 6.5.0
+
+### Added
+
+* API6
+  * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
+  * artist_albums: add `album_artist` as an optional parameter
+
+### Fixed
+
+* API6
+  * list: sorting was by `id` instead of `name`
+  * browse: sorting was by `id` instead of `name`
+  * download: The API can use searches as playlists so check for the `smart_` prefix
+  * stream: The API can use searches as playlists so check for the `smart_` prefix
+
 ## Ampache 6.4.0
 
 Work on Ampache7 is ongoing.
