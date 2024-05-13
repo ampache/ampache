@@ -69,7 +69,7 @@ final class ApplicationRunner
         array $action_list,
         string $default_action
     ): void {
-        $body = (array)$request->getParsedBody();
+        $body        = (array)$request->getParsedBody();
         $action_name = htmlspecialchars($body['action'] ?? $request->getQueryParams()['action'] ?? '');
 
         if (array_key_exists($action_name, $action_list) === false) {
