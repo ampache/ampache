@@ -94,6 +94,7 @@ var SearchRow = {
                 inputNode.setAttribute("value", SearchRow.decodeEntities(input));
                 break;
             case "select":
+                // search->_add_type_select()
                 var optioncount = 0;
                 var keys = Object.keys(widget["1"]);
 
@@ -118,8 +119,8 @@ var SearchRow = {
                     var option = document.createElement("option");
                     var realValue = 0;
                     // only allow ints that parse as ints and match the input
-                    if (parseInt(widget["1"][key]) == widget["1"][key] && parseInt(i) === optioncount) {
-                        realValue = parseInt(widget["1"][key]);
+                    if (parseInt(key) == key && parseInt(i) === optioncount) {
+                        realValue = key;
                     }
                     else {
                         realValue = i;
@@ -129,7 +130,9 @@ var SearchRow = {
                     } else {
                         option.selected = false;
                     }
+                    // index value or string id of the object
                     option.value = realValue;
+                    // text to show in the dropdown
                     option.innerHTML = widget["1"][key];
                     inputNode.appendChild(option);
                     optioncount++;
