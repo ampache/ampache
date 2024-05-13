@@ -13,20 +13,28 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Add `songs_artsts` to album objects
 * Add `playlist_search` as a browse type. (combined playlists and smartlists)
 * Allow sorting playlists by `type`
-* Allow sorting searches by `type`, `limit` and `random` if enabled
+* Allow sorting searches by `type`, `limit` and `random` status
+* Add many missing database columns to browse sorts and filters on all browses
 
 ### Changed
 
 * Extract the Query class into individual classes
+* Album browse `artist` was only selecting `album_artist`
 
 ### Removed
 
-* Removed incorrect browse sorts and filters.
+* Remove `disk` sort from `album` browse
+* Remove `album` sort from `artist` browse
+* Remove `call_sign` and `frequency` from `live_stream` browses (whatever they were)
 
 ### Fixed
 
 * Playlist Exporter wasn't checking user id correctly
-* Catalog browses using incorrect column
+* `catalog` browses using incorrect column
+* `artist` browse by `song_artist` wasn't in the valid list
+* Missing `video` browse filters on `clip`, `movie`, `personal_video`, `tvshow`, `tvshow_season` and `tvshow_episode` browses
+* Random (`rand`) was missing from a lot of query types as a valid option
+* for searches, `random` sort was random sorting the sql and ignoring the random column (use `rand` for random result sorting)
 
 ## API 6.5.0
 
