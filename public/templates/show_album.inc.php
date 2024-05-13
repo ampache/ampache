@@ -199,7 +199,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             <?php }
     }
 if (($owner_id > 0 && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-    $saveorder = T_('Save Track Order');
+    $saveorder = "&nbsp;" . T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -217,8 +217,8 @@ if (($owner_id > 0 && $owner_id == $current_user?->getId()) || Access::check(Acc
         </li>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags')); ?>
-                <?php echo T_('Update from tags'); ?>
+                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
         <?php

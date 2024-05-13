@@ -196,7 +196,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php } ?>
         <?php } ?>
         <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
-            $saveorder = T_('Save Track Order'); ?>
+            $saveorder = "&nbsp;" . T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
@@ -207,8 +207,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php } ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_disk_from_tags&album_disk=<?php echo $albumDisk->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags')); ?>
-                <?php echo T_('Update from tags'); ?>
+                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
+            echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
         <?php
@@ -225,8 +225,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php } ?>
             <li>
                 <a id="<?php echo 'edit_album_' . $albumDisk->album_id; ?>" onclick="showEditDialog('album_row', '<?php echo $albumDisk->album_id; ?>', '<?php echo 'edit_album_' . $albumDisk->album_id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
-                    <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
-                    <?php echo "&nbsp;" . T_('Edit Album'); ?>
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit'));
+            echo "&nbsp;" . T_('Edit Album'); ?>
                 </a>
             </li>
             <?php
