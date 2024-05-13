@@ -55,7 +55,7 @@ final readonly class EditShoutAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $requestData = $request->getParsedBody();
+        $requestData = (array)$request->getParsedBody();
         $shoutId     = (int) ($requestData['shout_id'] ?? 0);
 
         $shout = $this->shoutRepository->findById($shoutId);

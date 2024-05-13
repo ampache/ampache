@@ -53,7 +53,7 @@ final class ShowAddFilterAction extends AbstractFilterAction
             return null;
         }
 
-        $body = $request->getParsedBody();
+        $body = (array)$request->getParsedBody();
 
         $filter_name = scrub_in(htmlspecialchars($body['name'] ?? '', ENT_NOQUOTES));
 

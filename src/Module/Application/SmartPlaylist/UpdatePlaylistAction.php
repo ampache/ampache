@@ -55,8 +55,12 @@ final class UpdatePlaylistAction implements ApplicationActionInterface
             (int) ($request->getQueryParams()['playlist_id'] ?? 0)
         );
 
-        if ($playlist->has_access()) {
-            $playlist->set_rules($request->getParsedBody());
+        $data = $request->getParsedBody();
+        if (
+            is_array($data) &&
+            $playlist->has_access()
+        ) {
+            $playlist->set_rules($data);
             $playlist->update();
             $playlist->format();
         } else {

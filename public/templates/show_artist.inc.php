@@ -215,7 +215,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+        $postshout = "&nbsp;" . T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
         <?php echo Ui::get_material_symbol('comment', $postshout); ?>
@@ -227,7 +227,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
-    $download = T_('Download'); ?>
+    $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_material_symbol('folder_zip', $download); ?>

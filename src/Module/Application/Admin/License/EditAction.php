@@ -66,7 +66,7 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data        = $request->getParsedBody();
+        $data        = (array)$request->getParsedBody();
         $licenseId   = (int) ($data['license_id'] ?? 0);
         $name        = (string) ($data['name'] ?? '');
         $description = (string) ($data['description'] ?? '');
