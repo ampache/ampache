@@ -616,7 +616,7 @@ class Stats
      * used primarily by the democratic cooldown code
      * @param int $time
      * @param bool $newest
-     * @return array
+     * @return int[]
      */
     public static function get_object_history($time, $newest = true): array
     {
@@ -632,7 +632,7 @@ class Stats
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;
@@ -773,7 +773,7 @@ class Stats
      * @param bool $random
      * @param int $since
      * @param int $before
-     * @return array
+     * @return int[]
      */
     public static function get_top(
         $input_type,
@@ -804,7 +804,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -871,7 +871,7 @@ class Stats
      * @param int $offset
      * @param User|null $user
      * @param bool $newest
-     * @return array
+     * @return int[]
      */
     public static function get_recent(
         $input_type,
@@ -900,7 +900,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

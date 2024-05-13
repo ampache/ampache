@@ -81,7 +81,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $data     = $request->getParsedBody();
+        $data     = (array)$request->getParsedBody();
         $accessId = (int)($request->getQueryParams()['access_id'] ?? 0);
         try {
             $this->accessListManager->update(

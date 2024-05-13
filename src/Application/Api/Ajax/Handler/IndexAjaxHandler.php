@@ -433,7 +433,6 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_end_clean();
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

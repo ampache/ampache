@@ -93,7 +93,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     public ?string $link = null;
 
+    /** @var int[] $album_artists */
     public ?array $album_artists = null;
+
+    /** @var int[] $song_artists */
+    public ?array $song_artists = null;
 
     /** @var int $total_duration */
     public $total_duration;
@@ -632,6 +636,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
     /**
      * Get item album_artists array
+     * @return int[]
      */
     public function get_artists(): array
     {
@@ -647,6 +652,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         return $this->album_artists ?? [];
+    }
+
+    /**
+     * Get item song_artists array
+     * @return int[]
+     */
+    public function get_song_artists(): array
+    {
+        if (empty($this->song_artists)) {
+            $this->song_artists = self::get_parent_array($this->id, 0, 'song');
+        }
+
+        return $this->song_artists ?? array();
     }
 
     /**
@@ -743,15 +761,17 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * Get parent album artists.
      * @param int $album_id
      * @param int $primary_id
+     * @param string $object_type
+     * @return int[]
      */
-    public static function get_parent_array($album_id, $primary_id): array
+    public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
     {
-        $results    = [];
-        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;";
-        $db_results = Dba::read($sql, [$album_id]);
+        $results    = array();
+        $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
+        $db_results = Dba::read($sql, [$object_type, $album_id]);
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         $primary = ((int)$primary_id > 0)

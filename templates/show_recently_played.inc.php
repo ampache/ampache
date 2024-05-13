@@ -125,7 +125,7 @@ foreach ($data as $row) {
                                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $count . '_' . $song->id); ?>
                             <?php } ?>
                             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -199,12 +199,4 @@ if (!empty($user_id)) {
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
-<script>
-    $(document).ready(function () {
-        $("a[rel^='prettyPhoto']").prettyPhoto({
-            social_tools: false,
-            deeplinking: false
-        });
-    });
-</script>
 <?php Ui::show_box_bottom(); ?>

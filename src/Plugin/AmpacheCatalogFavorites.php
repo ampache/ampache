@@ -144,7 +144,7 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                    'playlist_add',
+                                    'low_priority',
                                     T_('Play last'),
                                     'addplay_song_' . $userflag
                                 );

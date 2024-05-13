@@ -85,7 +85,7 @@ class Ui implements UiInterface
             T_('RSS Feed')
         );
         if (!empty($title)) {
-            $string .= ' &nbsp;' . $title;
+            $string .= '&nbsp;' . $title;
         }
         $string .= '</a>';
 

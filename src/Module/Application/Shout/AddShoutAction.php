@@ -84,7 +84,7 @@ final class AddShoutAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $body       = (array) $request->getParsedBody();
+        $body       = (array)$request->getParsedBody();
         $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';

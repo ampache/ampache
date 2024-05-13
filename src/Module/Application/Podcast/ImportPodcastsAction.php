@@ -95,7 +95,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = $request->getParsedBody();
+        $data = (array)$request->getParsedBody();
 
         $catalogId = (int) ($data['catalog'] ?? 0);
 

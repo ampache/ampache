@@ -81,7 +81,7 @@ final class CreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = $request->getParsedBody();
+        $data = (array)$request->getParsedBody();
 
         $catalog = Catalog::create_from_id((int) ($data['catalog'] ?? 0));
         if ($catalog === null) {

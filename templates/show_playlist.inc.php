@@ -75,8 +75,8 @@ $playlist->display_art($thumb, false, false); ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">
-                <?php echo Ui::get_material_symbol('save', T_('Save Track Order')); ?>
-                <?php echo T_('Save Track Order'); ?>
+                <?php echo Ui::get_material_symbol('save', T_('Save Track Order'));
+    echo "&nbsp;" . T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
@@ -105,7 +105,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
                 <?php echo UI::get_material_symbol('share', T_('Share playlist')); ?>
-        &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
+        &nbsp;<?php echo T_('Share playlist'); ?>
         </a>
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
@@ -120,7 +120,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_playlist_' . $playlist->id); ?>
         </li>
     <?php } ?>
         <li>

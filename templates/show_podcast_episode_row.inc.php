@@ -57,7 +57,7 @@ $web_path = AmpConfig::get('web_path');
                 echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_podcast_episode_' . $libitem->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_podcast_episode_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $libitem->id);
             }
         } ?>
     </div>

@@ -97,7 +97,7 @@ if (!$gart) {
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_video_' . $video->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>

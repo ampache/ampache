@@ -76,7 +76,7 @@ final class UpdateUserAction extends AbstractUserAction
             throw new AccessDeniedException();
         }
 
-        $body = $request->getParsedBody();
+        $body = (array)$request->getParsedBody();
 
         $this->ui->showHeader();
 

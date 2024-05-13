@@ -1529,45 +1529,49 @@ abstract class Catalog extends database_object
      * Get each array of fullname's for a object type
      * @param array $objects
      * @param string $table
+     * @param string $sort
+     * @param string $order
+     * @return array
      */
-    public static function get_name_array($objects, $table): array
+    public static function get_name_array($objects, $table, $sort = '', $order = 'ASC'): array
     {
         switch ($table) {
             case 'album':
             case 'artist':
-                $sql = sprintf('SELECT DISTINCT `%s`.`id`, LTRIM(CONCAT(COALESCE(`%s`.`prefix`, \'\'), \' \', `%s`.`name`)) AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table, $table) . implode(",", $objects) . ");";
+                $sql = sprintf('SELECT DISTINCT `%s`.`id`, LTRIM(CONCAT(COALESCE(`%s`.`prefix`, \'\'), \' \', `%s`.`name`)) AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table, $table) . implode(",", $objects) . ")";
                 break;
             case 'catalog':
             case 'live_stream':
             case 'playlist':
             case 'search':
-                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`name` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ");";
+                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`name` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ")";
                 break;
             case 'podcast':
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`title` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ");";
+                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`title` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ")";
                 break;
             case 'share':
-                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`description` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ");";
+                $sql = sprintf('SELECT DISTINCT `%s`.`id`, `%s`.`description` AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table) . implode(",", $objects) . ")";
                 break;
             case 'playlist_search':
-                $empty_playlist = empty($objects['playlist']);
-                $empty_search   = empty($objects['search']);
-                if (!$empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects['playlist']) . ") UNION SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_search && !$empty_playlist) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
-                } else {
-                    return [];
+                $object_string = '';
+                foreach ($objects as $playlist_id) {
+                    $object_string .= (is_numeric($playlist_id))
+                        ? $playlist_id . ", "
+                        : "'" . $playlist_id . "', ";
                 }
+                $object_string = rtrim($object_string, ', ');
+                $sql           = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist` WHERE `id` IN (" . $object_string . ")";
                 break;
             default:
                 return [];
         }
+
+        $sql .= (!empty($sort))
+            ? " ORDER BY " . $sort . " " . $order . ";"
+            : ';';
 
         $db_results = Dba::read($sql);
         $results    = [];

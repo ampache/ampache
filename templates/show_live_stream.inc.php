@@ -47,7 +47,7 @@ Art::display('live_stream', $radio->id, (string)$radio->get_fullname(), $thumb);
                 <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_live_stream_' . $radio->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'playlist_add', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=live_stream&object_id=' . $radio->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_live_stream_' . $radio->id); ?>
             <?php } ?>
         <?php } ?>
         <?php echo Ajax::button('?action=basket&type=live_stream&id=' . $radio->id, 'new_window', T_('Add to Temporary Playlist'), 'add_live_stream_' . $radio->id); ?>

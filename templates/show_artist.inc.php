@@ -175,7 +175,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'playlist_add', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
         </li>
     <?php } ?>
 <?php } ?>
@@ -190,8 +190,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags')); ?>
-                <?php echo T_('Update from tags'); ?>
+                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
@@ -215,7 +215,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+        $postshout = "&nbsp;" . T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
         <?php echo Ui::get_material_symbol('comment', $postshout); ?>
@@ -227,7 +227,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
-    $download = T_('Download'); ?>
+    $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_material_symbol('folder_zip', $download); ?>
@@ -247,7 +247,7 @@ if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(Acce
             }
 if (canEditArtist($artist, $gatekeeper->getUserId())) {
     if (Upload::can_upload($current_user)) {
-        $t_upload = T_('Upload'); ?>
+        $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_material_symbol('upload', $t_upload); ?>
@@ -258,8 +258,8 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
     } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
-                    <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
-                    <?php echo T_('Edit Artist'); ?>
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit'));
+    echo "&nbsp;" . T_('Edit Artist'); ?>
                 </a>
             </li>
         <?php }
