@@ -70,6 +70,11 @@ class UpdatePlaylistActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['playlist_id' => (string) $playlistId]);
 
+        $request->shouldReceive('getParsedBody')
+            ->withNoArgs()
+            ->once()
+            ->andReturn();
+
         $this->modelFactory->shouldReceive('createSearch')
             ->with($playlistId)
             ->once()
