@@ -34,7 +34,7 @@ final class WantedQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'random',
+        'rand',
         'user',
         'accepted',
         'artist',
