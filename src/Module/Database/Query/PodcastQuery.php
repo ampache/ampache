@@ -46,7 +46,7 @@ final class PodcastQuery implements QueryInterface
         'catalog',
         'website',
         'episodes',
-        'random',
+        'rand',
         'rating',
         'user_flag'
     );

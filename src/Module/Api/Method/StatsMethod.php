@@ -173,7 +173,7 @@ final class StatsMethod
                         $browse = Api::getBrowse();
                         $browse->reset_filters();
                         $browse->set_type($type);
-                        $browse->set_sort('random');
+                        $browse->set_sort('rand');
                         $results = $browse->get_objects();
                 }
         }

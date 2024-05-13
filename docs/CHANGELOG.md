@@ -1,5 +1,57 @@
 # CHANGELOG
 
+## Ampache 6.5.0
+
+This release has focused on cleaning up the Query class to allow more options for API clients
+
+Ampache uses the Query class to create 'browses'. A browse is a query that allows filtering and sorting data.
+
+This release has made greater use of browses reducing reliance on customizing mini functions to provide the same information.
+
+### Added
+
+* Add `songs_artsts` to album objects
+* Add `playlist_search` as a browse type. (combined playlists and smartlists)
+* Allow sorting playlists by `type`
+* Allow sorting searches by `type`, `limit` and `random` status
+* Add many missing database columns to browse sorts and filters on all browses
+
+### Changed
+
+* Extract the Query class into individual classes
+* Album browse `artist` was only selecting `album_artist`
+
+### Removed
+
+* Remove `disk` sort from `album` browse
+* Remove `album` sort from `artist` browse
+* Remove `call_sign` and `frequency` from `live_stream` browses (whatever they were)
+
+### Fixed
+
+* Playlist Exporter wasn't checking user id correctly
+* `catalog` browses using incorrect column
+* `artist` browse by `song_artist` wasn't in the valid list
+* Missing `video` browse filters on `clip`, `movie`, `personal_video`, `tvshow`, `tvshow_season` and `tvshow_episode` browses
+* Random (`rand`) was missing from a lot of query types as a valid option
+* for searches, `random` sort was random sorting the sql and ignoring the random column (use `rand` for random result sorting)
+
+## API 6.5.0
+
+### Added
+
+* API6
+  * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
+  * artist_albums: add `album_artist` as an optional parameter
+
+### Fixed
+
+* API6
+  * list: sorting was by `id` instead of `name`
+  * browse: sorting was by `id` instead of `name`
+  * download: The API can use searches as playlists so check for the `smart_` prefix
+  * stream: The API can use searches as playlists so check for the `smart_` prefix
+
 ## Ampache 6.4.0
 
 Work on Ampache7 is ongoing.

@@ -34,6 +34,7 @@ final class ArtistQuery implements QueryInterface
         'add_gt',
         'add_lt',
         'album_artist',
+        'song_artist',
         'alpha_match',
         'catalog',
         'catalog_enabled',
@@ -55,7 +56,7 @@ final class ArtistQuery implements QueryInterface
         'song_count',
         'album_count',
         'total_count',
-        'random',
+        'rand',
         'rating',
         'time',
         'user_flag'

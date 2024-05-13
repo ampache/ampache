@@ -44,7 +44,7 @@ final class PersonalVideoQuery implements QueryInterface
         'update_time',
         'total_count',
         'total_skip',
-        'random',
+        'rand',
         'rating',
         'user_flag'
     );
