@@ -1801,7 +1801,7 @@ class Song extends database_object implements
     /**
      * Get parent song artists.
      * @param int $object_id
-     * @return array
+     * @return int[]
      */
     public static function get_parent_array($object_id, $type = 'artist'): array
     {
@@ -1812,7 +1812,7 @@ class Song extends database_object implements
         $db_results = Dba::read($sql, array($object_id));
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;

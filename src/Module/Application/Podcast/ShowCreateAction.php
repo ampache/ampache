@@ -64,7 +64,7 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data = $request->getParsedBody();
+        $data = (array)$request->getParsedBody();
 
         $this->ui->showHeader();
         $this->ui->show(

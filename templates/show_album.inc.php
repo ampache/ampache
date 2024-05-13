@@ -170,7 +170,7 @@ if (AmpConfig::get('use_rss')) { ?>
         <?php }
 if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
     if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+        $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout);
@@ -231,7 +231,7 @@ if ($isAlbumEditable) {
         <?php
 }
 if ($zip_album) {
-    $download = T_('Download'); ?>
+    $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download);

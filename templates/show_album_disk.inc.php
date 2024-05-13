@@ -168,7 +168,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php } ?>
         <?php if (!AmpConfig::get('use_auth') || $access25) { ?>
             <?php if (AmpConfig::get('sociable')) {
-                $postshout = T_('Post Shout'); ?>
+                $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $albumDisk->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout); ?>
@@ -223,7 +223,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         } ?>
         <?php
             if ($zip_albumD) {
-                $download = T_('Download'); ?>
+                $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $albumDisk->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download); ?>

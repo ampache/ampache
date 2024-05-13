@@ -71,7 +71,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             return null;
         }
 
-        $labelId = (int) ($request->getParsedBody()['label_id'] ?? 0);
+        $body    = (array)$request->getParsedBody();
+        $labelId = (int)($body['label_id'] ?? 0);
 
         $label = $this->labelRepository->findById($labelId);
         if (

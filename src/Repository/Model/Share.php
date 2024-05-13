@@ -139,6 +139,7 @@ class Share extends database_object
     {
         return $this->getObject() !== null;
     }
+
     /**
      * @return Song|Artist|Album|playlist_object|null
      */

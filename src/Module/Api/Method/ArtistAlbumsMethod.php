@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\AlbumRepositoryInterface;
 
 final class ArtistAlbumsMethod
 {
@@ -43,16 +42,18 @@ final class ArtistAlbumsMethod
      *
      * This returns the albums of an artist
      *
-     * filter = (string) UID of artist
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter       = (string) UID of artist
+     * album_artist = (integer) 0,1, if true return albums where the UID is an album_artist of the object //optional
+     * offset       = (integer) //optional
+     * limit        = (integer) //optional
      */
     public static function artist_albums(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+
+        $object_id = (int)$input['filter'];
         $artist    = new Artist($object_id);
         if ($artist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -60,7 +61,17 @@ final class ArtistAlbumsMethod
 
             return false;
         }
-        $results = static::getAlbumRepository()->getAlbumByArtist($object_id);
+
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('album');
+
+        $typeFilter = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1)
+            ? 'album_artist'
+            : 'artist';
+        $browse->set_filter($typeFilter, $object_id);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('album', $input['api_format']);
 
@@ -81,15 +92,5 @@ final class ArtistAlbumsMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
     }
 }
