@@ -14,6 +14,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Add `playlist_search` as a browse type. (combined playlists and smartlists)
 * Allow sorting playlists by `type`
 * Allow sorting searches by `type`, `limit` and `random` status
+* Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
 
 ### Changed

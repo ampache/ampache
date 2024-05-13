@@ -228,7 +228,7 @@ final class AmpacheRss implements AmpacheRssInterface
 
         $string = '<a class="nohtml" href="' . AmpConfig::get('web_path') . '/rss.php?type=' . $type . $rsstoken . $strparams . '" target="_blank">' . Ui::get_icon('feed', T_('RSS Feed'));
         if (!empty($title)) {
-            $string .= ' &nbsp;' . $title;
+            $string .= '&nbsp;' . $title;
         }
         $string .= '</a>';
 
