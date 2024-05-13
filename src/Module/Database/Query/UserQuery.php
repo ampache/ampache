@@ -36,10 +36,18 @@ final class UserQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'fullname',
+        'random',
         'username',
+        'fullname',
+        'email',
+        'website',
+        'access',
+        'disabled',
         'last_seen',
-        'create_date'
+        'create_date',
+        'state',
+        'city',
+        'fullname_public',
     );
 
     /** @var string */
@@ -111,6 +119,28 @@ final class UserQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        return '';
+        switch ($field) {
+            case 'username':
+            case 'fullname':
+            case 'email':
+            case 'website':
+            case 'access':
+            case 'disabled':
+            case 'last_seen':
+            case 'create_date':
+            case 'state':
+            case 'city':
+            case 'fullname_public':
+                $sql = "`user`.`$field`";
+                break;
+            default:
+                $sql = '';
+        }
+
+        if (empty($sql)) {
+            return '';
+        }
+
+        return "$sql $order,";
     }
 }

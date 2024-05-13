@@ -36,12 +36,14 @@ final class PodcastQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'catalog',
         'unplayed'
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'catalog',
         'website',
         'episodes',
         'random',
@@ -118,6 +120,11 @@ final class PodcastQuery implements QueryInterface
             case 'starts_with':
                 $filter_sql = " `podcast`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " (`podcast`.`catalog` = '" . Dba::escape($value) . "') AND ";
+                }
+                break;
             case 'unplayed':
                 if ((int)$value == 1) {
                     $filter_sql = " `podcast`.`total_count`='0' AND ";
@@ -143,6 +150,7 @@ final class PodcastQuery implements QueryInterface
             case 'title':
             case 'website':
             case 'episodes':
+            case 'catalog':
                 $sql = "`podcast`.`$field`";
                 break;
             case 'rating':

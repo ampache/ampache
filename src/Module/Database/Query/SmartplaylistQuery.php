@@ -46,7 +46,10 @@ final class SmartplaylistQuery implements QueryInterface
         'last_update',
         'name',
         'limit',
+        // random is used by Query for random sorting
         'random',
+        // is_random stops the collision with the query class
+        'is_random',
         'rating',
         'type',
         'user',
@@ -150,10 +153,12 @@ final class SmartplaylistQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'is_random':
+                $sql = "`search`.`random`";
+                break;
             case 'date':
             case 'last_update':
             case 'limit':
-            case 'random':
             case 'name':
             case 'type':
             case 'user':
