@@ -106,7 +106,6 @@ final class IndexMethod
                 $type === 'playlist' &&
                 $hide === false
             ) {
-                $name_type = 'playlist_search';
                 $browse->set_type('playlist_search');
             } elseif ($album_artist) {
                 $browse->set_type('album_artist');
