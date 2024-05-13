@@ -34,6 +34,7 @@ final class WantedQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'random',
         'user',
         'accepted',
         'artist',
@@ -103,6 +104,23 @@ final class WantedQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        return '';
+        switch ($field) {
+            case 'username':
+            case 'user':
+            case 'accepted':
+            case 'artist':
+            case 'name':
+            case 'year':
+                $sql = "`wanted`.`$field`";
+                break;
+            default:
+                $sql = '';
+        }
+
+        if (empty($sql)) {
+            return '';
+        }
+
+        return "$sql $order,";
     }
 }

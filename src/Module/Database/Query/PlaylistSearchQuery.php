@@ -42,6 +42,7 @@ final class PlaylistSearchQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'random',
         'date',
         'last_update',
         'name',

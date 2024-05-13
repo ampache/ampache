@@ -38,8 +38,16 @@ final class TvshowSeasonQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'random',
         'season',
-        'tvshow'
+        'tvshow',
+        'title',
+        'resolution',
+        'length',
+        'codec',
+        'random',
+        'rating',
+        'user_flag'
     );
 
     /** @var string */

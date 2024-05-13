@@ -50,7 +50,6 @@ final class ArtistQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'name',
-        'album',
         'placeformed',
         'yearformed',
         'song_count',

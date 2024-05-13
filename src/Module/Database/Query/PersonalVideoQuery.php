@@ -39,7 +39,10 @@ final class PersonalVideoQuery implements QueryInterface
         'resolution',
         'length',
         'codec',
-        'release_date'
+        'release_date',
+        'random',
+        'rating',
+        'user_flag'
     );
 
     /** @var string */

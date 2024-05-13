@@ -51,10 +51,17 @@ final class AlbumDiskQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'album_id',
+        'disk',
+        'disk_count',
+        'time',
+        'catalog',
+        'song_count',
+        'total_count',
+        'disksubtitle',
         'album_artist',
         'artist',
         'barcode',
-        'disksubtitle',
         'catalog_number',
         'generic_artist',
         'name',
@@ -64,10 +71,8 @@ final class AlbumDiskQuery implements QueryInterface
         'random',
         'release_status',
         'release_type',
-        'song_count',
         'subtitle',
-        'time',
-        'total_count',
+        'version',
         'year',
         'rating',
         'user_flag'
@@ -260,6 +265,10 @@ final class AlbumDiskQuery implements QueryInterface
                 $sql   = "`album`.`year` $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
                 $order = '';
                 break;
+            case 'album_id':
+            case 'catalog':
+            case 'disk':
+            case 'disk_count':
             case 'disksubtitle':
             case 'song_count':
             case 'total_count':
@@ -272,6 +281,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'barcode':
             case 'catalog_number':
             case 'subtitle':
+            case 'version':
                 $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
                 $order = '';
                 break;

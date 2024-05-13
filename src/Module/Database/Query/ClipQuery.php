@@ -36,10 +36,14 @@ final class ClipQuery implements QueryInterface
     protected array $sorts = array(
         'title',
         'artist',
+        'song',
         'resolution',
         'length',
         'codec',
-        'release_date'
+        'release_date',
+        'random',
+        'rating',
+        'user_flag'
     );
 
     /** @var string */
@@ -105,8 +109,9 @@ final class ClipQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
-            case 'location':
-                $sql = "`clip`.`artist`";
+            case 'artist':
+            case 'song':
+                $sql = "`clip`.`$field`";
                 break;
             default:
                 $sql = $query->sql_sort_video($field, $order, 'clip');

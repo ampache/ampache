@@ -54,6 +54,7 @@ final class AlbumQuery implements QueryInterface
         'album_artist',
         'artist',
         'barcode',
+        'catalog',
         'catalog_number',
         'generic_artist',
         'name',
@@ -63,7 +64,7 @@ final class AlbumQuery implements QueryInterface
         'random',
         'release_status',
         'release_type',
-        'disk',
+        'disk_count',
         'song_count',
         'subtitle',
         'time',
@@ -255,6 +256,7 @@ final class AlbumQuery implements QueryInterface
             case 'year':
                 $sql = "`album`.`year` $order, `album`.`addition_time`";
                 break;
+            case 'catalog':
             case 'disk_count':
             case 'song_count':
             case 'total_count':
