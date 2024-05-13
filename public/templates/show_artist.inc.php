@@ -247,7 +247,7 @@ if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(Acce
             }
 if (canEditArtist($artist, $gatekeeper->getUserId())) {
     if (Upload::can_upload($current_user)) {
-        $t_upload = T_('Upload'); ?>
+        $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_material_symbol('upload', $t_upload); ?>
@@ -259,7 +259,7 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
-                    <?php echo T_('Edit Artist'); ?>
+                    <?php echo "&nbsp;" . T_('Edit Artist'); ?>
                 </a>
             </li>
         <?php }
