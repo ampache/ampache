@@ -59,6 +59,7 @@ final class SongQuery implements QueryInterface
         'track',
         'time',
         'composer',
+        'addition_time',
         'total_count',
         'total_skip',
         'album',

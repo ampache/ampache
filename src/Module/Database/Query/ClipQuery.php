@@ -41,6 +41,10 @@ final class ClipQuery implements QueryInterface
         'length',
         'codec',
         'release_date',
+        'addition_time',
+        'update_time',
+        'total_count',
+        'total_skip',
         'random',
         'rating',
         'user_flag'

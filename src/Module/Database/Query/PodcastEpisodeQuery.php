@@ -33,6 +33,8 @@ final class PodcastEpisodeQuery implements QueryInterface
     public const FILTERS = array(
         'podcast',
         'catalog',
+        'add_gt',
+        'add_lt',
         'alpha_match',
         'exact_match',
         'regex_match',
@@ -52,8 +54,11 @@ final class PodcastEpisodeQuery implements QueryInterface
         'pubdate',
         'state',
         'random',
+        'addition_time',
+        'total_count',
+        'total_skip',
         'rating',
-        'user_flag'
+        'user_flag',
     );
 
     /** @var string */
@@ -128,6 +133,12 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'starts_with':
                 $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'add_lt':
+                $filter_sql = " `podcast_episode`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'add_gt':
+                $filter_sql = " `podcast_episode`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
+                break;
             case 'catalog':
                 if ($value != 0) {
                     $filter_sql = " (`podcast_episode`.`catalog` = '" . Dba::escape($value) . "') AND ";
@@ -163,6 +174,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'time':
             case 'pubdate':
             case 'state':
+            case 'addition_time':
                 $sql = "`podcast_episode`.`$field`";
                 break;
             case 'rating':
