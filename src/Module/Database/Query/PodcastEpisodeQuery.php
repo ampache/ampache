@@ -53,7 +53,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'time',
         'pubdate',
         'state',
-        'random',
+        'rand',
         'addition_time',
         'total_count',
         'total_skip',

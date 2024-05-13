@@ -60,12 +60,13 @@ final class SongQuery implements QueryInterface
         'time',
         'composer',
         'addition_time',
+        'update_time',
         'total_count',
         'total_skip',
         'album',
         'album_disk',
         'artist',
-        'random',
+        'rand',
         'rating',
         'user_flag'
     );
@@ -216,6 +217,8 @@ final class SongQuery implements QueryInterface
             case 'track':
             case 'time':
             case 'composer':
+            case 'addition_time':
+            case 'update_time':
             case 'total_count':
             case 'total_skip':
                 $sql = "`song`.`$field`";

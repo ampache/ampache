@@ -34,7 +34,7 @@ final class TvshowEpisodeQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'random',
+        'rand',
         'episode',
         'season',
         'tvshow',
@@ -46,7 +46,6 @@ final class TvshowEpisodeQuery implements QueryInterface
         'update_time',
         'total_count',
         'total_skip',
-        'random',
         'rating',
         'user_flag'
     );

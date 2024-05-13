@@ -648,7 +648,7 @@ class Query
      * @param string $sort
      * @param string $order
      */
-    public function set_sort($sort, $order = ''): bool
+    public function set_sort($sort, $order = ''): void
     {
         // Don't allow pointless sorts
         if (
@@ -658,14 +658,21 @@ class Query
         ) {
             debug_event(self::class, 'IGNORED set_sort ' . $this->get_type() . ': ' . $sort, 5);
 
-            return false;
+            return;
         }
 
         $this->reset_join();
 
-        if ($sort == 'random') {
-            // don't sort random
-        } elseif (!empty($order)) {
+        if ($sort === 'rand') {
+            // reset any existing sorts before setting a new one
+            $this->_state['sort']         = array();
+            $this->_state['sort']['rand'] = $order;
+
+            $this->_resort_objects();
+
+            return;
+        }
+        if (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
                 : 'ASC';
@@ -678,13 +685,12 @@ class Query
                 ? 'DESC'
                 : 'ASC';
         }
+
         // reset any existing sorts before setting a new one
         $this->_state['sort']        = array();
         $this->_state['sort'][$sort] = $order;
 
         $this->_resort_objects();
-
-        return true;
     }
 
     /**
@@ -1183,7 +1189,7 @@ class Query
         }
 
         // random sorting
-        if ($field === 'random') {
+        if ($field === 'rand') {
             return "RAND()";
         }
 

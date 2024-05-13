@@ -43,14 +43,13 @@ final class TvshowQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'random',
+        'rand',
         'name',
         'year',
         'title',
         'resolution',
         'length',
         'codec',
-        'random',
         'rating',
         'user_flag'
     );

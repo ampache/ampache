@@ -61,7 +61,7 @@ final class AlbumQuery implements QueryInterface
         'name_year',
         'name_original_year',
         'original_year',
-        'random',
+        'rand',
         'release_status',
         'release_type',
         'disk_count',

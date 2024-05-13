@@ -36,7 +36,7 @@ final class UserQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'random',
+        'rand',
         'username',
         'fullname',
         'email',
