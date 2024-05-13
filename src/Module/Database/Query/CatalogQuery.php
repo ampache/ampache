@@ -36,7 +36,15 @@ final class CatalogQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'name'
+        'name',
+        'catalog_type',
+        'last_update',
+        'last_clean',
+        'last_add',
+        'enabled',
+        'rename_pattern',
+        'sort_pattern',
+        'gather_types',
     );
 
     /** @var string */
@@ -108,6 +116,27 @@ final class CatalogQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        return '';
+        switch ($field) {
+            case 'name':
+            case 'catalog_type':
+            case 'last_update':
+            case 'last_clean':
+            case 'last_add':
+            case 'enabled':
+            case 'rename_pattern':
+            case 'sort_pattern':
+            case 'gather_types':
+                $sql = "`catalog`.`$field`";
+                break;
+            default:
+                $sql = '';
+                break;
+        }
+
+        if (empty($sql)) {
+            return '';
+        }
+
+        return "$sql $order,";
     }
 }

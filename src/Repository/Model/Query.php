@@ -1201,8 +1201,13 @@ class Query
     {
         $sql = "";
         switch ($field) {
+            case 'addition_time':
+            case 'catalog':
+            case 'update_time':
             case 'title':
-                $sql = "`video`.`title`";
+            case 'total_count':
+            case 'total_skip':
+                $sql = "`video`.`$field`";
                 break;
             case 'resolution':
                 $sql = "`video`.`resolution_x`";

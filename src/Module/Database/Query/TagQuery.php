@@ -42,6 +42,7 @@ final class TagQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'random',
         'tag',
         'name'
     );

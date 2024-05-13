@@ -32,6 +32,9 @@ final class PodcastEpisodeQuery implements QueryInterface
 {
     public const FILTERS = array(
         'podcast',
+        'catalog',
+        'add_gt',
+        'add_lt',
         'alpha_match',
         'exact_match',
         'regex_match',
@@ -44,14 +47,18 @@ final class PodcastEpisodeQuery implements QueryInterface
     protected array $sorts = array(
         'podcast',
         'title',
+        'catalog',
         'category',
         'author',
         'time',
         'pubdate',
         'state',
         'random',
+        'addition_time',
+        'total_count',
+        'total_skip',
         'rating',
-        'user_flag'
+        'user_flag',
     );
 
     /** @var string */
@@ -104,13 +111,6 @@ final class PodcastEpisodeQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
-            case 'catalog':
-                $query->set_join('LEFT', '`podcast`', '`podcast`.`id`', '`podcast_episode`.`podcast`', 100);
-                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
-                if ($value != 0) {
-                    $filter_sql = " `podcast`.`catalog` = '" . Dba::escape($value) . "' AND ";
-                }
-                break;
             case 'podcast':
                 $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
                 break;
@@ -132,6 +132,17 @@ final class PodcastEpisodeQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'add_lt':
+                $filter_sql = " `podcast_episode`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'add_gt':
+                $filter_sql = " `podcast_episode`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " (`podcast_episode`.`catalog` = '" . Dba::escape($value) . "') AND ";
+                }
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {
@@ -157,11 +168,13 @@ final class PodcastEpisodeQuery implements QueryInterface
         switch ($field) {
             case 'podcast':
             case 'title':
+            case 'catalog':
             case 'category':
             case 'author':
             case 'time':
             case 'pubdate':
             case 'state':
+            case 'addition_time':
                 $sql = "`podcast_episode`.`$field`";
                 break;
             case 'rating':

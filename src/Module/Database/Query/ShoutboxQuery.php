@@ -36,7 +36,8 @@ final class ShoutboxQuery implements QueryInterface
     protected array $sorts = array(
         'date',
         'user',
-        'sticky'
+        'sticky',
+        'object_type'
     );
 
     /** @var string */
@@ -101,6 +102,21 @@ final class ShoutboxQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        return '';
+        switch ($field) {
+            case 'date':
+            case 'user':
+            case 'sticky':
+            case 'object_type':
+                $sql = "`user_shout`.`$field`";
+                break;
+            default:
+                $sql = '';
+        }
+
+        if (empty($sql)) {
+            return '';
+        }
+
+        return "$sql $order,";
     }
 }

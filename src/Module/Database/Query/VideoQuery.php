@@ -31,20 +31,30 @@ use Ampache\Repository\Model\Query;
 final class VideoQuery implements QueryInterface
 {
     public const FILTERS = array(
+        'add_gt',
+        'add_lt',
         'alpha_match',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'tag'
+        'catalog',
+        'tag',
+        'update_gt',
+        'update_lt'
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'catalog',
         'resolution',
         'length',
         'codec',
+        'addition_time',
+        'update_time',
+        'total_count',
+        'total_skip',
         'random',
         'rating',
         'user_flag'
@@ -127,6 +137,23 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'add_lt':
+                $filter_sql = " `video`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'add_gt':
+                $filter_sql = " `video`.`addition_time` >= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'update_lt':
+                $filter_sql = " `video`.`update_time` <= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'update_gt':
+                $filter_sql = " `video`.`update_time` >= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " `video`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                }
                 break;
         }
 

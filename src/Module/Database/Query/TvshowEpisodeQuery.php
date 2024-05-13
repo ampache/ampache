@@ -34,13 +34,21 @@ final class TvshowEpisodeQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'random',
+        'episode',
+        'season',
+        'tvshow',
         'title',
         'resolution',
         'length',
         'codec',
-        'episode',
-        'season',
-        'tvshow'
+        'addition_time',
+        'update_time',
+        'total_count',
+        'total_skip',
+        'random',
+        'rating',
+        'user_flag'
     );
 
     /** @var string */

@@ -38,7 +38,14 @@ final class MovieQuery implements QueryInterface
         'resolution',
         'length',
         'codec',
-        'release_date'
+        'release_date',
+        'addition_time',
+        'update_time',
+        'total_count',
+        'total_skip',
+        'random',
+        'rating',
+        'user_flag'
     );
 
     /** @var string */
@@ -103,6 +110,21 @@ final class MovieQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
-        return $query->sql_sort_video($field, $order, 'movie');
+        switch ($field) {
+            case 'original_name':
+            case 'prefix':
+            case 'year':
+                $sql = "`movie`.`$field`";
+                break;
+            default:
+                $sql = $query->sql_sort_video($field, $order, 'movie');
+                break;
+        }
+
+        if (empty($sql)) {
+            return '';
+        }
+
+        return "$sql $order,";
     }
 }

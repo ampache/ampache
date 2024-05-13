@@ -54,10 +54,12 @@ final class SongQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'catalog',
         'year',
         'track',
         'time',
         'composer',
+        'addition_time',
         'total_count',
         'total_skip',
         'album',
@@ -181,7 +183,7 @@ final class SongQuery implements QueryInterface
                 break;
             case 'catalog':
                 if ($value != 0) {
-                    $filter_sql = " `song`.`catalog` = '$value' AND ";
+                    $filter_sql = " `song`.`catalog` = '" . Dba::escape($value) . "' AND ";
                 }
                 break;
             case 'catalog_enabled':
@@ -189,7 +191,7 @@ final class SongQuery implements QueryInterface
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'enabled':
-                $filter_sql = " `song`.`enabled`= '$value' AND ";
+                $filter_sql = " `song`.`enabled`= '" . Dba::escape($value) . "' AND ";
                 break;
         }
 
@@ -209,6 +211,7 @@ final class SongQuery implements QueryInterface
     {
         switch ($field) {
             case 'title':
+            case 'catalog':
             case 'year':
             case 'track':
             case 'time':
