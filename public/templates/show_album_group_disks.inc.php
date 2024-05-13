@@ -200,7 +200,7 @@ if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user-
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
-    echo T_('Update from tags'); ?>
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
 <?php
