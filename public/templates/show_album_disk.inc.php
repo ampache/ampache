@@ -181,8 +181,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $albumDisk->id; ?>">
-                    <?php echo Ui::get_material_symbol('comment', $postshout); ?>
-                    <?php echo $postshout; ?>
+                    <?php echo Ui::get_material_symbol('comment', $postshout);
+                echo $postshout; ?>
                 </a>
             </li>
             <?php
@@ -199,8 +199,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
-                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
-                    <?php echo T_('Graphs'); ?>
+                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
+                echo T_('Graphs'); ?>
                 </a>
             </li>
         <?php } ?>
@@ -218,7 +218,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id; ?>">
                         <?php echo Ui::get_material_symbol('upload', $t_upload);
-                        echo $t_upload; ?>
+                echo $t_upload; ?>
                     </a>
                 </li>
             <?php } ?>
