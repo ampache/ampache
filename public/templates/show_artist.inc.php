@@ -250,8 +250,8 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
         $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
-                        <?php echo Ui::get_material_symbol('upload', $t_upload); ?>
-                        <?php echo $t_upload; ?>
+                        <?php echo Ui::get_material_symbol('upload', $t_upload);
+        echo $t_upload; ?>
                     </a>
                 </li>
             <?php

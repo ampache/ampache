@@ -104,8 +104,8 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
-                <?php echo UI::get_material_symbol('share', T_('Share playlist')); ?>
-        &nbsp;<?php echo T_('Share playlist'); ?>
+                <?php echo UI::get_material_symbol('share', T_('Share playlist'));
+        echo "&nbsp;" . T_('Share playlist'); ?>
         </a>
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
