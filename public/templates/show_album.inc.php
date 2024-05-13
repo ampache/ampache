@@ -188,7 +188,7 @@ if (Access::check('interface', 25)) {
             <?php }
     }
 if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
-    $saveorder = T_('Save Track Order');
+    $saveorder = "&nbsp;" . T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -207,7 +207,7 @@ if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
-    echo T_('Update from tags'); ?>
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
         <?php
