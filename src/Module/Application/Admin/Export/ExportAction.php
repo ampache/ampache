@@ -72,7 +72,7 @@ final class ExportAction implements ApplicationActionInterface
         // instead of waiting until contents are generated, which could take a long time.
         ob_implicit_flush();
 
-        $requestData = $request->getParsedBody();
+        $requestData = (array)$request->getParsedBody();
         $catalogId   = (int) ($requestData['export_catalog'] ?? 0);
 
         try {
