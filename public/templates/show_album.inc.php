@@ -148,7 +148,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
             $addtotemp  = T_('Add to Temporary Playlist');
             $randtotemp = T_('Random to Temporary Playlist');
-            $addtoexist = T_('Add to playlist'); ?>
+            $addtoexist = "&nbsp;" . T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -213,7 +213,7 @@ if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->
         <?php
 }
 if ($isAlbumEditable) {
-    $t_upload = T_('Upload');
+    $t_upload = "&nbsp;" . T_('Upload');
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
@@ -225,7 +225,7 @@ if ($isAlbumEditable) {
         <li>
             <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit'));
-    echo T_('Edit Album'); ?>
+    echo "&nbsp;" . T_('Edit Album'); ?>
             </a>
         </li>
         <?php
