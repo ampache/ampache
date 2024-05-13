@@ -36,12 +36,14 @@ final class VideoQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'catalog',
         'tag'
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'catalog',
         'resolution',
         'length',
         'codec',
@@ -127,6 +129,11 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " `video`.`catalog` = '" . Dba::escape($value) . "' AND ";
+                }
                 break;
         }
 

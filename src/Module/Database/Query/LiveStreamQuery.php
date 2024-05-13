@@ -32,6 +32,7 @@ final class LiveStreamQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'catalog',
         'catalog_enabled',
         'exact_match',
         'regex_match',
@@ -42,6 +43,7 @@ final class LiveStreamQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'name',
+        'catalog',
         'codec',
         'site_url',
         'url',
@@ -118,6 +120,11 @@ final class LiveStreamQuery implements QueryInterface
             case 'starts_with':
                 $filter_sql = " `live_stream`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'catalog':
+                if ($value != 0) {
+                    $filter_sql = " (`live_stream`.`catalog` = '" . Dba::escape($value) . "') AND ";
+                }
+                break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
@@ -140,6 +147,7 @@ final class LiveStreamQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'catalog':
             case 'codec':
             case 'site_url':
             case 'url':

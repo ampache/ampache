@@ -169,7 +169,7 @@ final class ArtistQuery implements QueryInterface
                 }
                 if ($value != 0) {
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
-                    $filter_sql = " (`catalog_map`.`catalog_id` = '$value') AND ";
+                    $filter_sql = " (`catalog_map`.`catalog_id` = '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'catalog_enabled':

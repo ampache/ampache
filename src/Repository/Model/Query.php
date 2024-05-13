@@ -1201,6 +1201,9 @@ class Query
     {
         $sql = "";
         switch ($field) {
+            case 'catalog':
+                $sql = "`video`.`catalog`";
+                break;
             case 'title':
                 $sql = "`video`.`title`";
                 break;

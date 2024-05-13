@@ -184,7 +184,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'catalog':
                 if ($value != 0) {
-                    $filter_sql = " (`album`.`catalog` = '$value') AND ";
+                    $filter_sql = " (`album`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'catalog_enabled':
