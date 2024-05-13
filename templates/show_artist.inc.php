@@ -186,8 +186,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
-                <?php echo T_('Update from tags'); ?>
+                <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
@@ -238,7 +238,7 @@ if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check('interfac
             }
 if (canEditArtist($artist, $gatekeeper->getUserId())) {
     if (Upload::can_upload($current_user)) {
-        $t_upload = T_('Upload'); ?>
+        $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
@@ -249,8 +249,8 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
     } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
-                    <?php echo Ui::get_icon('edit', T_('Edit')); ?>
-                    <?php echo T_('Edit Artist'); ?>
+                    <?php echo Ui::get_icon('edit', T_('Edit'));
+    echo "&nbsp;" . T_('Edit Artist'); ?>
                 </a>
             </li>
         <?php }

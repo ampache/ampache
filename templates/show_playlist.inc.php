@@ -73,8 +73,8 @@ $playlist->display_art($thumb, false, false); ?>
         <li>
             <a onclick="submitNewItemsOrder('<?php echo $playlist->id; ?>', 'reorder_playlist_table', 'track_',
                                             '<?php echo $web_path; ?>/playlist.php?action=set_track_numbers&playlist_id=<?php echo $playlist->id; ?>', '<?php echo RefreshPlaylistMediasAction::REQUEST_KEY; ?>')">
-                <?php echo Ui::get_icon('save', T_('Save Track Order')); ?>
-                <?php echo T_('Save Track Order'); ?>
+                <?php echo Ui::get_icon('save', T_('Save Track Order'));
+    echo "&nbsp;" . T_('Save Track Order'); ?>
             </a>
         </li>
         <li>
@@ -103,7 +103,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('playlist
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
                 <?php echo UI::get_icon('share', T_('Share playlist')); ?>
-        &nbsp;&nbsp;<?php echo T_('Share playlist'); ?>
+        &nbsp;<?php echo T_('Share playlist'); ?>
         </a>
     <?php } ?>
     <?php if (AmpConfig::get('directplay')) { ?>
