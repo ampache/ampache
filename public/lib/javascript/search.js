@@ -118,8 +118,8 @@ var SearchRow = {
                     var option = document.createElement("option");
                     var realValue = 0;
                     // only allow ints that parse as ints and match the input
-                    if (parseInt(widget["1"][key]) == widget["1"][key] && parseInt(i) === optioncount) {
-                        realValue = parseInt(widget["1"][key]);
+                    if (parseInt(key) == key && parseInt(i) === optioncount) {
+                        realValue = key);
                     }
                     else {
                         realValue = i;
