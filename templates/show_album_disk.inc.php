@@ -151,7 +151,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
             $addtotemp  = T_('Add to Temporary Playlist');
             $randtotemp = T_('Random to Temporary Playlist');
-            $addtoexist = "&nbsp;" . T_('Add to playlist'); ?>
+            $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album_disk&id=' . $albumDisk->id, 'add_circle', $addtotemp, 'play_full_' . $albumDisk->id); ?>
         </li>
@@ -181,8 +181,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album_disk&id=<?php echo $albumDisk->id; ?>">
-                    <?php echo Ui::get_material_symbol('comment', $postshout); ?>
-                    <?php echo $postshout; ?>
+                    <?php echo Ui::get_material_symbol('comment', $postshout);
+                echo $postshout; ?>
                 </a>
             </li>
             <?php
@@ -196,12 +196,12 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             <?php } ?>
         <?php } ?>
         <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
-            $saveorder = "&nbsp;" . T_('Save Track Order'); ?>
+            $saveorder = T_('Save Track Order'); ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
-                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
-                    <?php echo T_('Graphs'); ?>
+                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
+                echo T_('Graphs'); ?>
                 </a>
             </li>
         <?php } ?>
@@ -218,8 +218,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             if (Upload::can_upload($current_user) && $albumDisk->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $albumDisk->album_artist; ?>&album=<?php echo $albumDisk->album_id; ?>">
-                        <?php echo Ui::get_material_symbol('upload', $t_upload); ?>
-                        <?php echo $t_upload; ?>
+                        <?php echo Ui::get_material_symbol('upload', $t_upload);
+                echo $t_upload; ?>
                     </a>
                 </li>
             <?php } ?>

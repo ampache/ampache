@@ -154,7 +154,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
             $addtotemp  = T_('Add to Temporary Playlist');
             $randtotemp = T_('Random to Temporary Playlist');
-            $addtoexist = "&nbsp;" . T_('Add to playlist'); ?>
+            $addtoexist = T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'new_window', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -184,8 +184,8 @@ if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, Acce
         $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_material_symbol('comment', $postshout); ?>
-                    <?php echo $postshout; ?>
+                    <?php echo Ui::get_material_symbol('comment', $postshout);
+        echo $postshout; ?>
                 </a>
             </li>
             <?php
@@ -199,12 +199,12 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             <?php }
     }
 if (($owner_id > 0 && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-    $saveorder = "&nbsp;" . T_('Save Track Order');
+    $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
-                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
-                    <?php echo T_('Graphs'); ?>
+                    <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
+        echo T_('Graphs'); ?>
                 </a>
             </li>
         <?php } ?>
@@ -228,15 +228,15 @@ if ($isAlbumEditable) {
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
-                        <?php echo Ui::get_material_symbol('upload', $t_upload); ?>
-                        <?php echo $t_upload; ?>
+                        <?php echo Ui::get_material_symbol('upload', $t_upload);
+        echo $t_upload; ?>
                     </a>
                 </li>
     <?php } ?>
         <li>
             <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
-                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
-                <?php echo "&nbsp;" . T_('Edit Album'); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit'));
+    echo "&nbsp;" . T_('Edit Album'); ?>
             </a>
         </li>
         <?php
@@ -245,8 +245,8 @@ if ($zip_album) {
     $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
-                <?php echo Ui::get_material_symbol('folder_zip', $download); ?>
-                <?php echo $download; ?>
+                <?php echo Ui::get_material_symbol('folder_zip', $download);
+    echo $download; ?>
             </a>
         </li>
 <?php
