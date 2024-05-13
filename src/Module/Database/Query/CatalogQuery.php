@@ -129,7 +129,7 @@ final class CatalogQuery implements QueryInterface
                 $sql = "`catalog`.`$field`";
                 break;
             default:
-                $sql = $query->sql_sort_video($field, $order, 'clip');
+                $sql = '';
                 break;
         }
 
