@@ -4941,11 +4941,6 @@ parameters:
 			path: src/Module/Application/SearchData/ShowAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/SmartPlaylist/UpdatePlaylistAction.php
-
-		-
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Application/StatisticGraph/ShowAction.php
