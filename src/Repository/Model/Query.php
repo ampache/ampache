@@ -1186,7 +1186,7 @@ class Query
         $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
-        return $final_sql . ($order_sql . $limit_sql);
+        return $final_sql;
     }
 
     /**
