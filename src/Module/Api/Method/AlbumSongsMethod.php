@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class AlbumSongsMethod
@@ -68,8 +67,8 @@ class AlbumSongsMethod
         $browse = Api::getBrowse();
         $browse->reset_filters();
         $browse->set_type('song');
-        $browse->set_filter('album', $object_id);
         $browse->set_sort('album_disk', 'ASC');
+        $browse->set_filter('album', $object_id);
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -92,15 +91,5 @@ class AlbumSongsMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }
