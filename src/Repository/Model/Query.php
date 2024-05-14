@@ -291,6 +291,8 @@ class Query
                 }
                 break;
             default:
+                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+
                 return false;
         } // end switch
 
@@ -1195,7 +1197,6 @@ class Query
         }
 
         if ($this->queryType === null) {
-            return '';
             $this->set_type($this->_state['type']);
         }
 
