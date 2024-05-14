@@ -249,6 +249,7 @@ class Query
             case 'album':
             case 'disk':
             case 'hidden':
+            case 'gather_type':
             case 'gather_types':
                 $this->_state['filter'][$key] = $value;
                 break;
