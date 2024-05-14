@@ -785,7 +785,7 @@ class Query
      */
     public function set_group($column, $value, $priority): void
     {
-        $this->_state['join'][$priority][$column] = $value;
+        $this->_state['group'][$priority][$column] = $value;
     }
 
     /**

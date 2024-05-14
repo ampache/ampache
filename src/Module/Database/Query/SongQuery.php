@@ -128,11 +128,11 @@ final class SongQuery implements QueryInterface
             case 'top50':
                 $query->set_join_and('LEFT', '`artist_map`', '`artist_map`.`object_id`', '`song`.`id`', '`artist_map`.`object_type`', "'song'", 50);
                 $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
-                $filter_sql = "`artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
+                $filter_sql = " `artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
                 break;
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                $filter_sql = "`tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -197,7 +197,7 @@ final class SongQuery implements QueryInterface
                 }
                 break;
             case 'user_catalog':
-                $filter_sql = "`song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                $filter_sql = " `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
