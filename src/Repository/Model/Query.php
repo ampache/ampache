@@ -265,7 +265,6 @@ class Query
             case 'season_eq':
             case 'user':
             case 'to_user':
-            case 'enabled':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
             case 'exact_match':
@@ -1154,7 +1153,7 @@ class Query
     private function _sql_filter($filter, $value): string
     {
         if ($this->queryType === null) {
-            return '';
+            $this->set_type($this->_state['type']);
         }
 
         return $this->queryType->get_sql_filter($this, $filter, $value);
@@ -1197,6 +1196,7 @@ class Query
 
         if ($this->queryType === null) {
             return '';
+            $this->set_type($this->_state['type']);
         }
 
         return $this->queryType->get_sql_sort($this, $field, $order);
