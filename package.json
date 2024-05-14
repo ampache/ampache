@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --minify false",
     "postinstall": "npm-run-all copy:*",
     "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/lib/components/bootstrap",
     "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/* public/lib/components/jquery-contextmenu",
