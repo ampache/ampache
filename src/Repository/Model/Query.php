@@ -107,12 +107,14 @@ class Query
         'filter' => [],
         'grid_view' => true,
         'group' => [],
-        'having' => '', // HAVING is not currently used in Query SQL
+        // HAVING is not currently used in Query SQL
+        'having' => '',
         'join' => null,
         'mashup' => null,
         'offset' => 0,
         'limit' => 0,
-        'song_artist' => null, // Used by $browse->set_type() to filter artists
+        // Used by $browse->set_type() to filter artists
+        'song_artist' => null,
         'select' => [],
         'simple' => false,
         'show_header' => true,
