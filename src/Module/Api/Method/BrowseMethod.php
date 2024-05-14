@@ -78,21 +78,23 @@ final class BrowseMethod
             return false;
         }
 
+        $browse = Api::getBrowse();
         if ($object_type === 'root') {
             // catalog root
-            $objects = User::get_user_catalogs($user->id, 'music');
+            $output_type  = 'catalog';
+            $child_type   = $output_type;
+            $gather_types = array('music');
             if (AmpConfig::get('podcast')) {
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'podcast'));
+                $gather_types[] = 'podcast';
             }
             if (AmpConfig::get('video')) {
-                // 'clip', 'tvshow', 'movie', 'personal_video'
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'clip'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'tvshow'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'movie'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'personal_video'));
+                $gather_types = array_merge($gather_types, array('clip', 'tvshow', 'movie', 'personal_video'));
             }
-            $child_type = 'catalog';
-            $results    = Catalog::get_name_array($objects, 'catalog', 'name');
+
+            $browse->reset_filters();
+            $browse->set_type($output_type);
+            $browse->set_filter('gather_types', $gather_types);
+            $browse->set_filter('user', $user->getId());
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
             if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
@@ -105,11 +107,8 @@ final class BrowseMethod
 
                 return false;
             }
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
 
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
+            $browse->reset_filters();
             switch ((string)$catalog->gather_types) {
                 case 'clip':
                 case 'tvshow':
@@ -117,17 +116,17 @@ final class BrowseMethod
                 case 'personal_video':
                     $output_type = 'video';
                     $browse->set_type('video');
-                    $browse->set_filter('gather_types', 'video');
+                    $browse->set_filter('gather_type', 'video');
                     break;
                 case 'music':
                     $output_type = 'artist';
                     $browse->set_type('album_artist');
-                    $browse->set_filter('gather_types', 'music');
+                    $browse->set_filter('gather_type', 'music');
                     break;
                 case 'podcast':
                     $output_type = 'podcast';
                     $browse->set_type('podcast');
-                    $browse->set_filter('gather_types', 'podcast');
+                    $browse->set_filter('gather_type', 'podcast');
                     break;
                 default:
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -138,13 +137,6 @@ final class BrowseMethod
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
             $browse->set_filter('catalog', $catalog->id);
-            $objects = $browse->get_objects();
-            if (empty($objects)) {
-                Api::empty('browse', $input['api_format']);
-
-                return false;
-            }
-            $results = Catalog::get_name_array($objects, $output_type, 'name');
         } else {
             if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
                 return false;
@@ -172,9 +164,8 @@ final class BrowseMethod
 
                 return false;
             }
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
 
+            $browse->reset_filters();
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
@@ -201,19 +192,19 @@ final class BrowseMethod
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
             $browse->set_filter('catalog', $catalog->id);
-
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
-
-            $objects = $browse->get_objects();
-            if (empty($objects)) {
-                Api::empty('browse', $input['api_format']);
-
-                return false;
-            }
-            $results = Catalog::get_name_array($objects, $output_type, 'name');
         }
 
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
+
+        $objects = $browse->get_objects();
+        if (empty($objects)) {
+            Api::empty('browse', $input['api_format']);
+
+            return false;
+        }
+
+        $results = Catalog::get_name_array($objects, $output_type, 'name');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

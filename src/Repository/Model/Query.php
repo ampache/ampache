@@ -244,9 +244,11 @@ class Query
             case 'album':
             case 'disk':
             case 'hidden':
+            case 'gather_type':
             case 'gather_types':
                 $this->_state['filter'][$key] = $value;
                 break;
+            case 'enabled':
             case 'min_count':
             case 'unplayed':
             case 'rated':
