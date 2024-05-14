@@ -224,7 +224,7 @@ final class SongQuery implements QueryInterface
                 $sql = "`song`.`$field`";
                 break;
             case 'album':
-                $sql   = "`album`.`name` $order, `song`.`track`";
+                $sql   = "`album`.`name` $order, `song`.`disk`, `song`.`track`";
                 $order = '';
                 $query->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
                 break;
@@ -232,7 +232,7 @@ final class SongQuery implements QueryInterface
                 $sql   = "`album`.`name` $order, `album_disk`.`disk`, `song`.`track`";
                 $order = '';
                 $query->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
-                $query->set_join('LEFT', '`album_disk`', '`album`.`id`', '`album_disk`.`album_id`', 100);
+                $query->set_join_and('LEFT', '`album_disk`', '`album_disk`.`album_id`', '`song`.`album`', '`album_disk`.`disk`', '`song`.`disk`', 100);
                 break;
             case 'artist':
                 $sql = "`artist`.`name`";
