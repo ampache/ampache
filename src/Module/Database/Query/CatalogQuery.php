@@ -52,7 +52,7 @@ final class CatalogQuery implements QueryInterface
     );
 
     /** @var string */
-    protected $select = "`catalog`.`name`";
+    protected $select = "`catalog`.`id`";
 
     /** @var string */
     protected $base = "SELECT %%SELECT%% FROM `catalog` ";
