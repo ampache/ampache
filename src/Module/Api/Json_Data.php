@@ -888,7 +888,10 @@ class Json_Data
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
+                }
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
@@ -899,9 +902,6 @@ class Json_Data
                 ) {
                     $playlist_names[] = $playlist->name;
                 }
-            }
-            if ($playlist->isNew()) {
-                continue;
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;

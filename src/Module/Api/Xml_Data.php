@@ -1072,7 +1072,10 @@ class Xml_Data
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = (int)$playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
+                }
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
