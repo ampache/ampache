@@ -300,6 +300,9 @@ class Query
                 return false;
         } // end switch
 
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
+
         // If we've set a filter we need to reset the totals
         $this->reset_total();
         $this->set_start(0);
@@ -668,7 +671,12 @@ class Query
             return;
         }
 
+        // TODO WHY?!?!
         $this->reset_join();
+
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
+        $this->_get_sort_sql();
 
         if ($sort === 'rand') {
             // reset any existing sorts before setting a new one
@@ -1142,29 +1150,33 @@ class Query
      */
     public function get_sql($limit = true): string
     {
-        $sql        = $this->_get_base_sql();
-        $filter_sql = "";
-        $join_sql   = "";
-        $having_sql = "";
-        $order_sql  = "";
-        if (!$this->_state['custom']) {
+        if ($this->_state['custom']) {
+            // custom queries are set by base and should not be added to
+            $final_sql = $this->_get_base_sql();
+        } else {
+            // filter and sort set joins as well as group so make sure you run those first
             $filter_sql = $this->_get_filter_sql();
-            $join_sql   = $this->_get_join_sql();
-            $having_sql = $this->_get_having_sql();
-            $order_sql  = $this->_get_sort_sql();
-        }
-        $limit_sql = $limit ? $this->_get_limit_sql() : '';
-        $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
+            $sort_sql   = $this->_get_sort_sql();
+            // regular queries need to be joined with all the other parts
+            $final_sql = $this->_get_base_sql() .
+                $this->_get_join_sql() .
+                $filter_sql .
+                $this->_get_having_sql();
 
-        if (!$this->_state['custom']) {
+            // allow forcing a group by
             if (!empty($this->_get_group_sql())) {
                 $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
             } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
                 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
             }
+
+            $final_sql .= $sort_sql;
         }
 
-        $final_sql .= $order_sql . $limit_sql;
+        // apply a limit/offset limit (if set)
+        $limit_sql = $limit ? $this->_get_limit_sql() : '';
+
+        $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
         return $final_sql;
