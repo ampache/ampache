@@ -47,7 +47,7 @@ export function overlayclickclose() {
 export function showPlaylistDialog(e, item_type, item_ids) {
     $("#playlistdialog").dialog("close");
 
-    var parent= e;
+    var parent = window;
     parent.itemType = item_type;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_playlist&object_type=" + item_type + "&id=" + item_ids;
     parent.editDialogId = "<div id=\"playlistdialog\"></div>";
@@ -114,7 +114,7 @@ var closebroadcasts;
 export function showBroadcastsDialog(e) {
     $("#broadcastsdialog").dialog("close");
 
-    var parent = e;
+    var parent = window;
     parent.contentUrl = jsAjaxServer + "/ajax.server.php?page=player&action=show_broadcasts";
     parent.editDialogId = "<div id=\"broadcastsdialog\"></div>";
 
@@ -170,7 +170,7 @@ export function handleBroadcastAction(url, id) {
 export function showShareDialog(e, object_type, object_id) {
     $("#sharedialog").dialog("close");
 
-    var parent = e;
+    var parent = window;
     parent.contentUrl = jsAjaxServer + "/ajax.server.php?page=browse&action=get_share_links&object_type=" + object_type + "&object_id=" + object_id;
     parent.editDialogId = "<div id=\"sharedialog\"></div>";
 
@@ -220,7 +220,7 @@ var tag_choices;
 var label_choices;
 
 export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, refresh_row_prefix, argument_string) {
-    var parent = e;
+    var parent = window;
     parent.editFormId = "form#" + edit_form_id;
     parent.contentUrl = jsAjaxServer + "/edit.server.php?action=show_edit_object&id=" + edit_id + "&type=" + edit_type;
     parent.saveUrl = jsAjaxServer + "/edit.server.php?action=edit_object&id=" + edit_id + "&type=" + edit_type;
@@ -366,7 +366,7 @@ $(document).ready(function () {
 });
 
 export function submitNewItemsOrder(itemId, tableid, rowPrefix, updateUrl, refreshAction) {
-    var parent = this;
+    var parent = window;
     parent.itemId = itemId;
     parent.refreshAction = refreshAction;
 
