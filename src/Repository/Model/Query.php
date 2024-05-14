@@ -1143,13 +1143,11 @@ class Query
         $sql        = $this->_get_base_sql();
         $filter_sql = "";
         $join_sql   = "";
-        $group_sql  = "";
         $having_sql = "";
         $order_sql  = "";
         if (!$this->_state['custom']) {
             $filter_sql = $this->_get_filter_sql();
             $join_sql   = $this->_get_join_sql();
-            $group_sql  = $this->_get_group_sql();
             $having_sql = $this->_get_having_sql();
             $order_sql  = $this->_get_sort_sql();
         }
@@ -1157,10 +1155,10 @@ class Query
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
         if (!$this->_state['custom']) {
-            if ($this->get_type() == 'artist' || $this->get_type() == 'album') {
+            if (!empty($this->_get_group_sql())) {
+                $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
+            } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
                 $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
-            } elseif (!empty($group_sql)) {
-                $final_sql .= " GROUP BY " . $group_sql . " ";
             }
         }
 
