@@ -792,7 +792,9 @@ class Query
     /**
      * set_group
      * This sets the "GROUP" part of the query
-     * @param string $condition
+     * @param string $column
+     * @param string $value
+     * @param int $priority
      */
     public function set_group($column, $value, $priority): void
     {
@@ -1213,6 +1215,9 @@ class Query
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
         }
+        if ($this->queryType === null) {
+            return '';
+        }
 
         return $this->queryType->get_sql_filter($this, $filter, $value);
     }
@@ -1254,6 +1259,9 @@ class Query
 
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
+        }
+        if ($this->queryType === null) {
+            return '';
         }
 
         return $this->queryType->get_sql_sort($this, $field, $order);
