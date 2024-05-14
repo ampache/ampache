@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class ArtistSongsMethod
@@ -65,9 +64,24 @@ final class ArtistSongsMethod
 
             return false;
         }
-        $results = (array_key_exists('top50', $input) && (int)$input['top50'] == 1)
-            ? static::getSongRepository()->getTopSongsByArtist($artist)
-            : static::getSongRepository()->getByArtist($object_id);
+
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('song');
+        if (array_key_exists('top50', $input) && (int)$input['top50'] == 1) {
+            $browse->set_start(0);
+            $browse->set_offset(50);
+            $browse->set_is_simple(true);
+            $browse->set_sort('object_count', 'DESC');
+            $type = 'top50';
+        } else {
+            $browse->set_sort('name', 'ASC');
+            $type = 'artist';
+        }
+
+        $browse->set_filter($type, $object_id);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
@@ -88,12 +102,5 @@ final class ArtistSongsMethod
         }
 
         return true;
-    }
-
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

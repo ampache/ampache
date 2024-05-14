@@ -224,7 +224,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'generic_artist':
                 $sql = "`artist`.`name`";
-                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 50);
                 $query->set_join(
                     'LEFT',
                     '`artist`',
@@ -239,7 +239,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'artist':
                 $sql = "`artist`.`name`";
-                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 50);
                 $query->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                 break;
             case 'rating':
