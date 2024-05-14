@@ -105,10 +105,12 @@ class Query
         'extended_key_name' => null,
         'filter' => array(),
         'grid_view' => true,
+        'group' => array(),
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'mashup' => null,
         'offset' => 0,
+        'limit' => 0,
         'song_artist' => null, // Used by $browse->set_type() to filter artists
         'select' => array(),
         'simple' => false,
@@ -244,9 +246,13 @@ class Query
             case 'album':
             case 'disk':
             case 'hidden':
+            case 'gather_type':
             case 'gather_types':
+            case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
+            case 'top50':
+            case 'enabled':
             case 'min_count':
             case 'unplayed':
             case 'rated':
@@ -263,7 +269,6 @@ class Query
             case 'season_eq':
             case 'user':
             case 'to_user':
-            case 'enabled':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
             case 'exact_match':
@@ -290,6 +295,8 @@ class Query
                 }
                 break;
             default:
+                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+
                 return false;
         } // end switch
 
@@ -704,6 +711,16 @@ class Query
     }
 
     /**
+     * set_limit
+     * This sets the current offset of this query
+     * @param int $limit
+     */
+    public function set_limit($limit): void
+    {
+        $this->_state['limit'] = abs($limit);
+    }
+
+    /**
      * set_catalog
      * @param int $catalog_number
      */
@@ -770,6 +787,16 @@ class Query
     public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2 AND $source3 = $dest3";
+    }
+
+    /**
+     * set_group
+     * This sets the "GROUP" part of the query
+     * @param string $condition
+     */
+    public function set_group($column, $value, $priority): void
+    {
+        $this->_state['group'][$priority][$column] = $value;
     }
 
     /**
@@ -1040,11 +1067,18 @@ class Query
     {
         $start  = $this->get_start();
         $offset = $this->get_offset();
+        if ($this->_state['limit'] > 0) {
+            if ($offset > 0) {
+                return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
+            } else {
+                return ' LIMIT ' . (string)($this->_state['limit']);
+            }
+        }
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
 
-        return ' LIMIT ' . (string)($this->get_start()) . ', ' . (string)($offset);
+        return ' LIMIT ' . (string)($start) . ', ' . (string)($offset);
     }
 
     /**
@@ -1066,6 +1100,26 @@ class Query
         } // end foreach of this level of joins
 
         return $sql;
+    }
+
+    /**
+     * _get_group_sql
+     * This returns the joins that this browse may need to work correctly
+     */
+    private function _get_group_sql(): string
+    {
+        if (empty($this->_state['group']) || !is_array($this->_state['group'])) {
+            return '';
+        }
+
+        $sql = '';
+        foreach ($this->_state['group'] as $groups) {
+            foreach ($groups as $group) {
+                $sql .= $group . ', ';
+            }
+        }
+
+        return rtrim($sql, ', ');
     }
 
     /**
@@ -1093,16 +1147,21 @@ class Query
         $order_sql  = "";
         if (!$this->_state['custom']) {
             $filter_sql = $this->_get_filter_sql();
-            $order_sql  = $this->_get_sort_sql();
             $join_sql   = $this->_get_join_sql();
             $having_sql = $this->_get_having_sql();
+            $order_sql  = $this->_get_sort_sql();
         }
         $limit_sql = $limit ? $this->_get_limit_sql() : '';
         $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
-            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
+        if (!$this->_state['custom']) {
+            if (!empty($this->_get_group_sql())) {
+                $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
+            } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
+                $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
+            }
         }
+
         $final_sql .= $order_sql . $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
@@ -1152,7 +1211,7 @@ class Query
     private function _sql_filter($filter, $value): string
     {
         if ($this->queryType === null) {
-            return '';
+            $this->set_type($this->_state['type']);
         }
 
         return $this->queryType->get_sql_filter($this, $filter, $value);
@@ -1194,7 +1253,7 @@ class Query
         }
 
         if ($this->queryType === null) {
-            return '';
+            $this->set_type($this->_state['type']);
         }
 
         return $this->queryType->get_sql_sort($this, $field, $order);

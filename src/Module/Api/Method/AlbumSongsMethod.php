@@ -65,9 +65,13 @@ class AlbumSongsMethod
             return false;
         }
 
-        ob_end_clean();
-        // songs for all disks
-        $results = static::getSongRepository()->getByAlbum($album->id);
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('song');
+        $browse->set_filter('album', $object_id);
+        $browse->set_sort('album_disk', 'ASC');
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 

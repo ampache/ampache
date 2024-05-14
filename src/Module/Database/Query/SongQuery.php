@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
 
 final class SongQuery implements QueryInterface
@@ -46,9 +47,11 @@ final class SongQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'tag',
+        'top50',
         'unplayed',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog'
     );
 
     /** @var string[] $sorts */
@@ -61,6 +64,7 @@ final class SongQuery implements QueryInterface
         'composer',
         'addition_time',
         'update_time',
+        'object_count',
         'total_count',
         'total_skip',
         'album',
@@ -121,9 +125,14 @@ final class SongQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'top50':
+                $query->set_join_and('LEFT', '`artist_map`', '`artist_map`.`object_id`', '`song`.`id`', '`artist_map`.`object_type`', "'song'", 50);
+                $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
+                $filter_sql = " `artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
+                break;
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                $filter_sql = "`tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -187,6 +196,9 @@ final class SongQuery implements QueryInterface
                     $filter_sql = " `song`.`catalog` = '" . Dba::escape($value) . "' AND ";
                 }
                 break;
+            case 'user_catalog':
+                $filter_sql = " `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
@@ -224,7 +236,7 @@ final class SongQuery implements QueryInterface
                 $sql = "`song`.`$field`";
                 break;
             case 'album':
-                $sql   = "`album`.`name` $order, `song`.`track`";
+                $sql   = "`album`.`name` $order, `song`.`disk`, `song`.`track`";
                 $order = '';
                 $query->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
                 break;
@@ -232,7 +244,7 @@ final class SongQuery implements QueryInterface
                 $sql   = "`album`.`name` $order, `album_disk`.`disk`, `song`.`track`";
                 $order = '';
                 $query->set_join('LEFT', "`album`", "`album`.`id`", "`song`.`album`", 100);
-                $query->set_join('LEFT', '`album_disk`', '`album`.`id`', '`album_disk`.`album_id`', 100);
+                $query->set_join_and('LEFT', '`album_disk`', '`album_disk`.`album_id`', '`song`.`album`', '`album_disk`.`disk`', '`song`.`disk`', 100);
                 break;
             case 'artist':
                 $sql = "`artist`.`name`";
@@ -245,6 +257,11 @@ final class SongQuery implements QueryInterface
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'object_count':
+                $sql = "count(`object_count`.`object_id`)";
+                $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
+                $query->set_group('song_id', '`song`.`id`', 100);
                 break;
             default:
                 $sql = '';
