@@ -240,7 +240,7 @@ if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(Acce
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
-                        echo T_('Graphs'); ?>
+                echo T_('Graphs'); ?>
                     </a>
                 </li>
             <?php }
