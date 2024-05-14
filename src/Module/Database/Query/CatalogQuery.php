@@ -108,7 +108,7 @@ final class CatalogQuery implements QueryInterface
                 $filter_sql = " `catalog`.`gather_types` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'gather_types':
-                $filter_sql = " `catalog`.`gather_types` IN (" . implode(',', $value) . ") AND ";
+                $filter_sql = " `catalog`.`gather_types` IN ('" . implode("', '", $value) . "') AND ";
                 break;
             case 'user':
                 $filter_sql = " `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $value, true)) . ") AND ";
