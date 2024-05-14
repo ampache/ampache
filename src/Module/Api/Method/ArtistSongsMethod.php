@@ -69,9 +69,7 @@ final class ArtistSongsMethod
         $browse->reset_filters();
         $browse->set_type('song');
         if (array_key_exists('top50', $input) && (int)$input['top50'] == 1) {
-            $browse->set_start(0);
-            $browse->set_offset(50);
-            $browse->set_is_simple(true);
+            $browse->set_limit(50);
             $browse->set_sort('object_count', 'DESC');
             $type = 'top50';
         } else {

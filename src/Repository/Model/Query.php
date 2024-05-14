@@ -110,6 +110,7 @@ class Query
         'join' => null,
         'mashup' => null,
         'offset' => 0,
+        'limit' => 0,
         'song_artist' => null, // Used by $browse->set_type() to filter artists
         'select' => array(),
         'simple' => false,
@@ -710,6 +711,16 @@ class Query
     }
 
     /**
+     * set_limit
+     * This sets the current offset of this query
+     * @param int $limit
+     */
+    public function set_limit($limit): void
+    {
+        $this->_state['limit'] = abs($limit);
+    }
+
+    /**
      * set_catalog
      * @param int $catalog_number
      */
@@ -1056,6 +1067,13 @@ class Query
     {
         $start  = $this->get_start();
         $offset = $this->get_offset();
+        if ($this->_state['limit'] > 0) {
+            if ($offset > 0) {
+                return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
+            } else {
+                return ' LIMIT ' . (string)($this->_state['limit']);
+            }
+        }
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
