@@ -723,6 +723,9 @@ class Subsonic_Xml_Data
         $xplaylists     = self::addChildToResultXml($xml, 'playlists');
         foreach ($playlists as $plist_id) {
             $playlist = new Playlist($plist_id);
+            if ($playlist->isNew()) {
+                continue;
+            }
             if ($hide_dupe_searches && $playlist->user == $user_id) {
                 $playlist_names[] = $playlist->name;
             }
@@ -730,7 +733,10 @@ class Subsonic_Xml_Data
         }
         foreach ($smartplaylists as $plist_id) {
             $playlist = new Search((int)str_replace('smart_', '', (string)$plist_id), 'song');
-            if ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names)) {
+            if (
+                $playlist->isNew() ||
+                ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names))
+            ) {
                 continue;
             }
             self::addPlaylist($xplaylists, $playlist);

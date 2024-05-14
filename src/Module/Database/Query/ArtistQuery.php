@@ -114,7 +114,7 @@ final class ArtistQuery implements QueryInterface
         switch ($filter) {
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                $filter_sql = "`tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -181,7 +181,7 @@ final class ArtistQuery implements QueryInterface
                 if ($query->get_filter('song_artist')) {
                     $type = '\'song_artist\'';
                 }
-                $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
+                $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 50);
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`catalog_map`.`catalog_id`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;

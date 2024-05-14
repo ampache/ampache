@@ -127,7 +127,7 @@ final class AlbumQuery implements QueryInterface
         switch ($filter) {
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                $filter_sql = "`tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -224,7 +224,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'generic_artist':
                 $sql = "`artist`.`name`";
-                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 50);
                 $query->set_join(
                     'LEFT',
                     '`artist`',
@@ -239,7 +239,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'artist':
                 $sql = "`artist`.`name`";
-                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 100);
+                $query->set_join('LEFT', '`song`', '`song`.`album`', '`album`.`id`', 50);
                 $query->set_join('LEFT', '`artist`', '`song`.`artist`', '`artist`.`id`', 100);
                 break;
             case 'rating':
