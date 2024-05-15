@@ -124,6 +124,8 @@ final class PersonalVideoQuery implements QueryInterface
             return '';
         }
 
+        $query->set_join('LEFT', '`video`', '`personal_video`.`id`', '`video`.`id`', 50);
+
         return "$sql $order,";
     }
 }

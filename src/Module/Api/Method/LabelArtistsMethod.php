@@ -61,20 +61,11 @@ final class LabelArtistsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $include = [];
-        if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
-        }
 
         $label = self::getLabelRepository()->findById((int) ($input['filter'] ?? 0));
-
         if ($label === null) {
             Api::empty('artist', $input['api_format']);
 
-            return false;
-        }
-
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
 
@@ -90,6 +81,11 @@ final class LabelArtistsMethod
             Api::empty('artist', $input['api_format']);
 
             return false;
+        }
+
+        $include = [];
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
 
         ob_end_clean();
