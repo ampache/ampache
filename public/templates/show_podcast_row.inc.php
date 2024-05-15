@@ -79,7 +79,7 @@ use Ampache\Module\Util\Ui;
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
     </a>
     <span id="button_sync_<?php echo $libitem->getId(); ?>">
-        <?php echo Ajax::button('?page=podcast&action=syncPodcast&podcast_id=' . $libitem->getId(), 'file_refresh', T_('Sync'), 'sync_podcast_' . $libitem->getId()); ?>
+        <?php echo Ajax::button('?page=podcast&action=syncPodcast&podcast_id=' . $libitem->getId(), 'sync', T_('Sync'), 'sync_podcast_' . $libitem->getId()); ?>
     </span>
     <?php
     }

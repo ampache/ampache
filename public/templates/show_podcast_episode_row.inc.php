@@ -112,7 +112,7 @@ if ($show_ratings) { ?>
 <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
-        <?php echo Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $libitem->id, 'sync', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
     <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
