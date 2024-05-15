@@ -162,8 +162,8 @@ final class ArtistQuery implements QueryInterface
                 $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
                 break;
             case 'label':
-                $query->set_join('LEFT', '`label`', '`label`.`artist`', '`artist`.`id`', 100);
-                $filter_sql = " `label`.`label` = '" . Dba::escape($value) . "' AND ";
+                $query->set_join('LEFT', '`label_asso`', '`label_asso`.`artist`', '`artist`.`id`', 100);
+                $filter_sql = " `label_asso`.`label` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'catalog':
                 $type = '\'artist\'';
