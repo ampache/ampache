@@ -999,13 +999,14 @@ class Xml_Data
      * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
+     * @param bool $show_dupes
      */
-    public static function playlists($playlists, $user, $songs = false): string
+    public static function playlists($playlists, $user, $songs = false, $show_dupes = true): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
+        $hide_dupe_searches = ($show_dupes === false) || (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
         $playlist_names     = array();
         $total_count        = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)

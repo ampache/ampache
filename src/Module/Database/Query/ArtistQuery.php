@@ -39,6 +39,7 @@ final class ArtistQuery implements QueryInterface
         'catalog',
         'catalog_enabled',
         'exact_match',
+        'label',
         'regex_match',
         'regex_not_match',
         'starts_with',
@@ -159,6 +160,10 @@ final class ArtistQuery implements QueryInterface
             case 'update_gt':
                 $query->set_join('LEFT', '`song`', '`song`.`artist`', '`artist`.`id`', 100);
                 $filter_sql = " `song`.`update_time` >= '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'label':
+                $query->set_join('LEFT', '`label_asso`', '`label_asso`.`artist`', '`artist`.`id`', 100);
+                $filter_sql = " `label_asso`.`label` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'catalog':
                 $type = '\'artist\'';

@@ -858,14 +858,15 @@ class Json_Data
      * @param bool $songs
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
+     * @param bool $show_dupes
      * @return array|string JSON Object "playlist"
      */
-    public static function playlists($objects, $user, $songs = false, $encode = true, $object = true)
+    public static function playlists($objects, $user, $songs = false, $encode = true, $object = true, $show_dupes = true)
     {
         $output = array(
             "total_count" => count($objects)
         );
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
+        $hide_dupe_searches = ($show_dupes === false) || (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
         $playlist_names     = array();
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {

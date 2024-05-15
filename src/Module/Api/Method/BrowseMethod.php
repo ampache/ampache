@@ -115,18 +115,18 @@ final class BrowseMethod
                 case 'movie':
                 case 'personal_video':
                     $output_type = 'video';
+                    $gather_type = 'video';
                     $browse->set_type('video');
-                    $browse->set_filter('gather_type', 'video');
                     break;
                 case 'music':
                     $output_type = 'artist';
+                    $gather_type = 'music';
                     $browse->set_type('album_artist');
-                    $browse->set_filter('gather_type', 'music');
                     break;
                 case 'podcast':
                     $output_type = 'podcast';
+                    $gather_type = 'podcast';
                     $browse->set_type('podcast');
-                    $browse->set_filter('gather_type', 'podcast');
                     break;
                 default:
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -136,6 +136,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
+            $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
         } else {
             if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
@@ -171,26 +172,30 @@ final class BrowseMethod
                 case 'artist':
                     /** @var Artist $item */
                     $output_type = 'album';
+                    $filter_type = 'album_artist';
                     $browse->set_type('album');
-                    $browse->set_filter('album_artist', $item->getId());
                     break;
                 case 'album':
                     /** @var Album $item */
                     $output_type = 'song';
+                    $filter_type = 'album';
                     $browse->set_type('song');
-                    $browse->set_filter('album', $item->getId());
                     break;
                 case 'podcast':
                     /** @var Podcast $item */
                     $output_type = 'podcast_episode';
+                    $filter_type = 'podcast';
                     $browse->set_type('podcast_episode');
-                    $browse->set_filter('podcast', $item->getId());
                     break;
                 default:
                     $output_type = $object_type;
+                    $filter_type = '';
             }
             $child_type = $output_type;
             $browse->set_sort('name', 'ASC');
+            if (!empty($filter_type)) {
+                $browse->set_filter($filter_type, $item->getId());
+            }
             $browse->set_filter('catalog', $catalog->id);
         }
 
