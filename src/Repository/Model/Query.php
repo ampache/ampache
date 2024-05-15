@@ -248,6 +248,7 @@ class Query
             case 'hidden':
             case 'gather_type':
             case 'gather_types':
+            case 'smartlist':
             case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;

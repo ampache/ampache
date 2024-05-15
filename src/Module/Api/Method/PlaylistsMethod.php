@@ -58,7 +58,7 @@ final class PlaylistsMethod
      */
     public static function playlists(array $input, User $user): bool
     {
-        $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
+        $exact      = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $filter     = (string)($input['filter'] ?? '');
         $show_dupes = (bool)($input['show_dupes'] ?? true);
@@ -73,10 +73,10 @@ final class PlaylistsMethod
         }
         $browse->set_sort('name', 'ASC');
         if (!empty($filter)) {
-            if ($like) {
-                $browse->set_filter('alpha_match', $filter);
-            } else {
+            if ($exact) {
                 $browse->set_filter('exact_match', $filter);
+            } else {
+                $browse->set_filter('alpha_match', $filter);
             }
         }
         $browse->set_filter('playlist_type', 1);

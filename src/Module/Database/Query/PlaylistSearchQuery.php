@@ -37,6 +37,7 @@ final class PlaylistSearchQuery implements QueryInterface
         'playlist_type',
         'regex_match',
         'regex_not_match',
+        'smartlist',
         'starts_with'
     );
 
@@ -121,6 +122,9 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'smartlist':
+                $filter_sql = " `playlist`.`id` LIKE 'smart_%' AND ";
                 break;
             case 'playlist_type':
                 $user_id = (!empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
