@@ -61,6 +61,7 @@ final class LabelAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('name', 'ASC');
 
         $this->ui->showHeader();
 
@@ -75,7 +76,6 @@ final class LabelAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('name', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
 

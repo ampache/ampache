@@ -69,12 +69,6 @@ final class AlbumDiskAction implements ApplicationActionInterface
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
 
-        if (array_key_exists('catalog', $_SESSION)) {
-            $browse->set_filter('catalog', $_SESSION['catalog']);
-        }
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
-            $browse->set_filter('catalog_enabled', '1');
-        }
         $year_sort = $this->configContainer->get('use_original_year') ? "original_year" : "year";
         $sort_type = $this->configContainer->get('album_sort');
         switch ($sort_type) {
@@ -92,6 +86,12 @@ final class AlbumDiskAction implements ApplicationActionInterface
                 break;
             default:
                 $browse->set_sort('name_' . $year_sort, 'ASC');
+        }
+        if (array_key_exists('catalog', $_SESSION)) {
+            $browse->set_filter('catalog', $_SESSION['catalog']);
+        }
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
+            $browse->set_filter('catalog_enabled', '1');
         }
         $browse->update_browse_from_session(); // Update current index depending on what is in session.
         $browse->show_objects();
