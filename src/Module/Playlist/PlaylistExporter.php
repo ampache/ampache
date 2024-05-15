@@ -75,13 +75,13 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 if ($userId > 0) {
                     $ids = Playlist::get_smartlists($userId);
                 } else {
-                    $ids = array((int)str_replace('smart_', '', $playlistId));
+                    $ids = array($playlistId);
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id)
-                        ? new Search($playlist_id, 'song', $user)
-                        : new Search($playlist_id);
+                        ? new Search((int)str_replace('smart_', '', $playlist_id), 'song', $user)
+                        : new Search((int)str_replace('smart_', '', $playlist_id));
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
