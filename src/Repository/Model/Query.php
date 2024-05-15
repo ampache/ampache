@@ -248,11 +248,15 @@ class Query
             case 'hidden':
             case 'gather_type':
             case 'gather_types':
+            case 'smartlist':
             case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
             case 'top50':
             case 'enabled':
+            case 'disabled':
+            case 'label':
+            case 'license':
             case 'min_count':
             case 'unplayed':
             case 'rated':
@@ -261,6 +265,7 @@ class Query
             case 'update_lt':
             case 'update_gt':
             case 'catalog_enabled':
+            case 'playlist_user':
             case 'year_lt':
             case 'year_lg':
             case 'year_eq':

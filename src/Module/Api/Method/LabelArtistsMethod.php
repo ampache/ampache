@@ -74,7 +74,18 @@ final class LabelArtistsMethod
             return false;
         }
 
-        $results = $label->get_artists();
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+            return false;
+        }
+
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('artist');
+        $browse->set_sort('name', 'ASC');
+
+        $browse->set_filter('label', $label->getId());
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('artist', $input['api_format']);
 

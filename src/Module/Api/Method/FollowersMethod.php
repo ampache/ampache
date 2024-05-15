@@ -70,7 +70,13 @@ final class FollowersMethod
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowers($leadUser->getId());
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('follower');
+        $browse->set_sort('follow_date', 'DESC');
+        $browse->set_filter('user', $leadUser->getId());
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('user', $input['api_format']);
 
@@ -87,15 +93,5 @@ final class FollowersMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
     }
 }

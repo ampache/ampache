@@ -43,6 +43,7 @@ final class SongQuery implements QueryInterface
         'disk',
         'enabled',
         'exact_match',
+        'license',
         'regex_match',
         'regex_not_match',
         'starts_with',
@@ -202,6 +203,9 @@ final class SongQuery implements QueryInterface
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`song`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
+                break;
+            case 'license':
+                $filter_sql = " `song`.`license` = '" . (int)$value . "' AND ";
                 break;
             case 'enabled':
                 $filter_sql = " `song`.`enabled`= '" . Dba::escape($value) . "' AND ";
