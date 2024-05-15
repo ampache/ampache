@@ -29,7 +29,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UsersMethod

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
