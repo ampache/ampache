@@ -262,6 +262,7 @@ class Query
             case 'update_lt':
             case 'update_gt':
             case 'catalog_enabled':
+            case 'playlist_user':
             case 'year_lt':
             case 'year_lg':
             case 'year_eq':
