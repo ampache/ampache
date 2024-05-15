@@ -67,7 +67,7 @@ final class UserPlaylistsMethod
                 $browse->set_filter('alpha_match', $filter);
             }
         }
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_filter('playlist_type', 0);
 
         $results = $browse->get_objects();
         if (empty($results)) {

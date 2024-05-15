@@ -67,7 +67,7 @@ final class UserSmartlistsMethod
                 $browse->set_filter('alpha_match', $filter);
             }
         }
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_filter('playlist_type', 0);
         $browse->set_filter('smartlist', 1);
 
         $results = $browse->get_objects();
