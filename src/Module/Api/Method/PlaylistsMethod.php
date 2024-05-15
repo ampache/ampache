@@ -64,13 +64,17 @@ final class PlaylistsMethod
         $show_dupes = (bool)($input['show_dupes'] ?? false);
         $include    = (bool)($input['include'] ?? false);
 
-        // regular playlists
-        $results = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
-        // merge with the smartlists
-        if (!$hide) {
-            $searches = Playlist::get_smartlists($user->id, $filter, $like, true, $show_dupes);
-            $results  = array_merge($results, $searches);
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        if ($hide === false) {
+            $browse->set_type('playlist_search');
+        } else {
+            $browse->set_type('playlist');
         }
+        $browse->set_sort('name', 'ASC');
+        $browse->set_filter('playlist_type', 1);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 
