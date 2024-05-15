@@ -256,6 +256,7 @@ class Query
             case 'enabled':
             case 'disabled':
             case 'label':
+            case 'license':
             case 'min_count':
             case 'unplayed':
             case 'rated':
