@@ -296,7 +296,7 @@ class Wanted extends database_object
                     )
                 )
             ) {
-                $result .= " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
+                $result .= " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'hide_source', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
 
             return $result;
