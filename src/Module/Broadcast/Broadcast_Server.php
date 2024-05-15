@@ -348,7 +348,11 @@ class Broadcast_Server implements MessageComponentInterface
     {
         foreach ($this->listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners);
-            if ($lindex && isset($this->listeners[$broadcast_id][$lindex])) {
+            if (
+                $lindex &&
+                is_array($this->listeners) &&
+                isset($this->listeners[$broadcast_id][$lindex])
+            ) {
                 unset($this->listeners[$broadcast_id][$lindex]);
                 echo "[info]Listener left broadcast " . $broadcast_id . "." . "\r\n";
 
