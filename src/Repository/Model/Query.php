@@ -254,6 +254,7 @@ class Query
                 break;
             case 'top50':
             case 'enabled':
+            case 'disabled':
             case 'min_count':
             case 'unplayed':
             case 'rated':
