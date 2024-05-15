@@ -1313,7 +1313,7 @@ class Query
         }
 
         if (!($sql === '' || $sql === '0') && $table != 'video') {
-            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 100);
+            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
 
         return $sql;

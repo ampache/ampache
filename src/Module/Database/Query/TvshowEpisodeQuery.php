@@ -146,6 +146,8 @@ final class TvshowEpisodeQuery implements QueryInterface
             return '';
         }
 
+        $query->set_join('LEFT', '`video`', '`tvshow_episode`.`id`', '`video`.`id`', 50);
+
         return "$sql $order,";
     }
 }
