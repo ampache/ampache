@@ -126,6 +126,8 @@ final class ClipQuery implements QueryInterface
             return '';
         }
 
+        $query->set_join('LEFT', '`video`', '`clip`.`id`', '`video`.`id`', 50);
+
         return "$sql $order,";
     }
 }
