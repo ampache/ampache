@@ -58,7 +58,7 @@ final class UserSmartlistsMethod
         $filter = (string)($input['filter'] ?? '');
         $browse = Api::getBrowse();
         $browse->reset_filters();
-        $browse->set_type('playlist_filter');
+        $browse->set_type('playlist_search');
         $browse->set_sort('name', 'ASC');
         if (!empty($filter)) {
             if ($exact) {
