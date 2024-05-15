@@ -61,7 +61,7 @@ final class PlaylistsMethod
         $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $filter     = (string)($input['filter'] ?? '');
-        $show_dupes = (bool)($input['show_dupes'] ?? false);
+        $show_dupes = (bool)($input['show_dupes'] ?? true);
         $include    = (bool)($input['include'] ?? false);
 
         $browse = Api::getBrowse();
@@ -72,6 +72,13 @@ final class PlaylistsMethod
             $browse->set_type('playlist');
         }
         $browse->set_sort('name', 'ASC');
+        if (!empty($filter)) {
+            if ($like) {
+                $browse->set_filter('alpha_match', $filter);
+            } else {
+                $browse->set_filter('exact_match', $filter);
+            }
+        }
         $browse->set_filter('playlist_type', 1);
 
         $results = $browse->get_objects();
@@ -86,12 +93,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset($input['offset'] ?? 0);
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::playlists($results, $user, $include);
+                echo Json_Data::playlists($results, $user, $include, true, true, $show_dupes);
                 break;
             default:
                 Xml_Data::set_offset($input['offset'] ?? 0);
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::playlists($results, $user, $include);
+                echo Xml_Data::playlists($results, $user, $include, $show_dupes);
         }
 
         return true;
