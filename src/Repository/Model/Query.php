@@ -255,6 +255,7 @@ class Query
             case 'top50':
             case 'enabled':
             case 'disabled':
+            case 'label':
             case 'min_count':
             case 'unplayed':
             case 'rated':
