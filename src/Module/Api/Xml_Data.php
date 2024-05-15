@@ -1040,13 +1040,14 @@ class Xml_Data
      * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
+     * @param bool $show_dupes
      */
-    public static function playlists($playlists, $user, $songs = false): string
+    public static function playlists($playlists, $user, $songs = false, $show_dupes = true): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
+        $hide_dupe_searches = ($show_dupes === false) || (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
         $playlist_names     = array();
         $total_count        = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
@@ -1062,18 +1063,28 @@ class Xml_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id), 'song', $user);
-                if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
+                if (
+                    $playlist->isNew() ||
+                    ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names))
+                ) {
                     continue;
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = (int)$playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
+                }
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
-                if ($hide_dupe_searches && $playlist->user == $user->getId()) {
+                if (
+                    $playlist->isNew() === false &&
+                    $hide_dupe_searches &&
+                    $playlist->user == $user->getId()
+                ) {
                     $playlist_names[] = $playlist->name;
                 }
             }

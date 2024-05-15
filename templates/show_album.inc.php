@@ -260,8 +260,8 @@ if (Catalog::can_remove($album)) {
 <?php $browse = new Browse();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
-$browse->set_filter('album', $album->id);
 $browse->set_sort('track', 'ASC');
+$browse->set_filter('album', $album->id);
 $browse->get_objects();
 $browse->show_objects(array(), array('hide' => $hide_array));
 $browse->store(); ?>

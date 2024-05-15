@@ -464,18 +464,28 @@ class Json4_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
+                if (
+                    $playlist->isNew() ||
+                    ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names))
+                ) {
                     continue;
                 }
                 $object_type    = 'search';
                 $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
+                }
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
-                if ($hide_dupe_searches && $playlist->user == $user->getId()) {
+                if (
+                    $playlist->isNew() === false &&
+                    $hide_dupe_searches &&
+                    $playlist->user == $user->getId()
+                ) {
                     $playlist_names[] = $playlist->name;
                 }
             }

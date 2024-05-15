@@ -253,8 +253,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     $browse = new Browse();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
-$browse->set_filter('album_disk', $albumDisk->id);
 $browse->set_sort('track', 'ASC');
+$browse->set_filter('album_disk', $albumDisk->id);
 $browse->get_objects();
 $browse->show_objects(array(), array('hide' => $hide_array));
 $browse->store(); ?>

@@ -47,7 +47,13 @@ final class UsersMethod
      */
     public static function users(array $input, User $user): bool
     {
-        $results = static::getUserRepository()->getValid();
+        $browse = Api::getBrowse();
+        $browse->reset_filters();
+        $browse->set_type('user');
+        $browse->set_sort('name', 'ASC');
+        $browse->set_filter('disabled', 0);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('user', $input['api_format']);
 
@@ -65,15 +71,5 @@ final class UsersMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

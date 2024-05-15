@@ -26,12 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Database\Query;
 
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
 
 final class CatalogQuery implements QueryInterface
 {
     public const FILTERS = array(
-        'gather_types'
+        'enabled',
+        'gather_type',
+        'gather_types',
+        'user'
     );
 
     /** @var string[] $sorts */
@@ -48,7 +52,7 @@ final class CatalogQuery implements QueryInterface
     );
 
     /** @var string */
-    protected $select = "`catalog`.`name`";
+    protected $select = "`catalog`.`id`";
 
     /** @var string */
     protected $base = "SELECT %%SELECT%% FROM `catalog` ";
@@ -97,8 +101,17 @@ final class CatalogQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
-            case 'gather_types':
+            case 'enabled':
+                $filter_sql = " `catalog`.`enabled` = '" . (int)$value . "' AND ";
+                break;
+            case 'gather_type':
                 $filter_sql = " `catalog`.`gather_types` = '" . Dba::escape($value) . "' AND ";
+                break;
+            case 'gather_types':
+                $filter_sql = " `catalog`.`gather_types` IN ('" . implode("', '", $value) . "') AND ";
+                break;
+            case 'user':
+                $filter_sql = " `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $value, true)) . ") AND ";
                 break;
         }
 

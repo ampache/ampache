@@ -105,10 +105,12 @@ class Query
         'extended_key_name' => null,
         'filter' => array(),
         'grid_view' => true,
+        'group' => array(),
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'mashup' => null,
         'offset' => 0,
+        'limit' => 0,
         'song_artist' => null, // Used by $browse->set_type() to filter artists
         'select' => array(),
         'simple' => false,
@@ -244,9 +246,17 @@ class Query
             case 'album':
             case 'disk':
             case 'hidden':
+            case 'gather_type':
             case 'gather_types':
+            case 'smartlist':
+            case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
+            case 'top50':
+            case 'enabled':
+            case 'disabled':
+            case 'label':
+            case 'license':
             case 'min_count':
             case 'unplayed':
             case 'rated':
@@ -255,6 +265,7 @@ class Query
             case 'update_lt':
             case 'update_gt':
             case 'catalog_enabled':
+            case 'playlist_user':
             case 'year_lt':
             case 'year_lg':
             case 'year_eq':
@@ -263,7 +274,6 @@ class Query
             case 'season_eq':
             case 'user':
             case 'to_user':
-            case 'enabled':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
             case 'exact_match':
@@ -290,8 +300,13 @@ class Query
                 }
                 break;
             default:
+                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+
                 return false;
         } // end switch
+
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
 
         // If we've set a filter we need to reset the totals
         $this->reset_total();
@@ -661,7 +676,12 @@ class Query
             return;
         }
 
+        // TODO WHY?!?!
         $this->reset_join();
+
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
+        $this->_get_sort_sql();
 
         if ($sort === 'rand') {
             // reset any existing sorts before setting a new one
@@ -701,6 +721,16 @@ class Query
     public function set_offset($offset): void
     {
         $this->_state['offset'] = abs($offset);
+    }
+
+    /**
+     * set_limit
+     * This sets the current offset of this query
+     * @param int $limit
+     */
+    public function set_limit($limit): void
+    {
+        $this->_state['limit'] = abs($limit);
     }
 
     /**
@@ -770,6 +800,18 @@ class Query
     public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2 AND $source3 = $dest3";
+    }
+
+    /**
+     * set_group
+     * This sets the "GROUP" part of the query
+     * @param string $column
+     * @param string $value
+     * @param int $priority
+     */
+    public function set_group($column, $value, $priority): void
+    {
+        $this->_state['group'][$priority][$column] = $value;
     }
 
     /**
@@ -1040,11 +1082,18 @@ class Query
     {
         $start  = $this->get_start();
         $offset = $this->get_offset();
+        if ($this->_state['limit'] > 0) {
+            if ($offset > 0) {
+                return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
+            } else {
+                return ' LIMIT ' . (string)($this->_state['limit']);
+            }
+        }
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
 
-        return ' LIMIT ' . (string)($this->get_start()) . ', ' . (string)($offset);
+        return ' LIMIT ' . (string)($start) . ', ' . (string)($offset);
     }
 
     /**
@@ -1069,6 +1118,26 @@ class Query
     }
 
     /**
+     * _get_group_sql
+     * This returns the joins that this browse may need to work correctly
+     */
+    private function _get_group_sql(): string
+    {
+        if (empty($this->_state['group']) || !is_array($this->_state['group'])) {
+            return '';
+        }
+
+        $sql = '';
+        foreach ($this->_state['group'] as $groups) {
+            foreach ($groups as $group) {
+                $sql .= $group . ', ';
+            }
+        }
+
+        return rtrim($sql, ', ');
+    }
+
+    /**
      * _get_having_sql
      * this returns the having sql stuff, if we've got anything
      */
@@ -1086,24 +1155,33 @@ class Query
      */
     public function get_sql($limit = true): string
     {
-        $sql        = $this->_get_base_sql();
-        $filter_sql = "";
-        $join_sql   = "";
-        $having_sql = "";
-        $order_sql  = "";
-        if (!$this->_state['custom']) {
+        if ($this->_state['custom']) {
+            // custom queries are set by base and should not be added to
+            $final_sql = $this->_get_base_sql();
+        } else {
+            // filter and sort set joins as well as group so make sure you run those first
             $filter_sql = $this->_get_filter_sql();
-            $order_sql  = $this->_get_sort_sql();
-            $join_sql   = $this->_get_join_sql();
-            $having_sql = $this->_get_having_sql();
-        }
-        $limit_sql = $limit ? $this->_get_limit_sql() : '';
-        $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
+            $sort_sql   = $this->_get_sort_sql();
+            // regular queries need to be joined with all the other parts
+            $final_sql = $this->_get_base_sql() .
+                $this->_get_join_sql() .
+                $filter_sql .
+                $this->_get_having_sql();
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
-            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
+            // allow forcing a group by
+            if (!empty($this->_get_group_sql())) {
+                $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
+            } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
+                $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
+            }
+
+            $final_sql .= $sort_sql;
         }
-        $final_sql .= $order_sql . $limit_sql;
+
+        // apply a limit/offset limit (if set)
+        $limit_sql = $limit ? $this->_get_limit_sql() : '';
+
+        $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
         return $final_sql;
@@ -1152,6 +1230,9 @@ class Query
     private function _sql_filter($filter, $value): string
     {
         if ($this->queryType === null) {
+            $this->set_type($this->_state['type']);
+        }
+        if ($this->queryType === null) {
             return '';
         }
 
@@ -1193,6 +1274,9 @@ class Query
             return "RAND()";
         }
 
+        if ($this->queryType === null) {
+            $this->set_type($this->_state['type']);
+        }
         if ($this->queryType === null) {
             return '';
         }

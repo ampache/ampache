@@ -61,6 +61,7 @@ final class SongAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('title', 'ASC');
 
         $this->ui->showHeader();
 
@@ -75,7 +76,6 @@ final class SongAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('title', 'ASC');
         $browse->update_browse_from_session(); // Update current index depending on what is in session.
         $browse->show_objects();
 

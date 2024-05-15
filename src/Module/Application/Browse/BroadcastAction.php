@@ -55,6 +55,7 @@ final class BroadcastAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('id', 'ASC');
 
         $this->ui->showHeader();
 
@@ -62,7 +63,6 @@ final class BroadcastAction implements ApplicationActionInterface
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
-        $browse->set_sort('id', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
 
