@@ -351,9 +351,9 @@ class Broadcast_Server implements MessageComponentInterface
             $lindex = array_search($conn, $brlisteners);
             if (
                 $lindex &&
-                isset($brlisteners[$lindex])
+                isset($brlisteners[$lindex]) // @phpstan-ignore-line
             ) {
-                unset($listeners[$broadcast_id][$lindex]);
+                unset($listeners[$broadcast_id][$lindex]); // @phpstan-ignore-line
                 echo "[info]Listener left broadcast " . $broadcast_id . "." . "\r\n";
 
                 foreach ($this->broadcasters as $broadcast) {
