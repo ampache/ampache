@@ -65,7 +65,6 @@ final class GenreSongsMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('song');
         $browse->set_sort('name', 'ASC');
 

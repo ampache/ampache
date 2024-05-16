@@ -70,7 +70,6 @@ final class FollowersMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('follower');
         $browse->set_sort('follow_date', 'DESC');
         $browse->set_filter('user', $leadUser->getId());

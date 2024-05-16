@@ -98,7 +98,6 @@ final class IndexMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         if (
             $type === 'playlist' &&
             $hide === false

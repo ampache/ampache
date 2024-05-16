@@ -44,7 +44,6 @@ final class Artists3Method
     public static function artists(array $input, User $user): void
     {
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('artist');
         $browse->set_sort('name', 'ASC');
 

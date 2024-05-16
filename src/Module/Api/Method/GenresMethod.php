@@ -52,7 +52,6 @@ final class GenresMethod
     public static function genres(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 

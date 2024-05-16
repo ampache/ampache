@@ -73,13 +73,13 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_STATE = [
-        'year' => 'ASC',
-        'original_year' => 'ASC',
         'last_update' => 'ASC',
+        'original_year' => 'ASC',
         'rating' => 'ASC',
         'song_count' => 'ASC',
         'total_count' => 'ASC',
         'total_skip' => 'ASC',
+        'year' => 'ASC',
     ];
 
     /**
@@ -108,13 +108,13 @@ class Query
         'group' => array(),
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
+        'limit' => 0,
         'mashup' => null,
         'offset' => 0,
-        'limit' => 0,
-        'song_artist' => null, // Used by $browse->set_type() to filter artists
         'select' => array(),
-        'simple' => false,
         'show_header' => true,
+        'simple' => false,
+        'song_artist' => null, // Used by $browse->set_type() to filter artists
         'sort' => array(),
         'start' => 0,
         'static' => false,
@@ -125,7 +125,7 @@ class Query
         'update_session' => false,
         'use_alpha' => false,
         'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
-        'use_pages' => false
+        'use_pages' => false,
     );
 
     /** @var array $_cache */
@@ -221,63 +221,57 @@ class Query
 
     /**
      * set_filter
-     * This saves the filter data we pass it.
+     * This saves the filter data we pass it from the ObjectQuery FILTERS array
      * @param string $key
      * @param mixed $value
      */
     public function set_filter($key, $value): bool
     {
         switch ($key) {
-            case 'tag':
-                if (is_array($value)) {
-                    $this->_state['filter'][$key] = $value;
-                } elseif (is_numeric($value)) {
-                    $this->_state['filter'][$key] = array($value);
-                } else {
-                    $this->_state['filter'][$key] = array();
-                }
-                break;
-            case 'artist':
             case 'album_artist':
-            case 'song_artist':
             case 'album_disk':
-            case 'catalog':
-            case 'podcast':
             case 'album':
+            case 'artist':
+            case 'catalog':
             case 'disk':
-            case 'hidden':
             case 'gather_type':
             case 'gather_types':
+            case 'hidden':
+            case 'object_type':
+            case 'podcast':
             case 'smartlist':
+            case 'song_artist':
             case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
-            case 'top50':
-            case 'enabled':
+            case 'add_gt':
+            case 'add_lt':
+            case 'catalog_enabled':
             case 'disabled':
+            case 'enabled':
             case 'label':
             case 'license':
             case 'min_count':
-            case 'unplayed':
-            case 'rated':
-            case 'add_lt':
-            case 'add_gt':
-            case 'update_lt':
-            case 'update_gt':
-            case 'catalog_enabled':
             case 'playlist_user':
-            case 'year_lt':
-            case 'year_lg':
-            case 'year_eq':
-            case 'season_lt':
-            case 'season_lg':
+            case 'rated':
             case 'season_eq':
-            case 'user':
+            case 'season_gt':
+            case 'season_lg':
+            case 'season_lt':
             case 'to_user':
+            case 'top50':
+            case 'unplayed':
+            case 'update_gt':
+            case 'update_lt':
+            case 'user':
+            case 'year_eq':
+            case 'year_gt':
+            case 'year_lg':
+            case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
-            case 'exact_match':
             case 'alpha_match':
+            case 'exact_match':
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
@@ -299,6 +293,15 @@ class Query
                     $this->_state['filter'][$key] = 1;
                 }
                 break;
+            case 'tag':
+                if (is_array($value)) {
+                    $this->_state['filter'][$key] = $value;
+                } elseif (is_numeric($value)) {
+                    $this->_state['filter'][$key] = array($value);
+                } else {
+                    $this->_state['filter'][$key] = array();
+                }
+                break;
             default:
                 debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
 
@@ -317,8 +320,7 @@ class Query
 
     /**
      * reset
-     * Reset everything, this should only be called when we are starting
-     * fresh
+     * Reset everything, this should only be called when we are starting fresh
      */
     public function reset(): void
     {
@@ -1018,26 +1020,26 @@ class Query
         if ($catalog_filter && $this->user_id > 0) {
             // Add catalog user filter
             switch ($type) {
-                case 'video':
-                case 'artist':
-                case 'album':
                 case 'album_disk':
-                case 'song':
-                case 'song_artist':
-                case 'song_album':
-                case 'podcast':
-                case 'podcast_episode':
-                case 'playlist':
+                case 'album':
+                case 'artist':
+                case 'clip':
                 case 'label':
                 case 'live_stream':
-                case 'tag':
-                case 'tvshow':
-                case 'tvshow_season':
-                case 'tvshow_episode':
                 case 'movie':
                 case 'personal_video':
-                case 'clip':
+                case 'playlist':
+                case 'podcast_episode':
+                case 'podcast':
                 case 'share':
+                case 'song_album':
+                case 'song_artist':
+                case 'song':
+                case 'tag':
+                case 'tvshow_episode':
+                case 'tvshow_season':
+                case 'tvshow':
+                case 'video':
                     $dis = Catalog::get_user_filter($type, $this->user_id);
                     break;
             }
@@ -1080,7 +1082,6 @@ class Query
      */
     private function _get_limit_sql(): string
     {
-        $start  = $this->get_start();
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
@@ -1089,6 +1090,7 @@ class Query
                 return ' LIMIT ' . (string)($this->_state['limit']);
             }
         }
+        $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
@@ -1293,27 +1295,27 @@ class Query
         switch ($field) {
             case 'addition_time':
             case 'catalog':
-            case 'update_time':
             case 'title':
             case 'total_count':
             case 'total_skip':
+            case 'update_time':
                 $sql = "`video`.`$field`";
-                break;
-            case 'resolution':
-                $sql = "`video`.`resolution_x`";
-                break;
-            case 'length':
-                $sql = "`video`.`time`";
                 break;
             case 'codec':
                 $sql = "`video`.`video_codec`";
                 break;
-            case 'release_date':
-                $sql = "`video`.`release_date`";
+            case 'length':
+                $sql = "`video`.`time`";
                 break;
             case 'rating':
                 $sql = "`rating`.`rating` $order, `rating`.`id`";
                 $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
+                break;
+            case 'release_date':
+                $sql = "`video`.`release_date`";
+                break;
+            case 'resolution':
+                $sql = "`video`.`resolution_x`";
                 break;
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
