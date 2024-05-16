@@ -594,7 +594,7 @@ class Stream
     /**
      * delete_now_playing
      *
-     * This will insert the Now Playing data.
+     * This will delete the Now Playing data.
      * @param string $sid
      * @param int $object_id
      * @param string $type
@@ -603,7 +603,7 @@ class Stream
     public static function delete_now_playing($sid, $object_id, $type, $uid): void
     {
         // Clear the now playing entry for this item
-        $sql = "DELETE FROM `now_playing` WHERE `id` = ?, `object_id` = ?, `object_type` = ?, `user` = ?;";
+        $sql = "DELETE FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? AND `user` = ?;";
         Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid));
     }
 

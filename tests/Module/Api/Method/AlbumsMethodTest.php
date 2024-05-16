@@ -79,9 +79,6 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
@@ -155,9 +152,6 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
