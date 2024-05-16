@@ -304,7 +304,7 @@ class Query
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
                 } elseif (is_numeric($value)) {
-                    $this->_state['filter'][$key] = array($value);
+                    $this->_state['filter'][$key] = [$value];
                 } else {
                     $this->_state['filter'][$key] = [];
                 }
