@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
@@ -45,19 +44,31 @@ final class UserSmartlistsMethod
      *
      * This returns smartlists (searches) based on the specified filter (Does not include playlists)
      *
-     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact  = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
      *
      * @param array<string, mixed> $input
      */
     public static function user_smartlists(array $input, User $user): bool
     {
-        $like    = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        $filter  = (string)($input['filter'] ?? '');
-        $results = Playlist::get_smartlists($user->id, $filter, $like, false, true, true);
+        $exact  = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
+        $filter = (string)($input['filter'] ?? '');
+        $browse = Api::getBrowse();
+        $browse->set_type('playlist_search');
+        $browse->set_sort('name', 'ASC');
+        if (!empty($filter)) {
+            if ($exact) {
+                $browse->set_filter('exact_match', $filter);
+            } else {
+                $browse->set_filter('alpha_match', $filter);
+            }
+        }
+        $browse->set_filter('playlist_user', $user->getId());
+        $browse->set_filter('smartlist', 1);
 
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 

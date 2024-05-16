@@ -193,7 +193,13 @@ class Api
     public static function getBrowse(): Browse
     {
         if (self::$browse === null) {
+            // create new browse
             self::$browse = new Browse(null, false);
+        } else {
+            // reset existing browse
+            self::$browse->reset();
+            // ensure _state offset is 0
+            self::$browse->set_offset(0);
         }
 
         return self::$browse;

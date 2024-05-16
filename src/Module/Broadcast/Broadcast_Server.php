@@ -348,10 +348,14 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function unregisterListener(ConnectionInterface $conn): void
     {
-        foreach ($this->listeners as $broadcast_id => $brlisteners) {
+        $listeners = (array)$this->listeners;
+        foreach ($listeners as $broadcast_id => $brlisteners) {
             $lindex = array_search($conn, $brlisteners);
-            if ($lindex && isset($this->listeners[$broadcast_id][$lindex])) {
-                unset($this->listeners[$broadcast_id][$lindex]);
+            if (
+                $lindex &&
+                isset($brlisteners[$lindex]) // @phpstan-ignore-line
+            ) {
+                unset($listeners[$broadcast_id][$lindex]); // @phpstan-ignore-line
                 echo "[info]Listener left broadcast " . $broadcast_id . "." . "\r\n";
 
                 foreach ($this->broadcasters as $broadcast) {

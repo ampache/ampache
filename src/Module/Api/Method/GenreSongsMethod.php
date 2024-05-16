@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -51,7 +52,25 @@ final class GenreSongsMethod
      */
     public static function genre_songs(array $input, User $user): bool
     {
-        $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));
+        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+            return false;
+        }
+        $object_id = (int) $input['filter'];
+        $genre     = new Tag($object_id);
+        if ($genre->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
+
+        $browse = Api::getBrowse();
+        $browse->set_type('song');
+        $browse->set_sort('name', 'ASC');
+
+        $browse->set_filter('tag', $object_id);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 

@@ -61,6 +61,7 @@ final class TvShowSeasonAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('season_number', 'ASC');
 
         $this->ui->showHeader();
 
@@ -70,7 +71,6 @@ final class TvShowSeasonAction implements ApplicationActionInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_DISABLE)) {
             $browse->set_filter('catalog_enabled', '1');
         }
-        $browse->set_sort('season_number', 'ASC');
         $browse->update_browse_from_session();
         $browse->show_objects();
 

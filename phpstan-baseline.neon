@@ -1146,11 +1146,6 @@ parameters:
 			path: src/Module/Api/Method/AlbumSongsMethod.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\AlbumSongsMethod\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Method/AlbumSongsMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\AlbumsMethod\\:\\:handle\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/AlbumsMethod.php

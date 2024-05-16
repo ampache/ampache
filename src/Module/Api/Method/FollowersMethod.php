@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\UserFollowerRepositoryInterface;
 
 /**
  * Class FollowersMethod
@@ -70,7 +69,12 @@ final class FollowersMethod
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowers($leadUser);
+        $browse = Api::getBrowse();
+        $browse->set_type('follower');
+        $browse->set_sort('follow_date', 'DESC');
+        $browse->set_filter('user', $leadUser->getId());
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('user', $input['api_format']);
 
@@ -87,15 +91,5 @@ final class FollowersMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated inject by constructor
-     */
-    private static function getUserFollowerRepository(): UserFollowerRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserFollowerRepositoryInterface::class);
     }
 }

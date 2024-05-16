@@ -125,6 +125,8 @@ final class MovieQuery implements QueryInterface
             return '';
         }
 
+        $query->set_join('LEFT', '`video`', '`movie`.`id`', '`video`.`id`', 50);
+
         return "$sql $order,";
     }
 }

@@ -97,35 +97,34 @@ final class IndexMethod
             return false;
         }
 
-        if ($type == 'catalog') {
-            $results = User::get_user_catalogs($user->id);
+        $browse = Api::getBrowse();
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
+        } elseif ($album_artist) {
+            $browse->set_type('album_artist');
+        } elseif ($song_artist) {
+            $browse->set_type('song_artist');
         } else {
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
-            if (
-                $type === 'playlist' &&
-                $hide === false
-            ) {
-                $browse->set_type('playlist_search');
-            } elseif ($album_artist) {
-                $browse->set_type('album_artist');
-            } elseif ($song_artist) {
-                $browse->set_type('song_artist');
-            } else {
-                $browse->set_type($type);
-            }
-            $browse->set_sort('name', 'ASC');
-
-            $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-            Api::set_filter($method, $input['filter'] ?? '', $browse);
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
-            if ($type == 'playlist') {
-                $browse->set_filter('playlist_type', 1);
-            }
-
-            $results = $browse->get_objects();
+            $browse->set_type($type);
         }
+
+        $browse->set_sort('name', 'ASC');
+        if ($type === 'catalog') {
+            $browse->set_filter('user', $user->getId());
+        }
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_filter('add', $input['add'] ?? '', $browse);
+        Api::set_filter('update', $input['update'] ?? '', $browse);
+        if ($type == 'playlist') {
+            $browse->set_filter('playlist_type', 1);
+        }
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
 

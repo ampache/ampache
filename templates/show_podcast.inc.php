@@ -119,7 +119,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
             </a>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcast->getId(), 'file_refresh', T_('Sync'), 'sync_podcast_' . $podcast->getId()); ?>
+            <?php echo Ajax::button_with_text('?page=podcast&action=syncPodcast&podcast_id=' . $podcast->getId(), 'sync', T_('Sync'), 'sync_podcast_' . $podcast->getId()); ?>
         </li>
         <?php } ?>
         <?php if ($access75) { ?>

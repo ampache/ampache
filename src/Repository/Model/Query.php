@@ -73,13 +73,13 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_STATE = [
-        'year' => 'ASC',
-        'original_year' => 'ASC',
         'last_update' => 'ASC',
+        'original_year' => 'ASC',
         'rating' => 'ASC',
         'song_count' => 'ASC',
         'total_count' => 'ASC',
         'total_skip' => 'ASC',
+        'year' => 'ASC',
     ];
 
     /**
@@ -106,16 +106,18 @@ class Query
         'extended_key_name' => null,
         'filter' => [],
         'grid_view' => true,
-        'having' => '',
+        'group' => [],
         // HAVING is not currently used in Query SQL
+        'having' => '',
         'join' => null,
+        'limit' => 0,
         'mashup' => null,
         'offset' => 0,
-        'song_artist' => null,
-        // Used by $browse->set_type() to filter artists
         'select' => [],
-        'simple' => false,
         'show_header' => true,
+        'simple' => false,
+        // Used by $browse->set_type() to filter artists
+        'song_artist' => null,
         'sort' => [],
         'start' => 0,
         'static' => false,
@@ -125,8 +127,8 @@ class Query
         'type' => '',
         'update_session' => false,
         'use_alpha' => false,
-        'use_filters' => true,
         // Used by $browse to hide the filter box in the sidebar
+        'use_filters' => true,
         'use_pages' => false,
     ];
 
@@ -225,54 +227,56 @@ class Query
 
     /**
      * set_filter
-     * This saves the filter data we pass it.
+     * This saves the filter data we pass it from the ObjectQuery FILTERS array
      * @param string $key
      */
     public function set_filter($key, mixed $value): bool
     {
         switch ($key) {
-            case 'tag':
-                if (is_array($value)) {
-                    $this->_state['filter'][$key] = $value;
-                } elseif (is_numeric($value)) {
-                    $this->_state['filter'][$key] = [$value];
-                } else {
-                    $this->_state['filter'][$key] = [];
-                }
-                break;
-            case 'artist':
             case 'album_artist':
-            case 'song_artist':
             case 'album_disk':
-            case 'catalog':
-            case 'podcast':
             case 'album':
+            case 'artist':
+            case 'catalog':
             case 'disk':
-            case 'hidden':
+            case 'gather_type':
             case 'gather_types':
+            case 'hidden':
+            case 'object_type':
+            case 'podcast':
+            case 'smartlist':
+            case 'song_artist':
+            case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
-            case 'min_count':
-            case 'unplayed':
-            case 'rated':
-            case 'add_lt':
             case 'add_gt':
-            case 'update_lt':
-            case 'update_gt':
+            case 'add_lt':
             case 'catalog_enabled':
-            case 'year_lt':
-            case 'year_lg':
-            case 'year_eq':
-            case 'season_lt':
-            case 'season_lg':
-            case 'season_eq':
-            case 'user':
-            case 'to_user':
+            case 'disabled':
             case 'enabled':
+            case 'label':
+            case 'license':
+            case 'min_count':
+            case 'playlist_user':
+            case 'rated':
+            case 'season_eq':
+            case 'season_gt':
+            case 'season_lg':
+            case 'season_lt':
+            case 'to_user':
+            case 'top50':
+            case 'unplayed':
+            case 'update_gt':
+            case 'update_lt':
+            case 'user':
+            case 'year_eq':
+            case 'year_gt':
+            case 'year_lg':
+            case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
-            case 'exact_match':
             case 'alpha_match':
+            case 'exact_match':
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
@@ -296,9 +300,23 @@ class Query
                     $this->_state['filter'][$key] = 1;
                 }
                 break;
+            case 'tag':
+                if (is_array($value)) {
+                    $this->_state['filter'][$key] = $value;
+                } elseif (is_numeric($value)) {
+                    $this->_state['filter'][$key] = [$value];
+                } else {
+                    $this->_state['filter'][$key] = [];
+                }
+                break;
             default:
+                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+
                 return false;
         }
+
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
 
         // If we've set a filter we need to reset the totals
         $this->reset_total();
@@ -309,8 +327,7 @@ class Query
 
     /**
      * reset
-     * Reset everything, this should only be called when we are starting
-     * fresh
+     * Reset everything, this should only be called when we are starting fresh
      */
     public function reset(): void
     {
@@ -668,11 +685,16 @@ class Query
             return;
         }
 
+        // TODO WHY?!?!
         $this->reset_join();
+
+        // ensure joins are set on $this->_state
+        $this->_get_filter_sql();
+        $this->_get_sort_sql();
 
         if ($sort === 'rand') {
             // reset any existing sorts before setting a new one
-            $this->_state['sort']         = array();
+            $this->_state['sort']         = [];
             $this->_state['sort']['rand'] = $order;
 
             $this->_resort_objects();
@@ -708,6 +730,16 @@ class Query
     public function set_offset($offset): void
     {
         $this->_state['offset'] = abs($offset);
+    }
+
+    /**
+     * set_limit
+     * This sets the current offset of this query
+     * @param int $limit
+     */
+    public function set_limit($limit): void
+    {
+        $this->_state['limit'] = abs($limit);
     }
 
     /**
@@ -777,6 +809,18 @@ class Query
     public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
     {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
+    }
+
+    /**
+     * set_group
+     * This sets the "GROUP" part of the query
+     * @param string $column
+     * @param string $value
+     * @param int $priority
+     */
+    public function set_group($column, $value, $priority): void
+    {
+        $this->_state['group'][$priority][$column] = $value;
     }
 
     /**
@@ -887,7 +931,7 @@ class Query
         }
 
         $results  = $this->_post_process($results);
-        $filtered = array();
+        $filtered = [];
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
             if (array_key_exists('id', $data)) {
@@ -984,26 +1028,26 @@ class Query
         if ($catalog_filter && $this->user_id > 0) {
             // Add catalog user filter
             switch ($type) {
-                case 'video':
-                case 'artist':
-                case 'album':
                 case 'album_disk':
-                case 'song':
-                case 'song_artist':
-                case 'song_album':
-                case 'podcast':
-                case 'podcast_episode':
-                case 'playlist':
+                case 'album':
+                case 'artist':
+                case 'clip':
                 case 'label':
                 case 'live_stream':
-                case 'tag':
-                case 'tvshow':
-                case 'tvshow_season':
-                case 'tvshow_episode':
                 case 'movie':
                 case 'personal_video':
-                case 'clip':
+                case 'playlist':
+                case 'podcast_episode':
+                case 'podcast':
                 case 'share':
+                case 'song_album':
+                case 'song_artist':
+                case 'song':
+                case 'tag':
+                case 'tvshow_episode':
+                case 'tvshow_season':
+                case 'tvshow':
+                case 'video':
                     $dis = Catalog::get_user_filter($type, $this->user_id);
                     break;
             }
@@ -1045,13 +1089,20 @@ class Query
      */
     private function _get_limit_sql(): string
     {
-        $start  = $this->get_start();
         $offset = $this->get_offset();
+        if ($this->_state['limit'] > 0) {
+            if ($offset > 0) {
+                return ' LIMIT ' . (string)($this->_state['limit']) . ', ' . (string)($offset);
+            } else {
+                return ' LIMIT ' . (string)($this->_state['limit']);
+            }
+        }
+        $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
 
-        return ' LIMIT ' . $this->get_start() . ', ' . $offset;
+        return ' LIMIT ' . (string)($start) . ', ' . (string)($offset);
     }
 
     /**
@@ -1076,6 +1127,26 @@ class Query
     }
 
     /**
+     * _get_group_sql
+     * This returns the joins that this browse may need to work correctly
+     */
+    private function _get_group_sql(): string
+    {
+        if (empty($this->_state['group']) || !is_array($this->_state['group'])) {
+            return '';
+        }
+
+        $sql = '';
+        foreach ($this->_state['group'] as $groups) {
+            foreach ($groups as $group) {
+                $sql .= $group . ', ';
+            }
+        }
+
+        return rtrim($sql, ', ');
+    }
+
+    /**
      * _get_having_sql
      * this returns the having sql stuff, if we've got anything
      */
@@ -1093,27 +1164,36 @@ class Query
      */
     public function get_sql($limit = true): string
     {
-        $sql        = $this->_get_base_sql();
-        $filter_sql = "";
-        $join_sql   = "";
-        $having_sql = "";
-        $order_sql  = "";
-        if (!$this->_state['custom']) {
+        if ($this->_state['custom']) {
+            // custom queries are set by base and should not be added to
+            $final_sql = $this->_get_base_sql();
+        } else {
+            // filter and sort set joins as well as group so make sure you run those first
             $filter_sql = $this->_get_filter_sql();
-            $order_sql  = $this->_get_sort_sql();
-            $join_sql   = $this->_get_join_sql();
-            $having_sql = $this->_get_having_sql();
+            $sort_sql   = $this->_get_sort_sql();
+            // regular queries need to be joined with all the other parts
+            $final_sql = $this->_get_base_sql() .
+                $this->_get_join_sql() .
+                $filter_sql .
+                $this->_get_having_sql();
+
+            // allow forcing a group by
+            if (!empty($this->_get_group_sql())) {
+                $final_sql .= " GROUP BY " . $this->_get_group_sql() . " ";
+            } elseif ($this->get_type() == 'artist' || $this->get_type() == 'album') {
+                $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
+            }
+
+            $final_sql .= $sort_sql;
         }
+
+        // apply a limit/offset limit (if set)
         $limit_sql = $limit ? $this->_get_limit_sql() : '';
-        $final_sql = $sql . $join_sql . $filter_sql . $having_sql;
 
-        if (($this->get_type() == 'artist' || $this->get_type() == 'album') && !$this->_state['custom']) {
-            $final_sql .= " GROUP BY `" . $this->get_type() . "`.`name`, `" . $this->get_type() . "`.`id` ";
-        }
-
+        $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
 
-        return $final_sql . ($order_sql . $limit_sql);
+        return $final_sql;
     }
 
     /**
@@ -1158,6 +1238,9 @@ class Query
     private function _sql_filter($filter, mixed $value): string
     {
         if ($this->queryType === null) {
+            $this->set_type($this->_state['type']);
+        }
+        if ($this->queryType === null) {
             return '';
         }
 
@@ -1185,6 +1268,9 @@ class Query
         }
 
         if ($this->queryType === null) {
+            $this->set_type($this->_state['type']);
+        }
+        if ($this->queryType === null) {
             return '';
         }
 
@@ -1200,27 +1286,27 @@ class Query
         switch ($field) {
             case 'addition_time':
             case 'catalog':
-            case 'update_time':
             case 'title':
             case 'total_count':
             case 'total_skip':
+            case 'update_time':
                 $sql = "`video`.`$field`";
-                break;
-            case 'resolution':
-                $sql = "`video`.`resolution_x`";
-                break;
-            case 'length':
-                $sql = "`video`.`time`";
                 break;
             case 'codec':
                 $sql = "`video`.`video_codec`";
                 break;
-            case 'release_date':
-                $sql = "`video`.`release_date`";
+            case 'length':
+                $sql = "`video`.`time`";
                 break;
             case 'rating':
                 $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
                 $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
+                break;
+            case 'release_date':
+                $sql = "`video`.`release_date`";
+                break;
+            case 'resolution':
+                $sql = "`video`.`resolution_x`";
                 break;
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
@@ -1229,7 +1315,7 @@ class Query
         }
 
         if (!($sql === '' || $sql === '0') && $table != 'video') {
-            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 100);
+            $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
 
         return $sql;

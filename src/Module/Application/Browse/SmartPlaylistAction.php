@@ -55,13 +55,13 @@ final class SmartPlaylistAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('name', 'ASC');
 
         $this->ui->showHeader();
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
 
-        $browse->set_sort('name', 'ASC');
         $browse->set_filter('playlist_type', 1);
         $browse->update_browse_from_session();
         $browse->show_objects();

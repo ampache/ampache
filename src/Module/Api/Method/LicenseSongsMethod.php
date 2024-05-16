@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class LicenseSongsMethod
@@ -59,7 +58,14 @@ final class LicenseSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = static::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
+
+        $browse = Api::getBrowse();
+        $browse->set_type('song');
+        $browse->set_sort('name', 'ASC');
+
+        $browse->set_filter('license', (int)$input['filter']);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
@@ -76,12 +82,5 @@ final class LicenseSongsMethod
         }
 
         return true;
-    }
-
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

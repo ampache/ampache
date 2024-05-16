@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class AlbumSongsMethod
@@ -65,9 +64,12 @@ class AlbumSongsMethod
             return false;
         }
 
-        ob_end_clean();
-        // songs for all disks
-        $results = static::getSongRepository()->getByAlbum($album->id);
+        $browse = Api::getBrowse();
+        $browse->set_type('song');
+        $browse->set_sort('album_disk', 'ASC');
+        $browse->set_filter('album', $object_id);
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
@@ -88,15 +90,5 @@ class AlbumSongsMethod
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

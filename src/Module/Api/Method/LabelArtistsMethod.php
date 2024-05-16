@@ -61,24 +61,30 @@ final class LabelArtistsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $include = [];
-        if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
-        }
 
         $label = self::getLabelRepository()->findById((int) ($input['filter'] ?? 0));
-
         if ($label === null) {
             Api::empty('artist', $input['api_format']);
 
             return false;
         }
 
-        $results = $label->get_artists();
+        $browse = Api::getBrowse();
+        $browse->set_type('artist');
+        $browse->set_sort('name', 'ASC');
+
+        $browse->set_filter('label', $label->getId());
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('artist', $input['api_format']);
 
             return false;
+        }
+
+        $include = [];
+        if (array_key_exists('include', $input)) {
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
         }
 
         ob_end_clean();

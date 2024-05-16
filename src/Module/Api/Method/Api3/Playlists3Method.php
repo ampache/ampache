@@ -44,7 +44,6 @@ final class Playlists3Method
     {
         unset($user);
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('playlist');
         $browse->set_sort('name', 'ASC');
 

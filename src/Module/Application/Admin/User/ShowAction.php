@@ -51,7 +51,6 @@ final class ShowAction extends AbstractUserAction
         $this->ui->showHeader();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->reset_filters();
         $browse->set_type('user');
         $browse->set_simple_browse(true);
         $browse->set_sort('name', 'ASC');
