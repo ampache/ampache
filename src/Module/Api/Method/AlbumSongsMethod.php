@@ -65,7 +65,6 @@ class AlbumSongsMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('song');
         $browse->set_sort('album_disk', 'ASC');
         $browse->set_filter('album', $object_id);

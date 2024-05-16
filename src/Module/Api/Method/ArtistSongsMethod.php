@@ -66,7 +66,6 @@ final class ArtistSongsMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('song');
         if (array_key_exists('top50', $input) && (int)$input['top50'] == 1) {
             $browse->set_limit(50);

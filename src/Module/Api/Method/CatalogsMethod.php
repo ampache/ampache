@@ -51,7 +51,6 @@ final class CatalogsMethod
     public static function catalogs(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('catalog');
         $browse->set_filter('user', $user->getId());
         if (

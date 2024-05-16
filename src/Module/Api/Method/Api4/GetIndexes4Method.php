@@ -87,7 +87,6 @@ final class GetIndexes4Method
             return false;
         }
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         if ($album_artist) {
             $browse->set_type('album_artist');
         } else {

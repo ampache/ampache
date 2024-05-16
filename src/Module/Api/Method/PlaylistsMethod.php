@@ -65,7 +65,6 @@ final class PlaylistsMethod
         $include    = (bool)($input['include'] ?? false);
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         if ($hide === false) {
             $browse->set_type('playlist_search');
         } else {

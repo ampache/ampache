@@ -60,7 +60,6 @@ final class Labels5Method
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC');
 

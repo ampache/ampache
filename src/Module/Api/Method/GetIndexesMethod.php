@@ -97,7 +97,6 @@ final class GetIndexesMethod
             return false;
         }
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         if ($type === 'playlist') {
             $browse->set_filter('playlist_type', 1);
             if ($hide === false) {
