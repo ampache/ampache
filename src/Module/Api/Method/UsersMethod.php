@@ -58,7 +58,7 @@ final class UsersMethod
         $sort = array_map('trim', explode(',', $input['sort'] ?? 'id,ASC'));
         $sort_name = $sort[0] ?: 'id';
         $sort_type = $sort[1] ?? 'ASC';
-        $browse->set_sort($sort_name, $sort_type);
+        $browse->set_sort(strtolower($sort_name), strtoupper($sort_type));
 
         $browse->set_filter('disabled', 0);
         $results = $browse->get_objects();
