@@ -55,12 +55,12 @@ final class UsersMethod
         $browse = Api::getBrowse();
         $browse->set_type('user');
 
-        $sort = array_map('trim', explode(',', $input['sort'] ?? 'id,ASC'));
-        $sort_name = $sort[0] ?: 'id';
-        $sort_type = $sort[1] ?? 'ASC';
-        $browse->set_sort(strtolower($sort_name), strtoupper($sort_type));
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC'], $browse);
 
         $browse->set_filter('disabled', 0);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+
         $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('user', $input['api_format']);

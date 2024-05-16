@@ -62,7 +62,7 @@ final class LabelArtists5Method
         }
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));;
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
         }
 
         $label = self::getLabelRepository()->findById((int) $input['filter']);

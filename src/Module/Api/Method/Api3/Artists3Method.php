@@ -59,7 +59,7 @@ final class Artists3Method
         $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));;
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
         }
         // echo out the resulting xml document
         ob_end_clean();

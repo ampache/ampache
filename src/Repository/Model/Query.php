@@ -244,6 +244,7 @@ class Query
             case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
+            case 'access':
             case 'add_gt':
             case 'add_lt':
             case 'catalog_enabled':

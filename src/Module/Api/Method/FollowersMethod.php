@@ -49,6 +49,10 @@ final class FollowersMethod
      * Error when user not found or no followers
      *
      * username = (string) $username //optional
+     * offset   = (integer) //optional
+     * limit    = (integer) //optional
+     * cond     = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort     = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function followers(array $input, User $user): bool
     {
@@ -71,8 +75,12 @@ final class FollowersMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('follower');
-        $browse->set_sort('follow_date', 'DESC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['follow_date','DESC'], $browse);
+
         $browse->set_filter('user', $leadUser->getId());
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -84,9 +92,13 @@ final class FollowersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::users($results);
                 break;
             default:
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::users($results);
         }
 

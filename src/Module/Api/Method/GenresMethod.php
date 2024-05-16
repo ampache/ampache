@@ -48,15 +48,20 @@ final class GenresMethod
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function genres(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->set_type('tag');
-        $browse->set_sort('name', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+
         $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('genre', $input['api_format']);

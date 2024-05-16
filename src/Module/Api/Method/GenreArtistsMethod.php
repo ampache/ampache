@@ -49,6 +49,8 @@ final class GenreArtistsMethod
      * filter = (string) UID of Album //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function genre_artists(array $input, User $user): bool
     {
@@ -66,9 +68,12 @@ final class GenreArtistsMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('artist');
-        $browse->set_sort('name', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
 
         $browse->set_filter('tag', $object_id);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {

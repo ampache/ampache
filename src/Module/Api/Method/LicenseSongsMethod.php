@@ -47,6 +47,10 @@ final class LicenseSongsMethod
      * This returns all songs attached to a license ID
      *
      * filter = (string) UID of license
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function license_songs(array $input, User $user): bool
     {
@@ -61,9 +65,12 @@ final class LicenseSongsMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('song');
-        $browse->set_sort('name', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
 
         $browse->set_filter('license', (int)$input['filter']);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -75,9 +82,13 @@ final class LicenseSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($results, $user);
                 break;
             default:
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user);
         }
 

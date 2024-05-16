@@ -267,7 +267,6 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
         if ($metadataManager->isCustomMetadataEnabled()) {
             $metadataManager->collectGarbage();
-            ;
         }
         $this->updateUi('clean', $this->cleanCounter, null, true);
 

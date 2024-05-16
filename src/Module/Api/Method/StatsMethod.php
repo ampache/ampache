@@ -173,6 +173,9 @@ final class StatsMethod
                         $browse = Api::getBrowse();
                         $browse->set_type($type);
                         $browse->set_sort('rand');
+
+                        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+
                         $results = $browse->get_objects();
                 }
         }

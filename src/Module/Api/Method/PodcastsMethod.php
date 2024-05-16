@@ -50,6 +50,8 @@ final class PodcastsMethod
      * include = (string) 'episodes' (include episodes in the response) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
+     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function podcasts(array $input, User $user): bool
     {
@@ -60,12 +62,15 @@ final class PodcastsMethod
         }
         $browse = Api::getBrowse();
         $browse->set_type('podcast');
-        $browse->set_sort('title', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC'], $browse);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {

@@ -53,13 +53,15 @@ final class GetIndexesMethod
      *
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
+     *  hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = Api::set_filter(date) //optional
      * update      = Api::set_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function get_indexes(array $input, User $user): bool
     {
@@ -107,12 +109,15 @@ final class GetIndexesMethod
         } else {
             $browse->set_type($type);
         }
-        $browse->set_sort('name', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {

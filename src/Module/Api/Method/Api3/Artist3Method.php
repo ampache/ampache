@@ -44,7 +44,7 @@ final class Artist3Method
         $uid     = scrub_in((string) $input['filter']);
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));;
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
         }
         echo Xml3_Data::artists(array($uid), $include, $user);
     }

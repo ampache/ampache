@@ -49,6 +49,8 @@ class AlbumSongsMethod
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function album_songs(array $input, User $user): bool
     {
@@ -66,8 +68,12 @@ class AlbumSongsMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('song');
-        $browse->set_sort('album_disk', 'ASC');
+
+        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['album_disk','ASC'], $browse);
+
         $browse->set_filter('album', $object_id);
+
+        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
 
         $results = $browse->get_objects();
         if (empty($results)) {
