@@ -60,7 +60,6 @@ final class LiveStreamsMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('live_stream');
         $browse->set_sort('name', 'ASC');
 

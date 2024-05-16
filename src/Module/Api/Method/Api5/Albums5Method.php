@@ -55,7 +55,6 @@ final class Albums5Method
     public static function albums(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';

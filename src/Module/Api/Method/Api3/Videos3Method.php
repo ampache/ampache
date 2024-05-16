@@ -44,7 +44,6 @@ final class Videos3Method
     {
         unset($user);
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC');
 

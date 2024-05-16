@@ -58,7 +58,6 @@ final class ArtistsMethod
     {
         $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
         $browse       = Api::getBrowse();
-        $browse->reset_filters();
         if ($album_artist) {
             $browse->set_type('album_artist');
         } else {

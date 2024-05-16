@@ -59,7 +59,6 @@ final class Shares5Method
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 
