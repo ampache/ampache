@@ -91,7 +91,6 @@ final class BrowseMethod
                 $gather_types = array_merge($gather_types, array('clip', 'tvshow', 'movie', 'personal_video'));
             }
 
-            $browse->reset_filters();
             $browse->set_type($output_type);
             $browse->set_filter('gather_types', $gather_types);
             $browse->set_filter('user', $user->getId());
@@ -108,7 +107,6 @@ final class BrowseMethod
                 return false;
             }
 
-            $browse->reset_filters();
             switch ((string)$catalog->gather_types) {
                 case 'clip':
                 case 'tvshow':
@@ -166,7 +164,6 @@ final class BrowseMethod
                 return false;
             }
 
-            $browse->reset_filters();
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':

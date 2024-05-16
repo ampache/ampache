@@ -59,7 +59,6 @@ final class Podcasts5Method
             return false;
         }
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('podcast');
         $browse->set_sort('title', 'ASC');
 

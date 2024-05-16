@@ -29,7 +29,6 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class UsersMethod
@@ -48,7 +47,6 @@ final class UsersMethod
     public static function users(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('user');
         $browse->set_sort('name', 'ASC');
         $browse->set_filter('disabled', 0);

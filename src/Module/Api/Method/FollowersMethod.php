@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\UserFollowerRepositoryInterface;
 
 /**
  * Class FollowersMethod
@@ -71,7 +70,6 @@ final class FollowersMethod
         }
 
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('follower');
         $browse->set_sort('follow_date', 'DESC');
         $browse->set_filter('user', $leadUser->getId());

@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
@@ -57,7 +56,6 @@ final class UserSmartlistsMethod
         $exact  = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $filter = (string)($input['filter'] ?? '');
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('playlist_search');
         $browse->set_sort('name', 'ASC');
         if (!empty($filter)) {

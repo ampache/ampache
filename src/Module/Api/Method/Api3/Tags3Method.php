@@ -44,7 +44,6 @@ final class Tags3Method
     {
         unset($user);
         $browse = Api::getBrowse();
-        $browse->reset_filters();
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 

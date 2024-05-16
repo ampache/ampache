@@ -215,7 +215,7 @@ class Playlist extends playlist_object
      * @param bool $includePublic
      * @param bool $includeHidden
      * @param bool $userOnly
-     * @return int[]
+     * @return array<string>
      */
     public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
     {
@@ -258,7 +258,7 @@ class Playlist extends playlist_object
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
+            $results[] = $row['id'];
         }
 
         if (empty($playlist_name)) {
