@@ -1656,10 +1656,14 @@ class Json_Data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */
-    public static function users($users, $encode = true, $object = true)
+    public static function users($objects, $encode = true, $object = true)
     {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
         $JSON = [];
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User($user_id);
             if ($user->isNew()) {
                 continue;

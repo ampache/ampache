@@ -43,6 +43,8 @@ final class UsersMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
+     *  offset  = (integer) //optional
+     *  limit   = (integer) //optional
      */
     public static function users(array $input, User $user): bool
     {
@@ -62,9 +64,13 @@ final class UsersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::users($results);
                 break;
             default:
+                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::users($results);
         }
 
