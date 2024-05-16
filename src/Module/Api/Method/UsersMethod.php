@@ -48,16 +48,19 @@ final class UsersMethod
      *  limit?: string,
      *  offset?: string,
      *  cond?: string,
-     *  sort?: string
      * } $input
      */
     public static function users(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->set_type('user');
-        $browse->set_sort('name', 'ASC');
-        $browse->set_filter('disabled', 0);
 
+        $sort = array_map('trim', explode(',', $input['sort'] ?? 'id,ASC'));
+        $sort_name = $sort[0] ?: 'id';
+        $sort_type = $sort[1] ?? 'ASC';
+        $browse->set_sort($sort_name, $sort_type);
+
+        $browse->set_filter('disabled', 0);
         $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('user', $input['api_format']);

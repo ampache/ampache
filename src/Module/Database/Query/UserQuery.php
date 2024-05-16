@@ -38,6 +38,7 @@ final class UserQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'rand',
+        'id',
         'username',
         'fullname',
         'email',
@@ -124,6 +125,7 @@ final class UserQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'id':
             case 'username':
             case 'fullname':
             case 'email':
