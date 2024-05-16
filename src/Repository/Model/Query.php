@@ -320,8 +320,7 @@ class Query
 
     /**
      * reset
-     * Reset everything, this should only be called when we are starting
-     * fresh
+     * Reset everything, this should only be called when we are starting fresh
      */
     public function reset(): void
     {
@@ -1083,7 +1082,6 @@ class Query
      */
     private function _get_limit_sql(): string
     {
-        $start  = $this->get_start();
         $offset = $this->get_offset();
         if ($this->_state['limit'] > 0) {
             if ($offset > 0) {
@@ -1092,6 +1090,7 @@ class Query
                 return ' LIMIT ' . (string)($this->_state['limit']);
             }
         }
+        $start = $this->get_start();
         if (!$this->is_simple() || $start < 0 || ($start == 0 && $offset == 0)) {
             return '';
         }
