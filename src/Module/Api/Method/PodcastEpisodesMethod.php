@@ -62,6 +62,7 @@ final class PodcastEpisodesMethod implements MethodInterface
      * limit  = (integer) //optional
      *
      * @param array{
+     *  api_format: string,
      *  filter?: string,
      *  offset?: string,
      *  limit?: string

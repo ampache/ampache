@@ -50,6 +50,7 @@ final class UserMethod
      * username = (string) $username
      *
      * @param array{
+     *  api_format: string,
      *  username?: scalar,
      *  api_format: string
      * } $input

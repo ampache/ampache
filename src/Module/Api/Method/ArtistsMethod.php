@@ -80,7 +80,7 @@ final class ArtistsMethod
         ob_end_clean();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include']);
         }
         switch ($input['api_format']) {
             case 'json':

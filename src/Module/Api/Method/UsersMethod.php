@@ -43,8 +43,13 @@ final class UsersMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
-     *  offset  = (integer) //optional
-     *  limit   = (integer) //optional
+     * @param array{
+     *  api_format: string,
+     *  limit?: string,
+     *  offset?: string,
+     *  cond?: string,
+     *  sort?: string
+     * } $input
      */
     public static function users(array $input, User $user): bool
     {
