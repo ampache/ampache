@@ -116,7 +116,7 @@ final class PodcastEpisodesMethod implements MethodInterface
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_type('podcast_episode');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['pubdate','DESC']);
 
         $browse->set_filter('podcast', $podcastId);
 
