@@ -1651,7 +1651,7 @@ class Json_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $users User id list
+     * @param int[] $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"

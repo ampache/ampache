@@ -72,12 +72,12 @@ final class GenresMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::genres($results);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::genres($results, $user);
         }
