@@ -61,6 +61,8 @@ final class CatalogsMethod
             $browse->set_filter('gather_type', $input['filter']);
         }
 
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
         $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('catalog', $input['api_format']);
@@ -71,12 +73,12 @@ final class CatalogsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::catalogs($results);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::catalogs($results, $user);
         }

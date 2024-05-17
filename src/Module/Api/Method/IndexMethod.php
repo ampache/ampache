@@ -50,13 +50,15 @@ final class IndexMethod
      *
      * type        = (string) 'catalog', 'song', 'album', 'artist', 'album_artist', 'song_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = Api::set_filter(date) //optional
      * update      = Api::set_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array<string, mixed> $input
      */
@@ -111,7 +113,8 @@ final class IndexMethod
             $browse->set_type($type);
         }
 
-        $browse->set_sort('name', 'ASC');
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
         if ($type === 'catalog') {
             $browse->set_filter('user', $user->getId());
         }
@@ -124,6 +127,8 @@ final class IndexMethod
             $browse->set_filter('playlist_type', 1);
         }
 
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
         $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
@@ -134,12 +139,12 @@ final class IndexMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::index($results, $type, $user, $include);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::index($results, $type, $user, $include);
         }

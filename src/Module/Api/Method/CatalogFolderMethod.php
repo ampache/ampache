@@ -68,7 +68,7 @@ final class CatalogFolderMethod
             return false;
         }
         $folder = html_entity_decode($input['folder']);
-        $task   = explode(',', (string)$input['task']);
+        $task   = explode(',', html_entity_decode((string)($input['task'])));
         if (!is_array($task)) {
             $task = array();
         }
