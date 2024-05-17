@@ -45,8 +45,8 @@ final class UsersMethod
      * Get ids and usernames for your site
      * @param array{
      *  api_format: string,
-     *  limit?: string,
      *  offset?: string,
+     *  limit?: string,
      *  cond?: string,
      *  sort?: string,
      * } $input
@@ -56,11 +56,11 @@ final class UsersMethod
         $browse = Api::getBrowse();
         $browse->set_type('user');
 
-        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC'], $browse);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC']);
 
         $browse->set_filter('disabled', 0);
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {

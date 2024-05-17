@@ -76,11 +76,11 @@ final class FollowersMethod
         $browse = Api::getBrowse();
         $browse->set_type('follower');
 
-        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['follow_date','DESC'], $browse);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['follow_date','DESC']);
 
         $browse->set_filter('user', $leadUser->getId());
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {

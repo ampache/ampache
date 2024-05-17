@@ -74,13 +74,13 @@ final class ArtistSongsMethod
             $browse->set_sort('object_count', 'DESC');
             $type = 'top50';
         } else {
-            Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
             $type = 'artist';
         }
 
         $browse->set_filter($type, $object_id);
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {

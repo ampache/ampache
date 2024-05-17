@@ -69,11 +69,11 @@ final class GenreSongsMethod
         $browse = Api::getBrowse();
         $browse->set_type('song');
 
-        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
         $browse->set_filter('tag', $object_id);
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {

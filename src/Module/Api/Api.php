@@ -316,44 +316,6 @@ class Api
     }
 
     /**
-     * set_sort
-     *
-     * Try to clean up sorts into something valid before sending to the browse
-     * @param string $sort
-     * @param array<string> $default
-     * @param Browse $browse
-     */
-    public static function set_sort($sort, $default, $browse): void
-    {
-        $sort      = array_map('trim', explode(',', $sort));
-        $sort_name = $sort[0] ?: $default[0];
-        $sort_type = $sort[1] ?? $default[1];
-        if (empty($sort_name) || empty($sort_type)) {
-            return;
-        }
-
-        $browse->set_sort(strtolower($sort_name), strtoupper($sort_type));
-    }
-
-    /**
-     * set_conditions
-     *
-     * Apply additional filters to the browse using ';' separated comma string pairs
-     * e.g. 'filter1,value1;filter2,value2'
-     * @param string $cond
-     * @param Browse $browse
-     */
-    public static function set_conditions($cond, $browse): void
-    {
-        foreach ((explode(';', (string)$cond)) as $condition) {
-            $filter = (explode(',', (string)$condition));
-            if (!empty($filter[0])) {
-                $browse->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
-            }
-        }
-    }
-
-    /**
      * check_parameter
      *
      * This function checks the $input actually has the parameter.

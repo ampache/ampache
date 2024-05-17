@@ -136,7 +136,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC'], $browse);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
@@ -223,7 +223,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order], $browse);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
 
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());
@@ -234,7 +234,7 @@ final class BrowseMethod
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {

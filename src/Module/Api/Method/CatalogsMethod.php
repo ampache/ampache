@@ -61,7 +61,7 @@ final class CatalogsMethod
             $browse->set_filter('gather_type', $input['filter']);
         }
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {

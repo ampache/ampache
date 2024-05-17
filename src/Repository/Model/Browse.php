@@ -110,6 +110,42 @@ class Browse extends Query
     }
 
     /**
+     * set_sort_order
+     *
+     * Try to clean up sorts into something valid before sending to the Query
+     * @param string $sort
+     * @param array<string> $default
+     */
+    public function set_sort_order($sort, $default): void
+    {
+        $sort      = array_map('trim', explode(',', $sort));
+        $sort_name = $sort[0] ?: $default[0];
+        $sort_type = $sort[1] ?? $default[1];
+        if (empty($sort_name) || empty($sort_type)) {
+            return;
+        }
+
+        $this->set_sort(strtolower($sort_name), strtoupper($sort_type));
+    }
+
+    /**
+     * set_conditions
+     *
+     * Apply additional filters to the Query using ';' separated comma string pairs
+     * e.g. 'filter1,value1;filter2,value2'
+     * @param string $cond
+     */
+    public function set_conditions($cond): void
+    {
+        foreach ((explode(';', (string)$cond)) as $condition) {
+            $filter = (explode(',', (string)$condition));
+            if (!empty($filter[0])) {
+                $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
+            }
+        }
+    }
+
+    /**
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there

@@ -92,11 +92,11 @@ final class GenreAlbumsMethod
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        Api::set_sort(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order], $browse);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
 
         $browse->set_filter('tag', $object_id);
 
-        Api::set_conditions(html_entity_decode((string)($input['cond'] ?? '')), $browse);
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
