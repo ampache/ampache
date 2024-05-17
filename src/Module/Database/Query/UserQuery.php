@@ -31,13 +31,15 @@ use Ampache\Repository\Model\Query;
 final class UserQuery implements QueryInterface
 {
     public const FILTERS = array(
+        'access',
+        'disabled',
         'starts_with',
-        'disabled'
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
         'rand',
+        'id',
         'username',
         'fullname',
         'email',
@@ -104,8 +106,9 @@ final class UserQuery implements QueryInterface
             case 'starts_with':
                 $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
                 break;
+            case 'access':
             case 'disabled':
-                $filter_sql = " `user`.`disabled` = " . (int)$value . " AND ";
+                $filter_sql = " `user`.`$filter` = " . (int)$value . " AND ";
                 break;
         }
 
@@ -124,6 +127,7 @@ final class UserQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'id':
             case 'username':
             case 'fullname':
             case 'email':

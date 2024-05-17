@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -49,6 +50,8 @@ final class GenreAlbumsMethod
      * filter = (string) UID of Genre //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function genre_albums(array $input, User $user): bool
     {
@@ -66,9 +69,34 @@ final class GenreAlbumsMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('album');
-        $browse->set_sort('name', 'ASC');
+        $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+        $sort_type     = AmpConfig::get('album_sort');
+        switch ($sort_type) {
+            case 'name_asc':
+                $sort  = 'name';
+                $order = 'ASC';
+                break;
+            case 'name_desc':
+                $sort  = 'name';
+                $order = 'DESC';
+                break;
+            case 'year_asc':
+                $sort  = $original_year;
+                $order = 'ASC';
+                break;
+            case 'year_desc':
+                $sort  = $original_year;
+                $order = 'DESC';
+                break;
+            default:
+                $sort  = 'name_' . $original_year;
+                $order = 'ASC';
+        }
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
 
         $browse->set_filter('tag', $object_id);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -80,12 +108,12 @@ final class GenreAlbumsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::albums($results, array(), $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::albums($results, array(), $user);
         }

@@ -1472,12 +1472,15 @@ class Xml_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[] $users User identifier list
+     * @param int[] $objects User identifier list
      */
-    public static function users($users): string
+    public static function users($objects): string
     {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
         $string = "";
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User($user_id);
             $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
         }

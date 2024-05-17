@@ -244,6 +244,7 @@ class Query
             case 'user_catalog':
                 $this->_state['filter'][$key] = $value;
                 break;
+            case 'access':
             case 'add_gt':
             case 'add_lt':
             case 'catalog_enabled':
@@ -312,7 +313,7 @@ class Query
         $this->_get_filter_sql();
 
         // If we've set a filter we need to reset the totals
-        $this->reset_total();
+        $this->_state['total'] = null;
         $this->set_start(0);
 
         return true;
@@ -324,70 +325,16 @@ class Query
      */
     public function reset(): void
     {
-        $this->reset_base();
-        $this->reset_filters();
-        $this->reset_total();
-        $this->reset_join();
-        $this->reset_select();
-        $this->reset_having();
+        $this->_state['base']   = null;
+        $this->_state['filter'] = array();
+        $this->_state['total']  = null;
+        $this->_state['join']   = array();
+        $this->_state['select'] = array();
+        $this->_state['having'] = '';
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
         $this->set_offset(AmpConfig::get('offset_limit', 50));
-    }
-
-    /**
-     * reset_base
-     * this resets the base string
-     */
-    public function reset_base(): void
-    {
-        $this->_state['base'] = null;
-    }
-
-    /**
-     * reset_select
-     * This resets the select fields that we've added so far
-     */
-    public function reset_select(): void
-    {
-        $this->_state['select'] = array();
-    }
-
-    /**
-     * reset_having
-     * Null out the having clause
-     */
-    public function reset_having(): void
-    {
-        $this->_state['having'] = '';
-    }
-
-    /**
-     * reset_join
-     * clears the joins if there are any
-     */
-    public function reset_join(): void
-    {
-        $this->_state['join'] = array();
-    }
-
-    /**
-     * reset_filter
-     * This is a wrapper function that resets the filters
-     */
-    public function reset_filters(): void
-    {
-        $this->_state['filter'] = array();
-    }
-
-    /**
-     * reset_total
-     * This resets the total for the browse type
-     */
-    public function reset_total(): void
-    {
-        $this->_state['total'] = null;
     }
 
     /**
@@ -446,7 +393,7 @@ class Query
             return $this->_state['total'];
         }
 
-        $db_results = Dba::read($this->get_sql(false));
+        $db_results = Dba::read($this->_get_sql(false));
         $num_rows   = Dba::num_rows($db_results);
 
         $this->_state['total'] = $num_rows;
@@ -678,10 +625,10 @@ class Query
             return;
         }
 
-        // TODO WHY?!?!
-        $this->reset_join();
+        // Joins may change because of the new sort so don't keep the old ones
+        $this->_state['join'] = array();
 
-        // ensure joins are set on $this->_state
+        // ensure joins are reset on $this->_state
         $this->_get_filter_sql();
         $this->_get_sort_sql();
 
@@ -915,7 +862,7 @@ class Query
     public function get_objects(): array
     {
         // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
-        $sql = $this->get_sql();
+        $sql = $this->_get_sql();
         //debug_event(self::class, 'get_objects query: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
@@ -1149,13 +1096,13 @@ class Query
     }
 
     /**
-     * get_sql
+     * _get_sql
      * This returns the sql statement we are going to use this has to be run
      * every time we get the objects because it depends on the filters and
      * the type of object we are currently browsing.
      * @param bool $limit
      */
-    public function get_sql($limit = true): string
+    private function _get_sql($limit = true): string
     {
         if ($this->_state['custom']) {
             // custom queries are set by base and should not be added to
@@ -1342,7 +1289,7 @@ class Query
         // and the vollmer way, hopefully we don't have to
         // do it the vollmer way
         if ($this->is_simple()) {
-            $sql = $this->get_sql();
+            $sql = $this->_get_sql();
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects

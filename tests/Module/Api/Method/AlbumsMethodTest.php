@@ -83,7 +83,7 @@ class AlbumsMethodTest extends MockeryTestCase
             ->with('album')
             ->once();
         $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
+            ->with('name_year', 'ASC')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
@@ -156,7 +156,7 @@ class AlbumsMethodTest extends MockeryTestCase
             ->with('album')
             ->once();
         $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
+            ->with('name_year', 'ASC')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()

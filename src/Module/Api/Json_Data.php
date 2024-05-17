@@ -1651,15 +1651,19 @@ class Json_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $users User id list
+     * @param int[] $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */
-    public static function users($users, $encode = true, $object = true)
+    public static function users($objects, $encode = true, $object = true)
     {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
         $JSON = [];
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User($user_id);
             if ($user->isNew()) {
                 continue;
