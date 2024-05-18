@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
@@ -63,12 +64,14 @@ final class AlbumsMethod implements MethodInterface
      * @param ApiOutputInterface $output
      * @param array $input
      *  filter  = (string) Alpha-numeric search term //optional
+     *  include = (array|string) 'songs' //optional
      *  exact   = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      *  add     = Api::set_filter(date) //optional
      *  update  = Api::set_filter(date) //optional
      *  offset  = (integer) //optional
      *  limit   = (integer) //optional
-     *  include = (array|string) 'songs' //optional
+     *  cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     *  sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      * @param User $user
      * @return ResponseInterface
      */
@@ -81,16 +84,42 @@ final class AlbumsMethod implements MethodInterface
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
         $browse->set_type('album');
-        $browse->set_sort('name', 'ASC');
+        $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+        $sort_type     = AmpConfig::get('album_sort');
+        switch ($sort_type) {
+            case 'name_asc':
+                $sort  = 'name';
+                $order = 'ASC';
+                break;
+            case 'name_desc':
+                $sort  = 'name';
+                $order = 'DESC';
+                break;
+            case 'year_asc':
+                $sort  = $original_year;
+                $order = 'ASC';
+                break;
+            case 'year_desc':
+                $sort  = $original_year;
+                $order = 'DESC';
+                break;
+            default:
+                $sort  = 'name_' . $original_year;
+                $order = 'ASC';
+        }
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
 
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
         $results = $browse->get_objects();
         $include = [];
         if (array_key_exists('include', $input)) {
-            $include = (is_array($input['include'])) ? $input['include'] : explode(',', (string)$input['include']);
+            $include = (is_array($input['include'])) ? $input['include'] : explode(',', html_entity_decode((string)($input['include'])));
         }
 
         ob_end_clean();

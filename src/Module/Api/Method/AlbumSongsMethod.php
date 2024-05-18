@@ -49,6 +49,8 @@ class AlbumSongsMethod
      * filter = (string) UID of Album
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function album_songs(array $input, User $user): bool
     {
@@ -66,8 +68,12 @@ class AlbumSongsMethod
 
         $browse = Api::getBrowse();
         $browse->set_type('song');
-        $browse->set_sort('album_disk', 'ASC');
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['album_disk','ASC']);
+
         $browse->set_filter('album', $object_id);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -79,12 +85,12 @@ class AlbumSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($results, $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user);
         }

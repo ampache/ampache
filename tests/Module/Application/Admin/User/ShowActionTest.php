@@ -84,9 +84,6 @@ class ShowActionTest extends MockeryTestCase
             ->withNoArgs()
             ->once();
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
         $browse->shouldReceive('set_type')
             ->with('user')
             ->once();

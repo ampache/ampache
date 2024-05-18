@@ -48,24 +48,23 @@ final class UserPlaylistsMethod
      * exact  = (integer) 0,1, if true filter is exact rather than fuzzy //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array<string, mixed> $input
      */
     public static function user_playlists(array $input, User $user): bool
     {
-        $exact   = (array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        $filter  = (string)($input['filter'] ?? '');
-        $browse  = Api::getBrowse();
+        $browse = Api::getBrowse();
         $browse->set_type('playlist');
-        $browse->set_sort('name', 'ASC');
-        if (!empty($filter)) {
-            if ($exact) {
-                $browse->set_filter('exact_match', $filter);
-            } else {
-                $browse->set_filter('alpha_match', $filter);
-            }
-        }
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        Api::set_filter($method, $input['filter'] ?? '', $browse);
         $browse->set_filter('playlist_user', $user->getId());
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -77,12 +76,12 @@ final class UserPlaylistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::playlists($results, $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::playlists($results, $user);
         }

@@ -60,6 +60,8 @@ final class BrowseMethod
      * update  = Api::set_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
+     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function browse(array $input, User $user): bool
     {
@@ -133,7 +135,9 @@ final class BrowseMethod
                     return false;
             }
             $child_type = $output_type;
-            $browse->set_sort('name', 'ASC');
+
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
         } else {
@@ -171,25 +175,56 @@ final class BrowseMethod
                     $output_type = 'album';
                     $filter_type = 'album_artist';
                     $browse->set_type('album');
+                    $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+                    $sort_type     = AmpConfig::get('album_sort');
+                    switch ($sort_type) {
+                        case 'name_asc':
+                            $sort  = 'name';
+                            $order = 'ASC';
+                            break;
+                        case 'name_desc':
+                            $sort  = 'name';
+                            $order = 'DESC';
+                            break;
+                        case 'year_asc':
+                            $sort  = $original_year;
+                            $order = 'ASC';
+                            break;
+                        case 'year_desc':
+                            $sort  = $original_year;
+                            $order = 'DESC';
+                            break;
+                        default:
+                            $sort  = 'name_' . $original_year;
+                            $order = 'ASC';
+                    }
                     break;
                 case 'album':
                     /** @var Album $item */
                     $output_type = 'song';
                     $filter_type = 'album';
                     $browse->set_type('song');
+                    $sort  = 'album';
+                    $order = 'ASC';
                     break;
                 case 'podcast':
                     /** @var Podcast $item */
                     $output_type = 'podcast_episode';
                     $filter_type = 'podcast';
                     $browse->set_type('podcast_episode');
+                    $sort  = 'podcast';
+                    $order = 'ASC';
                     break;
                 default:
                     $output_type = $object_type;
                     $filter_type = '';
+                    $sort        = 'name';
+                    $order       = 'ASC';
             }
             $child_type = $output_type;
-            $browse->set_sort('name', 'ASC');
+
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());
             }
@@ -198,6 +233,8 @@ final class BrowseMethod
 
         Api::set_filter('add', $input['add'] ?? '', $browse);
         Api::set_filter('update', $input['update'] ?? '', $browse);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $objects = $browse->get_objects();
         if (empty($objects)) {
@@ -210,12 +247,12 @@ final class BrowseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }

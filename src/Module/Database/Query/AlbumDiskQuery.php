@@ -217,6 +217,7 @@ final class AlbumDiskQuery implements QueryInterface
      */
     public function get_sql_sort($query, $field, $order): string
     {
+        $query->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 10);
         switch ($field) {
             case 'name':
                 $sql   = "`album`.`name` $order, `album_disk`.`disk`";
