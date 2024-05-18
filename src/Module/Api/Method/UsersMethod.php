@@ -43,13 +43,24 @@ final class UsersMethod
      * MINIMUM_API_VERSION=5.0.0
      *
      * Get ids and usernames for your site
+     * @param array{
+     *  api_format: string,
+     *  offset?: string,
+     *  limit?: string,
+     *  cond?: string,
+     *  sort?: string,
+     * } $input
      */
     public static function users(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
         $browse->set_type('user');
-        $browse->set_sort('name', 'ASC');
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC']);
+
         $browse->set_filter('disabled', 0);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -62,9 +73,13 @@ final class UsersMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::users($results);
                 break;
             default:
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::users($results);
         }
 

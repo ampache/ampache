@@ -79,14 +79,11 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
         $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
+            ->with('name_year', 'ASC')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
@@ -155,14 +152,11 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
-        $browse->shouldReceive('reset_filters')
-            ->withNoArgs()
-            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
         $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
+            ->with('name_year', 'ASC')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()

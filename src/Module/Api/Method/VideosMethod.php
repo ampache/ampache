@@ -45,9 +45,11 @@ final class VideosMethod
      * This returns video objects!
      *
      * filter = (string) Alpha-numeric search term //optional
-     * exact = (integer) 0,1, Whether to match the exact term or not //optional
+     * exact  = (integer) 0,1, Whether to match the exact term or not //optional
      * offset = (integer) //optional
-     * limit = (integer) //optional
+     * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function videos(array $input, User $user): bool
     {
@@ -58,10 +60,13 @@ final class VideosMethod
         }
         $browse = Api::getBrowse();
         $browse->set_type('video');
-        $browse->set_sort('title', 'ASC');
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         Api::set_filter($method, $input['filter'] ?? '', $browse);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -73,12 +78,12 @@ final class VideosMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::videos($results, $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::videos($results, $user);
         }
