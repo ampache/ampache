@@ -51,8 +51,8 @@ final class PlaylistsMethod
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * include     = (integer) 0,1, if true include playlist contents //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -74,7 +74,7 @@ final class PlaylistsMethod
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_type', 1);
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));

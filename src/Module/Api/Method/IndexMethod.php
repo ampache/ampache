@@ -52,8 +52,8 @@ final class IndexMethod
      * filter      = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
@@ -120,9 +120,9 @@ final class IndexMethod
         }
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', 1);
         }
