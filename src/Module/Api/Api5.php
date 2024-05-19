@@ -28,7 +28,6 @@ namespace Ampache\Module\Api;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
-use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\UserRepositoryInterface;
 

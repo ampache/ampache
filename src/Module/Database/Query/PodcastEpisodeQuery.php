@@ -169,7 +169,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         switch ($field) {
             case 'name':
             case 'title':
-            $sql = "`podcast_episode`.`title`";
+                $sql = "`podcast_episode`.`title`";
                 break;
             case 'podcast':
                 $sql = "`podcast_episode`.`$field` $order, `podcast_episode`.`pubdate` ";
