@@ -47,6 +47,7 @@ final class PodcastEpisodeQuery implements QueryInterface
     protected array $sorts = array(
         'podcast',
         'title',
+        'name',
         'catalog',
         'category',
         'author',
@@ -166,10 +167,13 @@ final class PodcastEpisodeQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'name':
+            case 'title':
+            $sql = "`podcast_episode`.`title`";
+                break;
             case 'podcast':
                 $sql = "`podcast_episode`.`$field` $order, `podcast_episode`.`pubdate` ";
                 break;
-            case 'title':
             case 'catalog':
             case 'category':
             case 'author':

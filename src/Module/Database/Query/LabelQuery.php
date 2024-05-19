@@ -40,6 +40,7 @@ final class LabelQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'title',
         'name',
         'category',
         'user',
@@ -136,6 +137,9 @@ final class LabelQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`label`.`name`";
+                break;
             case 'category':
             case 'user':
             case 'creation_date':

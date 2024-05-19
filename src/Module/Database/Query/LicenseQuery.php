@@ -40,6 +40,7 @@ final class LicenseQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'title',
         'name',
         'external_link',
     );
@@ -131,6 +132,9 @@ final class LicenseQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`license`.`name`";
+                break;
             case 'external_link':
                 $sql = "`license`.`$field`";
                 break;

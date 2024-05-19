@@ -144,6 +144,7 @@ final class TagQuery implements QueryInterface
                 $sql = "`tag`.`id`";
                 break;
             case 'name':
+            case 'title':
                 $sql = "`tag`.`name`";
                 break;
             default:

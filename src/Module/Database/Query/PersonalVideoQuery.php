@@ -35,6 +35,7 @@ final class PersonalVideoQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'name',
         'location',
         'resolution',
         'length',
