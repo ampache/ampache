@@ -39,6 +39,7 @@ final class ArtistQuery implements QueryInterface
         'catalog',
         'catalog_enabled',
         'exact_match',
+        'genre',
         'label',
         'regex_match',
         'regex_not_match',
@@ -114,6 +115,7 @@ final class ArtistQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
