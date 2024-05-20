@@ -28,11 +28,11 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600071 extends AbstractMigration
 {
-    protected array $changelog = ['Add Indexes to object_count: object_count_idx_count_object_date_object and object_count_idx_count_type_object_typ_object_id'];
+    protected array $changelog = ['Add Indexes to `object_count`: `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`'];
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_object_date_object` (`count_type`,`object_type`,`date`,`object_id`);');
-        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_object_typ_object_id` (`count_type`,`object_type`,`object_id`);');
+        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`);');
+        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`);');
     }
 }
