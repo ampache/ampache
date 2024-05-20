@@ -43,6 +43,7 @@ final class SongQuery implements QueryInterface
         'disk',
         'enabled',
         'exact_match',
+        'genre',
         'license',
         'regex_match',
         'regex_not_match',
@@ -132,6 +133,7 @@ final class SongQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
                 $filter_sql = " `artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
                 break;
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";

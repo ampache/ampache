@@ -40,6 +40,7 @@ final class AlbumQuery implements QueryInterface
         'catalog',
         'catalog_enabled',
         'exact_match',
+        'genre',
         'regex_match',
         'regex_not_match',
         'starts_with',
@@ -126,6 +127,7 @@ final class AlbumQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";

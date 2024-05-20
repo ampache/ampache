@@ -51,7 +51,7 @@ final class GetIndexesMethod
      *
      * This method is depreciated and will be removed in **API7** (Use list)
      *
-     * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
+     * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
      * filter      = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
@@ -68,8 +68,8 @@ final class GetIndexesMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $album_artist = ((string)$input['type'] == 'album_artist');
-        $type         = ($album_artist) ? 'artist' : (string)$input['type'];
+
+        $type = (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -93,7 +93,7 @@ final class GetIndexesMethod
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
+        if (!in_array(strtolower($type), array('album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'))) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -104,8 +104,6 @@ final class GetIndexesMethod
             $hide === false
         ) {
             $browse->set_type('playlist_search');
-        } elseif ($album_artist) {
-            $browse->set_type('album_artist');
         } else {
             $browse->set_type($type);
         }
