@@ -582,6 +582,10 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = ''): void
     {
+        if (empty($type)) {
+            return;
+        }
+
         if ($type === 'album_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_album_artist(true);
