@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -124,6 +125,13 @@ final class IndexMethod
         $browse->set_api_filter('update', $input['update'] ?? '');
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', 1);
+
+            if (
+                $hide === false &&
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+            ) {
+                $browse->set_filter('hide_dupe_smartlist', 1);
+            }
         }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));

@@ -87,7 +87,12 @@ final class GetIndexes4Method
             return false;
         }
         $browse = Api::getBrowse();
-        if ($album_artist) {
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
+        } elseif ($album_artist) {
             $browse->set_type('album_artist');
         } else {
             $browse->set_type($type);
@@ -101,14 +106,9 @@ final class GetIndexes4Method
 
         if ($type == 'playlist') {
             $browse->set_filter('playlist_type', 1);
-            if (!$hide) {
-                $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
-            } else {
-                $results = $browse->get_objects();
-            }
-        } else {
-            $results = $browse->get_objects();
         }
+
+        $results = $browse->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {

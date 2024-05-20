@@ -34,6 +34,8 @@ final class PlaylistSearchQuery implements QueryInterface
     public const FILTERS = array(
         'alpha_match',
         'exact_match',
+        'hide_dupe_smartlist',
+        'not_like',
         'playlist_type',
         'playlist_user',
         'regex_match',
@@ -112,6 +114,9 @@ final class PlaylistSearchQuery implements QueryInterface
             case 'alpha_match':
                 $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'not_like':
+                $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
             case 'regex_match':
                 if (!empty($value)) {
                     $filter_sql = " `playlist`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
@@ -127,6 +132,9 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'smartlist':
                 $filter_sql = " `playlist`.`id` LIKE 'smart_%' AND ";
+                break;
+            case 'hide_dupe_smartlist':
+                $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";

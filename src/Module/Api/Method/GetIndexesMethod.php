@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -52,7 +53,7 @@ final class GetIndexesMethod
      *
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
      * filter      = (string) //optional
-     *  hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
      * add         = $browse->set_api_filter(date) //optional
      * update      = $browse->set_api_filter(date) //optional
@@ -98,11 +99,11 @@ final class GetIndexesMethod
             return false;
         }
         $browse = Api::getBrowse();
-        if ($type === 'playlist') {
-            $browse->set_filter('playlist_type', 1);
-            if ($hide === false) {
-                $browse->set_type('playlist_search');
-            }
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
         } elseif ($album_artist) {
             $browse->set_type('album_artist');
         } else {
@@ -115,6 +116,16 @@ final class GetIndexesMethod
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
+
+        if ($type === 'playlist') {
+            $browse->set_filter('playlist_type', 1);
+            if (
+                $hide === false &&
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+            ) {
+                $browse->set_filter('hide_dupe_smartlist', 1);
+            }
+        }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
