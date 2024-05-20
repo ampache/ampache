@@ -26,7 +26,7 @@ namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-final class Migration600070 extends AbstractMigration
+final class Migration600071 extends AbstractMigration
 {
     protected array $changelog = ['Add Indexes to object_count: object_count_idx_count_object_date_object and object_count_idx_count_type_object_typ_object_id'];
 
