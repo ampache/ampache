@@ -99,11 +99,11 @@ final class GetIndexesMethod
             return false;
         }
         $browse = Api::getBrowse();
-        if ($type === 'playlist') {
-            $browse->set_filter('playlist_type', 1);
-            if ($hide === false) {
-                $browse->set_type('playlist_search');
-            }
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
         } elseif ($album_artist) {
             $browse->set_type('album_artist');
         } else {
@@ -117,12 +117,14 @@ final class GetIndexesMethod
         $browse->set_api_filter('add', $input['add'] ?? '');
         $browse->set_api_filter('update', $input['update'] ?? '');
 
-        if (
-            $type === 'playlist' &&
-            $hide === false &&
-            (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches')
-        ) {
-            $browse->set_filter('hide_dupe_smartlist', 1);
+        if ($type === 'playlist') {
+            $browse->set_filter('playlist_type', 1);
+            if (
+                $hide === false &&
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+            ) {
+                $browse->set_filter('hide_dupe_smartlist', 1);
+            }
         }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));

@@ -1340,14 +1340,26 @@ class Subsonic_Api
         $user = (isset($input['username']))
             ? User::get_from_username($input['username'])
             : $user;
-        $user_id   = $user->id ?? 0;
-        $response  = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
-        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
-        $searches  = Playlist::get_smartlists($user_id, '', true, true, false);
-        // allow skipping dupe search names when used as refresh searches
-        $hide_dupe_searches = (bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches');
+        $user_id  = $user->id ?? 0;
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
 
-        Subsonic_Xml_Data::addPlaylists($response, $user_id, $playlists, $searches, $hide_dupe_searches);
+        $browse = Api::getBrowse();
+        $browse->set_type('playlist_search');
+        $browse->set_sort('name', 'ASC');
+        $browse->set_filter('playlist_type', 1);
+
+        // hide duplicate searches that match name and user (if enabled)
+        if ((bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches') === true) {
+            $browse->set_filter('hide_dupe_smartlist', 1);
+        }
+        // hide playlists starting with the user string (if enabled)
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user_id, 'api_hidden_playlists')));
+        if (!empty($hide_string)) {
+            $browse->set_filter('not_like', $hide_string);
+        }
+
+        $results = $browse->get_objects();
+        Subsonic_Xml_Data::addPlaylists($response, $user, $results);
         self::_apiOutput($input, $response);
     }
 

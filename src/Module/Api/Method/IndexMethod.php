@@ -128,7 +128,7 @@ final class IndexMethod
 
             if (
                 $hide === false &&
-                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches')
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
             ) {
                 $browse->set_filter('hide_dupe_smartlist', 1);
             }
