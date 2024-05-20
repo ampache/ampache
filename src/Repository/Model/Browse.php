@@ -146,6 +146,49 @@ class Browse extends Query
     }
 
     /**
+     * set_api_filter
+     *
+     * Do some value checks for api input before attempting to set the query filter
+     * @param string $filter
+     * @param int|string|bool|null $value
+     */
+    public function set_api_filter($filter, $value): void
+    {
+        if (!strlen((string)$value)) {
+            return;
+        }
+
+        switch ($filter) {
+            case 'add':
+                // Check for a range, if no range default to gt
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $this->set_filter('add_lt', strtotime((string)$elements['1']));
+                    $this->set_filter('add_gt', strtotime((string)$elements['0']));
+                } else {
+                    $this->set_filter('add_gt', strtotime((string)$value));
+                }
+                break;
+            case 'update':
+                // Check for a range, if no range default to gt
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $this->set_filter('update_lt', strtotime((string)$elements['1']));
+                    $this->set_filter('update_gt', strtotime((string)$elements['0']));
+                } else {
+                    $this->set_filter('update_gt', strtotime((string)$value));
+                }
+                break;
+            case 'alpha_match':
+                $this->set_filter('alpha_match', $value);
+                break;
+            case 'exact_match':
+                $this->set_filter('exact_match', $value);
+                break;
+        }
+    }
+
+    /**
      * set_simple_browse
      * This sets the current browse object to a 'simple' browse method
      * which means use the base query provided and expand from there
@@ -532,6 +575,10 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = ''): void
     {
+        if (empty($type)) {
+            return;
+        }
+
         if ($type === 'album_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_album_artist(true);

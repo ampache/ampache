@@ -42,6 +42,7 @@ final class TvshowSeasonQuery implements QueryInterface
         'season',
         'tvshow',
         'title',
+        'name',
         'resolution',
         'length',
         'codec',

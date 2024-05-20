@@ -28,7 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -48,12 +48,12 @@ final class ListMethod
      *
      * This takes a named array of objects and returning `id`, `name`, `prefix` and `basename`
      *
-     * type        = (string) 'song', 'album', 'artist', 'song_artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
+     * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
      * filter      = (string) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -64,9 +64,8 @@ final class ListMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $album_artist = ((string)$input['type'] == 'album_artist');
-        $song_artist  = ((string)$input['type'] == 'song_artist');
-        $type         = ($album_artist || $song_artist) ? 'artist' : (string)$input['type'];
+
+        $type = (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -88,11 +87,12 @@ final class ListMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
+        if (!in_array(strtolower($type), array('album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'))) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
+
         $browse = Api::getBrowse();
 
         $name_type = $type;
@@ -103,10 +103,6 @@ final class ListMethod
         ) {
             $name_type = 'playlist_search';
             $browse->set_type('playlist_search');
-        } elseif ($album_artist) {
-            $browse->set_type('album_artist');
-        } elseif ($song_artist) {
-            $browse->set_type('song_artist');
         } else {
             $browse->set_type($type);
         }
@@ -114,12 +110,20 @@ final class ListMethod
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
 
         if ($type === 'playlist') {
-            $browse->set_filter('playlist_type', 1);
+            $browse->set_filter('playlist_open', $user->getId());
+
+            if (
+                $hide === false &&
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+            ) {
+                $browse->set_filter('hide_dupe_smartlist', 1);
+            }
+
         }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));

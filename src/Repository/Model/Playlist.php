@@ -147,7 +147,7 @@ class Playlist extends playlist_object
             $join = 'AND';
         }
         if (!$includeHidden) {
-            $hide_string = str_replace('%', '\%', str_replace('_', '\_', Preference::get_by_user($user_id, 'api_hidden_playlists')));
+            $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user_id, 'api_hidden_playlists')));
             if (!empty($hide_string)) {
                 $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
             }
@@ -202,68 +202,6 @@ class Playlist extends playlist_object
         }
 
         parent::add_to_cache($key, $user_id, $results);
-
-        return $results;
-    }
-
-    /**
-     * get_smartlists
-     * Returns a list of searches accessible by the user.
-     * @param int $user_id
-     * @param string $playlist_name
-     * @param bool $like
-     * @param bool $includePublic
-     * @param bool $includeHidden
-     * @param bool $userOnly
-     * @return array<string>
-     */
-    public static function get_smartlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
-    {
-        if (!$user_id) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
-        }
-        $key = 'smartlists';
-        if (empty($playlist_name)) {
-            if ($user_id > 0 && parent::is_cached($key, $user_id)) {
-                return parent::get_from_cache($key, $user_id);
-            }
-        }
-        $is_admin = ($userOnly === false || (Access::check('interface', 100, $user_id) || $user_id == -1));
-        $sql      = "SELECT CONCAT('smart_', `id`) AS `id` FROM `search` ";
-        $params   = array();
-        $join     = 'WHERE';
-
-        if (!$is_admin) {
-            $sql .= ($includePublic)
-                ? "$join (`user` = ? OR `type` = 'public') "
-                : "$join (`user` = ?) ";
-            $params[] = $user_id;
-            $join     = 'AND';
-        }
-        if ($playlist_name !== '') {
-            $playlist_name = (!$like) ? "= '" . $playlist_name . "'" : "LIKE '%" . $playlist_name . "%' ";
-            $sql .= "$join `name` " . $playlist_name;
-            $join = 'AND';
-        }
-        if (!$includeHidden) {
-            $hide_string = str_replace('%', '\%', str_replace('_', '\_', Preference::get_by_user($user_id, 'api_hidden_playlists')));
-            if (!empty($hide_string)) {
-                $sql .= "$join `name` NOT LIKE '" . Dba::escape($hide_string) . "%' ";
-            }
-        }
-        $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_smartlists ' . $sql, 5);
-
-        $db_results = Dba::read($sql, $params);
-        $results    = array();
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
-        }
-
-        if (empty($playlist_name)) {
-            parent::add_to_cache($key, $user_id, $results);
-        }
 
         return $results;
     }

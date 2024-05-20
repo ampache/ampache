@@ -34,6 +34,7 @@ final class TagQuery implements QueryInterface
         'alpha_match',
         'exact_match',
         'hidden',
+        'genre',
         'object_type',
         'regex_match',
         'regex_not_match',
@@ -113,6 +114,7 @@ final class TagQuery implements QueryInterface
                     $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
                 break;
+            case 'genre':
             case 'tag':
                 $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
                 break;
@@ -140,10 +142,12 @@ final class TagQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'genre':
             case 'tag':
                 $sql = "`tag`.`id`";
                 break;
             case 'name':
+            case 'title':
                 $sql = "`tag`.`name`";
                 break;
             default:

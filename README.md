@@ -16,7 +16,7 @@ This branch will become release7 and replace the develop and master branches.
 
 Information and changes for this major release are being recorded in the wiki [here.](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
 
-Ampache7 will continue to use **API6** and will not make any breaking changes to that [API.](https://ampache.org/api/)
+Ampache7 will continue to use **API6** and will not make any breaking changes to that [API](https://ampache.org/api/).
 
 ## Basics
 
@@ -60,9 +60,9 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
 
 * The correct PHP version for your Ampache release
   * PHP 7.1-7.4 (Ampache 4.x.x)
-  * PHP 7.4 (Ampache 5.0.x and higher)
-  * PHP 8.0 (Ampache 5.1.x and higher)
-  * PHP 8.1 (Ampache 5.5.0 and higher)
+  * PHP 7.4 (Ampache 5.0.x -> Ampache 6.x.x)
+  * PHP 8.0 (Ampache 5.1.x -> Ampache 6.x.x)
+  * PHP 8.1 (Ampache 5.5.0 -> Ampache 6.x.x)
   * PHP 8.2 (Ampache 6.0.0 and higher)
   * PHP 8.3 (Ampache 6.2.0 and higher)
 
@@ -77,7 +77,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * intl
   * simplexml
   * curl
-  * zip (Ampache 7.0.0 and higher)
+  * zip (Required in Ampache 7.0.0 and higher)
 
 * For FreeBSD The following php modules must be loaded:
   * php-xml
@@ -114,6 +114,16 @@ for more instructions.
 Translation progress so far:
 
 [![Transifex](https://www.transifex.com/_/charts/redirects/ampache/ampache/image_png/messagespot/)](https://www.transifex.com/projects/p/ampache/)
+
+## Admin tools and helper scripts
+
+There are a lot of automation and helper tools used to help keep the Ampache release processes running smoothly.
+
+The [Ampache Administrator](https://github.com/lachlan-00/ampache-administrator) repo is used to build, document and test all Ampache releases.
+
+The [ampache-python3](https://github.com/ampache/python3-ampache) repo is used heavily in the admin repo and provides a few example scripts to do some simple tasks using the latest API versions.
+
+The [Ampache Helper Scripts](https://github.com/icefields/Ampache-Helper-Scripts) uses lua and is being used to help in Android development and testing of [Power Ampache 2](https://github.com/icefields/Power-Ampache-2)
 
 ## Credits
 

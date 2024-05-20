@@ -710,33 +710,30 @@ class Subsonic_Xml_Data
     /**
      * addPlaylists
      * @param SimpleXMLElement $xml
-     * @param int $user_id
+     * @param User|null $user
      * @param array $playlists
-     * @param array $smartplaylists
-     * @param bool $hide_dupe_searches
      */
-    public static function addPlaylists($xml, $user_id, $playlists, $smartplaylists = array(), $hide_dupe_searches = false): void
+    public static function addPlaylists($xml, $user, $playlists): void
     {
-        $playlist_names = array();
-        $xplaylists     = self::addChildToResultXml($xml, 'playlists');
-        foreach ($playlists as $plist_id) {
-            $playlist = new Playlist($plist_id);
-            if ($playlist->isNew()) {
-                continue;
+        $xplaylists = self::addChildToResultXml($xml, 'playlists');
+        foreach ($playlists as $playlist_id) {
+            /**
+             * Strip smart_ from playlist id and compare to original
+             * smartlist = 'smart_1'
+             * playlist  = 1000000
+             */
+            if ((int)$playlist_id === 0) {
+                $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
+                if ($playlist->isNew()) {
+                    continue;
+                }
+            } else {
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
+                }
             }
-            if ($hide_dupe_searches && $playlist->user == $user_id) {
-                $playlist_names[] = $playlist->name;
-            }
-            self::addPlaylist($xplaylists, $playlist);
-        }
-        foreach ($smartplaylists as $plist_id) {
-            $playlist = new Search((int)str_replace('smart_', '', (string)$plist_id), 'song');
-            if (
-                $playlist->isNew() ||
-                ($hide_dupe_searches && $playlist->user == $user_id && in_array($playlist->name, $playlist_names))
-            ) {
-                continue;
-            }
+
             self::addPlaylist($xplaylists, $playlist);
         }
     }

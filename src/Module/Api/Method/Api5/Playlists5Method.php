@@ -26,14 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
+use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
 
 /**
  * Class Playlists5Method
+ * @package Lib\ApiMethods
  */
 final class Playlists5Method
 {
@@ -46,28 +48,43 @@ final class Playlists5Method
      * This returns playlists based on the specified filter
      *
      * filter      = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
      * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
+     * include     = (integer) 0,1, if true include playlist contents //optional
+     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
+     * offset      = (integer) //optional
+     * limit       = (integer) //optional
      */
     public static function playlists(array $input, User $user): bool
     {
-        $like       = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $filter     = (string)($input['filter'] ?? '');
-        $show_dupes = (bool)($input['show_dupes'] ?? false);
+        $show_dupes = (array_key_exists('show_dupes', $input))
+            ? (bool)($input['show_dupes'])
+            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
-        // regular playlists
-        $results = Playlist::get_playlists($user->id, $filter, $like, true, $show_dupes);
-        // merge with the smartlists
-        if (!$hide) {
-            $searches = Playlist::get_smartlists($user->id, $filter, $like, true, $show_dupes);
-            $results  = array_merge($results, $searches);
+        $browse = Api::getBrowse();
+        if ($hide === false) {
+            $browse->set_type('playlist_search');
+        } else {
+            $browse->set_type('playlist');
         }
+
+        $browse->set_sort('name', 'ASC');
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_filter('playlist_open', $user->getId());
+
+        if (
+            $hide === false &&
+            $show_dupes === false
+        ) {
+            $browse->set_filter('hide_dupe_smartlist', 1);
+        }
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api5::empty('playlist', $input['api_format']);
 
@@ -77,12 +94,12 @@ final class Playlists5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json5_Data::set_offset($input['offset'] ?? 0);
+                Json5_Data::set_offset((int)($input['offset'] ?? 0));
                 Json5_Data::set_limit($input['limit'] ?? 0);
                 echo Json5_Data::playlists($results, $user);
                 break;
             default:
-                Xml5_Data::set_offset($input['offset'] ?? 0);
+                Xml5_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml5_Data::set_limit($input['limit'] ?? 0);
                 echo Xml5_Data::playlists($results, $user);
         }

@@ -53,6 +53,7 @@ final class NowPlayingMethod
 
             return false;
         }
+        unset($user);
 
         ob_end_clean();
         switch ($input['api_format']) {

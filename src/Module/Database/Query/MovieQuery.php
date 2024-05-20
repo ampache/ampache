@@ -35,6 +35,7 @@ final class MovieQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'name',
         'resolution',
         'length',
         'codec',
