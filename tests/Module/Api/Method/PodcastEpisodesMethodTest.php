@@ -32,6 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
@@ -220,6 +221,7 @@ class PodcastEpisodesMethodTest extends TestCase
     {
         $stream  = $this->createMock(StreamInterface::class);
         $podcast = $this->createMock(Podcast::class);
+        $browse  = $this->createMock(Browse::class);
 
         $result    = '';
         $podcastId = 666;
@@ -236,21 +238,34 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('getBody')
             ->willReturn($stream);
 
+        $this->modelFactory->expects(static::once())
+            ->method('createBrowse')
+            ->with(null, false)
+            ->willReturn($browse);
+
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('podcast_episode');
+        $browse->expects(static::once())
+            ->method('set_sort_order')
+            ->with('', ['pubdate', 'DESC']);
+        $browse->expects(static::once())
+            ->method('set_conditions')
+            ->with('');
+        $browse->expects(static::once())
+            ->method('get_objects')
+            ->with()
+            ->willReturn([$episodeId]);
+
         $stream->expects(static::once())
             ->method('write')
-            ->with($result);
+            ->with('');
 
         $this->podcastRepository->expects(static::once())
             ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
 
-        $this->output->expects(static::once())
-            ->method('setOffset')
-            ->with($offset);
-        $this->output->expects(static::once())
-            ->method('setLimit')
-            ->with($limit);
         $this->output->expects(static::once())
             ->method('podcastEpisodes')
             ->with([$episodeId], $this->user)
