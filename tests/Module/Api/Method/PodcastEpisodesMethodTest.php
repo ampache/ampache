@@ -221,7 +221,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $stream  = $this->createMock(StreamInterface::class);
         $podcast = $this->createMock(Podcast::class);
 
-        $result    = 'some-error';
+        $result    = '';
         $podcastId = 666;
         $episodeId = 42;
         $limit     = 123;
