@@ -60,9 +60,12 @@ final class PlaylistsMethod
      */
     public static function playlists(array $input, User $user): bool
     {
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $show_dupes = (bool)($input['show_dupes'] ?? true);
         $include    = (bool)($input['include'] ?? false);
+        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $show_dupes = (array_key_exists('show_dupes', $input))
+            ? (bool)($input['show_dupes'])
+            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
+
         $browse = Api::getBrowse();
         if ($hide === false) {
             $browse->set_type('playlist_search');
@@ -78,8 +81,7 @@ final class PlaylistsMethod
 
         if (
             $hide === false &&
-            $show_dupes === false &&
-            (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches')
+            $show_dupes === false
         ) {
             $browse->set_filter('hide_dupe_smartlist', 1);
         }
