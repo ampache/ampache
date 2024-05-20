@@ -44,9 +44,11 @@ final class TvshowQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'rand',
+        'title',
         'name',
         'year',
         'title',
+        'name',
         'resolution',
         'length',
         'codec',
@@ -150,6 +152,9 @@ final class TvshowQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`tvshow`.`name`";
+                break;
             case 'year':
                 $sql = "`tvshow`.`$field`";
                 break;

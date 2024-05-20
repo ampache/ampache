@@ -34,6 +34,7 @@ final class BroadcastQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'title',
         'name',
         'user',
         'started',
@@ -104,6 +105,9 @@ final class BroadcastQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`broadcast`.`name`";
+                break;
             case 'user':
             case 'started':
             case 'listeners':

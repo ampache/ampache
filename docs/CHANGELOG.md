@@ -16,6 +16,8 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Allow sorting searches by `type`, `limit` and `random` status
 * Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
+* Database 600071
+  * Add indexes to object_count
 
 ### Changed
 
@@ -30,12 +32,17 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 ### Fixed
 
+* Fixed search rule JS showing the wrong lists id's in select items
 * Playlist Exporter wasn't checking user id correctly
 * `catalog` browses using incorrect column
 * `artist` browse by `song_artist` wasn't in the valid list
 * Missing `video` browse filters on `clip`, `movie`, `personal_video`, `tvshow`, `tvshow_season` and `tvshow_episode` browses
 * Random (`rand`) was missing from a lot of query types as a valid option
-* for searches, `random` sort was random sorting the sql and ignoring the random column (use `rand` for random result sorting)
+* For searches, `random` sort was random sorting the sql and ignoring the random column (use `rand` for random result sorting)
+* Icon text spacing was out of alignment on some object pages
+* Sort before any other browse action in case you delete the joins
+* phpmailer error info parameter is a property
+* Stream::delete_now_playing query didn't work
 
 ## API 6.5.0
 
@@ -44,14 +51,50 @@ This release has made greater use of browses reducing reliance on customizing mi
 * API6
   * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
   * artist_albums: add `album_artist` as an optional parameter
+  * get_indexes: add `catalog`, `album_artist` and `song_artist` types
+
+### Changed
+
+* Reset any existing browse when calling Api::getBrowse()
+* Filter duplicate search names outside of the data classes and filter on browses
 
 ### Fixed
 
+* ALL
+  * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
 * API6
   * list: sorting was by `id` instead of `name`
   * browse: sorting was by `id` instead of `name`
   * download: The API can use searches as playlists so check for the `smart_` prefix
   * stream: The API can use searches as playlists so check for the `smart_` prefix
+  * Respect album sort preferences in all album object responses
+  * Add `cond` and `sort` parameters to browse methods
+    * album_songs
+    * albums
+    * artist_albums
+    * artist_songs
+    * artists
+    * browse
+    * followers
+    * genre_albums
+    * genre_artists
+    * genre_songs
+    * genres
+    * get_indexes
+    * index
+    * label_artists
+    * labels
+    * license_songs
+    * licenses
+    * list
+    * live_streams
+    * playlists
+    * podcasts
+    * podcast_episodes
+    * shares
+    * songs
+    * user_playlists
+    * user_smartlists
 
 ## Ampache 6.4.0
 

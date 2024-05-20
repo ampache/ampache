@@ -34,6 +34,7 @@ final class PlaylistQuery implements QueryInterface
     public const FILTERS = array(
         'alpha_match',
         'exact_match',
+        'not_like',
         'playlist_type',
         'playlist_user',
         'regex_match',
@@ -46,6 +47,7 @@ final class PlaylistQuery implements QueryInterface
         'rand',
         'date',
         'last_update',
+        'title',
         'name',
         'rating',
         'type',
@@ -109,6 +111,9 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'alpha_match':
                 $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

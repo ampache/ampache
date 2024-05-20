@@ -45,6 +45,7 @@ final class SmartplaylistQuery implements QueryInterface
     protected array $sorts = array(
         'date',
         'last_update',
+        'title',
         'name',
         'limit',
         'rand',
@@ -155,10 +156,13 @@ final class SmartplaylistQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'name':
+            case 'title':
+                $sql = "`search`.`name`";
+                break;
             case 'date':
             case 'last_update':
             case 'limit':
-            case 'name':
             case 'random':
             case 'type':
             case 'user':

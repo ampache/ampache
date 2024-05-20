@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -51,8 +51,8 @@ final class PlaylistsMethod
      * show_dupes  = (integer) 0,1, if true ignore 'api_hide_dupe_searches' setting //optional
      * include     = (integer) 0,1, if true include playlist contents //optional
      * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
      * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -60,9 +60,11 @@ final class PlaylistsMethod
      */
     public static function playlists(array $input, User $user): bool
     {
-        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
-        $show_dupes = (bool)($input['show_dupes'] ?? true);
         $include    = (bool)($input['include'] ?? false);
+        $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
+        $show_dupes = (array_key_exists('show_dupes', $input))
+            ? (bool)($input['show_dupes'])
+            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api::getBrowse();
         if ($hide === false) {
@@ -74,8 +76,15 @@ final class PlaylistsMethod
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_filter('playlist_open', $user->getId());
+
+        if (
+            $hide === false &&
+            $show_dupes === false
+        ) {
+            $browse->set_filter('hide_dupe_smartlist', 1);
+        }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
@@ -91,12 +100,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::playlists($results, $user, $include, true, true, $show_dupes);
+                echo Json_Data::playlists($results, $user, $include);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::playlists($results, $user, $include, $show_dupes);
+                echo Xml_Data::playlists($results, $user, $include);
         }
 
         return true;

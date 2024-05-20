@@ -27,6 +27,7 @@ namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -73,7 +74,12 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ($userId > 0) {
-                    $ids = Playlist::get_smartlists($userId);
+                    $browse = new Browse(null, false);
+                    $browse->set_type('playlist_search');
+                    $browse->set_filter('playlist_user', $userId);
+                    $browse->set_filter('smartlist', 1);
+
+                    $ids = $browse->get_objects();
                 } else {
                     $ids = array($playlistId);
                 }
@@ -90,7 +96,12 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'playlists':
             default:
                 if ($userId > 0) {
-                    $ids = Playlist::get_playlists($userId);
+                    $browse = new Browse(null, false);
+                    $browse->set_type('playlist');
+                    $browse->set_sort('name', 'ASC');
+                    $browse->set_filter('playlist_user', $userId);
+
+                    $ids = $browse->get_objects();
                 } else {
                     $ids = array((int)$playlistId);
                 }

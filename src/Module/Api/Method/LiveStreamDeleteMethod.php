@@ -29,7 +29,6 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\LiveStreamRepositoryInterface;
-use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 

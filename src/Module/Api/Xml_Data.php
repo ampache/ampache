@@ -47,7 +47,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -338,7 +337,7 @@ class Xml_Data
      * we want
      *
      * @param list<int> $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'album_artist'|'song_artist'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include include children from objects that have them
      */
@@ -474,7 +473,7 @@ class Xml_Data
      * we want
      *
      * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
@@ -493,7 +492,12 @@ class Xml_Data
         // here is where we call the object type
         foreach ($objects as $object_id) {
             switch ($object_type) {
+                case 'catalog':
+                    $string .= self::catalogs($objects, $user);
+                    break;
+                case 'album_artist':
                 case 'artist':
+                case 'song_artist':
                     if ($include) {
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
                     } else {
@@ -502,14 +506,14 @@ class Xml_Data
                             break;
                         }
                         $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
+                        $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
                                 $string .= "\t<album id=\"" . $album_id . "\">\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n\t</album>\n";
                             }
                         }
-                        $string .= "</$object_type>\n";
+                        $string .= "</artist>\n";
                     }
                     break;
                 case 'album':
@@ -999,16 +1003,14 @@ class Xml_Data
      * @param array $playlists Playlist id's to include
      * @param User $user
      * @param bool $songs
-     * @param bool $show_dupes
      */
-    public static function playlists($playlists, $user, $songs = false, $show_dupes = true): string
+    public static function playlists($playlists, $user, $songs = false): string
     {
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = ($show_dupes === false) || (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
-        $playlist_names     = array();
-        $total_count        = (AmpConfig::get('hide_search', false))
+
+        $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info('playlist', $user->id);
         $string = "<total_count>" . $total_count . "</total_count>\n";
@@ -1022,10 +1024,7 @@ class Xml_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id), 'song', $user);
-                if (
-                    $playlist->isNew() ||
-                    ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names))
-                ) {
+                if ($playlist->isNew()) {
                     continue;
                 }
                 $object_type    = 'search';
@@ -1039,13 +1038,6 @@ class Xml_Data
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
-                if (
-                    $playlist->isNew() === false &&
-                    $hide_dupe_searches &&
-                    $playlist->user == $user->getId()
-                ) {
-                    $playlist_names[] = $playlist->name;
-                }
             }
             if ($songs) {
                 $items          = '';
