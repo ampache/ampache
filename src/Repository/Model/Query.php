@@ -254,6 +254,7 @@ class Query
             case 'label':
             case 'license':
             case 'min_count':
+            case 'playlist_open':
             case 'playlist_user':
             case 'podcast':
             case 'rated':

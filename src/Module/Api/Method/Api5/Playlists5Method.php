@@ -56,8 +56,6 @@ final class Playlists5Method
      * update      = $browse->set_api_filter(date) //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
-     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
-     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function playlists(array $input, User $user): bool
     {
@@ -73,11 +71,11 @@ final class Playlists5Method
             $browse->set_type('playlist');
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+        $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_filter('playlist_open', $user->getId());
 
         if (
             $hide === false &&
@@ -85,8 +83,6 @@ final class Playlists5Method
         ) {
             $browse->set_filter('hide_dupe_smartlist', 1);
         }
-
-        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
