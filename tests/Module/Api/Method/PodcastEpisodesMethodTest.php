@@ -32,6 +32,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -42,6 +43,8 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastEpisodesMethodTest extends TestCase
 {
+    private ModelFactoryInterface&MockObject $modelFactory;
+
     private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     private ConfigContainerInterface&MockObject $configContainer;
@@ -58,10 +61,12 @@ class PodcastEpisodesMethodTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastEpisodesMethod(
+            $this->modelFactory,
             $this->podcastRepository,
             $this->configContainer,
         );

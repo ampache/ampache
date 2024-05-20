@@ -94,6 +94,9 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_api_filter')
             ->with('update', '')
             ->once();
+        $browse->shouldReceive('set_conditions')
+            ->with('')
+            ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
             ->once()
@@ -175,6 +178,9 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once();
         $browse->shouldReceive('set_api_filter')
             ->with('update', '')
+            ->once();
+        $browse->shouldReceive('set_conditions')
+            ->with('')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
