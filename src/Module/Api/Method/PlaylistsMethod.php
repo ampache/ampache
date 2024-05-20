@@ -98,12 +98,12 @@ final class PlaylistsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::playlists($results, $user, $include, true, true, true);
+                echo Json_Data::playlists($results, $user, $include);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::playlists($results, $user, $include, true);
+                echo Xml_Data::playlists($results, $user, $include);
         }
 
         return true;

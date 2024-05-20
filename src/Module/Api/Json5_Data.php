@@ -544,9 +544,8 @@ class Json5_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
-        $playlist_names     = array();
-        $JSON               = [];
+
+        $JSON = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
@@ -557,10 +556,7 @@ class Json5_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if (
-                    $playlist->isNew() ||
-                    ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names))
-                ) {
+                if ($playlist->isNew()) {
                     continue;
                 }
                 $object_type    = 'search';
@@ -574,13 +570,6 @@ class Json5_Data
                 $object_type    = 'playlist';
                 $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
-                if (
-                    $playlist->isNew() === false &&
-                    $hide_dupe_searches &&
-                    $playlist->user == $user->getId()
-                ) {
-                    $playlist_names[] = $playlist->name;
-                }
             }
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;

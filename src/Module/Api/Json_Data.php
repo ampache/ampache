@@ -856,10 +856,9 @@ class Json_Data
      * @param bool $songs
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
-     * @param bool $show_dupes
      * @return array|string JSON Object "playlist"
      */
-    public static function playlists($objects, $user, $songs = false, $encode = true, $object = true, $show_dupes = true)
+    public static function playlists($objects, $user, $songs = false, $encode = true, $object = true)
     {
         $output = array(
             "total_count" => count($objects)
