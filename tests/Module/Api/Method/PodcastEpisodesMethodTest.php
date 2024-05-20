@@ -177,7 +177,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $stream  = $this->createMock(StreamInterface::class);
 
         $podcastId = 666;
-        $result    = 'some-result';
+        $result    = '';
 
         $this->configContainer->expects(static::once())
             ->method('get')
@@ -201,10 +201,6 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('writeEmpty')
             ->with('podcast_episode')
             ->willReturn($result);
-
-        $podcast->expects(static::once())
-            ->method('getEpisodeIds')
-            ->willReturn([]);
 
         static::assertSame(
             $this->response,
@@ -248,10 +244,6 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
-
-        $podcast->expects(static::once())
-            ->method('getEpisodeIds')
-            ->willReturn([$episodeId]);
 
         $this->output->expects(static::once())
             ->method('setOffset')
