@@ -64,7 +64,7 @@ final class Playlists5Method
         $hide       = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         $show_dupes = (array_key_exists('show_dupes', $input))
             ? (bool)($input['show_dupes'])
-            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
+            : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
         $browse = Api::getBrowse();
         if ($hide === false) {
