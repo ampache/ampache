@@ -39,6 +39,7 @@ final class VideoQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'catalog',
+        'genre',
         'tag',
         'update_gt',
         'update_lt'
@@ -111,6 +112,7 @@ final class VideoQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);
                 $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";

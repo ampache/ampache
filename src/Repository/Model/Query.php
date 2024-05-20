@@ -297,6 +297,7 @@ class Query
                     $this->_state['filter'][$key] = 1;
                 }
                 break;
+            case 'genre':
             case 'tag':
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
