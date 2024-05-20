@@ -57,6 +57,7 @@ final class AlbumQuery implements QueryInterface
         'catalog',
         'catalog_number',
         'generic_artist',
+        'title',
         'name',
         'name_year',
         'name_original_year',

@@ -58,6 +58,7 @@ final class SongQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'name',
         'catalog',
         'year',
         'track',
@@ -227,7 +228,10 @@ final class SongQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'name':
             case 'title':
+                $sql = "`song`.`title`";
+                break;
             case 'catalog':
             case 'year':
             case 'track':

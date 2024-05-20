@@ -35,6 +35,7 @@ final class ClipQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'name',
         'artist',
         'song',
         'resolution',

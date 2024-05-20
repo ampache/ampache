@@ -47,6 +47,7 @@ final class VideoQuery implements QueryInterface
     /** @var string[] $sorts */
     protected array $sorts = array(
         'title',
+        'name',
         'catalog',
         'resolution',
         'length',

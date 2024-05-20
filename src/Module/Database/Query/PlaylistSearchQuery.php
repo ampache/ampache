@@ -47,6 +47,7 @@ final class PlaylistSearchQuery implements QueryInterface
         'rand',
         'date',
         'last_update',
+        'title',
         'name',
         'rating',
         'type',

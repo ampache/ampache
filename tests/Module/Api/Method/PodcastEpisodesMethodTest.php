@@ -32,6 +32,8 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
+use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
@@ -42,6 +44,8 @@ use Psr\Http\Message\StreamInterface;
 
 class PodcastEpisodesMethodTest extends TestCase
 {
+    private ModelFactoryInterface&MockObject $modelFactory;
+
     private PodcastRepositoryInterface&MockObject $podcastRepository;
 
     private ConfigContainerInterface&MockObject $configContainer;
@@ -58,10 +62,12 @@ class PodcastEpisodesMethodTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
         $this->podcastRepository = $this->createMock(PodcastRepositoryInterface::class);
         $this->configContainer   = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new PodcastEpisodesMethod(
+            $this->modelFactory,
             $this->podcastRepository,
             $this->configContainer,
         );
@@ -172,7 +178,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $stream  = $this->createMock(StreamInterface::class);
 
         $podcastId = 666;
-        $result    = 'some-result';
+        $result    = '';
 
         $this->configContainer->expects(static::once())
             ->method('get')
@@ -197,10 +203,6 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with('podcast_episode')
             ->willReturn($result);
 
-        $podcast->expects(static::once())
-            ->method('getEpisodeIds')
-            ->willReturn([]);
-
         static::assertSame(
             $this->response,
             $this->subject->handle(
@@ -219,8 +221,9 @@ class PodcastEpisodesMethodTest extends TestCase
     {
         $stream  = $this->createMock(StreamInterface::class);
         $podcast = $this->createMock(Podcast::class);
+        $browse  = $this->createMock(Browse::class);
 
-        $result    = 'some-error';
+        $result    = '';
         $podcastId = 666;
         $episodeId = 42;
         $limit     = 123;
@@ -235,25 +238,34 @@ class PodcastEpisodesMethodTest extends TestCase
             ->method('getBody')
             ->willReturn($stream);
 
+        $this->modelFactory->expects(static::once())
+            ->method('createBrowse')
+            ->with(null, false)
+            ->willReturn($browse);
+
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('podcast_episode');
+        $browse->expects(static::once())
+            ->method('set_sort_order')
+            ->with('', ['pubdate', 'DESC']);
+        $browse->expects(static::once())
+            ->method('set_conditions')
+            ->with('');
+        $browse->expects(static::once())
+            ->method('get_objects')
+            ->with()
+            ->willReturn([$episodeId]);
+
         $stream->expects(static::once())
             ->method('write')
-            ->with($result);
+            ->with('');
 
         $this->podcastRepository->expects(static::once())
             ->method('findById')
             ->with($podcastId)
             ->willReturn($podcast);
 
-        $podcast->expects(static::once())
-            ->method('getEpisodeIds')
-            ->willReturn([$episodeId]);
-
-        $this->output->expects(static::once())
-            ->method('setOffset')
-            ->with($offset);
-        $this->output->expects(static::once())
-            ->method('setLimit')
-            ->with($limit);
         $this->output->expects(static::once())
             ->method('podcastEpisodes')
             ->with([$episodeId], $this->user)

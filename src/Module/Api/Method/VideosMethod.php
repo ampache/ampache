@@ -64,7 +64,7 @@ final class VideosMethod
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 

@@ -64,6 +64,7 @@ final class AlbumDiskQuery implements QueryInterface
         'barcode',
         'catalog_number',
         'generic_artist',
+        'title',
         'name',
         'name_year',
         'name_original_year',
