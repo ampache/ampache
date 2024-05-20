@@ -233,17 +233,10 @@ class Query
     public function set_filter($key, mixed $value): bool
     {
         switch ($key) {
-            case 'album_artist':
-            case 'album_disk':
-            case 'album':
-            case 'artist':
-            case 'catalog':
-            case 'disk':
             case 'gather_type':
             case 'gather_types':
             case 'hidden':
             case 'object_type':
-            case 'podcast':
             case 'smartlist':
             case 'song_artist':
             case 'user_catalog':
@@ -252,13 +245,20 @@ class Query
             case 'access':
             case 'add_gt':
             case 'add_lt':
+            case 'album_artist':
+            case 'album_disk':
+            case 'album':
+            case 'artist':
+            case 'catalog':
             case 'catalog_enabled':
             case 'disabled':
+            case 'disk':
             case 'enabled':
             case 'label':
             case 'license':
             case 'min_count':
             case 'playlist_user':
+            case 'podcast':
             case 'rated':
             case 'season_eq':
             case 'season_gt':
@@ -1231,9 +1231,12 @@ class Query
     {
         $sql = "";
         switch ($field) {
+            case 'name':
+            case 'title':
+                $sql = "`video`.`title`";
+                break;
             case 'addition_time':
             case 'catalog':
-            case 'title':
             case 'total_count':
             case 'total_skip':
             case 'update_time':

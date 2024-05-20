@@ -40,6 +40,7 @@ final class CatalogQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'title',
         'name',
         'catalog_type',
         'last_update',
@@ -131,6 +132,9 @@ final class CatalogQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`catalog`.`name`";
+                break;
             case 'catalog_type':
             case 'last_update':
             case 'last_clean':

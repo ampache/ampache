@@ -33,7 +33,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;

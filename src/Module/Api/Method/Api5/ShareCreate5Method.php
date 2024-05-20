@@ -33,7 +33,6 @@ use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\LibraryItemEnum;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;

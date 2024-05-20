@@ -56,8 +56,8 @@ final class BrowseMethod
      * filter  = (string) object_id //optional
      * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
-     * add     = Api::set_filter(date) //optional
-     * update  = Api::set_filter(date) //optional
+     * add     = $browse->set_api_filter(date) //optional
+     * update  = $browse->set_api_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
      * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -231,8 +231,8 @@ final class BrowseMethod
             $browse->set_filter('catalog', $catalog->id);
         }
 
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 

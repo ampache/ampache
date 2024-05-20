@@ -38,6 +38,7 @@ final class WantedQuery implements QueryInterface
         'user',
         'accepted',
         'artist',
+        'title',
         'name',
         'year'
     );
@@ -105,11 +106,14 @@ final class WantedQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'name':
+            case 'title':
+                $sql = "`wanted`.`name`";
+                break;
             case 'username':
             case 'user':
             case 'accepted':
             case 'artist':
-            case 'name':
             case 'year':
                 $sql = "`wanted`.`$field`";
                 break;

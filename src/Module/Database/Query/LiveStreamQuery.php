@@ -42,6 +42,7 @@ final class LiveStreamQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'title',
         'name',
         'catalog',
         'codec',
@@ -147,6 +148,9 @@ final class LiveStreamQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
+                $sql = "`live_stream`.`name`";
+                break;
             case 'catalog':
             case 'codec':
             case 'site_url':
