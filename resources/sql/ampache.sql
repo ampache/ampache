@@ -1479,7 +1479,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600070'),
+('db_version', '600071'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1883,6 +1883,12 @@ ALTER TABLE `album` ADD FULLTEXT KEY `name_2` (`name`);
 -- Indexes for table `artist`
 --
 ALTER TABLE `artist` ADD FULLTEXT KEY `name_2` (`name`);
+
+--
+-- Indexes for table `object_count`
+--
+ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_object_date_object` (`count_type`,`object_type`,`date`,`object_id`);
+ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_object_typ_object_id` (`count_type`,`object_type`,`object_id`);
 
 --
 -- Indexes for table `song`
