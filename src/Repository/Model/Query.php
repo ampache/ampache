@@ -231,6 +231,7 @@ class Query
             case 'gather_type':
             case 'gather_types':
             case 'hidden':
+            case 'hide_dupe_smartlist':
             case 'object_type':
             case 'smartlist':
             case 'song_artist':

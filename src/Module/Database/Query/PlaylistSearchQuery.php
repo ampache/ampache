@@ -34,6 +34,7 @@ final class PlaylistSearchQuery implements QueryInterface
     public const FILTERS = array(
         'alpha_match',
         'exact_match',
+        'hide_dupe_smartlist',
         'playlist_type',
         'playlist_user',
         'regex_match',
@@ -127,6 +128,9 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'smartlist':
                 $filter_sql = " `playlist`.`id` LIKE 'smart_%' AND ";
+                break;
+            case 'hide_dupe_smartlist':
+                $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
