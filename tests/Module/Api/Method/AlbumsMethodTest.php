@@ -82,8 +82,17 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
-        $browse->shouldReceive('set_sort')
-            ->with('name_year', 'ASC')
+        $browse->shouldReceive('set_sort_order')
+            ->with('', ['name_year', 'ASC'])
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('exact_match', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('add', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('update', '')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
@@ -155,8 +164,17 @@ class AlbumsMethodTest extends MockeryTestCase
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
-        $browse->shouldReceive('set_sort')
-            ->with('name_year', 'ASC')
+        $browse->shouldReceive('set_sort_order')
+            ->with('', ['name_year', 'ASC'])
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('exact_match', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('add', '')
+            ->once();
+        $browse->shouldReceive('set_api_filter')
+            ->with('update', '')
             ->once();
         $browse->shouldReceive('get_objects')
             ->withNoArgs()
