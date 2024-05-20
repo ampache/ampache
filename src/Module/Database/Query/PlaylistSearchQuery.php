@@ -35,6 +35,7 @@ final class PlaylistSearchQuery implements QueryInterface
         'alpha_match',
         'exact_match',
         'hide_dupe_smartlist',
+        'not_like',
         'playlist_type',
         'playlist_user',
         'regex_match',
@@ -112,6 +113,9 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'alpha_match':
                 $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
