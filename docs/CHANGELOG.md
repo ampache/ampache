@@ -16,6 +16,8 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Allow sorting searches by `type`, `limit` and `random` status
 * Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
+* Database 600071
+  * Add indexes to object_count
 
 ### Changed
 
@@ -40,6 +42,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Icon text spacing was out of alignment on some object pages
 * Sort before any other browse action in case you delete the joins
 * phpmailer error info parameter is a property
+* Stream::delete_now_playing query didn't work
 
 ## API 6.5.0
 
@@ -48,6 +51,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 * API6
   * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
   * artist_albums: add `album_artist` as an optional parameter
+  * get_indexes: add `catalog`, `album_artist` and `song_artist` types
 
 ### Changed
 
@@ -57,7 +61,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 ### Fixed
 
 * ALL
-  * html_entity_decode include parameter for all methods
+  * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
 * API6
   * list: sorting was by `id` instead of `name`
   * browse: sorting was by `id` instead of `name`

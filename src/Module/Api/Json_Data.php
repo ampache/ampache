@@ -204,7 +204,7 @@ class Json_Data
      * This takes an array of object_ids and return JSON based on the type of object
      *
      * @param list<int> $objects Array of object_ids (Mixed string|int)
-     * @param string $type 'catalog'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string  JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -346,7 +346,7 @@ class Json_Data
      * This takes an array of object_ids and return JSON based on the type of object
      *
      * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -355,6 +355,10 @@ class Json_Data
     {
         // here is where we call the object type
         switch ($type) {
+            case 'catalog':
+                /** @var string $results */
+                $results = self::catalogs($objects);
+                break;
             case 'song':
                 /** @var string $results */
                 $results = self::songs($objects, $user);
@@ -364,7 +368,9 @@ class Json_Data
                 /** @var string $results */
                 $results = self::albums($objects, $include_array, $user);
                 break;
+            case 'album_artist':
             case 'artist':
+            case 'song_artist':
                 $include_array = ($include) ? array('songs', 'albums') : array();
                 /** @var string $results */
                 $results = self::artists($objects, $include_array, $user);
