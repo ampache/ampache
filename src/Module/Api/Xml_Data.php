@@ -337,7 +337,7 @@ class Xml_Data
      * we want
      *
      * @param list<int> $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'album_artist'|'song_artist'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include include children from objects that have them
      */
@@ -473,7 +473,7 @@ class Xml_Data
      * we want
      *
      * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
@@ -492,7 +492,12 @@ class Xml_Data
         // here is where we call the object type
         foreach ($objects as $object_id) {
             switch ($object_type) {
+                case 'catalog':
+                    $string .= self::catalogs($objects, $user);
+                    break;
+                case 'album_artist':
                 case 'artist':
+                case 'song_artist':
                     if ($include) {
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
                     } else {
@@ -501,14 +506,14 @@ class Xml_Data
                             break;
                         }
                         $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
+                        $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
                                 $string .= "\t<album id=\"" . $album_id . "\">\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n\t</album>\n";
                             }
                         }
-                        $string .= "</$object_type>\n";
+                        $string .= "</artist>\n";
                     }
                     break;
                 case 'album':
