@@ -168,7 +168,7 @@ final class StatsMethod
                         $browse = Api::getBrowse();
                         $browse->set_type('playlist_search');
                         $browse->set_sort('rand');
-                        $browse->set_filter('playlist_type', 1);
+                        $browse->set_filter('playlist_open', $user->getId());
 
                         $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
                         if (!empty($hide_string)) {

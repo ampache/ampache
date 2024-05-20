@@ -77,7 +77,7 @@ final class PlaylistsMethod
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_filter('playlist_open', $user->getId());
 
         if (
             $hide === false &&

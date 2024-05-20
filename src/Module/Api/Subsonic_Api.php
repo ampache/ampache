@@ -1346,7 +1346,7 @@ class Subsonic_Api
         $browse = Api::getBrowse();
         $browse->set_type('playlist_search');
         $browse->set_sort('name', 'ASC');
-        $browse->set_filter('playlist_type', 1);
+        $browse->set_filter('playlist_open', $user_id);
 
         // hide duplicate searches that match name and user (if enabled)
         if ((bool)Preference::get_by_user($user_id, 'api_hide_dupe_searches') === true) {
