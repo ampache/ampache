@@ -386,6 +386,10 @@ class Query
     /**
      * get_sort
      * This returns the current sort
+     * @return array{
+     *  name: string|null,
+     *  order: string|null
+     * }
      */
     public function get_sort(): array
     {
