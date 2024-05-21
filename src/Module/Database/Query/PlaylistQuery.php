@@ -129,7 +129,7 @@ final class PlaylistQuery implements QueryInterface
             case 'starts_with':
                 $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
-            case 'starts_with':
+            case 'not_starts_with':
                 $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'playlist_user':
