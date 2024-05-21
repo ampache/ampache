@@ -282,6 +282,7 @@ class Query
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
+            case 'not_starts_with':
                 if ($this->is_static_content()) {
                     return false;
                 }
@@ -578,6 +579,7 @@ class Query
             case 'shoutbox':
                 $this->queryType = new ShoutboxQuery();
                 break;
+            case 'search':
             case 'smartplaylist':
                 $this->queryType = new SmartPlaylistQuery();
                 break;
