@@ -71,9 +71,8 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'smartlists':
                 if ($userId > 0) {
                     $browse = new Browse(null, false);
-                    $browse->set_type('playlist_search');
+                    $browse->set_type('smartplaylist');
                     $browse->set_filter('playlist_user', $userId);
-                    $browse->set_filter('smartlist', 1);
 
                     $ids = $browse->get_objects();
                 } else {

@@ -1356,7 +1356,7 @@ class Subsonic_Api
         // hide playlists starting with the user string (if enabled)
         $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user_id, 'api_hidden_playlists')));
         if (!empty($hide_string)) {
-            $browse->set_filter('not_like', $hide_string);
+            $browse->set_filter('not_starts_with', $hide_string);
         }
 
         $results = $browse->get_objects();

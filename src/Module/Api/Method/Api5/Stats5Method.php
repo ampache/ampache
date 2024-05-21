@@ -166,7 +166,7 @@ final class Stats5Method
 
                         $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
                         if (!empty($hide_string)) {
-                            $browse->set_filter('not_like', $hide_string);
+                            $browse->set_filter('not_starts_with', $hide_string);
                         }
 
                         $results = $browse->get_objects();

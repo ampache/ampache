@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600071 extends AbstractMigration
@@ -32,7 +33,10 @@ final class Migration600071 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`);');
-        $this->updateDatabase('ALTER TABLE `object_count` ADD INDEX IF NOT EXISTS `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`);');
+        Dba::write('ALTER TABLE `object_count` DROP KEY `object_count_idx_count_type_date_id`');
+        $this->updateDatabase('CREATE INDEX `object_count_idx_count_type_date_id` USING BTREE ON `object_count` (`count_type`,`object_type`,`date`,`object_id`)');
+
+        Dba::write('ALTER TABLE `object_count` DROP KEY `object_count_idx_count_type_id`');
+        $this->updateDatabase('CREATE INDEX `object_count_idx_count_type_id` USING BTREE ON `object_count` (`count_type`,`object_type`,`object_id`)');
     }
 }
