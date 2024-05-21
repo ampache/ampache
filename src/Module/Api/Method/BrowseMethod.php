@@ -243,7 +243,8 @@ final class BrowseMethod
             return false;
         }
 
-        $results = Catalog::get_name_array($objects, $output_type, 'name');
+        $sort    = $browse->get_sort();
+        $results = Catalog::get_name_array($objects, $output_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
