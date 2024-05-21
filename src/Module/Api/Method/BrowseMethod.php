@@ -73,8 +73,9 @@ final class BrowseMethod
 
             return false;
         }
+
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('root', 'catalog', 'artist', 'album', 'podcast'))) {
+        if (!in_array(strtolower($object_type), array('root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'))) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -171,6 +172,7 @@ final class BrowseMethod
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
+                case 'album_artist':
                     /** @var Artist $item */
                     $output_type = 'album';
                     $filter_type = 'album_artist';
