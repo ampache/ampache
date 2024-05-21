@@ -173,7 +173,7 @@ final class BrowseMethod
             switch ($object_type) {
                 case 'artist':
                 case 'album_artist':
-                    /** @var Artist $item */
+                    $object_type = 'artist';
                     $output_type = 'album';
                     $filter_type = 'album_artist';
                     $browse->set_type('album');
@@ -202,7 +202,6 @@ final class BrowseMethod
                     }
                     break;
                 case 'album':
-                    /** @var Album $item */
                     $output_type = 'song';
                     $filter_type = 'album';
                     $browse->set_type('song');
@@ -210,7 +209,6 @@ final class BrowseMethod
                     $order = 'ASC';
                     break;
                 case 'podcast':
-                    /** @var Podcast $item */
                     $output_type = 'podcast_episode';
                     $filter_type = 'podcast';
                     $browse->set_type('podcast_episode');
