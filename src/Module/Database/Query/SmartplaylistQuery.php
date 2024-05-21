@@ -34,11 +34,14 @@ final class SmartplaylistQuery implements QueryInterface
     public const FILTERS = array(
         'alpha_match',
         'exact_match',
+        'not_like',
+        'playlist_open',
         'playlist_type',
         'playlist_user',
         'regex_match',
         'regex_not_match',
-        'starts_with'
+        'starts_with',
+        'not_starts_with'
     );
 
     /** @var string[] $sorts */
@@ -58,7 +61,7 @@ final class SmartplaylistQuery implements QueryInterface
     );
 
     /** @var string */
-    protected $select = "`search`.`id`";
+    protected $select = "CONCAT('smart_', `search`.`id`) AS `id`";
 
     /** @var string */
     protected $base = "SELECT %%SELECT%% FROM `search` ";
@@ -113,6 +116,9 @@ final class SmartplaylistQuery implements QueryInterface
             case 'alpha_match':
                 $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'not_like':
+                $filter_sql = " `search`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
             case 'regex_match':
                 if (!empty($value)) {
                     $filter_sql = " `search`.`name` REGEXP '" . Dba::escape($value) . "' AND ";
@@ -125,6 +131,12 @@ final class SmartplaylistQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `search`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `search`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'playlist_open':
+                $filter_sql = "  (`search`.`type` = 'public' OR `search`.`user`=" . (int)$value . ") AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `search`.`user` = " . (int)$value . " AND ";

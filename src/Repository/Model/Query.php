@@ -72,7 +72,7 @@ use Ampache\Module\System\Dba;
  */
 class Query
 {
-    private const SORT_STATE = [
+    private const SORT_ORDER = [
         'last_update' => 'ASC',
         'original_year' => 'ASC',
         'rating' => 'ASC',
@@ -118,7 +118,10 @@ class Query
         'simple' => false,
         // Used by $browse->set_type() to filter artists
         'song_artist' => null,
-        'sort' => [],
+        'sort' => [
+            'name' => null,
+            'order' => null,
+        ],
         'start' => 0,
         'static' => false,
         'threshold' => '',
@@ -284,6 +287,7 @@ class Query
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
+            case 'not_starts_with':
                 if ($this->is_static_content()) {
                     return false;
                 }
@@ -337,11 +341,15 @@ class Query
     public function reset(): void
     {
         $this->_state['base']   = null;
-        $this->_state['filter'] = array();
-        $this->_state['total']  = null;
-        $this->_state['join']   = array();
         $this->_state['select'] = array();
+        $this->_state['join']   = array();
+        $this->_state['filter'] = array();
         $this->_state['having'] = '';
+        $this->_state['total']  = null;
+        $this->_state['sort']   = array(
+            'name' => null,
+            'order' => null,
+        );
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
@@ -373,6 +381,15 @@ class Query
     public function get_offset(): int
     {
         return $this->_state['offset'] ?? 0;
+    }
+
+    /**
+     * get_sort
+     * This returns the current sort
+     */
+    public function get_sort(): array
+    {
+        return $this->_state['sort'];
     }
 
     /**
@@ -569,6 +586,7 @@ class Query
             case 'shoutbox':
                 $this->queryType = new ShoutboxQuery();
                 break;
+            case 'search':
             case 'smartplaylist':
                 $this->queryType = new SmartPlaylistQuery();
                 break;
@@ -643,32 +661,24 @@ class Query
         $this->_get_filter_sql();
         $this->_get_sort_sql();
 
-        if ($sort === 'rand') {
-            // reset any existing sorts before setting a new one
-            $this->_state['sort']         = [];
-            $this->_state['sort']['rand'] = $order;
-
-            $this->_resort_objects();
-
-            return;
-        }
         if (!empty($order)) {
             $order = ($order == 'DESC')
                 ? 'DESC'
                 : 'ASC';
         } else {
             // if the sort already exists you want the reverse
-            $state = (array_key_exists($sort, $this->_state['sort']))
-                ? $this->_state['sort'][$sort]
-                : self::SORT_STATE[$sort] ?? 'DESC';
+            $state = ($this->_state['sort']['name'] === $sort)
+                ? $this->_state['sort']['order']
+                : self::SORT_ORDER[$sort] ?? 'DESC';
             $order = ($state == 'ASC')
                 ? 'DESC'
                 : 'ASC';
         }
 
-        // reset any existing sorts before setting a new one
-        $this->_state['sort']        = [];
-        $this->_state['sort'][$sort] = $order;
+        $this->_state['sort'] = [
+            'name' => $sort,
+            'order' => $order,
+        ];
 
         $this->_resort_objects();
     }
@@ -1025,9 +1035,7 @@ class Query
 
         $sql = 'ORDER BY ';
 
-        foreach ($this->_state['sort'] as $key => $value) {
-            $sql .= $this->_sql_sort($key, $value);
-        }
+        $sql .= $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
 
         $sql = rtrim($sql, 'ORDER BY ');
 
@@ -1316,11 +1324,9 @@ class Query
             $order_sql = " ORDER BY ";
 
             // There should only be one of these in a browse
-            foreach ($this->_state['sort'] as $key => $value) {
-                $sql_sort = $this->_sql_sort($key, $value);
-                $order_sql .= $sql_sort;
-                $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
-            }
+            $sql_sort = $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
+            $order_sql .= $sql_sort;
+            $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
 
             // Clean her up
             $order_sql = rtrim($order_sql, "ORDER BY ");

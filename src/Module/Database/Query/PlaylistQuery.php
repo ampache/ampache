@@ -39,7 +39,8 @@ final class PlaylistQuery implements QueryInterface
         'playlist_user',
         'regex_match',
         'regex_not_match',
-        'starts_with'
+        'starts_with',
+        'not_starts_with'
     );
 
     /** @var string[] $sorts */
@@ -113,7 +114,7 @@ final class PlaylistQuery implements QueryInterface
                 $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'not_like':
-                $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                $filter_sql = " `playlist`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -127,6 +128,9 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `playlist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";

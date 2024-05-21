@@ -51,8 +51,7 @@ final class UserMethod
      *
      * @param array{
      *  api_format: string,
-     *  username?: scalar,
-     *  api_format: string
+     *  username?: scalar
      * } $input
      */
     public static function user(array $input, User $user): bool
