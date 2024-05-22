@@ -66,7 +66,7 @@ final class UserSmartlistsMethod
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
-        $results = $browse->get_objects();
+        $results = preg_filter('/^/', 'smart_', $browse->get_objects());
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 

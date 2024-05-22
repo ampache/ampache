@@ -61,7 +61,7 @@ final class SmartplaylistQuery implements QueryInterface
     );
 
     /** @var string */
-    protected $select = "CONCAT('smart_', `search`.`id`) AS `id`";
+    protected $select = "`search`.`id`";
 
     /** @var string */
     protected $base = "SELECT %%SELECT%% FROM `search` ";
