@@ -65,6 +65,14 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+            if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
+                $interactor->error(
+                    T_('Catalog root unreadable, stopping check'),
+                    true
+                );
+
+                return;
+            }
             ob_flush();
             // Identify the catalog and file (if it exists in the DB)
             /** @var Catalog_local $catalog */
