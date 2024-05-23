@@ -1540,6 +1540,11 @@ abstract class Catalog extends database_object
             case 'artist':
                 $sql = sprintf('SELECT DISTINCT `%s`.`id`, LTRIM(CONCAT(COALESCE(`%s`.`prefix`, \'\'), \' \', `%s`.`name`)) AS `name` FROM `%s` WHERE `id` IN (', $table, $table, $table, $table) . implode(",", $objects) . ")";
                 break;
+            case 'album_artist':
+            case 'artist':
+            case 'song_artist':
+                $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` WHERE `id` IN (" . implode(",", $objects) . ")";
+                break;
             case 'catalog':
             case 'live_stream':
             case 'playlist':

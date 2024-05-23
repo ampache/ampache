@@ -31,6 +31,7 @@ namespace Ampache\Repository\Model;
 enum ObjectTypeEnum: string
 {
     case ALBUM           = 'album';
+    case ALBUM_ARTIST    = 'album_artist';
     case ALBUM_DISK      = 'album_disk';
     case ART             = 'art';
     case ARTIST          = 'artist';
@@ -46,6 +47,7 @@ enum ObjectTypeEnum: string
     case PODCAST_EPISODE = 'podcast_episode';
     case SEARCH          = 'search';
     case SHARE           = 'share';
+    case SONG_ARTIST     = 'song_artist';
     case SONG            = 'song';
     case SONG_PREVIEW    = 'song_preview';
     case TAG_HIDDEN      = 'tag_hidden';

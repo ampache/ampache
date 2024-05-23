@@ -65,6 +65,7 @@ final class ObjectTypeToClassNameMapper
     /** @var array<string, class-string<database_object>> */
     private const OBJECT_TYPE_MAPPING = [
         ObjectTypeEnum::ALBUM->value => Album::class,
+        ObjectTypeEnum::ALBUM_ARTIST->value => Artist::class,
         ObjectTypeEnum::ALBUM_DISK->value => AlbumDisk::class,
         ObjectTypeEnum::ART->value => Art::class,
         ObjectTypeEnum::ARTIST->value => Artist::class,
@@ -81,6 +82,7 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::SEARCH->value => Search::class,
         ObjectTypeEnum::SHARE->value => Share::class,
         ObjectTypeEnum::SONG->value => Song::class,
+        ObjectTypeEnum::SONG_ARTIST->value => Artist::class,
         ObjectTypeEnum::SONG_PREVIEW->value => Song_Preview::class,
         ObjectTypeEnum::TAG_HIDDEN->value => Tag::class,
         ObjectTypeEnum::TAG->value => Tag::class,
