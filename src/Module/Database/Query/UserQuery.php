@@ -31,9 +31,14 @@ use Ampache\Repository\Model\Query;
 final class UserQuery implements QueryInterface
 {
     public const FILTERS = array(
+        'alpha_match',
+        'exact_match',
+        'regex_match',
+        'regex_not_match',
         'access',
         'disabled',
         'starts_with',
+        'not_starts_with',
     );
 
     /** @var string[] $sorts */
@@ -103,8 +108,31 @@ final class UserQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'exact_match':
+                $filter_sql = " (`user`.`fullname` = '" . Dba::escape($value) . "' OR `user`.`username` = '" . Dba::escape($value) . "' OR `user`.`email` = '" . Dba::escape($value) . "') AND ";
+                break;
+            case 'alpha_match':
+                $filter_sql = " (`user`.`fullname` LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` LIKE '%" . Dba::escape($value) . "%') AND ";
+                break;
+            case 'regex_match':
+                if (!empty($value)) {
+                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "%' OR " .
+                        "`user`.`username` REGEXP '" . Dba::escape($value) . "%' OR " .
+                        "`user`.`email` REGEXP '" . Dba::escape($value) . "%') AND ";
+                }
+                break;
+            case 'regex_not_match':
+                if (!empty($value)) {
+                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
+                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
+                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "%') AND ";
+                }
+                break;
             case 'starts_with':
                 $filter_sql = " (`user`.`fullname` LIKE '" . Dba::escape($value) . "%' OR `user`.`username` LIKE '" . Dba::escape($value) . "%' OR `user`.`email` LIKE '" . Dba::escape($value) . "%') AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " (`user`.`fullname` NOT LIKE '" . Dba::escape($value) . "%' OR `user`.`username` NOT LIKE '" . Dba::escape($value) . "%' OR `user`.`email` NOT LIKE '" . Dba::escape($value) . "%') AND ";
                 break;
             case 'access':
             case 'disabled':

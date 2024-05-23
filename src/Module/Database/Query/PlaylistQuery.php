@@ -35,6 +35,7 @@ final class PlaylistQuery implements QueryInterface
         'alpha_match',
         'exact_match',
         'not_like',
+        'playlist_open',
         'playlist_type',
         'playlist_user',
         'regex_match',
@@ -131,6 +132,9 @@ final class PlaylistQuery implements QueryInterface
                 break;
             case 'not_starts_with':
                 $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'playlist_open':
+                $filter_sql = "  (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . ") AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
