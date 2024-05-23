@@ -69,7 +69,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 $items = Catalog::get_artists();
                 break;
             case 'smartlists':
-                if ($userId > 0) {
+                if ((int)$playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('smartplaylist');
                     $browse->set_filter('playlist_user', $userId);
@@ -90,7 +90,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'playlists':
             default:
-                if ($userId > 0) {
+                if ((int)$playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('playlist');
                     $browse->set_sort('name', 'ASC');
