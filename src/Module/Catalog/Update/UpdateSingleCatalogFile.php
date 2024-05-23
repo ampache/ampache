@@ -65,6 +65,14 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
 
                 return;
             }
+            if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
+                $interactor->error(
+                    T_('Catalog root unreadable, stopping check'),
+                    true
+                );
+
+                return;
+            }
             ob_flush();
             // Identify the catalog and file (if it exists in the DB)
             /** @var Catalog_local $catalog */
@@ -90,8 +98,12 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     break;
             }
             $file_test = is_file($filePath);
-            // deleted file
-            if (!$file_test && $cleanupMode == 1) {
+            // deleted file but it was valid media in the database
+            if (
+                $media->isNew() === false &&
+                !$file_test &&
+                $cleanupMode == 1
+            ) {
                 $catalog->clean_file($filePath, $type);
                 $interactor->info(
                     sprintf(T_('Removing File: "%s"'), $filePath),

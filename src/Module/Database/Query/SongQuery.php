@@ -181,7 +181,7 @@ final class SongQuery implements QueryInterface
                 $filter_sql = " `song`.`disk` = '" . Dba::escape($value) . "' AND ";
                 break;
             case 'artist':
-                $filter_sql = " `song`.`artist` = '" . Dba::escape($value) . "' AND ";
+                $filter_sql = " `song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_map`.`artist_id` = '" . Dba::escape($value) . "' AND `artist_map`.`object_type` = 'song') AND ";
                 break;
             case 'add_lt':
                 $filter_sql = " `song`.`addition_time` <= '" . Dba::escape($value) . "' AND ";
