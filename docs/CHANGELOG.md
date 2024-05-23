@@ -23,6 +23,8 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * Extract the Query class into individual classes
 * Album browse `artist` was only selecting `album_artist`
+* Subsonic
+  * Convert getPlaylists process to a browse
 
 ### Removed
 
@@ -53,12 +55,39 @@ This release has made greater use of browses reducing reliance on customizing mi
 * API6
   * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
   * artist_albums: add `album_artist` as an optional parameter
-  * get_indexes: add `catalog`, `album_artist` and `song_artist` types
+  * get_indexes: add `catalog`, `album_artist` and `song_artist` as possible `type` values
+  * list: add `catalog` and `song_artist` as possible `type` values
 
 ### Changed
 
 * Reset any existing browse when calling Api::getBrowse()
 * Filter duplicate search names outside of the data classes and filter on browses
+* API6 methods converted to Browse
+  * artist_albums
+  * artist_songs
+  * browse (`catalog` types)
+  * catalogs
+  * followers
+  * genre_albums
+  * genre_artists
+  * genre_songs
+  * get_indexes (`catalog` and `playlist` types)
+  * index (`catalog` and `playlist` types)
+  * label_artists
+  * license_songs
+  * list (`playlist` types)
+  * playlists
+  * podcast_episodes
+  * stats (random `playlist` types)
+  * user_playlists
+  * user_smartlists
+* API5 methods converted to Browse
+  * get_indexes (`playlist` types)
+  * playlists
+  * stats (random `playlist` types)
+* API4 methods converted to Browse
+  * get_indexes (`playlist` types)
+  * playlists
 
 ### Fixed
 
@@ -77,6 +106,7 @@ This release has made greater use of browses reducing reliance on customizing mi
     * artist_songs
     * artists
     * browse
+    * catalogs
     * followers
     * genre_albums
     * genre_artists
