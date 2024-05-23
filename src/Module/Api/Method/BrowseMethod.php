@@ -73,8 +73,9 @@ final class BrowseMethod
 
             return false;
         }
+
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('root', 'catalog', 'artist', 'album', 'podcast'))) {
+        if (!in_array(strtolower($object_type), array('root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'))) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -171,7 +172,8 @@ final class BrowseMethod
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
-                    /** @var Artist $item */
+                case 'album_artist':
+                    $object_type = 'artist';
                     $output_type = 'album';
                     $filter_type = 'album_artist';
                     $browse->set_type('album');
@@ -200,7 +202,6 @@ final class BrowseMethod
                     }
                     break;
                 case 'album':
-                    /** @var Album $item */
                     $output_type = 'song';
                     $filter_type = 'album';
                     $browse->set_type('song');
@@ -208,7 +209,6 @@ final class BrowseMethod
                     $order = 'ASC';
                     break;
                 case 'podcast':
-                    /** @var Podcast $item */
                     $output_type = 'podcast_episode';
                     $filter_type = 'podcast';
                     $browse->set_type('podcast_episode');
@@ -243,7 +243,8 @@ final class BrowseMethod
             return false;
         }
 
-        $results = Catalog::get_name_array($objects, $output_type, 'name');
+        $sort    = $browse->get_sort();
+        $results = Catalog::get_name_array($objects, $output_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':

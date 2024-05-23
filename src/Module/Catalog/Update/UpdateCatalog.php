@@ -27,6 +27,7 @@ namespace Ampache\Module\Catalog\Update;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
@@ -99,6 +100,13 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 sprintf(T_('Reading Catalog: "%s"'), $catalog->name),
                 true
             );
+            if (isset($catalog->path) && !Core::is_readable($catalog->path)) {
+                $interactor->error(
+                    T_('Catalog root unreadable, stopping check'),
+                    true
+                );
+                break;
+            }
             $interactor->eol();
             if ($missing === true) {
                 ob_start();

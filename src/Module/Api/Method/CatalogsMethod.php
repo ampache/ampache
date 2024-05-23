@@ -47,6 +47,8 @@ final class CatalogsMethod
      * filter = (string) set $filter_type 'music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast' //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function catalogs(array $input, User $user): bool
     {

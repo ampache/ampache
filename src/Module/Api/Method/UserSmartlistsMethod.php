@@ -56,18 +56,17 @@ final class UserSmartlistsMethod
     public static function user_smartlists(array $input, User $user): bool
     {
         $browse = Api::getBrowse();
-        $browse->set_type('playlist_search');
+        $browse->set_type('smartplaylist');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
         $browse->set_filter('playlist_user', $user->getId());
-        $browse->set_filter('smartlist', 1);
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
-        $results = $browse->get_objects();
+        $results = preg_filter('/^/', 'smart_', $browse->get_objects());
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 
