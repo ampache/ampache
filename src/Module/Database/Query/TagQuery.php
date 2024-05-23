@@ -38,6 +38,8 @@ final class TagQuery implements QueryInterface
         'object_type',
         'regex_match',
         'regex_not_match',
+        'starts_with',
+        'not_starts_with',
         'tag'
     );
 
@@ -113,6 +115,12 @@ final class TagQuery implements QueryInterface
                 if (!empty($value)) {
                     $filter_sql = " `tag`.`name` NOT REGEXP '" . Dba::escape($value) . "' AND ";
                 }
+                break;
+            case 'starts_with':
+                $filter_sql = " `tag`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `tag`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'genre':
             case 'tag':

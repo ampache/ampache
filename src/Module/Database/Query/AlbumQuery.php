@@ -44,6 +44,7 @@ final class AlbumQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'tag',
         'unplayed',
         'update_gt',
@@ -156,6 +157,13 @@ final class AlbumQuery implements QueryInterface
             case 'starts_with':
                 $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
                 $filter_sql = " `album`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                if ($query->catalog != 0) {
+                    $filter_sql .= "`album`.`catalog` = '" . $query->catalog . "' AND ";
+                }
+                break;
+            case 'not_starts_with':
+                $query->set_join('LEFT', '`song`', '`album`.`id`', '`song`.`album`', 100);
+                $filter_sql = " `album`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 if ($query->catalog != 0) {
                     $filter_sql .= "`album`.`catalog` = '" . $query->catalog . "' AND ";
                 }

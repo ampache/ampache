@@ -35,7 +35,8 @@ final class LicenseQuery implements QueryInterface
         'exact_match',
         'regex_match',
         'regex_not_match',
-        'starts_with'
+        'starts_with',
+        'not_starts_with',
     );
 
     /** @var string[] $sorts */
@@ -113,6 +114,9 @@ final class LicenseQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `license`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `license`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
         }
 
