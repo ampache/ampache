@@ -38,6 +38,7 @@ final class VideoQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'catalog',
         'genre',
         'tag',
@@ -140,6 +141,9 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `video`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `video`.`title` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'add_lt':
                 $filter_sql = " `video`.`addition_time` <= '" . Dba::escape($value) . "' AND ";

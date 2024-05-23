@@ -44,6 +44,7 @@ final class ArtistQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'tag',
         'unplayed',
         'update_gt',
@@ -144,6 +145,13 @@ final class ArtistQuery implements QueryInterface
             case 'starts_with':
                 $query->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
                 $filter_sql = " `artist`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                if ($query->catalog != 0) {
+                    $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
+                }
+                break;
+            case 'not_starts_with':
+                $query->set_join('LEFT', '`song`', '`artist`.`id`', '`song`.`artist`', 100);
+                $filter_sql = " `artist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 if ($query->catalog != 0) {
                     $filter_sql .= "`song`.`catalog` = '" . $query->catalog . "' AND ";
                 }
