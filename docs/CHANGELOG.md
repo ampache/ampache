@@ -33,7 +33,6 @@ This release has made greater use of browses reducing reliance on customizing mi
 ### Fixed
 
 * Fixed search rule JS showing the wrong lists id's in select items
-* Playlist Exporter wasn't checking user id correctly
 * `catalog` browses using incorrect column
 * `artist` browse by `song_artist` wasn't in the valid list
 * Missing `video` browse filters on `clip`, `movie`, `personal_video`, `tvshow`, `tvshow_season` and `tvshow_episode` browses
@@ -43,6 +42,9 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Sort before any other browse action in case you delete the joins
 * phpmailer error info parameter is a property
 * Stream::delete_now_playing query didn't work
+* CLI
+  * Check catalog path is readable on updateCatalog actions
+  * Don't try to clean a file if it wasn't valid media
 
 ## API 6.5.0
 
