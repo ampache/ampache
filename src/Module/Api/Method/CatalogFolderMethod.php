@@ -133,9 +133,13 @@ final class CatalogFolderMethod
                     $changed++;
                 }
             }
+            // Run commands on the current files in the folder path
             foreach ($file_ids as $file_id) {
                 /** @var Song|Podcast_Episode|Video $className */
                 $media = new $className($file_id);
+                if ($media->isNew()) {
+                    continue;
+                }
                 foreach ($task as $item) {
                     if (defined('SSE_OUTPUT')) {
                         unset($SSE_OUTPUT);
@@ -150,12 +154,10 @@ final class CatalogFolderMethod
                             }
                             break;
                         case 'verify':
-                            if ($media->isNew() === false) {
-                                Catalog::update_media_from_tags($media, array($type));
-                            }
+                            Catalog::update_media_from_tags($media, array($type));
                             break;
                         case 'remove':
-                            if ($media->id && $media->remove()) {
+                            if ($media->remove()) {
                                 $changed++;
                             }
                             break;
