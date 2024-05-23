@@ -35,6 +35,7 @@ final class PvmsgQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'to_user',
         'user'
     );
@@ -112,6 +113,9 @@ final class PvmsgQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `user_pvmsg`.`subject` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `user_pvmsg`.`subject` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'user':
                 $filter_sql = " `user_pvmsg`.`from_user` = '" . Dba::escape($value) . "' AND ";

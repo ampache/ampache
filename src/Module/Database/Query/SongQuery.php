@@ -48,6 +48,7 @@ final class SongQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'tag',
         'top50',
         'unplayed',
@@ -161,6 +162,12 @@ final class SongQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `song`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                if ($query->catalog != 0) {
+                    $filter_sql .= " `song`.`catalog` = '" . $query->catalog . "' AND ";
+                }
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `song`.`title` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 if ($query->catalog != 0) {
                     $filter_sql .= " `song`.`catalog` = '" . $query->catalog . "' AND ";
                 }

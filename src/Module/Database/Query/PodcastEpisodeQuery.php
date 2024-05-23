@@ -40,6 +40,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'regex_match',
         'regex_not_match',
         'starts_with',
+        'not_starts_with',
         'unplayed'
     );
 
@@ -133,6 +134,9 @@ final class PodcastEpisodeQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `podcast_episode`.`title` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `podcast_episode`.`title` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'add_lt':
                 $filter_sql = " `podcast_episode`.`addition_time` <= '" . Dba::escape($value) . "' AND ";

@@ -35,7 +35,8 @@ final class LabelQuery implements QueryInterface
         'exact_match',
         'regex_match',
         'regex_not_match',
-        'starts_with'
+        'starts_with',
+        'not_starts_with',
     );
 
     /** @var string[] $sorts */
@@ -118,6 +119,9 @@ final class LabelQuery implements QueryInterface
                 break;
             case 'starts_with':
                 $filter_sql = " `label`.`name` LIKE '" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_starts_with':
+                $filter_sql = " `label`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
         }
 
