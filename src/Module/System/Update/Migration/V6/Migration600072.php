@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
+ *
+ * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
+ * Copyright Ampache.org, 2001-2023
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+namespace Ampache\Module\System\Update\Migration\V6;
+
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+final class Migration600072 extends AbstractMigration
+{
+    protected array $changelog = ['Convert the remaining MyISAM'];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase('ALTER TABLE album_disk ENGINE=InnoDB;');
+        $this->updateDatabase('ALTER TABLE album_map ENGINE=InnoDB;');
+        $this->updateDatabase('ALTER TABLE artist_map ENGINE=InnoDB;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tmp_browse`;');
+        $this->updateDatabase('CREATE TABLE `tmp_browse` (
+                                 `id` int(13) NOT NULL AUTO_INCREMENT,
+                                 `sid` varchar(128) NOT NULL,
+                                 `data` longtext NOT NULL,
+                                 `object_data` longtext DEFAULT NULL,
+                                  PRIMARY KEY (`id`),
+                                  KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE
+                               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ;');
+    }
+}
