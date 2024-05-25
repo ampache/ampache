@@ -40,21 +40,19 @@ $web_path = (string)AmpConfig::get('web_path', '');
 
 Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
-        <dt><?php echo T_('Rating'); ?></dt>
-        <dd>
-            <div id="rating_<?php echo $episode->id; ?>_podcast_episode">
-                <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
-            </div>
-        </dd>
-        <dt><?php echo T_('Fav.'); ?></dt>
-        <dd>
-            <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">
-                <?php echo Userflag::show($episode->id, 'podcast_episode'); ?>
-            </div>
-        </dd>
-    <?php } ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
+    <dt><?php echo T_('Rating'); ?></dt>
+    <dd>
+        <div id="rating_<?php echo $episode->id; ?>_podcast_episode">
+            <?php echo Rating::show($episode->id, 'podcast_episode'); ?>
+        </div>
+    </dd>
+    <dt><?php echo T_('Fav.'); ?></dt>
+    <dd>
+        <div id="userflag_<?php echo $episode->id; ?>_podcast_episode">
+            <?php echo Userflag::show($episode->id, 'podcast_episode'); ?>
+        </div>
+    </dd>
 <?php } ?>
     <?php if (AmpConfig::get('waveform')) { ?>
         <dt><?php echo T_('Waveform'); ?></dt>
