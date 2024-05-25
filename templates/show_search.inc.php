@@ -24,15 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Userflag;
 
 /** @var Search $playlist */
 /** @var array $object_ids */
@@ -48,14 +45,6 @@ $browse->add_supplemental_object('search', $playlist->id);
 $browse->set_static_content(false);
 ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
-<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $playlist->id; ?>_search">
-    <?php echo Rating::show($playlist->id, 'search'); ?>
-</span>
-    <span id="userflag_<?php echo $playlist->id; ?>_search">
-    <?php echo Userflag::show($playlist->id, 'search'); ?>
-</span>
-<?php } ?>
 <div id="information_actions">
     <ul>
 <?php global $dic; // @todo remove after refactoring
