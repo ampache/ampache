@@ -1191,25 +1191,21 @@ function nT_($original, $plural, $value): string
  */
 function get_themes(): array
 {
-    /* Open the themes dir and start reading it */
-    $handle = opendir(__DIR__ . '/../../public/themes');
+    $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
 
-    if (!is_resource($handle)) {
-        debug_event('themes', 'Failed to open /themes directory', 2);
+    $results=array();
+    foreach ($lst_files as $file){
+        debug_event('themes', "Checking $file", 5);
+        $cfg = get_theme($file);
+        if (is_null($cfg)) {
+            debug_event('themes', "Warning: them $file is empty", 5);
+            continue;
+	}
 
-        return array();
+        $theme = basename(dirname($file)); // Get last dirname (name of the theme)
+        $results[$theme]=$cfg;
     }
 
-    $results = array();
-    while (($file = readdir($handle)) !== false) {
-        if ((string) $file !== '.' && (string) $file !== '..') {
-            debug_event('themes', "Checking $file", 5);
-            $cfg = get_theme($file);
-            if ($cfg !== null) {
-                $results[$cfg['name']] = $cfg;
-            }
-        }
-    } // end while directory
     // Sort by the theme name
     ksort($results);
 
