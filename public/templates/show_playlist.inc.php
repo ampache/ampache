@@ -57,15 +57,13 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 <?php $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
 $playlist->display_art($thumb, false, false); ?>
 </div>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $playlist->id; ?>_playlist">
-        <?php echo Rating::show($playlist->id, 'playlist'); ?>
-    </span>
-    <span id="userflag_<?php echo $playlist->id; ?>_playlist">
-        <?php echo Userflag::show($playlist->id, 'playlist'); ?>
-    </span>
-    <?php } ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
+<span id="rating_<?php echo $playlist->id; ?>_playlist">
+    <?php echo Rating::show($playlist->id, 'playlist'); ?>
+</span>
+<span id="userflag_<?php echo $playlist->id; ?>_playlist">
+    <?php echo Userflag::show($playlist->id, 'playlist'); ?>
+</span>
 <?php } ?>
 <div id="information_actions">
     <ul>
