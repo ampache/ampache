@@ -29,7 +29,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600072 extends AbstractMigration
 {
-    protected array $changelog = ['Recreate `tmp_browse` to allow InnoDB conversion'];
+    protected array $changelog = ['Drop and recreate `tmp_browse` to allow InnoDB conversion'];
 
     public function migrate(): void
     {
