@@ -1991,8 +1991,8 @@ class Song extends database_object implements
                 $downsample_remote ||
                 empty($additional_params) ||
                 (
-                    !strpos($additional_params, '&bitrate=') &&
-                    !strpos($additional_params, '&format=')
+                    strpos($additional_params, '&bitrate=') === false &&
+                    strpos($additional_params, '&format=') === false
                 )
             )
         ) {

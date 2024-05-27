@@ -90,18 +90,15 @@ if ($directplay_limit > 0) {
 $thumb        = Ui::is_grid_view('album') ? 32 : 11;
 Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
 </div>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
-        <span id="rating_<?php echo $albumDisk->id; ?>_album_disk">
-            <?php echo Rating::show($albumDisk->id, 'album_disk', true); ?>
-        </span>
-        <span id="userflag_<?php echo $albumDisk->id; ?>_album_disk">
-            <?php echo Userflag::show($albumDisk->id, 'album_disk'); ?>
-        </span>
-        <?php } ?>
-    <?php } ?>
-<?php
-if (AmpConfig::get('show_played_times')) { ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
+    <span id="rating_<?php echo $albumDisk->id; ?>_album_disk">
+        <?php echo Rating::show($albumDisk->id, 'album_disk', true); ?>
+    </span>
+    <span id="userflag_<?php echo $albumDisk->id; ?>_album_disk">
+        <?php echo Userflag::show($albumDisk->id, 'album_disk'); ?>
+    </span>
+<?php } ?>
+<?php if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;">
     <?php echo T_('Played') . ' ' .

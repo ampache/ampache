@@ -71,21 +71,19 @@ if (!$gart) {
 <?php } ?>
 </div>
 <dl class="media_details">
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
-        <dt><?php echo T_('Rating'); ?></dt>
-        <dd>
-            <div id="rating_<?php echo $video->id; ?>_video">
-                <?php echo Rating::show($video->id, 'video'); ?>
-            </div>
-        </dd>
-        <dt><?php echo T_('Fav.'); ?></dt>
-        <dd>
-            <div id="userflag_<?php echo $video->id; ?>_video">
-                <?php echo Userflag::show($video->id, 'video'); ?>
-            </div>
-        </dd>
-    <?php } ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
+    <dt><?php echo T_('Rating'); ?></dt>
+    <dd>
+        <div id="rating_<?php echo $video->id; ?>_video">
+            <?php echo Rating::show($video->id, 'video'); ?>
+        </div>
+    </dd>
+    <dt><?php echo T_('Fav.'); ?></dt>
+    <dd>
+        <div id="userflag_<?php echo $video->id; ?>_video">
+            <?php echo Userflag::show($video->id, 'video'); ?>
+        </div>
+    </dd>
 <?php } ?>
 <dt><?php echo T_('Action'); ?></dt>
     <dd>

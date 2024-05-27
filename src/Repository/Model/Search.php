@@ -74,7 +74,6 @@ class Search extends playlist_object
     public ?string $logic_operator = 'AND';
     public ?int $random            = 0;
     public int $limit              = 0;
-    public ?int $last_count        = 0;
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
     public $search_user; // user running the search
@@ -1355,9 +1354,8 @@ class Search extends playlist_object
     private function set_last($count, $column): void
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
-            $search_id = Dba::escape($this->id);
-            $sql       = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, array($count, $search_id));
+            $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
+            Dba::write($sql, array($count, $this->id));
         }
     }
 
