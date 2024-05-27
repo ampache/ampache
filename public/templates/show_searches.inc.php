@@ -58,7 +58,7 @@ use Ampache\Repository\Model\User;
             <th class="cel_random optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=rand', T_('Random'), 'playlist_sort_random'); ?></th>
             <th class="cel_limit optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=limit', T_('Item Limit'), 'playlist_sort_limit'); ?></th>
             <?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
-                <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+                <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=rating', T_('Rating'), 'playlist_sort_rating'); ?></th>
             <?php } ?>
             <th class="cel_owner essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=username', T_('Owner'), 'playlist_sort_username'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>

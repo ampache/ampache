@@ -45,6 +45,7 @@ abstract class playlist_object extends database_object implements library_item
 
     public ?string $link       = null;
     public int $date           = 0;
+    public ?int $last_count    = 0;
     public ?int $last_duration = 0;
     public ?int $last_update   = 0;
     public ?string $f_date;

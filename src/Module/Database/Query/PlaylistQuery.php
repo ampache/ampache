@@ -48,6 +48,7 @@ final class PlaylistQuery implements QueryInterface
     protected array $sorts = array(
         'rand',
         'date',
+        'last_count',
         'last_update',
         'title',
         'name',
@@ -167,6 +168,7 @@ final class PlaylistQuery implements QueryInterface
     {
         switch ($field) {
             case 'date':
+            case 'last_count':
             case 'last_update':
             case 'name':
             case 'type':
