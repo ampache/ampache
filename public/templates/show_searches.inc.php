@@ -55,7 +55,7 @@ use Ampache\Repository\Model\User;
             <th class="cel_add essential"></th>
             <th class="cel_last_update optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=last_update', T_('Last Update'), 'playlist_sort_last_update'); ?></th>
             <th class="cel_type optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=type', T_('Type'), 'playlist_sort_type'); ?></th>
-            <th class="cel_random optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=rand', T_('Random'), 'playlist_sort_random'); ?></th>
+            <th class="cel_random optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=random', T_('Random'), 'playlist_sort_random'); ?></th>
             <th class="cel_limit optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=limit', T_('Item Limit'), 'playlist_sort_limit'); ?></th>
             <?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
                 <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=smartplaylist&sort=rating', T_('Rating'), 'playlist_sort_rating'); ?></th>
