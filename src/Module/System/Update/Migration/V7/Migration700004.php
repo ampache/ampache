@@ -22,29 +22,29 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Module\System\Update\Migration\V6;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Module\System\Dba;
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Playlist;
 
-/**
- * Add a last_count to playlists to speed up access requests
- */
-final class Migration600073 extends AbstractMigration
+final class Migration700004 extends AbstractMigration
 {
-    protected array $changelog = ['Add a last_count to playlist table to speed up access requests'];
+    protected array $changelog = ['Drop and recreate `tmp_browse` to allow InnoDB conversion'];
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;");
-        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `last_count` INT(11) NULL;");
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql       = "SELECT `playlist`.`id`, COUNT(`playlist_data`.`id`) AS `count` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` GROUP BY `playlist`.`id`;";
-        $playlists = Dba::read($sql);
-        while ($results = Dba::fetch_assoc($playlists)) {
-            $playlist = new Playlist((int)$results['id']);
-            $playlist->update(array('last_count' => (int)$results['count']));
-        }
+        $this->updateDatabase('DROP TABLE IF EXISTS `tmp_browse`;');
+        $this->updateDatabase(
+            sprintf(
+                'CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) NOT NULL, `data` longtext NOT NULL, `object_data` longtext DEFAULT NULL, PRIMARY KEY (`id`), KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
+                $engine,
+                $charset,
+                $collation
+            )
+        );
     }
 }
