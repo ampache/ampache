@@ -42,6 +42,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
         $database           = $this->configContainer->get('database_name');
         $translated_charset = Dba::translate_to_mysqlcharset($this->configContainer->get('site_charset'));
         $target_charset     = $translated_charset['charset'];
+        $engine_sql         = ($translated_charset['charset'] == 'utf8mb4') ? 'ENGINE=InnoDB' : 'ENGINE=MYISAM';
         $target_collation   = $translated_charset['collation'];
 
         // Alter the charset for the entire database
@@ -57,10 +58,10 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
             $describe_results = Dba::read($sql);
 
             // Change the table engine
-            $sql = "ALTER TABLE `" . $row['0'] . "` ENGINE=InnoDB;";
+            $sql = "ALTER TABLE `" . $row['0'] . "` $engine_sql";
             Dba::write($sql);
             // Change the tables default charset and collation
-            $sql = "ALTER TABLE `" . $row['0'] . "` CONVERT TO CHARACTER SET $target_charset COLLATE $target_collation;";
+            $sql = "ALTER TABLE `" . $row['0'] . "` CONVERT TO CHARACTER SET $target_charset COLLATE $target_collation";
             Dba::write($sql);
 
             // Iterate through the columns of the table
