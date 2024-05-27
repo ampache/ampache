@@ -60,7 +60,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="cel_type optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=type', T_('Type'), 'playlist_sort_type'); ?></th>
             <th class="cel_medias optional"><?php /* HINT: Number of items in a playlist */ echo T_('# Items'); ?></th>
             <?php if ($show_ratings) { ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=rating', T_('Rating'), 'playlist_sort_rating'); ?></th>
             <?php } ?>
             <th class="cel_owner essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=playlist&sort=username', T_('Owner'), 'playlist_sort_username'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
