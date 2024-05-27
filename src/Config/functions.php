@@ -1197,7 +1197,7 @@ function get_themes(): array
     foreach ($lst_files as $cfg_file) {
         $name = basename(dirname($cfg_file)); // Get last dirname (name of the theme)
         debug_event('themes', "Checking $name", 5);
-        $theme_cfg = get_theme($name, $cfg_file);
+        $theme_cfg = get_theme($name);
         if (is_null($theme_cfg)) {
             debug_event('themes', "Warning: $name theme config is empty", 1);
             continue;
