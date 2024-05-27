@@ -73,7 +73,9 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_ORDER = [
+        'last_count' => 'ASC',
         'last_update' => 'ASC',
+        'limit' => 'ASC',
         'original_year' => 'ASC',
         'rating' => 'ASC',
         'song_count' => 'ASC',
