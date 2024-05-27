@@ -52,15 +52,13 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     <?php
     Art::display('tvshow_season', $season->id, $season->f_name, 6); ?>
 </div>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo (int) ($season->id); ?>_tvshow_season">
         <?php echo Rating::show($season->id, 'tvshow_season'); ?>
     </span>
     <span id="userflag_<?php echo $season->id; ?>_tvshow_season">
         <?php echo Userflag::show($season->id, 'tvshow_season'); ?>
     </span>
-    <?php } ?>
 <?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>

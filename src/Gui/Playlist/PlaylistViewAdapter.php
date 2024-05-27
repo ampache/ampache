@@ -305,6 +305,6 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getMediaCount(): int
     {
-        return $this->playlist->get_media_count();
+        return (int)$this->playlist->last_count;
     }
 }

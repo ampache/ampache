@@ -59,15 +59,13 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
     <?php echo $podcast->get_description(); ?>
 </div>
 <?php } ?>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo (int) ($podcast->getId()); ?>_podcast">
         <?php echo Rating::show($podcast->getId(), 'podcast'); ?>
     </span>
     <span id="userflag_<?php echo $podcast->getId(); ?>_podcast">
         <?php echo Userflag::show($podcast->getId(), 'podcast'); ?>
     </span>
-    <?php } ?>
 <?php } ?>
 <div id="information_actions">
     <h3><?php echo T_('Actions'); ?>:</h3>

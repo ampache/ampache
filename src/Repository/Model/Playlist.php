@@ -456,15 +456,21 @@ class Playlist extends playlist_object
     public function update(array $data): int
     {
         if (isset($data['name']) && $data['name'] != $this->name) {
-            $this->update_name($data['name']);
+            $this->_update_name($data['name']);
         }
 
         if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
-            $this->update_type($data['pl_type']);
+            $this->_update_type($data['pl_type']);
         }
 
         if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
-            $this->update_user($data['pl_user']);
+            $this->_update_user($data['pl_user']);
+        }
+        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+            $this->_set_last($data['last_count'], 'last_count');
+        }
+        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+            $this->_set_last($data['last_duration'], 'last_duration');
         }
 
         // reformat after an update
@@ -478,7 +484,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param string $new_type
      */
-    private function update_type($new_type): void
+    private function _update_type($new_type): void
     {
         if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
@@ -490,7 +496,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param int $new_user
      */
-    private function update_user($new_user): void
+    private function _update_user($new_user): void
     {
         if ($this->_update_item('user', $new_user)) {
             $this->user     = $new_user;
@@ -505,7 +511,7 @@ class Playlist extends playlist_object
      * This updates the playlist name, it calls the generic update_item function
      * @param string $new_name
      */
-    private function update_name($new_name): void
+    private function _update_name($new_name): void
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
@@ -513,17 +519,18 @@ class Playlist extends playlist_object
     }
 
     /**
-     * update_last_update
+     * _update_last
      * This updates the playlist last update, it calls the generic update_item function
      */
-    private function update_last_update(): void
+    private function _update_last(): void
     {
         $last_update = time();
         if ($this->_update_item('last_update', $last_update)) {
             $this->last_update = $last_update;
         }
 
-        $this->set_last($this->get_total_duration(), 'last_duration');
+        $this->_set_last($this->get_total_duration(), 'last_duration');
+        $this->_set_last($this->get_media_count(), 'last_count');
     }
 
     /**
@@ -570,7 +577,7 @@ class Playlist extends playlist_object
             ++$index;
         }
 
-        $this->update_last_update();
+        $this->_update_last();
     }
 
     /**
@@ -635,7 +642,7 @@ class Playlist extends playlist_object
         if ($count !== 0 || $values !== []) {
             Dba::write(rtrim($sql, ', '), $values);
             debug_event(self::class, sprintf('Added %d tracks to playlist: ', $count) . $this->id, 5);
-            $this->update_last_update();
+            $this->_update_last();
 
             return true;
         }
@@ -729,9 +736,13 @@ class Playlist extends playlist_object
      * @param int $count
      * @param string $column
      */
-    private function set_last($count, $column): void
+    private function _set_last($count, $column): void
     {
-        if ($this->id && in_array($column, ['last_count', 'last_duration']) && $count >= 0) {
+        if (
+            $this->id &&
+            in_array($column, ['last_count', 'last_duration']) &&
+            $count >= 0
+        ) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
             Dba::write($sql);
         }
@@ -748,7 +759,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id]);
         debug_event(self::class, 'Delete all tracks from: ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -764,7 +775,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $object_id]);
         debug_event(self::class, 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -780,7 +791,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $object_id]);
         debug_event(self::class, 'Delete item_id: ' . $object_id . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -795,7 +806,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $track]);
         debug_event(self::class, 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -812,7 +823,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, 'song', $object_id, $track]);
         debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -924,7 +935,7 @@ class Playlist extends playlist_object
             Dba::write($sql);
         }
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
