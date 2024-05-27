@@ -77,6 +77,7 @@ class Query
         'last_update' => 'ASC',
         'limit' => 'ASC',
         'original_year' => 'ASC',
+        'random' => 'ASC',
         'rating' => 'ASC',
         'song_count' => 'ASC',
         'total_count' => 'ASC',
