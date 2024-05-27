@@ -396,20 +396,41 @@ class Playlist extends playlist_object
      */
     public function get_media_count($type = ''): int
     {
-        $user    = Core::get_global('user');
-        $user_id = $user->id ?? 0;
-        $params  = [$this->id];
+        $user      = Core::get_global('user');
+        $user_id   = $user->id ?? 0;
+        $params    = [$this->id];
+        $all_media = empty($type) || !in_array($type, ['broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video']);
 
-        $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
-        // NEED TO REVIST FOR ALL MEDIA TYPES;
-        if (!empty($type)) {
-            $sql .= 'AND `playlist_data`.`object_type` = ? ';
-            $params[] = $type;
+        if ($all_media) {
+            // empty or invalid type so check for all media types
+            $sql = "SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` " .
+                "LEFT JOIN `broadcast` ON `playlist_data`.`object_id` = `broadcast`.`id` AND `playlist_data`.`object_type` = 'broadcast' " .
+                "LEFT JOIN `democratic` ON `playlist_data`.`object_id` = `democratic`.`id` AND `playlist_data`.`object_type` = 'democratic' " .
+                "LEFT JOIN `live_stream` ON `playlist_data`.`object_id` = `live_stream`.`id` AND `playlist_data`.`object_type` = 'live_stream' " .
+                "LEFT JOIN `podcast_episode` ON `playlist_data`.`object_id` = `podcast_episode`.`id` AND `playlist_data`.`object_type` = 'podcast_episode' " .
+                "LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' " .
+                "LEFT JOIN `song_preview` ON `playlist_data`.`object_id` = `song_preview`.`id` AND `playlist_data`.`object_type` = 'song_preview' " .
+                "LEFT JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` AND `playlist_data`.`object_type` = 'video' " .
+                "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL;";
+        } else {
+            // check for a specific type of object
+            $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
         }
 
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= 'AND `playlist_data`.`object_type`="song" AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ';
-            $params[] = $user_id;
+            if ($all_media) {
+                $sql .= "AND `playlist_data`.`object_type` = 'broadcast' AND `broadcast`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'democratic' AND `democratic`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'song' AND `song'.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'song_preview' AND `song_preview`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "AND `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
+                $params  = array($this->id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id);
+            } else {
+                $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
+                $params[] = $user_id;
+            }
         }
 
         $sql .= "GROUP BY `playlist_data`.`playlist`;";
@@ -456,15 +477,21 @@ class Playlist extends playlist_object
     public function update(array $data): int
     {
         if (isset($data['name']) && $data['name'] != $this->name) {
-            $this->update_name($data['name']);
+            $this->_update_name($data['name']);
         }
 
         if (isset($data['pl_type']) && $data['pl_type'] != $this->type) {
-            $this->update_type($data['pl_type']);
+            $this->_update_type($data['pl_type']);
         }
 
         if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
-            $this->update_user($data['pl_user']);
+            $this->_update_user($data['pl_user']);
+        }
+        if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
+            $this->_set_last($data['last_count'], 'last_count');
+        }
+        if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
+            $this->_set_last($data['last_duration'], 'last_duration');
         }
 
         // reformat after an update
@@ -478,7 +505,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param string $new_type
      */
-    private function update_type($new_type): void
+    private function _update_type($new_type): void
     {
         if ($this->_update_item('type', $new_type)) {
             $this->type = $new_type;
@@ -490,7 +517,7 @@ class Playlist extends playlist_object
      * This updates the playlist type, it calls the generic update_item function
      * @param int $new_user
      */
-    private function update_user($new_user): void
+    private function _update_user($new_user): void
     {
         if ($this->_update_item('user', $new_user)) {
             $this->user     = $new_user;
@@ -505,7 +532,7 @@ class Playlist extends playlist_object
      * This updates the playlist name, it calls the generic update_item function
      * @param string $new_name
      */
-    private function update_name($new_name): void
+    private function _update_name($new_name): void
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
@@ -513,17 +540,18 @@ class Playlist extends playlist_object
     }
 
     /**
-     * update_last_update
+     * _update_last
      * This updates the playlist last update, it calls the generic update_item function
      */
-    private function update_last_update(): void
+    private function _update_last(): void
     {
         $last_update = time();
         if ($this->_update_item('last_update', $last_update)) {
             $this->last_update = $last_update;
         }
 
-        $this->set_last($this->get_total_duration(), 'last_duration');
+        $this->_set_last($this->get_total_duration(), 'last_duration');
+        $this->_set_last($this->get_media_count(), 'last_count');
     }
 
     /**
@@ -570,7 +598,7 @@ class Playlist extends playlist_object
             ++$index;
         }
 
-        $this->update_last_update();
+        $this->_update_last();
     }
 
     /**
@@ -635,7 +663,7 @@ class Playlist extends playlist_object
         if ($count !== 0 || $values !== []) {
             Dba::write(rtrim($sql, ', '), $values);
             debug_event(self::class, sprintf('Added %d tracks to playlist: ', $count) . $this->id, 5);
-            $this->update_last_update();
+            $this->_update_last();
 
             return true;
         }
@@ -729,9 +757,13 @@ class Playlist extends playlist_object
      * @param int $count
      * @param string $column
      */
-    private function set_last($count, $column): void
+    private function _set_last($count, $column): void
     {
-        if ($this->id && in_array($column, ['last_count', 'last_duration']) && $count >= 0) {
+        if (
+            $this->id &&
+            in_array($column, ['last_count', 'last_duration']) &&
+            $count >= 0
+        ) {
             $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
             Dba::write($sql);
         }
@@ -748,7 +780,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id]);
         debug_event(self::class, 'Delete all tracks from: ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -764,7 +796,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $object_id]);
         debug_event(self::class, 'Delete object_id: ' . $object_id . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -780,7 +812,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $object_id]);
         debug_event(self::class, 'Delete item_id: ' . $object_id . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -795,7 +827,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, $track]);
         debug_event(self::class, 'Delete track: ' . $track . ' from ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -812,7 +844,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id, 'song', $object_id, $track]);
         debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }
@@ -924,7 +956,7 @@ class Playlist extends playlist_object
             Dba::write($sql);
         }
 
-        $this->update_last_update();
+        $this->_update_last();
 
         return true;
     }

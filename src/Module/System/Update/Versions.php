@@ -280,6 +280,9 @@ final class Versions
         600071 => Migration\V6\Migration600071::class,
         700001 => Migration\V7\Migration700001::class,
         700002 => Migration\V7\Migration700002::class,
+        700003 => Migration\V7\Migration700003::class,
+        700004 => Migration\V7\Migration700004::class,
+        700005 => Migration\V7\Migration700005::class,
     ];
 
     /**

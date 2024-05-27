@@ -93,16 +93,14 @@ Ui::show_box_top($title, 'info-box'); ?>
     Art::display('artist', $artist->id, $title, $thumb);
 } ?>
 </div>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
         <?php echo Rating::show($artist->id, 'artist', true); ?>
     </span>
     <span id="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>
-    <?php }
-    }
+<?php }
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .

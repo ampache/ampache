@@ -12,12 +12,15 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * Add `songs_artsts` to album objects
 * Add `playlist_search` as a browse type. (combined playlists and smartlists)
-* Allow sorting playlists by `type`
-* Allow sorting searches by `type`, `limit` and `random` status
+* Allow sorting playlists by `type`, `rating` and item count
+* Allow sorting searches by `type`, `limit`, `rating` and `random` status
 * Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
-* Database 600071
-  * Add indexes to object_count
+* Show ratings on smartplaylist objects in the WebUI
+* Database 600073
+  * Add indexes to `object_count`
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
+  * Add `last_count` to the `playlist` table
 
 ### Changed
 
@@ -44,6 +47,8 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Sort before any other browse action in case you delete the joins
 * phpmailer error info parameter is a property
 * Stream::delete_now_playing query didn't work
+* Transcode format checks were overwriting `bitrate` and `format` parameters
+* Playlist::get_media_count() was ignoring other media types
 * CLI
   * Check catalog path is readable on updateCatalog actions
   * Don't try to clean a file if it wasn't valid media
