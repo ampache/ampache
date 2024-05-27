@@ -411,7 +411,7 @@ class Playlist extends playlist_object
                 "LEFT JOIN `song` ON `playlist_data`.`object_id` = `song`.`id` AND `playlist_data`.`object_type` = 'song' " .
                 "LEFT JOIN `song_preview` ON `playlist_data`.`object_id` = `song_preview`.`id` AND `playlist_data`.`object_type` = 'song_preview' " .
                 "LEFT JOIN `video` ON `playlist_data`.`object_id` = `video`.`id` AND `playlist_data`.`object_type` = 'video' " .
-                "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL;";
+                "WHERE `playlist_data`.`playlist` = ?  AND `playlist_data`.`object_type` IS NOT NULL ";
         } else {
             // check for a specific type of object
             $sql = 'SELECT COUNT(`playlist_data`.`id`) AS `list_count` FROM `playlist_data` INNER JOIN `' . $type . '` ON `playlist_data`.`object_id` = `' . $type . '`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_id` IS NOT NULL ';
@@ -419,14 +419,11 @@ class Playlist extends playlist_object
 
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
             if ($all_media) {
-                $sql .= "AND `playlist_data`.`object_type` = 'broadcast' AND `broadcast`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'democratic' AND `democratic`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'song' AND `song'.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'song_preview' AND `song_preview`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
-                    "AND `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
-                $params  = array($this->id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id, $user_id);
+                $sql .= "AND (`playlist_data`.`object_type` = 'live_stream' AND `live_stream`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
+                    "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
+                $params  = array($this->id, $user_id, $user_id, $user_id, $user_id);
             } else {
                 $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
                 $params[] = $user_id;
