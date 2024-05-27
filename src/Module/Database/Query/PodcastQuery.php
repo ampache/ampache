@@ -32,6 +32,8 @@ final class PodcastQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
@@ -103,9 +105,11 @@ final class PodcastQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `podcast`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

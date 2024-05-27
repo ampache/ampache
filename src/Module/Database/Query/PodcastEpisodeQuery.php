@@ -36,6 +36,8 @@ final class PodcastEpisodeQuery implements QueryInterface
         'add_gt',
         'add_lt',
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
@@ -116,9 +118,11 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'podcast':
                 $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `podcast_episode`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

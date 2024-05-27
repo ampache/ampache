@@ -38,6 +38,8 @@ final class ArtistQuery implements QueryInterface
         'alpha_match',
         'catalog',
         'catalog_enabled',
+        'equal',
+        'like',
         'exact_match',
         'genre',
         'label',
@@ -126,9 +128,11 @@ final class ArtistQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

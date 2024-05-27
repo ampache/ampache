@@ -33,6 +33,8 @@ final class SmartplaylistQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'not_like',
         'playlist_open',
@@ -111,9 +113,11 @@ final class SmartplaylistQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `search`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `search`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

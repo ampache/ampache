@@ -33,6 +33,8 @@ final class PlaylistSearchQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'hide_dupe_smartlist',
         'not_like',
@@ -111,9 +113,11 @@ final class PlaylistSearchQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `playlist`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `playlist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
@@ -175,10 +179,13 @@ final class PlaylistSearchQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'name':
+            case 'title':
+                $sql = "`playlist`.`name`";
+                break;
             case 'date':
             case 'last_count':
             case 'last_update':
-            case 'name':
             case 'type':
             case 'user':
             case 'username':

@@ -42,6 +42,8 @@ final class SongQuery implements QueryInterface
         'catalog_enabled',
         'disk',
         'enabled',
+        'equal',
+        'like',
         'exact_match',
         'genre',
         'license',
@@ -144,9 +146,11 @@ final class SongQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `song`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `song`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

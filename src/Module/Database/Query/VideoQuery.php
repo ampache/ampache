@@ -34,6 +34,8 @@ final class VideoQuery implements QueryInterface
         'add_gt',
         'add_lt',
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
@@ -123,9 +125,11 @@ final class VideoQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `video`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

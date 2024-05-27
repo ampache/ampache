@@ -34,6 +34,8 @@ final class LiveStreamQuery implements QueryInterface
         'alpha_match',
         'catalog',
         'catalog_enabled',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
@@ -103,9 +105,11 @@ final class LiveStreamQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `live_stream`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;

@@ -39,6 +39,8 @@ final class AlbumQuery implements QueryInterface
         'song_artist',
         'catalog',
         'catalog_enabled',
+        'equal',
+        'like',
         'exact_match',
         'genre',
         'regex_match',
@@ -138,9 +140,11 @@ final class AlbumQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
@@ -225,6 +229,7 @@ final class AlbumQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
                 $sql = "`album`.`name`";
                 break;
             case 'name_original_year':

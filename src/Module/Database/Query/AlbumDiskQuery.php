@@ -39,8 +39,10 @@ final class AlbumDiskQuery implements QueryInterface
         'song_artist',
         'catalog',
         'catalog_enabled',
+        'equal',
         'exact_match',
         'genre',
+        'like',
         'regex_match',
         'regex_not_match',
         'starts_with',
@@ -142,9 +144,11 @@ final class AlbumDiskQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
@@ -231,6 +235,7 @@ final class AlbumDiskQuery implements QueryInterface
         $query->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 10);
         switch ($field) {
             case 'name':
+            case 'title':
                 $sql   = "`album`.`name` $order, `album_disk`.`disk`";
                 $order = '';
                 break;

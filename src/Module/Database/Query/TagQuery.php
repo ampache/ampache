@@ -32,6 +32,8 @@ final class TagQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'hidden',
         'genre',
@@ -100,9 +102,11 @@ final class TagQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
