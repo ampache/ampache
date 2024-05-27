@@ -16,8 +16,9 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Allow sorting searches by `type`, `limit` and `random` status
 * Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
-* Database 600071
-  * Add indexes to object_count
+* Database 600072
+  * Add indexes to `object_count`
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
 
 ### Changed
 
