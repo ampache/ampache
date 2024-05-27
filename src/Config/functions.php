@@ -1194,6 +1194,12 @@ function get_themes(): array
     $results = array();
 
     $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
+    if (!$lst_files) {
+        debug_event('themes', 'Failed to open /themes directory', 2);
+
+        return $results;
+    }
+
     foreach ($lst_files as $cfg_file) {
         $name = basename(dirname($cfg_file)); // Get last dirname (name of the theme)
         debug_event('themes', "Checking $name", 5);
