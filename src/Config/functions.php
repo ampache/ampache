@@ -1191,19 +1191,19 @@ function nT_($original, $plural, $value): string
  */
 function get_themes(): array
 {
+    $results = array();
+
     $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
-
-    $results=array();
-    foreach ($lst_files as $file){
-        debug_event('themes', "Checking $file", 5);
-        $cfg = get_theme($file);
-        if (is_null($cfg)) {
-            debug_event('themes', "Warning: them $file is empty", 5);
+    foreach ($lst_files as $cfg_file) {
+        $name = basename(dirname($cfg_file)); // Get last dirname (name of the theme)
+        debug_event('themes', "Checking $name", 5);
+        $theme_cfg = get_theme($name, $cfg_file);
+        if (is_null($theme_cfg)) {
+            debug_event('themes', "Warning: $name theme config is empty", 1);
             continue;
-	}
+        }
 
-        $theme = basename(dirname($file)); // Get last dirname (name of the theme)
-        $results[$theme]=$cfg;
+        $results[$name] = $theme_cfg;
     }
 
     // Sort by the theme name
@@ -1234,17 +1234,22 @@ function get_theme($name)
 
     $config_file = __DIR__ . "/../../public/themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
-        $results         = parse_ini_file($config_file);
-        $results['path'] = $name;
-        $results['base'] = explode(',', (string) $results['base']);
-        $nbbases         = count($results['base']);
-        for ($count = 0; $count < $nbbases; $count++) {
-            $results['base'][$count] = explode('|', $results['base'][$count]);
+        $results = parse_ini_file($config_file);
+        if (is_array($results)) {
+            $results['path'] = $name;
+            $results['base'] = explode(',', (string)$results['base']);
+            $nbbases         = count($results['base']);
+            for ($count = 0; $count < $nbbases; $count++) {
+                $results['base'][$count] = explode('|', $results['base'][$count]);
+            }
+            $results['colors'] = explode(',', (string)$results['colors']);
+        } else {
+            $results = null;
         }
-        $results['colors'] = explode(',', (string) $results['colors']);
     } else {
         $results = null;
     }
+
     $_mapcache[$name] = $results;
 
     return $results;
