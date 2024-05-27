@@ -24,25 +24,27 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration600072 extends AbstractMigration
 {
-    protected array $changelog = ['Convert the remaining MyISAM'];
+    protected array $changelog = ['Recreate `tmp_browse` to allow InnoDB conversion'];
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE album_disk ENGINE=InnoDB;');
-        $this->updateDatabase('ALTER TABLE album_map ENGINE=InnoDB;');
-        $this->updateDatabase('ALTER TABLE artist_map ENGINE=InnoDB;');
+        $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
+        $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
+        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+
         $this->updateDatabase('DROP TABLE IF EXISTS `tmp_browse`;');
-        $this->updateDatabase('CREATE TABLE `tmp_browse` (
-                                 `id` int(13) NOT NULL AUTO_INCREMENT,
-                                 `sid` varchar(128) NOT NULL,
-                                 `data` longtext NOT NULL,
-                                 `object_data` longtext DEFAULT NULL,
-                                  PRIMARY KEY (`id`),
-                                  KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE
-                               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ;');
+        $this->updateDatabase(
+            sprintf(
+                'CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) NOT NULL, `data` longtext NOT NULL, `object_data` longtext DEFAULT NULL, PRIMARY KEY (`id`), KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
+                $engine,
+                $charset,
+                $collation
+            )
+        );
     }
 }
