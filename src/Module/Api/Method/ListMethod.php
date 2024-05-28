@@ -123,7 +123,6 @@ final class ListMethod
             ) {
                 $browse->set_filter('hide_dupe_smartlist', 1);
             }
-
         }
 
         $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
