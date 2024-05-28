@@ -33,6 +33,7 @@ final class PodcastEpisodeQuery implements QueryInterface
     public const FILTERS = array(
         'podcast',
         'catalog',
+        'catalog_enabled',
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -45,6 +46,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'not_starts_with',
         'not_like',
         'unplayed',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -156,6 +158,13 @@ final class PodcastEpisodeQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`podcast_episode`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `podcast_episode`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast_episode`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {

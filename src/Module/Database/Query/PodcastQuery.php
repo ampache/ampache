@@ -41,7 +41,9 @@ final class PodcastQuery implements QueryInterface
         'not_starts_with',
         'not_like',
         'catalog',
+        'catalog_enabled',
         'unplayed',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -137,6 +139,13 @@ final class PodcastQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`podcast`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `podcast`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {

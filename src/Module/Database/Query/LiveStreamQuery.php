@@ -42,6 +42,7 @@ final class LiveStreamQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -137,6 +138,9 @@ final class LiveStreamQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`live_stream`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `live_stream`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`live_stream`.`catalog`', 100);
