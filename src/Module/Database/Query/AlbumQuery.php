@@ -47,6 +47,7 @@ final class AlbumQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag',
         'unplayed',
         'update_gt',
@@ -147,6 +148,9 @@ final class AlbumQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `album`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

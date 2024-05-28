@@ -37,7 +37,6 @@ final class PlaylistSearchQuery implements QueryInterface
         'like',
         'exact_match',
         'hide_dupe_smartlist',
-        'not_like',
         'playlist_open',
         'playlist_type',
         'playlist_user',
@@ -45,7 +44,8 @@ final class PlaylistSearchQuery implements QueryInterface
         'regex_not_match',
         'smartlist',
         'starts_with',
-        'not_starts_with'
+        'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */

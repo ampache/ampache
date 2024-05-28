@@ -47,6 +47,7 @@ final class ArtistQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag',
         'unplayed',
         'update_gt',
@@ -135,6 +136,9 @@ final class ArtistQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `artist`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

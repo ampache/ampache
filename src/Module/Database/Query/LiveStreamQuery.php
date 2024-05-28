@@ -41,6 +41,7 @@ final class LiveStreamQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */
@@ -112,6 +113,9 @@ final class LiveStreamQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `live_stream`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `live_stream`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

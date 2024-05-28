@@ -36,14 +36,14 @@ final class PlaylistQuery implements QueryInterface
         'equal',
         'like',
         'exact_match',
-        'not_like',
         'playlist_open',
         'playlist_type',
         'playlist_user',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with'
+        'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */

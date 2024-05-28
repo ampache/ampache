@@ -39,6 +39,7 @@ final class TvshowQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'year_eq',
         'year_gt',
         'year_lt'
@@ -114,6 +115,9 @@ final class TvshowQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `tvshow`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

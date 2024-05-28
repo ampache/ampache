@@ -41,6 +41,7 @@ final class UserQuery implements QueryInterface
         'disabled',
         'starts_with',
         'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */
@@ -117,6 +118,9 @@ final class UserQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " (`user`.`fullname` LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` LIKE '%" . Dba::escape($value) . "%') AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " (`user`.`fullname` NOT LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` NOT LIKE '%" . Dba::escape($value) . "%') AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

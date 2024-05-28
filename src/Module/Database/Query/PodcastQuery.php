@@ -39,8 +39,9 @@ final class PodcastQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'catalog',
-        'unplayed'
+        'unplayed',
     );
 
     /** @var string[] $sorts */
@@ -112,6 +113,9 @@ final class PodcastQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `podcast`.`title` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

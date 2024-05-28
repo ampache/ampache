@@ -39,6 +39,7 @@ final class LabelQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */
@@ -110,6 +111,9 @@ final class LabelQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `label`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

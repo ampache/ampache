@@ -42,6 +42,7 @@ final class TagQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag'
     );
 
@@ -109,6 +110,9 @@ final class TagQuery implements QueryInterface
             case 'like':
             case 'alpha_match':
                 $filter_sql = " `tag`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `tag`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
