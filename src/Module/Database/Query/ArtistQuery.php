@@ -52,6 +52,7 @@ final class ArtistQuery implements QueryInterface
         'unplayed',
         'update_gt',
         'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -195,6 +196,19 @@ final class ArtistQuery implements QueryInterface
                 if ($value != 0) {
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                     $filter_sql = " (`catalog_map`.`catalog_id` = '" . Dba::escape($value) . "') AND ";
+                }
+                break;
+            case 'user_catalog':
+                $type = '\'artist\'';
+                if ($query->get_filter('album_artist')) {
+                    $type = '\'album_artist\'';
+                }
+                if ($query->get_filter('song_artist')) {
+                    $type = '\'song_artist\'';
+                }
+                if ($value != 0) {
+                    $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
+                    $filter_sql = " (`catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ")) AND ";
                 }
                 break;
             case 'catalog_enabled':

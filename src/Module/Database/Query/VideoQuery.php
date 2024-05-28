@@ -43,10 +43,12 @@ final class VideoQuery implements QueryInterface
         'not_starts_with',
         'not_like',
         'catalog',
+        'catalog_enabled',
         'genre',
         'tag',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -169,6 +171,13 @@ final class VideoQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " `video`.`catalog` = '" . Dba::escape($value) . "' AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `video`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`video`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
         }
 

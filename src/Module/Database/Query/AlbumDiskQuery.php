@@ -51,7 +51,8 @@ final class AlbumDiskQuery implements QueryInterface
         'tag',
         'unplayed',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -209,6 +210,9 @@ final class AlbumDiskQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`album_disk`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
                 break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
