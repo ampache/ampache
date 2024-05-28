@@ -38,6 +38,8 @@ final class ArtistQuery implements QueryInterface
         'alpha_match',
         'catalog',
         'catalog_enabled',
+        'equal',
+        'like',
         'exact_match',
         'genre',
         'label',
@@ -45,10 +47,12 @@ final class ArtistQuery implements QueryInterface
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag',
         'unplayed',
         'update_gt',
         'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -126,11 +130,16 @@ final class ArtistQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `artist`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `artist`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `artist`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -187,6 +196,19 @@ final class ArtistQuery implements QueryInterface
                 if ($value != 0) {
                     $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
                     $filter_sql = " (`catalog_map`.`catalog_id` = '" . Dba::escape($value) . "') AND ";
+                }
+                break;
+            case 'user_catalog':
+                $type = '\'artist\'';
+                if ($query->get_filter('album_artist')) {
+                    $type = '\'album_artist\'';
+                }
+                if ($query->get_filter('song_artist')) {
+                    $type = '\'song_artist\'';
+                }
+                if ($value != 0) {
+                    $query->set_join_and('LEFT', '`catalog_map`', '`catalog_map`.`object_id`', '`artist`.`id`', '`catalog_map`.`object_type`', $type, 100);
+                    $filter_sql = " (`catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ")) AND ";
                 }
                 break;
             case 'catalog_enabled':
