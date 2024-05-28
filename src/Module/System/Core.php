@@ -396,7 +396,7 @@ class Core
     public static function get_tmp_dir(): string
     {
         if (AmpConfig::get('tmp_dir_path')) {
-            return rtrim(AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
+            return rtrim((string)AmpConfig::get('tmp_dir_path'), DIRECTORY_SEPARATOR);
         }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();

@@ -39,16 +39,20 @@ final class AlbumDiskQuery implements QueryInterface
         'song_artist',
         'catalog',
         'catalog_enabled',
+        'equal',
         'exact_match',
         'genre',
+        'like',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag',
         'unplayed',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -142,11 +146,16 @@ final class AlbumDiskQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `album`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -202,6 +211,9 @@ final class AlbumDiskQuery implements QueryInterface
                     $filter_sql = " (`album_disk`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
                 break;
+            case 'user_catalog':
+                $filter_sql = " `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album_disk`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
@@ -231,6 +243,7 @@ final class AlbumDiskQuery implements QueryInterface
         $query->set_join('LEFT', '`album`', '`album_disk`.`album_id`', '`album`.`id`', 10);
         switch ($field) {
             case 'name':
+            case 'title':
                 $sql   = "`album`.`name` $order, `album_disk`.`disk`";
                 $order = '';
                 break;

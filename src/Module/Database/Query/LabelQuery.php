@@ -32,11 +32,14 @@ final class LabelQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */
@@ -101,11 +104,16 @@ final class LabelQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `label`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `label`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `label`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

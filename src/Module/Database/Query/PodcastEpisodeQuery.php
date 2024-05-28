@@ -33,15 +33,20 @@ final class PodcastEpisodeQuery implements QueryInterface
     public const FILTERS = array(
         'podcast',
         'catalog',
+        'catalog_enabled',
         'add_gt',
         'add_lt',
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
-        'unplayed'
+        'not_like',
+        'unplayed',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -116,11 +121,16 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'podcast':
                 $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `podcast_episode`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `podcast_episode`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `podcast_episode`.`title` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -148,6 +158,13 @@ final class PodcastEpisodeQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`podcast_episode`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `podcast_episode`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast_episode`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {

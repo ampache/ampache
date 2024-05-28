@@ -280,6 +280,8 @@ class Query
             case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
+            case 'equal':
+            case 'like':
             case 'alpha_match':
             case 'exact_match':
             case 'regex_match':

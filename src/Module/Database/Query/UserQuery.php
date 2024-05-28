@@ -32,6 +32,8 @@ final class UserQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
@@ -39,6 +41,7 @@ final class UserQuery implements QueryInterface
         'disabled',
         'starts_with',
         'not_starts_with',
+        'not_like',
     );
 
     /** @var string[] $sorts */
@@ -108,11 +111,16 @@ final class UserQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " (`user`.`fullname` = '" . Dba::escape($value) . "' OR `user`.`username` = '" . Dba::escape($value) . "' OR `user`.`email` = '" . Dba::escape($value) . "') AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " (`user`.`fullname` LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` LIKE '%" . Dba::escape($value) . "%') AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " (`user`.`fullname` NOT LIKE '%" . Dba::escape($value) . "%' OR `user`.`username` LIKE '%" . Dba::escape($value) . "%' OR `user`.`email` NOT LIKE '%" . Dba::escape($value) . "%') AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

@@ -32,11 +32,14 @@ final class TvshowQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'year_eq',
         'year_gt',
         'year_lt'
@@ -48,8 +51,6 @@ final class TvshowQuery implements QueryInterface
         'title',
         'name',
         'year',
-        'title',
-        'name',
         'resolution',
         'length',
         'codec',
@@ -107,11 +108,16 @@ final class TvshowQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `tvshow`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `tvshow`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `tvshow`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {

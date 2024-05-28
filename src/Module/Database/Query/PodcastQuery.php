@@ -32,13 +32,18 @@ final class PodcastQuery implements QueryInterface
 {
     public const FILTERS = array(
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'catalog',
-        'unplayed'
+        'catalog_enabled',
+        'unplayed',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -103,11 +108,16 @@ final class PodcastQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `podcast`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `podcast`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `podcast`.`title` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -129,6 +139,13 @@ final class PodcastQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " (`podcast`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `podcast`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`podcast`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
             case 'unplayed':
                 if ((int)$value == 1) {
