@@ -98,6 +98,10 @@ final class PvmsgQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'equal':
+            case 'exact_match':
+                $filter_sql = " `user_pvmsg`.`subject` = '" . Dba::escape($value) . "' AND ";
+                break;
             case 'alpha_match':
                 $filter_sql = " `user_pvmsg`.`subject` LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
