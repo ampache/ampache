@@ -34,16 +34,21 @@ final class VideoQuery implements QueryInterface
         'add_gt',
         'add_lt',
         'alpha_match',
+        'equal',
+        'like',
         'exact_match',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'catalog',
+        'catalog_enabled',
         'genre',
         'tag',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -123,11 +128,16 @@ final class VideoQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ') AND ';
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `video`.`title` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `video`.`title` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `video`.`title` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -161,6 +171,13 @@ final class VideoQuery implements QueryInterface
                 if ($value != 0) {
                     $filter_sql = " `video`.`catalog` = '" . Dba::escape($value) . "' AND ";
                 }
+                break;
+            case 'user_catalog':
+                $filter_sql = " `video`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
+            case 'catalog_enabled':
+                $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`video`.`catalog`', 100);
+                $filter_sql = " `catalog`.`enabled` = '1' AND ";
                 break;
         }
 

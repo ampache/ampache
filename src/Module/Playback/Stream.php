@@ -763,14 +763,14 @@ class Stream
             ? AmpConfig::get('local_web_path')
             : AmpConfig::get('web_path');
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
-            $web_path = rtrim(AmpConfig::get('fallback_url'), '/');
+            $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }
 
         if (AmpConfig::get('force_http_play')) {
             $web_path = str_replace("https://", "http://", $web_path);
         }
 
-        $http_port = ($local && preg_match("/:(\d+)/", $web_path, $matches))
+        $http_port = ($local && preg_match("/:(\d+)/", (string)$web_path, $matches))
             ? $matches[1]
             : AmpConfig::get('http_port');
         if (!empty($http_port) && $http_port != 80 && $http_port != 443) {

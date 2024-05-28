@@ -456,7 +456,6 @@ class Json4_Data
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist_names = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'

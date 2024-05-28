@@ -39,16 +39,20 @@ final class AlbumQuery implements QueryInterface
         'song_artist',
         'catalog',
         'catalog_enabled',
+        'equal',
+        'like',
         'exact_match',
         'genre',
         'regex_match',
         'regex_not_match',
         'starts_with',
         'not_starts_with',
+        'not_like',
         'tag',
         'unplayed',
         'update_gt',
-        'update_lt'
+        'update_lt',
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
@@ -138,11 +142,16 @@ final class AlbumQuery implements QueryInterface
                 }
                 $filter_sql = rtrim((string) $filter_sql, 'AND ') . ") AND ";
                 break;
+            case 'equal':
             case 'exact_match':
                 $filter_sql = " `album`.`name` = '" . Dba::escape($value) . "' AND ";
                 break;
+            case 'like':
             case 'alpha_match':
                 $filter_sql = " `album`.`name` LIKE '%" . Dba::escape($value) . "%' AND ";
+                break;
+            case 'not_like':
+                $filter_sql = " `album`.`name` NOT LIKE '%" . Dba::escape($value) . "%' AND ";
                 break;
             case 'regex_match':
                 if (!empty($value)) {
@@ -198,6 +207,9 @@ final class AlbumQuery implements QueryInterface
                     $filter_sql = " (`album`.`catalog` = '" . Dba::escape($value) . "') AND ";
                 }
                 break;
+            case 'user_catalog':
+                $filter_sql = " `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $query->user_id, true)) . ") AND ";
+                break;
             case 'catalog_enabled':
                 $query->set_join('LEFT', '`catalog`', '`catalog`.`id`', '`album`.`catalog`', 100);
                 $filter_sql = " `catalog`.`enabled` = '1' AND ";
@@ -225,6 +237,7 @@ final class AlbumQuery implements QueryInterface
     {
         switch ($field) {
             case 'name':
+            case 'title':
                 $sql = "`album`.`name`";
                 break;
             case 'name_original_year':
