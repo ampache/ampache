@@ -1248,7 +1248,7 @@ class Query
     /**
      * sql_sort_video
      */
-    public function sql_sort_video(string $field, string $order, ?string $table = 'video'): string
+    public function sql_sort_video(?string $field, ?string $order, ?string $table = 'video'): string
     {
         $sql = "";
         switch ($field) {
