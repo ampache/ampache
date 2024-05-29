@@ -824,7 +824,7 @@ class Playlist extends playlist_object
         $sql = "INSERT INTO `playlist_data` (`playlist`, `object_type`, `object_id`, `track`) VALUES (?, ?, ?, ?);";
         Dba::write($sql, array($this->id, 'song', $object_id, $track));
 
-        debug_event(self::class, 'Set track ' . $track . ' to ' . $object_id . ' for playlist: ' . $this->id, 5);
+        debug_event(self::class, $this->id . ' set track: ' . $track . ' to ' . $object_id, 5);
 
         $this->_update_last();
 
@@ -850,7 +850,7 @@ class Playlist extends playlist_object
             $results    = Dba::fetch_assoc($db_results);
         }
         if (isset($results['object_id']) || isset($results['track'])) {
-            debug_event(self::class, 'has_item results: ' . ($results['object_id'] ?? $results['track']), 5);
+            debug_event(self::class, $this->id . ' has_item: ' . ($results['object_id'] ?? $results['track']), 5);
 
             return true;
         }
