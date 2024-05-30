@@ -423,7 +423,7 @@ class Playlist extends playlist_object
                     "OR `playlist_data`.`object_type` = 'podcast_episode' AND `podcast_episode`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
                     "OR `playlist_data`.`object_type` = 'song' AND `song`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) " .
                     "OR `playlist_data`.`object_type` = 'video' AND `video`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1)) ";
-                $params  = array($this->id, $user_id, $user_id, $user_id, $user_id);
+                $params  = [$this->id, $user_id, $user_id, $user_id, $user_id];
             } else {
                 $sql .= "AND `playlist_data`.`object_type` = '$type' AND `$type`.`catalog` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = ? AND `catalog_filter_group_map`.`enabled`=1) ";
                 $params[] = $user_id;
@@ -837,7 +837,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track): bool
     {
-        if (AmpConfig::get('unique_playlist') && $this->has_item($object_id)) {
+        if (AmpConfig::get('unique_playlist') && $this->has_item($object_id, $track)) {
             return false;
         }
 
@@ -862,15 +862,25 @@ class Playlist extends playlist_object
      */
     public function has_item($object = null, $track = null): bool
     {
-        $results = [];
-        if ($object) {
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
-            $db_results = Dba::read($sql, [$this->id, $object]);
-            $results    = Dba::fetch_assoc($db_results);
-        } elseif ($track) {
+        if ($object === null && $track === null) {
+            return false;
+        }
+
+        if ($object === null && $track !== null) {
+            // searching by track
             $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
             $db_results = Dba::read($sql, [$this->id, $track]);
             $results    = Dba::fetch_assoc($db_results);
+        } else {
+            if ($track !== null) {
+                $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
+                $db_results = Dba::read($sql, [$this->id, $object, $track]);
+            } else {
+                // Search object and optionally check by track
+                $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
+                $db_results = Dba::read($sql, [$this->id, $object]);
+            }
+            $results = Dba::fetch_assoc($db_results);
         }
 
         if (isset($results['object_id']) || isset($results['track'])) {
