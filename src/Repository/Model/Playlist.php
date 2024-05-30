@@ -814,7 +814,7 @@ class Playlist extends playlist_object
      */
     public function set_by_track_number($object_id, $track): bool
     {
-        if (AmpConfig::get('unique_playlist') && $this->has_item($object_id)) {
+        if (AmpConfig::get('unique_playlist') && $this->has_item($object_id, $track)) {
             return false;
         }
 
@@ -839,16 +839,27 @@ class Playlist extends playlist_object
      */
     public function has_item($object = null, $track = null): bool
     {
-        $results = array();
-        if ($object) {
-            $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
-            $db_results = Dba::read($sql, array($this->id, $object));
-            $results    = Dba::fetch_assoc($db_results);
-        } elseif ($track) {
+        if ($object === null && $track === null) {
+            return false;
+        }
+
+        if ($object === null && $track !== null) {
+            // searching by track
             $sql        = "SELECT `track` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`track` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
             $db_results = Dba::read($sql, array($this->id, $track));
             $results    = Dba::fetch_assoc($db_results);
+        } else {
+            if ($track !== null) {
+                $sql = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
+                $db_results = Dba::read($sql, array($this->id, $object, $track));
+            } else {
+                // Search object and optionally check by track
+                $sql = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
+                $db_results = Dba::read($sql, array($this->id, $object));
+            }
+            $results = Dba::fetch_assoc($db_results);
         }
+
         if (isset($results['object_id']) || isset($results['track'])) {
             debug_event(self::class, $this->id . ' has_item: ' . ($results['object_id'] ?? $results['track']), 5);
 
