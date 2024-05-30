@@ -107,6 +107,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <?php require Ui::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
+    <a href="<?php echo $web_path.'/search.php?type='.$currentType.'&'.http_build_query($_POST);?>" target=_blank><?php echo T_('Permalink'); ?></a>
     <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
 <?php if ($currentType == 'song' && Access::check('interface', 25)) { ?>
     <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
