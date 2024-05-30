@@ -1245,8 +1245,8 @@ class Preference extends database_object
         $results['theme_path'] = '/themes/' . $results['theme_name'];
 
         // Load theme settings
-        $themecfg                  = get_theme($results['theme_name']);
-        $results['theme_css_base'] = $themecfg['base'];
+        $theme_cfg                 = get_theme($results['theme_name']);
+        $results['theme_css_base'] = $theme_cfg['base'];
 
         if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed
@@ -1257,7 +1257,7 @@ class Preference extends database_object
             unset($results['theme_color']);
         }
         if (!isset($results['theme_color'])) {
-            $results['theme_color'] = strtolower((string)$themecfg['colors'][0]);
+            $results['theme_color'] = strtolower((string)$theme_cfg['colors'][0]);
         }
 
         AmpConfig::set_by_array($results, true);

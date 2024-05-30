@@ -65,13 +65,13 @@ final class PlaylistRemoveSong4Method
                 $playlist->delete_all();
                 Api4::message('success', 'all songs removed from playlist', null, $input['api_format']);
             } elseif (array_key_exists('song', $input)) {
-                $track = (int) scrub_in((string) $input['song']);
-                if (!$playlist->has_item($track)) {
+                $song = (int) scrub_in((string) $input['song']);
+                if (!$playlist->has_item($song)) {
                     Api4::message('error', T_('Song not found in playlist'), '404', $input['api_format']);
 
                     return false;
                 }
-                $playlist->delete_song($track);
+                $playlist->delete_song($song);
                 $playlist->regenerate_track_numbers();
                 Api4::message('success', 'song removed from playlist', null, $input['api_format']);
             } elseif (array_key_exists('track', $input)) {
