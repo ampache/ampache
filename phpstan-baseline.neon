@@ -111,11 +111,6 @@ parameters:
 			path: src/Config/Init/InitializationHandlerConfig.php
 
 		-
-			message: "#^Cannot access offset 'path' on array\\|false\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function apache_request_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
