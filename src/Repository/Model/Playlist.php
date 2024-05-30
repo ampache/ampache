@@ -850,11 +850,11 @@ class Playlist extends playlist_object
             $results    = Dba::fetch_assoc($db_results);
         } else {
             if ($track !== null) {
-                $sql = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
+                $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' AND `track` <= ? LIMIT 1";
                 $db_results = Dba::read($sql, array($this->id, $object, $track));
             } else {
                 // Search object and optionally check by track
-                $sql = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
+                $sql        = "SELECT `object_id` FROM `playlist_data` WHERE `playlist_data`.`playlist` = ? AND `playlist_data`.`object_id` = ? AND `playlist_data`.`object_type` = 'song' LIMIT 1";
                 $db_results = Dba::read($sql, array($this->id, $object));
             }
             $results = Dba::fetch_assoc($db_results);
