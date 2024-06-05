@@ -350,9 +350,13 @@ class AutoUpdate
 
         // Don't show anything if the current version is newer than the second, (e.g. version_compare(7.0.0, 6.9.0) = 1)
         if (
-            preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
-            preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest) &&
-            version_compare($current, $latest) === 1
+            empty($latest) ||
+            $current === $latest ||
+            (
+                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $current) &&
+                preg_match("/^[0-9]+\.[0-9]+\.[0-9]+$/", $latest) &&
+                version_compare($current, $latest) === 1
+            )
         ) {
             echo '<div id="autoupdate">';
             echo '</div>';
