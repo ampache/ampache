@@ -42,8 +42,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     protected const DB_TABLENAME = 'tag';
 
     public int $id = 0;
+
     public ?string $name;
-    public int $is_hidden;
+
+    public int $is_hidden = 0;
 
     public $f_name;
 

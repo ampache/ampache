@@ -62,7 +62,7 @@ final class TagAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
-        $browse->set_sort('count', 'ASC');
+        $browse->set_sort('name', 'ASC');
 
         $this->ui->showHeader();
 

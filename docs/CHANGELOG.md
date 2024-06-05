@@ -98,6 +98,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * ALL
   * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
+  * playlist_edit: track insert broken by removing table constraint
 * API6
   * list: sorting was by `id` instead of `name`
   * browse: sorting was by `id` instead of `name`
