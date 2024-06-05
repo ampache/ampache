@@ -1271,10 +1271,15 @@ final class VaInfo implements VaInfoInterface
                     $parsed['version'] = $data[0];
                     break;
                 case 'rating':
+                    if (!is_numeric($data[0])) {
+                        break;
+                    }
+
                     $rating_user = -1;
                     if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
                         $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
+
                     $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
                     break;
                 default:
@@ -1524,6 +1529,10 @@ final class VaInfo implements VaInfoInterface
         // Find the rating
         if (array_key_exists('POPM', $id3v2) && is_array($id3v2['POPM'])) {
             foreach ($id3v2['POPM'] as $popm) {
+                if (!is_numeric($popm['rating'])) {
+                    continue;
+                }
+
                 if (
                     array_key_exists('email', $popm) &&
                     $user = $this->userRepository->findByEmail($popm['email'])
@@ -1539,6 +1548,7 @@ final class VaInfo implements VaInfoInterface
                 if ($this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER)) {
                     $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
+
                 $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
             }
         }
