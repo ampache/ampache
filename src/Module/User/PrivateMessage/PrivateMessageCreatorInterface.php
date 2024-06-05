@@ -34,7 +34,7 @@ interface PrivateMessageCreatorInterface
      * @throws \PHPMailer\PHPMailer\Exception
      */
     public function create(
-        User $recipient,
+        ?User $recipient,
         User $sender,
         string $subject,
         string $message
