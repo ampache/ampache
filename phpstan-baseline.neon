@@ -3851,11 +3851,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$user of static method Ampache\\\\Module\\\\Api\\\\Api\\:\\:getBrowse\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Api.php
-
-		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
