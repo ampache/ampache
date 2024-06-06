@@ -1338,7 +1338,7 @@ class Subsonic_Api
     public static function getplaylists($input, $user): void
     {
         $user = (isset($input['username']))
-            ? User::get_from_username($input['username'])
+            ? User::get_from_username($input['username']) ?? $user
             : $user;
         $user_id  = $user->id ?? 0;
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
