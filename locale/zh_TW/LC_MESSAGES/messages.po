@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016
-# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022
+# Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024
 msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-03-22 21:48+1000\n"
+"POT-Creation-Date: 2024-05-03 11:27+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
-"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022\n"
+"Last-Translator: Shen-Ta Hsieh(BestSteve) <ibmibmibm.tw@gmail.com>, 2016,2018-2022,2024\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/ampache/ampache/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "最小數量"
 
 #: ../../public/templates/browse_filters.inc.php:59
 msgid "Rated"
-msgstr "評比"
+msgstr "評分"
 
 #: ../../public/templates/browse_filters.inc.php:64
 msgid "Unplayed"
@@ -191,7 +191,7 @@ msgstr "收合/展開側邊欄"
 #: ../../public/templates/show_test.inc.php:45
 #: ../../public/templates/test_error_page.inc.php:29
 #: ../../src/Application/Api/Upnp/UpnpApplication.php:57
-#: ../../src/Module/Playback/Stream_Playlist.php:529
+#: ../../src/Module/Playback/Stream_Playlist.php:547
 msgid "Ampache"
 msgstr "Ampache"
 
@@ -247,36 +247,35 @@ msgid "Home"
 msgstr "首頁"
 
 #: ../../public/templates/header.inc.php:62
-#: ../../public/templates/rightbar.inc.php:49
+#: ../../public/templates/rightbar.inc.php:50
 #: ../../public/templates/show_album_disk.inc.php:127
 #: ../../public/templates/show_album_group_disks.inc.php:132
 #: ../../public/templates/show_album_group_disks.inc.php:268
 #: ../../public/templates/show_album.inc.php:129
 #: ../../public/templates/show_artist_row.inc.php:56
 #: ../../public/templates/show_broadcast_row.inc.php:36
-#: ../../public/templates/show_democratic.inc.php:53
+#: ../../public/templates/show_democratic.inc.php:54
 #: ../../public/templates/show_html5_player.inc.php:44
 #: ../../public/templates/show_live_stream.inc.php:45
 #: ../../public/templates/show_live_stream_row.inc.php:41
 #: ../../public/templates/show_localplay_control.inc.php:33
-#: ../../public/templates/show_manage_democratic.inc.php:62
+#: ../../public/templates/show_manage_democratic.inc.php:63
 #: ../../public/templates/show_playlist_media_row.inc.php:54
 #: ../../public/templates/show_playlist_medias.inc.php:98
 #: ../../public/templates/show_podcast_episode.inc.php:71
-#: ../../public/templates/show_podcast_episode_row.inc.php:50
+#: ../../public/templates/show_podcast_episode_row.inc.php:52
 #: ../../public/templates/show_podcast_row.inc.php:46
 #: ../../public/templates/show_random_album_disks.inc.php:58
 #: ../../public/templates/show_random_albums.inc.php:58
 #: ../../public/templates/show_random_videos.inc.php:59
 #: ../../public/templates/show_recently_played_all.inc.php:128
 #: ../../public/templates/show_recently_played.inc.php:122
-#: ../../public/templates/show_recently_skipped_all.inc.php:125
 #: ../../public/templates/show_recently_skipped.inc.php:115
 #: ../../public/templates/show_search_row.inc.php:41
 #: ../../public/templates/show_tvshow_row.inc.php:48
 #: ../../public/templates/show_tvshow_season_row.inc.php:46
 #: ../../public/templates/show_video.inc.php:93
-#: ../../public/templates/show_video_row.inc.php:56
+#: ../../public/templates/show_video_row.inc.php:57
 #: ../../src/Gui/Album/AlbumViewAdapter.php:137
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:142
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:120
@@ -298,7 +297,7 @@ msgstr "播放"
 #: ../../public/templates/show_form_recent.inc.php:47
 #: ../../public/templates/show_form_search.inc.php:68
 #: ../../public/templates/show_form_userflag.inc.php:47
-#: ../../public/templates/show_label.inc.php:117
+#: ../../public/templates/show_label.inc.php:118
 #: ../../public/templates/show_labels.inc.php:65
 #: ../../public/templates/show_labels.inc.php:95
 #: ../../public/templates/show_random.inc.php:64
@@ -362,7 +361,7 @@ msgstr "播放清單"
 #: ../../public/templates/show_artists.inc.php:140
 #: ../../public/templates/show_edit_album_row.inc.php:113
 #: ../../public/templates/show_edit_artist_row.inc.php:64
-#: ../../public/templates/show_edit_song_row.inc.php:108
+#: ../../public/templates/show_edit_song_row.inc.php:109
 #: ../../public/templates/show_edit_tvshow_row.inc.php:46
 #: ../../public/templates/show_edit_video_row.inc.php:49
 #: ../../public/templates/show_now_playing_row.inc.php:76
@@ -452,7 +451,7 @@ msgid "Random Play"
 msgstr "隨機播放"
 
 #: ../../public/templates/header.inc.php:152
-#: ../../public/templates/show_manage_democratic.inc.php:37
+#: ../../public/templates/show_manage_democratic.inc.php:38
 #: ../../public/templates/sidebar.inc.php:68
 #: ../../src/Repository/Model/Search.php:664
 #: ../../src/Repository/Model/Search.php:784
@@ -543,7 +542,7 @@ msgstr "瀏覽"
 #: ../../public/templates/show_disabled_songs.inc.php:37
 #: ../../public/templates/show_disabled_songs.inc.php:64
 #: ../../public/templates/show_edit_catalog.inc.php:40
-#: ../../public/templates/show_edit_song_row.inc.php:66
+#: ../../public/templates/show_edit_song_row.inc.php:67
 #: ../../public/templates/show_lyrics.inc.php:55
 #: ../../public/templates/show_missing_albums.inc.php:36
 #: ../../public/templates/show_now_playing_row.inc.php:62
@@ -551,8 +550,6 @@ msgstr "瀏覽"
 #: ../../public/templates/show_recently_played_all.inc.php:186
 #: ../../public/templates/show_recently_played.inc.php:56
 #: ../../public/templates/show_recently_played.inc.php:180
-#: ../../public/templates/show_recently_skipped_all.inc.php:57
-#: ../../public/templates/show_recently_skipped_all.inc.php:183
 #: ../../public/templates/show_recently_skipped.inc.php:52
 #: ../../public/templates/show_recently_skipped.inc.php:173
 #: ../../public/templates/show_similar_songs.inc.php:64
@@ -566,7 +563,7 @@ msgstr "瀏覽"
 #: ../../src/Gui/Song/SongViewAdapter.php:352
 #: ../../src/Gui/Song/SongViewAdapter.php:354
 #: ../../src/Module/Util/Rss/AmpacheRss.php:342
-#: ../../src/Repository/Model/AlbumDisk.php:266
+#: ../../src/Repository/Model/AlbumDisk.php:268
 #: ../../src/Repository/Model/Album.php:496
 #: ../../src/Repository/Model/Search.php:608
 msgid "Album"
@@ -580,7 +577,7 @@ msgstr "專輯"
 #: ../../public/templates/show_democratic_playlist.inc.php:122
 #: ../../public/templates/show_disabled_songs.inc.php:38
 #: ../../public/templates/show_disabled_songs.inc.php:65
-#: ../../public/templates/show_edit_song_row.inc.php:51
+#: ../../public/templates/show_edit_song_row.inc.php:52
 #: ../../public/templates/show_lyrics.inc.php:62
 #: ../../public/templates/show_missing_albums.inc.php:37
 #: ../../public/templates/show_missing_artists.inc.php:35
@@ -590,8 +587,6 @@ msgstr "專輯"
 #: ../../public/templates/show_partial_edit_clip_row.inc.php:30
 #: ../../public/templates/show_recently_played_all.inc.php:59
 #: ../../public/templates/show_recently_played_all.inc.php:185
-#: ../../public/templates/show_recently_skipped_all.inc.php:56
-#: ../../public/templates/show_recently_skipped_all.inc.php:182
 #: ../../public/templates/show_recommended_artists.inc.php:54
 #: ../../public/templates/show_recommended_artists.inc.php:121
 #: ../../public/templates/show_song_previews.inc.php:34
@@ -599,7 +594,7 @@ msgstr "專輯"
 #: ../../public/templates/show_tagcloud.inc.php:35
 #: ../../public/templates/show_wanted_albums.inc.php:42
 #: ../../src/Module/Util/Rss/AmpacheRss.php:342
-#: ../../src/Repository/Model/AlbumDisk.php:261
+#: ../../src/Repository/Model/AlbumDisk.php:263
 #: ../../src/Repository/Model/Album.php:491
 #: ../../src/Repository/Model/Artist.php:352
 #: ../../src/Repository/Model/Browse.php:308
@@ -635,7 +630,7 @@ msgstr "歌曲"
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:471
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:467
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:505
-#: ../../src/Module/Playback/Stream_Url.php:186
+#: ../../src/Module/Playback/Stream_Url.php:198
 #: ../../src/Module/Util/Ui.php:844
 msgid "Democratic"
 msgstr "民主"
@@ -698,7 +693,7 @@ msgstr "儲存"
 
 #: ../../public/templates/header.inc.php:177
 #: ../../public/templates/show_confirmation.inc.php:46
-#: ../../public/templates/show_get_art.inc.php:141
+#: ../../public/templates/show_get_art.inc.php:144
 msgid "Cancel"
 msgstr "取消"
 
@@ -712,20 +707,19 @@ msgstr "取消"
 #: ../../public/templates/show_live_stream_row.inc.php:43
 #: ../../public/templates/show_playlist_media_row.inc.php:56
 #: ../../public/templates/show_podcast_episode.inc.php:73
-#: ../../public/templates/show_podcast_episode_row.inc.php:52
+#: ../../public/templates/show_podcast_episode_row.inc.php:54
 #: ../../public/templates/show_podcast_row.inc.php:48
 #: ../../public/templates/show_random_album_disks.inc.php:60
 #: ../../public/templates/show_random_albums.inc.php:60
 #: ../../public/templates/show_random_videos.inc.php:61
 #: ../../public/templates/show_recently_played_all.inc.php:130
 #: ../../public/templates/show_recently_played.inc.php:124
-#: ../../public/templates/show_recently_skipped_all.inc.php:127
 #: ../../public/templates/show_recently_skipped.inc.php:117
 #: ../../public/templates/show_search_row.inc.php:43
 #: ../../public/templates/show_tvshow_row.inc.php:50
 #: ../../public/templates/show_tvshow_season_row.inc.php:48
 #: ../../public/templates/show_video.inc.php:95
-#: ../../public/templates/show_video_row.inc.php:58
+#: ../../public/templates/show_video_row.inc.php:59
 #: ../../src/Application/Api/Upnp/PlayStatusApplication.php:65
 #: ../../src/Gui/Album/AlbumViewAdapter.php:149
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:154
@@ -746,20 +740,19 @@ msgstr "下一首播放"
 #: ../../public/templates/show_live_stream_row.inc.php:46
 #: ../../public/templates/show_playlist_media_row.inc.php:59
 #: ../../public/templates/show_podcast_episode.inc.php:76
-#: ../../public/templates/show_podcast_episode_row.inc.php:55
+#: ../../public/templates/show_podcast_episode_row.inc.php:57
 #: ../../public/templates/show_podcast_row.inc.php:51
 #: ../../public/templates/show_random_album_disks.inc.php:63
 #: ../../public/templates/show_random_albums.inc.php:63
 #: ../../public/templates/show_random_videos.inc.php:64
 #: ../../public/templates/show_recently_played_all.inc.php:133
 #: ../../public/templates/show_recently_played.inc.php:127
-#: ../../public/templates/show_recently_skipped_all.inc.php:130
 #: ../../public/templates/show_recently_skipped.inc.php:120
 #: ../../public/templates/show_search_row.inc.php:46
 #: ../../public/templates/show_tvshow_row.inc.php:53
 #: ../../public/templates/show_tvshow_season_row.inc.php:51
 #: ../../public/templates/show_video.inc.php:98
-#: ../../public/templates/show_video_row.inc.php:61
+#: ../../public/templates/show_video_row.inc.php:62
 #: ../../src/Gui/Album/AlbumViewAdapter.php:161
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:166
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:144
@@ -779,17 +772,16 @@ msgstr "最後播放"
 #: ../../public/templates/show_live_stream_row.inc.php:58
 #: ../../public/templates/show_playlist_media_row.inc.php:73
 #: ../../public/templates/show_podcast_episode.inc.php:79
-#: ../../public/templates/show_podcast_episode_row.inc.php:73
+#: ../../public/templates/show_podcast_episode_row.inc.php:75
 #: ../../public/templates/show_random_album_disks.inc.php:66
 #: ../../public/templates/show_random_albums.inc.php:66
 #: ../../public/templates/show_recently_played_all.inc.php:141
 #: ../../public/templates/show_recently_played.inc.php:135
-#: ../../public/templates/show_recently_skipped_all.inc.php:138
 #: ../../public/templates/show_recently_skipped.inc.php:128
 #: ../../public/templates/show_search_options.inc.php:40
 #: ../../public/templates/show_search_row.inc.php:54
 #: ../../public/templates/show_video.inc.php:101
-#: ../../public/templates/show_video_row.inc.php:80
+#: ../../public/templates/show_video_row.inc.php:81
 #: ../../src/Gui/Album/AlbumViewAdapter.php:173
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:178
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:156
@@ -800,20 +792,19 @@ msgid "Add to Temporary Playlist"
 msgstr "新增到暫存播放清單"
 
 #: ../../public/templates/header.inc.php:471
-#: ../../public/templates/rightbar.inc.php:53
+#: ../../public/templates/rightbar.inc.php:54
 #: ../../public/templates/show_album_disk.inc.php:149
 #: ../../public/templates/show_album_group_disks.inc.php:152
 #: ../../public/templates/show_album.inc.php:151
 #: ../../public/templates/show_artist_row.inc.php:78
 #: ../../public/templates/show_live_stream_row.inc.php:61
 #: ../../public/templates/show_playlist_media_row.inc.php:76
-#: ../../public/templates/show_podcast_episode_row.inc.php:76
+#: ../../public/templates/show_podcast_episode_row.inc.php:78
 #: ../../public/templates/show_recently_played_all.inc.php:143
 #: ../../public/templates/show_recently_played.inc.php:137
-#: ../../public/templates/show_recently_skipped_all.inc.php:140
 #: ../../public/templates/show_recently_skipped.inc.php:130
 #: ../../public/templates/show_search_row.inc.php:56
-#: ../../public/templates/show_video_row.inc.php:83
+#: ../../public/templates/show_video_row.inc.php:84
 #: ../../src/Gui/Album/AlbumViewAdapter.php:282
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:287
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:276
@@ -912,7 +903,7 @@ msgid "Alphabet"
 msgstr "頭字母"
 
 #: ../../public/templates/list_header.inc.php:151
-#: ../../public/templates/show_get_art.inc.php:105
+#: ../../public/templates/show_get_art.inc.php:106
 #: ../../src/Repository/Model/Search.php:439
 #: ../../src/Repository/Model/Search.php:444
 #: ../../src/Repository/Model/Search.php:450
@@ -924,11 +915,11 @@ msgstr "限制"
 msgid "Item Count"
 msgstr "項目數量"
 
-#: ../../public/templates/rightbar.inc.php:56
+#: ../../public/templates/rightbar.inc.php:57
 msgid "Add to New Playlist"
 msgstr "新增到新的播放清單"
 
-#: ../../public/templates/rightbar.inc.php:75
+#: ../../public/templates/rightbar.inc.php:76
 #: ../../public/templates/show_playlist.inc.php:98
 #: ../../public/templates/show_playlist.inc.php:99
 #: ../../public/templates/show_search.inc.php:55
@@ -942,33 +933,33 @@ msgstr "新增到新的播放清單"
 msgid "Batch download"
 msgstr "批次下載"
 
-#: ../../public/templates/rightbar.inc.php:80
-#: ../../public/templates/show_democratic.inc.php:56
+#: ../../public/templates/rightbar.inc.php:81
+#: ../../public/templates/show_democratic.inc.php:57
 #: ../../public/templates/show_localplay_status.inc.php:62
 msgid "Clear Playlist"
 msgstr "清除播放清單"
 
-#: ../../public/templates/rightbar.inc.php:83
+#: ../../public/templates/rightbar.inc.php:84
 msgid "Add dynamic items"
 msgstr "新增動態項目"
 
-#: ../../public/templates/rightbar.inc.php:86
+#: ../../public/templates/rightbar.inc.php:87
 msgid "Random song"
 msgstr "隨機歌曲"
 
-#: ../../public/templates/rightbar.inc.php:89
+#: ../../public/templates/rightbar.inc.php:90
 msgid "Random artist"
 msgstr "隨機作者"
 
-#: ../../public/templates/rightbar.inc.php:92
+#: ../../public/templates/rightbar.inc.php:93
 msgid "Random album"
 msgstr "隨機專輯"
 
-#: ../../public/templates/rightbar.inc.php:95
+#: ../../public/templates/rightbar.inc.php:96
 msgid "Random playlist"
 msgstr "隨機播放清單"
 
-#: ../../public/templates/rightbar.inc.php:100
+#: ../../public/templates/rightbar.inc.php:101
 #: ../../public/templates/show_now_playing.inc.php:42
 #: ../../public/templates/show_random_album_disks.inc.php:38
 #: ../../public/templates/show_random_albums.inc.php:38
@@ -979,7 +970,7 @@ msgstr "隨機播放清單"
 msgid "Refresh"
 msgstr "重新載入"
 
-#: ../../public/templates/rightbar.inc.php:143
+#: ../../public/templates/rightbar.inc.php:144
 #: ../../public/templates/show_access_list.inc.php:83
 #: ../../public/templates/show_account.inc.php:90
 #: ../../public/templates/show_account.inc.php:98
@@ -997,26 +988,25 @@ msgstr "重新載入"
 #: ../../public/templates/show_edit_user.inc.php:186
 #: ../../public/templates/show_edit_user.inc.php:202
 #: ../../public/templates/show_filter_row.inc.php:45
-#: ../../public/templates/show_label.inc.php:106
 #: ../../public/templates/show_label.inc.php:107
-#: ../../public/templates/show_label_row.inc.php:57
+#: ../../public/templates/show_label.inc.php:108
+#: ../../public/templates/show_label_row.inc.php:58
 #: ../../public/templates/show_license_row.inc.php:40
 #: ../../public/templates/show_live_stream_row.inc.php:77
 #: ../../public/templates/show_localplay_instances.inc.php:58
 #: ../../public/templates/show_localplay_playlist.inc.php:63
-#: ../../public/templates/show_manage_democratic.inc.php:63
+#: ../../public/templates/show_manage_democratic.inc.php:64
 #: ../../public/templates/show_playlist.inc.php:152
 #: ../../public/templates/show_playlist_media_row.inc.php:107
 #: ../../public/templates/show_podcast_episode.inc.php:107
-#: ../../public/templates/show_podcast_episode_row.inc.php:119
+#: ../../public/templates/show_podcast_episode_row.inc.php:121
 #: ../../public/templates/show_podcast.inc.php:121
 #: ../../public/templates/show_podcast.inc.php:122
 #: ../../public/templates/show_podcast_row.inc.php:86
-#: ../../public/templates/show_pvmsg_row.inc.php:42
-#: ../../public/templates/show_pvmsgs.inc.php:50
+#: ../../public/templates/show_pvmsg_row.inc.php:43
+#: ../../public/templates/show_pvmsgs.inc.php:51
 #: ../../public/templates/show_recently_played_all.inc.php:166
 #: ../../public/templates/show_recently_played.inc.php:160
-#: ../../public/templates/show_recently_skipped_all.inc.php:163
 #: ../../public/templates/show_recently_skipped.inc.php:153
 #: ../../public/templates/show_search.inc.php:76
 #: ../../public/templates/show_search_row.inc.php:77
@@ -1031,7 +1021,7 @@ msgstr "重新載入"
 #: ../../public/templates/show_tvshow_season_row.inc.php:85
 #: ../../public/templates/show_user_row.inc.php:92
 #: ../../public/templates/show_video.inc.php:126
-#: ../../public/templates/show_video_row.inc.php:138
+#: ../../public/templates/show_video_row.inc.php:139
 #: ../../src/Gui/Album/AlbumViewAdapter.php:272
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:277
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:240
@@ -1041,11 +1031,11 @@ msgstr "重新載入"
 msgid "Delete"
 msgstr "刪除"
 
-#: ../../public/templates/rightbar.inc.php:148
+#: ../../public/templates/rightbar.inc.php:149
 msgid "No items"
 msgstr "無項目"
 
-#: ../../public/templates/rightbar.inc.php:152
+#: ../../public/templates/rightbar.inc.php:153
 #: ../../public/templates/show_recently_played.inc.php:199
 #: ../../src/Repository/Model/Browse.php:486
 msgid "More"
@@ -1083,7 +1073,7 @@ msgstr "結束位址"
 #: ../../public/templates/show_add_access.inc.php:50
 #: ../../public/templates/show_edit_access.inc.php:48
 #: ../../public/templates/show_edit_democratic.inc.php:54
-#: ../../public/templates/show_manage_democratic.inc.php:40
+#: ../../public/templates/show_manage_democratic.inc.php:41
 #: ../../public/templates/show_preference_admin.inc.php:40
 #: ../../public/templates/show_preference_admin.inc.php:60
 msgid "Level"
@@ -1142,7 +1132,7 @@ msgstr "種類"
 #: ../../public/templates/show_localplay_instances.inc.php:41
 #: ../../public/templates/show_localplay_playlist.inc.php:45
 #: ../../public/templates/show_localplay_playlist.inc.php:77
-#: ../../public/templates/show_manage_democratic.inc.php:43
+#: ../../public/templates/show_manage_democratic.inc.php:44
 #: ../../public/templates/show_manage_license.inc.php:49
 #: ../../public/templates/show_manage_license.inc.php:71
 #: ../../public/templates/show_manage_shoutbox.inc.php:44
@@ -1152,8 +1142,8 @@ msgstr "種類"
 #: ../../public/templates/show_plugins.inc.php:41
 #: ../../public/templates/show_plugins.inc.php:85
 #: ../../public/templates/show_podcast_episode.inc.php:67
-#: ../../public/templates/show_pvmsgs.inc.php:64
-#: ../../public/templates/show_pvmsgs.inc.php:93
+#: ../../public/templates/show_pvmsgs.inc.php:65
+#: ../../public/templates/show_pvmsgs.inc.php:94
 #: ../../public/templates/show_recommended_artists.inc.php:70
 #: ../../public/templates/show_recommended_artists.inc.php:132
 #: ../../public/templates/show_songs.inc.php:120
@@ -1174,13 +1164,13 @@ msgstr "動作"
 #: ../../public/templates/show_artist.inc.php:252
 #: ../../public/templates/show_artist_row.inc.php:114
 #: ../../public/templates/show_filter_row.inc.php:41
-#: ../../public/templates/show_label.inc.php:98
+#: ../../public/templates/show_label.inc.php:99
 #: ../../public/templates/show_license_row.inc.php:37
 #: ../../public/templates/show_live_stream_row.inc.php:72
 #: ../../public/templates/show_playlist.inc.php:145
 #: ../../public/templates/show_playlist.inc.php:146
 #: ../../public/templates/show_podcast_episode.inc.php:102
-#: ../../public/templates/show_podcast_episode_row.inc.php:113
+#: ../../public/templates/show_podcast_episode_row.inc.php:115
 #: ../../public/templates/show_podcast.inc.php:110
 #: ../../public/templates/show_podcast_row.inc.php:77
 #: ../../public/templates/show_search.inc.php:69
@@ -1199,7 +1189,7 @@ msgstr "動作"
 #: ../../public/templates/show_user.inc.php:96
 #: ../../public/templates/show_user_row.inc.php:79
 #: ../../public/templates/show_video.inc.php:121
-#: ../../public/templates/show_video_row.inc.php:132
+#: ../../public/templates/show_video_row.inc.php:133
 #: ../../src/Gui/Album/AlbumViewAdapter.php:257
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:262
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:217
@@ -1293,7 +1283,7 @@ msgstr "頭像"
 #: ../../public/templates/show_account.inc.php:95
 #: ../../public/templates/show_account_simple.inc.php:86
 #: ../../public/templates/show_edit_user.inc.php:169
-#: ../../src/Module/Catalog/Catalog_dropbox.php:145
+#: ../../src/Module/Catalog/Catalog_dropbox.php:146
 msgid "API key"
 msgstr "API 金鑰"
 
@@ -1439,7 +1429,7 @@ msgstr "專輯作者"
 #: ../../public/templates/show_add_catalog.inc.php:54
 #: ../../public/templates/show_add_shout.inc.php:51
 #: ../../public/templates/show_edit_catalog.inc.php:42
-#: ../../public/templates/show_edit_song_row.inc.php:96
+#: ../../public/templates/show_edit_song_row.inc.php:97
 #: ../../public/templates/show_manage_shoutbox.inc.php:42
 #: ../../public/templates/show_manage_shoutbox.inc.php:68
 #: ../../src/Gui/Song/SongViewAdapter.php:372
@@ -1466,8 +1456,8 @@ msgstr ""
 #: ../../public/templates/show_edit_catalog.inc.php:45
 #: ../../public/templates/show_song_previews.inc.php:37
 #: ../../src/Gui/Song/SongViewAdapter.php:359
-#: ../../src/Repository/Model/AlbumDisk.php:295
-#: ../../src/Repository/Model/AlbumDisk.php:308
+#: ../../src/Repository/Model/AlbumDisk.php:297
+#: ../../src/Repository/Model/AlbumDisk.php:310
 msgid "Disk"
 msgstr "片"
 
@@ -1500,9 +1490,9 @@ msgstr "歌曲標題"
 #: ../../public/templates/show_albums.inc.php:60
 #: ../../public/templates/show_edit_album_row.inc.php:63
 #: ../../public/templates/show_edit_catalog.inc.php:48
-#: ../../public/templates/show_edit_song_row.inc.php:104
+#: ../../public/templates/show_edit_song_row.inc.php:105
 #: ../../public/templates/show_edit_tvshow_row.inc.php:42
-#: ../../public/templates/show_get_art.inc.php:98
+#: ../../public/templates/show_get_art.inc.php:99
 #: ../../public/templates/show_graphs.inc.php:76
 #: ../../public/templates/show_missing_albums.inc.php:38
 #: ../../public/templates/show_now_playing_row.inc.php:70
@@ -1513,7 +1503,6 @@ msgstr "歌曲標題"
 #: ../../public/templates/show_recently_played_all.inc.php:187
 #: ../../public/templates/show_recently_played.inc.php:57
 #: ../../public/templates/show_recently_played.inc.php:181
-#: ../../public/templates/show_recently_skipped_all.inc.php:184
 #: ../../public/templates/show_recently_skipped.inc.php:53
 #: ../../public/templates/show_recently_skipped.inc.php:174
 #: ../../public/templates/show_similar_songs.inc.php:67
@@ -1521,7 +1510,7 @@ msgstr "歌曲標題"
 #: ../../public/templates/show_top_tracks.inc.php:67
 #: ../../public/templates/show_wanted_albums.inc.php:43
 #: ../../src/Gui/Song/SongViewAdapter.php:361
-#: ../../src/Repository/Model/AlbumDisk.php:271
+#: ../../src/Repository/Model/AlbumDisk.php:273
 #: ../../src/Repository/Model/Album.php:501
 #: ../../src/Repository/Model/Search.php:613
 #: ../../src/Repository/Model/Search.php:825
@@ -1618,7 +1607,7 @@ msgstr "單集"
 #: ../../public/templates/show_edit_catalog.inc.php:59
 #: ../../public/templates/show_edit_podcast_episode_row.inc.php:34
 #: ../../public/templates/show_edit_podcast_row.inc.php:38
-#: ../../public/templates/show_edit_song_row.inc.php:45
+#: ../../public/templates/show_edit_song_row.inc.php:46
 #: ../../public/templates/show_edit_video_row.inc.php:37
 #: ../../public/templates/show_playlist_medias.inc.php:61
 #: ../../public/templates/show_playlist_medias.inc.php:100
@@ -1629,8 +1618,6 @@ msgstr "單集"
 #: ../../public/templates/show_podcasts.inc.php:127
 #: ../../public/templates/show_recently_played_all.inc.php:57
 #: ../../public/templates/show_recently_played_all.inc.php:183
-#: ../../public/templates/show_recently_skipped_all.inc.php:54
-#: ../../public/templates/show_recently_skipped_all.inc.php:180
 #: ../../public/templates/show_video.inc.php:131
 #: ../../public/templates/show_videos.inc.php:57
 #: ../../public/templates/show_videos.inc.php:106
@@ -1655,10 +1642,10 @@ msgid "Catalog Type"
 msgstr "目錄類型"
 
 #: ../../public/templates/show_add_catalog.inc.php:81
-#: ../../public/templates/show_arts.inc.php:65
+#: ../../public/templates/show_arts.inc.php:66
 #: ../../public/templates/show_disabled_songs.inc.php:35
 #: ../../public/templates/show_disabled_songs.inc.php:62
-#: ../../public/templates/show_pvmsg_row.inc.php:32
+#: ../../public/templates/show_pvmsg_row.inc.php:33
 msgid "Select"
 msgstr "選擇"
 
@@ -1749,7 +1736,7 @@ msgstr "新增標籤"
 #: ../../public/templates/show_edit_album_row.inc.php:67
 #: ../../public/templates/show_edit_artist_row.inc.php:42
 #: ../../public/templates/show_edit_label_row.inc.php:39
-#: ../../public/templates/show_edit_song_row.inc.php:80
+#: ../../public/templates/show_edit_song_row.inc.php:81
 #: ../../src/Repository/Model/Search.php:720
 #: ../../src/Repository/Model/Search.php:808
 #: ../../src/Repository/Model/Search.php:895
@@ -1873,13 +1860,13 @@ msgstr "狀態"
 
 #: ../../public/templates/show_add_label.inc.php:126
 #: ../../public/templates/show_edit_label_row.inc.php:118
-#: ../../public/templates/show_label_row.inc.php:44
+#: ../../public/templates/show_label_row.inc.php:45
 msgid "Active"
 msgstr ""
 
 #: ../../public/templates/show_add_label.inc.php:129
 #: ../../public/templates/show_edit_label_row.inc.php:121
-#: ../../public/templates/show_label_row.inc.php:46
+#: ../../public/templates/show_label_row.inc.php:47
 msgid "Inactive"
 msgstr ""
 
@@ -1917,7 +1904,7 @@ msgid "Codec"
 msgstr "編解碼"
 
 #: ../../public/templates/show_add_playlist.inc.php:29
-#: ../../public/templates/show_manage_democratic.inc.php:75
+#: ../../public/templates/show_manage_democratic.inc.php:76
 msgid "Create Playlist"
 msgstr "建立播放清單"
 
@@ -1961,15 +1948,15 @@ msgid "Compose Message"
 msgstr "撰寫訊息"
 
 #: ../../public/templates/show_add_pvmsg.inc.php:35
-#: ../../public/templates/show_pvmsgs.inc.php:62
-#: ../../public/templates/show_pvmsgs.inc.php:91
+#: ../../public/templates/show_pvmsgs.inc.php:63
+#: ../../public/templates/show_pvmsgs.inc.php:92
 msgid "Recipient"
 msgstr "收件人"
 
 #: ../../public/templates/show_add_pvmsg.inc.php:41
 #: ../../public/templates/show_mail_users.inc.php:56
-#: ../../public/templates/show_pvmsgs.inc.php:60
-#: ../../public/templates/show_pvmsgs.inc.php:89
+#: ../../public/templates/show_pvmsgs.inc.php:61
+#: ../../public/templates/show_pvmsgs.inc.php:90
 msgid "Subject"
 msgstr "主旨"
 
@@ -2029,7 +2016,7 @@ msgid "Share"
 msgstr "共享"
 
 #: ../../public/templates/show_add_share.inc.php:52
-#: ../../src/Module/Catalog/Catalog_dropbox.php:146
+#: ../../src/Module/Catalog/Catalog_dropbox.php:147
 msgid "Secret"
 msgstr "Secret"
 
@@ -2081,7 +2068,7 @@ msgid "Leave the artist and album fields blank to read file tags"
 msgstr ""
 
 #: ../../public/templates/show_add_upload.inc.php:207
-#: ../../public/templates/show_edit_song_row.inc.php:114
+#: ../../public/templates/show_edit_song_row.inc.php:115
 #: ../../src/Repository/Model/Search.php:699
 msgid "Music License"
 msgstr "音樂授權"
@@ -2114,8 +2101,6 @@ msgstr "新增使用者"
 #: ../../public/templates/show_recently_played_all.inc.php:189
 #: ../../public/templates/show_recently_played.inc.php:59
 #: ../../public/templates/show_recently_played.inc.php:183
-#: ../../public/templates/show_recently_skipped_all.inc.php:60
-#: ../../public/templates/show_recently_skipped_all.inc.php:186
 #: ../../public/templates/show_recently_skipped.inc.php:55
 #: ../../public/templates/show_recently_skipped.inc.php:176
 #: ../../public/templates/show_user_registration.inc.php:93
@@ -2205,7 +2190,7 @@ msgstr ""
 #: ../../public/templates/show_album_group_disks.inc.php:83
 #: ../../public/templates/show_album.inc.php:81
 #: ../../public/templates/show_artist.inc.php:72
-#: ../../public/templates/show_label.inc.php:56
+#: ../../public/templates/show_label.inc.php:57
 #: ../../src/Gui/Song/SongViewAdapter.php:364
 msgid "Search on Google ..."
 msgstr "在 Google 搜尋…"
@@ -2214,7 +2199,7 @@ msgstr "在 Google 搜尋…"
 #: ../../public/templates/show_album_group_disks.inc.php:84
 #: ../../public/templates/show_album.inc.php:82
 #: ../../public/templates/show_artist.inc.php:73
-#: ../../public/templates/show_label.inc.php:57
+#: ../../public/templates/show_label.inc.php:58
 #: ../../src/Gui/Song/SongViewAdapter.php:365
 msgid "Search on DuckDuckGo ..."
 msgstr "在 DuckDuckGo 搜尋…"
@@ -2223,7 +2208,7 @@ msgstr "在 DuckDuckGo 搜尋…"
 #: ../../public/templates/show_album_group_disks.inc.php:85
 #: ../../public/templates/show_album.inc.php:83
 #: ../../public/templates/show_artist.inc.php:74
-#: ../../public/templates/show_label.inc.php:58
+#: ../../public/templates/show_label.inc.php:59
 msgid "Search on Wikipedia ..."
 msgstr "在 Wikipedia 搜尋…"
 
@@ -2231,7 +2216,7 @@ msgstr "在 Wikipedia 搜尋…"
 #: ../../public/templates/show_album_group_disks.inc.php:86
 #: ../../public/templates/show_album.inc.php:84
 #: ../../public/templates/show_artist.inc.php:75
-#: ../../public/templates/show_label.inc.php:59
+#: ../../public/templates/show_label.inc.php:60
 #: ../../src/Gui/Song/SongViewAdapter.php:366
 msgid "Search on Last.fm ..."
 msgstr "在 Last.fm 搜尋…"
@@ -2304,7 +2289,7 @@ msgstr "上傳者"
 #: ../../public/templates/show_broadcasts.inc.php:44
 #: ../../public/templates/show_catalogs.inc.php:43
 #: ../../public/templates/show_catalogs.inc.php:72
-#: ../../public/templates/show_label.inc.php:75
+#: ../../public/templates/show_label.inc.php:76
 #: ../../public/templates/show_manage_filters.inc.php:44
 #: ../../public/templates/show_manage_filters.inc.php:65
 #: ../../public/templates/show_missing_albums.inc.php:40
@@ -2354,12 +2339,12 @@ msgstr "RSS 消息來源"
 #: ../../public/templates/show_artist.inc.php:209
 #: ../../public/templates/show_artist_row.inc.php:109
 #: ../../public/templates/show_html5_player.inc.php:255
-#: ../../public/templates/show_label.inc.php:81
 #: ../../public/templates/show_label.inc.php:82
-#: ../../public/templates/show_label_row.inc.php:52
+#: ../../public/templates/show_label.inc.php:83
+#: ../../public/templates/show_label_row.inc.php:53
 #: ../../public/templates/show_podcast_episode.inc.php:84
 #: ../../public/templates/show_video.inc.php:104
-#: ../../public/templates/show_video_row.inc.php:118
+#: ../../public/templates/show_video_row.inc.php:119
 #: ../../src/Gui/Album/AlbumViewAdapter.php:210
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:215
 #: ../../src/Gui/Song/SongViewAdapter.php:195
@@ -2434,11 +2419,11 @@ msgstr "編輯專輯"
 #: ../../public/templates/show_install_config.inc.php:252
 #: ../../public/templates/show_playlist_media_row.inc.php:97
 #: ../../public/templates/show_podcast_episode.inc.php:95
-#: ../../public/templates/show_podcast_episode_row.inc.php:105
-#: ../../public/templates/show_share.inc.php:41
+#: ../../public/templates/show_podcast_episode_row.inc.php:107
 #: ../../public/templates/show_share.inc.php:42
+#: ../../public/templates/show_share.inc.php:43
 #: ../../public/templates/show_video.inc.php:114
-#: ../../public/templates/show_video_row.inc.php:128
+#: ../../public/templates/show_video_row.inc.php:129
 #: ../../src/Gui/Song/SongViewAdapter.php:240
 #: ../../src/Module/System/AutoUpdate.php:328
 #: ../../src/Module/System/AutoUpdate.php:330
@@ -2458,9 +2443,9 @@ msgstr "下載"
 #: ../../public/templates/show_form_recent.inc.php:44
 #: ../../public/templates/show_form_search.inc.php:66
 #: ../../public/templates/show_form_userflag.inc.php:44
-#: ../../public/templates/show_label.inc.php:118
-#: ../../public/templates/show_label.inc.php:129
-#: ../../public/templates/show_manage_democratic.inc.php:42
+#: ../../public/templates/show_label.inc.php:119
+#: ../../public/templates/show_label.inc.php:130
+#: ../../public/templates/show_manage_democratic.inc.php:43
 #: ../../public/templates/show_random.inc.php:58
 #: ../../public/templates/show_recommended_artists.inc.php:56
 #: ../../public/templates/show_recommended_artists.inc.php:123
@@ -2507,7 +2492,7 @@ msgstr "評比"
 #: ../../public/templates/show_albums.inc.php:160
 #: ../../public/templates/show_artists.inc.php:68
 #: ../../public/templates/show_artists.inc.php:130
-#: ../../public/templates/show_arts.inc.php:60
+#: ../../public/templates/show_arts.inc.php:61
 #: ../../public/templates/show_labels.inc.php:62
 #: ../../public/templates/show_labels.inc.php:92
 #: ../../public/templates/show_live_streams.inc.php:59
@@ -2551,7 +2536,7 @@ msgstr "未知 (遺孤)"
 #: ../../public/templates/show_artist.inc.php:344
 #: ../../public/templates/show_index.inc.php:65
 #: ../../public/templates/show_index.inc.php:74
-#: ../../public/templates/show_label.inc.php:130
+#: ../../public/templates/show_label.inc.php:131
 #: ../../public/templates/show_missing_artist.inc.php:37
 #: ../../public/templates/show_now_playing_row.inc.php:104
 #: ../../public/templates/show_now_playing_row.inc.php:110
@@ -2694,11 +2679,11 @@ msgstr "找不到作者"
 msgid "Time"
 msgstr "時間"
 
-#: ../../public/templates/show_arts.inc.php:40
+#: ../../public/templates/show_arts.inc.php:41
 msgid "Select New Art"
 msgstr "選擇新封面圖片"
 
-#: ../../public/templates/show_arts.inc.php:68
+#: ../../public/templates/show_arts.inc.php:69
 #: ../../public/templates/show_ip_history.inc.php:69
 #: ../../src/Repository/Model/User.php:1005
 msgid "Invalid"
@@ -2810,7 +2795,7 @@ msgstr "前往"
 #: ../../public/templates/show_catalogs.inc.php:68
 #: ../../public/templates/show_video.inc.php:146
 #: ../../src/Gui/Song/SongViewAdapter.php:407
-#: ../../src/Module/Catalog/Catalog_dropbox.php:148
+#: ../../src/Module/Catalog/Catalog_dropbox.php:149
 #: ../../src/Module/Catalog/Catalog_local.php:146
 #: ../../src/Module/Cli/AddCatalogCommand.php:44
 #: ../../src/Module/Cli/UpdateCatalogFolderCommand.php:48
@@ -3039,28 +3024,28 @@ msgid "Preference"
 msgstr "偏好設定"
 
 #. HINT: Democratic Playlist Name
-#: ../../public/templates/show_democratic.inc.php:35
+#: ../../public/templates/show_democratic.inc.php:36
 #, php-format
 msgid "%s Playlist"
 msgstr "%s 播放清單"
 
-#: ../../public/templates/show_democratic.inc.php:35
+#: ../../public/templates/show_democratic.inc.php:36
 #: ../../src/Repository/Model/Browse.php:370
 msgid "Democratic Playlist"
 msgstr "民主播放清單"
 
-#: ../../public/templates/show_democratic.inc.php:41
-#: ../../public/templates/show_manage_democratic.inc.php:39
+#: ../../public/templates/show_democratic.inc.php:42
+#: ../../public/templates/show_manage_democratic.inc.php:40
 msgid "Cooldown"
 msgstr "冷卻"
 
-#: ../../public/templates/show_democratic.inc.php:47
 #: ../../public/templates/show_democratic.inc.php:48
+#: ../../public/templates/show_democratic.inc.php:49
 #: ../../public/templates/show_edit_democratic.inc.php:38
 msgid "Configure Democratic Playlist"
 msgstr "設定民主播放清單"
 
-#: ../../public/templates/show_democratic.inc.php:85
+#: ../../public/templates/show_democratic.inc.php:86
 msgid "Reload this page automatically"
 msgstr "自動重新載入目前網頁"
 
@@ -3089,9 +3074,9 @@ msgstr "偵錯頁面"
 
 #: ../../public/templates/show_denied.inc.php:59
 #: ../../public/templates/sidebar_localplay.inc.php:102
-#: ../../src/Module/Api/ApiHandler.php:147
-#: ../../src/Module/Api/ApiHandler.php:218
-#: ../../src/Module/Api/ApiHandler.php:230
+#: ../../src/Module/Api/ApiHandler.php:151
+#: ../../src/Module/Api/ApiHandler.php:225
+#: ../../src/Module/Api/ApiHandler.php:237
 msgid "Access Denied"
 msgstr "存取被拒"
 
@@ -3156,7 +3141,7 @@ msgid "Edit Access Control List"
 msgstr "編輯存取控制清單"
 
 #: ../../public/templates/show_edit_album_row.inc.php:58
-#: ../../public/templates/show_edit_song_row.inc.php:61
+#: ../../public/templates/show_edit_song_row.inc.php:62
 msgid "Additional Artists"
 msgstr ""
 
@@ -3205,7 +3190,7 @@ msgid "Save Catalog Settings"
 msgstr "儲存目錄設定"
 
 #: ../../public/templates/show_edit_democratic.inc.php:46
-#: ../../public/templates/show_manage_democratic.inc.php:38
+#: ../../public/templates/show_manage_democratic.inc.php:39
 msgid "Base Playlist"
 msgstr "基礎播放清單"
 
@@ -3277,7 +3262,7 @@ msgstr "語言"
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:475
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:474
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:509
-#: ../../src/Module/Playback/Stream_Url.php:184
+#: ../../src/Module/Playback/Stream_Url.php:196
 msgid "Random"
 msgstr "隨機"
 
@@ -3299,7 +3284,7 @@ msgstr ""
 msgid "Comment:"
 msgstr "註解："
 
-#: ../../public/templates/show_edit_song_row.inc.php:76
+#: ../../public/templates/show_edit_song_row.inc.php:77
 #: ../../public/templates/show_localplay_playlist.inc.php:43
 #: ../../public/templates/show_localplay_playlist.inc.php:75
 #: ../../public/templates/show_song_previews.inc.php:36
@@ -3309,13 +3294,13 @@ msgstr "註解："
 msgid "Track"
 msgstr "音軌"
 
-#: ../../public/templates/show_edit_song_row.inc.php:92
+#: ../../public/templates/show_edit_song_row.inc.php:93
 #: ../../src/Gui/Song/SongViewAdapter.php:356
 #: ../../src/Repository/Model/Search.php:611
 msgid "Composer"
 msgstr "作曲者"
 
-#: ../../public/templates/show_edit_song_row.inc.php:100
+#: ../../public/templates/show_edit_song_row.inc.php:101
 #: ../../public/templates/show_labels.inc.php:63
 #: ../../public/templates/show_labels.inc.php:93
 #: ../../src/Gui/Song/SongViewAdapter.php:379
@@ -3326,9 +3311,9 @@ msgstr "作曲者"
 msgid "Label"
 msgstr "標籤"
 
-#: ../../public/templates/show_edit_song_row.inc.php:125
+#: ../../public/templates/show_edit_song_row.inc.php:126
 msgid "More Metadata"
-msgstr "更多後設資訊"
+msgstr "更多詮釋資料"
 
 #: ../../public/templates/show_edit_tag_hidden_row.inc.php:38
 #: ../../public/templates/show_edit_tag_row.inc.php:38
@@ -3483,23 +3468,23 @@ msgstr "視訊"
 #: ../../public/templates/show_form_highest.inc.php:41
 #: ../../public/templates/sidebar.inc.php:80
 msgid "Top Rated"
-msgstr "最高評比"
+msgstr "最受好評"
 
 #: ../../public/templates/show_form_newest.inc.php:41
-#: ../../public/templates/show_mashup.inc.php:41
+#: ../../public/templates/show_mashup.inc.php:42
 #: ../../public/templates/sidebar.inc.php:78
 msgid "Newest"
 msgstr "最新"
 
 #: ../../public/templates/show_form_popular.inc.php:41
-#: ../../public/templates/show_mashup.inc.php:73
-#: ../../public/templates/show_mashup.inc.php:76
+#: ../../public/templates/show_mashup.inc.php:74
+#: ../../public/templates/show_mashup.inc.php:77
 #: ../../public/templates/sidebar.inc.php:79
 msgid "Popular"
 msgstr "熱門"
 
 #: ../../public/templates/show_form_recent.inc.php:41
-#: ../../public/templates/show_mashup.inc.php:52
+#: ../../public/templates/show_mashup.inc.php:53
 #: ../../public/templates/sidebar.inc.php:77
 msgid "Recent"
 msgstr "最近"
@@ -3547,29 +3532,29 @@ msgstr "作者圖片搜尋"
 msgid "Cover Art Search"
 msgstr "封面圖片搜尋"
 
-#: ../../public/templates/show_get_art.inc.php:77
+#: ../../public/templates/show_get_art.inc.php:78
 msgid "Direct URL to Image"
 msgstr "圖片直連網址"
 
-#: ../../public/templates/show_get_art.inc.php:83
+#: ../../public/templates/show_get_art.inc.php:84
 #: ../../src/Repository/Model/Search.php:790
 #: ../../src/Repository/Model/Search.php:875
 msgid "Local Image"
 msgstr "本地圖片"
 
-#: ../../public/templates/show_get_art.inc.php:93
+#: ../../public/templates/show_get_art.inc.php:94
 msgid "Spotify Album Filters"
 msgstr "Spotify 專輯過濾器"
 
-#: ../../public/templates/show_get_art.inc.php:100
+#: ../../public/templates/show_get_art.inc.php:101
 msgid "(e.g. '2001', '2001-2005')"
 msgstr "(例：「2001」、「2001-2005」)"
 
-#: ../../public/templates/show_get_art.inc.php:114
+#: ../../public/templates/show_get_art.inc.php:115
 msgid "Search Limit"
 msgstr "搜尋限制"
 
-#: ../../public/templates/show_get_art.inc.php:142
+#: ../../public/templates/show_get_art.inc.php:145
 msgid "Get Art"
 msgstr "取得封面圖片"
 
@@ -3605,15 +3590,15 @@ msgstr "天"
 msgid "Hour"
 msgstr "小時"
 
-#: ../../public/templates/show_html5_player_headers.inc.php:251
+#: ../../public/templates/show_html5_player_headers.inc.php:252
 msgid "Your browser doesn't support this feature."
 msgstr "您的瀏覽器不支援此功能。"
 
-#: ../../public/templates/show_html5_player_headers.inc.php:270
+#: ../../public/templates/show_html5_player_headers.inc.php:271
 msgid "Full-Screen not supported by your browser"
 msgstr "您的瀏覽器不支援全螢幕顯示"
 
-#: ../../public/templates/show_html5_player_headers.inc.php:579
+#: ../../public/templates/show_html5_player_headers.inc.php:580
 msgid "Media is currently playing, are you sure you want to close?"
 msgstr "媒體正在被播放，您確定要關閉嗎？"
 
@@ -3930,7 +3915,7 @@ msgid ""
 msgstr "依照您的使用模式設定 Ampache，安裝程式會自動啟用/停用功能。"
 
 #: ../../public/templates/show_install_config.inc.php:127
-#: ../../public/templates/show_manage_democratic.inc.php:41
+#: ../../public/templates/show_manage_democratic.inc.php:42
 #: ../../src/Module/Util/Ui.php:1115 ../../src/Module/Util/Ui.php:1131
 #: ../../src/Module/Util/Ui.php:1154
 msgid "Default"
@@ -4154,9 +4139,8 @@ msgstr "不顯示重複值"
 
 #: ../../public/templates/show_ip_history.inc.php:60
 #: ../../public/templates/show_ip_history.inc.php:74
-#: ../../public/templates/show_pvmsgs.inc.php:63
-#: ../../public/templates/show_pvmsgs.inc.php:92
-#: ../../public/templates/show_recently_skipped_all.inc.php:58
+#: ../../public/templates/show_pvmsgs.inc.php:64
+#: ../../public/templates/show_pvmsgs.inc.php:93
 msgid "Date"
 msgstr "日期"
 
@@ -4165,17 +4149,17 @@ msgstr "日期"
 msgid "IP Address"
 msgstr "IP 位址"
 
-#: ../../public/templates/show_label.inc.php:90
 #: ../../public/templates/show_label.inc.php:91
+#: ../../public/templates/show_label.inc.php:92
 #: ../../public/templates/show_mail_users.inc.php:68
 msgid "Send E-mail"
 msgstr "寄送電子郵件"
 
-#: ../../public/templates/show_label.inc.php:97
+#: ../../public/templates/show_label.inc.php:98
 msgid "Label Edit"
 msgstr "標籤編輯"
 
-#: ../../public/templates/show_label.inc.php:99
+#: ../../public/templates/show_label.inc.php:100
 msgid "Edit Label"
 msgstr "編輯標籤"
 
@@ -4192,7 +4176,7 @@ msgid "Live Stream Edit"
 msgstr "即時串流編輯"
 
 #: ../../public/templates/show_live_streams.inc.php:39
-#: ../../public/templates/show_manage_democratic.inc.php:34
+#: ../../public/templates/show_manage_democratic.inc.php:35
 msgid "Manage"
 msgstr "管理"
 
@@ -4357,10 +4341,8 @@ msgstr ""
 msgid "Add new files from:"
 msgstr ""
 
-#. HINT: /media/path
 #: ../../public/templates/show_manage_catalogs.inc.php:63
-#, php-format
-msgid "Clean deleted files in: %s"
+msgid "Clean deleted files in:"
 msgstr ""
 
 #: ../../public/templates/show_manage_catalogs.inc.php:67
@@ -4372,7 +4354,7 @@ msgstr ""
 msgid "Example path:"
 msgstr ""
 
-#: ../../public/templates/show_manage_democratic.inc.php:69
+#: ../../public/templates/show_manage_democratic.inc.php:70
 msgid "No democratic found"
 msgstr "找不到民主播放清單"
 
@@ -4417,7 +4399,7 @@ msgstr "置頂"
 msgid "Date Added"
 msgstr "新增日期"
 
-#: ../../public/templates/show_mashup.inc.php:62
+#: ../../public/templates/show_mashup.inc.php:63
 msgid "Trending"
 msgstr "趨勢"
 
@@ -4552,7 +4534,7 @@ msgid "Link"
 msgstr "鍊結"
 
 #: ../../public/templates/show_podcast_episode.inc.php:101
-#: ../../public/templates/show_podcast_episode_row.inc.php:112
+#: ../../public/templates/show_podcast_episode_row.inc.php:114
 msgid "Podcast Episode Edit"
 msgstr "編輯單集播客"
 
@@ -4589,7 +4571,7 @@ msgstr "位元率"
 msgid "Channels"
 msgstr "頻道"
 
-#: ../../public/templates/show_podcast_episode_row.inc.php:110
+#: ../../public/templates/show_podcast_episode_row.inc.php:112
 #: ../../public/templates/show_podcast.inc.php:115
 #: ../../public/templates/show_podcast_row.inc.php:80
 msgid "Sync"
@@ -4653,32 +4635,32 @@ msgstr "寄送者"
 
 #: ../../public/templates/show_pvmsg.inc.php:42
 #: ../../public/templates/show_pvmsg.inc.php:43
-#: ../../public/templates/show_pvmsg_row.inc.php:39
+#: ../../public/templates/show_pvmsg_row.inc.php:40
 msgid "Reply"
 msgstr "回覆"
 
-#: ../../public/templates/show_pvmsgs.inc.php:47
+#: ../../public/templates/show_pvmsgs.inc.php:48
 msgid "Compose"
 msgstr "撰寫"
 
-#: ../../public/templates/show_pvmsgs.inc.php:47
+#: ../../public/templates/show_pvmsgs.inc.php:48
 msgid "Compose a New Message"
 msgstr "撰寫新訊息"
 
-#: ../../public/templates/show_pvmsgs.inc.php:48
+#: ../../public/templates/show_pvmsgs.inc.php:49
 msgid "Mark as Read"
 msgstr "標示為已讀"
 
-#: ../../public/templates/show_pvmsgs.inc.php:49
+#: ../../public/templates/show_pvmsgs.inc.php:50
 msgid "Mark as Unread"
 msgstr "標示為未讀"
 
-#: ../../public/templates/show_pvmsgs.inc.php:61
-#: ../../public/templates/show_pvmsgs.inc.php:90
+#: ../../public/templates/show_pvmsgs.inc.php:62
+#: ../../public/templates/show_pvmsgs.inc.php:91
 msgid "Sender"
 msgstr "寄信人"
 
-#: ../../public/templates/show_pvmsgs.inc.php:82
+#: ../../public/templates/show_pvmsgs.inc.php:83
 msgid "No message found"
 msgstr "找不到訊息"
 
@@ -4714,7 +4696,7 @@ msgstr[0] "%d 小時"
 msgid "Size Limit"
 msgstr "大小限制"
 
-#: ../../public/templates/show_random.inc.php:134
+#: ../../public/templates/show_random.inc.php:132
 msgid "Enqueue"
 msgstr "加入佇列"
 
@@ -4722,8 +4704,6 @@ msgstr "加入佇列"
 #: ../../public/templates/show_recently_played_all.inc.php:191
 #: ../../public/templates/show_recently_played.inc.php:61
 #: ../../public/templates/show_recently_played.inc.php:185
-#: ../../public/templates/show_recently_skipped_all.inc.php:62
-#: ../../public/templates/show_recently_skipped_all.inc.php:188
 #: ../../public/templates/show_recently_skipped.inc.php:57
 #: ../../public/templates/show_recently_skipped.inc.php:178
 msgid "Last Played"
@@ -4733,8 +4713,6 @@ msgstr "上次播放"
 #: ../../public/templates/show_recently_played_all.inc.php:193
 #: ../../public/templates/show_recently_played.inc.php:63
 #: ../../public/templates/show_recently_played.inc.php:187
-#: ../../public/templates/show_recently_skipped_all.inc.php:64
-#: ../../public/templates/show_recently_skipped_all.inc.php:190
 #: ../../public/templates/show_recently_skipped.inc.php:59
 #: ../../public/templates/show_recently_skipped.inc.php:180
 msgid "Agent"
@@ -4742,7 +4720,6 @@ msgstr ""
 
 #: ../../public/templates/show_recently_played_all.inc.php:98
 #: ../../public/templates/show_recently_played.inc.php:92
-#: ../../public/templates/show_recently_skipped_all.inc.php:95
 #: ../../public/templates/show_recently_skipped.inc.php:85
 #, php-format
 msgid "%d second ago"
@@ -4751,7 +4728,6 @@ msgstr[0] "%d 秒前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:101
 #: ../../public/templates/show_recently_played.inc.php:95
-#: ../../public/templates/show_recently_skipped_all.inc.php:98
 #: ../../public/templates/show_recently_skipped.inc.php:88
 #, php-format
 msgid "%d minute ago"
@@ -4760,7 +4736,6 @@ msgstr[0] "%d 分前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:104
 #: ../../public/templates/show_recently_played.inc.php:98
-#: ../../public/templates/show_recently_skipped_all.inc.php:101
 #: ../../public/templates/show_recently_skipped.inc.php:91
 #, php-format
 msgid "%d hour ago"
@@ -4769,7 +4744,6 @@ msgstr[0] "%d 小時前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:107
 #: ../../public/templates/show_recently_played.inc.php:101
-#: ../../public/templates/show_recently_skipped_all.inc.php:104
 #: ../../public/templates/show_recently_skipped.inc.php:94
 #, php-format
 msgid "%d day ago"
@@ -4778,7 +4752,6 @@ msgstr[0] "%d 天前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:110
 #: ../../public/templates/show_recently_played.inc.php:104
-#: ../../public/templates/show_recently_skipped_all.inc.php:107
 #: ../../public/templates/show_recently_skipped.inc.php:97
 #, php-format
 msgid "%d week ago"
@@ -4787,7 +4760,6 @@ msgstr[0] "%d 週前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:113
 #: ../../public/templates/show_recently_played.inc.php:107
-#: ../../public/templates/show_recently_skipped_all.inc.php:110
 #: ../../public/templates/show_recently_skipped.inc.php:100
 #, php-format
 msgid "%d month ago"
@@ -4796,7 +4768,6 @@ msgstr[0] "%d 個月前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:116
 #: ../../public/templates/show_recently_played.inc.php:110
-#: ../../public/templates/show_recently_skipped_all.inc.php:113
 #: ../../public/templates/show_recently_skipped.inc.php:103
 #, php-format
 msgid "%d year ago"
@@ -4805,7 +4776,6 @@ msgstr[0] "%d 年前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:119
 #: ../../public/templates/show_recently_played.inc.php:113
-#: ../../public/templates/show_recently_skipped_all.inc.php:116
 #: ../../public/templates/show_recently_skipped.inc.php:106
 #, php-format
 msgid "%d decade ago"
@@ -4814,12 +4784,10 @@ msgstr[0] "%d0 年前"
 
 #: ../../public/templates/show_recently_played_all.inc.php:176
 #: ../../public/templates/show_recently_played.inc.php:170
-#: ../../public/templates/show_recently_skipped_all.inc.php:173
 #: ../../public/templates/show_recently_skipped.inc.php:163
 msgid "No recently played items found"
 msgstr "找不到最近播放過的項目"
 
-#: ../../public/templates/show_recently_skipped_all.inc.php:49
 #: ../../public/templates/show_recently_skipped.inc.php:44
 msgid "Recently Skipped"
 msgstr ""
@@ -4854,23 +4822,23 @@ msgstr "啟用金鑰已寄送至您提供的電子郵件位址。請檢查您的
 msgid "Your account has been created"
 msgstr ""
 
-#: ../../public/templates/show_rules.inc.php:48
+#: ../../public/templates/show_rules.inc.php:49
 msgid "Rules"
 msgstr "規則"
 
-#: ../../public/templates/show_rules.inc.php:52
+#: ../../public/templates/show_rules.inc.php:53
 msgid "Match"
 msgstr "符合"
 
-#: ../../public/templates/show_rules.inc.php:57
+#: ../../public/templates/show_rules.inc.php:58
 msgid "all rules"
 msgstr "所有規則"
 
-#: ../../public/templates/show_rules.inc.php:60
+#: ../../public/templates/show_rules.inc.php:61
 msgid "any rule"
 msgstr "任何規則"
 
-#: ../../public/templates/show_rules.inc.php:68
+#: ../../public/templates/show_rules.inc.php:69
 msgid "Add Another Rule"
 msgstr "新增其他規則"
 
@@ -4927,7 +4895,7 @@ msgstr "計數器"
 msgid "Public URL"
 msgstr "公開網址"
 
-#: ../../public/templates/show_share.inc.php:39
+#: ../../public/templates/show_share.inc.php:40
 msgid "Shared by"
 msgstr "共享者"
 
@@ -5437,7 +5405,7 @@ msgid "Subtitle"
 msgstr "字幕"
 
 #: ../../public/templates/show_video.inc.php:120
-#: ../../public/templates/show_video_row.inc.php:131
+#: ../../public/templates/show_video_row.inc.php:132
 msgid "Video Edit"
 msgstr "編輯視訊"
 
@@ -5476,7 +5444,7 @@ msgstr "最後更新"
 msgid "Added"
 msgstr "已新增"
 
-#: ../../public/templates/show_video_row.inc.php:115
+#: ../../public/templates/show_video_row.inc.php:116
 msgid "Video Information"
 msgstr "視訊資訊"
 
@@ -5711,11 +5679,7 @@ msgstr "新增"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song
 #. title", 1298376)
-#. HINT: Requested object string/id/type
-#. HINT: Requested object string/id/type ("album", "myusername", "some song
-#. title", 1298376)
 #: ../../src/Config/functions.php:966
-#: ../../src/Module/Api/Method/AlbumSongsMethod.php:63
 #: ../../src/Module/Api/Method/Api5/AlbumSongs5Method.php:63
 #: ../../src/Module/Api/Method/Api5/Artist5Method.php:60
 #: ../../src/Module/Api/Method/Api5/ArtistAlbums5Method.php:59
@@ -5768,65 +5732,6 @@ msgstr "新增"
 #: ../../src/Module/Api/Method/Api5/User5Method.php:68
 #: ../../src/Module/Api/Method/Api5/UserPreference5Method.php:58
 #: ../../src/Module/Api/Method/Api5/Video5Method.php:63
-#: ../../src/Module/Api/Method/ArtistAlbumsMethod.php:59
-#: ../../src/Module/Api/Method/ArtistMethod.php:61
-#: ../../src/Module/Api/Method/ArtistSongsMethod.php:64
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:98
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:91
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:106
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:97
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:114
-#: ../../src/Module/Api/Method/BrowseMethod.php:104
-#: ../../src/Module/Api/Method/BrowseMethod.php:155
-#: ../../src/Module/Api/Method/BrowseMethod.php:171
-#: ../../src/Module/Api/Method/CatalogDeleteMethod.php:61
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:82
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:101
-#: ../../src/Module/Api/Method/CatalogFolderMethod.php:82
-#: ../../src/Module/Api/Method/CatalogFolderMethod.php:101
-#: ../../src/Module/Api/Method/CatalogMethod.php:60
-#: ../../src/Module/Api/Method/DemocraticMethod.php:69
-#: ../../src/Module/Api/Method/DemocraticMethod.php:98
-#: ../../src/Module/Api/Method/FlagMethod.php:86
-#: ../../src/Module/Api/Method/FollowersMethod.php:68
-#: ../../src/Module/Api/Method/FollowingMethod.php:68
-#: ../../src/Module/Api/Method/GenreMethod.php:60
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:94
-#: ../../src/Module/Api/Method/LabelMethod.php:69
-#: ../../src/Module/Api/Method/LicenseMethod.php:67
-#: ../../src/Module/Api/Method/LiveStreamCreateMethod.php:74
-#: ../../src/Module/Api/Method/LiveStreamDeleteMethod.php:67
-#: ../../src/Module/Api/Method/LiveStreamEditMethod.php:69
-#: ../../src/Module/Api/Method/LiveStreamEditMethod.php:98
-#: ../../src/Module/Api/Method/LiveStreamMethod.php:66
-#: ../../src/Module/Api/Method/PlaylistAddMethod.php:89
-#: ../../src/Module/Api/Method/PlaylistMethod.php:63
-#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:69
-#: ../../src/Module/Api/Method/PodcastEditMethod.php:75
-#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:65
-#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:66
-#: ../../src/Module/Api/Method/PodcastMethod.php:69
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:97
-#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:60
-#: ../../src/Module/Api/Method/PreferenceEditMethod.php:69
-#: ../../src/Module/Api/Method/RateMethod.php:89
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:70
-#: ../../src/Module/Api/Method/RecordPlayMethod.php:88
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:79
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:102
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:117
-#: ../../src/Module/Api/Method/ShareDeleteMethod.php:73
-#: ../../src/Module/Api/Method/ShareEditMethod.php:74
-#: ../../src/Module/Api/Method/SongDeleteMethod.php:61
-#: ../../src/Module/Api/Method/SongMethod.php:60
-#: ../../src/Module/Api/Method/SystemPreferenceMethod.php:62
-#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:64
-#: ../../src/Module/Api/Method/UpdateArtMethod.php:82
-#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:75
-#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:72
-#: ../../src/Module/Api/Method/UserMethod.php:74
-#: ../../src/Module/Api/Method/UserPreferenceMethod.php:59
-#: ../../src/Module/Api/Method/VideoMethod.php:64
 #: ../../src/Module/Application/Upload/DefaultAction.php:110
 #, php-format
 msgid "Not Found: %s"
@@ -5935,11 +5840,10 @@ msgstr ""
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song
 #. title", 1298376)
-#: ../../src/Module/Api/Api5.php:295 ../../src/Module/Api/Api.php:331
+#: ../../src/Module/Api/Api5.php:295 ../../src/Module/Api/Api.php:332
 #: ../../src/Module/Api/Json5_Data.php:227
 #: ../../src/Module/Api/Json_Data.php:341
 #: ../../src/Module/Api/Json_Data.php:395
-#: ../../src/Module/Api/Method/AdvancedSearchMethod.php:86
 #: ../../src/Module/Api/Method/AlbumMethod.php:86
 #: ../../src/Module/Api/Method/Api5/AdvancedSearch5Method.php:85
 #: ../../src/Module/Api/Method/Api5/Album5Method.php:56
@@ -5985,107 +5889,47 @@ msgstr ""
 #: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:82
 #: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:89
 #: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:128
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:80
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:89
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:73
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:82
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:80
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:88
-#: ../../src/Module/Api/Method/BrowseMethod.php:76
-#: ../../src/Module/Api/Method/BrowseMethod.php:134
-#: ../../src/Module/Api/Method/BrowseMethod.php:162
-#: ../../src/Module/Api/Method/CatalogActionMethod.php:65
-#: ../../src/Module/Api/Method/CatalogAddMethod.php:79
-#: ../../src/Module/Api/Method/CatalogAddMethod.php:101
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:90
-#: ../../src/Module/Api/Method/CatalogFolderMethod.php:90
-#: ../../src/Module/Api/Method/FlagMethod.php:72
-#: ../../src/Module/Api/Method/FlagMethod.php:80
-#: ../../src/Module/Api/Method/GetArtMethod.php:70
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:77
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:85
-#: ../../src/Module/Api/Method/GetIndexesMethod.php:95
-#: ../../src/Module/Api/Method/GetSimilarMethod.php:63
-#: ../../src/Module/Api/Method/GoodbyeMethod.php:69
-#: ../../src/Module/Api/Method/IndexMethod.php:95
-#: ../../src/Module/Api/Method/ListMethod.php:91
-#: ../../src/Module/Api/Method/LiveStreamCreateMethod.php:78
-#: ../../src/Module/Api/Method/LostPasswordMethod.php:79
-#: ../../src/Module/Api/Method/LostPasswordMethod.php:85
-#: ../../src/Module/Api/Method/PlaylistAddMethod.php:74
-#: ../../src/Module/Api/Method/PlaylistAddMethod.php:110
-#: ../../src/Module/Api/Method/PlaylistAddSongMethod.php:69
-#: ../../src/Module/Api/Method/PlaylistGenerateMethod.php:76
 #: ../../src/Module/Api/Method/PodcastDeleteMethod.php:101
-#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:78
 #: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:96
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:71
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:77
-#: ../../src/Module/Api/Method/PreferenceCreateMethod.php:83
-#: ../../src/Module/Api/Method/PreferenceDeleteMethod.php:67
-#: ../../src/Module/Api/Method/RateMethod.php:70
-#: ../../src/Module/Api/Method/RateMethod.php:76
-#: ../../src/Module/Api/Method/RateMethod.php:83
-#: ../../src/Module/Api/Method/RegisterMethod.php:99
-#: ../../src/Module/Api/Method/RegisterMethod.php:105
-#: ../../src/Module/Api/Method/SearchGroupMethod.php:95
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:95
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:111
-#: ../../src/Module/Api/Method/ShareEditMethod.php:95
-#: ../../src/Module/Api/Method/SongDeleteMethod.php:75
-#: ../../src/Module/Api/Method/StatsMethod.php:91
-#: ../../src/Module/Api/Method/StatsMethod.php:109
-#: ../../src/Module/Api/Method/UpdateArtistInfoMethod.php:76
-#: ../../src/Module/Api/Method/UpdateArtMethod.php:72
-#: ../../src/Module/Api/Method/UpdateArtMethod.php:94
-#: ../../src/Module/Api/Method/UpdateFromTagsMethod.php:65
-#: ../../src/Module/Api/Method/UpdatePodcastMethod.php:69
-#: ../../src/Module/Api/Method/UserCreateMethod.php:84
-#: ../../src/Module/Api/Method/UserCreateMethod.php:90
-#: ../../src/Module/Api/Method/UserDeleteMethod.php:68
-#: ../../src/Module/Api/Method/UserEditMethod.php:82
-#: ../../src/Module/Api/Method/UserEditMethod.php:90
-#: ../../src/Module/Api/Method/UserEditMethod.php:157
 #, php-format
 msgid "Bad Request: %s"
 msgstr "錯誤的請求：%s"
 
 #. HINT: Access level, eg 75, 100
-#: ../../src/Module/Api/Api5.php:321 ../../src/Module/Api/Api.php:357
+#: ../../src/Module/Api/Api5.php:321 ../../src/Module/Api/Api.php:358
 #, php-format
 msgid "Require: %s"
 msgstr "需要：%s"
 
-#: ../../src/Module/Api/ApiHandler.php:200
-#: ../../src/Module/Api/ApiHandler.php:209
+#: ../../src/Module/Api/ApiHandler.php:207
+#: ../../src/Module/Api/ApiHandler.php:216
 msgid "Access Control not Enabled"
 msgstr "未啟用存取控制"
 
-#: ../../src/Module/Api/ApiHandler.php:263
-#: ../../src/Module/Api/ApiHandler.php:272
-#: ../../src/Module/Api/ApiHandler.php:281
-#: ../../src/Module/Api/ApiHandler.php:293
+#: ../../src/Module/Api/ApiHandler.php:270
+#: ../../src/Module/Api/ApiHandler.php:279
+#: ../../src/Module/Api/ApiHandler.php:288
+#: ../../src/Module/Api/ApiHandler.php:300
 msgid "Session Expired"
 msgstr "工作階段已過期"
 
-#: ../../src/Module/Api/ApiHandler.php:315
-#: ../../src/Module/Api/ApiHandler.php:324
-#: ../../src/Module/Api/ApiHandler.php:333
-#: ../../src/Module/Api/ApiHandler.php:345
+#: ../../src/Module/Api/ApiHandler.php:322
+#: ../../src/Module/Api/ApiHandler.php:331
+#: ../../src/Module/Api/ApiHandler.php:340
+#: ../../src/Module/Api/ApiHandler.php:352
 msgid "Unauthorized access attempt to API - ACL Error"
 msgstr "未授權的 API 存取 - 存取控制清單錯誤"
 
-#: ../../src/Module/Api/ApiHandler.php:378
-#: ../../src/Module/Api/ApiHandler.php:393
-#: ../../src/Module/Api/ApiHandler.php:408
-#: ../../src/Module/Api/ApiHandler.php:426
-#: ../../src/Module/Api/ApiHandler.php:540
-#: ../../src/Module/Api/ApiHandler.php:549
+#: ../../src/Module/Api/ApiHandler.php:385
+#: ../../src/Module/Api/ApiHandler.php:400
+#: ../../src/Module/Api/ApiHandler.php:415
+#: ../../src/Module/Api/ApiHandler.php:433
+#: ../../src/Module/Api/ApiHandler.php:592
+#: ../../src/Module/Api/ApiHandler.php:601
 #: ../../src/Module/Api/Method/Api3/Democratic3Method.php:101
 #: ../../src/Module/Api/Method/Api3/Localplay3Method.php:50
 #: ../../src/Module/Api/Method/Api3/Localplay3Method.php:70
 #: ../../src/Module/Api/Method/Api5/Democratic5Method.php:143
-#: ../../src/Module/Api/Method/DemocraticMethod.php:144
 msgid "Invalid Request"
 msgstr "非法的請求"
 
@@ -6093,34 +5937,6 @@ msgstr "非法的請求"
 #: ../../src/Module/Api/Method/Api4/ShareCreate4Method.php:85
 msgid "Wrong object type "
 msgstr ""
-
-#: ../../src/Module/Api/Method/AdvancedSearchMethod.php:80
-#: ../../src/Module/Api/Method/Api5/AdvancedSearch5Method.php:79
-#: ../../src/Module/Api/Method/Api5/BookmarkCreate5Method.php:70
-#: ../../src/Module/Api/Method/Api5/BookmarkDelete5Method.php:65
-#: ../../src/Module/Api/Method/Api5/BookmarkEdit5Method.php:70
-#: ../../src/Module/Api/Method/Api5/DeletedVideos5Method.php:53
-#: ../../src/Module/Api/Method/Api5/GetBookmark5Method.php:64
-#: ../../src/Module/Api/Method/Api5/GetIndexes5Method.php:70
-#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:82
-#: ../../src/Module/Api/Method/Api5/Stats5Method.php:79
-#: ../../src/Module/Api/Method/Api5/Video5Method.php:52
-#: ../../src/Module/Api/Method/Api5/Videos5Method.php:55
-#: ../../src/Module/Api/Method/BookmarkCreateMethod.php:73
-#: ../../src/Module/Api/Method/BookmarkDeleteMethod.php:66
-#: ../../src/Module/Api/Method/BookmarkEditMethod.php:73
-#: ../../src/Module/Api/Method/DeletedVideosMethod.php:54
-#: ../../src/Module/Api/Method/GetBookmarkMethod.php:70
-#: ../../src/Module/Api/Method/GetIndexesMethod.php:72
-#: ../../src/Module/Api/Method/IndexMethod.php:72
-#: ../../src/Module/Api/Method/ListMethod.php:69
-#: ../../src/Module/Api/Method/LocalplayMethod.php:83
-#: ../../src/Module/Api/Method/SearchGroupMethod.php:89
-#: ../../src/Module/Api/Method/StatsMethod.php:79
-#: ../../src/Module/Api/Method/VideoMethod.php:53
-#: ../../src/Module/Api/Method/VideosMethod.php:55
-msgid "Enable: video"
-msgstr "啟用：video"
 
 #: ../../src/Module/Api/Method/Api3/Democratic3Method.php:54
 #: ../../src/Module/Api/Method/Api3/Democratic3Method.php:74
@@ -6227,6 +6043,8 @@ msgid "Wrong library item type"
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api4/Flag4Method.php:87
+#: ../../src/Module/Api/Method/Api4/Playlist4Method.php:65
+#: ../../src/Module/Api/Method/Api4/PlaylistSongs4Method.php:67
 #: ../../src/Module/Api/Method/Api4/Rate4Method.php:86
 #: ../../src/Module/Api/Method/Api4/RecordPlay4Method.php:84
 #: ../../src/Module/Api/Method/Api4/Scrobble4Method.php:102
@@ -6282,10 +6100,6 @@ msgstr ""
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:117
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:128
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:184
-#: ../../src/Module/Api/Method/HandshakeMethod.php:83
-#: ../../src/Module/Api/Method/HandshakeMethod.php:119
-#: ../../src/Module/Api/Method/HandshakeMethod.php:130
-#: ../../src/Module/Api/Method/HandshakeMethod.php:186
 msgid "Received Invalid Handshake"
 msgstr "已收到無效的握手協議"
 
@@ -6295,14 +6109,11 @@ msgstr "已收到無效的握手協議"
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:117
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:128
 #: ../../src/Module/Api/Method/HandshakeMethod.php:118
-#: ../../src/Module/Api/Method/HandshakeMethod.php:119
-#: ../../src/Module/Api/Method/HandshakeMethod.php:130
 msgid "Login failed, timestamp is out of range"
 msgstr "登入失敗：時間戳記超出範圍"
 
 #: ../../src/Module/Api/Method/Api4/Handshake4Method.php:116
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:117
-#: ../../src/Module/Api/Method/HandshakeMethod.php:119
 #: ../../src/Module/Application/Preferences/AdminAction.php:62
 #: ../../src/Module/Application/Preferences/UpdatePreferencesAction.php:77
 msgid "Server"
@@ -6313,7 +6124,6 @@ msgstr "伺服器"
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:127
 #: ../../src/Module/Api/Method/Api5/Handshake5Method.php:184
 #: ../../src/Module/Api/Method/HandshakeMethod.php:129
-#: ../../src/Module/Api/Method/HandshakeMethod.php:186
 #: ../../src/Module/Application/Login/DefaultAction.php:183
 msgid "Incorrect username or password"
 msgstr "錯誤的使用者名稱或密碼"
@@ -6328,12 +6138,12 @@ msgstr ""
 msgid "Error Unable to connect to localplay controller"
 msgstr ""
 
-#: ../../src/Module/Api/Method/Api4/Playlist4Method.php:65
+#: ../../src/Module/Api/Method/Api4/Playlist4Method.php:70
 #: ../../src/Module/Api/Method/Api4/PlaylistAddSong4Method.php:59
 #: ../../src/Module/Api/Method/Api4/PlaylistDelete4Method.php:55
 #: ../../src/Module/Api/Method/Api4/PlaylistEdit4Method.php:73
 #: ../../src/Module/Api/Method/Api4/PlaylistRemoveSong4Method.php:62
-#: ../../src/Module/Api/Method/Api4/PlaylistSongs4Method.php:67
+#: ../../src/Module/Api/Method/Api4/PlaylistSongs4Method.php:72
 msgid "Access denied to this playlist"
 msgstr ""
 
@@ -6393,23 +6203,29 @@ msgstr ""
 msgid "Failed to sync episodes for podcast: "
 msgstr ""
 
+#: ../../src/Module/Api/Method/Api5/AdvancedSearch5Method.php:79
+#: ../../src/Module/Api/Method/Api5/BookmarkCreate5Method.php:70
+#: ../../src/Module/Api/Method/Api5/BookmarkDelete5Method.php:65
+#: ../../src/Module/Api/Method/Api5/BookmarkEdit5Method.php:70
+#: ../../src/Module/Api/Method/Api5/DeletedVideos5Method.php:53
+#: ../../src/Module/Api/Method/Api5/GetBookmark5Method.php:64
+#: ../../src/Module/Api/Method/Api5/GetIndexes5Method.php:70
+#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:82
+#: ../../src/Module/Api/Method/Api5/Stats5Method.php:79
+#: ../../src/Module/Api/Method/Api5/Video5Method.php:52
+#: ../../src/Module/Api/Method/Api5/Videos5Method.php:55
+msgid "Enable: video"
+msgstr "啟用：video"
+
 #: ../../src/Module/Api/Method/Api5/CatalogAction5Method.php:103
 #: ../../src/Module/Api/Method/Api5/CatalogFile5Method.php:161
 #: ../../src/Module/Api/Method/Api5/PlaylistRemoveSong5Method.php:71
 #: ../../src/Module/Api/Method/Api5/PlaylistRemoveSong5Method.php:81
 #: ../../src/Module/Api/Method/Api5/Scrobble5Method.php:96
-#: ../../src/Module/Api/Method/CatalogActionMethod.php:105
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:161
-#: ../../src/Module/Api/Method/CatalogFolderMethod.php:177
-#: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:72
-#: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:82
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:97
 msgid "Not Found"
 msgstr "找不到"
 
 #: ../../src/Module/Api/Method/Api5/CatalogFile5Method.php:76
-#: ../../src/Module/Api/Method/CatalogFileMethod.php:76
-#: ../../src/Module/Api/Method/CatalogFolderMethod.php:76
 msgid "Enable: delete_from_disk"
 msgstr "啟用：delete_from_disk"
 
@@ -6424,27 +6240,13 @@ msgstr "啟用：delete_from_disk"
 #: ../../src/Module/Api/Method/Api5/PodcastEpisodes5Method.php:56
 #: ../../src/Module/Api/Method/Api5/Podcasts5Method.php:57
 #: ../../src/Module/Api/Method/Api5/Stats5Method.php:84
-#: ../../src/Module/Api/Method/BrowseMethod.php:70
-#: ../../src/Module/Api/Method/DeletedPodcastEpisodesMethod.php:59
-#: ../../src/Module/Api/Method/GetIndexesMethod.php:77
-#: ../../src/Module/Api/Method/IndexMethod.php:77
-#: ../../src/Module/Api/Method/ListMethod.php:74
-#: ../../src/Module/Api/Method/PodcastCreateMethod.php:58
 #: ../../src/Module/Api/Method/PodcastDeleteMethod.php:87
-#: ../../src/Module/Api/Method/PodcastEditMethod.php:60
-#: ../../src/Module/Api/Method/PodcastEpisodeDeleteMethod.php:54
-#: ../../src/Module/Api/Method/PodcastEpisodeMethod.php:55
 #: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:81
-#: ../../src/Module/Api/Method/PodcastMethod.php:56
-#: ../../src/Module/Api/Method/PodcastsMethod.php:57
-#: ../../src/Module/Api/Method/StatsMethod.php:84
 msgid "Enable: podcast"
 msgstr "啟用：podcast"
 
 #: ../../src/Module/Api/Method/Api5/Flag5Method.php:58
 #: ../../src/Module/Api/Method/Api5/Rate5Method.php:56
-#: ../../src/Module/Api/Method/FlagMethod.php:59
-#: ../../src/Module/Api/Method/RateMethod.php:57
 msgid "Enable: ratings"
 msgstr "啟用：ratings"
 
@@ -6454,12 +6256,6 @@ msgstr "啟用：ratings"
 #: ../../src/Module/Api/Method/Api5/LastShouts5Method.php:55
 #: ../../src/Module/Api/Method/Api5/Timeline5Method.php:57
 #: ../../src/Module/Api/Method/Api5/ToggleFollow5Method.php:52
-#: ../../src/Module/Api/Method/FollowersMethod.php:57
-#: ../../src/Module/Api/Method/FollowingMethod.php:57
-#: ../../src/Module/Api/Method/FriendsTimelineMethod.php:56
-#: ../../src/Module/Api/Method/LastShoutsMethod.php:56
-#: ../../src/Module/Api/Method/TimelineMethod.php:58
-#: ../../src/Module/Api/Method/ToggleFollowMethod.php:53
 msgid "Enable: sociable"
 msgstr "啟用：sociable"
 
@@ -6469,50 +6265,29 @@ msgstr "啟用：sociable"
 #: ../../src/Module/Api/Method/Api5/ShareDelete5Method.php:53
 #: ../../src/Module/Api/Method/Api5/ShareEdit5Method.php:56
 #: ../../src/Module/Api/Method/Api5/Shares5Method.php:56
-#: ../../src/Module/Api/Method/GetIndexesMethod.php:82
-#: ../../src/Module/Api/Method/IndexMethod.php:82
-#: ../../src/Module/Api/Method/ListMethod.php:79
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:80
-#: ../../src/Module/Api/Method/ShareDeleteMethod.php:55
-#: ../../src/Module/Api/Method/ShareEditMethod.php:58
-#: ../../src/Module/Api/Method/ShareMethod.php:54
-#: ../../src/Module/Api/Method/SharesMethod.php:56
 msgid "Enable: share"
 msgstr "啟用：share"
 
 #: ../../src/Module/Api/Method/Api5/GetIndexes5Method.php:85
 #: ../../src/Module/Api/Method/Api5/LiveStream5Method.php:54
 #: ../../src/Module/Api/Method/Api5/LiveStreams5Method.php:57
-#: ../../src/Module/Api/Method/GetIndexesMethod.php:87
-#: ../../src/Module/Api/Method/IndexMethod.php:87
-#: ../../src/Module/Api/Method/ListMethod.php:84
-#: ../../src/Module/Api/Method/LiveStreamMethod.php:55
-#: ../../src/Module/Api/Method/LiveStreamsMethod.php:57
 msgid "Enable: live_stream"
 msgstr "啟用：live_stream"
 
 #: ../../src/Module/Api/Method/Api5/Label5Method.php:55
 #: ../../src/Module/Api/Method/Api5/LabelArtists5Method.php:56
 #: ../../src/Module/Api/Method/Api5/Labels5Method.php:57
-#: ../../src/Module/Api/Method/LabelArtistsMethod.php:57
-#: ../../src/Module/Api/Method/LabelMethod.php:56
-#: ../../src/Module/Api/Method/LabelsMethod.php:57
 msgid "Enable: label"
 msgstr "啟用：label"
 
 #: ../../src/Module/Api/Method/Api5/License5Method.php:55
 #: ../../src/Module/Api/Method/Api5/Licenses5Method.php:57
 #: ../../src/Module/Api/Method/Api5/LicenseSongs5Method.php:54
-#: ../../src/Module/Api/Method/LicenseMethod.php:56
-#: ../../src/Module/Api/Method/LicensesMethod.php:57
-#: ../../src/Module/Api/Method/LicenseSongsMethod.php:55
 msgid "Enable: licensing"
 msgstr "啟用：licensing"
 
 #: ../../src/Module/Api/Method/Api5/Localplay5Method.php:69
 #: ../../src/Module/Api/Method/Api5/LocalplaySongs5Method.php:58
-#: ../../src/Module/Api/Method/LocalplayMethod.php:70
-#: ../../src/Module/Api/Method/LocalplaySongsMethod.php:59
 msgid "Unable to connect to localplay controller"
 msgstr ""
 
@@ -6527,24 +6302,6 @@ msgstr ""
 #: ../../src/Module/Api/Method/Api5/SystemUpdate5Method.php:63
 #: ../../src/Module/Api/Method/Api5/UrlToSong5Method.php:60
 #: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:92
-#: ../../src/Module/Api/Method/CatalogAddMethod.php:86
-#: ../../src/Module/Api/Method/CatalogAddMethod.php:91
-#: ../../src/Module/Api/Method/CatalogAddMethod.php:126
-#: ../../src/Module/Api/Method/CatalogDeleteMethod.php:67
-#: ../../src/Module/Api/Method/LocalplayMethod.php:142
-#: ../../src/Module/Api/Method/LostPasswordMethod.php:66
-#: ../../src/Module/Api/Method/LostPasswordMethod.php:99
-#: ../../src/Module/Api/Method/PlaylistCreateMethod.php:66
-#: ../../src/Module/Api/Method/PlaylistEditMethod.php:108
-#: ../../src/Module/Api/Method/PodcastCreateMethod.php:72
-#: ../../src/Module/Api/Method/PodcastCreateMethod.php:83
-#: ../../src/Module/Api/Method/PreferenceEditMethod.php:75
-#: ../../src/Module/Api/Method/RegisterMethod.php:109
-#: ../../src/Module/Api/Method/ScrobbleMethod.php:87
-#: ../../src/Module/Api/Method/ShareCreateMethod.php:143
-#: ../../src/Module/Api/Method/SystemUpdateMethod.php:64
-#: ../../src/Module/Api/Method/UrlToSongMethod.php:61
-#: ../../src/Module/Api/Method/UserCreateMethod.php:94
 msgid "Bad Request"
 msgstr "錯誤的請求"
 
@@ -6554,18 +6311,10 @@ msgstr "錯誤的請求"
 #: ../../src/Module/Api/Method/Api5/PlaylistEdit5Method.php:75
 #: ../../src/Module/Api/Method/Api5/PlaylistRemoveSong5Method.php:63
 #: ../../src/Module/Api/Method/Api5/PlaylistSongs5Method.php:72
-#: ../../src/Module/Api/Method/PlaylistAddMethod.php:68
-#: ../../src/Module/Api/Method/PlaylistAddSongMethod.php:63
-#: ../../src/Module/Api/Method/PlaylistDeleteMethod.php:58
-#: ../../src/Module/Api/Method/PlaylistEditMethod.php:76
-#: ../../src/Module/Api/Method/PlaylistMethod.php:68
-#: ../../src/Module/Api/Method/PlaylistRemoveSongMethod.php:64
-#: ../../src/Module/Api/Method/PlaylistSongsMethod.php:74
 msgid "Require: 100"
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api5/SongDelete5Method.php:65
-#: ../../src/Module/Api/Method/SongDeleteMethod.php:66
 msgid "Require: 75"
 msgstr ""
 
@@ -6581,10 +6330,6 @@ msgstr ""
 msgid "Access denied"
 msgstr ""
 
-#: ../../src/Module/Api/Method/RegisterMethod.php:60
-msgid "Enable: allow_public_registration"
-msgstr ""
-
 #: ../../src/Module/Api/Upnp_Api.php:1070
 #: ../../src/Repository/Model/Browse.php:412
 msgid "Clips"
@@ -6593,7 +6338,7 @@ msgstr "影片"
 #: ../../src/Module/Api/Xml3_Data.php:673
 #: ../../src/Module/Api/Xml4_Data.php:943
 #: ../../src/Module/Api/Xml5_Data.php:1141
-#: ../../src/Module/Api/Xml_Data.php:1632
+#: ../../src/Module/Api/Xml_Data.php:1642
 msgid "Ampache XSPF Playlist"
 msgstr ""
 
@@ -7469,7 +7214,7 @@ msgid "Failed to create user"
 msgstr ""
 
 #: ../../src/Module/Application/SearchData/ShowAction.php:75
-#: ../../src/Repository/Model/Wanted.php:251
+#: ../../src/Repository/Model/Wanted.php:274
 msgid "Remove"
 msgstr "移除"
 
@@ -7624,87 +7369,87 @@ msgstr "Beets 伺服器網址"
 msgid "Remote Catalog type was selected, but the path is not a URL"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid "Go to https://www.dropbox.com/developers/apps/create"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid "Select 'Dropbox API app'"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid "Select 'Full Dropbox'"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid "Give a name to your application and create it"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid "Click the 'Generate' button to create an Access Token"
 msgstr "按下「Generate」按鈕來產生存取權杖"
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:107
+#: ../../src/Module/Catalog/Catalog_dropbox.php:108
 msgid ""
 "Copy your App key and App secret and Access Token into the following fields."
 msgstr "複製您的 App key、App secret 與 Access Token 到下方的欄位。"
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:147
+#: ../../src/Module/Catalog/Catalog_dropbox.php:148
 msgid "Access Token"
 msgstr "存取金鑰"
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:150
+#: ../../src/Module/Catalog/Catalog_dropbox.php:151
 msgid "Get chunked files on analyze"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:212
+#: ../../src/Module/Catalog/Catalog_dropbox.php:213
 msgid "Error: API Key, Secret and Access Token Required for Dropbox Catalogs"
 msgstr "錯誤：Dropbox 目錄需要 API Key、Secret 與 Access Token"
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:219
-#: ../../src/Module/Catalog/Catalog_dropbox.php:590
+#: ../../src/Module/Catalog/Catalog_dropbox.php:220
+#: ../../src/Module/Catalog/Catalog_dropbox.php:591
 msgid "Invalid \"API key\", \"secret\", or \"access token\": "
 msgstr "無效的「API key」、「secret」或「access token」："
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:228
+#: ../../src/Module/Catalog/Catalog_dropbox.php:229
 msgid "Invalid \"dropbox-path\": "
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:240
+#: ../../src/Module/Catalog/Catalog_dropbox.php:241
 #, php-format
 msgid "Error: Catalog with %s already exists"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:267
+#: ../../src/Module/Catalog/Catalog_dropbox.php:268
 msgid "Running Dropbox Remote Update"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:292
+#: ../../src/Module/Catalog/Catalog_dropbox.php:293
 #, php-format
 msgid "Catalog Update Finished.  Total Media: [%s]"
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:576
+#: ../../src/Module/Catalog/Catalog_dropbox.php:577
 #: ../../src/Module/Catalog/Catalog_Seafile.php:469
 #, php-format
 msgid "Updated song: \"%s\""
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:579
+#: ../../src/Module/Catalog/Catalog_dropbox.php:580
 #: ../../src/Module/Catalog/Catalog_Seafile.php:472
 #, php-format
 msgid "Song up to date: \"%s\""
 msgstr ""
 
 #. HINT: filename (File path)
-#: ../../src/Module/Catalog/Catalog_dropbox.php:583
+#: ../../src/Module/Catalog/Catalog_dropbox.php:584
 #: ../../src/Module/Catalog/Catalog_Seafile.php:476
 #: ../../src/Module/Catalog/Catalog_Seafile.php:571
 #, php-format
 msgid "Removing song: \"%s\""
 msgstr ""
 
-#: ../../src/Module/Catalog/Catalog_dropbox.php:619
+#: ../../src/Module/Catalog/Catalog_dropbox.php:620
 msgid "API Error: cannot connect to Dropbox."
 msgstr ""
 
@@ -8297,7 +8042,7 @@ msgstr ""
 
 #: ../../src/Module/Cli/ExportAlbumArtCommand.php:57
 msgid "Metadata write mode (`linux` or `windows`)"
-msgstr ""
+msgstr "詮釋資料寫入模式 (「linux」或「windows」)"
 
 #: ../../src/Module/Cli/ExportAlbumArtCommand.php:58
 msgid "Export album art for Linux"
@@ -8693,11 +8438,11 @@ msgstr ""
 msgid "XBMC Active Instance"
 msgstr ""
 
-#: ../../src/Module/Playback/Stream_Playlist.php:595
+#: ../../src/Module/Playback/Stream_Playlist.php:613
 msgid "Ampache ASX Playlist"
 msgstr ""
 
-#: ../../src/Module/Playback/Stream_Playlist.php:768
+#: ../../src/Module/Playback/Stream_Playlist.php:786
 msgid "Vote added"
 msgstr "投票已新增"
 
@@ -8944,7 +8689,7 @@ msgstr "已追蹤了"
 
 #: ../../src/Module/User/Activity/UserActivityRenderer.php:82
 msgid "rated"
-msgstr ""
+msgstr "已評分"
 
 #: ../../src/Module/User/Activity/UserActivityRenderer.php:85
 msgid "did something on"
@@ -9156,23 +8901,23 @@ msgstr ""
 
 #: ../../src/Module/Util/Ui.php:1009 ../../src/Repository/Model/Search.php:133
 msgid "1 Star"
-msgstr ""
+msgstr "1星"
 
 #: ../../src/Module/Util/Ui.php:1010 ../../src/Repository/Model/Search.php:134
 msgid "2 Stars"
-msgstr ""
+msgstr "2星"
 
 #: ../../src/Module/Util/Ui.php:1011 ../../src/Repository/Model/Search.php:135
 msgid "3 Stars"
-msgstr ""
+msgstr "3星"
 
 #: ../../src/Module/Util/Ui.php:1012 ../../src/Repository/Model/Search.php:136
 msgid "4 Stars"
-msgstr ""
+msgstr "4星"
 
 #: ../../src/Module/Util/Ui.php:1013 ../../src/Repository/Model/Search.php:137
 msgid "5 Stars"
-msgstr ""
+msgstr "5星"
 
 #: ../../src/Module/Util/Ui.php:1061
 msgid "Keep last played track"
@@ -9311,7 +9056,7 @@ msgstr ""
 
 #: ../../src/Plugin/AmpacheDiscogs.php:54
 msgid "Discogs metadata integration"
-msgstr ""
+msgstr "Discogs 詮釋資料整合"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:63
 #: ../../src/Repository/Model/Preference.php:838
@@ -9465,11 +9210,11 @@ msgstr ""
 
 #: ../../src/Plugin/AmpacheMusicBrainz.php:59
 msgid "MusicBrainz metadata integration"
-msgstr ""
+msgstr "MusicBrainz 詮釋資料整合"
 
 #: ../../src/Plugin/AmpacheOmdb.php:50
 msgid "OMDb metadata integration"
-msgstr ""
+msgstr "OMDb 詮釋資料整合"
 
 #: ../../src/Plugin/AmpachePaypal.php:53
 msgid "PayPal donation button on user page"
@@ -9649,7 +9394,7 @@ msgstr ""
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:61
 msgid "TheAudioDb metadata integration"
-msgstr ""
+msgstr "TheAudioDb 詮釋資料整合"
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:71
 #: ../../src/Repository/Model/Preference.php:930
@@ -9658,7 +9403,7 @@ msgstr ""
 
 #: ../../src/Plugin/AmpacheTvdb.php:53
 msgid "TVDb metadata integration"
-msgstr ""
+msgstr "TVDb 詮釋資料整合"
 
 #: ../../src/Plugin/AmpacheTvdb.php:62
 #: ../../src/Repository/Model/Preference.php:937
@@ -9688,12 +9433,12 @@ msgstr ""
 msgid "YOURLS API key"
 msgstr ""
 
-#: ../../src/Repository/Model/AlbumDisk.php:251
+#: ../../src/Repository/Model/AlbumDisk.php:253
 #: ../../src/Repository/Model/Album.php:481
 msgid "Album MusicBrainzID"
 msgstr "專輯的 MusicBrainz 識別碼"
 
-#: ../../src/Repository/Model/AlbumDisk.php:256
+#: ../../src/Repository/Model/AlbumDisk.php:258
 #: ../../src/Repository/Model/Album.php:486
 msgid "Release Group MusicBrainzID"
 msgstr "成品組的 MusicBrainz 識別碼"
@@ -10347,7 +10092,7 @@ msgstr ""
 
 #: ../../src/Repository/Model/Rating.php:433
 msgid "not rated yet"
-msgstr "尚未被評比"
+msgstr "尚未評分"
 
 #. HINT: object rating
 #: ../../src/Repository/Model/Rating.php:436
@@ -10361,7 +10106,7 @@ msgstr "目前的評比"
 
 #: ../../src/Repository/Model/Search.php:132
 msgid "0 Stars"
-msgstr ""
+msgstr "0星"
 
 #: ../../src/Repository/Model/Search.php:225
 msgid "is greater than or equal to"
@@ -10468,27 +10213,27 @@ msgstr ""
 
 #: ../../src/Repository/Model/Search.php:462
 msgid "has rated 5 stars"
-msgstr ""
+msgstr "已評分為5星"
 
 #: ../../src/Repository/Model/Search.php:468
 msgid "has rated 4 stars"
-msgstr ""
+msgstr "已評分為4星"
 
 #: ../../src/Repository/Model/Search.php:474
 msgid "has rated 3 stars"
-msgstr ""
+msgstr "已評分為3星"
 
 #: ../../src/Repository/Model/Search.php:480
 msgid "has rated 2 stars"
-msgstr ""
+msgstr "已評分為2星"
 
 #: ../../src/Repository/Model/Search.php:486
 msgid "has rated 1 star"
-msgstr ""
+msgstr "已評分為1星"
 
 #: ../../src/Repository/Model/Search.php:492
 msgid "has not rated"
-msgstr ""
+msgstr "尚未被評分"
 
 #: ../../src/Repository/Model/Search.php:604
 msgid "Any searchable text"
@@ -11538,11 +11283,11 @@ msgstr "漢語"
 msgid "Zulu"
 msgstr "祖魯語"
 
-#: ../../src/Repository/Model/Wanted.php:233
+#: ../../src/Repository/Model/Wanted.php:256
 msgid "Accept"
 msgstr "接受"
 
-#: ../../src/Repository/Model/Wanted.php:256
+#: ../../src/Repository/Model/Wanted.php:279
 msgid "Add to wanted list"
 msgstr "新增到願望清單"
 
@@ -11648,7 +11393,7 @@ msgstr ""
 
 #: ./untranslated-strings.txt:106
 msgid "metadata"
-msgstr ""
+msgstr "後設資訊"
 
 #: ./untranslated-strings.txt:110
 msgid "podcast"
