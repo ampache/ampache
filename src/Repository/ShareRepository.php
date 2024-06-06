@@ -107,7 +107,7 @@ final class ShareRepository implements ShareRepositoryInterface
         }
 
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::CATALOG_FILTER)) {
-            $sql .= sprintf(' AND %s', Catalog::get_user_filter('share', $userId));
+            $sql .= sprintf(' AND%s', Catalog::get_user_filter('share', $userId));
         }
 
         $result = $this->connection->query(
