@@ -35,7 +35,6 @@ use Ampache\Module\Api\Xml5_Data;
 
 /**
  * Class Playlists5Method
- * @package Lib\ApiMethods
  */
 final class Playlists5Method
 {

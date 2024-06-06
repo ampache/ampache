@@ -28,6 +28,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Extract the Query class into individual classes
 * Album browse `artist` was only selecting `album_artist`
 * Check a session exists bore trying to insert it
+* Check theme with glob instead of reading file paths using opendir
 * Subsonic
   * Convert getPlaylists process to a browse
 
@@ -105,8 +106,10 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * ALL
   * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
+  * Rating and flag data for smartlists was using incorrect id
   * playlist_edit: track insert broken by removing table constraint
   * playlist_edit: workaround sending owner username instead of ID
+  * playlist_add_song: When using `unique_playlist` don't grab the whole playlist
 * API6
   * list: sorting was by `id` instead of `name`
   * browse: sorting was by `id` instead of `name`
