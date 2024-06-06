@@ -887,7 +887,6 @@ class Json_Data
                     continue;
                 }
                 $object_type    = 'search';
-                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
                 $playlist = new Playlist($playlist_id);
@@ -895,9 +894,9 @@ class Json_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
             }
+            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
@@ -914,9 +913,9 @@ class Json_Data
             } else {
                 $items = (int)($playitem_total ?? 0);
             }
-            $rating      = new Rating($playlist_id, $object_type);
+            $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist_id, $object_type);
+            $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
             $JSON[] = [

@@ -654,7 +654,6 @@ class Xml5_Data
                     continue;
                 }
                 $object_type    = 'search';
-                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
                 $playlist = new Playlist($playlist_id);
@@ -662,16 +661,16 @@ class Xml5_Data
                     continue;
                 }
                 $object_type    = 'playlist';
-                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->get_media_count('song');
             }
+            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
 
-            $rating      = new Rating($playlist_id, $object_type);
+            $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist_id, $object_type);
+            $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
             $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . (int)$playitem_total . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<preciserating>" . $user_rating . "</preciserating>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string) $rating->get_average_rating() . "</averagerating>\n</playlist>\n";
