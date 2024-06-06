@@ -59,7 +59,7 @@ final class ArtistsMethod
     public static function artists(array $input, User $user): bool
     {
         $album_artist = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1);
-        $browse       = Api::getBrowse();
+        $browse       = Api::getBrowse($user);
         if ($album_artist) {
             $browse->set_type('album_artist');
         } else {

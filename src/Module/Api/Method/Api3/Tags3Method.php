@@ -42,8 +42,7 @@ final class Tags3Method
      */
     public static function tags(array $input, User $user): void
     {
-        unset($user);
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 

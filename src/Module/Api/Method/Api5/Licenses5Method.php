@@ -59,7 +59,7 @@ final class Licenses5Method
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 

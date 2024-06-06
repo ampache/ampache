@@ -53,7 +53,7 @@ final class Albums4Method
      */
     public static function albums(array $input, User $user): void
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('album');
         $browse->set_sort('name', 'ASC');
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';

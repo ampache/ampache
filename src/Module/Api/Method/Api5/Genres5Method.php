@@ -51,7 +51,7 @@ final class Genres5Method
      */
     public static function genres(array $input, User $user): bool
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 

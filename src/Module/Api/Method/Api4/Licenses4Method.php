@@ -57,9 +57,8 @@ final class Licenses4Method
 
             return false;
         }
-        unset($user);
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('license');
         $browse->set_sort('name', 'ASC');
 

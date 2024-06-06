@@ -98,7 +98,7 @@ final class GetIndexesMethod
 
             return false;
         }
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         if (
             $type === 'playlist' &&
             $hide === false

@@ -42,7 +42,7 @@ final class Playlists3Method
      */
     public static function playlists(array $input, User $user): void
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('playlist');
         $browse->set_sort('name', 'ASC');
 
