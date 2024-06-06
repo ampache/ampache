@@ -10,6 +10,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 ### Added
 
+* Translations 2024-06
 * Add `songs_artsts` to album objects
 * Add `playlist_search` as a browse type. (combined playlists and smartlists)
 * Allow sorting playlists by `type`, `rating` and item count
