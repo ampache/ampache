@@ -60,7 +60,7 @@ final class PodcastsMethod
 
             return false;
         }
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('podcast');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);

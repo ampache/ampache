@@ -160,7 +160,7 @@ final class Stats5Method
                         );
                         break;
                     case 'playlist':
-                        $browse = Api::getBrowse();
+                        $browse = Api::getBrowse($user);
                         $browse->set_type('playlist_search');
                         $browse->set_sort('rand');
                         $browse->set_filter('playlist_open', $user->getId());
@@ -175,7 +175,7 @@ final class Stats5Method
                     case 'video':
                     case 'podcast':
                     case 'podcast_episode':
-                        $browse = Api::getBrowse();
+                        $browse = Api::getBrowse($user);
                         $browse->set_type($type);
                         $browse->set_sort('rand');
                         $results = $browse->get_objects();

@@ -35,7 +35,6 @@ use Ampache\Module\Api\Xml5_Data;
 
 /**
  * Class Playlists5Method
- * @package Lib\ApiMethods
  */
 final class Playlists5Method
 {
@@ -64,7 +63,7 @@ final class Playlists5Method
             ? (bool)($input['show_dupes'])
             : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         if ($hide === false) {
             $browse->set_type('playlist_search');
         } else {

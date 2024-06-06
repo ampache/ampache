@@ -50,8 +50,7 @@ final class Genres4Method
      */
     public static function genres(array $input, User $user): void
     {
-        unset($user);
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('tag');
         $browse->set_sort('name', 'ASC');
 

@@ -56,19 +56,22 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
      * @throws \PHPMailer\PHPMailer\Exception
      */
     public function create(
-        User $recipient,
+        ?User $recipient,
         User $sender,
         string $subject,
         string $message
     ): void {
         $messageId = $this->privateMessageRepository->create(
-            $sender,
             $recipient,
+            $sender,
             $subject,
             $message
         );
 
-        if (Preference::get_by_user($recipient->getId(), 'notify_email')) {
+        if (
+            $recipient !== null &&
+            Preference::get_by_user($recipient->getId(), 'notify_email')
+        ) {
             $mailer = $this->utilityFactory->createMailer();
             if (!empty($recipient->email) && $mailer->isMailEnabled()) {
                 /* HINT: User fullname */

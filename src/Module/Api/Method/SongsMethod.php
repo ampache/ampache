@@ -57,7 +57,7 @@ final class SongsMethod
      */
     public static function songs(array $input, User $user): bool
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('song');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);

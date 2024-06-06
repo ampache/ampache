@@ -106,15 +106,15 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
      * Creates a private message and returns the id of the newly created object
      */
     public function create(
-        ?User $sender,
-        User $recipient,
+        ?User $recipient,
+        User $sender,
         string $subject,
         string $message
     ): int {
-        $senderUserId = null;
+        $toUserId = 0;
 
-        if ($sender !== null) {
-            $senderUserId = $sender->getId();
+        if ($recipient !== null) {
+            $toUserId = $recipient->getId();
         }
 
         $this->connection->query(
@@ -122,8 +122,8 @@ final readonly class PrivateMessageRepository implements PrivateMessageRepositor
             [
                 $subject,
                 $message,
-                $senderUserId,
-                $recipient->getId(),
+                $sender->getId(),
+                $toUserId,
             ]
         );
 

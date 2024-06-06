@@ -61,7 +61,7 @@ final class LicensesMethod
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('license');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
