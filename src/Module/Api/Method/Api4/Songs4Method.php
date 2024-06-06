@@ -54,7 +54,7 @@ final class Songs4Method
      */
     public static function songs(array $input, User $user): void
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('song');
         $browse->set_sort('title', 'ASC');
 

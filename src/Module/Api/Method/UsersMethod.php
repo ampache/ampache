@@ -53,7 +53,7 @@ final class UsersMethod
      */
     public static function users(array $input, User $user): bool
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('user');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC']);
@@ -68,7 +68,6 @@ final class UsersMethod
 
             return false;
         }
-        unset($user);
 
         ob_end_clean();
         switch ($input['api_format']) {

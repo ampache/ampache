@@ -190,7 +190,7 @@ class Api
      */
     public static $browse = null;
 
-    public static function getBrowse(): Browse
+    public static function getBrowse(User $user): Browse
     {
         if (self::$browse === null) {
             // create new browse
@@ -201,6 +201,9 @@ class Api
             // ensure _state offset is 0
             self::$browse->set_offset(0);
         }
+
+        // ensure user_id is set
+        self::$browse->set_user_id($user->getId())
 
         return self::$browse;
     }
