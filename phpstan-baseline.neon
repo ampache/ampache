@@ -14679,4 +14679,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
-

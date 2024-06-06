@@ -10,6 +10,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 ### Added
 
+* Translations 2024-06
 * Add `songs_artsts` to album objects
 * Add `playlist_search` as a browse type. (combined playlists and smartlists)
 * Allow sorting playlists by `type`, `rating` and item count
@@ -27,7 +28,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * Extract the Query class into individual classes
 * Album browse `artist` was only selecting `album_artist`
-* Check a session exists bore trying to insert it
+* Check a session exists before trying to insert it
 * Check theme with glob instead of reading file paths using opendir
 * Subsonic
   * Convert getPlaylists process to a browse
