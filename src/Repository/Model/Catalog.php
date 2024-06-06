@@ -1020,7 +1020,7 @@ abstract class Catalog extends database_object
         }
 
         $sql .= "ORDER BY `name`;";
-        //debug_event(self::class, 'get_catalogs ' . $sql, 5);
+        //debug_event(self::class, 'get_catalogs ' . $sql . ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, $params);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {

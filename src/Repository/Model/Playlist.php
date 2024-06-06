@@ -162,7 +162,7 @@ class Playlist extends playlist_object
         }
 
         $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
+        //debug_event(self::class, 'get_playlists query: ' . $sql . ' ' . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = [];
@@ -205,7 +205,7 @@ class Playlist extends playlist_object
         }
 
         $sql .= "ORDER BY `name`";
-        //debug_event(self::class, 'get_playlists query: ' . $sql, 5);
+        //debug_event(self::class, 'get_playlists query: ' . $sql . ' ' . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
         $results    = [];
@@ -379,7 +379,7 @@ class Playlist extends playlist_object
 
         $sql .= "ORDER BY `playlist_data`.`track`";
         $db_results = Dba::read($sql, $params);
-        // debug_event(__CLASS__, "get_songs(): " . $sql, 5);
+        // debug_event(__CLASS__, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];

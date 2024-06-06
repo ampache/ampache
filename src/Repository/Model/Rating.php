@@ -205,10 +205,11 @@ class Rating extends database_object
             return parent::get_from_cache($key, $this->id)[0];
         }
 
+        $params     = [$user_id, $this->id, $this->type];
         $sql        = "SELECT `rating` FROM `rating` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ? AND `rating` > 0;";
-        $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
+        $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_assoc($db_results);
-        //debug_event(self::class, 'get_user_rating ' . $sql, 5);
+        //debug_event(self::class, 'get_user_rating ' . $sql . ' ' . print_r($params, true), 5);
         if ($row === []) {
             return null;
         }
@@ -230,10 +231,11 @@ class Rating extends database_object
             return (float)parent::get_from_cache($key, $this->id)[0];
         }
 
+        $params     = [$this->id, $this->type];
         $sql        = "SELECT ROUND(AVG(`rating`), 2) AS `rating` FROM `rating` WHERE `object_id` = ? AND `object_type` = ? HAVING COUNT(object_id) > 1";
-        $db_results = Dba::read($sql, [$this->id, $this->type]);
+        $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_assoc($db_results);
-        //debug_event(self::class, 'get_average_rating ' . $sql, 5);
+        //debug_event(self::class, 'get_average_rating ' . $sql . ' ' . print_r($params, true), 5);
         if ($row === []) {
             return null;
         }
