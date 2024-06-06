@@ -56,8 +56,8 @@ final class Shares4Method
 
             return false;
         }
-        unset($user);
-        $browse = Api::getBrowse();
+
+        $browse = Api::getBrowse($user);
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 

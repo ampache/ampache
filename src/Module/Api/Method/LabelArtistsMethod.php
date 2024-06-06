@@ -72,7 +72,7 @@ final class LabelArtistsMethod
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('artist');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);

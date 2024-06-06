@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -188,7 +189,7 @@ class Api
      */
     public static $browse = null;
 
-    public static function getBrowse(): Browse
+    public static function getBrowse(User $user): Browse
     {
         if (self::$browse === null) {
             // create new browse
@@ -199,6 +200,9 @@ class Api
             // ensure _state offset is 0
             self::$browse->set_offset(0);
         }
+
+        // ensure user_id is set
+        self::$browse->set_user_id($user->getId());
 
         return self::$browse;
     }

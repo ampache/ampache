@@ -1344,7 +1344,7 @@ class Subsonic_Api
         $user_id  = $user->id ?? 0;
         $response = Subsonic_Xml_Data::addSubsonicResponse('getplaylists');
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('playlist_search');
         $browse->set_sort('name', 'ASC');
         $browse->set_filter('playlist_open', $user_id);

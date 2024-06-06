@@ -73,7 +73,7 @@ final class FollowersMethod
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('follower');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['follow_date','DESC']);

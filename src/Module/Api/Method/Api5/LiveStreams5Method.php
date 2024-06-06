@@ -59,7 +59,7 @@ final class LiveStreams5Method
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('live_stream');
         $browse->set_sort('name', 'ASC');
 

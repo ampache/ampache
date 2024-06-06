@@ -81,7 +81,7 @@ final class BrowseMethod
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         if ($object_type === 'root') {
             // catalog root
             $output_type  = 'catalog';

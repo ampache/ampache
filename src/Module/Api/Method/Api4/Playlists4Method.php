@@ -61,7 +61,7 @@ final class Playlists4Method
             ? (bool)($input['show_dupes'])
             : (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === false;
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         if ($hide === false) {
             $browse->set_type('playlist_search');
         } else {

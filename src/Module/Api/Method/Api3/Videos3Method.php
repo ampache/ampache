@@ -42,8 +42,7 @@ final class Videos3Method
      */
     public static function videos(array $input, User $user): void
     {
-        unset($user);
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('video');
         $browse->set_sort('title', 'ASC');
 
