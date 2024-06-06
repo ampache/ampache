@@ -3851,6 +3851,11 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
+			message: "#^Parameter \\#1 \\$user of static method Ampache\\\\Module\\\\Api\\\\Api\\:\\:getBrowse\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
+			count: 1
+			path: src/Module/Api/Subsonic_Api.php
+
+		-
 			message: "#^Cannot cast array\\<int, string\\>\\|string\\|null to string\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
@@ -4884,11 +4889,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/PrivateMessage/AddMessageAction.php
 
 		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
@@ -14324,4 +14324,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
-
