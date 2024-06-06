@@ -141,7 +141,7 @@ final class SmartplaylistQuery implements QueryInterface
                 $filter_sql = " `search`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'playlist_open':
-                $filter_sql = "  (`search`.`type` = 'public' OR `search`.`user`=" . (int)$value . ") AND ";
+                $filter_sql = " (`search`.`type` = 'public' OR `search`.`user`=" . (int)$value . ") AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `search`.`user` = " . (int)$value . " AND ";

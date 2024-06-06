@@ -68,7 +68,7 @@ if (!$currentType) {
 }
 
 // make sure the type is set
-$data = array_merge(array($currentType), $data);
+$data = array_merge(array('type' => $currentType), $data);
 
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">

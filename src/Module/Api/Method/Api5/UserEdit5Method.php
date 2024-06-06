@@ -30,7 +30,6 @@ use Ampache\Module\Api\Api;
 
 /**
  * Class UserUpdateMethod
- * @package Lib\ApiMethods
  */
 final class UserEdit5Method
 {
