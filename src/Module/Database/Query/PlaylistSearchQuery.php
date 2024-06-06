@@ -67,7 +67,7 @@ final class PlaylistSearchQuery implements QueryInterface
     protected $select = "`playlist`.`id`";
 
     /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username` FROM `search`) AS `playlist` ";
+    protected $base = "SELECT %%SELECT%% FROM (SELECT `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'playlist' AS `object_type` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name`, `user`, `type`, `date`, `last_update`, `last_duration`, `username`, 'search' AS `object_type` FROM `search`) AS `playlist` ";
 
     /**
      * get_select
@@ -193,11 +193,11 @@ final class PlaylistSearchQuery implements QueryInterface
                 break;
             case 'rating':
                 $sql = "`rating`.`rating` $order, `rating`.`date`";
-                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "'playlist'", "`rating`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
-                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "'playlist'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';
