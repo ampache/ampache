@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\UserRepositoryInterface;
 
