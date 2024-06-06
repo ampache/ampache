@@ -55,7 +55,7 @@ final class UserPlaylistsMethod
      */
     public static function user_playlists(array $input, User $user): bool
     {
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('playlist');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);

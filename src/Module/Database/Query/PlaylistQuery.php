@@ -139,7 +139,7 @@ final class PlaylistQuery implements QueryInterface
                 $filter_sql = " `playlist`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
             case 'playlist_open':
-                $filter_sql = "  (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . ") AND ";
+                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . ") AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";

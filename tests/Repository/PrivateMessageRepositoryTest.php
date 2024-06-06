@@ -203,14 +203,14 @@ class PrivateMessageRepositoryTest extends TestCase
     {
         $recipient = $this->createMock(User::class);
 
-        $subject     = 'some-subject';
-        $message     = 'some-message';
-        $recipientId = 666;
-        $insertedId  = 42;
+        $subject    = 'some-subject';
+        $message    = 'some-message';
+        $from_user  = 666;
+        $insertedId = 42;
 
         $recipient->expects(static::once())
             ->method('getId')
-            ->willReturn($recipientId);
+            ->willReturn($from_user);
 
         $this->connection->expects(static::once())
             ->method('query')
@@ -219,8 +219,8 @@ class PrivateMessageRepositoryTest extends TestCase
                 [
                     $subject,
                     $message,
-                    null,
-                    $recipientId
+                    $from_user,
+                    0,
                 ]
             );
         $this->connection->expects(static::once())
@@ -238,19 +238,19 @@ class PrivateMessageRepositoryTest extends TestCase
         $recipient = $this->createMock(User::class);
         $sender    = $this->createMock(User::class);
 
-        $subject     = 'some-subject';
-        $message     = 'some-message';
-        $recipientId = 666;
-        $insertedId  = 42;
-        $senderId    = 123;
+        $subject    = 'some-subject';
+        $message    = 'some-message';
+        $from_user  = 666;
+        $insertedId = 42;
+        $to_user    = 123;
 
         $recipient->expects(static::once())
             ->method('getId')
-            ->willReturn($recipientId);
+            ->willReturn($from_user);
 
         $sender->expects(static::once())
             ->method('getId')
-            ->willReturn($senderId);
+            ->willReturn($to_user);
 
         $this->connection->expects(static::once())
             ->method('query')
@@ -259,8 +259,8 @@ class PrivateMessageRepositoryTest extends TestCase
                 [
                     $subject,
                     $message,
-                    $senderId,
-                    $recipientId
+                    $from_user,
+                    $to_user,
                 ]
             );
         $this->connection->expects(static::once())

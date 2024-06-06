@@ -17,6 +17,7 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Ensure `catalog` is available on media browses
 * Add many missing database columns to browse sorts and filters on all browses
 * Show ratings on smartplaylist objects in the WebUI
+* Add a permalink in the search form to allow people to share or bookmark a search
 * Database 600073
   * Add indexes to `object_count`
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
@@ -26,6 +27,8 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * Extract the Query class into individual classes
 * Album browse `artist` was only selecting `album_artist`
+* Check a session exists bore trying to insert it
+* Check theme with glob instead of reading file paths using opendir
 * Subsonic
   * Convert getPlaylists process to a browse
 
@@ -49,9 +52,14 @@ This release has made greater use of browses reducing reliance on customizing mi
 * Stream::delete_now_playing query didn't work
 * Transcode format checks were overwriting `bitrate` and `format` parameters
 * Playlist::get_media_count() was ignoring other media types
+* Don't show an update notification when the latest version is missing or matches
+* Chek for valid numeric numbers on tags for rating during import
+* Subsonic
+  * Chat messages couldn't be added to the public chat
 * CLI
   * Check catalog path is readable on updateCatalog actions
   * Don't try to clean a file if it wasn't valid media
+  * Runtime error when importing new genre tags
 
 ## API 6.5.0
 
@@ -98,7 +106,10 @@ This release has made greater use of browses reducing reliance on customizing mi
 
 * ALL
   * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
+  * Rating and flag data for smartlists was using incorrect id
   * playlist_edit: track insert broken by removing table constraint
+  * playlist_edit: workaround sending owner username instead of ID
+  * playlist_add_song: When using `unique_playlist` don't grab the whole playlist
 * API6
   * list: sorting was by `id` instead of `name`
   * browse: sorting was by `id` instead of `name`

@@ -32,9 +32,15 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
+
+// POST = clicked on Search, REQUEST = coming from a link
+$data = !empty($_POST)
+    ? $_POST
+    : $_REQUEST;
+
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = (string)AmpConfig::get('web_path', '');
-$limit           = $_REQUEST['limit'] ?? 0;
+$limit           = $data['limit'] ?? 0;
 $limit1          = ($limit == 1) ? 'selected="selected"' : '';
 $limit5          = ($limit == 5) ? 'selected="selected"' : '';
 $limit10         = ($limit == 10) ? 'selected="selected"' : '';
@@ -43,7 +49,7 @@ $limit50         = ($limit == 50) ? 'selected="selected"' : '';
 $limit100        = ($limit == 100) ? 'selected="selected"' : '';
 $limit250        = ($limit == 250) ? 'selected="selected"' : '';
 $limit500        = ($limit == 500) ? 'selected="selected"' : '';
-$random          = $_REQUEST['random'] ?? 0;
+$random          = $data['random'] ?? 0;
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
@@ -56,9 +62,14 @@ $currentType = (isset($searchType))
 $currentType = (in_array($currentType, Search::VALID_TYPES))
     ? $currentType
     : null;
+
 if (!$currentType) {
     header("Location: " . $web_path . '/search.php?type=song');
 }
+
+// make sure the type is set
+$data = array_merge(array('type' => $currentType), $data);
+
 Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <form id="search" name="search" method="post" action="<?php echo $web_path; ?>/search.php?type=<?php echo $currentType; ?>" enctype="multipart/form-data" style="Display:inline">
 
@@ -107,7 +118,9 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
 <?php require Ui::find_template('show_rules.inc.php'); ?>
 
 <div class="formValidation">
-    <a href="<?php echo $web_path . '/search.php?type=' . $currentType . '&' . http_build_query($_POST); ?>" target=_blank><?php echo T_('Permalink'); ?></a>
+<?php if (isset($data['action']) && $data['action'] === 'search') { ?>
+    <a href="<?php echo $web_path . '/search.php?' . http_build_query($data); ?>" target=_blank><?php echo T_('Permalink'); ?></a>
+<?php } ?>
     <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
 <?php if ($currentType == 'song' && Access::check('interface', 25)) { ?>
     <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;

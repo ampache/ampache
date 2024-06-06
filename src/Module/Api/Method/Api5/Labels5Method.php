@@ -59,7 +59,7 @@ final class Labels5Method
             return false;
         }
 
-        $browse = Api::getBrowse();
+        $browse = Api::getBrowse($user);
         $browse->set_type('label');
         $browse->set_sort('name', 'ASC');
 
