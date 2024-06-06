@@ -709,7 +709,7 @@ class Query
      * set_user_id
      * @param int $user_id
      */
-    public function set_catalog($user_id): void
+    public function set_user_id($user_id): void
     {
         $this->user_id = $user_id;
     }
