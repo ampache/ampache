@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
