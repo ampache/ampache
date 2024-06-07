@@ -34,6 +34,7 @@ final class PersonalVideoQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'location',
@@ -47,7 +48,9 @@ final class PersonalVideoQuery implements QueryInterface
         'total_skip',
         'rand',
         'rating',
-        'user_flag'
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */

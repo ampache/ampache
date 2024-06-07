@@ -79,7 +79,7 @@ class Browse extends Query
         'tvshow_season',
         'user',
         'video',
-        'wanted'
+        'wanted',
     );
 
     /**

@@ -38,7 +38,7 @@ final class BroadcastQuery implements QueryInterface
         'name',
         'user',
         'started',
-        'listeners'
+        'listeners',
     );
 
     /** @var string */
@@ -108,6 +108,7 @@ final class BroadcastQuery implements QueryInterface
             case 'title':
                 $sql = "`broadcast`.`name`";
                 break;
+            case 'id':
             case 'user':
             case 'started':
             case 'listeners':

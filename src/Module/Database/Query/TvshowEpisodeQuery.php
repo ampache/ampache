@@ -34,6 +34,7 @@ final class TvshowEpisodeQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'rand',
         'episode',
         'season',
@@ -48,7 +49,9 @@ final class TvshowEpisodeQuery implements QueryInterface
         'total_count',
         'total_skip',
         'rating',
-        'user_flag'
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */

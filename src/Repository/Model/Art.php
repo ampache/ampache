@@ -58,7 +58,7 @@ class Art extends database_object
         'jpeg',
         'jpg',
         'png',
-        'webp'
+        'webp',
     );
 
     /**

@@ -37,7 +37,7 @@ final class PvmsgQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'to_user',
-        'user'
+        'user',
     );
 
     /** @var string[] $sorts */
@@ -45,7 +45,7 @@ final class PvmsgQuery implements QueryInterface
         'subject',
         'to_user',
         'creation_date',
-        'is_read'
+        'is_read',
     );
 
     /** @var string */
@@ -144,6 +144,7 @@ final class PvmsgQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'id':
             case 'subject':
             case 'to_user':
             case 'creation_date':

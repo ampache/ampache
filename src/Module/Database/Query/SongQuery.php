@@ -57,11 +57,12 @@ final class SongQuery implements QueryInterface
         'unplayed',
         'update_gt',
         'update_lt',
-        'user_catalog'
+        'user_catalog',
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'catalog',
@@ -79,7 +80,9 @@ final class SongQuery implements QueryInterface
         'artist',
         'rand',
         'rating',
-        'user_flag'
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -250,6 +253,7 @@ final class SongQuery implements QueryInterface
                 $sql = "`song`.`title`";
                 break;
             case 'catalog':
+            case 'id':
             case 'year':
             case 'track':
             case 'time':
@@ -280,8 +284,14 @@ final class SongQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'object_count':
                 $sql = "count(`object_count`.`object_id`)";

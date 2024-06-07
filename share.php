@@ -63,6 +63,6 @@ if (empty($action) || $action == 'stream' || $action == 'download') {
             CleanAction::REQUEST_KEY => CleanAction::class,
             ExternalShareAction::REQUEST_KEY => ExternalShareAction::class,
         ],
-        ''
+        '',
     );
 }

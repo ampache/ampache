@@ -40,7 +40,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     private const TAG_ALBUM_ART_PRIORITY = array(
         'ID3 Front Cover',
         'ID3 Illustration',
-        'ID3 Media'
+        'ID3 Media',
     );
 
     private const TAG_ARTIST_ART_PRIORITY = array(
@@ -50,7 +50,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         'ID3 Conductor',
         'ID3 Composer',
         'ID3 Lyricist',
-        'ID3 Other'
+        'ID3 Other',
     );
 
     private LoggerInterface $logger;
