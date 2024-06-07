@@ -1267,6 +1267,7 @@ class Query
                 break;
             case 'addition_time':
             case 'catalog':
+            case 'id':
             case 'total_count':
             case 'total_skip':
             case 'update_time':
@@ -1291,6 +1292,11 @@ class Query
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
                 $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order `rating`.`rating` $order, `rating`.`date`";
+                $this->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`video`.`id`", "`user_flag`.`object_type`", "'video'", "`user_flag`.`user`", (string)$this->user_id, 100);
+                $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
                 break;
         }
 

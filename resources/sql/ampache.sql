@@ -18,7 +18,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: May 03, 2024 at 01:47 AM
+-- Generation Time: Jun 06, 2024 at 05:50 AM
 -- Server version: 10.11.6-MariaDB-0+deb12u1
 -- PHP Version: 8.2.18
 
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `album_disk` (
   KEY `id_index` (`id`),
   KEY `album_id_type_index` (`album_id`,`disk`),
   KEY `id_disk_index` (`id`,`disk`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `album_map` (
   KEY `album_id_type_index` (`album_id`,`object_type`),
   KEY `object_id_type_index` (`object_id`,`object_type`),
   KEY `object_type_IDX` (`object_type`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `artist_map` (
   KEY `artist_id_index` (`artist_id`),
   KEY `artist_id_type_index` (`artist_id`,`object_type`),
   KEY `object_id_type_index` (`object_id`,`object_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -742,7 +742,9 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_count_type_IDX` (`object_type`,`object_id`) USING BTREE,
   KEY `object_count_date_IDX` (`date`,`count_type`) USING BTREE,
   KEY `object_count_user_IDX` (`object_type`,`object_id`,`user`,`count_type`) USING BTREE,
-  KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE
+  KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
+  KEY `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`) USING BTREE,
+  KEY `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -793,6 +795,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `last_duration` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `username` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `last_count` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `type` (`type`)
@@ -1375,11 +1378,12 @@ CREATE TABLE IF NOT EXISTS `tag_merge` (
 DROP TABLE IF EXISTS `tmp_browse`;
 CREATE TABLE IF NOT EXISTS `tmp_browse` (
   `id` int(13) NOT NULL AUTO_INCREMENT,
-  `sid` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `sid` varchar(128) NOT NULL,
   `data` longtext NOT NULL,
-  `object_data` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`sid`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `object_data` longtext DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tmp_browse_id_sid_IDX` (`sid`,`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1479,7 +1483,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600070'),
+('db_version', '600073'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
