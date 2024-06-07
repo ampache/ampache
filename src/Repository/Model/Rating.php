@@ -53,7 +53,7 @@ class Rating extends database_object
         'tvshow',
         'tvshow_season',
         'podcast',
-        'podcast_episode'
+        'podcast_episode',
     );
 
     // Public variables

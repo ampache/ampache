@@ -58,6 +58,7 @@ final class AlbumQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'album_artist',
         'artist',
         'barcode',
@@ -80,7 +81,8 @@ final class AlbumQuery implements QueryInterface
         'version',
         'year',
         'rating',
-        'user_flag'
+        'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -275,6 +277,11 @@ final class AlbumQuery implements QueryInterface
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album`.`id`", "`user_flag`.`object_type`", "'album'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album`.`id`", "`rating`.`object_type`", "'album'", "`rating`.`user`", (string)$query->user_id, 100);
+                break;
             case 'original_year':
                 $sql = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time`";
                 break;
@@ -283,6 +290,7 @@ final class AlbumQuery implements QueryInterface
                 break;
             case 'catalog':
             case 'disk_count':
+            case 'id':
             case 'song_count':
             case 'total_count':
             case 'release_type':

@@ -42,7 +42,7 @@ final class TvshowQuery implements QueryInterface
         'not_like',
         'year_eq',
         'year_gt',
-        'year_lt'
+        'year_lt',
     );
 
     /** @var string[] $sorts */
@@ -55,7 +55,7 @@ final class TvshowQuery implements QueryInterface
         'length',
         'codec',
         'rating',
-        'user_flag'
+        'user_flag',
     );
 
     /** @var string */

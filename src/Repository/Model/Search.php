@@ -64,7 +64,7 @@ class Search extends playlist_object
         'podcast_episode',
         'tag',
         'user',
-        'video'
+        'video',
     );
 
     // override playlist_object

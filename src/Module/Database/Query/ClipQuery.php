@@ -34,6 +34,7 @@ final class ClipQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'artist',
@@ -48,7 +49,8 @@ final class ClipQuery implements QueryInterface
         'total_skip',
         'rand',
         'rating',
-        'user_flag'
+        'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */

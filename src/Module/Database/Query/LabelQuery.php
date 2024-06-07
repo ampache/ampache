@@ -44,6 +44,7 @@ final class LabelQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'category',
@@ -51,7 +52,10 @@ final class LabelQuery implements QueryInterface
         'creation_date',
         'mbid',
         'country',
-        'active'
+        'active',
+        'rating',
+        'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -153,12 +157,26 @@ final class LabelQuery implements QueryInterface
                 $sql = "`label`.`name`";
                 break;
             case 'category':
+            case 'id':
             case 'user':
             case 'creation_date':
             case 'mbid':
             case 'country':
             case 'active':
                 $sql = "`label`.`$field`";
+                break;
+            case 'rating':
+                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag':
+                $sql = "`user_flag`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';

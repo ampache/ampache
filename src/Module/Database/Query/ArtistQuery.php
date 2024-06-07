@@ -58,6 +58,7 @@ final class ArtistQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'placeformed',
@@ -68,7 +69,8 @@ final class ArtistQuery implements QueryInterface
         'rand',
         'rating',
         'time',
-        'user_flag'
+        'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -256,6 +258,7 @@ final class ArtistQuery implements QueryInterface
             case 'title':
                 $sql = "`artist`.`name`";
                 break;
+            case 'id':
             case 'placeformed':
             case 'yearformed':
             case 'song_count':
@@ -271,6 +274,11 @@ final class ArtistQuery implements QueryInterface
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';

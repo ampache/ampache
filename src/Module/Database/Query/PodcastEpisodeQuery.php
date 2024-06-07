@@ -52,6 +52,7 @@ final class PodcastEpisodeQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'podcast',
         'title',
         'name',
@@ -67,6 +68,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'total_skip',
         'rating',
         'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -198,6 +200,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 break;
             case 'catalog':
             case 'category':
+            case 'id':
             case 'author':
             case 'time':
             case 'pubdate':
@@ -212,6 +215,11 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'user_flag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';

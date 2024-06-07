@@ -48,6 +48,7 @@ final class LiveStreamQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'catalog',
@@ -56,6 +57,9 @@ final class LiveStreamQuery implements QueryInterface
         'url',
         'genre',
         'catalog',
+        'rating',
+        'user_flag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -170,10 +174,24 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'catalog':
             case 'codec':
+            case 'id':
             case 'site_url':
             case 'url':
             case 'genre':
                 $sql = "`live_stream`.`$field`";
+                break;
+            case 'rating':
+                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag':
+                $sql = "`user_flag`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';
