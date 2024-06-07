@@ -610,7 +610,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         'Non-static method getid3',
         'Assigning the return value of new by reference is deprecated',
         // The XML-RPC lib is broken (kinda)
-        'used as offset, casting to integer'
+        'used as offset, casting to integer',
     );
 
     foreach ($ignores as $ignore) {

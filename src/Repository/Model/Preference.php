@@ -225,7 +225,7 @@ class Preference extends database_object
         'tvdb_api_key',
         'yourls_api_key',
         'yourls_domain',
-        'yourls_use_idn'
+        'yourls_use_idn',
     );
 
     /**

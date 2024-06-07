@@ -43,7 +43,7 @@ class Random
         'song',
         'album',
         'artist',
-        'video'
+        'video',
     );
 
     /**

@@ -50,6 +50,7 @@ final class PlaylistSearchQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'rand',
         'date',
         'last_count',
@@ -60,7 +61,9 @@ final class PlaylistSearchQuery implements QueryInterface
         'type',
         'user',
         'username',
-        'user_flag'
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -184,6 +187,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 $sql = "`playlist`.`name`";
                 break;
             case 'date':
+            case 'id':
             case 'last_count':
             case 'last_update':
             case 'type':
@@ -196,8 +200,14 @@ final class PlaylistSearchQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';

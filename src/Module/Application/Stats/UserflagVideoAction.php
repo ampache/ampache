@@ -85,7 +85,7 @@ final class UserflagVideoAction implements ApplicationActionInterface
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');
-            $browse->set_sort('userflag', 'DESC');
+            $browse->set_sort('user_flag', 'DESC');
             $browse->show_objects($objects);
             $browse->store();
         }
