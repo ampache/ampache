@@ -43,7 +43,7 @@ final class ShareQuery implements QueryInterface
         'max_counter',
         'allow_stream',
         'allow_download',
-        'expire'
+        'expire',
     );
 
     /** @var string */
@@ -112,6 +112,7 @@ final class ShareQuery implements QueryInterface
             case 'object':
                 $sql = "`share`.`object_type`, `share`.`object.id`";
                 break;
+            case 'id':
             case 'user':
             case 'object_type':
             case 'creation_date':

@@ -25,20 +25,21 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
 {
     public const FILTERS = array(
-        'to_user',
-        'user'
+        'follow_user',
+        'user',
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
-        'user',
         'follow_user',
-        'follow_date'
+        'follow_date',
+        'user',
     );
 
     /** @var string */
@@ -89,7 +90,15 @@ final class FollowerQuery implements QueryInterface
      */
     public function get_sql_filter($query, $filter, $value): string
     {
-        return '';
+        $filter_sql = '';
+        switch ($filter) {
+            case 'follow_user':
+            case 'user':
+                $filter_sql = " `user_follower`.`$filter` = '" . (int)$value . "' AND ";
+                break;
+        }
+
+        return $filter_sql;
     }
 
     /**

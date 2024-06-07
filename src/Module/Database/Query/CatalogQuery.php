@@ -44,11 +44,12 @@ final class CatalogQuery implements QueryInterface
         'enabled',
         'gather_type',
         'gather_types',
-        'user'
+        'user',
     );
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'title',
         'name',
         'catalog_type',
@@ -59,6 +60,10 @@ final class CatalogQuery implements QueryInterface
         'rename_pattern',
         'sort_pattern',
         'gather_types',
+        'rating',
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -172,6 +177,7 @@ final class CatalogQuery implements QueryInterface
                 $sql = "`catalog`.`name`";
                 break;
             case 'catalog_type':
+            case 'id':
             case 'last_update':
             case 'last_clean':
             case 'last_add':
@@ -180,6 +186,20 @@ final class CatalogQuery implements QueryInterface
             case 'sort_pattern':
             case 'gather_types':
                 $sql = "`catalog`.`$field`";
+                break;
+            case 'rating':
+                $sql = "`rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag':
+            case 'userflag':
+                $sql = "`user_flag`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             default:
                 $sql = '';

@@ -40,7 +40,7 @@ final class WantedQuery implements QueryInterface
         'artist',
         'title',
         'name',
-        'year'
+        'year',
     );
 
     /** @var string */
@@ -110,6 +110,7 @@ final class WantedQuery implements QueryInterface
             case 'title':
                 $sql = "`wanted`.`name`";
                 break;
+            case 'id':
             case 'username':
             case 'user':
             case 'accepted':

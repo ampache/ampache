@@ -58,6 +58,7 @@ final class AlbumDiskQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = array(
+        'id',
         'album_id',
         'disk',
         'disk_count',
@@ -83,7 +84,9 @@ final class AlbumDiskQuery implements QueryInterface
         'version',
         'year',
         'rating',
-        'user_flag'
+        'user_flag',
+        'userflag',
+        'user_flag_rating',
     );
 
     /** @var string */
@@ -280,8 +283,14 @@ final class AlbumDiskQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                break;
+            case 'user_flag_rating':
+                $sql = "`user_flag`.`date` $order, `rating`.`rating` $order, `rating`.`date`";
+                $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
+                $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'original_year':
                 $sql   = "IFNULL(`album`.`original_year`, `album`.`year`) $order, `album`.`addition_time` $order, `album`.`name`, `album_disk`.`disk`";
@@ -309,6 +318,10 @@ final class AlbumDiskQuery implements QueryInterface
             case 'subtitle':
             case 'version':
                 $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
+                $order = '';
+                break;
+            case 'id':
+                $sql   = "`album_disk`.`id`";
                 $order = '';
                 break;
             default:

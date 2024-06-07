@@ -33,7 +33,7 @@ final class TvshowSeasonQuery implements QueryInterface
     public const FILTERS = array(
         'season_eq',
         'season_gt',
-        'season_lt'
+        'season_lt',
     );
 
     /** @var string[] $sorts */
@@ -47,7 +47,7 @@ final class TvshowSeasonQuery implements QueryInterface
         'length',
         'codec',
         'rating',
-        'user_flag'
+        'user_flag',
     );
 
     /** @var string */
