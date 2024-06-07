@@ -62,6 +62,7 @@ final class CatalogQuery implements QueryInterface
         'gather_types',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -191,6 +192,7 @@ final class CatalogQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`catalog`.`id`", "`rating`.`object_type`", "'catalog'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`catalog`.`id`", "`user_flag`.`object_type`", "'catalog'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

@@ -85,6 +85,7 @@ final class AlbumDiskQuery implements QueryInterface
         'year',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -282,6 +283,7 @@ final class AlbumDiskQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`album_disk`.`id`", "`rating`.`object_type`", "'album_disk'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`album_disk`.`id`", "`user_flag`.`object_type`", "'album_disk'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

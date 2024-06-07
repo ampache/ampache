@@ -70,6 +70,7 @@ final class ArtistQuery implements QueryInterface
         'rating',
         'time',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -272,6 +273,7 @@ final class ArtistQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`artist`.`id`", "`rating`.`object_type`", "'artist'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`artist`.`id`", "`user_flag`.`object_type`", "'artist'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

@@ -68,6 +68,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'total_skip',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -213,6 +214,7 @@ final class PodcastEpisodeQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`podcast_episode`.`id`", "`rating`.`object_type`", "'podcast_episode'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`podcast_episode`.`id`", "`user_flag`.`object_type`", "'podcast_episode'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

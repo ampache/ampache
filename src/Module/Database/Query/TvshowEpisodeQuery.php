@@ -50,6 +50,7 @@ final class TvshowEpisodeQuery implements QueryInterface
         'total_skip',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 

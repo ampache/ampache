@@ -77,7 +77,7 @@ final class UserflagSongAction implements ApplicationActionInterface
         $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('song');
-        $browse->set_sort('userflag', 'DESC');
+        $browse->set_sort('user_flag', 'DESC');
         $browse->show_objects($objects);
         $browse->store();
 

@@ -59,6 +59,7 @@ final class LiveStreamQuery implements QueryInterface
         'catalog',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -185,6 +186,7 @@ final class LiveStreamQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`live_stream`.`id`", "`rating`.`object_type`", "'live_stream'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`live_stream`.`id`", "`user_flag`.`object_type`", "'live_stream'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

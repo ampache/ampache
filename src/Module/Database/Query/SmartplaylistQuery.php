@@ -62,6 +62,7 @@ final class SmartplaylistQuery implements QueryInterface
         'user',
         'username',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -195,6 +196,7 @@ final class SmartplaylistQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`search`.`id`", "`rating`.`object_type`", "'search'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`search`.`id`", "`user_flag`.`object_type`", "'search'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

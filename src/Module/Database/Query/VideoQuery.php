@@ -68,6 +68,7 @@ final class VideoQuery implements QueryInterface
         'rand',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 

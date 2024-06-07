@@ -55,6 +55,7 @@ final class LabelQuery implements QueryInterface
         'active',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -170,6 +171,7 @@ final class LabelQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`label`.`id`", "`rating`.`object_type`", "'label'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`label`.`id`", "`user_flag`.`object_type`", "'label'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

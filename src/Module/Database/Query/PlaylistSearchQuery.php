@@ -62,6 +62,7 @@ final class PlaylistSearchQuery implements QueryInterface
         'user',
         'username',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -199,6 +200,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`playlist`.`int_id`", "`rating`.`object_type`", "`playlist`.`object_type`", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`playlist`.`int_id`", "`user_flag`.`object_type`", "`playlist`.`object_type`", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;

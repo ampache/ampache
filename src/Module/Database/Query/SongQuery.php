@@ -81,6 +81,7 @@ final class SongQuery implements QueryInterface
         'rand',
         'rating',
         'user_flag',
+        'userflag',
         'user_flag_rating',
     );
 
@@ -283,6 +284,7 @@ final class SongQuery implements QueryInterface
                 $query->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`song`.`id`", "`rating`.`object_type`", "'song'", "`rating`.`user`", (string)$query->user_id, 100);
                 break;
             case 'user_flag':
+            case 'userflag':
                 $sql = "`user_flag`.`date`";
                 $query->set_join_and_and('LEFT', "`user_flag`", "`user_flag`.`object_id`", "`song`.`id`", "`user_flag`.`object_type`", "'song'", "`user_flag`.`user`", (string)$query->user_id, 100);
                 break;
