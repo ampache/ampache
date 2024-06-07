@@ -335,7 +335,7 @@ This returns albums based on the provided search filters
 | 'update'  | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset'  | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'   | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'    | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'    | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |           |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'    | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |           |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -401,7 +401,7 @@ This returns the songs of a specified album
 | 'filter' | string  | UID of Album, returns song JSON                            |       NO |
 | 'offset' | integer | Return results starting from this index position           |      YES |
 | 'limit'  | integer | Maximum number of results to return                        |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated |      YES |
 |          |         | comma string pairs (e.g. 'filter1,value1;filter2,value2')  |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order') |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')            |          |
@@ -434,7 +434,7 @@ This takes a collection of inputs and returns artist objects.
 | 'album_artist' | boolean    | `0`, `1` (if true filter for album artists only)                                                   |      YES |
 | 'offset'       | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'        | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'         | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'         | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |                |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'         | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |                |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -502,7 +502,7 @@ This returns the albums of an artist
 | 'album_artist' | boolean | `0`, `1` (if true filter for album artists only)                              |      YES |
 | 'offset'       | integer | Return results starting from this index position                              |      YES |
 | 'limit'        | integer | Maximum number of results to return                                           |      YES |
-| 'cond'         | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'         | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |                |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'         | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |                |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -531,7 +531,7 @@ This returns the songs of the specified artist
 | 'top50'  | boolean | `0`, `1` (if true filter to the artist top 50)                                |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -693,7 +693,7 @@ Return children of a parent object in a folder traversal/browse style. If you do
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -734,7 +734,7 @@ This searches the catalogs and returns... catalogs
 | 'filter' | string  | `music`, `clip`, `tvshow`, `movie`, `personal_video`, `podcast` (Catalog type) |      YES |
 | 'offset' | integer | Return results starting from this index position                               |      YES |
 | 'limit'  | integer | Maximum number of results to return                                            |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs  |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs  |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                         |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                     |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                |          |
@@ -1030,7 +1030,7 @@ This gets the followers for the requested username
 | 'username' | string  | Username of the user to get followers list                                    |       NO |
 | 'offset'   | integer | Return results starting from this index position                              |      YES |
 | 'limit'    | integer | Maximum number of results to return                                           |      YES |
-| 'cond'     | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'     | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |            |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'     | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |            |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1104,7 +1104,7 @@ This returns the genres (Tags) based on the specified filter
 | 'exact'  | boolean | `0`, `1` (if true filter is exact `=` rather than fuzzy `LIKE`)               |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1161,7 +1161,7 @@ This returns the albums associated with the genre in question
 | 'filter' | string  | UID of genre, returns album JSON                                              |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1189,7 +1189,7 @@ This returns the artists associated with the genre in question as defined by the
 | 'filter' | string  | UID of genre, returns artist JSON                                             |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1217,7 +1217,7 @@ returns the songs for this genre
 | 'filter' | string  | UID of genre, returns song JSON                                               |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1293,7 +1293,7 @@ This takes a collection of inputs and returns ID + name for the object type
 | 'include'     | boolean    | `0`, `1` (include songs in a playlist or episodes in a podcast)                                    |      YES |
 | 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'        | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1361,7 +1361,7 @@ This takes a collection of inputs and return ID's for the object type. Add 'incl
 | 'include'     | boolean    | `0`, `1` (include songs in a playlist or episodes in a podcast)                                    |      YES |
 | 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'        | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1407,7 +1407,7 @@ This returns labels based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1466,7 +1466,7 @@ This returns the artists for a label
 | 'filter' | string  | UID of label, returns artist JSON                                             |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1520,7 +1520,7 @@ This returns licenses based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    |                                                                                                    |      YES |
 | 'limit'  | integer    |                                                                                                    |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1573,7 +1573,7 @@ This returns the songs for a license
 | 'filter' | string  | UID of license, returns song JSON                                             |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -1608,7 +1608,7 @@ This takes a named array of objects and returning `id`, `name`, `prefix` and `ba
 | 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'        | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1640,7 +1640,7 @@ This returns live_streams based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -1832,7 +1832,7 @@ This returns playlists based on the specified filter
 | 'update'      | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset'      | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'       | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'        | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'        | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |               |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'        | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |               |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -2094,7 +2094,7 @@ Get information about podcasts
 | 'include' | string  | `episodes` (include podcast_episodes in the response)                         |      YES |
 | 'offset'  | integer | Return results starting from this index position                              |      YES |
 | 'limit'   | integer | Maximum number of results to return                                           |      YES |
-| 'cond'    | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'    | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |           |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'    | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |           |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -2237,7 +2237,7 @@ This returns the episodes for a podcast
 | 'filter' | string  | UID of podcast                                                                |       NO |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -2598,7 +2598,7 @@ This searches the shares and returns... shares
 | 'exact'  | boolean | `0`, `1` boolean to match the exact filter string                             |      YES |
 | 'offset' | integer | Return results starting from this index position                              |      YES |
 | 'limit'  | integer | Maximum number of results to return                                           |      YES |
-| 'cond'   | string  | Apply additional filters to the browse using ';' separated comma string pairs |      YES |
+| 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs |      YES |
 |          |         | (e.g. 'filter1,value1;filter2,value2')                                        |          |
 | 'sort'   | string  | Sort name or comma-separated key pair. (e.g. 'name,order')                    |      YES |
 |          |         | Default order 'ASC' (e.g. 'name,ASC' == 'name')                               |          |
@@ -2740,7 +2740,7 @@ Returns songs based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -3228,7 +3228,7 @@ This returns playlists based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
@@ -3281,7 +3281,7 @@ This returns smartlists based on the specified filter
 | 'update' | set_filter | ISO 8601 Date Format (2020-09-16) Find objects with an 'update' time newer than the specified date |      YES |
 | 'offset' | integer    | Return results starting from this index position                                                   |      YES |
 | 'limit'  | integer    | Maximum number of results to return                                                                |      YES |
-| 'cond'   | string     | Apply additional filters to the browse using ';' separated comma string pairs                      |      YES |
+| 'cond'   | string     | Apply additional filters to the browse using `;` separated comma string pairs                      |      YES |
 |          |            | (e.g. 'filter1,value1;filter2,value2')                                                             |          |
 | 'sort'   | string     | Sort name or comma-separated key pair. (e.g. 'name,order')                                         |      YES |
 |          |            | Default order 'ASC' (e.g. 'name,ASC' == 'name')                                                    |          |
