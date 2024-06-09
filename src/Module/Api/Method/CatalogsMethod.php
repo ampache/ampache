@@ -44,15 +44,28 @@ final class CatalogsMethod
      *
      * Get information about catalogs this user is allowed to manage.
      *
-     * filter = (string) set $filter_type //optional
+     * filter = (string) set $filter_type 'music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast' //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function catalogs(array $input, User $user): bool
     {
-        // filter for specific catalog types
-        $filter  = (isset($input['filter']) && in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) ? $input['filter'] : '';
-        $results = $user->get_catalogs($filter);
+        $browse = Api::getBrowse($user);
+        $browse->set_type('catalog');
+        $browse->set_filter('user', $user->getId());
+        if (
+            isset($input['filter']) &&
+            in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))
+        ) {
+            // filter for specific catalog types
+            $browse->set_filter('gather_type', $input['filter']);
+        }
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('catalog', $input['api_format']);
 
@@ -62,12 +75,12 @@ final class CatalogsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::catalogs($results);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::catalogs($results, $user);
         }

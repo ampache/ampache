@@ -152,14 +152,16 @@ class Tmp_Playlist extends database_object
         $sql          = "SELECT `tmp_playlist_data`.`object_type`, `tmp_playlist_data`.`id`, `tmp_playlist_data`.`object_id` FROM `tmp_playlist_data` ";
         if (isset($_COOKIE[$session_name])) {
             // Select all objects for this session
+            $params = array($_COOKIE[$session_name]);
             $sql .= "LEFT JOIN `tmp_playlist` ON `tmp_playlist`.`id` = `tmp_playlist_data`.`tmp_playlist` WHERE `tmp_playlist`.`session` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, array($_COOKIE[$session_name]));
+            $db_results = Dba::read($sql, $params);
         } else {
             // try to guess
+            $params = array($this->id);
             $sql .= "WHERE `tmp_playlist` = ? ORDER BY `id`;";
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, $params);
         }
-        //debug_event(self::class, 'get_items ' . $sql, 5);
+        //debug_event(self::class, 'get_items ' . $sql . ' ' . print_r($params, true), 5);
 
         // Define the array
         $items = array();

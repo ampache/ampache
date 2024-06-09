@@ -59,13 +59,12 @@ final class LiveStreams5Method
             return false;
         }
 
-        $browse = Api::getBrowse();
-        $browse->reset_filters();
+        $browse = Api::getBrowse($user);
         $browse->set_type('live_stream');
         $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
         $results = $browse->get_objects();
         if (empty($results)) {
             Api5::empty('live_stream', $input['api_format']);

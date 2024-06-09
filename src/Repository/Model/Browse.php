@@ -54,6 +54,7 @@ class Browse extends Query
         'catalog',
         'clip',
         'democratic',
+        'follower',
         'label',
         'license',
         'live_stream',
@@ -62,6 +63,7 @@ class Browse extends Query
         'playlist',
         'playlist_localplay',
         'playlist_media',
+        'playlist_search',
         'podcast',
         'podcast_episode',
         'pvmsg',
@@ -77,7 +79,7 @@ class Browse extends Query
         'tvshow_season',
         'user',
         'video',
-        'wanted'
+        'wanted',
     );
 
     /**
@@ -105,6 +107,85 @@ class Browse extends Query
     public function getId(): int
     {
         return (int)($this->id ?? 0);
+    }
+
+    /**
+     * set_sort_order
+     *
+     * Try to clean up sorts into something valid before sending to the Query
+     * @param string $sort
+     * @param array<string> $default
+     */
+    public function set_sort_order($sort, $default): void
+    {
+        $sort      = array_map('trim', explode(',', $sort));
+        $sort_name = $sort[0] ?: $default[0];
+        $sort_type = $sort[1] ?? $default[1];
+        if (empty($sort_name) || empty($sort_type)) {
+            return;
+        }
+
+        $this->set_sort(strtolower($sort_name), strtoupper($sort_type));
+    }
+
+    /**
+     * set_conditions
+     *
+     * Apply additional filters to the Query using ';' separated comma string pairs
+     * e.g. 'filter1,value1;filter2,value2'
+     * @param string $cond
+     */
+    public function set_conditions($cond): void
+    {
+        foreach ((explode(';', (string)$cond)) as $condition) {
+            $filter = (explode(',', (string)$condition));
+            if (!empty($filter[0])) {
+                $this->set_filter(strtolower($filter[0]), ($filter[1] ?: null));
+            }
+        }
+    }
+
+    /**
+     * set_api_filter
+     *
+     * Do some value checks for api input before attempting to set the query filter
+     * @param string $filter
+     * @param int|string|bool|null $value
+     */
+    public function set_api_filter($filter, $value): void
+    {
+        if (!strlen((string)$value)) {
+            return;
+        }
+
+        switch ($filter) {
+            case 'add':
+                // Check for a range, if no range default to gt
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $this->set_filter('add_lt', strtotime((string)$elements['1']));
+                    $this->set_filter('add_gt', strtotime((string)$elements['0']));
+                } else {
+                    $this->set_filter('add_gt', strtotime((string)$value));
+                }
+                break;
+            case 'update':
+                // Check for a range, if no range default to gt
+                if (strpos((string)$value, '/')) {
+                    $elements = explode('/', (string)$value);
+                    $this->set_filter('update_lt', strtotime((string)$elements['1']));
+                    $this->set_filter('update_gt', strtotime((string)$elements['0']));
+                } else {
+                    $this->set_filter('update_gt', strtotime((string)$value));
+                }
+                break;
+            case 'alpha_match':
+                $this->set_filter('alpha_match', $value);
+                break;
+            case 'exact_match':
+                $this->set_filter('exact_match', $value);
+                break;
+        }
     }
 
     /**
@@ -494,6 +575,10 @@ class Browse extends Query
      */
     public function set_type($type, $custom_base = ''): void
     {
+        if (empty($type)) {
+            return;
+        }
+
         if ($type === 'album_artist') {
             $this->set_type('artist', $custom_base);
             $this->set_album_artist(true);
@@ -694,6 +779,7 @@ class Browse extends Query
     {
         return make_bool($this->_state['use_alpha'] ?? false);
     }
+
     /**
      * Allow the current page to be save into the current session
      * @param bool $update_session

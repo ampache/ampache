@@ -328,6 +328,12 @@ final class Session implements SessionInterface
                 break;
         } // end switch on data type
 
+        if (Session::exists($type, $key)) {
+            debug_event(self::class, $type . ' session already exists.', 3);
+
+            return $key;
+        }
+
         $username = '';
         if (isset($data['username'])) {
             $username = $data['username'];

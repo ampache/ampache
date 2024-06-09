@@ -48,24 +48,28 @@ final class SongsMethod
      *
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add    = Api::set_filter(date) //optional
-     * update = Api::set_filter(date) //optional
+     * add    = $browse->set_api_filter(date) //optional
+     * update = $browse->set_api_filter(date) //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function songs(array $input, User $user): bool
     {
-        $browse = Api::getBrowse();
-        $browse->reset_filters();
+        $browse = Api::getBrowse($user);
         $browse->set_type('song');
-        $browse->set_sort('title', 'ASC');
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['title','ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
         // Filter out disabled songs
-        Api::set_filter('enabled', '1', $browse);
+        $browse->set_filter('enabled', 1);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
         $results = $browse->get_objects();
         if (empty($results)) {
@@ -77,12 +81,12 @@ final class SongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($results, $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user);
         }

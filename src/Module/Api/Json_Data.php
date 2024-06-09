@@ -43,7 +43,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -205,7 +204,7 @@ class Json_Data
      * This takes an array of object_ids and return JSON based on the type of object
      *
      * @param list<int> $objects Array of object_ids (Mixed string|int)
-     * @param string $type 'catalog'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
      * @return string  JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -347,7 +346,7 @@ class Json_Data
      * This takes an array of object_ids and return JSON based on the type of object
      *
      * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
      * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
@@ -356,6 +355,10 @@ class Json_Data
     {
         // here is where we call the object type
         switch ($type) {
+            case 'catalog':
+                /** @var string $results */
+                $results = self::catalogs($objects);
+                break;
             case 'song':
                 /** @var string $results */
                 $results = self::songs($objects, $user);
@@ -365,7 +368,9 @@ class Json_Data
                 /** @var string $results */
                 $results = self::albums($objects, $include_array, $user);
                 break;
+            case 'album_artist':
             case 'artist':
+            case 'song_artist':
                 $include_array = ($include) ? array('songs', 'albums') : array();
                 /** @var string $results */
                 $results = self::artists($objects, $include_array, $user);
@@ -804,6 +809,11 @@ class Json_Data
                     $album_artists[] = Artist::get_name_array_by_id($artist_id);
                 }
                 $objArray['artists'] = $album_artists;
+                $song_artists        = array();
+                foreach ($album->get_song_artists() as $artist_id) {
+                    $song_artists[] = Artist::get_name_array_by_id($artist_id);
+                }
+                $objArray['songartists'] = $song_artists;
             }
 
             // Handle includes
@@ -858,8 +868,6 @@ class Json_Data
         $output = array(
             "total_count" => count($objects)
         );
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
-        $playlist_names     = array();
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
@@ -873,21 +881,20 @@ class Json_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id), 'song', $user);
-                if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
+                if ($playlist->isNew()) {
                     continue;
                 }
                 $object_type    = 'search';
-                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
-                $object_type    = 'playlist';
-                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
-                $playitem_total = $playlist->get_media_count('song');
-                if ($hide_dupe_searches && $playlist->user == $user->getId()) {
-                    $playlist_names[] = $playlist->name;
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
                 }
+                $object_type    = 'playlist';
+                $playitem_total = $playlist->get_media_count('song');
             }
+            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
@@ -904,9 +911,9 @@ class Json_Data
             } else {
                 $items = (int)($playitem_total ?? 0);
             }
-            $rating      = new Rating($playlist_id, $object_type);
+            $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist_id, $object_type);
+            $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
             $JSON[] = [
@@ -1635,15 +1642,19 @@ class Json_Data
      *
      * This handles creating an JSON document for a user list
      *
-     * @param int[] $users User id list
+     * @param int[] $objects User id list
      * @param bool $encode return the array and don't json_encode the data
      * @param bool $object (whether to return as a named object array or regular array)
      * @return array|string JSON Object "label"
      */
-    public static function users($users, $encode = true, $object = true)
+    public static function users($objects, $encode = true, $object = true)
     {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
+
         $JSON = [];
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User($user_id);
             if ($user->isNew()) {
                 continue;

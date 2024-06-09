@@ -58,8 +58,8 @@ final class PlaylistEdit5Method
         if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $items = explode(',', (string)($input['items'] ?? ''));
-        $order = explode(',', (string)($input['tracks'] ?? ''));
+        $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
+        $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
         $playlist_edit = array();
@@ -79,6 +79,10 @@ final class PlaylistEdit5Method
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
+        if ((int)$owner === 0) {
+            $lookup = User::get_from_username($owner);
+            $owner  = $lookup->id ?? $playlist->user;
+        }
         // update name/type
         if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [

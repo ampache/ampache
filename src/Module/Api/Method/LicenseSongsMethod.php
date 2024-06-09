@@ -31,7 +31,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\SongRepositoryInterface;
 
 /**
  * Class LicenseSongsMethod
@@ -48,6 +47,10 @@ final class LicenseSongsMethod
      * This returns all songs attached to a license ID
      *
      * filter = (string) UID of license
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function license_songs(array $input, User $user): bool
     {
@@ -59,7 +62,17 @@ final class LicenseSongsMethod
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $results = static::getSongRepository()->getByLicense((int) scrub_in((string) $input['filter']));
+
+        $browse = Api::getBrowse($user);
+        $browse->set_type('song');
+
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
+        $browse->set_filter('license', (int)$input['filter']);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
@@ -69,19 +82,16 @@ final class LicenseSongsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
+                Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::songs($results, $user);
                 break;
             default:
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
+                Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::songs($results, $user);
         }
 
         return true;
-    }
-
-    private static function getSongRepository(): SongRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(SongRepositoryInterface::class);
     }
 }

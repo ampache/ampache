@@ -80,6 +80,10 @@ final class PlaylistEditMethod
         $name  = $input['name'] ?? $playlist->name;
         $type  = $input['type'] ?? $playlist->type;
         $owner = $input['owner'] ?? $playlist->user;
+        if ((int)$owner === 0) {
+            $lookup = User::get_from_username($owner);
+            $owner  = $lookup->id ?? $playlist->user;
+        }
         // update name/type
         if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
             $array = [

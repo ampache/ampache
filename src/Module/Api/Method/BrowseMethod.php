@@ -56,10 +56,12 @@ final class BrowseMethod
      * filter  = (string) object_id //optional
      * type    = (string) 'root', 'catalog', 'artist', 'album', 'podcast' // optional
      * catalog = (integer) catalog ID you are browsing // optional
-     * add     = Api::set_filter(date) //optional
-     * update  = Api::set_filter(date) //optional
+     * add     = $browse->set_api_filter(date) //optional
+     * update  = $browse->set_api_filter(date) //optional
      * offset  = (integer) //optional
      * limit   = (integer) //optional
+     * cond    = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort    = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function browse(array $input, User $user): bool
     {
@@ -71,28 +73,30 @@ final class BrowseMethod
 
             return false;
         }
+
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('root', 'catalog', 'artist', 'album', 'podcast'))) {
+        if (!in_array(strtolower($object_type), array('root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'))) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
+        $browse = Api::getBrowse($user);
         if ($object_type === 'root') {
             // catalog root
-            $objects = User::get_user_catalogs($user->id, 'music');
+            $output_type  = 'catalog';
+            $child_type   = $output_type;
+            $gather_types = array('music');
             if (AmpConfig::get('podcast')) {
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'podcast'));
+                $gather_types[] = 'podcast';
             }
             if (AmpConfig::get('video')) {
-                // 'clip', 'tvshow', 'movie', 'personal_video'
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'clip'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'tvshow'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'movie'));
-                $objects = array_merge($objects, User::get_user_catalogs($user->id, 'personal_video'));
+                $gather_types = array_merge($gather_types, array('clip', 'tvshow', 'movie', 'personal_video'));
             }
-            $child_type = 'catalog';
-            $results    = Catalog::get_name_array($objects, 'catalog');
+
+            $browse->set_type($output_type);
+            $browse->set_filter('gather_types', $gather_types);
+            $browse->set_filter('user', $user->getId());
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
             if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
@@ -105,29 +109,25 @@ final class BrowseMethod
 
                 return false;
             }
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
 
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
             switch ((string)$catalog->gather_types) {
                 case 'clip':
                 case 'tvshow':
                 case 'movie':
                 case 'personal_video':
                     $output_type = 'video';
+                    $gather_type = 'video';
                     $browse->set_type('video');
-                    $browse->set_filter('gather_types', 'video');
                     break;
                 case 'music':
                     $output_type = 'artist';
+                    $gather_type = 'music';
                     $browse->set_type('album_artist');
-                    $browse->set_filter('gather_types', 'music');
                     break;
                 case 'podcast':
                     $output_type = 'podcast';
+                    $gather_type = 'podcast';
                     $browse->set_type('podcast');
-                    $browse->set_filter('gather_types', 'podcast');
                     break;
                 default:
                     /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -136,15 +136,11 @@ final class BrowseMethod
                     return false;
             }
             $child_type = $output_type;
-            $browse->set_sort('name', 'ASC');
-            $browse->set_filter('catalog', $catalog->id);
-            $objects = $browse->get_objects();
-            if (empty($objects)) {
-                Api::empty('browse', $input['api_format']);
 
-                return false;
-            }
-            $results = Catalog::get_name_array($objects, $output_type);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
+            $browse->set_filter('gather_type', $gather_type);
+            $browse->set_filter('catalog', $catalog->id);
         } else {
             if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
                 return false;
@@ -172,57 +168,92 @@ final class BrowseMethod
 
                 return false;
             }
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
 
             // for sub objects you want to browse their children
             switch ($object_type) {
                 case 'artist':
-                    /** @var Artist $item */
+                case 'album_artist':
+                    $object_type = 'artist';
                     $output_type = 'album';
+                    $filter_type = 'album_artist';
                     $browse->set_type('album');
-                    $browse->set_filter('artist', $item->getId());
+                    $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+                    $sort_type     = AmpConfig::get('album_sort');
+                    switch ($sort_type) {
+                        case 'name_asc':
+                            $sort  = 'name';
+                            $order = 'ASC';
+                            break;
+                        case 'name_desc':
+                            $sort  = 'name';
+                            $order = 'DESC';
+                            break;
+                        case 'year_asc':
+                            $sort  = $original_year;
+                            $order = 'ASC';
+                            break;
+                        case 'year_desc':
+                            $sort  = $original_year;
+                            $order = 'DESC';
+                            break;
+                        default:
+                            $sort  = 'name_' . $original_year;
+                            $order = 'ASC';
+                    }
                     break;
                 case 'album':
-                    /** @var Album $item */
                     $output_type = 'song';
+                    $filter_type = 'album';
                     $browse->set_type('song');
-                    $browse->set_filter('album', $item->getId());
+                    $sort  = 'album';
+                    $order = 'ASC';
                     break;
                 case 'podcast':
-                    /** @var Podcast $item */
                     $output_type = 'podcast_episode';
+                    $filter_type = 'podcast';
                     $browse->set_type('podcast_episode');
-                    $browse->set_filter('podcast', $item->getId());
+                    $sort  = 'podcast';
+                    $order = 'ASC';
                     break;
                 default:
                     $output_type = $object_type;
+                    $filter_type = '';
+                    $sort        = 'name';
+                    $order       = 'ASC';
             }
             $child_type = $output_type;
-            $browse->set_sort('name', 'ASC');
-            $browse->set_filter('catalog', $catalog->id);
 
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
 
-            $objects = $browse->get_objects();
-            if (empty($objects)) {
-                Api::empty('browse', $input['api_format']);
-
-                return false;
+            if (!empty($filter_type)) {
+                $browse->set_filter($filter_type, $item->getId());
             }
-            $results = Catalog::get_name_array($objects, $output_type);
+            $browse->set_filter('catalog', $catalog->id);
         }
 
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $objects = $browse->get_objects();
+        if (empty($objects)) {
+            Api::empty('browse', $input['api_format']);
+
+            return false;
+        }
+
+        $sort    = $browse->get_sort();
+        $results = Catalog::get_name_array($objects, $output_type, $sort['name'] ?? 'name', $sort['order'] ?? 'ASC');
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }

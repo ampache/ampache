@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\UserRepositoryInterface;
 
@@ -180,19 +181,28 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.4.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '640000'; // AMPACHE_VERSION
+    public static string $version         = '6.5.0'; // AMPACHE_VERSION
+    public static string $version_numeric = '650000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
      */
     public static $browse = null;
 
-    public static function getBrowse(): Browse
+    public static function getBrowse(User $user): Browse
     {
         if (self::$browse === null) {
+            // create new browse
             self::$browse = new Browse(null, false);
+        } else {
+            // reset existing browse
+            self::$browse->reset();
+            // ensure _state offset is 0
+            self::$browse->set_offset(0);
         }
+
+        // ensure user_id is set
+        self::$browse->set_user_id($user->getId());
 
         return self::$browse;
     }
@@ -250,63 +260,6 @@ class Api
             default:
                 echo Xml_Data::empty();
         }
-    }
-
-    /**
-     * set_filter
-     * MINIMUM_API_VERSION=380001
-     *
-     * This is a play on the browse function, it's different as we expose
-     * the filters in a slightly different and vastly simpler way to the
-     * end users--so we have to do a little extra work to make them work
-     * internally.
-     * @param string $filter
-     * @param int|string|bool|null $value
-     * @param Browse|null $browse
-     */
-    public static function set_filter($filter, $value, $browse = null): bool
-    {
-        if (!strlen((string)$value)) {
-            return false;
-        }
-
-        if ($browse === null) {
-            $browse = self::getBrowse();
-        }
-
-        switch ($filter) {
-            case 'add':
-                // Check for a range, if no range default to gt
-                if (strpos((string)$value, '/')) {
-                    $elements = explode('/', (string)$value);
-                    $browse->set_filter('add_lt', strtotime((string)$elements['1']));
-                    $browse->set_filter('add_gt', strtotime((string)$elements['0']));
-                } else {
-                    $browse->set_filter('add_gt', strtotime((string)$value));
-                }
-                break;
-            case 'update':
-                // Check for a range, if no range default to gt
-                if (strpos((string)$value, '/')) {
-                    $elements = explode('/', (string)$value);
-                    $browse->set_filter('update_lt', strtotime((string)$elements['1']));
-                    $browse->set_filter('update_gt', strtotime((string)$elements['0']));
-                } else {
-                    $browse->set_filter('update_gt', strtotime((string)$value));
-                }
-                break;
-            case 'alpha_match':
-                $browse->set_filter('alpha_match', $value);
-                break;
-            case 'exact_match':
-                $browse->set_filter('exact_match', $value);
-                break;
-            case 'enabled':
-                $browse->set_filter('enabled', $value);
-                break;
-        } // end filter
-
-        return true;
     }
 
     /**

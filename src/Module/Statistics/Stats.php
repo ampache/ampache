@@ -616,7 +616,7 @@ class Stats
      * @param int $user_id
      * @param int $time
      * @param bool $newest
-     * @return array
+     * @return int[]
      */
     public static function get_object_history($user_id, $time, $newest = true): array
     {
@@ -635,7 +635,7 @@ class Stats
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;
@@ -771,7 +771,7 @@ class Stats
      * @param bool $random
      * @param int $since
      * @param int $before
-     * @return array
+     * @return int[]
      */
     public static function get_top($input_type, $count, $threshold, $offset = 0, $user_id = null, $random = false, $since = 0, $before = 0): array
     {
@@ -794,7 +794,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;
@@ -860,7 +860,7 @@ class Stats
      * @param int $count
      * @param int $offset
      * @param bool $newest
-     * @return array
+     * @return int[]
      */
     public static function get_recent($input_type, $count = 0, $offset = 0, $newest = true): array
     {
@@ -884,7 +884,7 @@ class Stats
         $db_results = Dba::read($sql);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

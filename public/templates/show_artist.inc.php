@@ -89,16 +89,14 @@ Ui::show_box_top($title, 'info-box'); ?>
     Art::display('artist', $artist->id, $title, $thumb);
 } ?>
 </div>
-<?php if (User::is_registered()) { ?>
-    <?php if (AmpConfig::get('ratings')) { ?>
+<?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
         <?php echo Rating::show($artist->id, 'artist', true); ?>
     </span>
     <span id="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>
-    <?php }
-    }
+<?php }
 if (AmpConfig::get('show_played_times')) { ?>
 <br />
 <div style="display:inline;"><?php echo T_('Played') . ' ' .
@@ -186,8 +184,8 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php if (Access::check('interface', 50)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_icon('file_refresh', T_('Update from tags')); ?>
-                <?php echo T_('Update from tags'); ?>
+                <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
     <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
@@ -206,7 +204,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
     <?php if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+        $postshout = "&nbsp;" . T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
         <?php echo Ui::get_icon('comment', $postshout); ?>
@@ -218,7 +216,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
-    $download = T_('Download'); ?>
+    $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download); ?>
@@ -238,7 +236,7 @@ if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check('interfac
             }
 if (canEditArtist($artist, $gatekeeper->getUserId())) {
     if (Upload::can_upload($current_user)) {
-        $t_upload = T_('Upload'); ?>
+        $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
                         <?php echo Ui::get_icon('upload', $t_upload); ?>
@@ -249,8 +247,8 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
     } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
-                    <?php echo Ui::get_icon('edit', T_('Edit')); ?>
-                    <?php echo T_('Edit Artist'); ?>
+                    <?php echo Ui::get_icon('edit', T_('Edit'));
+    echo "&nbsp;" . T_('Edit Artist'); ?>
                 </a>
             </li>
         <?php }

@@ -213,7 +213,7 @@ final class SearchGroupMethod
                 echo json_encode($output, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::searches($results, $user);
         }

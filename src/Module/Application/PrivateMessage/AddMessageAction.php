@@ -77,7 +77,7 @@ final class AddMessageAction implements ApplicationActionInterface
             return null;
         }
 
-        $data = $request->getParsedBody();
+        $data = (array)$request->getParsedBody();
 
         $this->ui->showHeader();
 

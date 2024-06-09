@@ -64,7 +64,7 @@ class Search extends playlist_object
         'podcast_episode',
         'tag',
         'user',
-        'video'
+        'video',
     );
 
     // override playlist_object
@@ -74,7 +74,6 @@ class Search extends playlist_object
     public ?string $logic_operator = 'AND';
     public ?int $random            = 0;
     public int $limit              = 0;
-    public ?int $last_count        = 0;
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
     public $search_user; // user running the search
@@ -1355,9 +1354,8 @@ class Search extends playlist_object
     private function set_last($count, $column): void
     {
         if (in_array($column, array('last_count', 'last_duration'))) {
-            $search_id = Dba::escape($this->id);
-            $sql       = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, array($count, $search_id));
+            $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
+            Dba::write($sql, array($count, $this->id));
         }
     }
 
@@ -1413,6 +1411,7 @@ class Search extends playlist_object
      * get_songs
      * This is called by the batch script, because we can't pass in Dynamic objects they pulled once and then their
      * target song.id is pushed into the array
+     * @return int[]
      */
     public function get_songs(): array
     {
@@ -1440,7 +1439,7 @@ class Search extends playlist_object
 
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['id'];
+            $results[] = (int)$row['id'];
         }
 
         return $results;

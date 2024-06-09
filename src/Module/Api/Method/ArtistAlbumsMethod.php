@@ -25,13 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
-use Ampache\Repository\AlbumRepositoryInterface;
 
 final class ArtistAlbumsMethod
 {
@@ -43,16 +43,20 @@ final class ArtistAlbumsMethod
      *
      * This returns the albums of an artist
      *
-     * filter = (string) UID of artist
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
+     * filter       = (string) UID of artist
+     * album_artist = (integer) 0,1, if true return albums where the UID is an album_artist of the object //optional
+     * offset       = (integer) //optional
+     * limit        = (integer) //optional
+     * cond         = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort         = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      */
     public static function artist_albums(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+
+        $object_id = (int)$input['filter'];
         $artist    = new Artist($object_id);
         if ($artist->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -60,7 +64,42 @@ final class ArtistAlbumsMethod
 
             return false;
         }
-        $results = static::getAlbumRepository()->getAlbumByArtist($object_id);
+
+        $browse = Api::getBrowse($user);
+        $browse->set_type('album');
+        $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+        $sort_type     = AmpConfig::get('album_sort');
+        switch ($sort_type) {
+            case 'name_asc':
+                $sort  = 'name';
+                $order = 'ASC';
+                break;
+            case 'name_desc':
+                $sort  = 'name';
+                $order = 'DESC';
+                break;
+            case 'year_asc':
+                $sort  = $original_year;
+                $order = 'ASC';
+                break;
+            case 'year_desc':
+                $sort  = $original_year;
+                $order = 'DESC';
+                break;
+            default:
+                $sort  = 'name_' . $original_year;
+                $order = 'ASC';
+        }
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+
+        $typeFilter = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1)
+            ? 'album_artist'
+            : 'artist';
+        $browse->set_filter($typeFilter, $object_id);
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty('album', $input['api_format']);
 
@@ -70,26 +109,16 @@ final class ArtistAlbumsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::albums($results, array(), $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::albums($results, array(), $user);
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated Inject by constructor
-     */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(AlbumRepositoryInterface::class);
     }
 }

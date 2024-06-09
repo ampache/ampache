@@ -1,5 +1,155 @@
 # CHANGELOG
 
+## Ampache 6.5.0
+
+This release is the final Ampache6 release with new features. Bug fixes and API extenstion only from now on!
+
+Ampache Develop will become Ampache7 on the first of July as we move on to completing the next major release.
+
+Cleaning up the Query class has helped ID and close a lot of bugs while allowing more options for API clients.
+
+Ampache uses the Query class to create 'browses'. A browse is a query that allows filtering and sorting data.
+
+This release has made greater use of browses reducing reliance on customizing mini functions to provide the same information.
+
+### Added
+
+* Translations 2024-06
+* Add `playlist_search` as a browse type. (combined playlists and smartlists)
+* Allow sorting playlists by `type`, `rating` and item count
+* Allow sorting searches by `type`, `limit`, `rating` and `random` status
+* Ensure `catalog` is available on media browses
+* Add many missing database columns to browse sorts and filters on all browses
+* Show ratings on smartplaylist objects in the WebUI
+* Add a permalink in the search form to allow people to share or bookmark a search
+* Database 600073
+  * Add indexes to `object_count`
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
+  * Add `last_count` to the `playlist` table
+  * Use InnoDb for all tables by default on new installs
+
+### Changed
+
+* Extract the Query class into individual classes
+* Album browse `artist` was only selecting `album_artist`
+* Check a session exists before trying to insert it
+* Check theme with glob instead of reading file paths using opendir
+* Subsonic
+  * Convert getPlaylists process to a browse
+
+### Removed
+
+* Remove `disk` sort from `album` browse
+* Remove `album` sort from `artist` browse
+* Remove `call_sign` and `frequency` from `live_stream` browses (whatever they were)
+
+### Fixed
+
+* Fixed search rule JS showing the wrong lists id's in select items
+* `catalog` browses using incorrect column
+* `artist` browse by `song_artist` wasn't in the valid list
+* Missing `video` browse filters on `clip`, `movie`, `personal_video`, `tvshow`, `tvshow_season` and `tvshow_episode` browses
+* Random (`rand`) was missing from a lot of query types as a valid option
+* For searches, `random` sort was random sorting the sql and ignoring the random column (use `rand` for random result sorting)
+* Icon text spacing was out of alignment on some object pages
+* Sort before any other browse action in case you delete the joins
+* phpmailer error info parameter is a property
+* Stream::delete_now_playing query didn't work
+* Transcode format checks were overwriting `bitrate` and `format` parameters
+* Playlist::get_media_count() was ignoring other media types
+* Don't show an update notification when the latest version is missing or matches
+* Check for valid numeric numbers on tags for rating during import
+* Subsonic
+  * Chat messages couldn't be added to the public chat
+* CLI
+  * Check catalog path is readable on updateCatalog actions
+  * Don't try to clean a file if it wasn't valid media
+  * Runtime error when importing new genre tags
+
+## API 6.5.0
+
+### Added
+
+* API6
+  * Add `songartists` to all album data responses. (In an album `artists`=album_artists, `songartists`=song_artists)
+  * artist_albums: add `album_artist` as an optional parameter
+  * get_indexes: add `catalog`, `album_artist` and `song_artist` as possible `type` values
+  * list: add `catalog` and `song_artist` as possible `type` values
+
+### Changed
+
+* Reset any existing browse when calling Api::getBrowse()
+* Filter duplicate search names outside of the data classes and filter on browses
+* API6 methods converted to Browse
+  * artist_albums
+  * artist_songs
+  * browse (`catalog` types)
+  * catalogs
+  * followers
+  * genre_albums
+  * genre_artists
+  * genre_songs
+  * get_indexes (`catalog` and `playlist` types)
+  * index (`catalog` and `playlist` types)
+  * label_artists
+  * license_songs
+  * list (`playlist` types)
+  * playlists
+  * podcast_episodes
+  * stats (random `playlist` types)
+  * user_playlists
+  * user_smartlists
+* API5 methods converted to Browse
+  * get_indexes (`playlist` types)
+  * playlists
+  * stats (random `playlist` types)
+* API4 methods converted to Browse
+  * get_indexes (`playlist` types)
+  * playlists
+
+### Fixed
+
+* ALL
+  * html_entity_decode `include`, `items` and `tracks` parameter for applicable methods
+  * Rating and flag data for smartlists was using incorrect id
+  * playlist_edit: track insert broken by removing table constraint
+  * playlist_edit: workaround sending owner username instead of ID
+  * playlist_add_song: When using `unique_playlist` don't grab the whole playlist
+* API6
+  * list: sorting was by `id` instead of `name`
+  * browse: sorting was by `id` instead of `name`
+  * download: The API can use searches as playlists so check for the `smart_` prefix
+  * stream: The API can use searches as playlists so check for the `smart_` prefix
+  * Respect album sort preferences in all album object responses
+  * Add `cond` and `sort` parameters to browse methods
+    * album_songs
+    * albums
+    * artist_albums
+    * artist_songs
+    * artists
+    * browse
+    * catalogs
+    * followers
+    * genre_albums
+    * genre_artists
+    * genre_songs
+    * genres
+    * get_indexes
+    * index
+    * label_artists
+    * labels
+    * license_songs
+    * licenses
+    * list
+    * live_streams
+    * playlists
+    * podcasts
+    * podcast_episodes
+    * shares
+    * songs
+    * user_playlists
+    * user_smartlists
+
 ## Ampache 6.4.0
 
 Work on Ampache7 is ongoing.
@@ -35,7 +185,7 @@ These searches will now use to rules for that object type and then return the so
 * Allow using `tmp_dir_path` for Dropbox catalog
 * Subsonic
   * Song file path is now always the original full file path
-  * This was a relative path that was changed with transcoding mean the path nevers existed.
+  * This was a relative path that was changed with transcoding meaning the path never existed.
 * Random search (`random.php?action=advanced`) `artist` and `album` actions have been changed to use their object rules
   * The returned results are still song objects but the searches are done using their rule set
 

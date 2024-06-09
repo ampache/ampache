@@ -148,7 +148,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
         <?php if ($show_playlist_add) {
             $addtotemp  = T_('Add to Temporary Playlist');
             $randtotemp = T_('Random to Temporary Playlist');
-            $addtoexist = T_('Add to playlist'); ?>
+            $addtoexist = "&nbsp;" . T_('Add to playlist'); ?>
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=album&id=' . $album->id, 'add', $addtotemp, 'play_full_' . $album->id); ?>
         </li>
@@ -170,7 +170,7 @@ if (AmpConfig::get('use_rss')) { ?>
         <?php }
 if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
     if (AmpConfig::get('sociable')) {
-        $postshout = T_('Post Shout'); ?>
+        $postshout = "&nbsp;" . T_('Post Shout'); ?>
             <li>
                 <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=album&id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_icon('comment', $postshout);
@@ -188,7 +188,7 @@ if (Access::check('interface', 25)) {
             <?php }
     }
 if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->id) || Access::check('interface', 50)) {
-    $saveorder = T_('Save Track Order');
+    $saveorder = "&nbsp;" . T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -207,13 +207,13 @@ if (($owner_id > 0 && !empty($current_user) && $owner_id == (int)$current_user->
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/albums.php?action=update_from_tags&album_id=<?php echo $album->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
                 <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
-    echo T_('Update from tags'); ?>
+    echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
         <?php
 }
 if ($isAlbumEditable) {
-    $t_upload = T_('Upload');
+    $t_upload = "&nbsp;" . T_('Upload');
     if (Upload::can_upload($current_user) && $album->album_artist > 0) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $album->album_artist; ?>&album=<?php echo $album->id; ?>">
@@ -225,13 +225,13 @@ if ($isAlbumEditable) {
         <li>
             <a id="<?php echo 'edit_album_' . $album->id; ?>" onclick="showEditDialog('album_row', '<?php echo $album->id; ?>', '<?php echo 'edit_album_' . $album->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                 <?php echo Ui::get_icon('edit', T_('Edit'));
-    echo T_('Edit Album'); ?>
+    echo "&nbsp;" . T_('Edit Album'); ?>
             </a>
         </li>
         <?php
 }
 if ($zip_album) {
-    $download = T_('Download'); ?>
+    $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album&id=<?php echo $album->id; ?>">
                 <?php echo Ui::get_icon('batch_download', $download);
@@ -260,8 +260,8 @@ if (Catalog::can_remove($album)) {
 <?php $browse = new Browse();
 $browse->set_type('song');
 $browse->set_simple_browse(true);
-$browse->set_filter('album', $album->id);
 $browse->set_sort('track', 'ASC');
+$browse->set_filter('album', $album->id);
 $browse->get_objects();
 $browse->show_objects(array(), array('hide' => $hide_array));
 $browse->store(); ?>

@@ -55,8 +55,8 @@ interface PrivateMessageRepositoryInterface
      * Creates a private message and returns the id of the newly created object
      */
     public function create(
-        ?User $sender,
-        User $recipient,
+        ?User $recipient,
+        User $sender,
         string $subject,
         string $message
     ): int;

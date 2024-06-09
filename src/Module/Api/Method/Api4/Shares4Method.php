@@ -56,16 +56,15 @@ final class Shares4Method
 
             return false;
         }
-        unset($user);
-        $browse = Api::getBrowse();
-        $browse->reset_filters();
+
+        $browse = Api::getBrowse($user);
         $browse->set_type('share');
         $browse->set_sort('title', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
 
         $results = $browse->get_objects();
 

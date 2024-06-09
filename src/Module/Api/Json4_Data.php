@@ -38,7 +38,6 @@ use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -451,12 +450,11 @@ class Json4_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
-        $JSON               = [];
+
+        $JSON = [];
 
         // Foreach the playlist ids
         foreach ($playlists as $playlist_id) {
-            $playlist_names = array();
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
@@ -464,21 +462,20 @@ class Json4_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string) $playlist_id), 'song', $user);
-                if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
+                if ($playlist->isNew()) {
                     continue;
                 }
                 $object_type    = 'search';
-                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = $playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
-                $object_type    = 'playlist';
-                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
-                $playitem_total = $playlist->get_media_count('song');
-                if ($hide_dupe_searches && $playlist->user == $user->getId()) {
-                    $playlist_names[] = $playlist->name;
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
                 }
+                $object_type    = 'playlist';
+                $playitem_total = $playlist->get_media_count('song');
             }
+            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
@@ -497,9 +494,9 @@ class Json4_Data
             } else {
                 $items = ($playitem_total ?? 0);
             }
-            $rating      = new Rating($playlist_id, $object_type);
+            $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist_id, $object_type);
+            $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
             $JSON[] = [

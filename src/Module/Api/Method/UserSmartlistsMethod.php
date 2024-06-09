@@ -27,7 +27,6 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 
@@ -45,19 +44,29 @@ final class UserSmartlistsMethod
      *
      * This returns smartlists (searches) based on the specified filter (Does not include playlists)
      *
-     * filter      = (string) Alpha-numeric search term (match all if missing) //optional
-     * exact       = (integer) 0,1, if true filter is exact rather than fuzzy //optional
-     * offset      = (integer) //optional
-     * limit       = (integer) //optional
+     * filter = (string) Alpha-numeric search term (match all if missing) //optional
+     * exact  = (integer) 0,1, if true filter is exact rather than fuzzy //optional
+     * offset = (integer) //optional
+     * limit  = (integer) //optional
+     * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort   = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array<string, mixed> $input
      */
     public static function user_smartlists(array $input, User $user): bool
     {
-        $like    = !(array_key_exists('exact', $input) && (int)$input['exact'] == 1);
-        $filter  = (string)($input['filter'] ?? '');
-        $results = Playlist::get_smartlists($user->id, $filter, $like, false, true, true);
+        $browse = Api::getBrowse($user);
+        $browse->set_type('smartplaylist');
 
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_filter('playlist_user', $user->getId());
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $results = preg_filter('/^/', 'smart_', $browse->get_objects());
         if (empty($results)) {
             Api::empty('playlist', $input['api_format']);
 
@@ -67,12 +76,12 @@ final class UserSmartlistsMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::playlists($results, $user);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::playlists($results, $user);
         }

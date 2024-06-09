@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Json_Data;
@@ -48,15 +48,17 @@ final class IndexMethod
      * This takes a collection of inputs and return ID's for the object type
      * Add 'include' to include child objects
      *
-     * type        = (string) 'catalog', 'song', 'album', 'artist', 'album_artist', 'song_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'
+     * type        = (string) 'album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'
      * filter      = (string) //optional
+     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
-     * hide_search = (integer) 0,1, if true do not include searches/smartlists in the result //optional
+     * cond        = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
+     * sort        = (string) sort name or comma separated key pair. Order default 'ASC' (e.g. 'name,ASC' and 'name' are the same) //optional
      *
      * @param array<string, mixed> $input
      */
@@ -65,9 +67,8 @@ final class IndexMethod
         if (!Api::check_parameter($input, array('type'), self::ACTION)) {
             return false;
         }
-        $album_artist = ((string)$input['type'] === 'album_artist');
-        $song_artist  = ((string)$input['type'] === 'song_artist');
-        $type         = (string)$input['type'];
+
+        $type = (string)$input['type'];
         if (!AmpConfig::get('allow_video') && $type == 'video') {
             Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
@@ -91,41 +92,46 @@ final class IndexMethod
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('catalog', 'song', 'album', 'artist', 'album_artist', 'song_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video', 'live_stream'))) {
+        if (!in_array(strtolower($type), array('album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'))) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        if ($type == 'catalog') {
-            $results = User::get_user_catalogs($user->id);
+        $browse = Api::getBrowse($user);
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
         } else {
-            $browse = Api::getBrowse();
-            $browse->reset_filters();
-            if ($album_artist) {
-                $browse->set_type('album_artist');
-            } elseif ($song_artist) {
-                $browse->set_type('song_artist');
-            } else {
-                $browse->set_type($type);
-            }
-            $browse->set_sort('name', 'ASC');
+            $browse->set_type($type);
+        }
 
-            $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-            Api::set_filter($method, $input['filter'] ?? '', $browse);
-            Api::set_filter('add', $input['add'] ?? '', $browse);
-            Api::set_filter('update', $input['update'] ?? '', $browse);
-            if ($type == 'playlist') {
-                $browse->set_filter('playlist_type', 1);
-                if (!$hide) {
-                    $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
-                } else {
-                    $results = $browse->get_objects();
-                }
-            } else {
-                $results = $browse->get_objects();
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+
+        if ($type === 'catalog') {
+            $browse->set_filter('user', $user->getId());
+        }
+
+        $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
+        if ($type == 'playlist') {
+            $browse->set_filter('playlist_open', $user->getId());
+
+            if (
+                $hide === false &&
+                (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches') === true
+            ) {
+                $browse->set_filter('hide_dupe_smartlist', 1);
             }
         }
+
+        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
+        $results = $browse->get_objects();
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
 
@@ -135,12 +141,12 @@ final class IndexMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset($input['offset'] ?? 0);
+                Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
                 echo Json_Data::index($results, $type, $user, $include);
                 break;
             default:
-                Xml_Data::set_offset($input['offset'] ?? 0);
+                Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 echo Xml_Data::index($results, $type, $user, $include);
         }

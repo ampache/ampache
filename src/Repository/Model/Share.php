@@ -46,7 +46,7 @@ class Share extends database_object
         'podcast_episode',
         'search',
         'song',
-        'video'
+        'video',
     );
 
     public int $id = 0;
@@ -139,6 +139,7 @@ class Share extends database_object
     {
         return $this->getObject() !== null;
     }
+
     /**
      * @return Song|Artist|Album|playlist_object|null
      */

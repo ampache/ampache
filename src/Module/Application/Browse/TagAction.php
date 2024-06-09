@@ -62,6 +62,7 @@ final class TagAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('name', 'ASC');
 
         $this->ui->showHeader();
 
@@ -69,8 +70,6 @@ final class TagAction implements ApplicationActionInterface
         $browse->set_update_session(true);
 
         // FIXME: This whole thing is ugly, even though it works.
-        $browse->set_sort('count', 'ASC');
-        // This one's a doozy
         $request_type = $this->requestParser->getFromRequest('type');
         $browse_type  = ($browse->is_valid_type($request_type)) ? $request_type : 'artist';
         if ($request_type != $browse_type) {

@@ -1003,7 +1003,7 @@ abstract class Catalog extends database_object
             }
         }
         $sql .= "ORDER BY `name`;";
-        //debug_event(self::class, 'get_catalogs ' . $sql, 5);
+        //debug_event(self::class, 'get_catalogs ' . $sql . ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, $params);
         $results    = array();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1504,46 +1504,53 @@ abstract class Catalog extends database_object
      * Get each array of fullname's for a object type
      * @param array $objects
      * @param string $table
+     * @param string $sort
+     * @param string $order
      * @return array
      */
-    public static function get_name_array($objects, $table): array
+    public static function get_name_array($objects, $table, $sort = '', $order = 'ASC'): array
     {
         switch ($table) {
             case 'album':
+                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ")";
+                break;
+            case 'album_artist':
             case 'artist':
-                $sql = "SELECT DISTINCT `$table`.`id`, LTRIM(CONCAT(COALESCE(`$table`.`prefix`, ''), ' ', `$table`.`name`)) AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+            case 'song_artist':
+                $sql = "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` WHERE `id` IN (" . implode(",", $objects) . ")";
                 break;
             case 'catalog':
             case 'live_stream':
             case 'playlist':
             case 'search':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`name` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ")";
                 break;
             case 'podcast':
             case 'podcast_episode':
             case 'song':
             case 'video':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`title` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ")";
                 break;
             case 'share':
-                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ");";
+                $sql = "SELECT DISTINCT `$table`.`id`, `$table`.`description` AS `name` FROM `$table` WHERE `id` IN (" . implode(",", $objects) . ")";
                 break;
             case 'playlist_search':
-                $empty_playlist = empty($objects['playlist']);
-                $empty_search   = empty($objects['search']);
-                if (!$empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects['playlist']) . ") UNION SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_playlist && !$empty_search) {
-                    $sql = "SELECT DISTINCT CONCAT('smart_', `search`.`id`) AS `id`, `search`.`name` FROM `search` WHERE CONCAT('smart_', `search`.`id`) IN ('" . implode("','", $objects['search']) . "');";
-                } elseif ($empty_search && !$empty_playlist) {
-                    $sql = "SELECT DISTINCT `playlist`.`id`, `playlist`.`name` AS `name` FROM `playlist` WHERE `id` IN (" . implode(",", $objects) . ");";
-                } else {
-                    return array();
+                $object_string = '';
+                foreach ($objects as $playlist_id) {
+                    $object_string .= (is_numeric($playlist_id))
+                        ? $playlist_id . ", "
+                        : "'" . $playlist_id . "', ";
                 }
+                $object_string = rtrim($object_string, ', ');
+                $sql           = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist` WHERE `id` IN (" . $object_string . ")";
                 break;
             default:
                 return array();
         }
+
+        $sql .= (!empty($sort))
+            ? " ORDER BY " . $sort . " " . $order . ";"
+            : ';';
 
         $db_results = Dba::read($sql);
         $results    = array();

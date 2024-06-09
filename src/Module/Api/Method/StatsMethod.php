@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -162,18 +163,27 @@ final class StatsMethod
                         );
                         break;
                     case 'playlist':
-                        $playlists = Playlist::get_playlists($user_id, '', true, true, false);
-                        $searches  = Playlist::get_smartlists($user_id, '', true, true, false);
-                        $results   = array_merge($playlists, $searches);
-                        shuffle($results);
+                        $browse = Api::getBrowse($user);
+                        $browse->set_type('playlist_search');
+                        $browse->set_sort('rand');
+                        $browse->set_filter('playlist_open', $user->getId());
+
+                        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->getId(), 'api_hidden_playlists')));
+                        if (!empty($hide_string)) {
+                            $browse->set_filter('not_starts_with', $hide_string);
+                        }
+
+                        $results = $browse->get_objects();
                         break;
                     case 'video':
                     case 'podcast':
                     case 'podcast_episode':
-                        $browse = Api::getBrowse();
-                        $browse->reset_filters();
+                        $browse = Api::getBrowse($user);
                         $browse->set_type($type);
-                        $browse->set_sort('random');
+                        $browse->set_sort('rand');
+
+                        $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
+
                         $results = $browse->get_objects();
                 }
         }

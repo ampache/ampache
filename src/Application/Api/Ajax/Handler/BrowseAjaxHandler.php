@@ -89,6 +89,10 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'browse':
+                // Set the new sort value
+                if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
+                    $browse->set_sort($_REQUEST['sort']);
+                }
                 // data set by the fileter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
@@ -107,11 +111,6 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 // filter box Catalog select
                 if (isset($_REQUEST['catalog'])) {
                     $browse->set_catalog($_SESSION['catalog']);
-                }
-
-                if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
-                    // Set the new sort value
-                    $browse->set_sort($_REQUEST['sort']);
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {

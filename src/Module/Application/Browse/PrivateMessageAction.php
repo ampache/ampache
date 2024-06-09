@@ -56,13 +56,13 @@ final class PrivateMessageAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type(static::REQUEST_KEY);
         $browse->set_simple_browse(true);
+        $browse->set_sort('creation_date', 'DESC');
 
         $this->ui->showHeader();
 
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
 
-        $browse->set_sort('creation_date', 'DESC');
         $folder = $_REQUEST['folder'] ?? null;
         if ($folder === 'sent') {
             $browse->set_filter('user', Core::get_global('user')->id);

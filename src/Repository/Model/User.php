@@ -1214,7 +1214,7 @@ class User extends database_object
      * @param int $count
      * @param int $offset
      * @param bool $newest
-     * @return array
+     * @return int[]
      */
     public function get_recently_played($type, $count, $offset = 0, $newest = true, $count_type = 'stream'): array
     {
@@ -1226,7 +1226,7 @@ class User extends database_object
 
         $results = array();
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['object_id'];
+            $results[] = (int)$row['object_id'];
         }
 
         return $results;

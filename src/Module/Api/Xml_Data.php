@@ -44,7 +44,6 @@ use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
-use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
@@ -379,7 +378,7 @@ class Xml_Data
      * we want
      *
      * @param list<int> $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'album_artist'|'song_artist'|'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include include children from objects that have them
      */
@@ -515,7 +514,7 @@ class Xml_Data
      * we want
      *
      * @param array $objects Array of object_ids (Mixed string|int)
-     * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
+     * @param string $object_type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      * @param bool $include include episodes from podcasts or tracks in a playlist
@@ -534,7 +533,12 @@ class Xml_Data
         // here is where we call the object type
         foreach ($objects as $object_id) {
             switch ($object_type) {
+                case 'catalog':
+                    $string .= self::catalogs($objects, $user);
+                    break;
+                case 'album_artist':
                 case 'artist':
+                case 'song_artist':
                     if ($include) {
                         $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
                     } else {
@@ -543,14 +547,14 @@ class Xml_Data
                             break;
                         }
                         $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
-                        $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
+                        $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
                                 $album = new Album($album_id);
                                 $string .= "\t<album id=\"" . $album_id . "\">\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $album->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $album->name . "]]></basename>\n\t</album>\n";
                             }
                         }
-                        $string .= "</$object_type>\n";
+                        $string .= "</artist>\n";
                     }
                     break;
                 case 'album':
@@ -1000,6 +1004,10 @@ class Xml_Data
             foreach ($album->get_artists() as $artist_id) {
                 $album_artists[] = Artist::get_name_array_by_id($artist_id);
             }
+            $song_artists = array();
+            foreach ($album->get_song_artists() as $artist_id) {
+                $song_artists[] = Artist::get_name_array_by_id($artist_id);
+            }
 
             $rating      = new Rating($album_id, 'album');
             $user_rating = $rating->get_user_rating($user->getId());
@@ -1013,6 +1021,9 @@ class Xml_Data
                 foreach ($album_artists as $album_artist) {
                     $string .= "\t<artist id=\"" . $album_artist['id'] . "\"><name><![CDATA[" . $album_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $album_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $album_artist['basename'] . "]]></basename>\n</artist>\n";
                 }
+            }
+            foreach ($song_artists as $song_artist) {
+                $string .= "\t<songartist id=\"" . $song_artist['id'] . "\"><name><![CDATA[" . $song_artist['name'] . "]]></name>\n\t<prefix><![CDATA[" . $song_artist['prefix'] . "]]></prefix>\n\t<basename><![CDATA[" . $song_artist['basename'] . "]]></basename>\n</songartist>\n";
             }
             // Handle includes
             $songs = ($include && in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
@@ -1039,9 +1050,8 @@ class Xml_Data
         if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
             $playlists = array_slice($playlists, self::$offset, self::$limit);
         }
-        $hide_dupe_searches = (bool)Preference::get_by_user($user->getId(), 'api_hide_dupe_searches');
-        $playlist_names     = array();
-        $total_count        = (AmpConfig::get('hide_search', false))
+
+        $total_count = (AmpConfig::get('hide_search', false))
             ? Catalog::get_update_info('search', $user->id) + Catalog::get_update_info('playlist', $user->id)
             : Catalog::get_update_info('playlist', $user->id);
         $string = "<total_count>" . $total_count . "</total_count>\n";
@@ -1055,20 +1065,18 @@ class Xml_Data
              */
             if ((int)$playlist_id === 0) {
                 $playlist = new Search((int) str_replace('smart_', '', (string)$playlist_id), 'song', $user);
-                if ($hide_dupe_searches && $playlist->user == $user->getId() && in_array($playlist->name, $playlist_names)) {
+                if ($playlist->isNew()) {
                     continue;
                 }
                 $object_type    = 'search';
-                $art_url        = Art::url($playlist->id, $object_type, Core::get_request('auth'));
                 $playitem_total = (int)$playlist->last_count;
             } else {
-                $playlist       = new Playlist($playlist_id);
-                $object_type    = 'playlist';
-                $art_url        = Art::url($playlist_id, $object_type, Core::get_request('auth'));
-                $playitem_total = $playlist->get_media_count('song');
-                if ($hide_dupe_searches && $playlist->user == $user->getId()) {
-                    $playlist_names[] = $playlist->name;
+                $playlist = new Playlist($playlist_id);
+                if ($playlist->isNew()) {
+                    continue;
                 }
+                $object_type    = 'playlist';
+                $playitem_total = $playlist->get_media_count('song');
             }
             if ($songs) {
                 $items          = '';
@@ -1081,13 +1089,14 @@ class Xml_Data
             } else {
                 $items = $playitem_total;
             }
+            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
 
-            $rating      = new Rating($playlist_id, $object_type);
+            $rating      = new Rating($playlist->id, $object_type);
             $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist_id, $object_type);
+            $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
             $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n</playlist>\n";
@@ -1454,12 +1463,15 @@ class Xml_Data
      *
      * This handles creating an xml document for a user list
      *
-     * @param int[] $users User identifier list
+     * @param int[] $objects User identifier list
      */
-    public static function users($users): string
+    public static function users($objects): string
     {
+        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
+        }
         $string = "";
-        foreach ($users as $user_id) {
+        foreach ($objects as $user_id) {
             $user = new User($user_id);
             $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
         }

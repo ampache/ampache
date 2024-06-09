@@ -49,8 +49,8 @@ final class GetIndexes4Method
      * type        = (string) 'song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'
      * filter      = (string) //optional
      * exact       = (integer) 0,1, if true filter is exact rather then fuzzy //optional
-     * add         = Api::set_filter(date) //optional
-     * update      = Api::set_filter(date) //optional
+     * add         = $browse->set_api_filter(date) //optional
+     * update      = $browse->set_api_filter(date) //optional
      * include     = (integer) 0,1 include songs if available for that object //optional
      * offset      = (integer) //optional
      * limit       = (integer) //optional
@@ -86,9 +86,13 @@ final class GetIndexes4Method
 
             return false;
         }
-        $browse = Api::getBrowse();
-        $browse->reset_filters();
-        if ($album_artist) {
+        $browse = Api::getBrowse($user);
+        if (
+            $type === 'playlist' &&
+            $hide === false
+        ) {
+            $browse->set_type('playlist_search');
+        } elseif ($album_artist) {
             $browse->set_type('album_artist');
         } else {
             $browse->set_type($type);
@@ -96,20 +100,15 @@ final class GetIndexes4Method
         $browse->set_sort('name', 'ASC');
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
-        Api::set_filter($method, $input['filter'] ?? '', $browse);
-        Api::set_filter('add', $input['add'] ?? '', $browse);
-        Api::set_filter('update', $input['update'] ?? '', $browse);
+        $browse->set_api_filter($method, $input['filter'] ?? '');
+        $browse->set_api_filter('add', $input['add'] ?? '');
+        $browse->set_api_filter('update', $input['update'] ?? '');
 
         if ($type == 'playlist') {
-            $browse->set_filter('playlist_type', 1);
-            if (!$hide) {
-                $results = array_merge($browse->get_objects(), Playlist::get_smartlists($user->id));
-            } else {
-                $results = $browse->get_objects();
-            }
-        } else {
-            $results = $browse->get_objects();
+            $browse->set_filter('playlist_open', $user->getId());
         }
+
+        $results = $browse->get_objects();
 
         ob_end_clean();
         switch ($input['api_format']) {

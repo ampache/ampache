@@ -111,11 +111,6 @@ parameters:
 			path: src/Config/Init/InitializationHandlerConfig.php
 
 		-
-			message: "#^Cannot access offset 'path' on array\\|false\\.$#"
-			count: 1
-			path: src/Config/functions.php
-
-		-
 			message: "#^Function apache_request_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -1132,11 +1127,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/AlbumSongsMethod.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\AlbumSongsMethod\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/AlbumSongsMethod.php
 
@@ -3326,11 +3316,6 @@ parameters:
 			path: src/Module/Api/Method/UserUpdateMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\UsersMethod\\:\\:users\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/UsersMethod.php
-
-		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/UsersMethod.php
@@ -3952,11 +3937,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:addPlaylists\\(\\) has parameter \\$smartplaylists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
@@ -4921,11 +4901,6 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$recipient of method Ampache\\\\Module\\\\User\\\\PrivateMessage\\\\PrivateMessageCreatorInterface\\:\\:create\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/PrivateMessage/AddMessageAction.php
-
-		-
 			message: "#^Cannot call method add_object\\(\\) on Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\|null\\.$#"
 			count: 1
 			path: src/Module/Application/Random/GetAdvancedAction.php
@@ -4939,11 +4914,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\SearchData\\\\ShowAction\\:\\:arrayToJSON\\(\\) has parameter \\$array with no type specified\\.$#"
 			count: 1
 			path: src/Module/Application/SearchData/ShowAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:set_rules\\(\\) expects array, array\\|object\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/SmartPlaylist/UpdatePlaylistAction.php
 
 		-
 			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
@@ -8646,22 +8616,7 @@ parameters:
 			path: src/Module/Statistics/Stats.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_object_history\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -12331,11 +12286,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_artists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -12356,11 +12306,6 @@ parameters:
 			path: src/Repository/Model/Album.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
@@ -12372,11 +12317,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$_songs type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Album\\:\\:\\$album_artists type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -13336,23 +13276,8 @@ parameters:
 			path: src/Repository/Model/Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_smartlists\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, int\\|string given\\.$#"
-			count: 2
 			path: src/Repository/Model/Playlist.php
 
 		-
@@ -13541,6 +13466,16 @@ parameters:
 			path: src/Repository/Model/Preference.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_serialize\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -13562,16 +13497,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_total\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:post_process\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Query.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:post_process\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
@@ -13646,11 +13571,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:get_highest\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:is_valid\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
@@ -13697,11 +13617,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_searches\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_songs\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -13872,11 +13787,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent_array\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -14142,11 +14052,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -14441,11 +14346,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_user_data\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
@@ -14517,11 +14417,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_flag\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:get_latest\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Userflag.php
 
@@ -14784,4 +14679,3 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
-

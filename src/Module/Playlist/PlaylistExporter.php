@@ -27,6 +27,7 @@ namespace Ampache\Module\Playlist;
 
 use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Playback\Stream_Playlist;
@@ -69,16 +70,19 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 break;
             case 'smartlists':
                 if ((int)$playlistId < 1) {
-                    $ids = Playlist::get_smartlists($userId);
+                    $browse = new Browse(null, false);
+                    $browse->set_type('smartplaylist');
+                    $browse->set_filter('playlist_user', $userId);
+
+                    $ids = $browse->get_objects();
                 } else {
                     $ids = array($playlistId);
                 }
                 $items = array();
                 foreach ($ids as $playlist_id) {
-                    $searchId = (int)str_replace('smart_', '', $playlist_id);
                     $playlist = ($user->id)
-                        ? new Search($searchId, 'song', $user)
-                        : new Search($searchId);
+                        ? new Search((int)$playlist_id, 'song', $user)
+                        : new Search((int)$playlist_id);
                     if ($playlist->isNew() === false) {
                         $items[] = $playlist;
                     }
@@ -87,7 +91,12 @@ final class PlaylistExporter implements PlaylistExporterInterface
             case 'playlists':
             default:
                 if ((int)$playlistId < 1) {
-                    $ids = Playlist::get_playlists($userId);
+                    $browse = new Browse(null, false);
+                    $browse->set_type('playlist');
+                    $browse->set_sort('name', 'ASC');
+                    $browse->set_filter('playlist_user', $userId);
+
+                    $ids = $browse->get_objects();
                 } else {
                     $ids = array((int)$playlistId);
                 }
