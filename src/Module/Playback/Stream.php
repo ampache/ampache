@@ -588,7 +588,8 @@ class Stream
         $uid,
         $length,
         $sid,
-        $type, $previous = null
+        $type,
+        $previous = null
     ): void {
         if (!$previous) {
             $previous = time();

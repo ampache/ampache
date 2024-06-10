@@ -113,7 +113,7 @@ class Art extends database_object
         $uid = 0,
         $type = 'album',
         $kind = 'default'
-    )  {
+    ) {
         if (!$uid) {
             return;
         }

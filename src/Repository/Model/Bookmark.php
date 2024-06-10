@@ -66,7 +66,7 @@ class Bookmark extends database_object
         $object_id = 0,
         $object_type = null,
         $user_id = null
-    )  {
+    ) {
         if (!$object_id) {
             return;
         }
