@@ -37,7 +37,6 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Recommendation;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
