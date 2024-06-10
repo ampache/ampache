@@ -46,7 +46,7 @@ final class PlaylistSongs3Method
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();
 
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];

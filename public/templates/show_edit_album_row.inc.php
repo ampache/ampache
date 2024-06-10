@@ -58,7 +58,7 @@ use Ampache\Module\Api\Ajax;
             <?php if (!empty($libitem->album_artists) && count($libitem->album_artists) > 1) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, [$libitem->album_artist])); ?></td>
             </tr>
             <?php } ?>
             <tr>

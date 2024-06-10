@@ -127,7 +127,7 @@ class AmpacheVlc extends localplay_controller
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
+        return Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
@@ -138,7 +138,7 @@ class AmpacheVlc extends localplay_controller
     public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?";
-        Dba::query($sql, array($uid));
+        Dba::query($sql, [$uid]);
 
         return true;
     }
@@ -152,7 +152,7 @@ class AmpacheVlc extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_vlc` ORDER BY `name`";
         $db_results = Dba::query($sql);
-        $results    = array();
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -170,7 +170,7 @@ class AmpacheVlc extends localplay_controller
     public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?";
-        Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['password'], $uid));
+        Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['password'], $uid]);
 
         return true;
     }
@@ -182,11 +182,11 @@ class AmpacheVlc extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = array();
-        $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields             = [];
+        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -201,7 +201,7 @@ class AmpacheVlc extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -447,11 +447,11 @@ class AmpacheVlc extends localplay_controller
         $list = $this->_vlc->get_tracks();
 
         if (!$list) {
-            return array();
+            return [];
         }
-        $songs   = array();
-        $song_id = array();
-        $results = array();
+        $songs   = [];
+        $song_id = [];
+        $results = [];
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
         if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
@@ -481,12 +481,12 @@ class AmpacheVlc extends localplay_controller
             $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
-            return array();
+            return [];
         }
 
         $counter = 0;
         foreach ($songs as $key => $entry) {
-            $data = array();
+            $data = [];
 
             /* Required Elements */
             $data['id']    = $counter; // id follows localplay api
@@ -563,7 +563,7 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array                 = array();
+        $array                 = [];
         $array['track']        = 0;
         $oid                   = '';
 

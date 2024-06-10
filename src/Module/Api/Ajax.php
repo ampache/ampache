@@ -62,7 +62,7 @@ class Ajax
      */
     public static function observe($source, $method, $action, $confirm = ''): string
     {
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -111,7 +111,7 @@ class Ajax
     {
         $url = self::url($action);
 
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;

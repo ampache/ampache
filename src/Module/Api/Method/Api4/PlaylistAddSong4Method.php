@@ -49,7 +49,7 @@ final class PlaylistAddSong4Method
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter', 'song'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter', 'song'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -66,7 +66,7 @@ final class PlaylistAddSong4Method
 
             return false;
         }
-        $playlist->add_songs(array($song));
+        $playlist->add_songs([$song]);
         Api4::message('success', 'song added to playlist', null, $input['api_format']);
 
         return true;

@@ -51,7 +51,7 @@ final class PlaylistMethod
      */
     public static function playlist(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -73,10 +73,10 @@ final class PlaylistMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists(array($object_id), $user, false, true, false);
+                echo Json_Data::playlists([$object_id], $user, false, true, false);
                 break;
             default:
-                echo Xml_Data::playlists(array($object_id), $user);
+                echo Xml_Data::playlists([$object_id], $user);
         }
 
         return true;

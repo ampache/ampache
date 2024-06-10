@@ -49,7 +49,7 @@ final class User5Method
      */
     public static function user(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         $username = (string) $input['username'];

@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -42,10 +42,10 @@ final class UserQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'id',
         'username',
@@ -59,7 +59,7 @@ final class UserQuery implements QueryInterface
         'state',
         'city',
         'fullname_public',
-    );
+    ];
 
     /** @var string */
     protected $select = "`user`.`id`";

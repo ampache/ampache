@@ -67,7 +67,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
             $is_allowed_recent  = ($userId !== null) ? $userId === $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
 
-                yield array(
+                yield [
                     'title' => sprintf(
                         '%s - %s - %s',
                         $song->get_fullname(),
@@ -90,7 +90,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     ),
                     'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
-                );
+                ];
             }
         }
     }

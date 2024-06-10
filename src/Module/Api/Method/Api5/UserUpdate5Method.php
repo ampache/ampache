@@ -64,7 +64,7 @@ final class UserUpdate5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         $username   = $input['username'];

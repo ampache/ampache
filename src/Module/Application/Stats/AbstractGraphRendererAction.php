@@ -82,7 +82,7 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
         $f_start_date = get_datetime((int)$start_date);
         $zoom         = (string)($_REQUEST['zoom'] ?? 'day');
 
-        $gtypes   = array();
+        $gtypes   = [];
         $gtypes[] = 'user_hits';
         if ($object_type == null || $object_type == 'song' || $object_type == 'video') {
             $gtypes[] = 'user_bandwidth';

@@ -55,7 +55,7 @@ final class PlaylistAddMethod
      */
     public static function playlist_add(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -70,7 +70,7 @@ final class PlaylistAddMethod
             return false;
         }
 
-        if (!in_array(strtolower($object_type), array('song', 'album', 'artist', 'playlist'))) {
+        if (!in_array(strtolower($object_type), ['song', 'album', 'artist', 'playlist'])) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

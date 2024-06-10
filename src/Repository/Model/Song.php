@@ -2044,11 +2044,11 @@ class Song extends database_object implements
                 $this->bitrate = $bitrate;
 
                 // replace duplicate/incorrect parameters on the additional params
-                $patterns = array(
+                $patterns = [
                     '/&format=[a-z]+/',
                     '/&transcode_to=[a-z|0-9]+/',
                     '/&bitrate=[0-9]+/',
-                );
+                ];
                 $additional_params = preg_replace($patterns, '', $additional_params);
                 $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }

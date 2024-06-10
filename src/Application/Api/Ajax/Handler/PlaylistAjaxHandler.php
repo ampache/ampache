@@ -46,7 +46,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -102,7 +102,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
-                $medias    = array();
+                $medias    = [];
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 

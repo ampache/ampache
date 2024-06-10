@@ -144,7 +144,7 @@ final class DefaultAction implements ApplicationActionInterface
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth                         = array();
+                    $auth                         = [];
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';

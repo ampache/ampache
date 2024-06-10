@@ -57,7 +57,7 @@ final class Stream5Method
      */
     public static function stream(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -75,10 +75,10 @@ final class Stream5Method
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($transcode_to && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($transcode_to && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
-        if ($maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {

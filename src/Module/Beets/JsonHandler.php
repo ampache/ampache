@@ -55,12 +55,12 @@ class JsonHandler extends Handler
      * Defines the differences between beets and ampache fields
      * @var array
      */
-    protected $fieldMapping = array(
-        'disc' => array('disk', '%d'),
-        'length' => array('time', '%d'),
-        'comments' => array('comment', '%s'),
-        'bitrate' => array('bitrate', '%d')
-    );
+    protected $fieldMapping = [
+        'disc' => ['disk', '%d'],
+        'length' => ['time', '%d'],
+        'comments' => ['comment', '%s'],
+        'bitrate' => ['bitrate', '%d']
+    ];
 
     /**
      * JsonHandler constructor.
@@ -107,10 +107,10 @@ class JsonHandler extends Handler
      */
     protected function assembleUri($command): string
     {
-        $uriParts = array(
+        $uriParts = [
             $this->uri,
             $command
-        );
+        ];
 
         return implode('/', $uriParts);
     }
@@ -132,11 +132,11 @@ class JsonHandler extends Handler
      */
     public function removeUnwantedStrings($item): string
     {
-        $toRemove = array(
+        $toRemove = [
             '{"items":[',
             '{"results":[',
             ']}'
-        );
+        ];
 
         return str_replace($toRemove, '', $item);
     }
@@ -184,12 +184,12 @@ class JsonHandler extends Handler
      */
     public function createFileUrl($song): string
     {
-        $parts = array(
+        $parts = [
             $this->uri,
             'item',
             $song['id'],
             'file' . '#.' . strtolower($song['format'])
-        );
+        ];
 
         return implode('/', $parts);
     }

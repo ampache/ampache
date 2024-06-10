@@ -78,7 +78,7 @@ class Upload
                 // run upload script if set
                 self::upload_script($targetdir, $targetfile);
 
-                $options                = array();
+                $options                = [];
                 $options['user_upload'] = Core::get_global('user')?->getId();
                 if (isset($_POST['license'])) {
                     $options['license'] = Core::get_post('license');

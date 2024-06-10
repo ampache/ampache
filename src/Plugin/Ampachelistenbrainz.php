@@ -127,7 +127,7 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         $album  = new Album($song->album);
         $artist = new Artist($song->artist);
 
-        $additional_info = array();
+        $additional_info = [];
         if ($song->mbid) {
             $additional_info['recording_mbid'] = $song->mbid;
         }
@@ -137,24 +137,24 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         if ($artist->mbid) {
             $additional_info['artist_mbid'] = $artist->mbid;
         }
-        $track_metadata = array(
+        $track_metadata = [
             'additional_info' => $additional_info,
             'artist_name' => $artist->name,
             'track_name' => $song->title,
             'release_name' => $album->get_fullname(true),
-        );
+        ];
         if (empty($additional_info)) {
             $track_metadata = array_splice($track_metadata, 1);
         }
-        $json = json_encode(array(
+        $json = json_encode([
             'listen_type' => 'single',
-            'payload' => array(
-                array(
+            'payload' => [
+                [
                     'listened_at' => time(),
                     'track_metadata' => $track_metadata
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
         $response = $this->post_json_url('/1/submit-listens', $json);
 
@@ -177,17 +177,17 @@ class Ampachelistenbrainz implements AmpachePluginInterface
      */
     private function post_json_url($url, $content)
     {
-        $opts = array(
-            'http' => array(
+        $opts = [
+            'http' => [
                 'method' => 'POST',
-                'header' => array(
+                'header' => [
                     'Authorization: token ' . $this->token,
                     'Content-type: application/json; charset=utf-8',
                     'Content-length: ' . strlen($content)
-                ),
+                ],
                 'content' => $content
-            )
-        );
+            ]
+        ];
         debug_event('listenbrainz.plugin', 'Submission option: ' . json_encode($opts), 5);
         $context = stream_context_create($opts);
         $target  = $this->scheme . '://' . $this->api_host . $url;

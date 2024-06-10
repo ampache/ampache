@@ -59,7 +59,7 @@ final class PreferenceCreateMethod
      */
     public static function preference_create(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'type', 'default', 'category'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'type', 'default', 'category'], self::ACTION)) {
             return false;
         }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
@@ -75,13 +75,13 @@ final class PreferenceCreateMethod
             return false;
         }
         $type = (string) $input['type'];
-        if (!in_array(strtolower($type), array('boolean', 'integer', 'string', 'special'))) {
+        if (!in_array(strtolower($type), ['boolean', 'integer', 'string', 'special'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
         $category = (string) $input['category'];
-        if (!in_array($category, array('interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'))) {
+        if (!in_array($category, ['interface', 'internal', 'options', 'playlist', 'plugins', 'streaming'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'category', $input['api_format']);
 
             return false;

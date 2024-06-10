@@ -64,13 +64,13 @@ final class CatalogFileMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
             return false;
         }
         $file = html_entity_decode($input['file']);
         $task = explode(',', html_entity_decode((string)($input['task'])));
         if (!is_array($task)) {
-            $task = array();
+            $task = [];
         }
 
         // confirm that a valid task is going to happen
@@ -87,7 +87,7 @@ final class CatalogFileMethod
         }
         $output_task = '';
         foreach ($task as $item) {
-            if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
+            if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Bad Request: %s', $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
 
@@ -137,13 +137,13 @@ final class CatalogFileMethod
                         break;
                     case 'verify':
                         if ($media->isNew() === false) {
-                            Catalog::update_media_from_tags($media, array($type));
+                            Catalog::update_media_from_tags($media, [$type]);
                         }
                         break;
                     case 'add':
                         if ($media->isNew()) {
                             /** @var Catalog_local $catalog */
-                            $catalog->add_file($file, array());
+                            $catalog->add_file($file, []);
                         }
                         break;
                     case 'remove':

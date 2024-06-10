@@ -233,7 +233,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         $cXY_G = (int)(($c00[1]) * $rx_ * $ry_) + (int)(($c01[1]) * $rx_ * $ry) + (int)(($c10[1]) * $rx * $ry_) + (int)(($c11[1]) * $rx * $ry);
         $cXY_B = (int)(($c00[2]) * $rx_ * $ry_) + (int)(($c01[2]) * $rx_ * $ry) + (int)(($c10[2]) * $rx * $ry_) + (int)(($c11[2]) * $rx * $ry);
 
-        return array($cXY_R, $cXY_G, $cXY_B);
+        return [$cXY_R, $cXY_G, $cXY_B];
     }
 
     #-- imagegetcolor from current ->$img split up into RGB array
@@ -248,6 +248,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
         $rgb = imagecolorat($img, $x, $y);
 
-        return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF);
+        return [($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF];
     }
 }

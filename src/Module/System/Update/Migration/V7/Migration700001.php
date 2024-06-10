@@ -26,9 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-/**
- * Add user preference `webplayer_removeplayed`, Remove tracks before the current playlist item in the webplayer when played
- */
 final class Migration700001 extends AbstractMigration
 {
     protected array $changelog = ['Add user preferences to show/hide menus in the sidebar and the switcher arrows.'];

@@ -48,7 +48,7 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
         $democratic->set_parent();
 
         $show_browse = false;
-        $results     = array();
+        $results     = [];
         $action      = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -58,12 +58,12 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 $show_browse = true;
                 break;
             case 'add_vote':
-                $democratic->add_vote(array(
-                    array(
+                $democratic->add_vote([
+                    [
                         'object_type' => Core::get_request('type'),
                         'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
-                    )
-                ));
+                    ]
+                ]);
                 $show_browse = true;
                 break;
             case 'delete':

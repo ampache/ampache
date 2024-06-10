@@ -39,7 +39,7 @@ final class Migration600036 extends AbstractMigration
     {
         $sql       = "SELECT `id` FROM `user`";
         $db_users  = Dba::read($sql);
-        $user_list = array();
+        $user_list = [];
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
@@ -48,7 +48,7 @@ final class Migration600036 extends AbstractMigration
         foreach ($user_list as $user_id) {
             $total = User::get_play_size($user_id);
             $sql   = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
-            $this->updateDatabase($sql, array($user_id, 'play_size', $total));
+            $this->updateDatabase($sql, [$user_id, 'play_size', $total]);
         }
     }
 }

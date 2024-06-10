@@ -106,7 +106,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
 
-<?php $objects = array();
+<?php $objects = [];
 // FIXME :: this is kludgy
 if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();

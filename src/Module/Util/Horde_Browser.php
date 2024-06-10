@@ -121,21 +121,21 @@ class Horde_Browser
      *
      * @var array
      */
-    private $_features = array(
+    private $_features = [
         'frames' => true,
         'html' => true,
         'images' => true,
         'java' => true,
         'javascript' => true,
         'tables' => true
-    );
+    ];
 
     /**
      * Quirks.
      *
      * @var array
      */
-    private $_quirks = array();
+    private $_quirks = [];
 
     /**
      * Creates a browser instance (Constructor).
@@ -743,8 +743,8 @@ class Horde_Browser
         $cLength = null
     ): array {
         /* Remove linebreaks (and ',', ';') from file names. */
-        $filename = str_replace(array("\r\n", "\r", "\n"), ' ', $filename);
-        $filename = str_replace(array(",", ";"), '', $filename);
+        $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
+        $filename = str_replace([",", ";"], '', $filename);
 
         /* Some browsers don't like spaces in the filename. */
         if ($this->hasQuirk('no_filename_spaces')) {

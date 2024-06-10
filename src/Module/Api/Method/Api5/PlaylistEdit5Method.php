@@ -55,14 +55,14 @@ final class PlaylistEdit5Method
      */
     public static function playlist_edit(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
         $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
-        $playlist_edit = array();
+        $playlist_edit = [];
         if (count($items) == count($order) && count($items) > 0) {
             $playlist_edit = array_combine($order, $items);
         }

@@ -43,7 +43,7 @@ class AmpConfig
     /**
      * @var array $_global
      */
-    private static $_global = array();
+    private static $_global = [];
 
     /**
      * get

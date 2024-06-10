@@ -348,15 +348,15 @@ class Query
     public function reset(): void
     {
         $this->_state['base']   = null;
-        $this->_state['select'] = array();
-        $this->_state['join']   = array();
-        $this->_state['filter'] = array();
+        $this->_state['select'] = [];
+        $this->_state['join']   = [];
+        $this->_state['filter'] = [];
         $this->_state['having'] = '';
         $this->_state['total']  = null;
-        $this->_state['sort']   = array(
+        $this->_state['sort']   = [
             'name' => null,
             'order' => null,
-        );
+        ];
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
@@ -666,7 +666,7 @@ class Query
         }
 
         // Joins may change because of the new sort so don't keep the old ones
-        $this->_state['join'] = array();
+        $this->_state['join'] = [];
 
         // ensure joins are reset on $this->_state
         $this->_get_filter_sql();

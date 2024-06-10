@@ -140,7 +140,7 @@ final class Handshake5Method
 
             if ($client instanceof User) {
                 // Create the session
-                $data             = array();
+                $data             = [];
                 $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
                 $data['apikey']   = (string)$client->apikey;

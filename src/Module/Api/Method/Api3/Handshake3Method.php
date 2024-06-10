@@ -133,7 +133,7 @@ final class Handshake3Method
 
             if ($client instanceof User) {
                 // Create the session
-                $data             = array();
+                $data             = [];
                 $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
                 $data['apikey']   = (string)$client->apikey;
@@ -175,7 +175,7 @@ final class Handshake3Method
                     ? 0
                     : date("c", $now_time + AmpConfig::get('session_length') - 60);
 
-                $results = array(
+                $results = [
                     'auth' => $token,
                     'api' => Api3::$version,
                     'session_expire' => $session_expire,
@@ -188,7 +188,7 @@ final class Handshake3Method
                     'playlists' => $counts['playlist'],
                     'videos' => $counts['video'],
                     'catalogs' => $counts['catalog']
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
 
                 return true;

@@ -105,7 +105,7 @@ final class ShareCreator implements ShareCreatorInterface
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array(
+        $params = [
             $user->getId(),
             $object_type->value,
             $object_id,
@@ -117,7 +117,7 @@ final class ShareCreator implements ShareCreatorInterface
             0,
             $max_counter,
             $description
-        );
+        ];
         Dba::write($sql, $params);
 
         $share_id = (int)
@@ -142,7 +142,7 @@ final class ShareCreator implements ShareCreatorInterface
         }
 
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $share_id));
+        Dba::write($sql, [$url, $share_id]);
 
         return $share_id;
     }

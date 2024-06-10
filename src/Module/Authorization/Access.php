@@ -110,7 +110,7 @@ class Access
     private function has_info($access_id): bool
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($access_id));
+        $db_results = Dba::read($sql, [$access_id]);
         $data       = Dba::fetch_assoc($db_results);
         if (empty($data)) {
             return false;

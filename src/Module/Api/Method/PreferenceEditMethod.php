@@ -53,7 +53,7 @@ final class PreferenceEditMethod
      */
     public static function preference_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
         $all = (array_key_exists('all', $input) && (int)$input['all'] == 1);

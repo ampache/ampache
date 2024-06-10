@@ -47,7 +47,7 @@ final readonly class UserAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
         $user_id = (int)$this->requestParser->getFromRequest('user_id');
 

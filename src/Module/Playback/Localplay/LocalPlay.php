@@ -298,7 +298,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;
@@ -317,7 +317,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;

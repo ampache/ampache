@@ -57,7 +57,7 @@ final class UserCreate4Method
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_create', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
             return false;
         }
         $username = $input['username'];

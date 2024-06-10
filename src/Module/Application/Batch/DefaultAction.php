@@ -76,7 +76,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $default_name = 'Unknown';
         $name         = $default_name;
         $action       = $this->requestParser->getFromRequest('action');
-        $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
+        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist']));
         $object_type  = $action === 'browse'
             ? $this->requestParser->getFromRequest('type')
             : $action;

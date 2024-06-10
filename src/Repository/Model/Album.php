@@ -677,7 +677,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->song_artists = self::get_parent_array($this->id, 0, 'song');
         }
 
-        return $this->song_artists ?? array();
+        return $this->song_artists ?? [];
     }
 
     /**
@@ -779,7 +779,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
     {
-        $results    = array();
+        $results    = [];
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
         $db_results = Dba::read($sql, [$object_type, $album_id]);
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);

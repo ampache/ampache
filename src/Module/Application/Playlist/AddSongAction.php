@@ -63,7 +63,7 @@ final class AddSongAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $playlist->add_songs(array($_REQUEST['song_id']));
+        $playlist->add_songs([$_REQUEST['song_id']]);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

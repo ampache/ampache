@@ -82,7 +82,7 @@ class AutoUpdate
             if (
                 is_string($current) &&
                 preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))
+                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
             ) {
                 return (string)$matches[1];
             }
@@ -109,7 +109,7 @@ class AutoUpdate
         try {
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = Requests::get($url, [], Core::requests_options());
 
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);

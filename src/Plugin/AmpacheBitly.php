@@ -112,14 +112,14 @@ class AmpacheBitly implements AmpachePluginInterface
             return '';
         }
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Bearer ' . $this->bitly_token,
             'Content-Type' => 'application/json'
-        );
-        $data = array(
+        ];
+        $data = [
             'group_guid' => $this->bitly_group_guid,
             'long_url' => $url,
-        );
+        ];
         $apiurl = 'https://api-ssl.bitly.com/v4/shorten';
 
         try {
@@ -161,7 +161,7 @@ class AmpacheBitly implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['bitly_token'])) || !strlen(trim($data['bitly_group_guid']))) {
-            $data                     = array();
+            $data                     = [];
             $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
             $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
         }

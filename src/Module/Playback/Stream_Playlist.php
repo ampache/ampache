@@ -106,7 +106,7 @@ class Stream_Playlist
             $this->streamtoken = $user->streamtoken;
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 $this->urls[] = new Stream_Url($row);
@@ -119,11 +119,11 @@ class Stream_Playlist
         debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $fields       = array();
+        $fields       = [];
         $fields[]     = '`sid`';
-        $values       = array();
+        $values       = [];
         $values[]     = $this->id;
-        $holders      = array();
+        $holders      = [];
         $holders[]    = '?';
 
         foreach ($url->properties as $field) {
@@ -145,16 +145,16 @@ class Stream_Playlist
     {
         debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
         $sql         = '';
-        $fields      = array();
-        $values      = array();
-        $holders_arr = array();
+        $fields      = [];
+        $values      = [];
+        $holders_arr = [];
 
         foreach ($urls as $url) {
             $this->urls[] = $url;
-            $fields       = array();
+            $fields       = [];
             $fields[]     = '`sid`';
             $values[]     = $this->id;
-            $holders      = array();
+            $holders      = [];
             $holders[]    = '?';
 
             foreach ($url->properties as $field) {
@@ -209,7 +209,7 @@ class Stream_Playlist
      */
     public static function media_to_urlarray(array $media, string $additional_params = ''): array
     {
-        $urls = array();
+        $urls = [];
         foreach ($media as $medium) {
             $surl = self::media_to_url($medium, $additional_params);
             if ($surl != null) {
@@ -536,7 +536,7 @@ class Stream_Playlist
      * }> $media
      * @param string $additional_params
      */
-    public function add(array $media = array(), string $additional_params = ''): void
+    public function add(array $media = [], string $additional_params = ''): void
     {
         $urls = self::media_to_urlarray($media, $additional_params);
         $this->_add_urls($urls);
@@ -548,15 +548,15 @@ class Stream_Playlist
      * from media objects like democratic playlists
      * @param list<string> $urls
      */
-    public function add_urls(array $urls = array()): bool
+    public function add_urls(array $urls = []): bool
     {
         foreach ($urls as $url) {
-            $this->_add_url(new Stream_Url(array(
+            $this->_add_url(new Stream_Url([
                 'url' => $url,
                 'title' => Stream_Url::get_title($url),
                 'author' => T_('Ampache'),
                 'time' => '-1'
-            )));
+            ]));
         }
 
         return true;
@@ -645,20 +645,20 @@ class Stream_Playlist
     {
         $result = "";
         foreach ($this->urls as $url) {
-            $xml = array();
+            $xml = [];
 
-            $xml['track'] = array(
+            $xml['track'] = [
                 'title' => $url->title,
                 'creator' => $url->author,
                 'duration' => (int) $url->time * 1000,
                 'location' => $url->url,
                 'identifier' => $url->url
-            );
+            ];
             if ($url->type == 'video') {
-                $xml['track']['meta'] = array(
+                $xml['track']['meta'] = [
                     'attribute' => 'rel="provider"',
                     'value' => 'video'
-                );
+                ];
             }
             if ($url->info_url) {
                 $xml['track']['info'] = $url->info_url;
@@ -784,11 +784,11 @@ class Stream_Playlist
     {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
-        $items = array();
+        $items = [];
 
         foreach ($this->urls as $url) {
             $url_data = Stream_Url::parse($url->url);
-            $items[]  = array($url_data['type'], $url_data['id']);
+            $items[]  = [$url_data['type'], $url_data['id']];
         }
         if (!empty($items)) {
             $democratic->add_vote($items);

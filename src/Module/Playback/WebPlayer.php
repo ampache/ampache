@@ -43,7 +43,7 @@ class WebPlayer
      */
     public static function is_playlist_radio($playlist): bool
     {
-        $radios = array();
+        $radios = [];
 
         foreach ($playlist->urls as $item) {
             if ($item->type == "radio") {
@@ -91,7 +91,7 @@ class WebPlayer
      */
     protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = ''): array
     {
-        $types = array('real' => 'mp3', 'player' => '');
+        $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
@@ -278,8 +278,8 @@ class WebPlayer
      */
     public static function get_media_js_param($item, $transcode_cfg, $force_type = ''): string
     {
-        $json = array();
-        foreach (array('title', 'author') as $member) {
+        $json = [];
+        foreach (['title', 'author'] as $member) {
             if ($member == "author") {
                 $kmember = "artist";
             } else {

@@ -54,7 +54,7 @@ final class PlaylistRemoveSong5Method
      */
     public static function playlist_remove_song(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         ob_end_clean();

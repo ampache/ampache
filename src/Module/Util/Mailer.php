@@ -150,7 +150,7 @@ final class Mailer implements MailerInterface
      */
     public static function get_users($filter): array
     {
-        $params = array();
+        $params = [];
         switch ($filter) {
             case 'users':
                 $sql      = "SELECT * FROM `user` WHERE `access`= ? AND `email` IS NOT NULL";
@@ -172,14 +172,14 @@ final class Mailer implements MailerInterface
 
         $db_results = Dba::read($sql, $params);
 
-        $results = array();
+        $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'fullname' => $row['fullname'],
                 'email' => $row['email']
-            );
+            ];
         }
 
         return $results;

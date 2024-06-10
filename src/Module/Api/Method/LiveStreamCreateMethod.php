@@ -60,7 +60,7 @@ final class LiveStreamCreateMethod
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('name', 'codec', 'url', 'catalog'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['name', 'codec', 'url', 'catalog'], self::ACTION)) {
             return false;
         }
         $name       = $input['name'];
@@ -82,13 +82,13 @@ final class LiveStreamCreateMethod
             return false;
         }
 
-        $data = array(
+        $data = [
             "name" => $name,
             "url" => $url,
             "codec" => $codec,
             "catalog" => $catalog_id,
             "site_url" => $site_url
-        );
+        ];
 
         $results = Live_Stream::create($data);
         if (empty($results)) {
@@ -100,10 +100,10 @@ final class LiveStreamCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array((int)$results));
+                echo Json_Data::live_streams([(int)$results]);
                 break;
             default:
-                echo Xml_Data::live_streams(array((int)$results), $user);
+                echo Xml_Data::live_streams([(int)$results], $user);
         }
 
         return true;

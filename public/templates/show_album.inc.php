@@ -71,8 +71,8 @@ $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 $hide_array        = (AmpConfig::get('hide_single_artist') && $album->get_artist_count() == 1)
-    ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
-    : array('cel_album', 'cel_year', 'cel_drag');
+    ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
+    : ['cel_album', 'cel_year', 'cel_drag'];
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($album->song_count <= $directplay_limit);
@@ -175,7 +175,7 @@ if (AmpConfig::get('use_rss')) { ?>
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                array('object_type' => 'album', 'object_id' => (string)$album->id)
+                ['object_type' => 'album', 'object_id' => (string)$album->id]
             ); ?>
         </li>
         <?php }
@@ -274,6 +274,6 @@ $browse->set_simple_browse(true);
 $browse->set_sort('track', 'ASC');
 $browse->set_filter('album', $album->id);
 $browse->get_objects();
-$browse->show_objects(array(), array('hide' => $hide_array));
+$browse->show_objects([], ['hide' => $hide_array]);
 $browse->store(); ?>
 </div>

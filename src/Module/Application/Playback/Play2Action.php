@@ -118,7 +118,7 @@ final class Play2Action implements ApplicationActionInterface
         if ($slashcount > 2) {
             // e.g. ssid/3ca112fff23376ef7c74f018497dd39d/type/song/oid/280/uid/player/api/name/Glad.mp3
             $new_arr     = explode('/', $_SERVER['QUERY_STRING']);
-            $new_request = array();
+            $new_request = [];
             $key         = null;
             $i           = 0;
             // alternate key and value through the split array e.g:
@@ -244,7 +244,7 @@ final class Play2Action implements ApplicationActionInterface
         }
         // allow disabling stat recording from the play url
         $record_stats = true;
-        if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if ($action == 'download' && !in_array($type, ['song', 'video', 'podcast_episode'])) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -330,13 +330,13 @@ final class Play2Action implements ApplicationActionInterface
                 // this is a permastream link so create a session
                 if (!Session::exists(AccessTypeEnum::STREAM->value, $session_id)) {
                     Session::create(
-                        array(
+                        [
                             'sid' => $session_id,
                             'username' => $user->username,
                             'value' => '',
                             'type' => 'stream',
                             'agent' => ''
-                        )
+                        ]
                     );
                 } else {
                     Session::update_agent($session_id, $agent);
@@ -617,7 +617,7 @@ final class Play2Action implements ApplicationActionInterface
         }
         $media->format();
 
-        if (!User::stream_control(array(array('object_type' => $type, 'object_id' => $media->id)))) {
+        if (!User::stream_control([['object_type' => $type, 'object_id' => $media->id]])) {
             throw new AccessDeniedException(
                 sprintf(
                     'Stream control failed for user %s on %s',
@@ -758,7 +758,7 @@ final class Play2Action implements ApplicationActionInterface
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             // STUPID IE
-            $media_name = str_replace(array('?', '/', '\\'), "_", $streamConfiguration['file_name']);
+            $media_name = str_replace(['?', '/', '\\'], "_", $streamConfiguration['file_name']);
             $headers    = $this->browser->getDownloadHeaders($media_name, $media->mime, false, (string)Core::get_filesize($stream_file));
 
             foreach ($headers as $headerName => $value) {
@@ -783,7 +783,7 @@ final class Play2Action implements ApplicationActionInterface
                     );
                     Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                 } else {
-                    Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
+                    Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                 }
             }
 
@@ -893,8 +893,8 @@ final class Play2Action implements ApplicationActionInterface
             }
         }
 
-        $transcode_settings = array();
-        $troptions          = array();
+        $transcode_settings = [];
+        $troptions          = [];
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
@@ -1036,7 +1036,7 @@ final class Play2Action implements ApplicationActionInterface
                             );
                             Stats::insert($type, $media->id, $user_id, $agent, $location, 'download', $time);
                         } else {
-                            Stats::insert($type, $media->id, $user_id, 'share.php', array(), 'download', $time);
+                            Stats::insert($type, $media->id, $user_id, 'share.php', [], 'download', $time);
                         }
                     } elseif (!$share_id && $record_stats) {
                         $this->logger->notice(
@@ -1050,7 +1050,7 @@ final class Play2Action implements ApplicationActionInterface
                         }
                     } elseif ($share_id > 0) {
                         // shares are people too
-                        $media->set_played(0, 'share.php', array(), $time);
+                        $media->set_played(0, 'share.php', [], $time);
                     }
                 }
             }
@@ -1103,8 +1103,8 @@ final class Play2Action implements ApplicationActionInterface
         }
         $bytes_streamed = 0;
         $buf_all        = '';
-        $r_arr          = array($filepointer);
-        $w_arr          = $e_arr = array();
+        $r_arr          = [$filepointer];
+        $w_arr          = $e_arr = [];
         $status         = stream_select($r_arr, $w_arr, $e_arr, null);
         if ($status === false) {
             $this->logger->error(

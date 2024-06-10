@@ -54,7 +54,7 @@ final class PlaylistSongs5Method
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -84,7 +84,7 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];

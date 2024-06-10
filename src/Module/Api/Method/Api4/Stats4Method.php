@@ -62,7 +62,7 @@ final class Stats4Method
      */
     public static function stats(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
         $user_id = $user->id;
@@ -82,7 +82,7 @@ final class Stats4Method
         $offset = (int)($input['offset'] ?? 0);
         $limit  = (int)($input['limit'] ?? 0);
         // original method only searched albums and had poor method inputs
-        if (in_array($type, array('newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'))) {
+        if (in_array($type, ['newest', 'highest', 'frequent', 'recent', 'forgotten', 'flagged'])) {
             $type            = 'album';
             $input['filter'] = $type;
         }
@@ -152,19 +152,19 @@ final class Stats4Method
         if ($type === 'artist') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::artists($results, array(), $user);
+                    echo Json4_Data::artists($results, [], $user);
                     break;
                 default:
-                    echo Xml4_Data::artists($results, array(), $user);
+                    echo Xml4_Data::artists($results, [], $user);
             }
         }
         if ($type === 'album') {
             switch ($input['api_format']) {
                 case 'json':
-                    echo Json4_Data::albums($results, array(), $user);
+                    echo Json4_Data::albums($results, [], $user);
                     break;
                 default:
-                    echo Xml4_Data::albums($results, array(), $user);
+                    echo Xml4_Data::albums($results, [], $user);
             }
         }
 

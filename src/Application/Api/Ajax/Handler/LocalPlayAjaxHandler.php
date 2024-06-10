@@ -45,7 +45,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -117,7 +117,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $browse = new Browse();
                         $browse->set_type('playlist_localplay');
                         $browse->set_static_content(true);
-                        $browse->save_objects(array());
+                        $browse->save_objects([]);
                         $browse->show_objects();
                         $browse->store();
                         $results[$browse->get_content_div()] = ob_get_contents();

@@ -68,7 +68,7 @@ final class LocalplaySongs5Method
 
             return false;
         }
-        $results = array('localplay_songs' => $songs);
+        $results = ['localplay_songs' => $songs];
 
         ob_end_clean();
         switch ($input['api_format']) {

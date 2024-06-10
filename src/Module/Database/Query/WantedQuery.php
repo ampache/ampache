@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class WantedQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'user',
         'accepted',
@@ -41,7 +41,7 @@ final class WantedQuery implements QueryInterface
         'title',
         'name',
         'year',
-    );
+    ];
 
     /** @var string */
     protected $select = "`wanted`.`id`";

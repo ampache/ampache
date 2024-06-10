@@ -61,7 +61,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $browse->set_filter('album', $object_id);
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";
-        $browse->show_objects(array(), true); // true argument is set to show the reorder column
+        $browse->show_objects([], true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
 

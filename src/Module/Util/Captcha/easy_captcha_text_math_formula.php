@@ -60,7 +60,7 @@ class easy_captcha_text_math_formula extends easy_captcha
      */
     public function create_formula(): string
     {
-        $formula = array(
+        $formula = [
             rand(20, 100) . " / " . rand(2, 10),
             rand(50, 150) . " - " . rand(2, 100),
             rand(2, 100) . " + " . rand(2, 100),
@@ -68,7 +68,7 @@ class easy_captcha_text_math_formula extends easy_captcha
             rand(5, 10) . " * " . rand(5, 10) . " - " . rand(1, 20),
             rand(30, 100) . " + " . rand(5, 99) . " - " . rand(1, 50),
             //    rand(20,100) . " / " . rand(2,10) . " + " . rand(1,50),
-        );
+        ];
 
         return $formula[rand(0, count($formula) - 1)];
     }
@@ -96,7 +96,7 @@ class easy_captcha_text_math_formula extends easy_captcha
         preg_match("#^(\d+)([-+/*])(\d+)([-+/*])?(\d+)?$#", $this->clean($formula), $uu);
         list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
         if ($Y) {
-            $calc = array(
+            $calc = [
                 '/' => $X / $Y,
                 // PHP+ZendVM catches division by zero already, and CAPTCHA "attacker" would get no advantage herefrom anyhow
                 "*" => $X * $Y,
@@ -105,7 +105,7 @@ class easy_captcha_text_math_formula extends easy_captcha
                 "*-" => $X * $Y - $Z,
                 "+-" => $X + $Y - $Z,
                 "/+" => $X / $Y + $Z,
-            );
+            ];
         }
 
         return ($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));

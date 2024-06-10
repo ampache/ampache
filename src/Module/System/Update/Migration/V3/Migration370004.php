@@ -49,7 +49,7 @@ final class Migration370004 extends AbstractMigration
         $this->updatePreferences('upload_script', 'Upload: run the following script after upload (current directory = upload target directory)', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
         $this->updatePreferences('upload_allow_edit', 'Upload: allow users to edit uploaded songs', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
 
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `artist` ADD COLUMN `user` int(11) NULL AFTER `last_update`",
             "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('0 - default', '')",
@@ -67,7 +67,7 @@ final class Migration370004 extends AbstractMigration
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
             "ALTER TABLE `song` ADD COLUMN `user_upload` int(11) NULL AFTER `addition_time`, ADD COLUMN `license` int(11) NULL AFTER `user_upload`"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }

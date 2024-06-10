@@ -173,12 +173,12 @@ class Api
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
     ];
 
-    public const API_VERSIONS = array(
+    public const API_VERSIONS = [
         3,
         4,
         5,
         6
-    );
+    ];
 
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
@@ -216,7 +216,7 @@ class Api
      * @param string $format
      * @param array $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = array()): void
+    public static function message($message, $format = 'xml', $return_data = []): void
     {
         switch ($format) {
             case 'json':
@@ -337,7 +337,7 @@ class Api
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
-        $autharray = (!empty($token)) ? array('auth' => $token) : array();
+        $autharray = (!empty($token)) ? ['auth' => $token] : [];
         // perpetual sessions do not expire
         $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
@@ -345,7 +345,7 @@ class Api
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
 
         // send the totals
-        $outarray = array(
+        $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
             'update' => date("c", (int)$details['update']),
@@ -367,7 +367,7 @@ class Api
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
             'labels' => $counts['label']
-        );
+        ];
 
         return array_merge($autharray, $outarray);
     }

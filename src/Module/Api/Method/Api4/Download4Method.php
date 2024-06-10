@@ -50,7 +50,7 @@ final class Download4Method
      */
     public static function download(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
         $fileid       = $input['id'];

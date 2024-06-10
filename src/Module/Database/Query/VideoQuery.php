@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class VideoQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -50,10 +50,10 @@ final class VideoQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -70,7 +70,7 @@ final class VideoQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`video`.`id`";

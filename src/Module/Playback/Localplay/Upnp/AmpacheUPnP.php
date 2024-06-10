@@ -128,7 +128,7 @@ class AmpacheUPnP extends localplay_controller
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, array($data['name'] ?? null, $data['url'] ?? null, $user_id));
+        return Dba::query($sql, [$data['name'] ?? null, $data['url'] ?? null, $user_id]);
     }
 
     /**
@@ -139,7 +139,7 @@ class AmpacheUPnP extends localplay_controller
     public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_upnp` WHERE `id` = ?";
-        Dba::query($sql, array($uid));
+        Dba::query($sql, [$uid]);
 
         return true;
     }
@@ -153,7 +153,7 @@ class AmpacheUPnP extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_upnp` ORDER BY `name`";
         $db_results = Dba::query($sql);
-        $results    = array();
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -171,7 +171,7 @@ class AmpacheUPnP extends localplay_controller
     public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_upnp` SET `url` = ?, `name` = ? WHERE `id` = ?";
-        Dba::query($sql, array($data['url'], $data['name'], $uid));
+        Dba::query($sql, [$data['url'], $data['name'], $uid]);
 
         return true;
     }
@@ -183,9 +183,9 @@ class AmpacheUPnP extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields         = array();
-        $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['url']  = array('description' => T_('URL'), 'type' => 'url');
+        $fields         = [];
+        $fields['name'] = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['url']  = ['description' => T_('URL'), 'type' => 'url'];
 
         return $fields;
     }
@@ -200,7 +200,7 @@ class AmpacheUPnP extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -419,9 +419,9 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->Repeat(array(
+        $this->_upnp->Repeat([
             'repeat' => ($state ? 'all' : 'off')
-        ));
+        ]);
 
         return true;
     }
@@ -460,10 +460,10 @@ class AmpacheUPnP extends localplay_controller
 
         $playlist = $this->_upnp->GetPlaylistItems();
 
-        $results = array();
+        $results = [];
         $idx     = 1;
         foreach ($playlist as $key => $item) {
-            $data          = array();
+            $data          = [];
             $data['link']  = $item['link'] ?? '';
             $data['id']    = $idx;
             $data['track'] = $idx;
@@ -494,7 +494,7 @@ class AmpacheUPnP extends localplay_controller
     public function status(): array
     {
         debug_event('upnp.controller', 'status', 5);
-        $array = array();
+        $array = [];
         if (!$this->_upnp) {
             return $array;
         }

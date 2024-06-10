@@ -90,18 +90,18 @@ class Ampacheflickr implements AmpachePluginInterface
      */
     public function get_photos($search, $category = 'concert'): array
     {
-        $photos = array();
+        $photos = [];
         $url    = "https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=" . $this->api_key . "&per_page=20&content_type=1&text=" . rawurlencode(trim($search . " " . $category));
         debug_event('flickr.plugin', 'Calling ' . $url, 5);
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = Requests::get($url, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml && $xml->photos) {
                 foreach ($xml->photos->photo as $photo) {
-                    $photos[] = array(
+                    $photos[] = [
                         'title' => $photo->title,
                         'url' => "http://farm" . $photo['farm'] . ".static.flickr.com/" . $photo['server'] . '/' . $photo['id'] . "_" . $photo['secret'] . "_m.jpg",
-                    );
+                    ];
                 }
             }
         }
@@ -115,24 +115,24 @@ class Ampacheflickr implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         if (!$limit) {
             $limit = 5;
         }
 
         $images  = $this->get_photos($options['keyword'], '');
-        $results = array();
+        $results = [];
         foreach ($images as $image) {
             $title = $this->name;
             if (!empty($image['title'])) {
                 $title .= ' - ' . $image['title'];
             }
-            $results[] = array(
+            $results[] = [
                 'url' => $image['url'],
                 'mime' => 'image/jpeg',
                 'title' => $title
-            );
+            ];
 
             if ($limit && count($results) >= $limit) {
                 break;
@@ -153,7 +153,7 @@ class Ampacheflickr implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['flickr_api_key']))) {
-            $data                   = array();
+            $data                   = [];
             $data['flickr_api_key'] = Preference::get_by_user(-1, 'flickr_api_key');
         }
 

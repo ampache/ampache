@@ -53,7 +53,7 @@ final class Localplay4Method
      */
     public static function localplay(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('command'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -83,12 +83,12 @@ final class Localplay4Method
                 if ($clear == 1) {
                     $localplay->delete_all();
                 }
-                $media = array(
+                $media = [
                     'object_type' => $type,
                     'object_id' => $object_id,
-                );
+                ];
                 $playlist = new Stream_Playlist();
-                $playlist->add(array($media));
+                $playlist->add([$media]);
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }
@@ -131,8 +131,8 @@ final class Localplay4Method
                 return false;
         } // end switch on command
         $results = (!empty($status))
-            ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => $result)));
+            ? ['localplay' => ['command' => [$input['command'] => $status]]]
+            : ['localplay' => ['command' => [$input['command'] => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

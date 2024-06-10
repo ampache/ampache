@@ -72,7 +72,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
      */
     public function font()
     {
-        $fonts = array(/*"FreeMono.ttf"*/);
+        $fonts = [/*"FreeMono.ttf"*/];
         $fonts += glob(__DIR__ . '/../../../../resources/fonts/*.ttf');
 
         return $fonts[rand(0, count($fonts) - 1)];

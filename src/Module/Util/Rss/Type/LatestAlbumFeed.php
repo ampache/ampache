@@ -50,14 +50,14 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
 
-            yield array(
+            yield [
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => (string)Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time)
-            );
+            ];
         }
     }
 }

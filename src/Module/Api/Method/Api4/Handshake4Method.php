@@ -139,7 +139,7 @@ final class Handshake4Method
 
             if ($client instanceof User) {
                 // Create the session
-                $data             = array();
+                $data             = [];
                 $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
                 $data['apikey']   = (string)$client->apikey;
@@ -180,7 +180,7 @@ final class Handshake4Method
                     : date("c", $now_time + AmpConfig::get('session_length') - 60);
 
                 // send the totals
-                $results = array(
+                $results = [
                     'auth' => $token,
                     'api' => Api4::$version,
                     'session_expire' => $session_expire,
@@ -201,7 +201,7 @@ final class Handshake4Method
                     'licenses' => $counts['license'],
                     'live_streams' => $counts['live_stream'],
                     'labels' => $counts['label']
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);

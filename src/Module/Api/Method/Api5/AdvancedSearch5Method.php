@@ -70,7 +70,7 @@ final class AdvancedSearch5Method
      */
     public static function advanced_search(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
             return false;
         }
 
@@ -103,12 +103,12 @@ final class AdvancedSearch5Method
                 Json5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Json5_Data::albums($results, array(), $user);
+                        echo Json5_Data::albums($results, [], $user);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json5_Data::artists($results, array(), $user);
+                        echo Json5_Data::artists($results, [], $user);
                         break;
                     case 'label':
                         echo Json5_Data::labels($results);
@@ -142,10 +142,10 @@ final class AdvancedSearch5Method
                 Xml5_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Xml5_Data::albums($results, array(), $user);
+                        echo Xml5_Data::albums($results, [], $user);
                         break;
                     case 'artist':
-                        echo Xml5_Data::artists($results, array(), $user);
+                        echo Xml5_Data::artists($results, [], $user);
                         break;
                     case 'label':
                         echo Xml5_Data::labels($results, $user);

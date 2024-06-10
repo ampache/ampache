@@ -60,7 +60,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                     <?php if (count($libitem->artists) > 1) { ?>
                         <tr>
                             <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                            <td><?php echo Artist::get_display(array_diff($libitem->artists, array($libitem->artist))); ?></td>
+                            <td><?php echo Artist::get_display(array_diff($libitem->artists, [$libitem->artist])); ?></td>
                         </tr>
                     <?php } ?>
                 <tr>

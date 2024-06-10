@@ -1409,7 +1409,7 @@ class Search extends playlist_object
     {
         if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, array($count, $this->id));
+            Dba::write($sql, [$count, $this->id]);
         }
     }
 

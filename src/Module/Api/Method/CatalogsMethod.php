@@ -57,7 +57,7 @@ final class CatalogsMethod
         $browse->set_filter('user', $user->getId());
         if (
             isset($input['filter']) &&
-            in_array($input['filter'], array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))
+            in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'])
         ) {
             // filter for specific catalog types
             $browse->set_filter('gather_type', $input['filter']);

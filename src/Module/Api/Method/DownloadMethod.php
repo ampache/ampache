@@ -55,7 +55,7 @@ final class DownloadMethod
      */
     public static function download(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -76,10 +76,10 @@ final class DownloadMethod
         $maxBitRate = (int)($input['bitrate'] ?? 0);
         $format     = $input['format'] ?? null; // mp3, flv or raw
         $params     = '&client=api&action=download&cache=1';
-        if ($format && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
-        if ($format != 'raw' && $maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($format != 'raw' && $maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         $url = '';

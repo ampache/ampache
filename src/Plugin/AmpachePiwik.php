@@ -128,7 +128,7 @@ class AmpachePiwik implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['piwik_site_id'])) || !strlen(trim($data['piwik_url']))) {
-            $data                  = array();
+            $data                  = [];
             $data['piwik_site_id'] = Preference::get_by_user(-1, 'piwik_site_id');
             $data['piwik_url']     = Preference::get_by_user(-1, 'piwik_url');
         }

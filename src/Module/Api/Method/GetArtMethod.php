@@ -56,7 +56,7 @@ final class GetArtMethod
      */
     public static function get_art(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -67,7 +67,7 @@ final class GetArtMethod
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -101,7 +101,7 @@ final class GetArtMethod
         if ($art->has_db_info($fallback)) {
             header('Access-Control-Allow-Origin: *');
             if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
+                $dim           = [];
                 $dim['width']  = $size;
                 $dim['height'] = $size;
                 $thumb         = $art->get_thumb($dim);

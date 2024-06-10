@@ -100,7 +100,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                array('object_type' => 'podcast', 'object_id' => (string)$podcast->getId())
+                ['object_type' => 'podcast', 'object_id' => (string)$podcast->getId()]
             ); ?>
         /li>
         <?php } ?>

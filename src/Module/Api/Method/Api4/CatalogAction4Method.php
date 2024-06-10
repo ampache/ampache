@@ -52,7 +52,7 @@ final class CatalogAction4Method
      */
     public static function catalog_action(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
             return false;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'catalog_action', $input['api_format'])) {
@@ -60,7 +60,7 @@ final class CatalogAction4Method
         }
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
+        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
             Api4::message('error', T_('Incorrect catalog task') . ' ' . $task, '401', $input['api_format']);
 
             return false;
@@ -83,10 +83,10 @@ final class CatalogAction4Method
                     $catalog->gather_art();
                     break;
                 case 'add_to_catalog':
-                    $options = array(
+                    $options = [
                         'gather_art' => false,
                         'parse_playlist' => false
-                    );
+                    ];
                     $catalog->add_to_catalog($options);
                     break;
             }

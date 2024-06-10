@@ -1280,7 +1280,7 @@ class Ui implements UiInterface
                 break;
             case 'disabled_custom_metadata_fields':
                 $ids             = explode(',', $value);
-                $options         = array();
+                $options         = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
@@ -1290,8 +1290,8 @@ class Ui implements UiInterface
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
                 $ids       = explode(',', $value);
-                $options   = array();
-                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_array() : Playlist::get_playlist_array();
+                $options   = [];
+                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_[] : Playlist::get_playlist_[];
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
                         $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';

@@ -237,11 +237,11 @@ class UPnPPlayer
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
-        return array(
+        return [
             'InstanceID' => 0,
             $prefix . 'URI' => $songUrl,
             $prefix . 'URIMetaData' => htmlentities($xmlDIDL)
-        );
+        ];
     }
 
     /**
@@ -272,7 +272,7 @@ class UPnPPlayer
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
-        $args     = array('InstanceID' => 0, 'Speed' => 1);
+        $args     = ['InstanceID' => 0, 'Speed' => 1];
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
@@ -317,7 +317,7 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args     = array('InstanceID' => 0, 'Speed' => 1);
+            $args     = ['InstanceID' => 0, 'Speed' => 1];
             $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
         }
 
@@ -387,11 +387,11 @@ class UPnPPlayer
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice('SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('SetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
-        ));
+        ]);
 
         return true;
     }
@@ -406,10 +406,10 @@ class UPnPPlayer
         $instanceId = 0;
         $channel    = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice('GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('GetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel
-        ));
+        ]);
 
         $responseXML = simplexml_load_string($response);
         if (empty($responseXML)) {
@@ -431,7 +431,7 @@ class UPnPPlayer
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
         if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
-            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data));
+            Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $data]);
         } else {
             Session::write($sid, $data);
         }

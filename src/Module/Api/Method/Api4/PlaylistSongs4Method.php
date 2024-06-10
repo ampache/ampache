@@ -51,7 +51,7 @@ final class PlaylistSongs4Method
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $uid = scrub_in((string) $input['filter']);
@@ -75,7 +75,7 @@ final class PlaylistSongs4Method
         }
 
         $items   = $playlist->get_items();
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type']->value == 'song') {
                 $results[] = $object['object_id'];

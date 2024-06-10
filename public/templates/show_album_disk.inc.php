@@ -67,8 +67,8 @@ $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = $access25;
 $directplay_limit  = AmpConfig::get('direct_play_limit');
 $hide_array        = (AmpConfig::get('hide_single_artist') && $albumDisk->get_artist_count() == 1)
-    ? array('cel_artist', 'cel_album', 'cel_year', 'cel_drag')
-    : array('cel_album', 'cel_year', 'cel_drag');
+    ? ['cel_artist', 'cel_album', 'cel_year', 'cel_drag']
+    : ['cel_album', 'cel_year', 'cel_drag'];
 
 if ($directplay_limit > 0) {
     $show_playlist_add = ($albumDisk->song_count <= $directplay_limit);
@@ -169,7 +169,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                array('object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id)
+                ['object_type' => 'album_disk', 'object_id' => (string)$albumDisk->id]
             ); ?>
         </li>
         <?php } ?>
@@ -262,6 +262,6 @@ $browse->set_simple_browse(true);
 $browse->set_sort('track', 'ASC');
 $browse->set_filter('album_disk', $albumDisk->id);
 $browse->get_objects();
-$browse->show_objects(array(), array('hide' => $hide_array));
+$browse->show_objects([], ['hide' => $hide_array]);
 $browse->store(); ?>
 </div>

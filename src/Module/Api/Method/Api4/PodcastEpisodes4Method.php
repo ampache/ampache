@@ -56,7 +56,7 @@ final class PodcastEpisodes4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $podcast_id = (int) $input['filter'];

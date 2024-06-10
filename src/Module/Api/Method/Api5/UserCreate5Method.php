@@ -58,7 +58,7 @@ final class UserCreate5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
             return false;
         }
         $username = $input['username'];
