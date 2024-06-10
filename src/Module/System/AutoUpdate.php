@@ -286,7 +286,7 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            !empty($current) &&
+            !empty($latest) &&
             $current !== $latest
         ) {
             if (
