@@ -620,9 +620,9 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
                     echo '<div id=update_notify>';
-                    if (!AmpConfig::get('hide_ampache_messages', false)) {
-                        AutoUpdate::show_ampache_message();
-                    }
+                    //if (!AmpConfig::get('hide_ampache_messages', false)) {
+                    //    AutoUpdate::show_ampache_message();
+                    //}
                     if (AmpConfig::get('autoupdate')) {
                         $current_version = AutoUpdate::get_current_version();
                         $latest_version  = AutoUpdate::get_latest_version();
