@@ -86,14 +86,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id   = $user->id;
                 $ajax_page = 'stats';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                $data      = Stats::get_recently_played($user_id);
+                require_once Ui::find_template('show_recently_played_all.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':

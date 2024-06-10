@@ -862,7 +862,6 @@ class Ui implements UiInterface
             case 'home_moment_videos':
             case 'home_now_playing':
             case 'home_recently_played':
-            case 'home_recently_played_all':
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
