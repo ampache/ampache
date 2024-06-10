@@ -335,7 +335,7 @@ class AutoUpdate
             echo '<div id="autoupdate">';
             echo '<span>' . T_("WARNING") . '</span>';
             echo ' (Ampache Develop is about to go through a major change!)<br />';
-            echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
+            echo '<a href="https://github.com/ampache/ampache/wiki/ampache7-for-admins' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
             echo '</div>';
         }
     }
