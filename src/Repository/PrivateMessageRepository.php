@@ -37,8 +37,10 @@ use Ampache\Repository\Model\User;
  */
 final readonly class PrivateMessageRepository implements PrivateMessageRepositoryInterface
 {
-    public function __construct(private ModelFactoryInterface $modelFactory, private DatabaseConnectionInterface $connection)
-    {
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
+    ) {
     }
 
     /**

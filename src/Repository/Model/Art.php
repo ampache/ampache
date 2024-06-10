@@ -109,8 +109,11 @@ class Art extends database_object
      * @param string $type
      * @param string $kind
      */
-    public function __construct($uid = 0, $type = 'album', $kind = 'default')
-    {
+    public function __construct(
+        $uid = 0,
+        $type = 'album',
+        $kind = 'default'
+    )  {
         if (!$uid) {
             return;
         }
@@ -603,8 +606,14 @@ class Art extends database_object
      * @param string $kind
      * @param string|null $mime
      */
-    private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime): bool
-    {
+    private static function write_to_dir(
+        $source,
+        $sizetext,
+        $type,
+        $uid,
+        $kind,
+        $mime
+    ): bool {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
             return false;

@@ -45,8 +45,11 @@ class VlcPlayer
      * @param string $password
      * @param int $port
      */
-    public function __construct($host = 'localhost', $password = '', $port = 8080)
-    {
+    public function __construct(
+        $host = 'localhost',
+        $password = '',
+        $port = 8080
+    ) {
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;

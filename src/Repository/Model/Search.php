@@ -107,8 +107,11 @@ class Search extends playlist_object
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
-    public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
-    {
+    public function __construct(
+        $search_id = 0,
+        $object_type = 'song',
+        ?User $user = null
+    ) {
         $this->search_user = $user;
         if (!$this->search_user instanceof User) {
             $this->search_user = User::get_from_global() ?? new User(-1);

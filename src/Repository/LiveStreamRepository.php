@@ -38,8 +38,10 @@ use Ampache\Repository\Model\User;
  */
 final readonly class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
-    public function __construct(private ModelFactoryInterface $modelFactory, private DatabaseConnectionInterface $connection)
-    {
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
+    ) {
     }
 
     /**

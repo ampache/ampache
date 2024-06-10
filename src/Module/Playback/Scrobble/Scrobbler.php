@@ -47,8 +47,13 @@ class Scrobbler
      * @param string $challenge
      * @param string $secret
      */
-    public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
-    {
+    public function __construct(
+        $api_key,
+        $scheme = 'https',
+        $host = '',
+        $challenge = '',
+        $secret = ''
+    ) {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
         $this->host          = $host;
@@ -202,8 +207,14 @@ class Scrobbler
      * @param $length
      * @param $track
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length, $track): bool
-    {
+    public function queue_track(
+        $artist,
+        $album,
+        $title,
+        $timestamp,
+        $length,
+        $track
+    ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
 

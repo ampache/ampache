@@ -46,8 +46,10 @@ class easy_captcha_dxy_wave
      * @param $max_x
      * @param $max_y
      */
-    public function __construct($max_x, $max_y)
-    {
+    public function __construct(
+        $max_x,
+        $max_y
+    ) {
         $this->dist_x = $this->real_rand(2.5, 3.5); // max +-x/y delta distance
         $this->dist_y = $this->real_rand(2.5, 3.5);
         $this->slow_x = $this->real_rand(7.5, 20.0); // =wave-width in pixel/3

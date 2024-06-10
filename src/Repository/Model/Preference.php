@@ -523,8 +523,16 @@ class Preference extends database_object
      * @param null|string $subcategory
      * @param bool $replace
      */
-    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null, $replace = false): bool
-    {
+    public static function insert(
+        $name,
+        $description,
+        $default,
+        $level,
+        $type,
+        $category,
+        $subcategory = null,
+        $replace = false
+    ): bool {
         if ($replace) {
             self::delete($name);
         }

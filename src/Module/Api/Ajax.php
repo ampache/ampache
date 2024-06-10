@@ -140,8 +140,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button(
+        $action,
+        $icon,
+        $alt,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -174,8 +181,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button_with_text(
+        $action,
+        $icon,
+        $text,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 

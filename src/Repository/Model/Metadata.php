@@ -50,8 +50,10 @@ class Metadata
 
     private ?MetadataField $metadataField = null;
 
-    public function __construct(private readonly MetadataRepositoryInterface $metadataRepository, private readonly MetadataFieldRepositoryInterface $metadataFieldRepository)
-    {
+    public function __construct(
+        private readonly MetadataRepositoryInterface $metadataRepository,
+        private readonly MetadataFieldRepositoryInterface $metadataFieldRepository
+    ) {
     }
 
     /**

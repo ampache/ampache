@@ -121,8 +121,14 @@ class Playlist extends playlist_object
      * @param bool $userOnly
      * @return int[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
-    {
+    public static function get_playlists(
+        $user_id = null,
+        $playlist_name = '',
+        $like = true,
+        $includePublic = true,
+        $includeHidden = true,
+        $userOnly = false
+    ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;

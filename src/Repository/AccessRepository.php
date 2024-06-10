@@ -40,8 +40,10 @@ use Generator;
  */
 final readonly class AccessRepository implements AccessRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection, private ModelFactoryInterface $modelFactory)
-    {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private ModelFactoryInterface $modelFactory
+    ) {
     }
 
     /**

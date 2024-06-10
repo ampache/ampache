@@ -69,8 +69,10 @@ class Rating extends database_object
      * @param int|null $rating_id
      * @param string $type
      */
-    public function __construct($rating_id, $type)
-    {
+    public function __construct(
+        $rating_id,
+        $type
+    ) {
         $this->id   = (int)$rating_id;
         $this->type = $type;
     }

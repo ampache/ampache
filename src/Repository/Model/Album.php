@@ -306,8 +306,21 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param string|null $version
      * @param bool $readonly
      */
-    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = null, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
-    {
+    public static function check(
+        $catalog_id,
+        $name,
+        $year = 0,
+        $mbid = null,
+        $mbid_group = null,
+        $album_artist = null,
+        $release_type = null,
+        $release_status = null,
+        $original_year = null,
+        $barcode = null,
+        $catalog_number = null,
+        $version = null,
+        $readonly = false
+    ): int {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
         $prefix         = $trimmed['prefix'];

@@ -212,8 +212,15 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $charset
      * @param string $collation
      */
-    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci'): bool
-    {
+    public function install_insert_db(
+        $db_user = null,
+        $db_pass = null,
+        $create_db = true,
+        $overwrite = false,
+        $create_tables = true,
+        $charset = 'utf8mb4',
+        $collation = 'utf8mb4_unicode_ci'
+    ): bool {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
         preg_match('/([^\d\w\_\-])/', $database, $matches);

@@ -583,8 +583,13 @@ class Stream
      * @param string $type
      * @param int $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null): void
-    {
+    public static function insert_now_playing(
+        $object_id,
+        $uid,
+        $length,
+        $sid,
+        $type, $previous = null
+    ): void {
         if (!$previous) {
             $previous = time();
         }

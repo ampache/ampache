@@ -150,8 +150,10 @@ class Query
      * @param int|null $query_id
      * @param bool $cached
      */
-    public function __construct($query_id = 0, $cached = true)
-    {
+    public function __construct(
+        $query_id = 0,
+        $cached = true
+    ) {
         $sid = session_id();
 
         if (!$cached) {
@@ -767,8 +769,15 @@ class Query
      * @param string $dest2
      * @param int $priority
      */
-    public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority): void
-    {
+    public function set_join_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $priority
+    ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
 
@@ -785,8 +794,17 @@ class Query
      * @param string $dest3
      * @param int $priority
      */
-    public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
-    {
+    public function set_join_and_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $source3,
+        $dest3,
+        $priority
+    ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
 

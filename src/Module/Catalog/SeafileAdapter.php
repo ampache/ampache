@@ -63,9 +63,7 @@ class SeafileAdapter
         return $token->token;
     }
 
-    /////////////////////////
     // instance
-    /////////////////////////
 
     private $server;
     private $api_key;
@@ -84,8 +82,12 @@ class SeafileAdapter
      * @param $call_delay
      * @param $api_key
      */
-    public function __construct($server_uri, $library_name, $call_delay, $api_key)
-    {
+    public function __construct(
+        $server_uri,
+        $library_name,
+        $call_delay,
+        $api_key
+    ) {
         $this->server          = $server_uri;
         $this->library_name    = $library_name;
         $this->api_key         = $api_key;

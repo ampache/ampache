@@ -390,8 +390,14 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day'): array
-    {
+    protected function get_user_bandwidth_pts(
+        $user_id = 0,
+        $object_type = 'song',
+        $object_id = 0,
+        $start_date = null,
+        $end_date = null,
+        $zoom = 'day'
+    ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 

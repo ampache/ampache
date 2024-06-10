@@ -37,8 +37,10 @@ use Generator;
  */
 final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
-    public function __construct(private ModelFactoryInterface $modelFactory, private DatabaseConnectionInterface $connection)
-    {
+    public function __construct(
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
+    ) {
     }
 
     /**

@@ -71,8 +71,12 @@ class AmazonSearch
      * @param $associate_tag
      * @param string $base_url_param
      */
-    public function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
-    {
+    public function __construct(
+        $public_key,
+        $private_key,
+        $associate_tag,
+        $base_url_param = ''
+    ) {
         // If we have a base url then use it
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);

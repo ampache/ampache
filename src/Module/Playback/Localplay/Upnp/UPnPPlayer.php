@@ -83,8 +83,10 @@ class UPnPPlayer
      * @param string $name
      * @param string $description_url
      */
-    public function __construct($name = "noname", $description_url = "http://localhost")
-    {
+    public function __construct(
+        $name = "noname",
+        $description_url = "http://localhost"
+    ) {
         debug_event(__CLASS__, 'constructor: ' . $name . ' | ' . $description_url, 5);
 
         $this->_description_url = $description_url;

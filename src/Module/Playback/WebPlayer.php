@@ -188,8 +188,14 @@ class WebPlayer
      * @param string $force_type
      * @param array $transcode_cfg
      */
-    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = ''): bool
-    {
+    public static function can_transcode(
+        $media_type,
+        $file_type,
+        $types,
+        $urlinfo,
+        $transcode_cfg,
+        $force_type = ''
+    ): bool {
         $transcode = false;
 
         // Check transcode is required

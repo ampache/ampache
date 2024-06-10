@@ -46,8 +46,11 @@ class OAuthRequest
      * @param $http_url
      * @param $parameters
      */
-    public function __construct($http_method, $http_url, $parameters = null)
-    {
+    public function __construct(
+        $http_method,
+        $http_url,
+        $parameters = null
+    ) {
         $parameters = ($parameters) ? $parameters : array();
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url(
             $http_url,

@@ -287,8 +287,14 @@ class Stats
      * @param int $time
      * @param bool $exact
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false): bool
-    {
+    public static function is_already_inserted(
+        $type,
+        $object_id,
+        $user,
+        $agent,
+        $time,
+        $exact = false
+    ): bool {
         $sql = ($exact)
             ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND `object_count`.`date` = $time "
             : "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";

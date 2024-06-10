@@ -40,8 +40,10 @@ use PDO;
  */
 final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection, private ConfigContainerInterface $configContainer)
-    {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
+    ) {
     }
 
     /**

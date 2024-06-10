@@ -53,8 +53,10 @@ class Userflag extends database_object
      * @param int|null $object_id
      * @param string $type
      */
-    public function __construct($object_id, $type)
-    {
+    public function __construct(
+        $object_id,
+        $type
+    ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
     }

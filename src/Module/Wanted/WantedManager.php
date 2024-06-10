@@ -69,14 +69,23 @@ final readonly class WantedManager implements WantedManagerInterface
     /**
      * Add a new wanted release.
      */
-    public function add(User $user, string $mbid, ?int $artist, string $artist_mbid, string $name, int $year): void
-    {
+    public function add(
+        User $user,
+        string $mbid,
+        ?int $artist,
+        string $artist_mbid,
+        string $name,
+        int $year
+    ): void {
         Dba::write(
             "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [$user->getId(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0']
         );
 
-        if ($user->has_access(AccessLevelEnum::MANAGER) ? true : AmpConfig::get('wanted_auto_accept', false)) {
+        if (
+            $user->has_access(AccessLevelEnum::MANAGER) ||
+            AmpConfig::get('wanted_auto_accept', false)
+        ) {
             $wanted_id = (int)Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 

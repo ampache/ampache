@@ -210,8 +210,12 @@ class mpd
      * @param $password
      * @param $debug_callback
      */
-    public function __construct($server, $port, $password = null, $debug_callback = null)
-    {
+    public function __construct(
+        $server,
+        $port,
+        $password = null,
+        $debug_callback = null
+    ) {
         $this->host     = trim($server);
         $this->port     = trim($port);
         $this->password = $password;

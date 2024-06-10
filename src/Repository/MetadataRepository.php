@@ -38,8 +38,10 @@ use PDO;
  */
 final readonly class MetadataRepository implements MetadataRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection, private MetadataFieldRepositoryInterface $metadataFieldRepository)
-    {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private MetadataFieldRepositoryInterface $metadataFieldRepository
+    ) {
     }
 
     /**
