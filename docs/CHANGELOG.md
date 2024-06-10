@@ -1,5 +1,43 @@
 # CHANGELOG
 
+## Ampache 7.0.0
+
+### Added
+
+* npm java package management
+* Convert most theme icons to Google Material Icon SVG's
+* Config version 72
+  * Add `npm_binary_path`
+  * Remove OpenID config
+* Database 700006
+  * Add user preferences to show/hide menus in the sidebar and the switcher arrows
+  * Add Indexes to `object_count`: `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
+  * Convert the remaining MyISAM tables to InnoDB
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
+  * Add a `last_count` to playlist table to speed up access requests
+  * Delete user preference `home_recently_played_all`
+
+### Changed
+
+* Use PHP functions for php8.2+
+* Default to InnoDB on new installs
+* Change url for user avatar links
+* Move JavaScript out of PHP where possible
+* Convert string access names and int user access levels to enums
+* Update the upload file browser
+* Update gettext/gettext to v5
+* Default to RandomAction on stream.php
+* Reborn theme CSS updates after switching to Material icons
+
+### Removed
+
+* Support for PHP < 8.2
+* Unused stream actions
+
+### Fixed
+
+* Enforce sidebar_light when enabled, ignoring cookie if set
+
 ## Ampache 6.5.0
 
 This release is the final Ampache6 release with new features. Bug fixes and API extenstion only from now on!
