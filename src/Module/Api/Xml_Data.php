@@ -1099,7 +1099,7 @@ class Xml_Data
             $flag        = new Userflag($playlist->id, $object_type);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . ($playlist->has_access($user->getId()) ? 1 : 0) . "</has_access>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
