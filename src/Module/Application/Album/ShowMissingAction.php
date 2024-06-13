@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -99,8 +99,8 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         // you might not send an artist name
         $options = (isset($artist))
-            ? array('artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name)
-            : array('album_name' => $walbum->name, 'keyword' => $walbum->name);
+            ? ['artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name]
+            : ['album_name' => $walbum->name, 'keyword' => $walbum->name];
 
         // Attempt to find the art.
         $art    = $this->modelFactory->createArt((int) $walbum->mbid);

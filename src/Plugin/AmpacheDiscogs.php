@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -104,7 +104,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['discogs_api_key'])) || !strlen(trim($data['discogs_secret_api_key']))) {
-            $data                           = array();
+            $data                           = [];
             $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
             $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
         }
@@ -202,10 +202,10 @@ class AmpacheDiscogs implements AmpachePluginInterface
         if (!in_array('music', $gather_types)) {
             debug_event(self::class, 'Not a valid media type, skipped.', 5);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
         try {
             if (in_array('artist', $gather_types)) {
                 $artists = $this->search_artist($media_info['title']);
@@ -239,7 +239,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

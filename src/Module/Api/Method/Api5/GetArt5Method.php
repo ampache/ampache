@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ final class GetArt5Method
      */
     public static function get_art(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -66,7 +66,7 @@ final class GetArt5Method
         $fallback  = (array_key_exists('fallback', $input) && (int)$input['fallback'] == 1);
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -100,7 +100,7 @@ final class GetArt5Method
         if ($art->has_db_info($fallback)) {
             header('Access-Control-Allow-Origin: *');
             if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
+                $dim           = [];
                 $dim['width']  = $size;
                 $dim['height'] = $size;
                 $thumb         = $art->get_thumb($dim);

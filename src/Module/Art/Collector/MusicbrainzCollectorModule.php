@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -77,9 +77,9 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        $includes = array(
+        $includes = [
             'url-rels'
-        );
+        ];
         try {
             $release = $this->musicBrainz->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {
@@ -195,7 +195,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             'imguri' => '$matches[1]',
             'releaseuri' => '',
         ];
-        foreach ($release->relations ?? array() as $ar) {
+        foreach ($release->relations ?? [] as $ar) {
             $arurl = $ar->url->resource;
 
             $this->logger->debug(

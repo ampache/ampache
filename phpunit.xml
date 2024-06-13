@@ -17,7 +17,6 @@
       <directory>tests</directory>
     </testsuite>
   </testsuites>
-  <coverage cacheDirectory="build/coverageCache"/>
   <source restrictNotices="true" restrictWarnings="true" ignoreIndirectDeprecations="true">
     <include>
       <directory>src</directory>

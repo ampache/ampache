@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,22 +56,22 @@ final class ArtCleanup implements ArtCleanupInterface
         // minimum width is set and current width is too low
         if ($minw) {
             $sql = 'DELETE FROM `image` WHERE `width` < ? AND `width` > 0';
-            Dba::write($sql, array($minw));
+            Dba::write($sql, [$minw]);
         }
         // max width is set and current width is too high
         if ($maxw) {
             $sql = 'DELETE FROM `image` WHERE `width` > ? AND `width` > 0';
-            Dba::write($sql, array($maxw));
+            Dba::write($sql, [$maxw]);
         }
         // min height is set and current width is too low
         if ($minh) {
             $sql = 'DELETE FROM `image` WHERE `height` < ? AND `height` > 0';
-            Dba::write($sql, array($minh));
+            Dba::write($sql, [$minh]);
         }
         // max height is set and current height is too high
         if ($maxh) {
             $sql = 'DELETE FROM `image` WHERE `height` > ? AND `height` > 0';
-            Dba::write($sql, array($maxh));
+            Dba::write($sql, [$maxh]);
         }
     }
 
@@ -80,7 +80,7 @@ final class ArtCleanup implements ArtCleanupInterface
      */
     public function collectGarbageForObject(string $object_type, int $object_id): void
     {
-        $types = array(
+        $types = [
             'album',
             'album_disk',
             'artist',
@@ -96,14 +96,14 @@ final class ArtCleanup implements ArtCleanupInterface
             'tvshow_season',
             'user',
             'video'
-        );
+        ];
 
         if (in_array($object_type, $types)) {
             if ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK)) {
                 Art::delete_from_dir($object_type, $object_id);
             }
             $sql = "DELETE FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, array($object_type, $object_id));
+            Dba::write($sql, [$object_type, $object_id]);
         } else {
             debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
         }
@@ -114,7 +114,7 @@ final class ArtCleanup implements ArtCleanupInterface
      */
     public function collectGarbage(): void
     {
-        $types = array(
+        $types = [
             'album',
             'album_disk',
             'artist',
@@ -130,7 +130,7 @@ final class ArtCleanup implements ArtCleanupInterface
             'tvshow_season',
             'user',
             'video'
-        );
+        ];
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);
         // iterate over our types and delete the images
@@ -156,6 +156,6 @@ final class ArtCleanup implements ArtCleanupInterface
             Art::delete_from_dir($art->type, $art->uid, $art->kind);
         }
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `kind` = ?";
-        Dba::write($sql, array($art->uid, $art->type, $art->kind));
+        Dba::write($sql, [$art->uid, $art->type, $art->kind]);
     }
 }

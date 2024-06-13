@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -173,12 +173,12 @@ class Api
         Method\VideosMethod::ACTION => Method\VideosMethod::class,
     ];
 
-    public const API_VERSIONS = array(
+    public const API_VERSIONS = [
         3,
         4,
         5,
         6
-    );
+    ];
 
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
@@ -186,9 +186,7 @@ class Api
     public static string $version         = '6.5.0'; // AMPACHE_VERSION
     public static string $version_numeric = '650000'; // AMPACHE_VERSION
 
-    /**
-     * @var Browse $browse
-     */
+    /** @var Browse $browse */
     public static $browse = null;
 
     public static function getBrowse(User $user): Browse
@@ -216,7 +214,7 @@ class Api
      * @param string $format
      * @param array $return_data
      */
-    public static function message($message, $format = 'xml', $return_data = array()): void
+    public static function message($message, $format = 'xml', $return_data = []): void
     {
         switch ($format) {
             case 'json':
@@ -337,7 +335,7 @@ class Api
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
             : $counts['playlist'] + $counts['search'];
-        $autharray = (!empty($token)) ? array('auth' => $token) : array();
+        $autharray = (!empty($token)) ? ['auth' => $token] : [];
         // perpetual sessions do not expire
         $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
         $session_expire = ($perpetual)
@@ -345,7 +343,7 @@ class Api
             : date("c", time() + AmpConfig::get('session_length', 3600) - 60);
 
         // send the totals
-        $outarray = array(
+        $outarray = [
             'api' => self::$version,
             'session_expire' => $session_expire,
             'update' => date("c", (int)$details['update']),
@@ -367,7 +365,7 @@ class Api
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
             'labels' => $counts['label']
-        );
+        ];
 
         return array_merge($autharray, $outarray);
     }

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -69,14 +69,23 @@ final readonly class WantedManager implements WantedManagerInterface
     /**
      * Add a new wanted release.
      */
-    public function add(User $user, string $mbid, ?int $artist, string $artist_mbid, string $name, int $year): void
-    {
+    public function add(
+        User $user,
+        string $mbid,
+        ?int $artist,
+        string $artist_mbid,
+        string $name,
+        int $year
+    ): void {
         Dba::write(
             "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [$user->getId(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0']
         );
 
-        if ($user->has_access(AccessLevelEnum::MANAGER) ? true : AmpConfig::get('wanted_auto_accept', false)) {
+        if (
+            $user->has_access(AccessLevelEnum::MANAGER) ||
+            AmpConfig::get('wanted_auto_accept', false)
+        ) {
             $wanted_id = (int)Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,7 +75,7 @@ final class BrowseMethod
         }
 
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'))) {
+        if (!in_array(strtolower($object_type), ['root', 'catalog', 'album_artist', 'artist', 'album', 'podcast'])) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -86,12 +86,12 @@ final class BrowseMethod
             // catalog root
             $output_type  = 'catalog';
             $child_type   = $output_type;
-            $gather_types = array('music');
+            $gather_types = ['music'];
             if (AmpConfig::get('podcast')) {
                 $gather_types[] = 'podcast';
             }
             if (AmpConfig::get('video')) {
-                $gather_types = array_merge($gather_types, array('clip', 'tvshow', 'movie', 'personal_video'));
+                $gather_types = array_merge($gather_types, ['clip', 'tvshow', 'movie', 'personal_video']);
             }
 
             $browse->set_type($output_type);
@@ -99,7 +99,7 @@ final class BrowseMethod
             $browse->set_filter('user', $user->getId());
         } elseif ($object_type === 'catalog') {
             // artist/podcasts/videos
-            if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+            if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
                 return false;
             }
             $catalog = Catalog::create_from_id($object_id);
@@ -142,7 +142,7 @@ final class BrowseMethod
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
         } else {
-            if (!Api::check_parameter($input, array('filter', 'catalog'), self::ACTION)) {
+            if (!Api::check_parameter($input, ['filter', 'catalog'], self::ACTION)) {
                 return false;
             }
             $catalog = Catalog::create_from_id($catalog_id);

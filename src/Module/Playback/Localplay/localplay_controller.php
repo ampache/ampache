@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -117,7 +117,7 @@ abstract class localplay_controller
 
         $class = get_class($object);
 
-        return call_user_func(array($class, 'play_url'), $object->id);
+        return call_user_func([$class, 'play_url'], $object->id);
     }
 
     /**
@@ -142,33 +142,33 @@ abstract class localplay_controller
     public function parse_url($url): array
     {
         // Define possible 'primary' keys
-        $primary_array = array('oid', 'demo_id', 'random');
-        $data          = array();
+        $primary_array = ['oid', 'demo_id', 'random'];
+        $data          = [];
 
         //beautiful urls need their own parsing as parse_url will find nothing.
         if (AmpConfig::get('stream_beautiful_url')) {
             preg_match('/oid[\=|\/](.*?)[\&|\/]/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
-                return array(
+                return [
                     'primary_key' => 'oid',
                     'oid' => $match[1]
-                );
+                ];
             }
             preg_match('/demo_id.(.*)/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
-                return array(
+                return [
                     'primary_key' => 'demo_id',
                     'oid' => $match[1]
-                );
+                ];
             }
             preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
             if (array_key_exists(1, $match) && $match[1] && array_key_exists(2, $match) && $match[2]) {
                 $result = array_combine($match[1], $match[2]);
 
-                return array(
+                return [
                     'primary_key' => $result['random_type'],
                     'oid' => $result['random_id']
-                );
+                ];
             }
         }
         $variables = parse_url($url, PHP_URL_QUERY);

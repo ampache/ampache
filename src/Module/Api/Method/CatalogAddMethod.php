@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class CatalogAddMethod
      */
     public static function catalog_add(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('name', 'path'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['name', 'path'], self::ACTION)) {
             return false;
         }
         if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
@@ -76,13 +76,13 @@ final class CatalogAddMethod
         $password       = $input['password'] ?? null;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('local', 'beets', 'remote', 'subsonic', 'seafile'))) {
+        if (!in_array(strtolower($type), ['local', 'beets', 'remote', 'subsonic', 'seafile'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
-        $is_remote = in_array($type, array('remote', 'subsonic', 'beetsremote', 'seafile'));
+        $is_remote = in_array($type, ['remote', 'subsonic', 'beetsremote', 'seafile']);
         if ($is_remote) {
             if (!$username) {
                 Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'username', $input['api_format']);
@@ -105,7 +105,7 @@ final class CatalogAddMethod
             return false;
         }
 
-        $object = array(
+        $object = [
             'name' => $name,
             'path' => $path, // local, beets
             'uri' => $path, // remote, subsonic, beetsremote
@@ -115,7 +115,7 @@ final class CatalogAddMethod
             'gather_media' => $gather_types,
             'username' => $username,
             'password' => $password
-        );
+        ];
         if ($type == 'seafile') {
             $object['library_name'  ] = $object['name'];
             $object['server_uri']     = $object['path'];
@@ -135,7 +135,7 @@ final class CatalogAddMethod
 
             return false;
         }
-        $results = array($catalog->id);
+        $results = [$catalog->id];
 
         ob_end_clean();
         switch ($input['api_format']) {

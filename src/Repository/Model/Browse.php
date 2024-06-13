@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -82,9 +82,7 @@ class Browse extends Query
         'wanted',
     ];
 
-    /**
-     * @var int $duration
-     */
+    /** @var int $duration */
     public $duration;
 
     /**
@@ -93,8 +91,10 @@ class Browse extends Query
      * @param int|null $browse_id
      * @param bool $cached
      */
-    public function __construct($browse_id = 0, $cached = true)
-    {
+    public function __construct(
+        $browse_id = 0,
+        $cached = true
+    ) {
         parent::__construct($browse_id, $cached);
 
         if (!$browse_id) {

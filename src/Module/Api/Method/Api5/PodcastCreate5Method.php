@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,7 @@ final class PodcastCreate5Method
         if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -90,10 +90,10 @@ final class PodcastCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($podcast->getId()), $user, false, false);
+                echo Json5_Data::podcasts([$podcast->getId()], $user, false, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml5_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

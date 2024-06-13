@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $searchArtMode
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
-        $db_results = Dba::read($sql, array($catname));
+        $db_results = Dba::read($sql, [$catname]);
 
         ob_end_clean();
         ob_start();
@@ -128,7 +128,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
                     // Look for new files
-                    $catalog->add_file($filePath, array());
+                    $catalog->add_file($filePath, []);
                     Catalog::get_id_from_file($filePath, $type);
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -82,7 +82,7 @@ class AutoUpdate
             if (
                 is_string($current) &&
                 preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))
+                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
             ) {
                 return (string)$matches[1];
             }
@@ -109,7 +109,7 @@ class AutoUpdate
         try {
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = Requests::get($url, [], Core::requests_options());
 
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
@@ -286,7 +286,7 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            !empty($current) &&
+            !empty($latest) &&
             $current !== $latest
         ) {
             if (

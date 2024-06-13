@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ final class Migration600036 extends AbstractMigration
     {
         $sql       = "SELECT `id` FROM `user`";
         $db_users  = Dba::read($sql);
-        $user_list = array();
+        $user_list = [];
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
@@ -48,7 +48,7 @@ final class Migration600036 extends AbstractMigration
         foreach ($user_list as $user_id) {
             $total = User::get_play_size($user_id);
             $sql   = "REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;";
-            $this->updateDatabase($sql, array($user_id, 'play_size', $total));
+            $this->updateDatabase($sql, [$user_id, 'play_size', $total]);
         }
     }
 }

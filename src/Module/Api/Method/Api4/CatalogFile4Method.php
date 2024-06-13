@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ final class CatalogFile4Method
      */
     public static function catalog_file(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('catalog', 'file', 'task'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
             return false;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, 'catalog_file', $input['api_format'])) {
@@ -74,7 +74,7 @@ final class CatalogFile4Method
         }
         $file = html_entity_decode($input['file']);
         // confirm the correct data
-        if (!in_array($task, array('add', 'clean', 'verify', 'remove'))) {
+        if (!in_array($task, ['add', 'clean', 'verify', 'remove'])) {
             Api4::message('error', T_('Incorrect file task') . ' ' . $task, '401', $input['api_format']);
 
             return false;
@@ -120,11 +120,11 @@ final class CatalogFile4Method
                     $catalog->clean_file($file, $type);
                     break;
                 case 'verify':
-                    Catalog::update_media_from_tags($media, array($type));
+                    Catalog::update_media_from_tags($media, [$type]);
                     break;
                 case 'add':
                     /** @var Catalog_local $catalog */
-                    $catalog->add_file($file, array());
+                    $catalog->add_file($file, []);
                     break;
                 case 'remove':
                     $media->remove();

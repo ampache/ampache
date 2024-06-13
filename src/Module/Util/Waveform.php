@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -248,11 +248,11 @@ class Waveform
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
-        return array(
+        return [
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
             hexdec(substr($input, 4, 2))
-        );
+        ];
     }
 
     /**
@@ -287,7 +287,7 @@ class Waveform
 
         $handle = fopen($filename, "r");
         // wav file header retrieval
-        $heading   = array();
+        $heading   = [];
         $heading[] = fread($handle, 4);
         $heading[] = bin2hex(fread($handle, 4));
         $heading[] = fread($handle, 4);
@@ -335,7 +335,7 @@ class Waveform
         imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
-                $bytes = array();
+                $bytes = [];
 
                 // get number of bytes depending on bitrate
                 for ($count = 0; $count < $byte; $count++) {
@@ -430,6 +430,6 @@ class Waveform
             ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
             : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($waveform, $object_id));
+        return Dba::write($sql, [$waveform, $object_id]);
     }
 }

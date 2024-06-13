@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,10 +66,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         }
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
-            $argument = array('hide' => explode(',', scrub_in((string)$_REQUEST['hide'])));
+            $argument = ['hide' => explode(',', scrub_in((string)$_REQUEST['hide']))];
         }
 
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -109,7 +109,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -122,7 +122,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
@@ -171,12 +171,12 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
@@ -240,7 +240,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':

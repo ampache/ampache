@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -77,7 +77,10 @@ class Subsonic_Xml_Data
     public const SSERROR_TRIAL                 = 60;
     public const SSERROR_DATA_NOTFOUND         = 70;
 
-    // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
+    /**
+     * Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
+     */
+
     public const AMPACHEID_ARTIST    = 100000000;
     public const AMPACHEID_ALBUM     = 200000000;
     public const AMPACHEID_SONG      = 300000000;
@@ -211,7 +214,7 @@ class Subsonic_Xml_Data
     private static function addIndex($xml, $artists): void
     {
         $xlastcat     = null;
-        $sharpartists = array();
+        $sharpartists = [];
         $xlastletter  = '';
         foreach ($artists as $artist) {
             if (strlen((string)$artist['name']) > 0) {
@@ -278,7 +281,7 @@ class Subsonic_Xml_Data
         $xartist = self::addChildToResultXml($xml, 'artist');
         $xartist->addAttribute('id', $sub_id);
         $xartist->addAttribute('name', (string)self::_checkName($artist->get_fullname()));
-        $allalbums = array();
+        $allalbums = [];
         if (($extra && !$albumsSet) || $albums) {
             $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
@@ -612,7 +615,7 @@ class Subsonic_Xml_Data
         $xdir = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$catalog_id);
         $xdir->addAttribute('name', (string)$catalog->name);
-        $allartists = Catalog::get_artist_arrays(array($catalog_id));
+        $allartists = Catalog::get_artist_arrays([$catalog_id]);
         foreach ($allartists as $artist) {
             self::addChildArray($xdir, $artist);
         }
@@ -1649,14 +1652,14 @@ class Subsonic_Xml_Data
      */
     public static function _getAmpacheIdArrays($object_ids): array
     {
-        $ampidarrays = array();
+        $ampidarrays = [];
         $track       = 1;
         foreach ($object_ids as $object_id) {
-            $ampidarrays[] = array(
+            $ampidarrays[] = [
                 'object_id' => self::_getAmpacheId((string)$object_id),
                 'object_type' => self::_getAmpacheType((string)$object_id),
                 'track' => $track
-            );
+            ];
             $track++;
         }
 

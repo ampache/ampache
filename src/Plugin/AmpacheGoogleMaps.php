@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -93,7 +93,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $name = "";
         try {
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = Requests::get($url, [], Core::requests_options());
 
             $place = json_decode($request->body, true);
             if (count($place['results']) > 0) {
@@ -169,7 +169,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['gmaps_api_key']))) {
-            $data                  = array();
+            $data                  = [];
             $data['gmaps_api_key'] = Preference::get_by_user(-1, 'gmaps_api_key');
         }
 

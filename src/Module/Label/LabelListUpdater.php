@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
 
         $clabels      = $this->labelRepository->getByArtist($artistId);
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labelsComma);
-        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : array();
+        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {

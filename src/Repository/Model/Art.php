@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,42 +63,28 @@ class Art extends database_object
         'webp',
     ];
 
-    /**
-     * @var int $id
-     */
+    /** @var int $id */
     public $id;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var int $uid
-     */
+    /** @var int $uid */
     public $uid; // UID of the object not ID because it's not the ART.ID
-    /**
-     * @var string $raw
-     */
+
+    /** @var string $raw */
     public $raw; // Raw art data
-    /**
-     * @var string $raw_mime
-     */
+
+    /** @var string $raw_mime */
     public $raw_mime;
 
-    /**
-     * @var string $kind
-     */
+    /** @var string $kind */
     public $kind;
 
-    /**
-     * @var string $thumb
-     */
+    /** @var string $thumb */
     public $thumb;
 
-    /**
-     * @var string $thumb_mime
-     */
+    /** @var string $thumb_mime */
     public $thumb_mime;
 
     /**
@@ -109,8 +95,11 @@ class Art extends database_object
      * @param string $type
      * @param string $kind
      */
-    public function __construct($uid = 0, $type = 'album', $kind = 'default')
-    {
+    public function __construct(
+        $uid = 0,
+        $type = 'album',
+        $kind = 'default'
+    ) {
         if (!$uid) {
             return;
         }
@@ -603,8 +592,14 @@ class Art extends database_object
      * @param string $kind
      * @param string|null $mime
      */
-    private static function write_to_dir($source, $sizetext, $type, $uid, $kind, $mime): bool
-    {
+    private static function write_to_dir(
+        $source,
+        $sizetext,
+        $type,
+        $uid,
+        $kind,
+        $mime
+    ): bool {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
         if ($path === false) {
             return false;

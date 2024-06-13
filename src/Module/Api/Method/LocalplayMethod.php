@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,7 +59,7 @@ final class LocalplayMethod
      */
     public static function localplay(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('command'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
         // localplay is actually meant to be behind permissions
@@ -93,12 +93,12 @@ final class LocalplayMethod
                 if ($clear == 1) {
                     $localplay->delete_all();
                 }
-                $media = array(
+                $media = [
                     'object_type' => $type,
                     'object_id' => $object_id,
-                );
+                ];
                 $playlist = new Stream_Playlist();
-                $playlist->add(array($media), '&client=' . $localplay->type);
+                $playlist->add([$media], '&client=' . $localplay->type);
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }
@@ -148,8 +148,8 @@ final class LocalplayMethod
                 return false;
         } // end switch on command
         $results = (!empty($status))
-            ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => $result)));
+            ? ['localplay' => ['command' => [$input['command'] => $status]]]
+            : ['localplay' => ['command' => [$input['command'] => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -86,14 +86,8 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id   = $user->id;
                 $ajax_page = 'stats';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                $data      = Stats::get_recently_played($user_id);
+                require_once Ui::find_template('show_recently_played_all.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':

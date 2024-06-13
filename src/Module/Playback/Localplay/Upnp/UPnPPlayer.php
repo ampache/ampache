@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -83,8 +83,10 @@ class UPnPPlayer
      * @param string $name
      * @param string $description_url
      */
-    public function __construct($name = "noname", $description_url = "http://localhost")
-    {
+    public function __construct(
+        $name = "noname",
+        $description_url = "http://localhost"
+    ) {
         debug_event(__CLASS__, 'constructor: ' . $name . ' | ' . $description_url, 5);
 
         $this->_description_url = $description_url;
@@ -235,11 +237,11 @@ class UPnPPlayer
         $domDIDL  = Upnp_Api::createDIDL($songItem, '');
         $xmlDIDL  = $domDIDL->saveXML();
 
-        return array(
+        return [
             'InstanceID' => 0,
             $prefix . 'URI' => $songUrl,
             $prefix . 'URIMetaData' => htmlentities($xmlDIDL)
-        );
+        ];
     }
 
     /**
@@ -270,7 +272,7 @@ class UPnPPlayer
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
-        $args     = array('InstanceID' => 0, 'Speed' => 1);
+        $args     = ['InstanceID' => 0, 'Speed' => 1];
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
@@ -315,7 +317,7 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args     = array('InstanceID' => 0, 'Speed' => 1);
+            $args     = ['InstanceID' => 0, 'Speed' => 1];
             $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
         }
 
@@ -385,11 +387,11 @@ class UPnPPlayer
         $instanceId    = 0;
         $channel       = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice('SetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('SetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel,
             'DesiredVolume' => $desiredVolume
-        ));
+        ]);
 
         return true;
     }
@@ -404,10 +406,10 @@ class UPnPPlayer
         $instanceId = 0;
         $channel    = 'Master';
 
-        $response = $this->Device()->sendRequestToDevice('GetVolume', array(
+        $response = $this->Device()->sendRequestToDevice('GetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel
-        ));
+        ]);
 
         $responseXML = simplexml_load_string($response);
         if (empty($responseXML)) {
@@ -429,7 +431,7 @@ class UPnPPlayer
         $sid  = 'upnp_ply_' . $this->_description_url;
         $data = json_encode($this->_intState);
         if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
-            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $data));
+            Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $data]);
         } else {
             Session::write($sid, $data);
         }

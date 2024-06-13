@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,7 +67,7 @@ class Stats
     public static function clear($user_id = 0): void
     {
         if ($user_id > 0) {
-            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", array($user_id));
+            Dba::write("DELETE FROM `object_count` WHERE `user` = ?;", [$user_id]);
         } else {
             Dba::write("TRUNCATE `object_count`;");
         }
@@ -89,7 +89,7 @@ class Stats
      */
     public static function garbage_collection(): void
     {
-        foreach (array('album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode') as $object_type) {
+        foreach (['album', 'artist', 'song', 'playlist', 'tag', 'live_stream', 'video', 'podcast', 'podcast_episode'] as $object_type) {
             Dba::write("DELETE FROM `object_count` WHERE `object_type` = '$object_type' AND `object_count`.`object_id` NOT IN (SELECT `$object_type`.`id` FROM `$object_type`);");
         }
         // if deletes are copmleted you can have left over stuff
@@ -106,11 +106,11 @@ class Stats
      */
     public static function migrate($object_type, $old_object_id, $new_object_id, $child_id)
     {
-        if (!in_array($object_type, array('song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'))) {
+        if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'])) {
             return false;
         }
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        $params = array($new_object_id, $object_type, $old_object_id);
+        $params = [$new_object_id, $object_type, $old_object_id];
         if ((int)$child_id > 0) {
             $sql .= " AND `date` IN (SELECT `date` FROM (SELECT `date` FROM `object_count` WHERE `object_type` = 'song' AND object_id = ?) AS `song_date`)";
             $params[] = $child_id;
@@ -127,10 +127,10 @@ class Stats
         if ($source_id > 0 && $dest_id > 0) {
             debug_event(__CLASS__, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
-            $db_results = Dba::read($sql, array($source_type, $source_id));
+            $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                Dba::write($sql, array($dest_type, $dest_id, $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
+                Dba::write($sql, [$dest_type, $dest_id, $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']]);
             }
         }
     }
@@ -143,10 +143,10 @@ class Stats
         if ($source_id > 0 && $dest_id > 0) {
             debug_event(__CLASS__, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
-            $db_results = Dba::read($sql, array($source_type, $source_id));
+            $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "DELETE FROM `object_count` WHERE `object_count`.`object_type` = ? AND `object_count`.`object_id` = ? AND `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`geo_latitude` = ? AND `object_count`.`geo_longitude` = ? AND `object_count`.`geo_name` = ? AND `object_count`.`count_type` = ?";
-                Dba::write($sql, array($dest_type, $dest_id, $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name'], $row['count_type']));
+                Dba::write($sql, [$dest_type, $dest_id, $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name'], $row['count_type']]);
             }
         }
     }
@@ -158,14 +158,14 @@ class Stats
     {
         if ($activity_id > 0) {
             $sql        = "SELECT `object_count`.`object_id`, `object_count`.`object_type`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`id` = ?;";
-            $db_results = Dba::read($sql, array($activity_id));
+            $db_results = Dba::read($sql, [$activity_id]);
             if ($row = Dba::fetch_assoc($db_results)) {
-                $params     = array($row['date'], $row['user'], $row['agent'], $row['count_type']);
+                $params     = [$row['date'], $row['user'], $row['agent'], $row['count_type']];
                 $sql        = "SELECT `object_id`, `object_type` FROM `object_count` WHERE `object_count`.`date` = ? AND `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`count_type` = ? AND `count_type` = 'stream'";
                 $db_results = Dba::read($sql, $params);
                 while ($row = Dba::fetch_assoc($db_results)) {
                     // reduce the counts for these objects too
-                    if (in_array($row['object_type'], array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'))) {
+                    if (in_array($row['object_type'], ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode'])) {
                         self::count($row['object_type'], $row['object_id'], 'down');
                     }
                 }
@@ -189,19 +189,19 @@ class Stats
                 $sql = ($count_type == 'down')
                     ? "UPDATE `$type` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ? AND `total_count` > 0"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
-                Dba::write($sql, array($object_id));
+                Dba::write($sql, [$object_id]);
                 break;
             case 'album':
             case 'artist':
                 $sql = ($count_type == 'down')
                     ? "UPDATE `$type` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0"
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
-                Dba::write($sql, array($object_id));
+                Dba::write($sql, [$object_id]);
                 break;
         }
-        if (in_array($type, array('song', 'podcast_episode', 'video')) && $count_type == 'down') {
+        if (in_array($type, ['song', 'podcast_episode', 'video']) && $count_type == 'down') {
             $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;";
-            Dba::write($sql, array($object_id));
+            Dba::write($sql, [$object_id]);
         }
     }
 
@@ -258,14 +258,14 @@ class Stats
         }
 
         $sql        = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname));
+        $db_results = Dba::write($sql, [$type, $object_id, $count_type, $date, $user_id, $agent, $latitude, $longitude, $geoname]);
 
         // the count was inserted
         if ($db_results) {
-            if (in_array($type, array('song', 'album', 'artist', 'video', 'podcast', 'podcast_episode')) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
+            if (in_array($type, ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode']) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
                 self::count($type, $object_id, 'up');
                 // don't register activity for album or artist plays
-                if (!in_array($type, array('album', 'artist', 'podcast'))) {
+                if (!in_array($type, ['album', 'artist', 'podcast'])) {
                     static::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
                 }
             }
@@ -287,12 +287,18 @@ class Stats
      * @param int $time
      * @param bool $exact
      */
-    public static function is_already_inserted($type, $object_id, $user, $agent, $time, $exact = false): bool
-    {
+    public static function is_already_inserted(
+        $type,
+        $object_id,
+        $user,
+        $agent,
+        $time,
+        $exact = false
+    ): bool {
         $sql = ($exact)
             ? "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND `object_count`.`date` = $time "
             : "SELECT `object_id`, `date`, `count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` = ? AND `object_count`.`count_type` = 'stream' AND (`object_count`.`date` >= ($time - 5) AND `object_count`.`date` <= ($time + 5)) ";
-        $params = array($user, $type);
+        $params = [$user, $type];
         if ($agent !== '') {
             $sql .= "AND `object_count`.`agent` = ? ";
             $params[] = $agent;
@@ -336,7 +342,7 @@ class Stats
             }
         }
 
-        $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
+        $db_results = Dba::read($sql, [$object_type, $object_id, $count_type]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['total_count'] ?? 0);
@@ -351,7 +357,7 @@ class Stats
      */
     public static function get_object_data($dataType, $startTime, $endTime, User $user): string
     {
-        $params = array($startTime, $endTime, $user->getId());
+        $params = [$startTime, $endTime, $user->getId()];
         switch ($dataType) {
             case 'song_count':
                 $sql = "SELECT COUNT(`object_id`) AS `data` FROM `object_count` WHERE `date` >= ? AND `date` <= ? AND `user` = ? AND `count_type` = 'stream' AND `object_type` = 'song';";
@@ -397,7 +403,7 @@ class Stats
             }
         }
 
-        $db_results = Dba::read($sql, array($object_type, $object_id, $count_type));
+        $db_results = Dba::read($sql, [$object_type, $object_id, $count_type]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['total_count'];
@@ -413,7 +419,7 @@ class Stats
     {
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
-        $db_results = Dba::read($sql, array($latitude, $longitude));
+        $db_results = Dba::read($sql, [$latitude, $longitude]);
         $results    = Dba::fetch_assoc($db_results);
         if (!empty($results)) {
             $name = $results['geo_name'];
@@ -440,7 +446,7 @@ class Stats
             $user_id = $user->id ?? 0;
         }
         if ((int)$user_id == 0) {
-            return array(
+            return [
                 'id' => 0,
                 'object_type' => false,
                 'object_id' => false,
@@ -448,11 +454,11 @@ class Stats
                 'agent' => '',
                 'date' => 0,
                 'count_type' => ''
-            );
+            ];
         }
 
         $sql    = "SELECT `object_count`.`id`, `object_count`.`object_type`, `object_count`.`object_id`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`date`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`user` = ? AND `object_count`.`object_type` IN ('song', 'video', 'podcast_episode') AND `object_count`.`count_type` IN ('stream', 'skip') ";
-        $params = array($user_id);
+        $params = [$user_id];
         if ($agent) {
             $sql .= "AND `object_count`.`agent` = ? ";
             $params[] = $agent;
@@ -480,11 +486,11 @@ class Stats
     {
         // update the object_count table
         $sql = "UPDATE `object_count` SET `object_count`.`date` = ? WHERE `object_count`.`user` = ? AND `object_count`.`agent` = ? AND `object_count`.`date` = ?";
-        Dba::write($sql, array($new_date, $user_id, $agent, $original_date));
+        Dba::write($sql, [$new_date, $user_id, $agent, $original_date]);
 
         // update the user_activity table
         $sql = "UPDATE `user_activity` SET `user_activity`.`activity_date` = ? WHERE `user_activity`.`user` = ? AND `user_activity`.`activity_date` = ?";
-        Dba::write($sql, array($new_date, $user_id, $original_date));
+        Dba::write($sql, [$new_date, $user_id, $original_date]);
     }
 
     /**
@@ -501,7 +507,7 @@ class Stats
             return 0;
         }
         $sql        = "SELECT `time` FROM `$object_type` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($object_id));
+        $db_results = Dba::read($sql, [$object_id]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['time'] ?? 0);
@@ -523,7 +529,7 @@ class Stats
     {
         // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
-        Dba::write($sql, array($date, $agent, $user_id, $object_type));
+        Dba::write($sql, [$date, $agent, $user_id, $object_type]);
 
         // update the total counts (and total_skip counts) as well
         if ($user_id > 0 && $agent !== 'debug') {
@@ -540,16 +546,16 @@ class Stats
                 $podcast_episode = new Podcast_Episode($object_id);
                 self::count('podcast', $podcast_episode->podcast, 'down');
             }
-            if (in_array($object_type, array('song', 'video', 'podcast_episode'))) {
+            if (in_array($object_type, ['song', 'video', 'podcast_episode'])) {
                 $sql = "UPDATE `user_data`, (SELECT `$object_type`.`size` FROM `$object_type` WHERE `$object_type`.`id` = ?) AS `$object_type` SET `value` = `value` - `$object_type`.`size` WHERE `user` = ? AND `value` = 'play_size'";
-                Dba::write($sql, array($object_id, $object_id));
+                Dba::write($sql, [$object_id, $object_id]);
             }
         }
 
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, array($date, $agent, $user_id));
+        return Dba::write($sql, [$date, $agent, $user_id]);
     }
 
     /**
@@ -628,9 +634,9 @@ class Stats
         $sql .= (AmpConfig::get('catalog_filter') && $user_id > 0)
             ? " AND" . Catalog::get_user_filter('song', $user_id) . "ORDER BY `object_count`.`date` " . $order
             : "ORDER BY `object_count`.`date` " . $order;
-        $db_results = Dba::read($sql, array($user_id, $time));
+        $db_results = Dba::read($sql, [$user_id, $time]);
 
-        $results = array();
+        $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
         }
@@ -739,10 +745,10 @@ class Stats
             if ($input_type == 'song_artist') {
                 $sql .= " AND `artist`.`song_count` > 0";
             }
-            if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+            if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
                 $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
             }
-            if ($catalog_filter && in_array($type, array('artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video')) && $filter_user !== null) {
+            if ($catalog_filter && in_array($type, ['artist', 'album', 'album_disk', 'podcast_episode', 'song', 'video']) && $filter_user !== null) {
                 $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $filter_user->getId());
             }
             $rating_filter = AmpConfig::get_rating_filter();
@@ -802,7 +808,7 @@ class Stats
 
         //debug_event(self::class, 'get_top ' . $sql, 5);
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -832,10 +838,10 @@ class Stats
         if ($input_type == 'album_artist') {
             $sql = "SELECT `object_id` AS `id`, MAX(`date`) AS `date` FROM `object_count` LEFT JOIN `artist` ON `artist`.`id` = `object_id` AND `object_type` = 'artist' WHERE `artist`.`album_count` > 0 AND `object_type` = 'artist' AND `count_type` = 'stream'" . $user_sql;
         }
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        if ($catalog_filter && in_array($type, array('video', 'artist', 'album_artist', 'album', 'album_disk', 'song')) && $filter_user !== null) {
+        if ($catalog_filter && in_array($type, ['video', 'artist', 'album_artist', 'album', 'album_disk', 'song']) && $filter_user !== null) {
             $sql .= " AND" . Catalog::get_user_filter("object_count_$type", $filter_user->getId());
         }
         $rating_filter = AmpConfig::get_rating_filter();
@@ -898,7 +904,7 @@ class Stats
 
         //debug_event(self::class, 'get_recent ' . $sql, 5);
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -927,7 +933,7 @@ class Stats
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
             : "'$object_type'";
 
-        $results = array();
+        $results = [];
         $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
         // check for valid catalogs
         $sql .= " AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
@@ -1104,7 +1110,7 @@ class Stats
 
         //debug_event(self::class, 'get_newest ' . $sql, 5);
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_row($db_results)) {
             $results[] = (int) $row[0];
         } // end while results

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,7 +89,7 @@ final class Stats3Method
 
         if ($results !== null) {
             ob_end_clean();
-            echo Xml3_Data::albums($results, array(), $user);
+            echo Xml3_Data::albums($results, [], $user);
         }
     }
 

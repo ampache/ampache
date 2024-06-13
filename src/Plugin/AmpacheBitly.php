@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -112,14 +112,14 @@ class AmpacheBitly implements AmpachePluginInterface
             return '';
         }
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Bearer ' . $this->bitly_token,
             'Content-Type' => 'application/json'
-        );
-        $data = array(
+        ];
+        $data = [
             'group_guid' => $this->bitly_group_guid,
             'long_url' => $url,
-        );
+        ];
         $apiurl = 'https://api-ssl.bitly.com/v4/shorten';
 
         try {
@@ -161,7 +161,7 @@ class AmpacheBitly implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['bitly_token'])) || !strlen(trim($data['bitly_group_guid']))) {
-            $data                     = array();
+            $data                     = [];
             $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
             $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
         }

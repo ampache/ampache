@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -63,7 +63,6 @@ class Song extends database_object implements
 {
     protected const DB_TABLENAME = 'song';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $file = null;
@@ -90,7 +89,7 @@ class Song extends database_object implements
 
     public int $time;
 
-    public ?int $track   = null;
+    public ?int $track = null;
 
     public ?string $mbid = null;
 
@@ -104,26 +103,29 @@ class Song extends database_object implements
 
     public ?int $user_upload = null;
 
-    public ?int $license     = null;
+    public ?int $license = null;
 
     public ?string $composer = null;
 
-    public ?int $channels    = null;
+    public ?int $channels = null;
 
     public int $total_count;
 
     public int $total_skip;
 
-    /** song_data table */
-    public ?string $comment              = null;
+    /**
+     * song_data table
+     */
 
-    public ?string $lyrics               = null;
+    public ?string $comment = null;
 
-    public ?string $label                = null;
+    public ?string $lyrics = null;
 
-    public ?string $language             = null;
+    public ?string $label = null;
 
-    public ?string $waveform             = null;
+    public ?string $language = null;
+
+    public ?string $waveform = null;
 
     public ?float $replaygain_track_gain = null;
 
@@ -133,11 +135,11 @@ class Song extends database_object implements
 
     public ?float $replaygain_album_peak = null;
 
-    public ?int $r128_album_gain         = null;
+    public ?int $r128_album_gain = null;
 
-    public ?int $r128_track_gain         = null;
+    public ?int $r128_track_gain = null;
 
-    public ?string $disksubtitle         = null;
+    public ?string $disksubtitle = null;
 
     public ?string $link = null;
 
@@ -248,9 +250,8 @@ class Song extends database_object implements
     private ?License $licenseObj = null;
 
     /* Setting Variables */
-    /**
-     * @var bool $_fake
-     */
+
+    /** @var bool $_fake */
     public $_fake = false; // If this is a 'construct_from_array' object
 
     /**
@@ -2044,11 +2045,11 @@ class Song extends database_object implements
                 $this->bitrate = $bitrate;
 
                 // replace duplicate/incorrect parameters on the additional params
-                $patterns = array(
+                $patterns = [
                     '/&format=[a-z]+/',
                     '/&transcode_to=[a-z|0-9]+/',
                     '/&bitrate=[0-9]+/',
-                );
+                ];
                 $additional_params = preg_replace($patterns, '', $additional_params);
                 $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }

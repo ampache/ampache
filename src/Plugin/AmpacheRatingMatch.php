@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -252,12 +252,12 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
 
         // get the plays for your user
-        $db_results  = Dba::read($sql, array('stream', $song->id, $this->user->id));
+        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
         $play_result = Dba::fetch_assoc($db_results);
         $play_count  = (int) $play_result['counting'];
 
         // get the skips for your user
-        $db_results  = Dba::read($sql, array('skip', $song->id, $this->user->id));
+        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 
@@ -351,12 +351,12 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         $this->user        = $user;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
         $this->match_flags = (int) $data['ratingmatch_flags'];
-        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : array();
-        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : array();
-        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : array();
-        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : array();
-        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : array();
-        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : array();
+        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
+        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
+        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
+        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
+        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
+        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
         $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
 
         return true;

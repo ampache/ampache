@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,8 +64,8 @@ final class Migration500013 extends AbstractMigration
         // fill the data
         $this->updateDatabase("UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;");
         $this->updateDatabase("UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;");
-        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;", array(T_('System')));
-        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;", array(T_('System')));
+        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;", [T_('System')]);
+        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;", [T_('System')]);
     }
 
     public function getTableMigrations(

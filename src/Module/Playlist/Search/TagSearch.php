@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,14 +39,14 @@ final class TagSearch implements SearchInterface
     ): array {
         $sql_logic_operator = $search->logic_operator;
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -81,7 +81,7 @@ final class TagSearch implements SearchInterface
 
         $where_sql = implode(" $sql_logic_operator ", $where);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`tag`.`id`) FROM `tag`',
             'join' => $join,
             'where' => $where,
@@ -91,6 +91,6 @@ final class TagSearch implements SearchInterface
             'group_sql' => '',
             'having_sql' => '',
             'parameters' => $parameters
-        );
+        ];
     }
 }

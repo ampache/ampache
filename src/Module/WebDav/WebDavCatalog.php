@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,10 +48,10 @@ class WebDavCatalog extends DAV\Collection
      */
     public function getChildren(): array
     {
-        $children = array();
+        $children = [];
         $catalogs = null;
         if ($this->catalog_id > 0) {
-            $catalogs   = array();
+            $catalogs   = [];
             $catalogs[] = $this->catalog_id;
         }
         $artists = Catalog::get_artists($catalogs);

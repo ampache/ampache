@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -115,15 +115,15 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
     public function get_lyrics($song)
     {
         $uri     = rtrim(preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode((string)$song->get_artist_fullname());
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);
             if ($json) {
                 if (!empty($json->lyrics)) {
-                    return array(
+                    return [
                         'text' => nl2br($json->lyrics),
                         'url' => $json->image
-                    );
+                    ];
                 }
             }
         }

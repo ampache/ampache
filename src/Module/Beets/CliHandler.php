@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,9 +34,7 @@ use Ampache\Module\System\Core;
  */
 class CliHandler extends Handler
 {
-    /**
-     * @var Catalog
-     */
+    /** @var Catalog */
     protected $handler;
 
     /**
@@ -73,7 +71,7 @@ class CliHandler extends Handler
      * All stored beets fields
      * @var array
      */
-    protected $fields = array();
+    protected $fields = [];
 
     /**
      * Beets command
@@ -91,13 +89,13 @@ class CliHandler extends Handler
      * Defines the differences between beets and ampache fields
      * @var array
      */
-    protected $fieldMapping = array(
-        'disc' => array('disk', '%d'),
-        'path' => array('file', '%s'),
-        'length' => array('time', '%d'),
-        'comments' => array('comment', '%s'),
-        'bitrate' => array('bitrate', '%d')
-    );
+    protected $fieldMapping = [
+        'disc' => ['disk', '%d'],
+        'path' => ['file', '%s'],
+        'length' => ['time', '%d'],
+        'comments' => ['comment', '%s'],
+        'bitrate' => ['bitrate', '%d']
+    ];
 
     /**
      * CliHandler constructor.
@@ -142,11 +140,11 @@ class CliHandler extends Handler
      */
     protected function assembleCommand($command, $disableCostomFields = false): string
     {
-        $commandParts = array(
+        $commandParts = [
             escapeshellcmd($this->beetsCommand),
             ' -l ' . escapeshellarg($this->handler->get_path()),
             escapeshellcmd($command)
-        );
+        ];
         if ($this->useCustomFields && !$disableCostomFields) {
             $commandParts[] = ' -f ' . escapeshellarg($this->getFieldFormat());
         }
@@ -204,10 +202,10 @@ class CliHandler extends Handler
     protected function getFields(): array
     {
         $fields          = null;
-        $processedFields = array();
+        $processedFields = [];
         exec($this->assembleCommand('fields', true), $fields);
         foreach ((array) $fields as $field) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/^[\s]+([\w]+)$/', $field, $matches)) {
                 $processedFields[] = $matches[1];
             }

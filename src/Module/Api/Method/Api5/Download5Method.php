@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,7 +52,7 @@ final class Download5Method
      */
     public static function download(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -62,7 +62,7 @@ final class Download5Method
         $format    = $input['format'] ?? null; // mp3, flv or raw
 
         $params = '&client=api&action=download&cache=1';
-        if ($format && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
         $url = '';

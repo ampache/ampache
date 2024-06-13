@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ class OAuthServer
 {
     protected $timestamp_threshold = 300; // in seconds, five minutes
     protected $version             = '1.0';
-    protected $signature_methods   = array();
+    protected $signature_methods   = [];
 
     protected $data_store;
 
@@ -120,10 +120,10 @@ class OAuthServer
         $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
-        return array(
+        return [
             $consumer,
             $token
-        );
+        ];
     }
 
     // Internals from here

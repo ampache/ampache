@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,7 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
         <td>
         <select name="limit">
 <?php
-        foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
+        foreach ([1, 5, 10, 20, 30, 50, 100, 500, 1000] as $i) {
             echo "\t\t\t" . '<option value="' . $i . '" ' .
                 (($random_count == $i) ? 'selected="selected"' : '') . '>' .
                 $i . "</option>\n";
@@ -97,7 +97,7 @@ ${$name}                    = ' selected="selected"'; ?>
             echo "\t\t\t" . '<option value="0" ' .
 (($length == 0) ? 'selected="selected"' : '') . '>' .
 T_('Unlimited') . "</option>\n";
-foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
+foreach ([15, 30, 60, 120, 240, 480, 960] as $i) {
     echo "\t\t\t" . '<option value="' . $i . '" ' .
         (($length == $i) ? 'selected="selected"' : '') . '>';
     if ($i < 60) {
@@ -118,7 +118,7 @@ foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
     echo "\t\t\t" . '<option value="0" ' .
         (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
         T_('Unlimited') . "</option>\n";
-foreach (array(64, 128, 256, 512, 1024) as $i) {
+foreach ([64, 128, 256, 512, 1024] as $i) {
     echo "\t\t\t" . '<option value="' . $i . '"' .
         (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
         Ui::format_bytes($i * 1048576) . "</option>\n";

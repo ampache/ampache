@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -42,10 +42,10 @@ final class UserQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'id',
         'username',
@@ -59,7 +59,7 @@ final class UserQuery implements QueryInterface
         'state',
         'city',
         'fullname_public',
-    );
+    ];
 
     /** @var string */
     protected $select = "`user`.`id`";

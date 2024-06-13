@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,8 +35,8 @@ use DateTimeZone;
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
     private const VERSION        = '7.0.0'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '71';
-    private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
+    private const CONFIG_VERSION = '72';
+    private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -121,7 +121,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['date_timezone'] = date_default_timezone_get();
         }
         if (!empty($results['date_timezone'])) {
-            $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+            $listIdentifiers = DateTimeZone::listIdentifiers() ?? [];
             if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }

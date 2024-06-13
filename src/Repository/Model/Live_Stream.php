@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,29 +57,19 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     public ?string $link = null;
 
-    /**
-     * @var null|string $f_name
-     */
+    /** @var null|string $f_name */
     public $f_name;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var null|string $f_name_link
-     */
+    /** @var null|string $f_name_link */
     public $f_name_link;
 
-    /**
-     * @var null|string $f_url_link
-     */
+    /** @var null|string $f_url_link */
     public $f_url_link;
 
-    /**
-     * @var null|string $f_site_url_link
-     */
+    /** @var null|string $f_site_url_link */
     public $f_site_url_link;
 
     /**

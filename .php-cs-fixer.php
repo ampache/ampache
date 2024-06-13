@@ -8,6 +8,9 @@ $finder = PhpCsFixer\Finder::create()
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
+        'array_syntax' => [
+            'syntax' => 'short'
+        ],
         'binary_operator_spaces' => [
             'operators' => ['=' => 'align']
         ],

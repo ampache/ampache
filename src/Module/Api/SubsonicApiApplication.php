@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -175,7 +175,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $query_string .= '&' . $postdata;
         }
         $query = explode('&', $query_string);
-        $input = array();
+        $input = [];
         foreach ($query as $param) {
             $decname  = false;
             $decvalue = false;
@@ -190,7 +190,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
 
             // workaround for clementine/Qt5 bug
             // see https://github.com/clementine-player/Clementine/issues/6080
-            $matches = array();
+            $matches = [];
             if ($decname == "id" && preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $decvalue, $matches)) {
                 $calc = (
                     (((int)$matches[1]) << 24) +
@@ -215,7 +215,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             if (array_key_exists($decname, $input)) {
                 if (is_array($input[$decname]) === false) {
                     $oldvalue          = $input[$decname];
-                    $input[$decname]   = array();
+                    $input[$decname]   = [];
                     $input[$decname][] = $oldvalue;
                 }
                 $input[$decname][] = $decvalue;
@@ -229,7 +229,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         // Call your function if it's valid
         if (in_array($action, $methods)) {
             /** @see Subsonic_Api */
-            call_user_func(array(Subsonic_Api::class, $action), $input, $user);
+            call_user_func([Subsonic_Api::class, $action], $input, $user);
 
             // We only allow a single function to be called, and we assume it's cleaned up!
             return;

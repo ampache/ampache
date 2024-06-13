@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,7 +71,7 @@ final class AdvancedSearchMethod
      */
     public static function advanced_search(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
             return false;
         }
 
@@ -105,12 +105,12 @@ final class AdvancedSearchMethod
                 Json_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Json_Data::albums($results, array(), $user);
+                        echo Json_Data::albums($results, [], $user);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists($results, array(), $user);
+                        echo Json_Data::artists($results, [], $user);
                         break;
                     case 'label':
                         echo Json_Data::labels($results);
@@ -144,10 +144,10 @@ final class AdvancedSearchMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'album':
-                        echo Xml_Data::albums($results, array(), $user);
+                        echo Xml_Data::albums($results, [], $user);
                         break;
                     case 'artist':
-                        echo Xml_Data::artists($results, array(), $user);
+                        echo Xml_Data::artists($results, [], $user);
                         break;
                     case 'label':
                         echo Xml_Data::labels($results, $user);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 <div id="information_actions">
 <ul>
-<?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
+<?php if (in_array($search_type, ['song', 'album', 'artist'])) { ?>
     <li>
         <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'new_window', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
     </li>

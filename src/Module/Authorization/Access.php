@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,44 +40,28 @@ class Access
 {
     protected const DB_TABLENAME = 'access_list';
 
-    // Variables from DB
-    /**
-     * @var int $id
-     */
+    /** @var int $id */
     public $id;
 
-    /**
-     * @var string $name
-     */
+    /** @var string $name */
     public $name;
 
-    /**
-     * @var string $start
-     */
+    /** @var string $start */
     public $start;
 
-    /**
-     * @var string $end
-     */
+    /** @var string $end */
     public $end;
 
-    /**
-     * @var int $level
-     */
+    /** @var int $level */
     public $level;
 
-    /**
-     * @var int $user
-     */
+    /** @var int $user */
     public $user;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var bool $enabled
+    /** @var bool $enabled
      *
      * @deprecated seems not to be in use
      */
@@ -110,7 +94,7 @@ class Access
     private function has_info($access_id): bool
     {
         $sql        = 'SELECT * FROM `access_list` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($access_id));
+        $db_results = Dba::read($sql, [$access_id]);
         $data       = Dba::fetch_assoc($db_results);
         if (empty($data)) {
             return false;

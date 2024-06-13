@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,10 +85,10 @@ final class AdvancedSearch4Method
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json4_Data::artists($results, array(), $user);
+                        echo Json4_Data::artists($results, [], $user);
                         break;
                     case 'album':
-                        echo Json4_Data::albums($results, array(), $user);
+                        echo Json4_Data::albums($results, [], $user);
                         break;
                     case 'playlist':
                         echo Json4_Data::playlists($results, $user);
@@ -109,10 +109,10 @@ final class AdvancedSearch4Method
                 Xml4_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
-                        echo Xml4_Data::artists($results, array(), $user);
+                        echo Xml4_Data::artists($results, [], $user);
                         break;
                     case 'album':
-                        echo Xml4_Data::albums($results, array(), $user);
+                        echo Xml4_Data::albums($results, [], $user);
                         break;
                     case 'playlist':
                         echo Xml4_Data::playlists($results, $user);

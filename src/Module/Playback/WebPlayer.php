@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,7 +43,7 @@ class WebPlayer
      */
     public static function is_playlist_radio($playlist): bool
     {
-        $radios = array();
+        $radios = [];
 
         foreach ($playlist->urls as $item) {
             if ($item->type == "radio") {
@@ -91,7 +91,7 @@ class WebPlayer
      */
     protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = ''): array
     {
-        $types = array('real' => 'mp3', 'player' => '');
+        $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
@@ -188,8 +188,14 @@ class WebPlayer
      * @param string $force_type
      * @param array $transcode_cfg
      */
-    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = ''): bool
-    {
+    public static function can_transcode(
+        $media_type,
+        $file_type,
+        $types,
+        $urlinfo,
+        $transcode_cfg,
+        $force_type = ''
+    ): bool {
         $transcode = false;
 
         // Check transcode is required
@@ -272,8 +278,8 @@ class WebPlayer
      */
     public static function get_media_js_param($item, $transcode_cfg, $force_type = ''): string
     {
-        $json = array();
-        foreach (array('title', 'author') as $member) {
+        $json = [];
+        foreach (['title', 'author'] as $member) {
             if ($member == "author") {
                 $kmember = "artist";
             } else {

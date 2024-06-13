@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,21 +62,21 @@ final class PlaylistGenerate4Method
     public static function playlist_generate(array $input, User $user): void
     {
         // parameter defaults
-        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], ['forgotten', 'recent', 'unplayed', 'random'], true))
             ? $input['mode']
             : 'random';
-        $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
+        $format = (array_key_exists('format', $input) && in_array($input['format'], ['song', 'index', 'id'], true))
             ? $input['format']
             : 'song';
 
         $offset     = (int)($input['offset'] ?? 0);
         $limit      = (int)($input['limit'] ?? 0);
         $rule_count = 1;
-        $data       = array(
+        $data       = [
             'type' => 'song'
-        );
+        ];
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
-        if (in_array($mode, array('forgotten', 'recent'), true)) {
+        if (in_array($mode, ['forgotten', 'recent'], true)) {
             // played songs
             $data['rule_' . $rule_count]               = 'myplayed';
             $data['rule_' . $rule_count . '_operator'] = 0;

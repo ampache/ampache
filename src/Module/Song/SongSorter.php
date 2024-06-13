@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -73,7 +73,7 @@ final class SongSorter implements SongSorterInterface
 
         if (!empty($catalogName)) {
             $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
-            $db_results = Dba::read($sql, array($catalogName));
+            $db_results = Dba::read($sql, [$catalogName]);
         } else {
             $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local';";
             $db_results = Dba::read($sql);
@@ -345,7 +345,7 @@ final class SongSorter implements SongSorterInterface
 
             // Update the catalog
             $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
-            Dba::write($sql, array($fullname, $song->id));
+            Dba::write($sql, [$fullname, $song->id]);
         } // end else
 
         return true;

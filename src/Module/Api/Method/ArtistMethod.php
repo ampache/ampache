@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ final class ArtistMethod
      */
     public static function artist(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -69,10 +69,10 @@ final class ArtistMethod
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::artists(array($object_id), $include, $user, true, false);
+                echo Json_Data::artists([$object_id], $include, $user, true, false);
                 break;
             default:
-                echo Xml_Data::artists(array($object_id), $include, $user);
+                echo Xml_Data::artists([$object_id], $include, $user);
         }
 
         return true;

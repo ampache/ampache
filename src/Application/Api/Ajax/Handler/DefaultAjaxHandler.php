@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results      = array();
+        $results      = [];
         $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
         $action       = $this->requestParser->getFromRequest('action');
@@ -100,7 +100,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     switch ($request_type) {
                         case 'browse_set':
                         case 'browse_set_random':
-                            $songs   = array();
+                            $songs   = [];
                             $browse  = new Browse((int)$this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {

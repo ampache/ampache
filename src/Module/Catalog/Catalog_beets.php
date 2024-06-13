@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -89,9 +89,9 @@ class Catalog_beets extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
+        $fields['beetsdb'] = ['description' => T_('Beets Database File'), 'type' => 'text'];
 
         return $fields;
     }
@@ -118,7 +118,7 @@ class Catalog_beets extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
-        $db_results = Dba::read($selectSql, array($beetsdb));
+        $db_results = Dba::read($selectSql, [$beetsdb]);
 
         if (Dba::num_rows($db_results)) {
             debug_event(self::class, 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
@@ -128,7 +128,7 @@ class Catalog_beets extends Catalog
         }
 
         $insertSql = 'INSERT INTO `catalog_beets` (`beetsdb`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, array($beetsdb, $catalog_id));
+        Dba::write($insertSql, [$beetsdb, $catalog_id]);
 
         return true;
     }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,14 +57,14 @@ final class PlaylistEditMethod
      */
     public static function playlist_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
         $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
-        $playlist_edit = array();
+        $playlist_edit = [];
         if (!empty($items) && (count($items) == count($order))) {
             $playlist_edit = array_combine($order, $items);
         }

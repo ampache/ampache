@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -66,7 +66,7 @@ final class ControlReplyApplication implements ApplicationInterface
             return;
         }
 
-        $items        = array();
+        $items        = [];
         $totMatches   = 0;
         $responseType = "u:Error";
         $soapXML      = '';
@@ -131,17 +131,17 @@ final class ControlReplyApplication implements ApplicationInterface
                     debug_event('control-reply', 'Browse request for root items', 5);
                     // Root items
                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                        $items[] = array(
+                        $items[] = [
                             'id' => '0',
                             'parentID' => '-1',
                             'childCount' => '2',
                             'searchable' => '1',
                             'dc:title' => T_('root'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                     } else {
                         $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
-                        //$items[] = array();
+                        //$items[] = [];
                         $items[]                  = Upnp_Api::_musicMetadata('');
                         $items[]                  = Upnp_Api::_videoMetadata('');
                         list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class PlaylistAddSong5Method
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'song'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter', 'song'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -67,7 +67,7 @@ final class PlaylistAddSong5Method
 
             return false;
         }
-        $playlist->add_songs(array($song));
+        $playlist->add_songs([$song]);
         Api5::message('song added to playlist', $input['api_format']);
 
         return true;

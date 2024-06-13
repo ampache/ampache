@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,7 +57,7 @@ final class Scrobble5Method
      */
     public static function scrobble(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['song', 'artist', 'album'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -105,7 +105,7 @@ final class Scrobble5Method
             debug_event(self::class, 'scrobble: ' . $media->id . ' for ' . $user->username . ' using ' . $agent . ' ' . $date, 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            if ($media->set_played($user_id, $agent, array(), $date)) {
+            if ($media->set_played($user_id, $agent, [], $date)) {
                 // scrobble plugins
                 User::save_mediaplay($user, $media);
             }

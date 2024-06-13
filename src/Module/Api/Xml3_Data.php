@@ -107,7 +107,7 @@ class Xml3_Data
      */
     public static function set_type($type): void
     {
-        if (in_array($type, array('rss', 'xspf', 'itunes'))) {
+        if (in_array($type, ['rss', 'xspf', 'itunes'])) {
             self::$type = $type;
         }
     }
@@ -183,15 +183,15 @@ class Xml3_Data
         $string = '';
 
         if (!empty($tags)) {
-            $atags = array();
+            $atags = [];
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {
                     $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$tag['id']] = array(
+                    $atags[$tag['id']] = [
                         'name' => $tag['name'],
                         'count' => 1
-                    );
+                    ];
                 }
             }
 
@@ -302,7 +302,7 @@ class Xml3_Data
     public static function artists($artists, $include, $user, $full_xml = true): string
     {
         if (null == $include) {
-            $include = array();
+            $include = [];
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -543,7 +543,7 @@ class Xml3_Data
     public static function democratic($object_ids, $user): string
     {
         if (!is_array($object_ids)) {
-            $object_ids = array();
+            $object_ids = [];
         }
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';

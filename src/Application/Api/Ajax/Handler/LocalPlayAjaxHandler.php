@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,7 +45,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -117,7 +117,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $browse = new Browse();
                         $browse->set_type('playlist_localplay');
                         $browse->set_static_content(true);
-                        $browse->save_objects(array());
+                        $browse->save_objects([]);
                         $browse->show_objects();
                         $browse->store();
                         $results[$browse->get_content_div()] = ob_get_contents();

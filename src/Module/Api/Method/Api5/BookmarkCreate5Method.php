@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ final class BookmarkCreate5Method
      */
     public static function bookmark_create(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -72,7 +72,7 @@ final class BookmarkCreate5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -95,13 +95,13 @@ final class BookmarkCreate5Method
 
             return false;
         }
-        $object = array(
+        $object = [
             'user' => $user->getId(),
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
             'position' => $position
-        );
+        ];
 
         // create it then retrieve it
         Bookmark::create($object, $user->getId(), $time);

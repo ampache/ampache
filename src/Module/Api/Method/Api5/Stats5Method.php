@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,7 +67,7 @@ final class Stats5Method
      */
     public static function stats(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];
@@ -88,7 +88,7 @@ final class Stats5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -108,7 +108,7 @@ final class Stats5Method
             }
         }
 
-        $results = array();
+        $results = [];
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
             case 'newest':
@@ -207,12 +207,12 @@ final class Stats5Method
                     case 'json':
                         Json5_Data::set_offset($offset);
                         Json5_Data::set_limit($limit);
-                        echo Json5_Data::artists($results, array(), $user);
+                        echo Json5_Data::artists($results, [], $user);
                         break;
                     default:
                         Xml5_Data::set_offset($offset);
                         Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::artists($results, array(), $user);
+                        echo Xml5_Data::artists($results, [], $user);
                 }
                 break;
             case 'album':
@@ -220,12 +220,12 @@ final class Stats5Method
                     case 'json':
                         Json5_Data::set_offset($offset);
                         Json5_Data::set_limit($limit);
-                        echo Json5_Data::albums($results, array(), $user);
+                        echo Json5_Data::albums($results, [], $user);
                         break;
                     default:
                         Xml5_Data::set_offset($offset);
                         Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::albums($results, array(), $user);
+                        echo Xml5_Data::albums($results, [], $user);
                 }
                 break;
             case 'playlist':

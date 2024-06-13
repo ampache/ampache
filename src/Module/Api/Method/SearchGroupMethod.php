@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,17 +71,17 @@ final class SearchGroupMethod
      */
     public static function search_group(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('rule_1', 'rule_1_operator', 'rule_1_input'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['rule_1', 'rule_1_operator', 'rule_1_input'], self::ACTION)) {
             return false;
         }
-        $search_groups = array(
+        $search_groups = [
             'all',
             'music',
             'song_artist',
             'album_artist',
             'podcast',
             'video'
-        );
+        ];
         $type = (isset($input['type']))
             ? $input['type']
             : 'all';
@@ -96,7 +96,7 @@ final class SearchGroupMethod
 
             return false;
         }
-        $search_types = array(
+        $search_types = [
             'song',
             'album',
             'song_artist',
@@ -108,45 +108,45 @@ final class SearchGroupMethod
             'podcast_episode',
             'genre',
             'user'
-        );
+        ];
         switch ($type) {
             case 'all':
                 break;
             case 'music':
-                $search_types = array(
+                $search_types = [
                     'song',
                     'album',
                     'artist',
-                );
+                ];
                 break;
             case 'song_artist':
-                $search_types = array(
+                $search_types = [
                     'song',
                     'album',
                     'song_artist',
-                );
+                ];
                 break;
             case 'album_artist':
-                $search_types = array(
+                $search_types = [
                     'song',
                     'album',
                     'album_artist',
-                );
+                ];
                 break;
             case 'podcast':
-                $search_types = array(
+                $search_types = [
                     'podcast',
                     'podcast_episode',
-                );
+                ];
                 break;
             case 'video':
-                $search_types = array(
+                $search_types = [
                     'video'
-                );
+                ];
         }
         $offset         = $input['offset'] ?? 0;
         $limit          = $input['limit'] ?? 0;
-        $results        = array();
+        $results        = [];
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
@@ -158,7 +158,7 @@ final class SearchGroupMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                $output = array('search' => array());
+                $output = ['search' => []];
                 Json_Data::set_offset($offset);
                 Json_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
@@ -167,7 +167,7 @@ final class SearchGroupMethod
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::albums($search, array(), $user, false);
+                            $output['search'][$key] = Json_Data::albums($search, [], $user, false);
                             break;
                         case 'song_artist':
                         case 'album_artist':
@@ -175,7 +175,7 @@ final class SearchGroupMethod
                             if ((count($search) > $limit || $offset > 0) && $limit) {
                                 $search = array_slice($search, $offset, $limit);
                             }
-                            $output['search'][$key] = Json_Data::artists($search, array(), $user, false);
+                            $output['search'][$key] = Json_Data::artists($search, [], $user, false);
                             break;
                         case 'label':
                             $output['search'][$key] = Json_Data::labels($search, false);

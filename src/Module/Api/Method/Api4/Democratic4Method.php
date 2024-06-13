@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class Democratic4Method
      */
     public static function democratic(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('method'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['method'], self::ACTION)) {
             return false;
         }
         // Load up democratic information
@@ -66,18 +66,18 @@ final class Democratic4Method
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }
-                $democratic->add_vote(array(
-                    array(
+                $democratic->add_vote([
+                    [
                         'object_type' => $type,
                         'object_id' => $media->id
-                    )
-                ));
+                    ]
+                ]);
 
                 // If everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);
@@ -99,10 +99,10 @@ final class Democratic4Method
                 $democratic->remove_vote($object_id);
 
                 // Everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);
@@ -125,9 +125,9 @@ final class Democratic4Method
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = array(
+                $results = [
                     'url' => $url
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);

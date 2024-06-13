@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,14 +50,14 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
 
-            yield array(
+            yield [
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => (string)Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time)
-            );
+            ];
         }
     }
 }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@ use Ampache\Module\Util\Ui;
 
 $keywords  = $item->get_keywords();
 $limit     = AmpConfig::get('art_search_limit', ArtCollector::ART_SEARCH_LIMIT);
-$art_order = AmpConfig::get('art_order', array());
+$art_order = AmpConfig::get('art_order', []);
 $art_type  = ($object_type == 'artist') ? T_('Artist Art Search') : T_('Cover Art Search');
 $web_path  = AmpConfig::get('web_path');
 UI::show_box_top($art_type, 'box box_get_albumart'); ?>

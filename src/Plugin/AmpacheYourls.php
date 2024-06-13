@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -113,7 +113,7 @@ class AmpacheYourls implements AmpachePluginInterface
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
-            $request  = Requests::get($apiurl, array(), Core::requests_options());
+            $request  = Requests::get($apiurl, [], Core::requests_options());
             $shorturl = $request->body;
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
@@ -142,7 +142,7 @@ class AmpacheYourls implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['yourls_domain'])) || !strlen(trim($data['yourls_api_key']))) {
-            $data                   = array();
+            $data                   = [];
             $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
             $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
         }

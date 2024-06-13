@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,7 +85,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
         $artist_filename    = $this->configContainer->get('artist_art_preferred_filename');
         $artist_art_folder  = $this->configContainer->get('artist_art_folder');
 
-        $dirs = array();
+        $dirs = [];
         if ($art->type == 'album') {
             $media = new Album($art->uid);
             $songs = $this->songRepository->getByAlbum((int) $media->id);
@@ -98,7 +98,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $dirs[] = Core::conv_lc_file(dirname($media->file));
         } elseif ($art->type == 'artist') {
             $media              = new Artist($art->uid);
-            $preferred_filename = str_replace(array('<', '>', '\\', '/'), '_', (string)$media->get_fullname());
+            $preferred_filename = str_replace(['<', '>', '\\', '/'], '_', (string)$media->get_fullname());
             if ($artist_art_folder) {
                 $dirs[] = Core::conv_lc_file($artist_art_folder);
             }

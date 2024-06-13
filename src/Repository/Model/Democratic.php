@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,15 +42,15 @@ class Democratic extends Tmp_Playlist
 {
     protected const DB_TABLENAME = 'democratic';
 
-    public ?string $name      = null;
+    public ?string $name = null;
 
-    public ?int $cooldown     = null;
+    public ?int $cooldown = null;
 
-    public int $level         = 0;
+    public int $level = 0;
 
-    public int $user          = 0;
+    public int $user = 0;
 
-    public bool $primary      = false;
+    public bool $primary = false;
 
     public int $base_playlist = 0;
 
@@ -64,7 +64,7 @@ class Democratic extends Tmp_Playlist
 
     public $object_ids = [];
 
-    public $vote_ids   = [];
+    public $vote_ids = [];
 
     /**
      * constructor

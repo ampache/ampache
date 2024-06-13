@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,13 +38,13 @@ final class Migration500012 extends AbstractMigration
     {
         $sql       = "SELECT `id` FROM `user`";
         $db_users  = Dba::read($sql);
-        $user_list = array();
+        $user_list = [];
         while ($results = Dba::fetch_assoc($db_users)) {
             $user_list[] = (int)$results['id'];
         }
         // Calculate their total Bandwidth Usage
         foreach ($user_list as $user_id) {
-            $params = array($user_id);
+            $params = [$user_id];
             $total  = 0;
             $sql_s  = "SELECT IFNULL(SUM(`size`), 0) AS `size` FROM `object_count` LEFT JOIN `song` ON `song`.`id`=`object_count`.`object_id` AND `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream' AND `object_count`.`user` = ?;";
             $db_s   = Dba::read($sql_s, $params);
@@ -62,7 +62,7 @@ final class Migration500012 extends AbstractMigration
                 $total = $total + $results['size'];
             }
 
-            $this->updateDatabase("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", array($user_id, 'play_size', $total));
+            $this->updateDatabase("REPLACE INTO `user_data` SET `user` = ?, `key` = ?, `value` = ?;", [$user_id, 'play_size', $total]);
         }
     }
 }

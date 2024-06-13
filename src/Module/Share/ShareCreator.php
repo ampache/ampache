@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -105,7 +105,7 @@ final class ShareCreator implements ShareCreatorInterface
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array(
+        $params = [
             $user->getId(),
             $object_type->value,
             $object_id,
@@ -117,7 +117,7 @@ final class ShareCreator implements ShareCreatorInterface
             0,
             $max_counter,
             $description
-        );
+        ];
         Dba::write($sql, $params);
 
         $share_id = (int)
@@ -142,7 +142,7 @@ final class ShareCreator implements ShareCreatorInterface
         }
 
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $share_id));
+        Dba::write($sql, [$url, $share_id]);
 
         return $share_id;
     }

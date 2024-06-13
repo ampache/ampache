@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,15 +101,15 @@ class AmpacheHeadphones implements AmpachePluginInterface
         set_time_limit(0);
 
         $headartist = json_decode(
-            $this->headphones_call('getArtist', array('id' => $wanted->artist_mbid))
+            $this->headphones_call('getArtist', ['id' => $wanted->artist_mbid])
         );
 
         // No artist info, need to add artist to Headphones first. Can be long!
         if (!$headartist->artist) {
-            $this->headphones_call('addArtist', array('id' => $wanted->artist_mbid));
+            $this->headphones_call('addArtist', ['id' => $wanted->artist_mbid]);
         }
 
-        return ($this->headphones_call('queueAlbum', array('id' => $wanted->mbid)) == 'OK');
+        return ($this->headphones_call('queueAlbum', ['id' => $wanted->mbid]) == 'OK');
     }
 
     /**
@@ -132,9 +132,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
         debug_event(self::class, 'Headphones api call: ' . $url, 5);
         try {
             // We assume Headphone server is local, don't use proxy here
-            $request = Requests::get($url, array(), array(
-                'timeout' => 600
-            ));
+            $request = Requests::get($url, [], ['timeout' => 600]);
         } catch (Exception $error) {
             debug_event(self::class, 'Headphones api http exception: ' . $error->getMessage(), 1);
 
@@ -155,7 +153,7 @@ class AmpacheHeadphones implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['headphones_api_url'])) || !strlen(trim($data['headphones_api_key']))) {
-            $data                       = array();
+            $data                       = [];
             $data['headphones_api_url'] = Preference::get_by_user(-1, 'headphones_api_url');
             $data['headphones_api_key'] = Preference::get_by_user(-1, 'headphones_api_key');
         }

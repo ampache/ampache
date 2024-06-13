@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -121,8 +121,14 @@ class Playlist extends playlist_object
      * @param bool $userOnly
      * @return int[]
      */
-    public static function get_playlists($user_id = null, $playlist_name = '', $like = true, $includePublic = true, $includeHidden = true, $userOnly = false): array
-    {
+    public static function get_playlists(
+        $user_id = null,
+        $playlist_name = '',
+        $like = true,
+        $includePublic = true,
+        $includeHidden = true,
+        $userOnly = false
+    ): array {
         if (!$user_id) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;

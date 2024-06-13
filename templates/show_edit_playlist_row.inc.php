@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,7 +51,7 @@ use Ampache\Repository\Model\Playlist;
                 </td>
                 <td>
                     <?php
-                    $options = array();
+                    $options = [];
 if (!empty($users)) {
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';

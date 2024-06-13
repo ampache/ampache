@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -176,14 +176,8 @@ $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
 $user       = $client;
-if (AmpConfig::get('home_recently_played_all')) {
-    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
-    require_once Ui::find_template('show_recently_played_all.inc.php');
-} else {
-    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
-    Song::build_cache(array_keys($data));
-    require Ui::find_template('show_recently_played.inc.php');
-} ?>
+$data       = Stats::get_recently_played($client->getId(), 'stream', null, true);
+require_once Ui::find_template('show_recently_played_all.inc.php');  ?>
         </div>
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';

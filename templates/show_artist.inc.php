@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -207,7 +207,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 RssFeedTypeEnum::LIBRARY_ITEM,
                 $current_user,
                 T_('RSS Feed'),
-                array('object_type' => 'artist', 'object_id' => (string)$artist->id)
+                ['object_type' => 'artist', 'object_id' => (string)$artist->id]
             ); ?>
         </li>
 <?php } ?>
@@ -295,7 +295,7 @@ if ($use_label) { ?>
     <div id="tabs_content">
         <div id="albums" class="tab_content" style="display: block;">
 <?php if (empty($multi_object_ids)) {
-    $multi_object_ids = array('' => $object_ids);
+    $multi_object_ids = ['' => $object_ids];
 }
 
 foreach ($multi_object_ids as $key => $object_ids) {
@@ -310,7 +310,7 @@ foreach ($multi_object_ids as $key => $object_ids) {
     if (!empty($key)) {
         $browse->set_content_div_ak($key);
     }
-    $browse->show_objects($object_ids, array('group_disks' => true, 'title' => $title));
+    $browse->show_objects($object_ids, ['group_disks' => true, 'title' => $title]);
     $browse->store();
 } ?>
         </div>

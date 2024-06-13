@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -45,17 +45,17 @@ final class Video4Method
      */
     public static function video(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $video_id = scrub_in((string) $input['filter']);
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::videos(array($video_id), $user);
+                echo Json4_Data::videos([$video_id], $user);
                 break;
             default:
-                echo Xml4_Data::videos(array($video_id), $user);
+                echo Xml4_Data::videos([$video_id], $user);
         }
 
         return true;

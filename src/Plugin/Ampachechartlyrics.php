@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -98,15 +98,15 @@ class Ampachechartlyrics implements AmpachePluginInterface
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml) {
                 if (!empty($xml->Lyric)) {
-                    return array(
+                    return [
                         'text' => nl2br($xml->Lyric),
                         'url' => $xml->LyricUrl
-                    );
+                    ];
                 }
             }
         }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,7 +61,7 @@ final class RefreshAlbumSongsAction implements ApplicationActionInterface
         $browse->set_filter('album', $object_id);
         $browse->get_objects();
         echo "<div id='browse_content_song' class='browse_content'>";
-        $browse->show_objects(array(), true); // true argument is set to show the reorder column
+        $browse->show_objects([], true); // true argument is set to show the reorder column
         $browse->store();
         echo "</div>";
 

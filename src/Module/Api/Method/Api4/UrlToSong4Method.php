@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,7 @@ final class UrlToSong4Method
      */
     public static function url_to_song(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('url'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
         $charset  = AmpConfig::get('site_charset');
@@ -58,10 +58,10 @@ final class UrlToSong4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
+                echo Json4_Data::songs([(int)($url_data['id'] ?? 0)], $user);
                 break;
             default:
-                echo Xml4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
+                echo Xml4_Data::songs([(int)($url_data['id'] ?? 0)], $user);
         }
 
         return true;

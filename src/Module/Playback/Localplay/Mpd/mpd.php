@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -161,21 +161,24 @@ class mpd
     public const TABLE_ALBUM  = 'album';
 
     // Table holding version compatibility information
-    private static $_COMPATIBILITY_TABLE = array(
-        self::COMMAND_CONSUME => array('min' => '0.15.0', 'max' => false),
-        self::COMMAND_IDLE => array('min' => '0.14.0', 'max' => false),
-        self::COMMAND_PASSWORD => array('min' => '0.10.0', 'max' => false),
-        self::COMMAND_MOVETRACK => array('min' => '0.9.1', 'max' => false),
-        self::COMMAND_PLSWAPTRACK => array('min' => '0.9.1', 'max' => false),
-        self::COMMAND_RANDOM => array('min' => '0.9.1', 'max' => false),
-        self::COMMAND_SEEK => array('min' => '0.9.1', 'max' => false),
-        self::COMMAND_SETVOL => array('min' => '0.10.0', 'max' => false),
-        self::COMMAND_SINGLE => array('min' => '0.15.0', 'max' => false),
-        self::COMMAND_STICKER => array('min' => '0.15.0', 'max' => false),
-        self::COMMAND_VOLUME => array('min' => false, 'max' => '0.10.0')
-    );
+    private static $_COMPATIBILITY_TABLE = [
+        self::COMMAND_CONSUME => ['min' => '0.15.0', 'max' => false],
+        self::COMMAND_IDLE => ['min' => '0.14.0', 'max' => false],
+        self::COMMAND_PASSWORD => ['min' => '0.10.0', 'max' => false],
+        self::COMMAND_MOVETRACK => ['min' => '0.9.1', 'max' => false],
+        self::COMMAND_PLSWAPTRACK => ['min' => '0.9.1', 'max' => false],
+        self::COMMAND_RANDOM => ['min' => '0.9.1', 'max' => false],
+        self::COMMAND_SEEK => ['min' => '0.9.1', 'max' => false],
+        self::COMMAND_SETVOL => ['min' => '0.10.0', 'max' => false],
+        self::COMMAND_SINGLE => ['min' => '0.15.0', 'max' => false],
+        self::COMMAND_STICKER => ['min' => '0.15.0', 'max' => false],
+        self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
+    ];
 
-    // TCP/Connection variables
+    /**
+     * TCP/Connection variables
+     */
+
     private $host;
     private $port;
     private $password;
@@ -183,17 +186,16 @@ class mpd
     private $_mpd_sock = null;
     public $connected  = false;
 
-    // MPD Status variables
-    public $mpd_version = "(unknown)";
+    public $mpd_version = "(unknown)"; // MPD Status variables
 
     public $stats;
     public $status;
     public $playlist;
 
-    // Misc Other Vars
-    public $mpd_class_version = '1.3';
+    public $mpd_class_version = '1.3'; // Misc Other Vars
 
     public $err_str = ''; // Stores the latest error message
+
     private $_command_queue; // The list of commands for bulk command sending
 
     private $_debug_callback = null; // Optional callback to be run on debug
@@ -210,8 +212,12 @@ class mpd
      * @param $password
      * @param $debug_callback
      */
-    public function __construct($server, $port, $password = null, $debug_callback = null)
-    {
+    public function __construct(
+        $server,
+        $port,
+        $password = null,
+        $debug_callback = null
+    ) {
         $this->host     = trim($server);
         $this->port     = trim($port);
         $this->password = $password;
@@ -611,7 +617,7 @@ class mpd
         $new_position = $new_position > 0 ? $new_position : 0;
         $new_position = ($new_position < count($this->playlist)) ? $new_position : count($this->playlist);
 
-        $response = $this->SendCommand(self::COMMAND_MOVETRACK, array($current_position, $new_position));
+        $response = $this->SendCommand(self::COMMAND_MOVETRACK, [$current_position, $new_position]);
 
         $this->_debug('PLMoveTrack', "return: $response", 5);
 
@@ -873,7 +879,7 @@ class mpd
             $track = $this->current_track_id;
         }
 
-        $response = $this->SendCommand(self::COMMAND_SEEK, array($track, $pos));
+        $response = $this->SendCommand(self::COMMAND_SEEK, [$track, $pos]);
         $this->_debug('SeekTo', "return: $pos", 5);
 
         return $pos;
@@ -933,7 +939,7 @@ class mpd
             return false;
         }
 
-        $response = $this->SendCommand(self::COMMAND_SEARCH, array($type, $string), false);
+        $response = $this->SendCommand(self::COMMAND_SEARCH, [$type, $string], false);
 
         $results = false;
 
@@ -966,7 +972,7 @@ class mpd
             return false;
         }
 
-        $response = $this->SendCommand(self::COMMAND_FIND, array($type, $string), false);
+        $response = $this->SendCommand(self::COMMAND_FIND, [$type, $string], false);
 
         $results = false;
 
@@ -1007,7 +1013,7 @@ class mpd
         if (!$response = $this->SendCommand(self::COMMAND_TABLE, self::TABLE_ARTIST, false)) {
             return false;
         }
-        $results = array();
+        $results = [];
 
         $parsed = self::_parseResponse($response);
 
@@ -1035,7 +1041,7 @@ class mpd
     {
         $this->_debug('GetAlbums', 'start', 5);
 
-        $params = array(self::TABLE_ALBUM);
+        $params = [self::TABLE_ALBUM];
         if ($artist !== null) {
             $params[] = $artist;
         }
@@ -1044,7 +1050,7 @@ class mpd
             return false;
         }
 
-        $results = array();
+        $results = [];
         $parsed  = self::_parseResponse($response);
 
         foreach ($parsed as $key => $value) {
@@ -1131,7 +1137,7 @@ class mpd
             return false;
         }
 
-        $results = array();
+        $results = [];
         $counter = -1;
         $lines   = explode("\n", $response);
         foreach ($lines as $line) {
@@ -1158,7 +1164,7 @@ class mpd
             return false;
         }
 
-        $results = array();
+        $results = [];
         $lines   = explode("\n", $response);
         foreach ($lines as $line) {
             if (preg_match('/(\w+): (.+)/', $line, $matches)) {

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -90,61 +90,39 @@ class User extends database_object
     // Constructed variables
     public string $ip_history = '';
 
-    /**
-     * @var array $prefs
-     */
+    /** @var array $prefs */
     public $prefs = [];
 
-    /**
-     * @var Tmp_Playlist|null $playlist
-     */
+    /** @var Tmp_Playlist|null $playlist */
     public $playlist;
 
-    /**
-     * @var null|string $f_name
-     */
+    /** @var null|string $f_name */
     public $f_name;
 
-    /**
-     * @var null|string $f_last_seen
-     */
+    /** @var null|string $f_last_seen */
     public $f_last_seen;
 
-    /**
-     * @var null|string $f_create_date
-     */
+    /** @var null|string $f_create_date */
     public $f_create_date;
 
-    /**
-     * @var null|string $link
-     */
+    /** @var null|string $link */
     public $link;
 
     private ?string $f_link = null;
 
-    /**
-     * @var null|string $f_usage
-     */
+    /** @var null|string $f_usage */
     public $f_usage;
 
-    /**
-     * @var null|string $f_avatar
-     */
+    /** @var null|string $f_avatar */
     public $f_avatar;
 
-    /**
-     * @var null|string $f_avatar_mini
-     */
+    /** @var null|string $f_avatar_mini */
     public $f_avatar_mini;
 
-    /**
-     * @var null|string $f_avatar_medium
-     */
+    /** @var null|string $f_avatar_medium */
     public $f_avatar_medium;
 
-    /**
-     * @var array $catalogs;
-     */
+    /** @var array $catalogs */
     public $catalogs;
 
     private ?bool $has_art = null;

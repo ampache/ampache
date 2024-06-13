@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,7 +64,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
         switch ($type) {
             case 'albums':
                 $ids   = Catalog::get_albums();
-                $items = array();
+                $items = [];
                 foreach ($ids as $albumid) {
                     $items[] = new Album($albumid);
                 }
@@ -80,9 +80,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array($playlistId);
+                    $ids = [$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id)
                         ? new Search((int)$playlist_id, 'song', $user)
@@ -102,9 +102,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array((int)$playlistId);
+                    $ids = [(int)$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
                     if ($playlist->isNew() === false) {

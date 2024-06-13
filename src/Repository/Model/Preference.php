@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -101,7 +101,6 @@ class Preference extends database_object
         'home_moment_videos',
         'home_now_playing',
         'home_recently_played',
-        'home_recently_played_all',
         'httpq_active',
         'jp_volume',
         'lang',
@@ -523,8 +522,16 @@ class Preference extends database_object
      * @param null|string $subcategory
      * @param bool $replace
      */
-    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null, $replace = false): bool
-    {
+    public static function insert(
+        $name,
+        $description,
+        $default,
+        $level,
+        $type,
+        $category,
+        $subcategory = null,
+        $replace = false
+    ): bool {
         if ($replace) {
             self::delete($name);
         }
@@ -865,7 +872,6 @@ class Preference extends database_object
             'home_moment_videos' => T_('Show Videos of the Moment'),
             'home_now_playing' => T_('Show Now Playing'),
             'home_recently_played' => T_('Show Recently Played'),
-            'home_recently_played_all' => T_('Show all media types in Recently Played'),
             'httpq_active' => T_('HTTPQ Active Instance'),
             'jp_volume' => T_('Default webplayer volume'),
             'lang' => T_('Language'),
@@ -1118,7 +1124,6 @@ class Preference extends database_object
             'home_moment_videos',
             'home_now_playing',
             'home_recently_played',
-            'home_recently_played_all',
             'httpq_active',
             'label',
             'ldap_start_tls',

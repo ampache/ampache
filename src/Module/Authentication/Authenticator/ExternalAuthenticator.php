@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,18 +33,18 @@ final class ExternalAuthenticator implements AuthenticatorInterface
     {
         $authenticator = AmpConfig::get('external_authenticator');
         if (!$authenticator) {
-            return array(
+            return [
                 'success' => false,
                 'error' => 'No external authenticator configured'
-            );
+            ];
         }
 
         // FIXME: should we do input sanitization?
-        $proc = proc_open($authenticator, array(
-            0 => array('pipe', 'r'),
-            1 => array('pipe', 'w'),
-            2 => array('pipe', 'w')
-        ), $pipes);
+        $proc = proc_open($authenticator, [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $pipes);
 
         if (is_resource($proc)) {
             fwrite($pipes[0], $username . "\n" . $password . "\n");
@@ -55,24 +55,24 @@ final class ExternalAuthenticator implements AuthenticatorInterface
             }
             fclose($pipes[2]);
         } else {
-            return array(
+            return [
                 'success' => false,
                 'error' => 'Failed to run external authenticator'
-            );
+            ];
         }
 
         if (proc_close($proc) == 0) {
-            return array(
+            return [
                 'success' => true,
                 'type' => 'external',
                 'username' => $username
-            );
+            ];
         }
 
-        return array(
+        return [
             'success' => false,
             'error' => 'The external authenticator did not accept the login'
-        );
+        ];
     }
 
     public function postAuth(): ?array

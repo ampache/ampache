@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -97,7 +97,7 @@ class AmpacheTvdb implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['tvdb_api_key']))) {
-            $data                 = array();
+            $data                 = [];
             $data['tvdb_api_key'] = Preference::get_by_user(-1, 'tvdb_api_key');
         }
 
@@ -127,10 +127,10 @@ class AmpacheTvdb implements AmpachePluginInterface
         if (!in_array('tvshow', $gather_types)) {
             debug_event('tvdb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
         try {
             $tvdburl = 'http://thetvdb.com';
             $client  = new Moinax\TvDb\Client($tvdburl, $this->api_key);
@@ -217,7 +217,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         debug_event('tvdb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
@@ -232,7 +232,7 @@ class AmpacheTvdb implements AmpachePluginInterface
      */
     private function getReleaseByTitle($results, $title, $year)
     {
-        $titles = array();
+        $titles = [];
         foreach ($results as $index) {
             $pos = strpos($index->name, $title);
             if ($pos !== false) {

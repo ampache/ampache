@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,7 +62,7 @@ class Ajax
      */
     public static function observe($source, $method, $action, $confirm = ''): string
     {
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -111,7 +111,7 @@ class Ajax
     {
         $url = self::url($action);
 
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -140,8 +140,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button(
+        $action,
+        $icon,
+        $alt,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -174,8 +181,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button_with_text(
+        $action,
+        $icon,
+        $text,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 

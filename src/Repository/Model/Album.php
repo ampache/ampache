@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,22 +46,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 {
     protected const DB_TABLENAME = 'album';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $name = null;
 
     public ?string $prefix = null;
 
-    // MusicBrainz ID
-    public ?string $mbid = null;
+    public ?string $mbid = null; // MusicBrainz ID
 
     public int $year;
 
     public int $disk_count = 0;
 
-    // MusicBrainz Release Group ID
-    public ?string $mbid_group = null;
+    public ?string $mbid_group = null; // MusicBrainz Release Group ID
 
     public ?string $release_type = null;
 
@@ -148,21 +145,16 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public $artist_id;
 
     // cached information
-    /**
-     * @var bool $_fake
-     */
+
+    /** @var bool $_fake */
     public $_fake;
 
-    /**
-     * @var array $_songs
-     */
+    /** @var array $_songs */
     public $_songs = [];
 
     private ?bool $has_art = null;
 
-    /**
-     * @var array $_mapcache
-     */
+    /** @var array $_mapcache */
     private static $_mapcache = [];
 
     /**
@@ -306,8 +298,21 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      * @param string|null $version
      * @param bool $readonly
      */
-    public static function check($catalog_id, $name, $year = 0, $mbid = null, $mbid_group = null, $album_artist = null, $release_type = null, $release_status = null, $original_year = null, $barcode = null, $catalog_number = null, $version = null, $readonly = false): int
-    {
+    public static function check(
+        $catalog_id,
+        $name,
+        $year = 0,
+        $mbid = null,
+        $mbid_group = null,
+        $album_artist = null,
+        $release_type = null,
+        $release_status = null,
+        $original_year = null,
+        $barcode = null,
+        $catalog_number = null,
+        $version = null,
+        $readonly = false
+    ): int {
         $trimmed        = Catalog::trim_prefix(trim((string) $name));
         $name           = $trimmed['string'];
         $prefix         = $trimmed['prefix'];
@@ -664,7 +669,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             $this->song_artists = self::get_parent_array($this->id, 0, 'song');
         }
 
-        return $this->song_artists ?? array();
+        return $this->song_artists ?? [];
     }
 
     /**
@@ -766,7 +771,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public static function get_parent_array($album_id, $primary_id, $object_type = 'album'): array
     {
-        $results    = array();
+        $results    = [];
         $sql        = "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = ? AND `album_id` = ?;";
         $db_results = Dba::read($sql, [$object_type, $album_id]);
         //debug_event(self::class, 'get_parent_array ' . $sql, 5);

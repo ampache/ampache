@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,7 +59,7 @@ final class PlayerMethod
      */
     public static function player(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
@@ -69,7 +69,7 @@ final class PlayerMethod
 
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'podcast_episode', 'video'))) {
+        if (!in_array(strtolower($type), ['song', 'podcast_episode', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -77,7 +77,7 @@ final class PlayerMethod
         }
 
         $state = $input['state'] ?? 'play';
-        if (!in_array(strtolower($state), array('play', 'stop'))) {
+        if (!in_array(strtolower($state), ['play', 'stop'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $state), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'state', $input['api_format']);
 
@@ -116,7 +116,7 @@ final class PlayerMethod
             // internal scrobbling (user_activity and object_count tables)
             if (
                 $media instanceof Song &&
-                $media->set_played($user->id, $agent, array(), ($time - $position))
+                $media->set_played($user->id, $agent, [], ($time - $position))
             ) {
                 // scrobble plugins
                 User::save_mediaplay($user, $media);

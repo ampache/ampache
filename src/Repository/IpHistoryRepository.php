@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,8 +40,10 @@ use PDO;
  */
 final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
-    public function __construct(private DatabaseConnectionInterface $connection, private ConfigContainerInterface $configContainer)
-    {
+    public function __construct(
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
+    ) {
     }
 
     /**

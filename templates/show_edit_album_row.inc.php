@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ use Ampache\Module\Api\Ajax;
             <?php if (!empty($libitem->album_artists) && count($libitem->album_artists) > 1) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, [$libitem->album_artist])); ?></td>
             </tr>
             <?php } ?>
             <tr>

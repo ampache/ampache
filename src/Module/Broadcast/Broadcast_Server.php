@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,30 +51,26 @@ class Broadcast_Server implements MessageComponentInterface
     public const BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public $verbose;
-    /**
-     * @var ConnectionInterface[] $clients
-     */
+
+    /** @var ConnectionInterface[] $clients */
     protected $clients;
-    /**
-     * @var string[] $sids
-     */
+
+    /** @var string[] $sids */
     protected $sids;
-    /**
-     * @var ConnectionInterface[] $listeners
-     */
+
+    /** @var ConnectionInterface[] $listeners */
     protected $listeners;
-    /**
-     * @var Broadcast[] $broadcasters
-     */
+
+    /** @var Broadcast[] $broadcasters */
     protected $broadcasters;
 
     public function __construct()
     {
         $this->verbose      = false;
-        $this->clients      = array();
-        $this->sids         = array();
-        $this->listeners    = array();
-        $this->broadcasters = array();
+        $this->clients      = [];
+        $this->sids         = [];
+        $this->listeners    = [];
+        $this->broadcasters = [];
     }
 
     /**
@@ -145,11 +141,11 @@ class Broadcast_Server implements MessageComponentInterface
      */
     protected function getSongJS($song_id): string
     {
-        $media   = array();
-        $media[] = array(
+        $media   = [];
+        $media[] = [
             'object_type' => LibraryItemEnum::SONG,
             'object_id' => $song_id
-        );
+        ];
         $item          = Stream_Playlist::media_to_urlarray($media);
         $transcode_cfg = AmpConfig::get('transcode');
 
@@ -257,7 +253,7 @@ class Broadcast_Server implements MessageComponentInterface
         $broadcast = Broadcast::get_broadcast($broadcast_key);
         if ($broadcast) {
             $this->broadcasters[$from->resourceId] = $broadcast;
-            $this->listeners[$broadcast->id]       = array();
+            $this->listeners[$broadcast->id]       = [];
 
             self::echo_message($this->verbose, "[info]Broadcast " . $broadcast->id . " registered." . "\r\n");
         }
@@ -315,11 +311,11 @@ class Broadcast_Server implements MessageComponentInterface
 
             // Send current song and song position to
             $this->broadcastMessage(
-                array($from),
+                [$from],
                 self::BROADCAST_SONG,
                 base64_encode($this->getSongJS($broadcast->song))
             );
-            $this->broadcastMessage(array($from), self::BROADCAST_SONG_POSITION, (string)$broadcast->song_position);
+            $this->broadcastMessage([$from], self::BROADCAST_SONG_POSITION, (string)$broadcast->song_position);
             $this->notifyNbListeners($broadcast);
 
             self::echo_message($this->verbose, "[info]New listener on broadcast " . $broadcast->id . "." . "\r\n");

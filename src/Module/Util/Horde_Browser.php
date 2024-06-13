@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -121,21 +121,21 @@ class Horde_Browser
      *
      * @var array
      */
-    private $_features = array(
+    private $_features = [
         'frames' => true,
         'html' => true,
         'images' => true,
         'java' => true,
         'javascript' => true,
         'tables' => true
-    );
+    ];
 
     /**
      * Quirks.
      *
      * @var array
      */
-    private $_quirks = array();
+    private $_quirks = [];
 
     /**
      * Creates a browser instance (Constructor).
@@ -743,8 +743,8 @@ class Horde_Browser
         $cLength = null
     ): array {
         /* Remove linebreaks (and ',', ';') from file names. */
-        $filename = str_replace(array("\r\n", "\r", "\n"), ' ', $filename);
-        $filename = str_replace(array(",", ";"), '', $filename);
+        $filename = str_replace(["\r\n", "\r", "\n"], ' ', $filename);
+        $filename = str_replace([",", ";"], '', $filename);
 
         /* Some browsers don't like spaces in the filename. */
         if ($this->hasQuirk('no_filename_spaces')) {

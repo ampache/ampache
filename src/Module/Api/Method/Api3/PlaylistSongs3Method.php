@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ final class PlaylistSongs3Method
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();
 
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];

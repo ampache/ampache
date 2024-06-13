@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -862,7 +862,6 @@ class Ui implements UiInterface
             case 'home_moment_videos':
             case 'home_now_playing':
             case 'home_recently_played':
-            case 'home_recently_played_all':
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
@@ -1281,7 +1280,7 @@ class Ui implements UiInterface
                 break;
             case 'disabled_custom_metadata_fields':
                 $ids             = explode(',', $value);
-                $options         = array();
+                $options         = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
@@ -1291,8 +1290,10 @@ class Ui implements UiInterface
             case 'personalfav_playlist':
             case 'personalfav_smartlist':
                 $ids       = explode(',', $value);
-                $options   = array();
-                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_array() : Playlist::get_playlist_array();
+                $options   = [];
+                $playlists = ($name == 'personalfav_smartlist')
+                    ? Search::get_search_array()
+                    : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
                         $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';

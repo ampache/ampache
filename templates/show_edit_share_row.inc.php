@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ use Ampache\Module\Authorization\Access;
             </tr>
 <?php global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if ((in_array($libitem->object_type, array('song', 'video', 'podcast_episode')) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($libitem->object_type))) { ?>
+if ((in_array($libitem->object_type, ['song', 'video', 'podcast_episode']) && (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD))) || (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($libitem->object_type))) { ?>
             <tr>
                 <td class="edit_dialog_content_header"></td>
                 <td><input type="checkbox" name="allow_download" value="1" <?php echo ($libitem->allow_download) ? 'checked' : ''; ?> /> <?php echo T_('Allow Download'); ?></td>

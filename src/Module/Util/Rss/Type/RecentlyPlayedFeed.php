@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -67,7 +67,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
             $is_allowed_recent  = ($userId !== null) ? $userId === $row_id : $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
 
-                yield array(
+                yield [
                     'title' => sprintf(
                         '%s - %s - %s',
                         $song->get_fullname(),
@@ -90,7 +90,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                     ),
                     'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
-                );
+                ];
             }
         }
     }

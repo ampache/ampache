@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,11 +57,11 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         $data = Stream::get_now_playing();
 
         $format     = (string) (AmpConfig::get('rss_format') ?? '%t - %a - %A');
-        $string_map = array(
+        $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
             '%A' => 'album'
-        );
+        ];
         foreach ($data as $element) {
             /** @var Song|Video $media */
             $media = $element['media'];
@@ -83,13 +83,13 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 $description = str_replace($search, $text, $description);
             }
 
-            yield array(
+            yield [
                 'title' => str_replace(' - - ', ' - ', $title),
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_fullname() . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
-            );
+            ];
         }
     }
 }

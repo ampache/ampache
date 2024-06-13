@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,14 +43,14 @@ final class LabelSearch implements SearchInterface
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -113,7 +113,7 @@ final class LabelSearch implements SearchInterface
         }
         $table_sql = implode(' ', $table);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`label`.`id`), `label`.`name` FROM `label`',
             'join' => $join,
             'where' => $where,
@@ -123,6 +123,6 @@ final class LabelSearch implements SearchInterface
             'group_sql' => '',
             'having_sql' => '',
             'parameters' => $parameters
-        );
+        ];
     }
 }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,14 +30,14 @@ use Ampache\Repository\Model\Query;
 
 final class TvshowSeasonQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'season_eq',
         'season_gt',
         'season_lt',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'season',
         'tvshow',
@@ -48,7 +48,7 @@ final class TvshowSeasonQuery implements QueryInterface
         'codec',
         'rating',
         'user_flag',
-    );
+    ];
 
     /** @var string */
     protected $select = "`tvshow_season`.`id`";

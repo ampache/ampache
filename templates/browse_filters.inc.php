@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@ if (!Core::is_session_started()) {
 }
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
-$allowed_filters = array('starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art');
+$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art'];
 if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
@@ -73,7 +73,7 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $results = array();
+                <?php $results = [];
         $catalogs              = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
         if (!empty($catalogs)) {
             // Only show the catalogs this user is allowed to access

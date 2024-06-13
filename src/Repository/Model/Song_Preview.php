@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,8 +41,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public ?string $session = null;
 
-    // artist.id (Int)
-    public ?int $artist         = null;
+    public ?int $artist = null; // artist.id (Int)
 
     public ?string $artist_mbid = null;
 
@@ -50,10 +49,9 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public ?string $album_mbid = null;
 
-    //  // MusicBrainz ID
-    public ?string $mbid = null;
+    public ?string $mbid = null; // MusicBrainz ID
 
-    public ?int $disk    = null;
+    public ?int $disk = null;
 
     public ?int $track = null;
 
@@ -61,7 +59,7 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public ?string $link = null;
 
-    public $enabled      = true;
+    public $enabled = true;
 
     public $mime;
 

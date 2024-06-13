@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ $theme_path     = AmpConfig::get('theme_path') . '/templates';
 $theme_color    = AmpConfig::get('theme_color');
 $theme_css_base = AmpConfig::get('theme_css_base');
 if (!is_array($theme_css_base)) {
-    $theme_css_base = array($theme_css_base);
+    $theme_css_base = [$theme_css_base];
 }
 foreach ($theme_css_base as $css_base) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>" />

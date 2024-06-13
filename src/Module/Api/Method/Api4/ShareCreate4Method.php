@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,7 +72,7 @@ final class ShareCreate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
 
@@ -81,12 +81,12 @@ final class ShareCreate4Method
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+        if (!in_array($object_type, ['song', 'album', 'artist'])) {
             Api4::message('error', T_('Wrong object type ' . $object_type), '401', $input['api_format']);
 
             return false;
         }
-        $results = array();
+        $results = [];
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {

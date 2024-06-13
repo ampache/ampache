@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -141,17 +141,17 @@ class Catalog_dropbox extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['apikey']    = array('description' => T_('API key'), 'type' => 'text');
-        $fields['secret']    = array('description' => T_('Secret'), 'type' => 'password');
-        $fields['authtoken'] = array('description' => T_('Access Token'), 'type' => 'text');
-        $fields['path']      = array('description' => T_('Path'), 'type' => 'text', 'value' => '/');
-        $fields['getchunk']  = array(
+        $fields['apikey']    = ['description' => T_('API key'), 'type' => 'text'];
+        $fields['secret']    = ['description' => T_('Secret'), 'type' => 'password'];
+        $fields['authtoken'] = ['description' => T_('Access Token'), 'type' => 'text'];
+        $fields['path']      = ['description' => T_('Path'), 'type' => 'text', 'value' => '/'];
+        $fields['getchunk']  = [
             'description' => T_('Get chunked files on analyze'),
             'type' => 'checkbox',
             'value' => true
-        );
+        ];
 
         return $fields;
     }
@@ -234,7 +234,7 @@ class Catalog_dropbox extends Catalog
 
         // Make sure this catalog isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_dropbox` WHERE `apikey` = ?';
-        $db_results = Dba::read($sql, array($apikey));
+        $db_results = Dba::read($sql, [$apikey]);
 
         if (Dba::num_rows($db_results)) {
             debug_event('dropbox.catalog', 'Cannot add catalog with duplicate key ' . $apikey, 1);
@@ -244,7 +244,7 @@ class Catalog_dropbox extends Catalog
         }
 
         $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `authtoken`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, array($apikey, $secret, $authtoken, $path, ($getchunk ? 1 : 0), $catalog_id));
+        Dba::write($sql, [$apikey, $secret, $authtoken, $path, ($getchunk ? 1 : 0), $catalog_id]);
 
         return true;
     }
@@ -420,7 +420,7 @@ class Catalog_dropbox extends Catalog
                 }
                 $results['file'] = $path;
                 $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                Dba::write($sql, array($results['file'], $song_id));
+                Dba::write($sql, [$results['file'], $song_id]);
             } else {
                 debug_event(
                     'dropbox.catalog',
@@ -491,7 +491,7 @@ class Catalog_dropbox extends Catalog
                 }
                 $results['file'] = $path;
                 $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
-                Dba::write($sql, array($results['file'], $video_id));
+                Dba::write($sql, [$results['file'], $video_id]);
 
                 return $video_id;
             } else {
@@ -544,7 +544,7 @@ class Catalog_dropbox extends Catalog
         $dropbox        = new Dropbox($app);
         try {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('dropbox.catalog', 'Starting verify on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $path     = $row['file'];
@@ -572,7 +572,7 @@ class Catalog_dropbox extends Catalog
                     $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
                     // Must compare to original path, not temporary location.
                     $results['file'] = $path;
-                    $info            = ($song->id) ? self::update_song_from_tags($results, $song) : array();
+                    $info            = ($song->id) ? self::update_song_from_tags($results, $song) : [];
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $updated++;
@@ -582,7 +582,7 @@ class Catalog_dropbox extends Catalog
                 } else {
                     debug_event('dropbox.catalog', 'removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 }
             }
 
@@ -606,7 +606,7 @@ class Catalog_dropbox extends Catalog
         $dropbox = new Dropbox($app);
 
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('dropbox.catalog', 'Starting clean on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $file = $row['file'];
@@ -615,7 +615,7 @@ class Catalog_dropbox extends Catalog
             } catch (DropboxClientException $e) {
                 if ($e->getCode() == 409) {
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 } else {
                     AmpError::add('general', T_('API Error: cannot connect to Dropbox.'));
                 }
@@ -631,7 +631,7 @@ class Catalog_dropbox extends Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -668,7 +668,7 @@ class Catalog_dropbox extends Catalog
         } else {
             $sql = 'SELECT `id` FROM `video` WHERE `file` = ?';
         }
-        $db_results = Dba::read($sql, array($file));
+        $db_results = Dba::read($sql, [$file]);
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
         }
@@ -776,13 +776,13 @@ class Catalog_dropbox extends Catalog
         set_time_limit(0);
 
         $search_count = 0;
-        $searches     = array();
+        $searches     = [];
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids();
             $searches['artist'] = $this->get_artist_ids();
         } else {
-            $searches['album']  = array();
-            $searches['artist'] = array();
+            $searches['album']  = [];
+            $searches['artist'] = [];
             foreach ($songs as $song) {
                 if ($song->isNew() === false) {
                     $meta    = $dropbox->getMetadata((string)$song->file);
@@ -792,10 +792,10 @@ class Catalog_dropbox extends Catalog
                     $res = $this->download($dropbox, $song->file, 40960, $outfile);
                     if ($res) {
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                        Dba::write($sql, array($outfile, $song->id));
+                        Dba::write($sql, [$outfile, $song->id]);
                         parent::gather_art([$song->id]);
                         $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                        Dba::write($sql, array($song->file, $song->id));
+                        Dba::write($sql, [$song->file, $song->id]);
                         $search_count++;
                         if (Ui::check_ticker()) {
                             Ui::update_text('count_art_' . $this->id, $search_count);

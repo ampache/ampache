@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,25 +85,19 @@ class Query
         'year' => 'ASC',
     ];
 
-    /**
-     * @var int|string $id
-     */
+    /** @var int|string $id */
     public $id;
 
-    /**
-     * @var int $catalog
-     */
+    /** @var int $catalog */
     public $catalog;
 
     /** @var int|null $user_id */
     public $user_id = null;
 
-    /**
-     * @var array $_state
-     */
+    /** @var array $_state */
     protected $_state = [
+        // Used by $browse->set_type() to filter artists to album artist only
         'album_artist' => false,
-        // Used by $browse->set_type() to filter artists
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
@@ -119,7 +113,7 @@ class Query
         'select' => [],
         'show_header' => true,
         'simple' => false,
-        // Used by $browse->set_type() to filter artists
+        // Used by $browse->set_type() to filter artists to song artist only
         'song_artist' => null,
         'sort' => [
             'name' => null,
@@ -150,8 +144,10 @@ class Query
      * @param int|null $query_id
      * @param bool $cached
      */
-    public function __construct($query_id = 0, $cached = true)
-    {
+    public function __construct(
+        $query_id = 0,
+        $cached = true
+    ) {
         $sid = session_id();
 
         if (!$cached) {
@@ -346,15 +342,15 @@ class Query
     public function reset(): void
     {
         $this->_state['base']   = null;
-        $this->_state['select'] = array();
-        $this->_state['join']   = array();
-        $this->_state['filter'] = array();
+        $this->_state['select'] = [];
+        $this->_state['join']   = [];
+        $this->_state['filter'] = [];
         $this->_state['having'] = '';
         $this->_state['total']  = null;
-        $this->_state['sort']   = array(
+        $this->_state['sort']   = [
             'name' => null,
             'order' => null,
-        );
+        ];
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
@@ -664,7 +660,7 @@ class Query
         }
 
         // Joins may change because of the new sort so don't keep the old ones
-        $this->_state['join'] = array();
+        $this->_state['join'] = [];
 
         // ensure joins are reset on $this->_state
         $this->_get_filter_sql();
@@ -767,8 +763,15 @@ class Query
      * @param string $dest2
      * @param int $priority
      */
-    public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority): void
-    {
+    public function set_join_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $priority
+    ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
 
@@ -785,8 +788,17 @@ class Query
      * @param string $dest3
      * @param int $priority
      */
-    public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
-    {
+    public function set_join_and_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $source3,
+        $dest3,
+        $priority
+    ): void {
         $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
 

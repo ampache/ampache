@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,8 +33,10 @@ use Ampache\Config\AmpConfig;
  */
 class easy_captcha_persistent_grant extends easy_captcha
 {
-    public function __construct($captcha_id = null, $ignore_expiration = 0)
-    {
+    public function __construct(
+        $captcha_id = null,
+        $ignore_expiration = 0
+    ) {
     }
 
     /**
@@ -44,7 +46,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     public function solved($input = 0)
     {
         if (easy_captcha::CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
-            return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
+            return in_array($_COOKIE[$this->cookie()], [$this->validity_token(), $this->validity_token(-1)]);
         }
 
         return false;

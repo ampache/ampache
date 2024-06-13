@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -150,7 +150,7 @@ final class Mailer implements MailerInterface
      */
     public static function get_users($filter): array
     {
-        $params = array();
+        $params = [];
         switch ($filter) {
             case 'users':
                 $sql      = "SELECT * FROM `user` WHERE `access`= ? AND `email` IS NOT NULL";
@@ -172,14 +172,14 @@ final class Mailer implements MailerInterface
 
         $db_results = Dba::read($sql, $params);
 
-        $results = array();
+        $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'fullname' => $row['fullname'],
                 'email' => $row['email']
-            );
+            ];
         }
 
         return $results;

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -110,7 +110,7 @@ class Xml5_Data
      */
     public static function set_type($type): bool
     {
-        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
+        if (!in_array(strtolower($type), ['rss', 'xspf', 'itunes'])) {
             return false;
         }
 
@@ -146,7 +146,7 @@ class Xml5_Data
      * @param string $string success message
      * @param array $return_data
      */
-    public static function success($string, $return_data = array()): string
+    public static function success($string, $return_data = []): string
     {
         $xml_string = "\t<success code=\"1\"><![CDATA[" . $string . "]]></success>";
         foreach ($return_data as $title => $data) {
@@ -202,15 +202,15 @@ class Xml5_Data
         $string = '';
 
         if (!empty($tags)) {
-            $atags = array();
+            $atags = [];
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {
                     $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$tag['id']] = array(
+                    $atags[$tag['id']] = [
                         'name' => $tag['name'],
                         'count' => 1
-                    );
+                    ];
                 }
             }
 
@@ -317,7 +317,7 @@ class Xml5_Data
             switch ($object_type) {
                 case 'artist':
                     if ($include) {
-                        $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
+                        $string .= self::artists([$object_id], ['songs', 'albums'], $user, false);
                     } else {
                         $artist = new Artist($object_id);
                         if ($artist->isNew()) {
@@ -336,7 +336,7 @@ class Xml5_Data
                     break;
                 case 'album':
                     if ($include) {
-                        $string .= self::albums(array($object_id), array('songs'), $user, false);
+                        $string .= self::albums([$object_id], ['songs'], $user, false);
                     } else {
                         $album = new Album($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
@@ -368,7 +368,7 @@ class Xml5_Data
                     $playlist_name = $playlist->get_fullname();
                     $playlist_user = $playlist->username;
 
-                    $songs = ($include) ? $playlist->get_items() : array();
+                    $songs = ($include) ? $playlist->get_items() : [];
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     $playlist_track = 0;
                     foreach ($songs as $song_id) {
@@ -389,7 +389,7 @@ class Xml5_Data
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes(array($episode_id), $user, false);
+                                $string .= self::podcast_episodes([$episode_id], $user, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -555,7 +555,7 @@ class Xml5_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), array(), $user, false)
+                ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
                 : '';
             $songs = (in_array("songs", $include))
                 ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false)
@@ -891,7 +891,7 @@ class Xml5_Data
 
                 if ($field !== null) {
                     $meta_name = str_replace(
-                        array(' ', '(', ')', '/', '\\', '#'),
+                        [' ', '(', ')', '/', '\\', '#'],
                         '_',
                         $field->getName()
                     );
@@ -1082,7 +1082,7 @@ class Xml5_Data
         // Pass it to the keyed array xml function
         foreach ($data as $item) {
             // We need to enclose it in an item tag
-            $string .= self::keyed_array(array('item' => $item), true);
+            $string .= self::keyed_array(['item' => $item], true);
         }
 
         return self::_header() . $string . self::_footer();

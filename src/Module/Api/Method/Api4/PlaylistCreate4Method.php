@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class PlaylistCreate4Method
      */
     public static function playlist_create(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('name', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['name', 'type'], self::ACTION)) {
             return false;
         }
         $name = $input['name'];
@@ -63,10 +63,10 @@ final class PlaylistCreate4Method
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists(array($uid), $user);
+                echo Json4_Data::playlists([$uid], $user);
                 break;
             default:
-                echo Xml4_Data::playlists(array($uid), $user);
+                echo Xml4_Data::playlists([$uid], $user);
         }
 
         return true;

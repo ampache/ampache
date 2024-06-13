@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
 
-    public const VALID_TYPES     = [
+    public const VALID_TYPES = [
         'song',
         'album',
         'album_disk',
@@ -70,34 +70,27 @@ class Search extends playlist_object
         'video',
     ];
 
-    // override playlist_object
-    public ?string $type = 'public';
+    public ?string $type = 'public'; // override playlist_object
 
-    // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
-    public $rules;
+    public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
 
     public ?string $logic_operator = 'AND';
 
-    public ?int $random            = 0;
+    public ?int $random = 0;
 
-    public int $limit              = 0;
+    public int $limit = 0;
 
-    // the type of object you want to return (self::VALID_TYPES)
-    public $objectType;
+    public $objectType; // the type of object you want to return (self::VALID_TYPES)
 
-    // user running the search
-    public $search_user;
+    public $search_user; // user running the search
 
-    // rules that are available to the objectType (title, year, rating, etc)
-    public $types     = [];
+    public $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
-    // rule operator subtypes (numeric, text, boolean, etc)
-    public $basetypes = [];
+    public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
     private $searchType;
 
-    // generate sql for the object type (Ampache\Module\Playlist\Search\*)
-    private $stars;
+    private $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
 
     private $order_by;
 
@@ -107,8 +100,11 @@ class Search extends playlist_object
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
-    public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
-    {
+    public function __construct(
+        $search_id = 0,
+        $object_type = 'song',
+        ?User $user = null
+    ) {
         $this->search_user = $user;
         if (!$this->search_user instanceof User) {
             $this->search_user = User::get_from_global() ?? new User(-1);
@@ -1406,7 +1402,7 @@ class Search extends playlist_object
     {
         if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, array($count, $this->id));
+            Dba::write($sql, [$count, $this->id]);
         }
     }
 

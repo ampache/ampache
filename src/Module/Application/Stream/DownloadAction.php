@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -52,20 +52,20 @@ final class DownloadAction extends AbstractStreamAction
         $mediaIds = [];
 
         if (array_key_exists('song_id', $_REQUEST)) {
-            $mediaIds[] = array(
+            $mediaIds[] = [
                 'object_type' => LibraryItemEnum::SONG,
                 'object_id' => (int) $_REQUEST['song_id']
-            );
+            ];
         } elseif (array_key_exists('video_id', $_REQUEST)) {
-            $mediaIds[] = array(
+            $mediaIds[] = [
                 'object_type' => LibraryItemEnum::VIDEO,
                 'object_id' => (int) $_REQUEST['video_id']
-            );
+            ];
         } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
-            $mediaIds[] = array(
+            $mediaIds[] = [
                 'object_type' => LibraryItemEnum::PODCAST_EPISODE,
                 'object_id' => (int) $_REQUEST['podcast_episode_id']
-            );
+            ];
         }
         // add the missing request parts
         if (array_key_exists('client', $_REQUEST)) {

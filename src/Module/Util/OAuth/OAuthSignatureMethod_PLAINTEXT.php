@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -56,10 +56,10 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
      */
     public function build_signature($request, $consumer, $token): string
     {
-        $key_parts = array(
+        $key_parts = [
             $consumer->secret,
             ($token) ? $token->secret : ""
-        );
+        ];
 
         $key_parts            = OAuthUtil::urlencode_rfc3986($key_parts);
         $key                  = implode('&', $key_parts);

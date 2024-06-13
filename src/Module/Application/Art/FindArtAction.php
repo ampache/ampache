@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -107,7 +107,7 @@ final class FindArtAction extends AbstractArtAction
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
             $path_info      = pathinfo($_FILES['file']['name']);
-            $upload         = array();
+            $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);

@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,7 +60,7 @@ abstract class Handler
      */
     protected function dispatch($data)
     {
-        return call_user_func(array($this->handler, $this->handlerCommand), $data);
+        return call_user_func([$this->handler, $this->handlerCommand], $data);
     }
 
     /**
@@ -88,9 +88,9 @@ abstract class Handler
      */
     public function getTimedCommand($command, $tag, $time): string
     {
-        $commandParts = array(
+        $commandParts = [
             $command
-        );
+        ];
         if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {

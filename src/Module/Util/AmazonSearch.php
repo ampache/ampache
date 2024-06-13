@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,11 +46,11 @@ class AmazonSearch
     public $url_suffix       = '/onca/xml';
     public $base_url;
     public $search;
-    public $public_key;    // AWSAccessKeyId
-    public $private_key;   // AWSSecretKey
+    public $public_key; // AWSAccessKeyId
+    public $private_key; // AWSSecretKey
     public $associate_tag; // Amazon Affiliate Associate Tag
-    public $results = array(); // Array of results
-    public $_parser;   // The XML parser
+    public $results = []; // Array of results
+    public $_parser; // The XML parser
     public $_grabtags; // Tags to grab the contents of
     public $_sourceTag; // source tag don't ask
     public $_subTag; // Stupid hack to make things come our right
@@ -71,8 +71,12 @@ class AmazonSearch
      * @param $associate_tag
      * @param string $base_url_param
      */
-    public function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
-    {
+    public function __construct(
+        $public_key,
+        $private_key,
+        $associate_tag,
+        $base_url_param = ''
+    ) {
         // If we have a base url then use it
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
@@ -87,7 +91,7 @@ class AmazonSearch
         $this->private_key   = $private_key;
         $this->associate_tag = $associate_tag;
 
-        $this->_grabtags = array(
+        $this->_grabtags = [
             'ASIN',
             'ProductName',
             'Catalog',
@@ -105,7 +109,7 @@ class AmazonSearch
             'SmallImage',
             'MediumImage',
             'LargeImage'
-        );
+        ];
     }
 
     /**
@@ -166,7 +170,7 @@ class AmazonSearch
 
         debug_event(self::class, 'Amazon request: ' . $url, 5);
         // make the request and retrieve the response
-        $request  = Requests::get($url, array(), $options);
+        $request  = Requests::get($url, [], $options);
         $contents = $request->body;
 
         //debug_event(self::class, $contents, 5);
@@ -185,9 +189,9 @@ class AmazonSearch
      */
     public function getProxyConfig(): array
     {
-        $options = array();
+        $options = [];
         if ($this->_proxy_host) {
-            $proxy   = array();
+            $proxy   = [];
             $proxy[] = $this->_proxy_host . ($this->_proxy_port ? ':' . $this->_proxy_port : '');
             if ($this->_proxy_user) {
                 $proxy[] = $this->_proxy_user;
@@ -208,7 +212,7 @@ class AmazonSearch
      */
     public function search($terms, $type = 'Music'): array
     {
-        $params = array();
+        $params = [];
 
         $params['Service']        = 'AWSECommerceService';
         $params['AWSAccessKeyId'] = $this->public_key;
@@ -224,7 +228,7 @@ class AmazonSearch
         // sort by keys
         ksort($params);
 
-        $canonicalized_query = array();
+        $canonicalized_query = [];
 
         foreach ($params as $param => $value) {
             $param = str_replace("%7E", "~", rawurlencode($param));
@@ -298,7 +302,7 @@ class AmazonSearch
         // create the xml parser
         $this->createParser();
 
-        $params                   = array();
+        $params                   = [];
         $params['Service']        = 'AWSECommerceService';
         $params['AWSAccessKeyId'] = $this->public_key;
         $params['AssociateTag']   = $this->associate_tag;
@@ -311,7 +315,7 @@ class AmazonSearch
         ksort($params);
 
         // assemble the query terms
-        $canonicalized_query = array();
+        $canonicalized_query = [];
         foreach ($params as $param => $value) {
             $param = str_replace("%7E", "~", rawurlencode($param));
             $value = str_replace("%7E", "~", rawurlencode($value));
@@ -326,7 +330,7 @@ class AmazonSearch
         $url = 'http://' . $this->base_url . $this->url_suffix . '?' . $canonicalized_query . '&Signature=' . $this->signString($string_to_sign);
 
         // make the request
-        $request  = Requests::get($url, array(), $options);
+        $request  = Requests::get($url, [], $options);
         $contents = $request->body;
 
         if (!xml_parse($this->_parser, $contents)) {

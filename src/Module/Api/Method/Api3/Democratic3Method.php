@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,18 +54,18 @@ final class Democratic3Method
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
                 }
-                $democratic->add_vote(array(
-                    array(
+                $democratic->add_vote([
+                    [
                         'object_type' => 'song',
                         'object_id' => $media->id
-                    )
-                ));
+                    ]
+                ]);
 
                 // If everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
                 break;
             case 'devote':
@@ -78,10 +78,10 @@ final class Democratic3Method
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
                 break;
             case 'playlist':
@@ -92,9 +92,9 @@ final class Democratic3Method
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = array(
+                $results = [
                     'url' => $url
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
                 break;
             default:

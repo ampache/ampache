@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -128,11 +128,11 @@ class Catalog_subsonic extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['uri']      = array('description' => T_('URI'), 'type' => 'url');
-        $fields['username'] = array('description' => T_('Username'), 'type' => 'text');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields['uri']      = ['description' => T_('URI'), 'type' => 'url'];
+        $fields['username'] = ['description' => T_('Username'), 'type' => 'text'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -183,7 +183,7 @@ class Catalog_subsonic extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_subsonic` WHERE `uri` = ?';
-        $db_results = Dba::read($sql, array($uri));
+        $db_results = Dba::read($sql, [$uri]);
 
         if (Dba::num_rows($db_results)) {
             debug_event('subsonic.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
@@ -194,7 +194,7 @@ class Catalog_subsonic extends Catalog
         }
 
         $sql = 'INSERT INTO `catalog_subsonic` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
-        Dba::write($sql, array($uri, $username, $password, $catalog_id));
+        Dba::write($sql, [$uri, $username, $password, $catalog_id]);
 
         return true;
     }
@@ -261,7 +261,7 @@ class Catalog_subsonic extends Catalog
                         foreach ($album['data']['directory']['child'] as $song) {
                             $artistInfo = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
                             if (Catalog::is_audio_file($song['path'])) {
-                                $data           = array();
+                                $data           = [];
                                 $data['artist'] = html_entity_decode($song['artist']);
                                 $data['album']  = html_entity_decode($song['album']);
                                 $data['title']  = html_entity_decode($song['title']);
@@ -339,12 +339,12 @@ class Catalog_subsonic extends Catalog
         $song     = new Song($song_Id);
         $art      = new Art($song->album, 'album');
         if (AmpConfig::get('album_art_max_height') && AmpConfig::get('album_art_max_width')) {
-            $size = array(
+            $size = [
                 'width' => AmpConfig::get('album_art_max_width'),
                 'height' => AmpConfig::get('album_art_max_height')
-            );
+            ];
         } else {
-            $size = array('width' => 275, 'height' => 275);
+            $size = ['width' => 275, 'height' => 275];
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
 
@@ -363,13 +363,13 @@ class Catalog_subsonic extends Catalog
         $dead = 0;
 
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->catalog_id));
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('subsonic.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
-                $song   = $subsonic->getSong(array('id' => $songid));
+                $song   = $subsonic->getSong(['id' => $songid]);
                 if (!$song['success']) {
                     $remove = true;
                 }
@@ -382,7 +382,7 @@ class Catalog_subsonic extends Catalog
             } else {
                 debug_event('subsonic.catalog', 'removing song', 5);
                 $dead++;
-                Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
             }
         }
 
@@ -394,7 +394,7 @@ class Catalog_subsonic extends Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -428,15 +428,15 @@ class Catalog_subsonic extends Catalog
         if ($user_bit_rate > $max_bitrate) {
             $max_bitrate = $user_bit_rate;
         }
-        $options = array(
+        $options = [
             'format' => $target,
             'maxBitRate' => $max_bitrate
-        );
+        ];
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');
         $subsonic     = $this->createClient();
         $sql          = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?;";
-        $db_results   = Dba::read($sql, array($this->catalog_id));
+        $db_results   = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = Catalog::get_cache_path($row['id'], $this->catalog_id, $cache_path, $cache_target);
             if ($target_file === null) {
@@ -457,13 +457,13 @@ class Catalog_subsonic extends Catalog
                         $curl       = curl_init();
                         curl_setopt_array(
                             $curl,
-                            array(
+                            [
                                 CURLOPT_RETURNTRANSFER => 1,
                                 CURLOPT_FILE => $filehandle,
                                 CURLOPT_TIMEOUT => 0,
                                 CURLOPT_PIPEWAIT => 1,
                                 CURLOPT_URL => $remote_url,
-                            )
+                            ]
                         );
                         curl_exec($curl);
                         curl_close($curl);
@@ -492,7 +492,7 @@ class Catalog_subsonic extends Catalog
         $url = $song['file'];
 
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, array($url));
+        $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];

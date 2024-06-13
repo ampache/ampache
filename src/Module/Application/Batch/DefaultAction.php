@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,7 +76,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $default_name = 'Unknown';
         $name         = $default_name;
         $action       = $this->requestParser->getFromRequest('action');
-        $flat_path    = (in_array($action, array('browse', 'playlist', 'tmp_playlist')));
+        $flat_path    = (in_array($action, ['browse', 'playlist', 'tmp_playlist']));
         $object_type  = $action === 'browse'
             ? $this->requestParser->getFromRequest('type')
             : $action;

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,13 +57,13 @@ final class Migration360020 extends AbstractMigration
             }
         }
 
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `catalog` DROP COLUMN `path`, DROP COLUMN `remote_username`, DROP COLUMN `remote_password`",
             "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)",
             "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }

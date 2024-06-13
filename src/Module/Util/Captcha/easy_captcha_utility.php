@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -41,7 +41,7 @@ class easy_captcha_utility
     {
         return current(array_filter( // filter by writability
             array_filter( // filter empty entries
-                array(
+                [
                     $_SERVER['TMPDIR'] ?? null,
                     $_SERVER['REDIRECT_TMPDIR'] ?? null,
                     $_SERVER['TEMP'] ?? null,
@@ -50,7 +50,7 @@ class easy_captcha_utility
                     $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
-                )
+                ]
             ),
             "is_writeable"
         ));
@@ -261,7 +261,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
             $url = $path['path'];
         }
 
-        $path    = array();
+        $path    = [];
         $abspath = substr("$url ", 0, 1) == '/' ? '/' : '';
         $ncomp   = 0;
 

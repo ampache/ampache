@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@ final class Migration520001 extends AbstractMigration
     {
         $sql        = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
         $dupe_prefs = Dba::read($sql);
-        $pref_list  = array();
+        $pref_list  = [];
         while ($results = Dba::fetch_assoc($dupe_prefs)) {
             $pref_list[] = (int)$results['id'];
         }
@@ -46,7 +46,7 @@ final class Migration520001 extends AbstractMigration
         // delete duplicates (if they exist)
         foreach ($pref_list as $pref_id) {
             $sql = "DELETE FROM `preference` WHERE `id` = ?;";
-            $this->updateDatabase($sql, array($pref_id));
+            $this->updateDatabase($sql, [$pref_id]);
         }
 
         $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);");

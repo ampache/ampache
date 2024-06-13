@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -298,7 +298,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;
@@ -317,7 +317,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;

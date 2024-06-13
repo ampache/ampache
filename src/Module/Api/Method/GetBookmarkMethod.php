@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,7 +59,7 @@ final class GetBookmarkMethod
      */
     public static function get_bookmark(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'type'], self::ACTION)) {
             return false;
         }
         $object_id = (int)$input['filter'];
@@ -72,7 +72,7 @@ final class GetBookmarkMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -96,12 +96,12 @@ final class GetBookmarkMethod
             return false;
         }
 
-        $object = array(
+        $object = [
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => null
-        );
+        ];
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);

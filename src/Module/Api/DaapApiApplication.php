@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -49,7 +49,7 @@ final class DaapApiApplication implements ApiApplicationInterface
         // Get the list of possible methods for the daap API
         $methods = get_class_methods(Daap_Api::class);
         // Define list of internal functions that should be skipped
-        $internal_functions = array('apiOutput', 'create_dictionary', 'createError', 'output_body', 'output_header', 'follow_stream');
+        $internal_functions = ['apiOutput', 'create_dictionary', 'createError', 'output_body', 'output_header', 'follow_stream'];
 
         Daap_Api::create_dictionary();
 
@@ -71,7 +71,7 @@ final class DaapApiApplication implements ApiApplicationInterface
                     // If the method is the same as the action being called
                     // Then let's call this function!
                     if ($act == $method) {
-                        call_user_func(array(Daap_Api::class, $method), array_slice($params, $i, $p_count - $i));
+                        call_user_func([Daap_Api::class, $method], array_slice($params, $i, $p_count - $i));
 
                         // We only allow a single function to be called, and we assume it's cleaned up!
                         return;

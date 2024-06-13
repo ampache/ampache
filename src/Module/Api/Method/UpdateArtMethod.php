@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -57,7 +57,7 @@ final class UpdateArtMethod
      */
     public static function update_art(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('type', 'id'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
 
@@ -70,7 +70,7 @@ final class UpdateArtMethod
         $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('artist', 'album'))) {
+        if (!in_array(strtolower($type), ['artist', 'album'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return true;
@@ -88,7 +88,7 @@ final class UpdateArtMethod
         // update your object
 
         if (Catalog::gather_art_item($type, $object_id, $overwrite, true)) {
-            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], array('art' => $art_url));
+            Api::message('Gathered new art for: ' . (string) $object_id . ' (' . $type . ')', $input['api_format'], ['art' => $art_url]);
 
             return true;
         }

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class GenreAlbums4Method
      */
     public static function genre_albums(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $results = Tag::get_tag_objects('album', (int)($input['filter'] ?? 0));
@@ -60,12 +60,12 @@ final class GenreAlbums4Method
                 case 'json':
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::albums($results, array(), $user);
+                    echo Json4_Data::albums($results, [], $user);
                     break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::albums($results, array(), $user);
+                    echo Xml4_Data::albums($results, [], $user);
             }
         }
 

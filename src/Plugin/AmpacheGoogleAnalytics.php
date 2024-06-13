@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['googleanalytics_tracking_id']))) {
-            $data                                = array();
+            $data                                = [];
             $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
         }
 

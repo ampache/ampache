@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -36,13 +36,13 @@ use Psr\Log\LoggerInterface;
 
 final class MetaTagCollectorModule implements CollectorModuleInterface
 {
-    private const TAG_ALBUM_ART_PRIORITY = array(
+    private const TAG_ALBUM_ART_PRIORITY = [
         'ID3 Front Cover',
         'ID3 Illustration',
         'ID3 Media',
-    );
+    ];
 
-    private const TAG_ARTIST_ART_PRIORITY = array(
+    private const TAG_ARTIST_ART_PRIORITY = [
         'ID3 Artist',
         'ID3 Lead Artist',
         'ID3 Band',
@@ -50,7 +50,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         'ID3 Composer',
         'ID3 Lyricist',
         'ID3 Other',
-    );
+    ];
 
     private LoggerInterface $logger;
 
@@ -141,7 +141,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         $video = new Video($art->uid);
 
-        return $this->gatherMediaTags($video, array());
+        return $this->gatherMediaTags($video, []);
     }
 
     /**
@@ -196,16 +196,16 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             return [];
         }
 
-        $images = array();
+        $images = [];
 
         if (isset($id3['asf']['extended_content_description_object']['content_descriptors']['13'])) {
             $image = $id3['asf']['extended_content_description_object']['content_descriptors']['13'];
             if (array_key_exists('data', $image)) {
-                $images[] = array(
+                $images[] = [
                     'raw' => $image['data'],
                     'mime' => $image['mime'],
                     'title' => 'ID3 asf'
-                );
+                ];
             }
         }
 
@@ -289,7 +289,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
         $images = self::gatherFileArt((string)$media->file);
 
         // stop collecting dupes for each album
-        $raw_array = array();
+        $raw_array = [];
         foreach ($data as $image) {
             $raw_array[] = $image['raw'];
         }
@@ -315,7 +315,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
     {
         // get song object directly from id, not by loop through album
         $song = new Song($art->uid);
-        $data = $this->gatherMediaTags($song, array());
+        $data = $this->gatherMediaTags($song, []);
 
         $data = self::sortArtByPriority($data, $art->type);
 

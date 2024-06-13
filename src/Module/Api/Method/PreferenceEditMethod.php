@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ final class PreferenceEditMethod
      */
     public static function preference_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'value'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
         $all = (array_key_exists('all', $input) && (int)$input['all'] == 1);

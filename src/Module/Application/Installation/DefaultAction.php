@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -84,17 +84,17 @@ final class DefaultAction implements ApplicationActionInterface
         $port       = scrub_in((string) ($_REQUEST['local_port'] ?? ''));
         $skip_admin = isset($_REQUEST['skip_admin']);
 
-        AmpConfig::set_by_array(array(
+        AmpConfig::set_by_array([
             'web_path' => $web_path,
             'database_name' => $database,
             'database_hostname' => $hostname,
             'database_port' => $port
-        ), true);
+        ], true);
         if (!$skip_admin) {
-            AmpConfig::set_by_array(array(
+            AmpConfig::set_by_array([
                 'database_username' => $username,
                 'database_password' => $password
-            ), true);
+            ], true);
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,7 +46,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 
     public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -102,7 +102,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 }
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
-                $medias    = array();
+                $medias    = [];
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,7 +54,7 @@ final class UpdateArt4Method
      */
     public static function update_art(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'id'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_art', $input['api_format'])) {
@@ -65,7 +65,7 @@ final class UpdateArt4Method
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('artist', 'album'))) {
+        if (!in_array(strtolower($type), ['artist', 'album'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return true;

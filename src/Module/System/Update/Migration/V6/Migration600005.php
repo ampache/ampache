@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,8 +60,8 @@ final class Migration600005 extends AbstractMigration
     {
         $sql        = "SELECT MIN(`id`) AS `id` FROM `album` GROUP BY `album`.`prefix`, `album`.`name`, `album`.`album_artist`, `album`.`release_type`, `album`.`release_status`, `album`.`mbid`, `album`.`year`, `album`.`original_year`, `album`.`mbid_group` HAVING COUNT(`id`) > 1;";
         $db_results = Dba::read($sql);
-        $album_list = array();
-        $migrate    = array();
+        $album_list = [];
+        $migrate    = [];
         // get the base album you will migrate into
         while ($row = Dba::fetch_assoc($db_results)) {
             $album_list[] = $row['id'];
@@ -71,7 +71,7 @@ final class Migration600005 extends AbstractMigration
             $album  = new Album((int)$album_id);
             $f_name = trim(trim($album->prefix ?? '') . ' ' . trim($album->name ?? ''));
             $where  = " WHERE (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ? ) ";
-            $params = array($f_name, $f_name);
+            $params = [$f_name, $f_name];
             if ($album->mbid) {
                 $where .= 'AND `album`.`mbid` = ? ';
                 $params[] = $album->mbid;
@@ -110,10 +110,10 @@ final class Migration600005 extends AbstractMigration
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 if ($row['id'] !== $album_id) {
-                    $migrate[] = array(
+                    $migrate[] = [
                         'old' => $row['id'],
                         'new' => $album_id
-                    );
+                    ];
                 }
             }
         }
@@ -135,7 +135,7 @@ final class Migration600005 extends AbstractMigration
             );
 
             $sql = "UPDATE `song` SET `album` = ? WHERE `album` = ?;";
-            $this->updateDatabase($sql, array($albums['new'], $albums['old']));
+            $this->updateDatabase($sql, [$albums['new'], $albums['old']]);
 
             // bulk migrate by album only (0 will let us migrate everything below)
             Song::migrate_album($albums['new'], 0, $albums['old']);

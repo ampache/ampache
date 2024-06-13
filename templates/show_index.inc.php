@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -84,13 +83,7 @@ if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
     $user      = Core::get_global('user');
     $user_id   = $user->id ?? -1;
     $ajax_page = 'index';
-    if (AmpConfig::get('home_recently_played_all')) {
-        $data = Stats::get_recently_played($user_id);
-        require_once Ui::find_template('show_recently_played_all.inc.php');
-    } else {
-        $data = Stats::get_recently_played($user_id, 'stream', 'song');
-        Song::build_cache(array_keys($data));
-        require_once Ui::find_template('show_recently_played.inc.php');
-    } ?>
+    $data      = Stats::get_recently_played($user_id);
+    require_once Ui::find_template('show_recently_played_all.inc.php'); ?>
 </div>
 <?php } ?>

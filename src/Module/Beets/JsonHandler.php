@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,14 +34,11 @@ class JsonHandler extends Handler
 {
     protected $uri;
 
-    /**
-     * @var Catalog
-     */
+    /** @var Catalog */
     protected $handler;
 
     /**
      * string handler command to do whatever we need
-     * @var
      */
     protected $handlerCommand;
 
@@ -55,12 +52,12 @@ class JsonHandler extends Handler
      * Defines the differences between beets and ampache fields
      * @var array
      */
-    protected $fieldMapping = array(
-        'disc' => array('disk', '%d'),
-        'length' => array('time', '%d'),
-        'comments' => array('comment', '%s'),
-        'bitrate' => array('bitrate', '%d')
-    );
+    protected $fieldMapping = [
+        'disc' => ['disk', '%d'],
+        'length' => ['time', '%d'],
+        'comments' => ['comment', '%s'],
+        'bitrate' => ['bitrate', '%d']
+    ];
 
     /**
      * JsonHandler constructor.
@@ -107,10 +104,10 @@ class JsonHandler extends Handler
      */
     protected function assembleUri($command): string
     {
-        $uriParts = array(
+        $uriParts = [
             $this->uri,
             $command
-        );
+        ];
 
         return implode('/', $uriParts);
     }
@@ -132,11 +129,11 @@ class JsonHandler extends Handler
      */
     public function removeUnwantedStrings($item): string
     {
-        $toRemove = array(
+        $toRemove = [
             '{"items":[',
             '{"results":[',
             ']}'
-        );
+        ];
 
         return str_replace($toRemove, '', $item);
     }
@@ -184,12 +181,12 @@ class JsonHandler extends Handler
      */
     public function createFileUrl($song): string
     {
-        $parts = array(
+        $parts = [
             $this->uri,
             'item',
             $song['id'],
             'file' . '#.' . strtolower($song['format'])
-        );
+        ];
 
         return implode('/', $parts);
     }

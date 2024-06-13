@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -144,7 +144,7 @@ final class DefaultAction implements ApplicationActionInterface
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth                         = array();
+                    $auth                         = [];
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';
@@ -285,14 +285,14 @@ final class DefaultAction implements ApplicationActionInterface
         /* If the authentication was a success */
         if (isset($auth) && $auth['success'] && $user instanceof User) {
             // $auth->info are the fields specified in the config file
-            //   to retrieve for each user
+            // to retrieve for each user
             Session::create($auth);
 
             // Not sure if it was me or php tripping out, but naming this 'user' didn't work at all
             $_SESSION['userdata'] = $auth;
 
             // You really don't want to store the avatar
-            //   in the SESSION.
+            // in the SESSION.
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!

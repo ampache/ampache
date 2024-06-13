@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,7 +62,7 @@ final class PodcastCreate4Method
         if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -89,10 +89,10 @@ final class PodcastCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::podcasts(array($podcast->getId()), $user);
+                echo Json4_Data::podcasts([$podcast->getId()], $user);
                 break;
             default:
-                echo Xml4_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml4_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

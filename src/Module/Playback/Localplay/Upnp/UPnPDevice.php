@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,12 +29,12 @@ use Ampache\Module\System\Session;
 
 class UPnPDevice
 {
-    private $_settings = array(
+    private $_settings = [
         "descriptionURL" => "",
         "host" => "",
-        "controlURLs" => array(),
-        "eventURLs" => array()
-    );
+        "controlURLs" => [],
+        "eventURLs" => []
+    ];
 
     /**
      * UPnPDevice constructor.
@@ -80,7 +80,7 @@ class UPnPDevice
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
         $responseXML = simplexml_load_string($response);
-        $services    = $responseXML->device->serviceList->service ?? array();
+        $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
             $serviceTypeNames                                 = explode(":", $serviceType);
@@ -94,11 +94,11 @@ class UPnPDevice
 
         $this->_settings['descriptionURL'] = $descriptionUrl;
 
-        Session::create(array(
+        Session::create([
             'type' => 'stream',
             'sid' => 'upnp_dev_' . $descriptionUrl,
             'value' => json_encode($this->_settings)
-        ));
+        ]);
     }
 
     /**
@@ -125,13 +125,13 @@ class UPnPDevice
         $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? '/' : "") . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
-        $header = array(
+        $header = [
             'SOAPACTION: "urn:schemas-upnp-org:service:' . $type . ':1#' . $method . '"',
             'CONTENT-TYPE: text/xml; charset="utf-8"',
             'HOST: ' . $this->_settings['host'],
             'Connection: close',
             'Content-Length: ' . mb_strlen($body),
-        );
+        ];
         //debug_event('upnpdevice', 'sendRequestToDevice Met: ' . $method . ' | ' . $controlUrl, 5);
         //debug_event('upnpdevice', 'sendRequestToDevice Body: ' . $body, 5);
         //debug_event('upnpdevice', 'sendRequestToDevice Hdr: ' . print_r($header, true), 5);
@@ -149,7 +149,7 @@ class UPnPDevice
         curl_close($curl);
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
-        $headers = array();
+        $headers = [];
         $tmp     = explode("\r\n\r\n", $response);
 
         foreach ($tmp as $key => $value) {
@@ -170,8 +170,8 @@ class UPnPDevice
      */
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
     {
-        $args = array('InstanceID' => $instance_id);
-        //$response = \Format::forge($response, 'xml:ns')->to_array();
+        $args = ['InstanceID' => $instance_id];
+        //$response = \Format::forge($response, 'xml:ns')->to_[];
         //return $response['s:Body']['u:' . $command . 'Response'];
 
         return $this->sendRequestToDevice($command, $args, $type);

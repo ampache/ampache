@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public Label, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public Label as published by
@@ -55,7 +55,7 @@ final class LiveStream5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id   = (int) $input['filter'];
@@ -70,10 +70,10 @@ final class LiveStream5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::live_streams(array($object_id), false);
+                echo Json5_Data::live_streams([$object_id], false);
                 break;
             default:
-                echo Xml5_Data::live_streams(array($object_id), $user);
+                echo Xml5_Data::live_streams([$object_id], $user);
         }
 
         return true;

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ final class RecordPlay5Method
      */
     public static function record_play(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
         $play_user = $user;
@@ -93,7 +93,7 @@ final class RecordPlay5Method
         debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($play_user->id, $agent, array(), $date)) {
+        if ($media->set_played($play_user->id, $agent, [], $date)) {
             // scrobble plugins
             User::save_mediaplay($play_user, $media);
         }

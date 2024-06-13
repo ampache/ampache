@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,7 @@ final class StreamMethod
      */
     public static function stream(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -86,10 +86,10 @@ final class StreamMethod
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($transcode_to && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($transcode_to && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
-        if ($maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {

@@ -3,7 +3,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ class easy_captcha_fuzzy extends easy_captcha
             $diff    = levenshtein($pw, $input);
             $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-            return ($pw == $input) || ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+            return ($pw == $input) || ($diff <= $maxdiff); // either matches, or allows around 2 divergent letters
         }
 
         return false;

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -85,9 +85,7 @@ class Daap_Api
         'com.apple.itunes.norm-volume',
     ];
 
-    /**
-     * @var array<string, array{type: string, code: string}>
-     */
+    /** @var array<string, array{type: string, code: string}> */
     public static array $tags = [];
 
     /**
@@ -100,7 +98,7 @@ class Daap_Api
         ob_end_clean();
         if (function_exists('curl_version')) {
             $headers      = apache_request_headers();
-            $reqheaders   = array();
+            $reqheaders   = [];
             $reqheaders[] = "User-Agent: " . urlencode(preg_replace('/[\s\/]+/', '_', $headers['User-Agent']));
             if (array_key_exists('Range', $headers)) {
                 $reqheaders[] = "Range: " . $headers['Range'];
@@ -110,25 +108,25 @@ class Daap_Api
             if ($curl) {
                 curl_setopt_array(
                     $curl,
-                    array(
+                    [
                         CURLOPT_HTTPHEADER => $reqheaders,
                         CURLOPT_HEADER => false,
                         CURLOPT_RETURNTRANSFER => false,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_WRITEFUNCTION => array(
+                        CURLOPT_WRITEFUNCTION => [
                             'Ampache\Module\Api\Daap_Api',
                             'output_body'
-                        ),
-                        CURLOPT_HEADERFUNCTION => array(
+                        ],
+                        CURLOPT_HEADERFUNCTION => [
                             'Ampache\Module\Api\Daap_Api',
                             'output_header'
-                        ),
+                        ],
                         // Ignore invalid certificate
                         // Default trusted chain is crap anyway and currently no custom CA option
                         CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_SSL_VERIFYHOST => false,
                         CURLOPT_TIMEOUT => 0
-                    )
+                    ]
                 );
                 curl_exec($curl);
                 curl_close($curl);
@@ -237,9 +235,9 @@ class Daap_Api
 
         // Create a new daap session
         $sql = "INSERT INTO `daap_session` (`creationdate`) VALUES (?)";
-        Dba::write($sql, array(
+        Dba::write($sql, [
             time()
-        ));
+        ]);
         $sid = Dba::insert_id();
 
         $output = self::tlv('dmap.status', 200);
@@ -256,9 +254,9 @@ class Daap_Api
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
-        Dba::write($sql, array(
+        Dba::write($sql, [
             time() - 1800
-        ));
+        ]);
 
         self::check_auth($code);
 
@@ -266,9 +264,9 @@ class Daap_Api
             debug_event(self::class, 'Missing session id.', 2);
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, array(
+            $db_results = Dba::read($sql, [
                 Core::get_get('session-id')
-            ));
+            ]);
 
             if (Dba::num_rows($db_results) == 0) {
                 debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
@@ -317,9 +315,9 @@ class Daap_Api
         self::check_auth();
 
         $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
-        Dba::write($sql, array(
+        Dba::write($sql, [
             $input['session-id']
-        ));
+        ]);
 
         self::setHeaders();
         header("HTTP/1.0 204 Logout Successful", true, 204);
@@ -350,7 +348,7 @@ class Daap_Api
         $output = self::tlv('dmap.status', 200);
         $output .= self::tlv('dmap.updatetype', 0);
 
-        $songs    = array();
+        $songs    = [];
         $catalogs = Catalog::get_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
@@ -474,7 +472,7 @@ class Daap_Api
                         $output = self::tlv('dmap.status', 200);
                         $output .= self::tlv('dmap.updatetype', 0);
                         $items    = $playlist->get_items();
-                        $song_ids = array();
+                        $song_ids = [];
                         foreach ($items as $item) {
                             if ($item['object_type']->value == 'song') {
                                 $song_ids[] = $item['object_id'];
@@ -483,7 +481,7 @@ class Daap_Api
                         if (AmpConfig::get('memory_cache')) {
                             Song::build_cache($song_ids);
                         }
-                        $songs = array();
+                        $songs = [];
                         foreach ($song_ids as $song_id) {
                             $songs[] = new Song($song_id);
                         }
@@ -848,10 +846,10 @@ class Daap_Api
      */
     private static function add_dict($code, $type, $name): void
     {
-        self::$tags[$name] = array(
+        self::$tags[$name] = [
             'type' => $type,
             'code' => $code
-        );
+        ];
     }
 
     /**

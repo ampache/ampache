@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,9 +46,12 @@ class OAuthRequest
      * @param $http_url
      * @param $parameters
      */
-    public function __construct($http_method, $http_url, $parameters = null)
-    {
-        $parameters = ($parameters) ? $parameters : array();
+    public function __construct(
+        $http_method,
+        $http_url,
+        $parameters = null
+    ) {
+        $parameters = ($parameters) ? $parameters : [];
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url(
             $http_url,
             PHP_URL_QUERY
@@ -112,13 +115,13 @@ class OAuthRequest
      */
     public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
     {
-        $parameters = ($parameters) ? $parameters : array();
-        $defaults   = array(
+        $parameters = ($parameters) ? $parameters : [];
+        $defaults   = [
             "oauth_version" => OAuthRequest::$version,
             "oauth_nonce" => OAuthRequest::generate_nonce(),
             "oauth_timestamp" => OAuthRequest::generate_timestamp(),
             "oauth_consumer_key" => $consumer->key
-        );
+        ];
         if ($token) {
             $defaults['oauth_token'] = $token->key;
         }
@@ -140,7 +143,7 @@ class OAuthRequest
             if (is_scalar($this->parameters[$name])) {
                 // This is the first duplicate, so transform scalar (string)
                 // into an array so we can add the duplicates
-                $this->parameters[$name] = array($this->parameters[$name]);
+                $this->parameters[$name] = [$this->parameters[$name]];
             }
 
             $this->parameters[$name][] = $value;
@@ -200,11 +203,11 @@ class OAuthRequest
      */
     public function get_signature_base_string(): string
     {
-        $parts = array(
+        $parts = [
             $this->get_normalized_http_method(),
             $this->get_normalized_http_url(),
             $this->get_signable_parameters()
-        );
+        ];
 
         $parts = OAuthUtil::urlencode_rfc3986($parts);
 

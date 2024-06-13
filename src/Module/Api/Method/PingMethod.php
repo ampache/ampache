@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,11 +55,11 @@ final class PingMethod
         $version      = (isset($input['version'])) ? $input['version'] : Api::$version;
         Api::$version = ((int)$version >= 350001) ? Api::$version_numeric : Api::$version;
         $data_version = (int)substr($version, 0, 1);
-        $results      = array(
+        $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api::$version,
             'compatible' => '350001'
-        );
+        ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
         if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
@@ -73,7 +73,7 @@ final class PingMethod
                 Session::write($input['auth'], $data_version, $perpetual);
             }
             $results = array_merge(
-                array('session_expire' => $session_expire),
+                ['session_expire' => $session_expire],
                 $results,
                 Api::server_details($input['auth'])
             );

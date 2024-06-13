@@ -104,7 +104,7 @@ $replaygain = (AmpConfig::get('theme_color') == 'light')
             toggleDuration: true,
             keyEnabled: true,
             solution: "<?php
-                $solutions = array();
+                $solutions = [];
 if (AmpConfig::get('webplayer_html5')) {
     $solutions[] = 'html';
 }
@@ -374,7 +374,7 @@ if (AmpConfig::get('song_page_title') && !$isShare) {
 </script>
 <?php // Load Aurora.js scripts
 if (AmpConfig::get('webplayer_aurora')) {
-    $atypes = array('mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac');
+    $atypes = ['mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac'];
     // Load only existing codec scripts
     if (!$isVideo) {
         foreach ($atypes as $atype) {

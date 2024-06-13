@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,7 @@ final class Migration700005 extends AbstractMigration
         $playlists = Dba::read($sql);
         while ($results = Dba::fetch_assoc($playlists)) {
             $playlist = new Playlist((int)$results['id']);
-            $playlist->update(array('last_count' => (int)$results['count']));
+            $playlist->update(['last_count' => (int)$results['count']]);
         }
     }
 }
