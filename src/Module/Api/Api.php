@@ -366,7 +366,7 @@ class Api
             'live_streams' => $counts['live_stream'],
             'labels' => $counts['label'],
             'username' => $client->getUsername(),
-        );
+        ];
 
         return array_merge($autharray, $outarray);
     }
