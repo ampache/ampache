@@ -195,7 +195,7 @@ class mpd
     public $mpd_class_version = '1.3'; // Misc Other Vars
 
     public $err_str = ''; // Stores the latest error message
-    
+
     private $_command_queue; // The list of commands for bulk command sending
 
     private $_debug_callback = null; // Optional callback to be run on debug
