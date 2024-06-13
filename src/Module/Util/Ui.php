@@ -1291,7 +1291,9 @@ class Ui implements UiInterface
             case 'personalfav_smartlist':
                 $ids       = explode(',', $value);
                 $options   = [];
-                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_[] : Playlist::get_playlist_[];
+                $playlists = ($name == 'personalfav_smartlist')
+                    ? Search::get_search_array()
+                    : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
                         $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
