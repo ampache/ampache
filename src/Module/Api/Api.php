@@ -364,8 +364,9 @@ class Api
             'shares' => $counts['share'],
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label']
-        ];
+            'labels' => $counts['label'],
+            'username' => $client->getUsername(),
+        );
 
         return array_merge($autharray, $outarray);
     }
