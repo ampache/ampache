@@ -175,7 +175,10 @@ class mpd
         self::COMMAND_VOLUME => ['min' => false, 'max' => '0.10.0']
     ];
 
-    // TCP/Connection variables
+    /**
+     * TCP/Connection variables
+     */
+
     private $host;
     private $port;
     private $password;
@@ -183,17 +186,16 @@ class mpd
     private $_mpd_sock = null;
     public $connected  = false;
 
-    // MPD Status variables
-    public $mpd_version = "(unknown)";
+    public $mpd_version = "(unknown)"; // MPD Status variables
 
     public $stats;
     public $status;
     public $playlist;
 
-    // Misc Other Vars
-    public $mpd_class_version = '1.3';
+    public $mpd_class_version = '1.3'; // Misc Other Vars
 
     public $err_str = ''; // Stores the latest error message
+    
     private $_command_queue; // The list of commands for bulk command sending
 
     private $_debug_callback = null; // Optional callback to be run on debug

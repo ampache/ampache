@@ -34,9 +34,7 @@ use Ampache\Module\System\Core;
  */
 class CliHandler extends Handler
 {
-    /**
-     * @var Catalog
-     */
+    /** @var Catalog */
     protected $handler;
 
     /**

@@ -35,7 +35,6 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 {
     protected const DB_TABLENAME = 'user_pvmsg';
 
-    /* Variables from DB */
     private int $id = 0;
 
     private ?string $subject;

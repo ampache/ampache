@@ -31,10 +31,9 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
 {
-    /* returns jpeg file stream with unscannable letters encoded
-       in front of colorful disturbing background
-    */
     /**
+     * returns jpeg file stream with unscannable letters encoded
+     * in front of colorful disturbing background
      * @return false|string
      */
     public function jpeg()
@@ -124,7 +123,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $rotation = rand(-33, 33);
             $y        = rand($size + 3, $this->height - 3);
             $x        = $w1 + $w2 * $p;
-            $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
+            $w1 += rand(-$this->width / 90, $this->width / 40); // @BUG: last char could be +30 pixel outside of image
             $font            = $this->font();
             list($r, $g, $b) = [rand(30, 99), rand(30, 99), rand(30, 99)];
             imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);

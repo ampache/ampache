@@ -85,25 +85,19 @@ class Query
         'year' => 'ASC',
     ];
 
-    /**
-     * @var int|string $id
-     */
+    /** @var int|string $id */
     public $id;
 
-    /**
-     * @var int $catalog
-     */
+    /** @var int $catalog */
     public $catalog;
 
     /** @var int|null $user_id */
     public $user_id = null;
 
-    /**
-     * @var array $_state
-     */
+    /** @var array $_state */
     protected $_state = [
+        // Used by $browse->set_type() to filter artists to album artist only
         'album_artist' => false,
-        // Used by $browse->set_type() to filter artists
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
@@ -119,7 +113,7 @@ class Query
         'select' => [],
         'show_header' => true,
         'simple' => false,
-        // Used by $browse->set_type() to filter artists
+        // Used by $browse->set_type() to filter artists to song artist only
         'song_artist' => null,
         'sort' => [
             'name' => null,

@@ -34,14 +34,11 @@ class JsonHandler extends Handler
 {
     protected $uri;
 
-    /**
-     * @var Catalog
-     */
+    /** @var Catalog */
     protected $handler;
 
     /**
      * string handler command to do whatever we need
-     * @var
      */
     protected $handlerCommand;
 

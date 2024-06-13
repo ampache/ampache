@@ -186,9 +186,7 @@ class Api
     public static string $version         = '6.5.0'; // AMPACHE_VERSION
     public static string $version_numeric = '650000'; // AMPACHE_VERSION
 
-    /**
-     * @var Browse $browse
-     */
+    /** @var Browse $browse */
     public static $browse = null;
 
     public static function getBrowse(User $user): Browse

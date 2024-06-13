@@ -39,8 +39,7 @@ abstract class database_object
 
     private static $object_cache = [];
 
-    // Statistics for debugging
-    public static $cache_hit       = 0;
+    public static $cache_hit = 0; // Statistics for debugging
 
     private static ?bool $_enabled = null;
 

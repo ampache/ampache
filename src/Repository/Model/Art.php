@@ -63,42 +63,28 @@ class Art extends database_object
         'webp',
     ];
 
-    /**
-     * @var int $id
-     */
+    /** @var int $id */
     public $id;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var int $uid
-     */
+    /** @var int $uid */
     public $uid; // UID of the object not ID because it's not the ART.ID
-    /**
-     * @var string $raw
-     */
+
+    /** @var string $raw */
     public $raw; // Raw art data
-    /**
-     * @var string $raw_mime
-     */
+
+    /** @var string $raw_mime */
     public $raw_mime;
 
-    /**
-     * @var string $kind
-     */
+    /** @var string $kind */
     public $kind;
 
-    /**
-     * @var string $thumb
-     */
+    /** @var string $thumb */
     public $thumb;
 
-    /**
-     * @var string $thumb_mime
-     */
+    /** @var string $thumb_mime */
     public $thumb_mime;
 
     /**

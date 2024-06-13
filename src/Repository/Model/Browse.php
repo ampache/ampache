@@ -82,9 +82,7 @@ class Browse extends Query
         'wanted',
     ];
 
-    /**
-     * @var int $duration
-     */
+    /** @var int $duration */
     public $duration;
 
     /**

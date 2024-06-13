@@ -63,7 +63,6 @@ class Song extends database_object implements
 {
     protected const DB_TABLENAME = 'song';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $file = null;
@@ -90,7 +89,7 @@ class Song extends database_object implements
 
     public int $time;
 
-    public ?int $track   = null;
+    public ?int $track = null;
 
     public ?string $mbid = null;
 
@@ -104,26 +103,29 @@ class Song extends database_object implements
 
     public ?int $user_upload = null;
 
-    public ?int $license     = null;
+    public ?int $license = null;
 
     public ?string $composer = null;
 
-    public ?int $channels    = null;
+    public ?int $channels = null;
 
     public int $total_count;
 
     public int $total_skip;
 
-    /** song_data table */
-    public ?string $comment              = null;
+    /**
+     * song_data table
+     */
 
-    public ?string $lyrics               = null;
+    public ?string $comment = null;
 
-    public ?string $label                = null;
+    public ?string $lyrics = null;
 
-    public ?string $language             = null;
+    public ?string $label = null;
 
-    public ?string $waveform             = null;
+    public ?string $language = null;
+
+    public ?string $waveform = null;
 
     public ?float $replaygain_track_gain = null;
 
@@ -133,11 +135,11 @@ class Song extends database_object implements
 
     public ?float $replaygain_album_peak = null;
 
-    public ?int $r128_album_gain         = null;
+    public ?int $r128_album_gain = null;
 
-    public ?int $r128_track_gain         = null;
+    public ?int $r128_track_gain = null;
 
-    public ?string $disksubtitle         = null;
+    public ?string $disksubtitle = null;
 
     public ?string $link = null;
 
@@ -248,9 +250,8 @@ class Song extends database_object implements
     private ?License $licenseObj = null;
 
     /* Setting Variables */
-    /**
-     * @var bool $_fake
-     */
+
+    /** @var bool $_fake */
     public $_fake = false; // If this is a 'construct_from_array' object
 
     /**

@@ -77,7 +77,10 @@ class Subsonic_Xml_Data
     public const SSERROR_TRIAL                 = 60;
     public const SSERROR_DATA_NOTFOUND         = 70;
 
-    // Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
+    /**
+     * Ampache doesn't have a global unique id but each items are unique per category. We use id pattern to identify item category.
+     */
+
     public const AMPACHEID_ARTIST    = 100000000;
     public const AMPACHEID_ALBUM     = 200000000;
     public const AMPACHEID_SONG      = 300000000;

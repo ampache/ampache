@@ -46,22 +46,19 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 {
     protected const DB_TABLENAME = 'album';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $name = null;
 
     public ?string $prefix = null;
 
-    // MusicBrainz ID
-    public ?string $mbid = null;
+    public ?string $mbid = null; // MusicBrainz ID
 
     public int $year;
 
     public int $disk_count = 0;
 
-    // MusicBrainz Release Group ID
-    public ?string $mbid_group = null;
+    public ?string $mbid_group = null; // MusicBrainz Release Group ID
 
     public ?string $release_type = null;
 
@@ -148,21 +145,16 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     public $artist_id;
 
     // cached information
-    /**
-     * @var bool $_fake
-     */
+
+    /** @var bool $_fake */
     public $_fake;
 
-    /**
-     * @var array $_songs
-     */
+    /** @var array $_songs */
     public $_songs = [];
 
     private ?bool $has_art = null;
 
-    /**
-     * @var array $_mapcache
-     */
+    /** @var array $_mapcache */
     private static $_mapcache = [];
 
     /**

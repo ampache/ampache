@@ -43,7 +43,6 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
 {
     protected const DB_TABLENAME = 'podcast';
 
-    /* Variables from DB */
     private int $id = 0;
 
     private ?string $feed = null;

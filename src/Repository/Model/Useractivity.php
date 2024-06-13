@@ -32,7 +32,6 @@ class Useractivity extends database_object
 {
     protected const DB_TABLENAME = 'user_activity';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public int $user;

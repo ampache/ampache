@@ -42,15 +42,13 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 {
     protected const DB_TABLENAME = 'artist';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $name = null;
 
     public ?string $prefix = null;
 
-    // MusicBrainz ID
-    public ?string $mbid    = null;
+    public ?string $mbid = null; // MusicBrainz ID
 
     public ?string $summary = null;
 
@@ -76,66 +74,42 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public ?string $link = null;
 
-    /**
-     * @var int $catalog_id
-     */
+    /** @var int $catalog_id */
     public $catalog_id;
 
-    /**
-     * @var int $songs
-     */
+    /** @var int $songs */
     public $songs;
 
-    /**
-     * @var int $albums
-     */
+    /** @var int $albums */
     public $albums;
 
-    /**
-     * @var array $tags
-     */
+    /** @var array $tags */
     public $tags;
 
-    /**
-     * @var null|string $f_tags
-     */
+    /** @var null|string $f_tags */
     public $f_tags;
 
-    /**
-     * @var array $labels
-     */
+    /** @var array $labels */
     public $labels;
 
-    /**
-     * @var null|string $f_labels
-     */
+    /** @var null|string $f_labels */
     public $f_labels;
 
-    /**
-     * @var null|string $f_name // Prefix + Name, generated
-     */
-    public $f_name;
+    /** @var null|string $f_name */
+    public $f_name; // Prefix + Name, generated
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var null|string $f_time
-     */
+    /** @var null|string $f_time */
     public $f_time;
 
-    /**
-     * @var bool $_fake
-     */
+    /** @var bool $_fake */
     public $_fake = false; // Set if construct_from_array used
 
     private ?bool $has_art = null;
 
-    /**
-     * @var array $_mapcache
-     */
+    /** @var array $_mapcache */
     private static $_mapcache = [];
 
     /**

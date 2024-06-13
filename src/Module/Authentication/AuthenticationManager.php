@@ -32,9 +32,7 @@ use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
 {
-    /**
-     * @var AuthenticatorInterface[] $authenticatorList
-     */
+    /** @var AuthenticatorInterface[] $authenticatorList */
     private array $authenticatorList;
 
     private ConfigContainerInterface $configContainer;

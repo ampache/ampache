@@ -83,9 +83,7 @@ abstract class Catalog extends database_object
 {
     protected const DB_TABLENAME = 'catalog';
 
-    /**
-     * @var array<string, class-string>
-     */
+    /** @var array<string, class-string> */
     public const CATALOG_TYPES = [
         'beets' => Catalog_beets::class,
         'beetsremote' => Catalog_beetsremote::class,
@@ -96,8 +94,7 @@ abstract class Catalog extends database_object
         'subsonic' => Catalog_subsonic::class,
     ];
 
-    /**
-     * @var array{
+    /** @var array{
      *  album: int,
      *  album_disk: int,
      *  album_group: int,
@@ -159,43 +156,29 @@ abstract class Catalog extends database_object
 
     public ?string $rename_pattern = '';
 
-    public ?string $sort_pattern   = '';
+    public ?string $sort_pattern = '';
 
-    public ?string $gather_types   = '';
+    public ?string $gather_types = '';
 
-    /**
-     * @var string $key
-     */
+    /** @var string $key */
     public $key;
 
-    /**
-     * @var null|string $f_name
-     */
+    /** @var null|string $f_name */
     public $f_name;
 
-    /**
-     * @var null|string $link
-     */
+    /** @var null|string $link */
     public $link;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var null|string $f_update
-     */
+    /** @var null|string $f_update */
     public $f_update;
 
-    /**
-     * @var null|string $f_add
-     */
+    /** @var null|string $f_add */
     public $f_add;
 
-    /**
-     * @var null|string $f_clean
-     */
+    /** @var null|string $f_clean */
     public $f_clean;
 
     /**
@@ -222,20 +205,15 @@ abstract class Catalog extends database_object
      */
     protected $_filecache = [];
 
-    // Used in functions
-    /**
-     * @var array $albums
-     */
+    /* Used in functions */
+
+    /** @var array $albums */
     protected static $albums = [];
 
-    /**
-     * @var array $artists
-     */
+    /** @var array $artists */
     protected static $artists = [];
 
-    /**
-     * @var array $tags
-     */
+    /** @var array $tags */
     protected static $tags = [];
 
     /**

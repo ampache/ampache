@@ -149,7 +149,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 $songMeta       = $this->getVorbisMetadata($song);
                 $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
-                //  Update existing vorbiscomments
+                // Update existing vorbiscomments
                 if (!empty($vorbiscomments)) {
                     foreach ($vorbiscomments as $key => $value) {
                         if (isset($songMeta[$key])) {
@@ -538,7 +538,7 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $album = new Album($song->album);
         $album->format();
-        $meta['original_year'] = $album->original_year;  //TORY
+        $meta['original_year'] = $album->original_year; //TORY
 
         $meta['text'] = [];
         if ($song->album_mbid) {

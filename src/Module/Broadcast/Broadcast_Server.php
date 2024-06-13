@@ -51,21 +51,17 @@ class Broadcast_Server implements MessageComponentInterface
     public const BROADCAST_AUTH_SID           = "AUTH_SID";
 
     public $verbose;
-    /**
-     * @var ConnectionInterface[] $clients
-     */
+
+    /** @var ConnectionInterface[] $clients */
     protected $clients;
-    /**
-     * @var string[] $sids
-     */
+
+    /** @var string[] $sids */
     protected $sids;
-    /**
-     * @var ConnectionInterface[] $listeners
-     */
+
+    /** @var ConnectionInterface[] $listeners */
     protected $listeners;
-    /**
-     * @var Broadcast[] $broadcasters
-     */
+
+    /** @var Broadcast[] $broadcasters */
     protected $broadcasters;
 
     public function __construct()

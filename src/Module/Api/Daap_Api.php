@@ -85,9 +85,7 @@ class Daap_Api
         'com.apple.itunes.norm-volume',
     ];
 
-    /**
-     * @var array<string, array{type: string, code: string}>
-     */
+    /** @var array<string, array{type: string, code: string}> */
     public static array $tags = [];
 
     /**

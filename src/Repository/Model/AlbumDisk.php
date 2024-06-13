@@ -37,7 +37,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 {
     protected const DB_TABLENAME = 'album_disk';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public int $album_id;
@@ -56,18 +55,19 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public ?string $disksubtitle = null;
 
-    /* Variables from parent Album */
+    /**
+     * Variables from parent Album
+     */
+
     public ?string $name;
 
     public ?string $prefix;
 
-    // MusicBrainz ID
-    public ?string $mbid;
+    public ?string $mbid; // MusicBrainz ID
 
     public ?int $year;
 
-    // MusicBrainz Release Group ID
-    public ?string $mbid_group;
+    public ?string $mbid_group; // MusicBrainz Release Group ID
 
     public ?string $release_type;
 

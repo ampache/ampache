@@ -90,12 +90,12 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         for ($n = 0; $n < 10; $n++) {
             $string .= chr(rand(0, 255));
         }
-        $string = base64_encode($string);   // base64-set, but filter out unwanted chars
+        $string = base64_encode($string); // base64-set, but filter out unwanted chars
         $string = preg_replace(
             "/[+\/=IG0ODQR]/i",
             "",
             $string
-        );  // strips hard to discern letters, depends on used font type
+        ); // strips hard to discern letters, depends on used font type
         $string = substr($string, 0, rand(easy_captcha::CAPTCHA_MIN_CHARS, self::CAPTCHA_MAX_CHARS));
 
         return ($string);

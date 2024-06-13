@@ -39,7 +39,6 @@ class TVShow_Season extends database_object implements
 {
     protected const DB_TABLENAME = 'tvshow_season';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public int $season_number;

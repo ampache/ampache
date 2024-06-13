@@ -40,7 +40,6 @@ class Label extends database_object implements library_item
 {
     protected const DB_TABLENAME = 'label';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $name = null;
@@ -59,33 +58,24 @@ class Label extends database_object implements library_item
 
     public ?int $creation_date = null;
 
-    // MusicBrainz ID
-    public ?string $mbid    = null;
+    public ?string $mbid = null; // MusicBrainz ID
 
     public ?string $country = null;
 
     public bool $active;
 
-    /**
-     * @var null|string $f_name
-     */
+    /** @var null|string $f_name */
     public $f_name;
 
     public ?string $link = null;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var array $artists
-     */
+    /** @var array $artists */
     public $artists = [];
 
-    /**
-     * @var int $artists
-     */
+    /** @var int $artists */
     public $artist_count;
 
     /**

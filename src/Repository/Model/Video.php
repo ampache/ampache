@@ -100,89 +100,55 @@ class Video extends database_object implements
 
     public ?string $link = null;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var array $tags
-     */
+    /** @var array $tags */
     public $tags;
 
-    /**
-     * @var null|string $f_name
-     */
+    /** @var null|string $f_name */
     public $f_name;
 
-    /**
-     * @var null|string $f_full_title
-     */
+    /** @var null|string $f_full_title */
     public $f_full_title;
 
-    /**
-     * @var null|string $f_time
-     */
+    /** @var null|string $f_time */
     public $f_time;
 
-    /**
-     * @var null|string $f_time_h
-     */
+    /** @var null|string $f_time_h */
     public $f_time_h;
 
-    /**
-     * @var null|string $f_size
-     */
+    /** @var null|string $f_size */
     public $f_size;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var null|string $f_codec
-     */
+    /** @var null|string $f_codec */
     public $f_codec;
 
-    /**
-     * @var null|string $f_resolution
-     */
+    /** @var null|string $f_resolution */
     public $f_resolution;
 
-    /**
-     * @var null|string $f_display
-     */
+    /** @var null|string $f_display */
     public $f_display;
 
-    /**
-     * @var null|string $f_bitrate
-     */
+    /** @var null|string $f_bitrate */
     public $f_bitrate;
 
-    /**
-     * @var null|string $f_video_bitrate
-     */
+    /** @var null|string $f_video_bitrate */
     public $f_video_bitrate;
 
-    /**
-     * @var null|string $f_frame_rate
-     */
+    /** @var null|string $f_frame_rate */
     public $f_frame_rate;
 
-    /**
-     * @var null|string $f_tags
-     */
+    /** @var null|string $f_tags */
     public $f_tags;
 
-    /**
-     * @var null|string $f_length
-     */
+    /** @var null|string $f_length */
     public $f_length;
 
-    /**
-     * @var null|string $f_release_date
-     */
+    /** @var null|string $f_release_date */
     public $f_release_date;
 
     private ?bool $has_art = null;

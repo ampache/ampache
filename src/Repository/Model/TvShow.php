@@ -37,7 +37,6 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
 {
     protected const DB_TABLENAME = 'tvshow';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?string $name = null;

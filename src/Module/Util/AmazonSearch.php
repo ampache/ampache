@@ -46,11 +46,11 @@ class AmazonSearch
     public $url_suffix       = '/onca/xml';
     public $base_url;
     public $search;
-    public $public_key;    // AWSAccessKeyId
-    public $private_key;   // AWSSecretKey
+    public $public_key; // AWSAccessKeyId
+    public $private_key; // AWSSecretKey
     public $associate_tag; // Amazon Affiliate Associate Tag
     public $results = []; // Array of results
-    public $_parser;   // The XML parser
+    public $_parser; // The XML parser
     public $_grabtags; // Tags to grab the contents of
     public $_sourceTag; // source tag don't ask
     public $_subTag; // Stupid hack to make things come our right

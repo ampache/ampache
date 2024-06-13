@@ -42,7 +42,6 @@ class Wanted extends database_object
 {
     protected const DB_TABLENAME = 'wanted';
 
-    /* Variables from DB */
     public int $id = 0;
 
     public ?int $user = null;
@@ -61,29 +60,19 @@ class Wanted extends database_object
 
     public int $accepted;
 
-    /**
-     * @var null|string $link
-     */
+    /** @var null|string $link */
     public $link;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
 
-    /**
-     * @var null|string $f_artist_link
-     */
+    /** @var null|string $f_artist_link */
     public $f_artist_link;
 
-    /**
-     * @var null|string $f_user
-     */
+    /** @var null|string $f_user */
     public $f_user;
 
-    /**
-     * @var array $songs
-     */
+    /** @var array $songs */
     public $songs;
 
     /**

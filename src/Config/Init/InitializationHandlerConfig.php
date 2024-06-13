@@ -36,7 +36,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
 {
     private const VERSION        = '7.0.0'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '72';
-    private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
+    private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 

@@ -40,44 +40,28 @@ class Access
 {
     protected const DB_TABLENAME = 'access_list';
 
-    // Variables from DB
-    /**
-     * @var int $id
-     */
+    /** @var int $id */
     public $id;
 
-    /**
-     * @var string $name
-     */
+    /** @var string $name */
     public $name;
 
-    /**
-     * @var string $start
-     */
+    /** @var string $start */
     public $start;
 
-    /**
-     * @var string $end
-     */
+    /** @var string $end */
     public $end;
 
-    /**
-     * @var int $level
-     */
+    /** @var int $level */
     public $level;
 
-    /**
-     * @var int $user
-     */
+    /** @var int $user */
     public $user;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var bool $enabled
+    /** @var bool $enabled
      *
      * @deprecated seems not to be in use
      */

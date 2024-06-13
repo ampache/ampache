@@ -40,9 +40,7 @@ use Ampache\Module\System\AmpError;
  */
 class AmpConfig
 {
-    /**
-     * @var array $_global
-     */
+    /** @var array $_global */
     private static $_global = [];
 
     /**
