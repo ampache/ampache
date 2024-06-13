@@ -2,10 +2,13 @@
 
 ## Ampache 7.0.0
 
+Information and changes for this major release are recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
+
 ### Added
 
 * npm java package management
-* Convert most theme icons to Google Material Icon SVG's
+* Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
+* Restore composer.lock
 * Config version 72
   * Add `npm_binary_path`
   * Remove OpenID config
@@ -19,20 +22,25 @@
 
 ### Changed
 
+* Prefer the name of the artist provided by MusicBrainz plugin
 * Use PHP functions for php8.2+
 * Default to InnoDB on new installs
-* Change url for user avatar links
+* Change URL for user avatar links
 * Move JavaScript out of PHP where possible
 * Convert string access names and int user access levels to enums
 * Update the upload file browser
 * Update gettext/gettext to v5
 * Default to RandomAction on stream.php
 * Reborn theme CSS updates after switching to Material icons
+* Update code style to convert long form arrays (`array()`) to short form (`[]`)
+* Pull prettyphoto from github (`lachlan-00/prettyphoto`) using npm instead of merging into the project
 
 ### Removed
 
 * Support for PHP < 8.2
 * Unused stream actions
+* Old composer files
+* Unused PNG icons
 
 ### Fixed
 
