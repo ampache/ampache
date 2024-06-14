@@ -1,5 +1,13 @@
 # API CHANGELOG
 
+## API 6.5.1
+
+### Added
+
+* API6
+  * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
+  * Add `has_access` property to playlist responses. (Can edit the playlist if true)
+
 ## API 6.5.0
 
 ### Added
