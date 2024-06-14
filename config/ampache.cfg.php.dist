@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 72
+config_version = 73
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -112,7 +112,6 @@ database_password = "password"
 
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
-;
 ; DEFAULT: "utf8mb4"
 ;database_charset = "utf8mb4"
 
@@ -126,6 +125,11 @@ database_password = "password"
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
 ; DEFAULT: "utf8mb4_unicode_ci"
 ;database_collation = "utf8mb4_unicode_ci"
+
+; Set a default table engine for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+; DEFAULT: "InnoDB"
+;database_engine = "InnoDB"
 
 ;#########################################################
 ; Session and Security                                   #

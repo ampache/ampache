@@ -156,7 +156,7 @@ final class UpdateRunner implements UpdateRunnerInterface
     ): Generator {
         $collation = $this->configContainer->get('database_collation') ?? 'utf8mb4_unicode_ci';
         $charset   = $this->configContainer->get('database_charset') ?? 'utf8mb4';
-        $engine    = 'InnoDB';
+        $engine    = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         foreach ($updates as $update) {
             $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine);

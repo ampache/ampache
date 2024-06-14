@@ -128,7 +128,7 @@ class Catalog_dropbox extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = 'InnoDB';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE $collation NOT NULL, `secret` VARCHAR(255) COLLATE $collation NOT NULL, `path` VARCHAR(255) COLLATE $collation NOT NULL, `authtoken` VARCHAR(255) COLLATE $collation NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
