@@ -925,7 +925,7 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "has_access" => $playlist->has_access($user->getId()),
+                "has_access" => $playlist->has_access($user),
                 "has_art" => $playlist->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,

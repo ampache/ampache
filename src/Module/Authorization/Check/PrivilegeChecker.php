@@ -51,7 +51,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
      * This is the global 'has_access' function. it can check for any 'type'
      * of object.
      *
-     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userid is provided
+     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userId is provided
      */
     public function check(
         AccessTypeEnum $type,
