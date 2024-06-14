@@ -202,7 +202,13 @@ class Random
     {
         $results  = array();
         $playlist = new Playlist($playlist_id);
-        if ($playlist->has_access($user->id)) {
+        if (
+            $playlist->isNew() === false &&
+            (
+                $playlist->type === 'public' ||
+                $playlist->has_access($user)
+            )
+        ) {
             foreach ($playlist->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
@@ -222,15 +228,17 @@ class Random
     {
         $results = array();
         $search  = new Search($search_id, 'song', $user);
-        if ($search->has_access($user->id) || $search->type == 'public') {
+        if (
+            $search->isNew() === false &&
+            (
+                $search->type === 'public' ||
+                $search->has_access($user)
+            )
+        ) {
             foreach ($search->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
-
-            return $results;
         }
-
-        debug_event(self::class, $user->id . " doesn't have access to search:" . $search_id, 5);
 
         return $results;
     }
