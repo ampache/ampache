@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
