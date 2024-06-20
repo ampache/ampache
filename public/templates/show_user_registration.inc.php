@@ -91,7 +91,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                     </div>
                     <div class="registerfield require">
                         <label for="username"><?php echo T_('Username'); ?>:</label>
-                        <input type='text' name='username' id='username' value='<?php echo scrub_out((string) $username); ?>' />
+                        <input id="username" type="text" name="username" maxlength="128" value="<?php echo scrub_out((string) $username); ?>" />
                         <?php echo AmpError::display('username'); ?>
                         <?php echo AmpError::display('duplicate_user'); ?>
                     </div>
@@ -100,14 +100,14 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             echo 'require';
                         } ?>">
                             <label for="fullname"><?php echo T_('Full Name'); ?>:</label>
-                            <input type='text' name='fullname' id='fullname' value='<?php echo scrub_out((string) $fullname); ?>' />
+                            <input id="fullname" type="text" name="fullname" maxlength="255" value="<?php echo scrub_out((string) $fullname); ?>" />
                             <?php echo AmpError::display('fullname'); ?>
                         </div>
                     <?php } ?>
 
                     <div class="registerfield require">
                         <label for="email"><?php echo T_('E-mail'); ?>:</label>
-                        <input type='text' name='email' id='email' value='<?php echo scrub_out((string) $email); ?>' />
+                        <input id="email" type="text" name="email" maxlength="128" value="<?php echo scrub_out((string) $email); ?>" />
                         <?php echo AmpError::display('email'); ?>
                     </div>
                     <?php if (in_array('website', $display_fields)) { ?>
@@ -115,7 +115,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             echo 'require';
                         } ?>">
                             <label for="website"><?php echo T_('Website'); ?>:</label>
-                            <input type='text' name='website' id='website' value='<?php echo scrub_out((string) $website); ?>' />
+                            <input id="website" type="text" name="website" maxlength="255" value="<?php echo scrub_out((string) $website); ?>" />
                             <?php echo AmpError::display('website'); ?>
                         </div>
                     <?php } ?>
@@ -124,7 +124,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             echo 'require';
                         } ?>">
                             <label for="state"><?php echo T_('State'); ?>:</label>
-                            <input type='text' name='state' id='state' value='<?php echo scrub_out((string) $state); ?>' />
+                            <input id="state" type="text" name="state" maxlength="64" value="<?php echo scrub_out((string) $state); ?>" />
                             <?php echo AmpError::display('state'); ?>
                         </div>
                     <?php } ?>
@@ -133,20 +133,20 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             echo 'require';
                         } ?>">
                             <label for="city"><?php echo T_('City'); ?>:</label>
-                            <input type='text' name='city' id='city' value='<?php echo scrub_out((string) $city); ?>' />
+                            <input id="city" type="text" name="city" maxlength="64" value="<?php echo scrub_out((string) $city); ?>" />
                             <?php echo AmpError::display('city'); ?>
                         </div>
                     <?php } ?>
 
                     <div class="registerfield require">
                         <label for="password_1"><?php echo T_('Password'); ?>:</label>
-                        <input type='password' name='password_1' id='password_1' />
+                        <input id="password_1" type="password" name="password_1" maxlength="64" />
                         <?php echo AmpError::display('password'); ?>
                     </div>
 
                     <div class="registerfield require">
                         <label for="password_2"><?php echo T_('Confirm Password'); ?>:</label>
-                        <input type='password' name='password_2' id='password_2' />
+                        <input id="password_2 type="password" name="password_2" maxlength="64"" />
                     </div>
 
                     <?php if (AmpConfig::get('captcha_public_reg')) {
@@ -162,7 +162,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                             <?php } ?>
                         <div id="submit-registration-button">
                             <input type="hidden" name="action" value="add_user" />
-                            <input type='submit' name='submit_registration' id='submit_registration' value='<?php echo T_('Register'); ?>' />
+                            <input id="submit_registration" type="submit" name="submit_registration" value="<?php echo T_('Register'); ?>" />
                         </div>
                         <?php echo AmpError::display('user_agreement'); ?>
                     </div>
