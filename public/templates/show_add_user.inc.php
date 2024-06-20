@@ -44,29 +44,29 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
         </tr>
         <tr>
             <td><?php echo T_('Password'); ?>: *</td>
-            <td><input type="password" name="password_1" value="" />
+            <td><input type="password" name="password_1" maxlength="64" value="" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>: *</td>
-            <td><input type="password" name="password_2" value="" /></td>
+            <td><input type="password" name="password_2" maxlength="64" value="" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Full Name'); ?>:</td>
-            <td><input type="text" name="fullname" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
+            <td><input type="text" name="fullname" maxlength="255" value="<?php echo scrub_out(Core::get_post('fullname')); ?>" />
                 <?php echo AmpError::display('fullname'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('E-mail'); ?>: *</td>
-            <td><input type="text" name="email" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
+            <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out((string)filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Website'); ?>:</td>
-            <td><input type="text" name="website" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
+            <td><input type="text" name="website" maxlength="255" value="<?php echo scrub_out(Core::get_post('website')); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
