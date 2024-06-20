@@ -69,11 +69,11 @@ $access100      = Access::check('interface', 100); ?>
         <?php } ?>
         <tr>
             <td><?php echo T_('New Password'); ?>:</td>
-            <td><?php echo AmpError::display('password'); ?><input type="password" name="password1" id="password1" /></td>
+            <td><?php echo AmpError::display('password'); ?><input id="password1" type="password" name="password1" maxlength="64" autocomplete="new-password" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
-            <td><input type="password" name="password2" id="password2" /></td>
+            <td><input id="password2" type="password" name="password2" maxlength="64" autocomplete="new-password" /></td>
         </tr>
         <tr>
             <td><?php echo T_('Avatar'); ?> (&lt; <?php echo Ui::format_bytes(AmpConfig::get('max_upload_size')); ?>)</td>

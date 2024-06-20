@@ -146,7 +146,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
 
                     <div class="registerfield require">
                         <label for="password_2"><?php echo T_('Confirm Password'); ?>:</label>
-                        <input id="password_2 type="password" name="password_2" maxlength="64"" />
+                        <input id="password_2 type="password" name="password_2" maxlength="64" />
                     </div>
 
                     <?php if (AmpConfig::get('captcha_public_reg')) {
