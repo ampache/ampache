@@ -46,7 +46,7 @@ $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?
         </tr>
         <tr>
             <td><?php echo T_('Username'); ?>:</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autofocus />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autocomplete="off" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
@@ -85,13 +85,13 @@ $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?
         </tr>
         <tr>
             <td><?php echo T_('Password'); ?>:</td>
-            <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="off" />
+            <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="new-password" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
-            <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="off" /></td>
+            <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
         </tr>
         <tr>
             <td><?php echo T_('User Access Level'); ?>:</td>
