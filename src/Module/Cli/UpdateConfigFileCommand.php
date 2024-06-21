@@ -29,8 +29,9 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\InstallationHelperInterface;
 
-final class UpdateDbCommand extends Command
+final class UpdateConfigFileCommand extends Command
 {
     private ConfigContainerInterface $configContainer;
 
@@ -38,44 +39,29 @@ final class UpdateDbCommand extends Command
 
     public function __construct(
         ConfigContainerInterface $configContainer,
-        DatabaseCharsetUpdaterInterface $databaseCharsetUpdater
+        InstallationHelperInterface $installationHelper
     ) {
-        parent::__construct('run:updateDb', T_('Update the database collation and charset'));
+        parent::__construct('run:updateConfigFile', T_('Update the Ampache config file'));
 
-        $this->configContainer        = $configContainer;
-        $this->databaseCharsetUpdater = $databaseCharsetUpdater;
-
+        $this->configContainer = $configContainer;
+        $this->installationHelper = $installationHelper;
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
-            ->usage('<bold>  run:updateDb</end> <comment> ## ' . T_('Update the database') . '<eol/>');
+            ->usage('<bold>  run:updateConfigFile</end> <comment> ## ' . T_('Update the config file') . '<eol/>');
     }
 
     public function execute(): void
     {
         $interactor = $this->app()->io();
         $dryRun     = $this->values()['execute'] === false;
+        $outOfDate  = $this->configContainer->get('int_config_version') > $this->configContainer->get('config_version');
 
-        $translated_charset = Dba::translate_to_mysqlcharset($this->configContainer->get('site_charset'));
-        $target_charset     = $translated_charset['charset'];
-        $target_collation   = $translated_charset['collation'];
-        $table_engine       = $this->configContainer->get('database_engine') ?? 'InnoDB';
-
-        $interactor->info(
-            T_('This script makes changes to your database based on your config settings'),
-            true
-        );
-        $interactor->info(
-            sprintf(T_('Target charset: %s'), $target_charset),
-            true
-        );
-        $interactor->info(
-            sprintf(T_('Target collation: %s'), $target_collation),
-            true
-        );
-        $interactor->info(
-            sprintf(T_('Table engine: %s'), $table_engine),
-            true
-        );
+        if ($outOfDate) {
+            $interactor->info(
+                T_('Your Ampache config file is out of date!'),
+                true
+            );
+        }
 
         if ($dryRun === true) {
             $interactor->info(
@@ -92,7 +78,15 @@ final class UpdateDbCommand extends Command
                 true
             );
 
-            $this->databaseCharsetUpdater->update();
+            if (
+                $outOfDate &&
+                $this->installationHelper->write_config(__DIR__ . '/../../../config/ampache.cfg.php')
+            ) {
+                $interactor->ok(
+                    T_('Updated'),
+                    true
+                );
+            }
         }
     }
 }

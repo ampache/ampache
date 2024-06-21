@@ -63,7 +63,7 @@ final class SortFilesCommand extends Command
             );
         } else {
             $interactor->warn(
-                T_('Running in Write Mode. Make sure you\'ve tested first!'),
+                "***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!'),
                 true
             );
         }
