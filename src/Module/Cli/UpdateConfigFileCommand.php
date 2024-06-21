@@ -27,8 +27,6 @@ namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\InstallationHelperInterface;
 
 final class UpdateConfigFileCommand extends Command
