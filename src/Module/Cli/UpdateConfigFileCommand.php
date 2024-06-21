@@ -35,7 +35,7 @@ final class UpdateConfigFileCommand extends Command
 {
     private ConfigContainerInterface $configContainer;
 
-    private DatabaseCharsetUpdaterInterface $databaseCharsetUpdater;
+    private InstallationHelperInterface $installationHelper;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
@@ -43,7 +43,7 @@ final class UpdateConfigFileCommand extends Command
     ) {
         parent::__construct('run:updateConfigFile', T_('Update the Ampache config file'));
 
-        $this->configContainer = $configContainer;
+        $this->configContainer    = $configContainer;
         $this->installationHelper = $installationHelper;
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
