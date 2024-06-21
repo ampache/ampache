@@ -55,24 +55,24 @@ final class UpdateConfigFileCommand extends Command
         $outOfDate  = $this->configContainer->get('int_config_version') > $this->configContainer->get('config_version');
 
         if ($outOfDate) {
-            $interactor->info(
-                T_('Your Ampache config file is out of date!'),
+            $interactor->warn(
+                "\n" . T_('Your Ampache config file is out of date!'),
                 true
             );
         }
 
         if ($dryRun === true) {
             $interactor->info(
-                T_('Running in Test Mode. Use -x to execute'),
+                "\n" . T_('Running in Test Mode. Use -x to execute'),
                 true
             );
             $interactor->ok(
-                T_('No changes have been made'),
+                "\n" . T_('No changes have been made'),
                 true
             );
         } else {
             $interactor->warn(
-                "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
+                "\n" . "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                 true
             );
 
@@ -81,7 +81,7 @@ final class UpdateConfigFileCommand extends Command
                 $this->installationHelper->write_config(__DIR__ . '/../../../config/ampache.cfg.php')
             ) {
                 $interactor->ok(
-                    T_('Updated'),
+                    "\n" . T_('Updated'),
                     true
                 );
             }
