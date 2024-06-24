@@ -63,7 +63,7 @@ final class RateMethod
         }
         ob_end_clean();
         $type      = (string) $input['type'];
-        $object_id = (int) $input['id'];
+        $object_id = (int)$input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
@@ -76,6 +76,16 @@ final class RateMethod
             Api::error(sprintf('Bad Request: %s', $rating), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'rating', $input['api_format']);
 
             return false;
+        }
+
+        // searches are playlists but not in the database
+        if (
+            $type === 'playlist' &&
+            $object_id === 0
+        ) {
+            $type      = 'search';
+            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);
