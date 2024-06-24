@@ -39,6 +39,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
         private RequestParserInterface $requestParser
     ) {
     }
+
     public function handle(User $user): void
     {
         $results = [];

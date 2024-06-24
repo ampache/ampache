@@ -276,6 +276,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return Ui::get_material_symbol('bar_chart', T_('Graphs'));
     }
+
     public function getRefreshIcon(): string
     {
         return Ui::get_material_symbol('sync_alt', T_('Update from tags'));
