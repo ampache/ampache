@@ -74,6 +74,16 @@ final class FlagMethod
             return false;
         }
 
+        // searches are playlists but not in the database
+        if (
+            $type === 'playlist' &&
+            $object_id === 0
+        ) {
+            $type      = 'search';
+            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+
+        }
+
         $className = ObjectTypeToClassNameMapper::map($type);
 
         if (!$className || !$object_id) {
