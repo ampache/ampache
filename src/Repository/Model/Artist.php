@@ -192,7 +192,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if (
             $extra &&
-            (AmpConfig::get('show_played_times'))
+            AmpConfig::get('show_played_times')
         ) {
             $sql = sprintf('SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN %s GROUP BY `song`.`artist`', $idlist);
 

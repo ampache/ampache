@@ -655,7 +655,8 @@ class Video extends database_object implements
 
         if (
             $data['art'] &&
-            ($options !== null && $options !== []) &&
+            $options !== null &&
+            $options !== [] &&
             $options['gather_art']
         ) {
             $art = new Art($video_id, 'video');

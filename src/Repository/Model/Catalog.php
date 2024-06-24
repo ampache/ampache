@@ -2645,7 +2645,16 @@ abstract class Catalog extends database_object
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
-            if ($artist !== '' && $artist !== '0' && ($albumartist !== null && $albumartist !== '' && $albumartist !== '0') && $artist === $albumartist) {
+            if (
+                $artist !== '' &&
+                $artist !== '0' &&
+                (
+                    $albumartist !== null &&
+                    $albumartist !== '' &&
+                    $albumartist !== '0'
+                ) &&
+                $artist === $albumartist
+            ) {
                 $albumartist = $artists_array[0];
             }
 
@@ -3907,7 +3916,10 @@ abstract class Catalog extends database_object
 
         return (
             Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
-            ($libitem->get_user_owner() == $user_id && AmpConfig::get('upload_allow_remove'))
+            (
+                $libitem->get_user_owner() == $user_id &&
+                AmpConfig::get('upload_allow_remove')
+            )
         );
     }
 

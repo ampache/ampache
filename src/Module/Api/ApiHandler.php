@@ -252,7 +252,7 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public &&
             (
                 !$user instanceof User || // User is required for non-public methods
-                (!$header_auth && $input['auth'] === md5((string)$user->username)) || // require header auth for simplified session
+                !$header_auth && $input['auth'] === md5((string)$user->username) || // require header auth for simplified session
                 $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {

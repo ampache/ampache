@@ -284,8 +284,16 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
-            ((Core::get_global('user') instanceof User && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+            (
+                (
+                    Core::get_global('user') instanceof User &&
+                    $this->song->get_user_owner() == Core::get_global('user')->id
+                ) &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
+            )
+        );
     }
 
     public function getEditButtonTitle(): string
@@ -300,8 +308,16 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canToggleState(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
-            ((Core::get_global('user') instanceof User && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
+            (
+                (
+                    Core::get_global('user') instanceof User &&
+                    $this->song->get_user_owner() == Core::get_global('user')->id
+                ) &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true
+            )
+        );
     }
 
     public function getToggleStateButton(): string

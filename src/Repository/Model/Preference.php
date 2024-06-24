@@ -299,7 +299,15 @@ class Preference extends database_object
             $name    = self::name_from_id($preference);
         }
 
-        if ($pref_id === null || $pref_id === 0 || ($name === null || $name === '' || $name === '0')) {
+        if (
+            $pref_id === null ||
+            $pref_id === 0 ||
+            (
+                $name === null ||
+                $name === '' ||
+                $name === '0'
+            )
+        ) {
             return false;
         }
 
@@ -1004,7 +1012,12 @@ class Preference extends database_object
             return false;
         }
 
-        if (array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
+        if (
+            array_key_exists('userdata', $_SESSION) &&
+            array_key_exists('preferences', $_SESSION['userdata']) &&
+            is_array($_SESSION['userdata']['preferences']) &&
+            $_SESSION['userdata']['uid'] == $uid
+        ) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;

@@ -155,7 +155,7 @@ final class Play2Action implements ApplicationActionInterface
 
             // Share id and secret if used
             $share_id = (int)scrub_in((string) ($new_request['share_id'] ?? 0));
-            $secret   = scrub_in((string) ($new_request['share_secret'] ?? ''));
+            $secret   = (string)scrub_in((string) ($new_request['share_secret'] ?? ''));
 
             // This is specifically for tmp playlist requests
             $demo_id = (int)scrub_in((string) ($new_request['demo_id'] ?? 0));
@@ -297,7 +297,15 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         // First things first, if we don't have a uid/oid stop here
-        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+        if (
+            empty($object_id) &&
+            (
+                !$demo_id &&
+                !$share_id &&
+                !$secret &&
+                !$random
+            )
+        ) {
             $this->logger->error(
                 'No object OID specified, nothing to play',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

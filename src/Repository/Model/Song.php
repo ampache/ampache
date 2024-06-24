@@ -342,7 +342,15 @@ class Song extends database_object implements
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
-            if ($artist !== '' && $artist !== '0' && ($albumartist !== '' && $albumartist !== '0') && $artist === $albumartist) {
+            if (
+                $artist !== '' &&
+                $artist !== '0' &&
+                (
+                    $albumartist !== '' &&
+                    $albumartist !== '0'
+                ) &&
+                $artist === $albumartist
+            ) {
                 $albumartist = (string)$artists_array[0];
             }
 

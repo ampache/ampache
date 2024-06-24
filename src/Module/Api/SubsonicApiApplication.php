@@ -70,7 +70,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         $format   = (string)($_REQUEST['f'] ?? 'xml');
         $callback = $_REQUEST['callback'] ?? $format;
         /* Set the correct default headers */
-        if ($action != "getcoverart" && $action != "hls" && $action != "stream" && $action != "download" && $action != "getavatar") {
+        if (!in_array($action, ['getcoverart', 'hls', 'stream', 'download', 'getavatar'])) {
             Subsonic_Api::_setHeader($format);
         }
 
@@ -105,7 +105,19 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             $_SERVER['HTTP_USER_AGENT'] = $clientapp;
         }
 
-        if (empty($userName) || (empty($password) && (empty($token) || empty($salt))) || empty($version) || empty($action) || empty($clientapp)) {
+        if (
+            empty($userName) ||
+            empty($version) ||
+            empty($action) ||
+            empty($clientapp) ||
+            (
+                empty($password) &&
+                (
+                    empty($token) ||
+                    empty($salt)
+                )
+            )
+        ) {
             ob_end_clean();
             $this->logger->warning(
                 'Missing Subsonic base parameters',

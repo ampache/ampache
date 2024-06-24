@@ -103,13 +103,27 @@ class TVShow_Episode extends Video
         $tags = $data['genre'];
 
         $tvshow = TvShow::check($data['tvshow'], $data['year'], $data['tvshow_summary']);
-        if ($options !== null && $options !== [] && $options['gather_art'] && $tvshow && $data['tvshow_art'] && !Art::has_db((int)$tvshow, 'tvshow')) {
+        if (
+            $options !== null &&
+            $options !== [] &&
+            $options['gather_art'] &&
+            $tvshow &&
+            $data['tvshow_art'] &&
+            !Art::has_db((int)$tvshow, 'tvshow')
+        ) {
             $art = new Art((int)$tvshow, 'tvshow');
             $art->insert_url($data['tvshow_art']);
         }
 
         $tvshow_season = TVShow_Season::check($tvshow, $data['tvshow_season']);
-        if ($options !== null && $options !== [] && $options['gather_art'] && $tvshow_season && $data['tvshow_season_art'] && !Art::has_db($tvshow_season, 'tvshow_season')) {
+        if (
+            $options !== null &&
+            $options !== [] &&
+            $options['gather_art'] &&
+            $tvshow_season &&
+            $data['tvshow_season_art'] &&
+            !Art::has_db($tvshow_season, 'tvshow_season')
+        ) {
             $art = new Art($tvshow_season, 'tvshow_season');
             $art->insert_url($data['tvshow_season_art']);
         }

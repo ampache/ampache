@@ -135,7 +135,16 @@ class Share extends database_object
 
     public function show_action_buttons(): void
     {
-        if ($this->isNew() === false && (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user === Core::get_global('user')->id))) {
+        if (
+            $this->isNew() === false &&
+            (
+                Core::get_global('user') instanceof User &&
+                (
+                    Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) ||
+                    $this->user === Core::get_global('user')->id
+                )
+            )
+        ) {
             if ($this->allow_download) {
                 echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }

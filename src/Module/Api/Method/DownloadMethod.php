@@ -66,7 +66,10 @@ final class DownloadMethod
 
         if (
             $object_id === 0 &&
-            ($type == 'playlist' || $type == 'search')
+            (
+                $type == 'playlist' ||
+                $type == 'search'
+            )
         ) {
             // The API can use searches as playlists so check for those too
             $object_id = (int)str_replace('smart_', '', $input['id']);

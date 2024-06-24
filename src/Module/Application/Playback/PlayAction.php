@@ -271,7 +271,15 @@ final class PlayAction implements ApplicationActionInterface
         }
 
         // First things first, if we don't have a uid/oid stop here
-        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+        if (
+            empty($object_id) &&
+            (
+                !$demo_id &&
+                !$share_id &&
+                !$secret &&
+                !$random
+            )
+        ) {
             $this->logger->error(
                 'No object OID specified, nothing to play',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

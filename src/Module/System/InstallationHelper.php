@@ -53,7 +53,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
                 $in_string = false;
-            } elseif (!$in_string && ($sql[$count] == '"' || $sql[$count] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            } elseif (
+                !$in_string &&
+                (
+                    $sql[$count] == '"' ||
+                    $sql[$count] == "'"
+                ) &&
+                (
+                    !isset($buffer[0]) ||
+                    $buffer[0] != "\\"
+                )
+            ) {
                 $in_string = $sql[$count];
             }
             if (isset($buffer[1])) {
