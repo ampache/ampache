@@ -257,7 +257,12 @@ class Share extends database_object
             return false;
         }
 
-        if (isset($this->secret) && ($this->secret !== null && $this->secret !== '' && $this->secret !== '0') && $secret != $this->secret) {
+        if (
+            $this->secret !== null &&
+            $this->secret !== '' &&
+            $this->secret !== '0' &&
+            $secret != $this->secret
+        ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;
