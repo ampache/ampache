@@ -9,6 +9,8 @@ Information and changes for this major release are recorded in the wiki [here](h
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
+* CLI
+  * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
 * Config version 73
   * Add `npm_binary_path`
   * Remove OpenID config
