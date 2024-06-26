@@ -427,7 +427,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = ['data' => $apics[0]['data'], 'description' => $apics[0]['description'], 'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']];
+                                $ndata['attached_picture'][] = [
+                                    'data' => $apics[0]['data'],
+                                    'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'],
+                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                ];
                             }
                             break;
                         case 2:
@@ -440,7 +445,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                             = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId] = ['data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype], 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']];
+                                $ndata['attached_picture'][$apicsId] = [
+                                    'data' => $apics[$apicsId]['data'],
+                                    'mime' => $apics[$apicsId][$apic_mimetype],
+                                    'picturetypeid' => $apics[$apicsId][$apic_typeid],
+                                    'description' => $apics[$apicsId]['description']
+                                ];
                             }
                             break;
                     }
@@ -1053,7 +1063,7 @@ class Art extends database_object
      * @param string $type
      * @param string $sid
      * @param int|null $thumb
-     * @return string
+     * @return string|null
      */
     public static function url($uid, $type, $sid = null, $thumb = null): ?string
     {

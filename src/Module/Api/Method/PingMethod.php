@@ -62,7 +62,10 @@ final class PingMethod
         ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
+        if (
+            array_key_exists('auth', $input) &&
+            Session::exists(AccessTypeEnum::API->value, $input['auth'])
+        ) {
             Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
             $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);

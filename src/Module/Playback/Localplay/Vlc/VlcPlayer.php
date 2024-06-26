@@ -546,36 +546,33 @@ class VlcPlayer
                     if ($priority == 'tag' && $attributes_data) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
-                } else {
-                    // If taken, put all things inside a list(array)
-                    if (isset($current[$tag][0]) && is_array($current[$tag])) {
-                        // If it is already an array push the new element into that array.
-                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                } elseif (isset($current[$tag][0]) && is_array($current[$tag])) {
+                    // If it is already an array push the new element into that array.
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                        if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+                    }
+                    $repeated_tag_index[$tag . '_' . $level]++;
+                } else {
+                    // If it is not an array... Make it an array using using the existing value and the new value
+                    $current[$tag] = [
+                        $current[$tag],
+                        $result
+                    ];
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    if ($priority == 'tag' && $get_attributes) {
+                        if (isset($current[$tag . '_attr'])) {
+                            // The attribute of the last(0th) tag must be moved as well
+                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                            unset($current[$tag . '_attr']);
+                        }
+
+                        if ($attributes_data) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
-                        $repeated_tag_index[$tag . '_' . $level]++;
-                    } else {
-                        // If it is not an array...
-                        $current[$tag] = [
-                            $current[$tag],
-                            $result
-                        ]; // ...Make it an array using using the existing value and the new value
-                        $repeated_tag_index[$tag . '_' . $level] = 1;
-                        if ($priority == 'tag' && $get_attributes) {
-                            if (isset($current[$tag . '_attr'])) {
-                                // The attribute of the last(0th) tag must be moved as well
-                                $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                                unset($current[$tag . '_attr']);
-                            }
-
-                            if ($attributes_data) {
-                                $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                            }
-                        }
-                        $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                     }
+                    $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                 }
             } elseif ($type == 'close') {
                 // End of tag '</tag>'

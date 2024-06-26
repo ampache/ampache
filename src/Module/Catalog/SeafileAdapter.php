@@ -102,7 +102,12 @@ class SeafileAdapter
      */
     public function ready(): bool
     {
-        return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
+        return (
+            $this->server != null &&
+            $this->api_key != null &&
+            $this->library_name != null &&
+            $this->call_delay != null
+        );
     }
 
     // create API client object & find library

@@ -278,10 +278,8 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:schemas-upnp-org:service:ContentDirectory:1', $address);
                 # And one that MiniDLNA advertises
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
-            } else {
-                if (self::SSDP_DEBUG) {
-                    debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
-                }
+            } elseif (self::SSDP_DEBUG) {
+                debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
             }
         } elseif (self::SSDP_DEBUG) {
             debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);

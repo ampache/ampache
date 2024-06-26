@@ -389,13 +389,11 @@ final class InstallationHelper implements InstallationHelperInterface
                 AmpError::add('general', T_('Config file is not writable'));
 
                 return false;
-            } else {
+            } elseif (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
-                if (!file_put_contents($config_file, $final)) {
-                    AmpError::add('general', T_('Failed writing config file'));
+                AmpError::add('general', T_('Failed writing config file'));
 
-                    return false;
-                }
+                return false;
             }
         } else {
             $browser = new Horde_Browser();

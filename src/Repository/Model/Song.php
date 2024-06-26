@@ -951,7 +951,7 @@ class Song extends database_object implements
     /**
      * get_album_disk
      * gets album_disk of the object
-     * @return int
+     * @return int|null
      */
     public function get_album_disk(): ?int
     {
@@ -2203,7 +2203,12 @@ class Song extends database_object implements
         $actions = [];
         $count   = 0;
         while (AmpConfig::get('custom_play_action_title_' . $count)) {
-            $actions[] = ['index' => ($count + 1), 'title' => AmpConfig::get('custom_play_action_title_' . $count), 'icon' => AmpConfig::get('custom_play_action_icon_' . $count), 'run' => AmpConfig::get('custom_play_action_run_' . $count)];
+            $actions[] = [
+                'index' => ($count + 1),
+                'title' => AmpConfig::get('custom_play_action_title_' . $count),
+                'icon' => AmpConfig::get('custom_play_action_icon_' . $count),
+                'run' => AmpConfig::get('custom_play_action_run_' . $count)
+            ];
             ++$count;
         }
 

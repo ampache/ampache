@@ -200,9 +200,6 @@ class Podcast_Episode extends database_object implements
         $hour           = sprintf("%02d", floor($min / 60));
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
-        if (AmpConfig::get('show_played_times')) {
-        }
     }
 
     public function getCategory(): string

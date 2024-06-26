@@ -61,31 +61,33 @@ final class PlaylistRemoveSong5Method
         $playlist = new Playlist($input['filter']);
         if (!$playlist->has_access($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
-        } else {
-            if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
-                $playlist->delete_all();
-                Api5::message('all songs removed from playlist', $input['api_format']);
-            } elseif (array_key_exists('song', $input)) {
-                $track = (int) scrub_in((string) $input['song']);
-                if (!$playlist->has_item($track)) {
-                    Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
-                    return false;
-                }
-                $playlist->delete_song($track);
-                $playlist->regenerate_track_numbers();
-                Api5::message('song removed from playlist', $input['api_format']);
-            } elseif (array_key_exists('track', $input)) {
-                $track = (int) scrub_in((string) $input['track']);
-                if (!$playlist->has_item(null, $track)) {
-                    Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
+            return false;
+        }
 
-                    return false;
-                }
-                $playlist->delete_track_number($track);
-                $playlist->regenerate_track_numbers();
-                Api5::message('song removed from playlist', $input['api_format']);
+        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+            $playlist->delete_all();
+            Api5::message('all songs removed from playlist', $input['api_format']);
+        } elseif (array_key_exists('song', $input)) {
+            $track = (int) scrub_in((string) $input['song']);
+            if (!$playlist->has_item($track)) {
+                Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+
+                return false;
             }
+            $playlist->delete_song($track);
+            $playlist->regenerate_track_numbers();
+            Api5::message('song removed from playlist', $input['api_format']);
+        } elseif (array_key_exists('track', $input)) {
+            $track = (int) scrub_in((string) $input['track']);
+            if (!$playlist->has_item(null, $track)) {
+                Api5::error(T_('Not Found'), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
+
+                return false;
+            }
+            $playlist->delete_track_number($track);
+            $playlist->regenerate_track_numbers();
+            Api5::message('song removed from playlist', $input['api_format']);
         }
 
         return true;

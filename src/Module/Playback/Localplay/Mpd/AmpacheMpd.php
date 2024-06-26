@@ -562,16 +562,16 @@ class AmpacheMpd extends localplay_controller
         } elseif (!empty($playlist_item)) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
+            } elseif (!empty($playlist_item['Name'])) {
+                $array['track_title'] = $playlist_item['Name'];
             } else {
-                if (!empty($playlist_item['Name'])) {
-                    $array['track_title'] = $playlist_item['Name'];
-                } else {
-                    $array['track_title'] = $playlist_item['file'] ?? '';
-                }
+                $array['track_title'] = $playlist_item['file'] ?? '';
             }
+
             if (!empty($playlist_item['Artist'])) {
                 $array['track_artist'] = $playlist_item['Artist'];
             }
+
             if (!empty($playlist_item['Album'])) {
                 $array['track_album'] = $playlist_item['Album'];
             }

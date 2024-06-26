@@ -205,17 +205,15 @@ class Xml_Data
                     if (is_array($value)) {
                         $value = xoutput_from_array($value, true, $type);
                         $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_int($value)) {
-                            $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
-                        } elseif ($key == "Date Added") {
-                            $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
-                        }
+                    } elseif ($key == "key") {
+                        $string .= "\t\t<$key>$value</$key>\n";
+                    } elseif (is_int($value)) {
+                        $string .= "\t\t\t<key>$key</key><integer>$value</integer>\n";
+                    } elseif ($key == "Date Added") {
+                        $string .= "\t\t\t<key>$key</key><date>$value</date>\n";
+                    } elseif (is_string($value)) {
+                        /* We need to escape the value */
+                        $string .= "\t\t\t<key>$key</key><string><![CDATA[" . $value . "]]></string>\n";
                     }
                 } // end foreach
 
@@ -225,15 +223,13 @@ class Xml_Data
                     if (is_array($value)) {
                         $value = xoutput_from_array($value, true, $type);
                         $string .= "\t\t<$key>\n$value\t\t</$key>\n";
-                    } else {
-                        if ($key == "key") {
-                            $string .= "\t\t<$key>$value</$key>\n";
-                        } elseif (is_numeric($value)) {
-                            $string .= "\t\t\t<$key>$value</$key>\n";
-                        } elseif (is_string($value)) {
-                            /* We need to escape the value */
-                            $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
-                        }
+                    } elseif ($key == "key") {
+                        $string .= "\t\t<$key>$value</$key>\n";
+                    } elseif (is_numeric($value)) {
+                        $string .= "\t\t\t<$key>$value</$key>\n";
+                    } elseif (is_string($value)) {
+                        /* We need to escape the value */
+                        $string .= "\t\t\t<$key><![CDATA[" . $value . "]]></$key>\n";
                     }
                 } // end foreach
 

@@ -314,15 +314,13 @@ class Stream_Playlist
                         $url['url'] = substr($url['url'], 1);
                     }
                 }
+            } elseif (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
+                /** @var Song|Podcast_Episode|Video $object */
+                $url['url'] = (!empty($user))
+                    ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
+                    : $object->play_url($additional_params);
             } else {
-                if (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
-                    /** @var Song|Podcast_Episode|Video $object */
-                    $url['url'] = (!empty($user))
-                        ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
-                        : $object->play_url($additional_params);
-                } else {
-                    $url['url'] = $object->play_url($additional_params);
-                }
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;

@@ -197,11 +197,20 @@ final class Environment implements EnvironmentInterface
      */
     public function check_upload_size(): bool
     {
-        $upload_max = return_bytes(ini_get('upload_max_filesize'));
-        $post_max   = return_bytes(ini_get('post_max_size'));
+        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string)ini_get('post_max_size'));
         $mini       = 20971520; // 20M
 
-        return (($upload_max >= $mini || $upload_max < 1) && ($post_max >= $mini || $post_max < 1));
+        return (
+            (
+                $upload_max >= $mini ||
+                $upload_max < 1
+            ) &&
+            (
+                $post_max >= $mini ||
+                $post_max < 1
+            )
+        );
     }
 
     public function check_php_int_size(): bool

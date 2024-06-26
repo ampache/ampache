@@ -101,7 +101,6 @@ class Stream
      * @param string $target
      * @param string $player
      * @param string $media_type
-     * @return string
      */
     public static function get_transcode_format(
         $source,
@@ -451,7 +450,7 @@ class Stream
     /**
      * get_image_preview
      * @param Video $media
-     * @return string
+     * @return string|null
      */
     public static function get_image_preview($media): ?string
     {

@@ -451,15 +451,13 @@ class Catalog_local extends Catalog
 
                         return false;
                     }
-                } else {
-                    if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
-                            debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
-                        } else {
-                            debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
+                } elseif (count($this->get_gather_types('video')) > 0) {
+                    if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
+                        debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
+                    } else {
+                        debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
-                            return false;
-                        }
+                        return false;
                     }
                 }
 

@@ -56,35 +56,27 @@ final class Stats3Method
         $results = null;
         if ($type == "newest") {
             $results = Stats::get_newest("album", $limit, $offset);
-        } else {
-            if ($type == "highest") {
-                $results = Rating::get_highest("album", $limit, $offset);
-            } else {
-                if ($type == "frequent") {
-                    $results = Stats::get_top("album", $limit, '', $offset);
+        } elseif ($type == "highest") {
+            $results = Rating::get_highest("album", $limit, $offset);
+        } elseif ($type == "frequent") {
+            $results = Stats::get_top("album", $limit, '', $offset);
+        } elseif ($type == "recent") {
+            if (!empty($username)) {
+                if ($user->isNew()) {
+                    debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
                 } else {
-                    if ($type == "recent") {
-                        if (!empty($username)) {
-                            if ($user->isNew()) {
-                                debug_event(self::class, 'User `' . $username . '` cannot be found.', 1);
-                            } else {
-                                $results = $user->get_recently_played('album', $limit);
-                            }
-                        } else {
-                            $results = Stats::get_recent('album', $limit, $offset);
-                        }
-                    } else {
-                        if ($type == "flagged") {
-                            $results = Userflag::get_latest('album');
-                        } else {
-                            if (!$limit) {
-                                $limit = AmpConfig::get('popular_threshold');
-                            }
-                            $results = static::getAlbumRepository()->getRandom($user->id, $limit);
-                        }
-                    }
+                    $results = $user->get_recently_played('album', $limit);
                 }
+            } else {
+                $results = Stats::get_recent('album', $limit, $offset);
             }
+        } elseif ($type == "flagged") {
+            $results = Userflag::get_latest('album');
+        } else {
+            if (!$limit) {
+                $limit = AmpConfig::get('popular_threshold');
+            }
+            $results = static::getAlbumRepository()->getRandom($user->id, $limit);
         }
 
         if ($results !== null) {

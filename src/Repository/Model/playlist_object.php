@@ -146,7 +146,10 @@ abstract class playlist_object extends database_object implements library_item
             return true;
         }
 
-        return (Core::get_global('user') instanceof User && $this->user == Core::get_global('user')->id) || ($this->user == $user_id);
+        return (
+            Core::get_global('user') instanceof User &&
+            $this->user == Core::get_global('user')->id
+        );
     }
 
     /**

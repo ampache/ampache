@@ -400,17 +400,15 @@ class Core
         }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
+        } elseif (strpos(PHP_OS, 'WIN') === 0) {
+            $tmp_dir = $_ENV['TMP'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = 'C:\Windows\Temp';
+            }
         } else {
-            if (strpos(PHP_OS, 'WIN') === 0) {
-                $tmp_dir = $_ENV['TMP'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = 'C:\Windows\Temp';
-                }
-            } else {
-                $tmp_dir = @$_ENV['TMPDIR'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = '/tmp';
-                }
+            $tmp_dir = @$_ENV['TMPDIR'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = '/tmp';
             }
         }
 

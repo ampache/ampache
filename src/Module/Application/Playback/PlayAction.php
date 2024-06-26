@@ -856,18 +856,16 @@ final class PlayAction implements ApplicationActionInterface
                         );
                     }
                 }
+            } elseif ($transcode_cfg != 'never') {
+                $this->logger->notice(
+                    'Transcoding is not enforced for ' . $streamConfiguration['file_type'],
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             } else {
-                if ($transcode_cfg != 'never') {
-                    $this->logger->notice(
-                        'Transcoding is not enforced for ' . $streamConfiguration['file_type'],
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } else {
-                    $this->logger->debug(
-                        'Transcode disabled in user settings.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                }
+                $this->logger->debug(
+                    'Transcode disabled in user settings.',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             }
         }
 
@@ -910,15 +908,14 @@ final class PlayAction implements ApplicationActionInterface
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
+        } elseif ($cpaction && $media instanceof Song) {
+            $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
+            $filepointer = $transcoder['handle'] ?? null;
+            $transcode   = true;
         } else {
-            if ($cpaction && $media instanceof Song) {
-                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
-                $filepointer = $transcoder['handle'] ?? null;
-                $transcode   = true;
-            } else {
-                $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
-            }
+            $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
         }
+
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
             // Content-length guessing if required by the player.
@@ -1059,7 +1056,7 @@ final class PlayAction implements ApplicationActionInterface
             header('Accept-Ranges: bytes');
         }
 
-        if ($transcode && isset($transcoder)) {
+        if ($transcode && !empty($transcoder)) {
             $mime = ($type == 'video')
                 ? Video::type_to_mime($transcoder['format'] ?? '')
                 : Song::type_to_mime($transcoder['format'] ?? '');
@@ -1111,7 +1108,7 @@ final class PlayAction implements ApplicationActionInterface
             );
             // close any leftover handle and processes
             fclose($filepointer);
-            if ($transcode && isset($transcoder)) {
+            if ($transcode && !empty($transcoder)) {
                 Stream::kill_process($transcoder);
             }
 
@@ -1135,7 +1132,16 @@ final class PlayAction implements ApplicationActionInterface
                     }
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0 && ($transcode || $bytes_streamed < $stream_size)));
+            } while (
+                !feof($filepointer) &&
+                (
+                    connection_status() == 0 &&
+                    (
+                        $transcode ||
+                        $bytes_streamed < $stream_size
+                    )
+                )
+            );
         }
 
         if ($send_all_in_once && connection_status() == 0) {
@@ -1158,7 +1164,7 @@ final class PlayAction implements ApplicationActionInterface
 
         // close any leftover handle and processes
         fclose($filepointer);
-        if ($transcode && isset($transcoder)) {
+        if ($transcode && !empty($transcoder)) {
             Stream::kill_process($transcoder);
         }
 

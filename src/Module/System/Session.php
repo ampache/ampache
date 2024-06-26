@@ -133,17 +133,15 @@ final class Session implements SessionInterface
                 }
                 $this->userRepository->updateLastSeen((int) Core::get_global('user')?->getId());
             }
-        } else {
+        } elseif (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
             // If Auth, but no session is set
-            if (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                session_name($sessionName);
-                session_id(scrub_in((string) $_REQUEST['sid']));
-                session_start();
-                self::createGlobalUser(new User($_SESSION['userdata']['uid']));
-            } else {
-                $GLOBALS['user'] = null;
-            }
-        } // If NO_SESSION passed
+            session_name($sessionName);
+            session_id(scrub_in((string) $_REQUEST['sid']));
+            session_start();
+            self::createGlobalUser(new User($_SESSION['userdata']['uid']));
+        } else {
+            $GLOBALS['user'] = null;
+        }
 
         return true;
     }

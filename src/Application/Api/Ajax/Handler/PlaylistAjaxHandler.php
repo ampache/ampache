@@ -78,7 +78,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'append_item':
                 // Only song item are supported with playlists
-                if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
+                if (empty($_REQUEST['playlist_id'])) {
                     if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                         debug_event('playlist.ajax', 'Error:' . $user->username . ' does not have user access, unable to create playlist', 1);
                         break;

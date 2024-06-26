@@ -167,7 +167,12 @@ class Tmp_Playlist extends database_object
         $items = [];
         $count = 1;
         while ($results = Dba::fetch_assoc($db_results)) {
-            $items[] = ['object_type' => LibraryItemEnum::from($results['object_type']), 'object_id' => $results['object_id'], 'track_id' => $results['id'], 'track' => $count++];
+            $items[] = [
+                'object_type' => LibraryItemEnum::from($results['object_type']),
+                'object_id' => $results['object_id'],
+                'track_id' => $results['id'],
+                'track' => $count++
+            ];
         }
 
         return $items;

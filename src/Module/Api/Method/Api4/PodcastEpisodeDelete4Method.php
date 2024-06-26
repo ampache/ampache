@@ -65,13 +65,15 @@ final class PodcastEpisodeDelete4Method
         $episode   = new Podcast_Episode($object_id);
         if ($episode->isNew()) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+
+        if ($episode->remove()) {
+            Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
+            Catalog::count_table('podcast_episode');
         } else {
-            if ($episode->remove()) {
-                Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
-                Catalog::count_table('podcast_episode');
-            } else {
-                Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
-            }
+            Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
         }
 
         return true;

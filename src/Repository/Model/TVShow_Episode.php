@@ -235,7 +235,7 @@ class TVShow_Episode extends Video
     }
 
     /**
-     * @return array{object_type: LibraryItemEnum, object_id: int}
+     * @return array{object_type: LibraryItemEnum, object_id: int}|null
      */
     public function get_parent(): ?array
     {

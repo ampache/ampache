@@ -4062,12 +4062,12 @@ parameters:
 
 		-
 			message: "#^Elseif condition is always false\\.$#"
-			count: 1
+			count: 2
 			path: src/Module/Api/Upnp_Api.php
 
 		-
 			message: "#^If condition is always false\\.$#"
-			count: 5
+			count: 4
 			path: src/Module/Api/Upnp_Api.php
 
 		-
@@ -4856,11 +4856,6 @@ parameters:
 			path: src/Module/Application/Login/DefaultAction.php
 
 		-
-			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -4869,11 +4864,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
-
-		-
-			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
@@ -4909,11 +4899,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Test/ConfigAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Application/Upload/DefaultAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) expects int, string\\|false\\|null given\\.$#"
@@ -5517,11 +5502,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:parse\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 68$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -9743,11 +9723,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 1
-			path: src/Module/Util/Environment.php
-
-		-
-			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"
-			count: 2
 			path: src/Module/Util/Environment.php
 
 		-

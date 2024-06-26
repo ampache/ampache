@@ -247,11 +247,17 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $owner_id = $this->song->get_user_owner();
 
         return (
-            (($owner_id !== null && !empty($GLOBALS['user'])) && $owner_id == $GLOBALS['user']->id) ||
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
+            is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/') &&
+            (
+                (
+                    $owner_id !== null &&
+                    !empty($GLOBALS['user'])
+                ) &&
+                $owner_id == $GLOBALS['user']->id
+            ) ||
             $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
-        ) &&
-        $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
-        is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
+        );
     }
 
     public function getDisplayStatsUrl(): string

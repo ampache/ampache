@@ -28,7 +28,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -358,13 +357,11 @@ class Catalog_dropbox extends Catalog
                 } else {
                     debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
                 }
-            } else {
-                if (count($this->get_gather_types('video')) > 0) {
-                    if ($is_video_file && $this->insert_video($dropbox, $path)) {
-                        return true;
-                    } else {
-                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
-                    }
+            } elseif (count($this->get_gather_types('video')) > 0) {
+                if ($is_video_file && $this->insert_video($dropbox, $path)) {
+                    return true;
+                } else {
+                    debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
                 }
             }
         } else {

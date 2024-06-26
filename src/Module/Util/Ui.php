@@ -672,12 +672,10 @@ class Ui implements UiInterface
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $update_id . "\n";
             echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } elseif (!empty($field)) {
+            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
-            if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
-            } else {
-                echo "<br />" . $value . "<br /><br />\n";
-            }
+            echo "<br />" . $value . "<br /><br />\n";
         }
 
         ob_flush();
@@ -806,12 +804,10 @@ class Ui implements UiInterface
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
+            } elseif (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
+                echo "******";
             } else {
-                if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
-                    echo "******";
-                } else {
-                    echo $value;
-                }
+                echo $value;
             }
 
             return;

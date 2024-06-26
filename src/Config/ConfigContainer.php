@@ -115,7 +115,12 @@ final class ConfigContainer implements ConfigContainerInterface
     {
         $value = $this->configuration[$feature] ?? false;
 
-        return $value === 'true' || $value === true || $value === 1 || $value === '1';
+        return (
+            $value === 'true' ||
+            $value === true ||
+            $value === 1 ||
+            $value === '1'
+        );
     }
 
     public function getThemePath(): string
