@@ -4,9 +4,17 @@
 
 ### Added
 
+* ALL
+  * playlist_edit: separate error when the playlist doesn't exist
 * API6
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
   * Add `has_access` property to playlist responses. (Can edit the playlist if true)
+
+### Fixed
+
+* API6
+  * flag: id smartplaylists correctly
+  * rate: id smartplaylists correctly
 
 ## API 6.5.0
 

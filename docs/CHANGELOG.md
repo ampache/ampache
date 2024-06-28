@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Ampache 6.5.1
+
+### Added
+
+* Add maxlength to the user data fields on the registration and edit pages
+* Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
+
+### Changed
+
+* Split out API change documentation from CHANGELOG.md to API-CHANGELOG.md
+* Simplify and speed up playlist access checks by sending the user object
+
 ## Ampache 6.5.0
 
 This release is the final Ampache6 release with new features. Bug fixes and API extenstion only from now on!
