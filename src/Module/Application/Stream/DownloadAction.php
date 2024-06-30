@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -51,25 +52,20 @@ final class DownloadAction extends AbstractStreamAction
         $mediaIds = [];
 
         if (array_key_exists('song_id', $_REQUEST)) {
-            $mediaIds[] = array(
-                'object_type' => 'song',
-                'object_id' => scrub_in((string) $_REQUEST['song_id'])
-            );
+            $mediaIds[] = [
+                'object_type' => LibraryItemEnum::SONG,
+                'object_id' => (int) $_REQUEST['song_id']
+            ];
         } elseif (array_key_exists('video_id', $_REQUEST)) {
-            $mediaIds[] = array(
-                'object_type' => 'video',
-                'object_id' => scrub_in((string) $_REQUEST['video_id'])
-            );
+            $mediaIds[] = [
+                'object_type' => LibraryItemEnum::VIDEO,
+                'object_id' => (int) $_REQUEST['video_id']
+            ];
         } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
-            $mediaIds[] = array(
-                'object_type' => 'podcast_episode',
-                'object_id' => scrub_in((string) $_REQUEST['podcast_episode_id'])
-            );
-        } elseif (array_key_exists('share_id', $_REQUEST)) {
-            $mediaIds[] = array(
-                'object_type' => 'share',
-                'object_id' => scrub_in((string) $_REQUEST['share_id'])
-            );
+            $mediaIds[] = [
+                'object_type' => LibraryItemEnum::PODCAST_EPISODE,
+                'object_id' => (int) $_REQUEST['podcast_episode_id']
+            ];
         }
         // add the missing request parts
         if (array_key_exists('client', $_REQUEST)) {

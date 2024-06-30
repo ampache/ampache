@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration380007 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('upload_catalog_pattern', 'Rename uploaded file according to catalog pattern', '0', 100, 'boolean', 'system', 'upload');
-        $this->updatePreferences('catalog_check_duplicate', 'Check library item at import time and disable duplicates', '0', 100, 'boolean', 'system', 'catalog');
+        $this->updatePreferences('upload_catalog_pattern', 'Rename uploaded file according to catalog pattern', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'upload');
+        $this->updatePreferences('catalog_check_duplicate', 'Check library item at import time and disable duplicates', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'catalog');
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -26,18 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\UpdateInfoEnum;
 
 /**
  * Provides access to the `update_info` table
  */
-final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
+final readonly class UpdateInfoRepository implements UpdateInfoRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -45,11 +42,11 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
      *
      * Will return `null` if no item was found
      */
-    public function getValueByKey(string $key): ?string
+    public function getValueByKey(UpdateInfoEnum $key): ?string
     {
         $value = $this->connection->fetchOne(
             'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-            [$key]
+            [$key->value]
         );
 
         if ($value === false) {
@@ -62,17 +59,17 @@ final class UpdateInfoRepository implements UpdateInfoRepositoryInterface
     /**
      * Sets a value using the provided params
      */
-    public function setValue(string $key, string $value): void
+    public function setValue(UpdateInfoEnum $key, string $value): void
     {
         $result = $this->connection->query(
             'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
-            [$value, $key]
+            [$value, $key->value]
         );
 
         if ($result->rowCount() === 0) {
             $this->connection->query(
                 'INSERT INTO `update_info` (`key`, `value`) VALUES (?, ?)',
-                [$key, $value]
+                [$key->value, $value]
             );
         }
     }

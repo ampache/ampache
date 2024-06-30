@@ -30,6 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Shoutbox;
@@ -68,7 +69,7 @@ class DeleteActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -88,7 +89,7 @@ class DeleteActionTest extends MockeryTestCase
         static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -118,7 +119,7 @@ class DeleteActionTest extends MockeryTestCase
         $webPath = 'some-path';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 

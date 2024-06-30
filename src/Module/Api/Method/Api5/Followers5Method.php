@@ -57,7 +57,7 @@ final class Followers5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -71,7 +71,7 @@ final class Followers5Method
             return false;
         }
 
-        $results = static::getUserFollowerRepository()->getFollowers($leader->getId());
+        $results = static::getUserFollowerRepository()->getFollowers($leader);
         if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 

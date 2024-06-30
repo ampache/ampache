@@ -10,9 +10,11 @@
 
 Ampache6 is [here!](https://github.com/ampache/ampache/releases/)
 
-**warning** The Ampache develop branch will be converted to Ampache7 on the 1st of July! Make sure you're ready to roll before then!
+Ampache7 development has begun on the patch7 branch!
 
-Information and changes for this major release are being recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
+This branch will become release7 and replace the develop and master branches.
+
+Information and changes for this major release are being recorded in the wiki [here.](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
 
 Ampache7 will continue to use **API6** and will not make any breaking changes to that [API](https://ampache.org/api/).
 

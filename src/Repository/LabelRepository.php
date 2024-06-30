@@ -30,14 +30,10 @@ use Ampache\Repository\Model\Label;
 use DateTimeInterface;
 use PDO;
 
-final class LabelRepository implements LabelRepositoryInterface
+final readonly class LabelRepository implements LabelRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     public function findById(int $labelId): ?Label

@@ -87,7 +87,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
     echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
 
     $filters = Catalog::get_catalog_filters();
-    $options = array();
+    $options = [];
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == 0) {

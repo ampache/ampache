@@ -50,10 +50,10 @@ final class SearchSongs4Method
      */
     public static function search_songs(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $data                    = array();
+        $data                    = [];
         $data['type']            = 'song';
         $data['rule_1']          = 'anywhere';
         $data['rule_1_input']    = $input['filter'];

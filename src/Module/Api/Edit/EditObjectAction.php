@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
@@ -62,7 +64,7 @@ final class EditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
@@ -92,7 +94,11 @@ final class EditObjectAction extends AbstractEditAction
         $className = ObjectTypeToClassNameMapper::map((string)$object_type);
         /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
-        if ($libitem->get_user_owner() === $userId && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if (
+            $libitem->get_user_owner() === $userId &&
+            AmpConfig::get('upload_allow_edit') &&
+            !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
@@ -174,7 +180,7 @@ final class EditObjectAction extends AbstractEditAction
     private function clean_to_existing($labels)
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
-        $ret   = array();
+        $ret   = [];
         if ($array !== false) {
             foreach ($array as $label) {
                 $label = trim((string)$label);

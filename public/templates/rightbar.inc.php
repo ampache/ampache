@@ -26,32 +26,32 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Broadcast;
+use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Video;
 
 $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')->id : -1; ?>
-<script>
-    function ToggleRightbarVisibility()
-    {
-        if ($("#rightbar").is(":visible")) {
-            $("#rightbar").slideUp();
-        } else {
-            $("#rightbar").slideDown();
-        }
-    }
-</script>
 <ul id="rb_action">
     <li>
-        <?php echo Ajax::button('?page=stream&action=basket', 'all', T_('Play'), 'rightbar_play'); ?>
+        <?php echo Ajax::button('?page=stream&action=basket', 'play_circle', T_('Play'), 'rightbar_play'); ?>
     </li>
-<?php if (Access::check('interface', 25)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li id="pl_add">
-            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
             <ul id="pl_action_additems" class="submenu">
                 <li>
                     <?php echo Ajax::text('?page=playlist&action=append_item', T_('Add to New Playlist'), 'rb_create_playlist'); ?>
@@ -70,18 +70,18 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
 <?php }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_playlist')) { ?>
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')->playlist->id; ?>">
-            <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
+            <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
         </a>
     </li>
 <?php } ?>
     <li>
-    <?php echo Ajax::button('?action=basket&type=clear_all', 'delete', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
+    <?php echo Ajax::button('?action=basket&type=clear_all', 'close', T_('Clear Playlist'), 'rb_clear_playlist'); ?>
     </li>
     <li id="rb_add">
-      <?php echo Ui::get_icon('add', T_('Add dynamic items')); ?>
+      <?php echo Ui::get_material_symbol('add_circle', T_('Add dynamic items')); ?>
         <ul id="rb_action_additems" class="submenu">
             <li>
                 <?php echo Ajax::text('?page=random&action=song', T_('Random song'), 'rb_add_random_song'); ?>
@@ -106,42 +106,33 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
 
-<?php $objects = array();
+<?php $objects = [];
 // FIXME :: this is kludgy
 if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
-} ?>
-    <script>
-        <?php if (count($objects) > 0 || (AmpConfig::get('play_type') == 'localplay')) { ?>
-            $("#content").removeClass("content-right-wild", 500);
-            $("#footer").removeClass("footer-wild", 500);
-            $("#rightbar").removeClass("hidden"); 
-            $("#rightbar").show("slow");
-        <?php } else { ?>
-            $("#content").addClass("content-right-wild", 500);
-            $("#footer").addClass("footer-wild", 500);
-            $("#rightbar").hide("slow");
-        <?php } ?>
-    </script>
-<?php
+}
 // Limit the number of objects we show here
 if (count($objects) > 100) {
     $truncated = (count($objects) - 100);
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video');
+global $dic;
+$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];
-    $type = array_shift($object_data);
-    if (in_array($type, $normal_array)) {
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var Ampache\Repository\Model\playable_item $object */
-        $object = new $className(array_shift($object_data)); ?>
+
+    $object = $libraryItemLoader->load(
+        $object_data['object_type'],
+        $object_data['object_id'],
+        [Broadcast::class, Democratic::class, Live_Stream::class, Podcast_Episode::class, Song::class, Song_Preview::class, Video::class,]
+    );
+    if ($object !== null) {
+        ?>
     <li>
       <?php echo $object->get_f_link();
-        echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'delete', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
+        echo Ajax::button('?action=current_playlist&type=delete&id=' . $uid, 'close', T_('Delete'), 'rightbar_delete_' . $uid, '', 'delitem'); ?>
     </li>
 <?php
     }
@@ -161,3 +152,12 @@ if (isset($truncated)) { ?>
 if (count($objects)) {
     Stream::run_playlist_method();
 } ?>
+
+<script>
+    $(document).ready(function() {
+        // necessary evils for time being
+        jsAmpConfigPlayType = "<?php echo AmpConfig::get('play_type'); ?>";
+        jsBasketCount = <?php echo (Core::get_global('user') instanceof User && Core::get_global('user')->playlist) ? count(Core::get_global('user')->playlist->get_items()) : 0; ?>;
+        RightbarInit();
+    });
+</script>

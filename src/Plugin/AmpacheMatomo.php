@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,10 +59,10 @@ class AmpacheMatomo implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
+        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'matomo')) {
             return false;
         }
-        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -105,7 +106,7 @@ class AmpacheMatomo implements AmpachePluginInterface
         echo "var u='" . scrub_out($this->matomo_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'matomo.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if (Core::get_global('user')->id > 0) {
+        if (Core::get_global('user')?->getId() > 0) {
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
@@ -127,7 +128,7 @@ class AmpacheMatomo implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['matomo_site_id'])) || !strlen(trim($data['matomo_url']))) {
-            $data                   = array();
+            $data                   = [];
             $data['matomo_site_id'] = Preference::get_by_user(-1, 'matomo_site_id');
             $data['matomo_url']     = Preference::get_by_user(-1, 'matomo_url');
         }

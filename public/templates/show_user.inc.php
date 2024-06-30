@@ -24,25 +24,29 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\User\Activity\UserActivityRendererInterface;
+use Ampache\Module\User\Following\UserFollowStateRendererInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Browse;
-use Ampache\Module\User\Activity\UserActivityRendererInterface;
-use Ampache\Module\User\Following\UserFollowStateRendererInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Ui;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
+/** @var LibraryItemLoaderInterface $libaryItemLoader */
 /** @var User $client */
 /** @var int[] $following */
 /** @var int[] $followers */
@@ -63,11 +67,11 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 }
     if (AmpConfig::get('sociable')) {
         echo $userFollowStateRenderer->render(
-            $client->getId(),
-            $current_user->getId()
+            $client,
+            $current_user
         );
 
-        $plugins = Plugin::get_plugins('display_user_field'); ?>
+        $plugins = Plugin::get_plugins(PluginTypeEnum::USER_FIELD_WIDGET); ?>
     <ul id="plugins_user_field">
 <?php foreach ($plugins as $plugin_name) {
     $plugin = new Plugin($plugin_name);
@@ -84,34 +88,34 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
         <?php echo $client->get_fullname(); ?>
-        <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
-                <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
+                <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
-        <?php if (Access::check('interface', 100)) { ?>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('preferences', T_('Preferences')); ?></a>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
-            <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
 
         <?php } ?>
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
-        <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_icon('play_preview', T_('Now Playing')); ?></a>
+        <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>
 <?php } ?>
 <?php if (AmpConfig::get('show_wrapped')) { ?>
-        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_icon('info', T_('Wrapped')); ?></a>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('info', T_('Wrapped')); ?></a>
 <?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>
     <dd><?php echo $create_date; ?></dd>
     <dt><?php echo T_('Last Seen'); ?></dt>
     <dd><?php echo $last_seen; ?></dd>
-    <?php if (Access::check('interface', 50)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
     <dd><?php echo $client->f_usage; ?>
         <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-            <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+            <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
         <?php } ?>
     </dd>
     <?php } ?>
@@ -154,11 +158,11 @@ if ($current_list) {
                     <tr>
                         <td>
         <?php foreach ($object_ids as $object_data) {
-            $type      = array_shift($object_data);
-            $className = ObjectTypeToClassNameMapper::map($type);
-            /** @var Ampache\Repository\Model\playable_item $object */
-            $object = new $className(array_shift($object_data));
-            echo $object->get_f_link(); ?>
+            $object = $libaryItemLoader->load(
+                $object_data['object_type'],
+                $object_data['object_id'],
+            );
+            echo $object?->get_f_link(); ?>
             <br />
             <?php
         } ?>
@@ -171,14 +175,9 @@ if ($current_list) {
 $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
-if (AmpConfig::get('home_recently_played_all')) {
-    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
-    require_once Ui::find_template('show_recently_played_all.inc.php');
-} else {
-    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
-    Song::build_cache(array_keys($data));
-    require Ui::find_template('show_recently_played.inc.php');
-} ?>
+$user       = $client;
+$data       = Stats::get_recently_played($client->getId(), 'stream', null, true);
+require_once Ui::find_template('show_recently_played_all.inc.php');  ?>
         </div>
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';

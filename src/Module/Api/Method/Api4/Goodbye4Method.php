@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Module\Api\Api4;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
@@ -47,15 +48,15 @@ final class Goodbye4Method
      */
     public static function goodbye(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('auth'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['auth'], self::ACTION)) {
             return false;
         }
         debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
 
         // Check and see if we should destroy the api session (done if valid session is passed)
-        if (Session::exists('api', $input['auth'])) {
+        if (Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
-            Dba::write($sql, array($input['auth']));
+            Dba::write($sql, [$input['auth']]);
 
             ob_end_clean();
             Api4::message('success', 'goodbye: ' . $input['auth'], null, $input['api_format']);

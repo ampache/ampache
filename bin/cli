@@ -66,6 +66,7 @@ $app->add($dic->get(Cli\SortFilesCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFolderCommand::class));
+$app->add($dic->get(Cli\UpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\UpdateDbCommand::class));
 
 $logo = <<<LOGO

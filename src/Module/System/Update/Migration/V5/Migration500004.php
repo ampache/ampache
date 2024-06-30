@@ -44,7 +44,12 @@ final class Migration500004 extends AbstractMigration
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
-        $tables    = ['song', 'album', 'video', 'podcast_episode'];
+        $tables    = [
+            'song',
+            'album',
+            'video',
+            'podcast_episode'
+        ];
         $catalogs  = Catalog::get_catalogs();
 
         // Make sure your files have a catalog
@@ -56,7 +61,7 @@ final class Migration500004 extends AbstractMigration
                     $sql = ($type === 'album')
                         ? "UPDATE `album` LEFT JOIN `song` ON `song`.`album` = `album`.`id` SET `album`.`catalog` = ? WHERE `song`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);"
                         : "UPDATE `$type` SET `catalog` = ? WHERE `$type`.`file` LIKE '$rootdir%' AND (`$type`.`catalog` IS NULL OR `$type`.`catalog` != ?);";
-                    Dba::write($sql, array($catalog->id, $catalog->id));
+                    Dba::write($sql, [$catalog->id, $catalog->id]);
                 }
             }
         }

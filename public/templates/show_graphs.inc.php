@@ -72,12 +72,12 @@ if (AmpConfig::get('geolocation')) { ?>
         <dd>
             <select name="zoom">
             <?php
-            $date_formats = array(
+            $date_formats = [
                 'year' => T_('Year'),
                 'month' => T_('Month'),
                 'day' => T_('Day'),
                 'hour' => T_('Hour')
-            );
+            ];
 foreach ($date_formats as $dtype => $dname) {
     echo "<option value='" . $dtype . "' ";
     if ($dtype == $zoom) {

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
@@ -56,7 +57,7 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -110,7 +111,7 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['googleanalytics_tracking_id']))) {
-            $data                                = array();
+            $data                                = [];
             $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
         }
 

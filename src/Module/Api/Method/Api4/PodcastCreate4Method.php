@@ -29,6 +29,8 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\Catalog;
@@ -57,10 +59,10 @@ final class PodcastCreate4Method
 
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -87,10 +89,10 @@ final class PodcastCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::podcasts(array($podcast->getId()), $user);
+                echo Json4_Data::podcasts([$podcast->getId()], $user);
                 break;
             default:
-                echo Xml4_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml4_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

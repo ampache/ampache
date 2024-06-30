@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -86,7 +87,7 @@ final class AddUserAction extends AbstractUserAction
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website              = scrub_in(htmlspecialchars($body['website'] ?? '', ENT_NOQUOTES));
-        $access               = (int) scrub_in(htmlspecialchars($body['access'] ?? '', ENT_NOQUOTES));
+        $access               = AccessLevelEnum::tryFrom((int) ($body['access'] ?? 0)) ?? AccessLevelEnum::USER;
         $catalog_filter_group = (int) scrub_in(htmlspecialchars($body['catalog_filter_group'] ?? '', ENT_NOQUOTES));
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
@@ -131,7 +132,7 @@ final class AddUserAction extends AbstractUserAction
         $user->upload_avatar();
 
         $useraccess = '';
-        switch ($access) {
+        switch ($access->value) {
             case 5:
                 $useraccess = T_('Guest');
                 break;

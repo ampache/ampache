@@ -54,7 +54,7 @@ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box 
         <tr>
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
-                        <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
+                        <?php $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
 <?php } ?>

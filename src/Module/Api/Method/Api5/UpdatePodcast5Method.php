@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -49,11 +51,11 @@ final class UpdatePodcast5Method
      */
     public static function update_podcast(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
-        if (!Api5::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -61,7 +63,7 @@ final class UpdatePodcast5Method
         if ($podcast !== null) {
             if (static::getPodcastSyncer()->sync($podcast, true)) {
                 Api5::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api5::error(sprintf(T_('Bad Request: %s'), $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);

@@ -84,13 +84,13 @@ final class ShareAction implements ApplicationActionInterface
         printf(
             $text,
             $this->configContainer->getWebPath(),
-            Ui::get_icon('clean', T_('Clean')),
+            Ui::get_material_symbol('mop', T_('Clean')),
             T_('Clean Expired Shared Objects')
         );
         $user       = Core::get_global('user');
         $object_ids = (!empty($user))
             ? $this->shareRepository->getIdsByUser($user)
-            : array();
+            : [];
         if (!empty($object_ids)) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');

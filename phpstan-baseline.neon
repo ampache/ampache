@@ -1,9 +1,34 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#1 \\$artist_id of static method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:get_artists_like\\(\\) expects int, string given\\.$#"
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 2
+			path: public/templates/show_html5_player.inc.php
+
+		-
+			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Installation\\\\DefaultAction\\:\\:\\$installationHelper\\.$#"
+			count: 4
+			path: public/templates/show_install_config.inc.php
+
+		-
+			message: "#^Variable \\$is_100 might not be defined\\.$#"
 			count: 1
-			path: src/Application/Api/Ajax/Handler/IndexAjaxHandler.php
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Variable \\$is_25 might not be defined\\.$#"
+			count: 1
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Variable \\$is_5 might not be defined\\.$#"
+			count: 1
+			path: public/templates/show_preference_admin.inc.php
+
+		-
+			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Register\\\\AddUserAction\\:\\:\\$ui\\.$#"
+			count: 1
+			path: public/templates/show_registration_confirmation.inc.php
 
 		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
@@ -422,11 +447,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$message of method Psr\\\\Log\\\\LoggerInterface\\:\\:warning\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/AbstractEditAction.php
 
@@ -971,11 +991,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1072,11 +1087,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -4052,12 +4062,12 @@ parameters:
 
 		-
 			message: "#^Elseif condition is always false\\.$#"
-			count: 1
+			count: 2
 			path: src/Module/Api/Upnp_Api.php
 
 		-
 			message: "#^If condition is always false\\.$#"
-			count: 5
+			count: 4
 			path: src/Module/Api/Upnp_Api.php
 
 		-
@@ -4701,11 +4711,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -4721,22 +4726,12 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:rss_feed\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -4831,19 +4826,9 @@ parameters:
 			path: src/Module/Application/Batch/DefaultAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Batch\\\\DefaultAction\\:\\:getMediaFiles\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
-			path: src/Module/Application/Image/ShowAction.php
+			path: src/Module/Application/Image/AbstractShowAction.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -4871,11 +4856,6 @@ parameters:
 			path: src/Module/Application/Login/DefaultAction.php
 
 		-
-			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/Play2Action.php
-
-		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
@@ -4886,11 +4866,6 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Cannot access offset 'stderr' on array\\|false\\.$#"
-			count: 2
-			path: src/Module/Application/Playback/PlayAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
@@ -4899,11 +4874,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
-
-		-
-			message: "#^Cannot call method add_object\\(\\) on Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\|null\\.$#"
-			count: 1
-			path: src/Module/Application/Random/GetAdvancedAction.php
 
 		-
 			message: "#^Variable \\$captcha in isset\\(\\) always exists and is not nullable\\.$#"
@@ -4921,34 +4891,14 @@ parameters:
 			path: src/Module/Application/StatisticGraph/ShowAction.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$mediaIds with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/AbstractStreamAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/AbstractStreamAction.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:get_medias\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/PlayItemAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_id of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Application/Stream/PlayItemAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Test/ConfigAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Application/Upload/DefaultAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) expects int, string\\|false\\|null given\\.$#"
@@ -5266,61 +5216,6 @@ parameters:
 			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
 
 		-
-			message: "#^Access to an undefined property Auth_OpenID_ConsumerResponse\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Cannot call method contents\\(\\) on Auth_OpenID_SRegResponse\\|null\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 2
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\OpenIdAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\OpenIdAuthenticator\\:\\:postAuth\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Offset 'username' does not exist on array\\{type\\: 'openid', website\\: mixed, email\\?\\: mixed, username\\?\\: mixed, name\\?\\: mixed, success\\?\\: true\\}\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Offset 'username' does not exist on array\\{type\\: 'openid', website\\: mixed, email\\?\\: mixed, username\\?\\: mixed, name\\?\\: mixed\\}\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Parameter \\#1 \\$required of static method Auth_OpenID_SRegRequest\\:\\:build\\(\\) expects null, array\\<int, string\\> given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Parameter \\#1 \\$success_response of static method Auth_OpenID_SRegResponse\\:\\:fromSuccessResponse\\(\\) expects Auth_OpenID_SuccessResponse, Auth_OpenID_ConsumerResponse given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
-			message: "#^Parameter \\#2 \\$optional of static method Auth_OpenID_SRegRequest\\:\\:build\\(\\) expects null, array\\<int, string\\> given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/OpenIdAuthenticator.php
-
-		-
 			message: "#^Function pam_auth invoked with 2 parameters, 3\\-5 required\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
@@ -5414,11 +5309,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Openid\\:\\:get_policies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Authentication/Openid.php
 
 		-
 			message: "#^Parameter \\#1 \\$inAddrStart of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:exists\\(\\) expects string, string\\|false given\\.$#"
@@ -5612,11 +5502,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:parse\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 68$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -5936,32 +5821,12 @@ parameters:
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_check_chunk\\(\\) has parameter \\$media_type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_check_chunk\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_clean_chunk\\(\\) has parameter \\$chunk with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_clean_chunk\\(\\) has parameter \\$chunk_size with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_clean_chunk\\(\\) has parameter \\$media_type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_local.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:_clean_chunk\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
 
@@ -6114,16 +5979,6 @@ parameters:
 			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Module/Catalog/PlaylistImporter.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Cannot call method getStatusCode\\(\\) on Psr\\\\Http\\\\Message\\\\ResponseInterface\\|null\\.$#"
-			count: 2
-			path: src/Module/Catalog/SeafileAdapter.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
@@ -6604,11 +6459,6 @@ parameters:
 			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/UpdateDbCommand.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -8621,22 +8471,12 @@ parameters:
 			path: src/Module/Statistics/Stats.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_user\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -9883,11 +9723,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
 			count: 1
-			path: src/Module/Util/Environment.php
-
-		-
-			message: "#^Parameter \\#1 \\$val of function return_bytes expects string, string\\|false given\\.$#"
-			count: 2
 			path: src/Module/Util/Environment.php
 
 		-
@@ -11511,26 +11346,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\ZipHandler\\:\\:zip\\(\\) has parameter \\$media_files with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function substr_count expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\ZipHandlerInterface\\:\\:zip\\(\\) has parameter \\$media_files with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/ZipHandlerInterface.php
-
-		-
 			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$catalog\\.$#"
 			count: 1
 			path: src/Module/WebDav/WebDavFile.php
@@ -12267,16 +12082,6 @@ parameters:
 
 		-
 			message: "#^Cannot access an offset on array\\<int\\<0, max\\>, int\\>\\|int\\.$#"
-			count: 2
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getAlbumByArtist\\(\\) should return array\\<int\\> but returns array\\<int\\|string, array\\<int, int\\>\\|int\\>\\.$#"
-			count: 1
-			path: src/Repository/AlbumRepository.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\AlbumRepository\\:\\:getByArtist\\(\\) should return array\\<int\\> but returns array\\<int\\|string, array\\<int, int\\>\\|int\\>\\.$#"
 			count: 1
 			path: src/Repository/AlbumRepository.php
 
@@ -12297,11 +12102,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Album.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Album\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Album.php
 
@@ -12337,11 +12137,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
 
@@ -12561,11 +12356,6 @@ parameters:
 			path: src/Repository/Model/Artist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:remove_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -12617,11 +12407,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Broadcast.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Broadcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Broadcast.php
 
@@ -12816,11 +12601,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_media_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -12862,16 +12642,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:update_video_from_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$update has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -12937,11 +12707,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Clip.php
 
@@ -13016,11 +12781,6 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:remove_vote\\(\\) has parameter \\$row_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -13061,6 +12821,11 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
+			message: "#^Return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:get_items\\(\\) should be compatible with return type \\(array\\<int, array\\{object_type\\: Ampache\\\\Repository\\\\Model\\\\LibraryItemEnum, object_id\\: int, track_id\\: int, track\\: int\\}\\>\\) of method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\)$#"
+			count: 1
+			path: src/Repository/Model/Democratic.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -13086,11 +12851,6 @@ parameters:
 			path: src/Repository/Model/Label.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
@@ -13108,11 +12868,6 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
 			path: src/Repository/Model/Label.php
 
 		-
@@ -13137,11 +12892,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Live_Stream.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Live_Stream\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Live_Stream.php
 
@@ -13256,22 +13006,7 @@ parameters:
 			path: src/Repository/Model/Personal_Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -13326,11 +13061,6 @@ parameters:
 			path: src/Repository/Model/Plugin.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:get_plugins\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:is_installed\\(\\) has parameter \\$plugin_name with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
@@ -13356,11 +13086,6 @@ parameters:
 			path: src/Repository/Model/Podcast.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast.php
-
-		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13381,11 +13106,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:get_transcode_settings\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
@@ -13402,16 +13122,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Repository/Model/Podcast_Episode.php
 
@@ -13576,11 +13286,6 @@ parameters:
 			path: src/Repository/Model/Rating.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Rating.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:_add_type_select\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
@@ -13597,12 +13302,7 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
+			count: 2
 			path: src/Repository/Model/Search.php
 
 		-
@@ -13711,11 +13411,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Binary operation \"\\.\" between 'Running custom play…' and array\\<int, string\\>\\|string results in an error\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -13781,11 +13476,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:get_parent_array\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -13831,11 +13521,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function stripslashes expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|string given\\.$#"
 			count: 2
 			path: src/Repository/Model/Song.php
@@ -13872,11 +13557,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -13981,11 +13661,6 @@ parameters:
 			path: src/Repository/Model/TVShow_Episode.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Episode.php
@@ -14057,11 +13732,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TVShow_Season.php
 
@@ -14171,11 +13841,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_tags\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -14187,11 +13852,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_split expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
 
@@ -14212,11 +13872,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:delete_track\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
 
@@ -14257,11 +13912,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/TvShow.php
 
@@ -14316,17 +13966,17 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getRssToken\\(\\) should return string but returns string\\|null\\.$#"
+			count: 1
+			path: src/Repository/Model/User.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_avatar\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_catalogs\\(\\) has parameter \\$filter with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_favorites\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User.php
 
@@ -14421,11 +14071,6 @@ parameters:
 			path: src/Repository/Model/Userflag.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Userflag\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Userflag.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
@@ -14462,11 +14107,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
@@ -14538,21 +14178,6 @@ parameters:
 		-
 			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 3
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function rawurlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function urlencode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Parameter \\#4 \\$level of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:_update_item\\(\\) expects int, string given\\.$#"
-			count: 1
 			path: src/Repository/Model/Video.php
 
 		-
@@ -14641,11 +14266,6 @@ parameters:
 			path: src/Repository/Model/playable_item.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playable_item.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
@@ -14672,10 +14292,5 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_parent\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php

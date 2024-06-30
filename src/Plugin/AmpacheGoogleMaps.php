@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,7 +59,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -92,7 +93,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $name = "";
         try {
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = Requests::get($url, [], Core::requests_options());
 
             $place = json_decode($request->body, true);
             if (count($place['results']) > 0) {
@@ -168,7 +169,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['gmaps_api_key']))) {
-            $data                  = array();
+            $data                  = [];
             $data['gmaps_api_key'] = Preference::get_by_user(-1, 'gmaps_api_key');
         }
 

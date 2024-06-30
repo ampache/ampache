@@ -26,13 +26,13 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Metadata\MetadataManagerInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-
-/** @var Song $libitem */
 
 global $dic;
 $metadataManager = $dic->get(MetadataManagerInterface::class);
@@ -47,7 +47,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface', 75)) { ?>
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
                     <td>
@@ -60,7 +60,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                     <?php if (count($libitem->artists) > 1) { ?>
                         <tr>
                             <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                            <td><?php echo Artist::get_display(array_diff($libitem->artists, array($libitem->artist))); ?></td>
+                            <td><?php echo Artist::get_display(array_diff($libitem->artists, [$libitem->artist])); ?></td>
                         </tr>
                     <?php } ?>
                 <tr>
@@ -81,7 +81,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
                     <?php
-                        if (Access::check('interface', 50)) { ?>
+                        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                             <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                         <?php
                         } else {

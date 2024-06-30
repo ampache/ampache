@@ -24,15 +24,18 @@
 namespace Ampache\Module\Playback\Localplay\HttpQ;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use PDOStatement;
 
 /**
@@ -89,13 +92,13 @@ class AmpacheHttpq extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `localplay_httpq` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, 25, 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq');
 
         return true;
     }
@@ -124,11 +127,11 @@ class AmpacheHttpq extends localplay_controller
     public function add_instance($data)
     {
         $sql     = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
+        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
@@ -155,7 +158,7 @@ class AmpacheHttpq extends localplay_controller
         $sql = "SELECT * FROM `localplay_httpq` ORDER BY `name`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -190,11 +193,11 @@ class AmpacheHttpq extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = array();
-        $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields             = [];
+        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -209,7 +212,7 @@ class AmpacheHttpq extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -222,7 +225,7 @@ class AmpacheHttpq extends localplay_controller
     public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (empty($user)) {
             return false;
         }
         Preference::update('httpq_active', $user->id, $uid);
@@ -444,14 +447,14 @@ class AmpacheHttpq extends localplay_controller
         $list = $this->_httpq->get_tracks();
 
         if (!$list) {
-            return array();
+            return [];
         }
 
         $songs   = explode("::", $list);
-        $results = array();
+        $results = [];
 
         foreach ($songs as $key => $entry) {
-            $data = array();
+            $data = [];
 
             /* Required Elements */
             $data['id']  = $key;
@@ -477,27 +480,34 @@ class AmpacheHttpq extends localplay_controller
                     break;
                 default:
                     // If we don't know it, look up by filename
-                    $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $filename          = Dba::escape($entry['file']);
+                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $libraryItemLoader = $this->getLibraryItemLoader();
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media     = new $className($row['id']);
-                        $media->format();
-                        switch ($row['type']) {
-                            case 'song':
-                                /** @var Song $media */
-                                $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
-                                $data['link'] = $media->get_f_link();
-                                break;
-                            case 'live_stream':
-                                /** @var Live_Stream $media */
-                                $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $site_url";
-                                $data['link'] = $media->site_url;
-                                break;
-                        } // end switch on type
+                        $media = $libraryItemLoader->load(
+                            LibraryItemEnum::from($row['type']),
+                            $row['id'],
+                            [Song::class, Live_Stream::class]
+                        );
+
+                        if ($media !== null) {
+                            $media->format();
+                            switch ($row['type']) {
+                                case 'song':
+                                    /** @var Song $media */
+                                    $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                    $data['link'] = $media->get_f_link();
+                                    break;
+                                case 'live_stream':
+                                    /** @var Live_Stream $media */
+                                    $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                    $data['name'] = "$media->name $site_url";
+                                    $data['link'] = $media->site_url;
+                                    break;
+                            } // end switch on type
+                        }
                     } else {
                         $data['name'] = basename($data['raw']);
                         $data['link'] = basename($data['raw']);
@@ -521,7 +531,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function status(): array
     {
-        $array = array();
+        $array = [];
         /* Construct the Array */
         $array['state']  = $this->_httpq->state();
         $array['volume'] = $this->_httpq->get_volume();
@@ -560,5 +570,15 @@ class AmpacheHttpq extends localplay_controller
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
         return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
     }
 }

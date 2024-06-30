@@ -34,9 +34,9 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '6.5.0'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '71';
-    private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
+    private const VERSION        = '7.0.0'; // AMPACHE_VERSION
+    private const CONFIG_VERSION = '73';
+    private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -121,7 +121,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['date_timezone'] = date_default_timezone_get();
         }
         if (!empty($results['date_timezone'])) {
-            $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+            $listIdentifiers = DateTimeZone::listIdentifiers() ?? [];
             if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }

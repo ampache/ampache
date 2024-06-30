@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -34,14 +34,10 @@ use PDO;
  *
  * Tables: `image`
  */
-final class ImageRepository implements ImageRepositoryInterface
+final readonly class ImageRepository implements ImageRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**

@@ -133,7 +133,7 @@ class Catalog_Seafile extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `" . self::$table_name . "` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE $collation NOT NULL, `api_key` VARCHAR(100) COLLATE $collation NOT NULL, `library_name` VARCHAR(255) COLLATE $collation NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -149,17 +149,17 @@ class Catalog_Seafile extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['server_uri'] = array(
+        $fields['server_uri'] = [
             'description' => T_('Server URI'),
             'type' => 'text',
             'value' => 'https://seafile.example.org/'
-        );
-        $fields['library_name']   = array('description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music');
-        $fields['api_call_delay'] = array('description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250');
-        $fields['username']       = array('description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => '');
-        $fields['password']       = array('description' => T_('Seafile Password'), 'type' => 'password', 'value' => '');
+        ];
+        $fields['library_name']   = ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'];
+        $fields['api_call_delay'] = ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'];
+        $fields['username']       = ['description' => T_('Seafile Username/Email'), 'type' => 'text', 'value' => ''];
+        $fields['password']       = ['description' => T_('Seafile Password'), 'type' => 'password', 'value' => ''];
 
         return $fields;
     }
@@ -218,7 +218,7 @@ class Catalog_Seafile extends Catalog
         try {
             $api_key = SeafileAdapter::request_api_key($server_uri, $username, $password);
             $sql     = "INSERT INTO `catalog_seafile` (`server_uri`, `api_key`, `library_name`, `api_call_delay`, `catalog_id`) VALUES (?, ?, ?, ?, ?)";
-            Dba::write($sql, array($server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id));
+            Dba::write($sql, [$server_uri, $api_key, $library_name, (int)($api_call_delay), $catalog_id]);
             debug_event('seafile_catalog', 'Retrieved API token for user ' . $username . '.', 1);
 
             return true;
@@ -301,6 +301,7 @@ class Catalog_Seafile extends Catalog
                     }
                 } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
                     //TODO $this->insert_video();
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, video is unsupported", 5);
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
@@ -452,7 +453,7 @@ class Catalog_Seafile extends Catalog
         $results = 0;
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file`, `title` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('seafile_catalog', 'Verify starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $fileinfo = $this->seafile->from_virtual_path($row['file']);
@@ -464,7 +465,7 @@ class Catalog_Seafile extends Catalog
                 if ($metadata !== null) {
                     debug_event('seafile_catalog', 'Verify updating song', 5);
                     $song = new Song($row['id']);
-                    $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : array();
+                    $info = ($song->id) ? self::update_song_from_tags($metadata, $song) : [];
                     if ($info['change']) {
                         Ui::update_text('', sprintf(T_('Updated song: "%s"'), $row['title']));
                         $results++;
@@ -475,7 +476,7 @@ class Catalog_Seafile extends Catalog
                     debug_event('seafile_catalog', 'Verify removing song', 5);
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $row['title']));
                     //$dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 }
             }
 
@@ -510,7 +511,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -540,7 +541,7 @@ class Catalog_Seafile extends Catalog
 
         if ($this->seafile->prepare()) {
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 debug_event('seafile_catalog', 'Clean starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
                 $file = $this->seafile->from_virtual_path($row['file']);
@@ -571,7 +572,7 @@ class Catalog_Seafile extends Catalog
                     Ui::update_text('', sprintf(T_('Removing song: "%s"'), $file['filename']));
                     debug_event('seafile_catalog', 'Clean removing song', 5);
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 }
             }
 
@@ -586,7 +587,7 @@ class Catalog_Seafile extends Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -618,7 +619,7 @@ class Catalog_Seafile extends Catalog
     public function check_remote_song($file)
     {
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, array($file));
+        $db_results = Dba::read($sql, [$file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return $results['id'];

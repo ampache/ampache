@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Module\Util\UiInterface;
@@ -99,7 +100,7 @@ class ConfirmDeleteActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -119,7 +120,7 @@ class ConfirmDeleteActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -140,7 +141,7 @@ class ConfirmDeleteActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->podcastRepository->expects(static::once())
@@ -171,7 +172,7 @@ class ConfirmDeleteActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->request->expects(static::once())

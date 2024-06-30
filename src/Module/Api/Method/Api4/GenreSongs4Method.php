@@ -50,7 +50,7 @@ final class GenreSongs4Method
      */
     public static function genre_songs(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $results = Tag::get_tag_objects('song', (int)($input['filter'] ?? 0));

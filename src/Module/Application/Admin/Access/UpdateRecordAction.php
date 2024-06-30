@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -72,7 +73,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             !$this->requestParser->verifyForm('edit_acl')
         ) {
             throw new AccessDeniedException();
@@ -89,8 +90,8 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 $data['end'] ?? '',
                 $data['name'] ?? '',
                 (int)($data['user'] ?? -1),
-                (int)($data['level'] ?? 0),
-                $data['type'] ?? ''
+                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                AccessTypeEnum::from($data['type'] ?? 'stream')
             );
         } catch (InvalidIpRangeException $e) {
             AmpError::add('start', T_('IP Address version mismatch'));

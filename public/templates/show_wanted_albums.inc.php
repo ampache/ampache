@@ -28,12 +28,11 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\WantedRepositoryInterface;
 
-/** @var Browse $browse */
-/** @var list<int> $object_ids */
-
 global $dic;
 $wantedRepository = $dic->get(WantedRepositoryInterface::class);
 
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="wanted">
     <thead>

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration370020 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('browser_notify', 'WebPlayer browser notifications', '1', 25, 'integer', 'interface');
-        $this->updatePreferences('browser_notify_timeout', 'WebPlayer browser notifications timeout (seconds)', '10', 25, 'integer', 'interface');
+        $this->updatePreferences('browser_notify', 'WebPlayer browser notifications', '1', AccessLevelEnum::USER->value, 'integer', 'interface');
+        $this->updatePreferences('browser_notify_timeout', 'WebPlayer browser notifications timeout (seconds)', '10', AccessLevelEnum::USER->value, 'integer', 'interface');
     }
 }

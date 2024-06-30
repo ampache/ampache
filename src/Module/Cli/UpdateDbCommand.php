@@ -58,7 +58,7 @@ final class UpdateDbCommand extends Command
         $translated_charset = Dba::translate_to_mysqlcharset($this->configContainer->get('site_charset'));
         $target_charset     = $translated_charset['charset'];
         $target_collation   = $translated_charset['collation'];
-        $table_engine       = ($target_charset == 'utf8mb4') ? 'InnoDB' : 'MyISAM';
+        $table_engine       = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         $interactor->info(
             T_('This script makes changes to your database based on your config settings'),
@@ -88,7 +88,7 @@ final class UpdateDbCommand extends Command
             );
         } else {
             $interactor->warn(
-                T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
+                "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                 true
             );
 

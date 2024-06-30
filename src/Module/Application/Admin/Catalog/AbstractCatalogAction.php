@@ -23,6 +23,7 @@
 
 namespace Ampache\Module\Application\Admin\Catalog;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -44,7 +45,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
@@ -69,7 +70,7 @@ abstract class AbstractCatalogAction implements ApplicationActionInterface
 
     protected function getCatalogIds(): ?array
     {
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : array();
+        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : [];
         if (!is_array($catalogs)) {
             return null;
         }

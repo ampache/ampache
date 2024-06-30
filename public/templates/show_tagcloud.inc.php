@@ -25,27 +25,29 @@ declare(strict_types=0);
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 
-$tag_types = array(
+$tag_types = [
     'artist' => T_('Artist'),
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
     'tag_hidden' => T_('Hidden'),
-);
-
-/** @var UiInterface $ui */
-/** @var Browse $browse2 */
-/** @var array $object_ids */
-/** @var string $browse_type */
+];
 
 global $dic;
 $ui = $dic->get(UiInterface::class);
+
+/** @var UiInterface $ui */
+/** @var Browse $browse2 */
+/** @var list<array{id: int, name: string}> $object_ids */
+/** @var string $browse_type */
 
 $ui->show(
     'show_form_genre.inc.php',
@@ -60,16 +62,16 @@ $ui->show(
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
             <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
         </div>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
                     <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id']; ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
-                        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                        <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                     </a>
                 </li>
                 <li>
-                    <a class="tag_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a class="tag_delete" href="<?php echo $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri(); ?>?page=tag&action=delete&tag_id=<?php echo $data['id']; ?>" onclick="return confirm('<?php echo T_('Do you really want to delete this Tag?'); ?>');"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 </li>
             </ul>
         </div>

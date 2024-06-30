@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -32,14 +32,10 @@ use Ampache\Repository\Model\AlbumDisk;
 /**
  * Provides database access to album-disks
  */
-final class AlbumDiskRepository implements AlbumDiskRepositoryInterface
+final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -54,7 +50,7 @@ final class AlbumDiskRepository implements AlbumDiskRepositoryInterface
             [$album->getId()]
         );
 
-        $results    = array();
+        $results    = [];
         while ($rowId = $result->fetchColumn()) {
             $results[] = new AlbumDisk((int) $rowId);
         }

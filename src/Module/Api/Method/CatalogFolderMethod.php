@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -59,16 +61,16 @@ final class CatalogFolderMethod
      */
     public static function catalog_folder(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('catalog', 'folder', 'task'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
             return false;
         }
         $folder = html_entity_decode($input['folder']);
         $task   = explode(',', html_entity_decode((string)($input['task'])));
         if (!is_array($task)) {
-            $task = array();
+            $task = [];
         }
 
         // confirm that a valid task is going to happen
@@ -85,7 +87,7 @@ final class CatalogFolderMethod
         }
         $output_task = '';
         foreach ($task as $item) {
-            if (!in_array($item, array('add', 'clean', 'verify', 'remove'))) {
+            if (!in_array($item, ['add', 'clean', 'verify', 'remove'])) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Bad Request: %s', $item), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
 
@@ -127,7 +129,7 @@ final class CatalogFolderMethod
         if ($catalog->catalog_type == 'local') {
             if (in_array('add', $task)) {
                 /** @var Catalog_local $catalog */
-                if ($catalog->add_files($folder, array())) {
+                if ($catalog->add_files($folder, [])) {
                     $changed++;
                 }
             }
@@ -152,7 +154,7 @@ final class CatalogFolderMethod
                             }
                             break;
                         case 'verify':
-                            Catalog::update_media_from_tags($media, array($type));
+                            Catalog::update_media_from_tags($media, [$type]);
                             break;
                         case 'remove':
                             if ($media->remove()) {

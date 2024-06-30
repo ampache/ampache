@@ -37,18 +37,26 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
 {
     protected const DB_TABLENAME = 'tvshow';
 
-    /* Variables from DB */
     public int $id = 0;
-    public ?string $name;
-    public ?string $prefix;
-    public ?string $summary;
-    public ?int $year;
+
+    public ?string $name = null;
+
+    public ?string $prefix = null;
+
+    public ?string $summary = null;
+
+    public ?int $year = null;
 
     public $catalog_id;
+
     public $tags;
+
     public $f_tags;
+
     public $episodes;
+
     public $seasons;
+
     public $f_name;
 
     public ?string $link = null;
@@ -56,7 +64,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     public $f_link;
 
     // Constructed vars
-    private static $_mapcache = array();
+    private static $_mapcache = [];
 
     /**
      * TV Show
@@ -68,6 +76,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         if (!$show_id) {
             return;
         }
+
         $info = $this->get_info($show_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -103,8 +112,8 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     public function get_seasons(): array
     {
         $sql        = "SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-        $db_results = Dba::read($sql, array($this->id));
-        $results    = array();
+        $db_results = Dba::read($sql, [$this->id]);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -125,7 +134,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         $sql .= "ORDER BY `tvshow_season`.`season_number`, `tvshow_episode`.`episode_number`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -136,7 +145,6 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * _get_extra info
      * This returns the extra information for the tv show, this means totals etc
-     * @return array
      */
     private function _get_extra_info(): array
     {
@@ -145,11 +153,11 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
             $row = parent::get_from_cache('tvshow_extra', $this->id);
         } else {
             $sql        = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` AS `catalog_id` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_season`.`tvshow` = ? GROUP BY `catalog_id`";
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
             $row        = Dba::fetch_assoc($db_results);
 
             $sql                 = "SELECT COUNT(`tvshow_season`.`id`) AS `season_count` FROM `tvshow_season` WHERE `tvshow_season`.`tvshow` = ?";
-            $db_results          = Dba::read($sql, array($this->id));
+            $db_results          = Dba::read($sql, [$this->id]);
             $row2                = Dba::fetch_assoc($db_results);
             $row['season_count'] = $row2['season_count'];
 
@@ -182,23 +190,21 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        $keywords           = array();
-        $keywords['tvshow'] = array(
-            'important' => true,
-            'label' => T_('TV Show'),
-            'value' => $this->get_fullname()
-        );
-        $keywords['type'] = array(
-            'important' => false,
-            'label' => null,
-            'value' => 'tvshow'
-        );
-
-        return $keywords;
+        return [
+            'tvshow' => [
+                'important' => true,
+                'label' => T_('TV Show'),
+                'value' => $this->get_fullname(),
+            ],
+            'type' => [
+                'important' => false,
+                'label' => null,
+                'value' => 'tvshow',
+            ],
+        ];
     }
 
     /**
@@ -207,7 +213,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     public function get_fullname(): ?string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_name)) {
+        if ($this->f_name === null) {
             $this->f_name = trim(trim((string) $this->prefix) . ' ' . trim((string) $this->name));
         }
 
@@ -234,7 +240,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . scrub_out($this->get_fullname()) . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
@@ -250,39 +256,32 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
-        return array('tvshow_season' => $this->get_seasons());
+        return ['tvshow_season' => $this->get_seasons()];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'video') {
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
-                $medias[] = array(
-                    'object_type' => 'video',
-                    'object_id' => $episode_id
-                );
+                $medias[] = ['object_type' => LibraryItemEnum::VIDEO, 'object_id' => $episode_id];
             }
         }
 
@@ -297,9 +296,6 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         return $this->catalog_id;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return null;
@@ -343,7 +339,6 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
      * @param $year
      * @param $tvshow_summary
      * @param bool $readonly
-     * @return int|null
      */
     public static function check($name, $year, $tvshow_summary, $readonly = false): ?int
     {
@@ -358,14 +353,14 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         $name       = $trimmed['string'];
         $prefix     = $trimmed['prefix'];
         $sql        = 'SELECT `id` FROM `tvshow` WHERE `name` LIKE ? AND `year` = ?';
-        $db_results = Dba::read($sql, array($name, $year));
-        $id_array   = array();
+        $db_results = Dba::read($sql, [$name, $year]);
+        $id_array   = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $key            = 'null';
             $id_array[$key] = $row['id'];
         }
 
-        if (count($id_array)) {
+        if ($id_array !== []) {
             $tvshow_id = array_shift($id_array);
             $exists    = true;
         }
@@ -381,10 +376,11 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         }
 
         $sql        = 'INSERT INTO `tvshow` (`name`, `prefix`, `year`, `summary`) VALUES(?, ?, ?, ?)';
-        $db_results = Dba::write($sql, array($name, $prefix, $year, $tvshow_summary));
+        $db_results = Dba::write($sql, [$name, $prefix, $year, $tvshow_summary]);
         if (!$db_results) {
             return null;
         }
+
         $tvshow_id = Dba::insert_id();
         if (!$tvshow_id) {
             return null;
@@ -398,7 +394,6 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * update
      * This takes a key'd array of data and updates the current tv show
-     * @param array $data
      */
     public function update(array $data): int
     {
@@ -413,12 +408,13 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
             $tvshow_id = self::check($name, $year, true);
 
             // If it's changed we need to update
-            if ($tvshow_id !== null && $tvshow_id != $this->id) {
+            if ($tvshow_id !== null && $tvshow_id !== $this->id) {
                 $seasons = $this->get_seasons();
                 foreach ($seasons as $season_id) {
                     TVShow_Season::update_tvshow($tvshow_id, $season_id);
                 }
-                $current_id = (int)$tvshow_id;
+
+                $current_id = $tvshow_id;
                 Stats::migrate('tvshow', $this->id, $current_id, 0);
                 Useractivity::migrate('tvshow', $this->id, $current_id);
                 $this->getShareRepository()->migrate('tvshow', $this->id, $current_id);
@@ -430,7 +426,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
                 if (!AmpConfig::get('cron_cache')) {
                     self::garbage_collection();
                 }
-            } // end if it changed
+            }
         }
 
         $trimmed = Catalog::trim_prefix(trim((string)$name));
@@ -438,7 +434,7 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         $prefix  = $trimmed['prefix'];
 
         $sql = 'UPDATE `tvshow` SET `name` = ?, `prefix` = ?, `year` = ?, `summary` = ? WHERE `id` = ?';
-        Dba::write($sql, array($name, $prefix, $year, $summary, $current_id));
+        Dba::write($sql, [$name, $prefix, $year, $summary, $current_id]);
 
         $this->name    = $name;
         $this->prefix  = $prefix;
@@ -495,14 +491,14 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
             $season  = new TVShow_Season($season_object);
             $deleted = $season->remove();
             if (!$deleted) {
-                debug_event(self::class, 'Error when deleting the season `' . (string) $season_object . '`.', 1);
+                debug_event(self::class, 'Error when deleting the season `' . $season_object . '`.', 1);
                 break;
             }
         }
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
             if ($deleted) {
                 $this->getArtCleanup()->collectGarbageForObject('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);
@@ -513,6 +509,11 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
         }
 
         return $deleted;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::TV_SHOW;
     }
 
     /**

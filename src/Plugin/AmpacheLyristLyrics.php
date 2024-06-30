@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -58,7 +59,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -114,15 +115,15 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
     public function get_lyrics($song)
     {
         $uri     = rtrim(preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode((string)$song->get_artist_fullname());
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);
             if ($json) {
                 if (!empty($json->lyrics)) {
-                    return array(
+                    return [
                         'text' => nl2br($json->lyrics),
                         'url' => $json->image
-                    );
+                    ];
                 }
             }
         }

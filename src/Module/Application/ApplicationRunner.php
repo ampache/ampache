@@ -30,11 +30,11 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Slim\ResponseEmitter;
 use Throwable;
 
 final class ApplicationRunner
@@ -106,7 +106,7 @@ final class ApplicationRunner
              * This will become the default once the rendering of all actions got converted
              */
             if ($response !== null) {
-                $this->dic->get(SapiEmitter::class)->emit($response);
+                $this->dic->get(ResponseEmitter::class)->emit($response);
             }
         } catch (AccessDeniedException $e) {
             $message = $e->getMessage();

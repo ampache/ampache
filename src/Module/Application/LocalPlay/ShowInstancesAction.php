@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\UiInterface;
@@ -57,7 +58,7 @@ final class ShowInstancesAction extends AbstractLocalPlayAction
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         // First build the Localplay object and then get the instances
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_LOCALPLAY, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 

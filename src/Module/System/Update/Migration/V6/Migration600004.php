@@ -40,7 +40,7 @@ final class Migration600004 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `disk` to song table',
-        'Create album_disk table and migrate user ratings & flags'
+        'Create album_disk table and migrate user ratings & flags',
     ];
 
     public function migrate(): void

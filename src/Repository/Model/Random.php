@@ -39,12 +39,12 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Random
 {
-    public const VALID_TYPES = array(
+    public const VALID_TYPES = [
         'song',
         'album',
         'artist',
         'video',
-    );
+    ];
 
     /**
      * artist
@@ -52,7 +52,7 @@ class Random
      */
     public static function artist(): int
     {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -93,19 +93,12 @@ class Random
      */
     public static function get_single_song($random_type, $user, $object_id = 0): int
     {
-        switch ($random_type) {
-            case 'artist':
-                $song_ids = self::get_artist(1, $user);
-                break;
-            case 'playlist':
-                $song_ids = self::get_playlist($user, $object_id);
-                break;
-            case 'search':
-                $song_ids = self::get_search($user, $object_id);
-                break;
-            default:
-                $song_ids = self::get_default(1, $user);
-        }
+        $song_ids = match ($random_type) {
+            'artist' => self::get_artist(1, $user),
+            'playlist' => self::get_playlist($user, $object_id),
+            'search' => self::get_search($user, $object_id),
+            default => self::get_default(1, $user),
+        };
         $song = array_pop($song_ids);
         //debug_event(__CLASS__, "get_single_song:" . $song, 5);
 
@@ -122,12 +115,13 @@ class Random
      */
     public static function get_default($limit, $user = null): array
     {
-        $results = array();
+        $results = [];
 
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $user_id = ($user instanceof User) ? $user->id : null;
+
+        $user_id = $user?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -157,7 +151,7 @@ class Random
      */
     public static function get_artist($limit, $user = null): array
     {
-        $results = array();
+        $results = [];
 
         if (empty($user)) {
             $user = Core::get_global('user');
@@ -200,7 +194,7 @@ class Random
      */
     public static function get_playlist($user, $playlist_id = 0): array
     {
-        $results  = array();
+        $results  = [];
         $playlist = new Playlist($playlist_id);
         if (
             $playlist->isNew() === false &&
@@ -210,7 +204,7 @@ class Random
             )
         ) {
             foreach ($playlist->get_random_items('1') as $songs) {
-                $results[] = (int)$songs['object_id'];
+                $results[] = $songs['object_id'];
             }
         }
 
@@ -220,13 +214,12 @@ class Random
     /**
      * get_search
      * Get a random song from a search (that you own)
-     * @param User $user
      * @param int $search_id
      * @return int[]
      */
     public static function get_search(User $user, $search_id = 0): array
     {
-        $results = array();
+        $results = [];
         $search  = new Search($search_id, 'song', $user);
         if (
             $search->isNew() === false &&
@@ -310,7 +303,6 @@ class Random
      * @param string $sql_query
      * @param array $sql_params
      * @param array $data
-     * @return array
      */
     private static function advanced_results($sql_query, $sql_params, $data): array
     {
@@ -457,7 +449,7 @@ class Random
     public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
     }

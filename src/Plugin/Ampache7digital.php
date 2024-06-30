@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\OAuth\OAuthConsumer;
@@ -59,10 +60,10 @@ class Ampache7digital implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (Preference::exists('7digital_api_key') && !Preference::insert('7digital_api_key', T_('7digital consumer key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (Preference::exists('7digital_api_key') && !Preference::insert('7digital_api_key', T_('7digital consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', 75, 'string', 'plugins', $this->name)) {
+        if (Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -99,7 +100,7 @@ class Ampache7digital implements AmpachePluginInterface
      */
     public function get_song_preview($track_mbid, $artist_name, $title): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -128,7 +129,7 @@ class Ampache7digital implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['7digital_api_key'])) || !strlen(trim($data['7digital_secret_api_key']))) {
-            $data                            = array();
+            $data                            = [];
             $data['7digital_api_key']        = Preference::get_by_user(-1, '7digital_api_key');
             $data['7digital_secret_api_key'] = Preference::get_by_user(-1, '7digital_secret_api_key');
         }

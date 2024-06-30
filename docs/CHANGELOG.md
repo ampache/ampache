@@ -1,5 +1,54 @@
 # CHANGELOG
 
+## Ampache 7.0.0
+
+Information and changes for this major release are recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
+
+### Added
+
+* npm java package management
+* Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
+* Restore composer.lock
+* CLI
+  * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
+* Config version 73
+  * Add `npm_binary_path`
+  * Remove OpenID config
+  * Add `database_engine` to allow you to change from InnoDB if you want to
+* Database 700006
+  * Add user preferences to show/hide menus in the sidebar and the switcher arrows
+  * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
+  * Convert the remaining MyISAM tables to InnoDB
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
+  * Add a `last_count` to playlist table to speed up access requests
+  * Delete user preference `home_recently_played_all`
+
+### Changed
+
+* Prefer the name of the artist provided by MusicBrainz plugin
+* Use PHP functions for php8.2+
+* Default to InnoDB on new installs
+* Change URL for user avatar links
+* Move JavaScript out of PHP where possible
+* Convert string access names and int user access levels to enums
+* Update the upload file browser
+* Update gettext/gettext to v5
+* Default to RandomAction on stream.php
+* Reborn theme CSS updates after switching to Material icons
+* Update code style to convert long form arrays (`array()`) to short form (`[]`)
+* Pull prettyphoto from GitHub (`lachlan-00/prettyphoto`) using npm instead of merging into the project
+
+### Removed
+
+* Support for PHP < 8.2
+* Unused stream actions
+* Old composer files
+* Unused PNG icons
+
+### Fixed
+
+* Enforce sidebar_light when enabled, ignoring cookie if set
+
 ## Ampache 6.5.0
 
 This release is the final Ampache6 release with new features. Bug fixes and API extenstion only from now on!
@@ -26,7 +75,7 @@ This release has made greater use of browses reducing reliance on customizing mi
   * Add indexes to `object_count`
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
   * Add `last_count` to the `playlist` table
-  * Use InnoDb for all tables by default on new installs
+  * Use InnoDB for all tables by default on new installs
 
 ### Changed
 

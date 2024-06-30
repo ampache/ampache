@@ -37,12 +37,12 @@ use Ampache\Repository\Model\User;
 <li>
 <?php if ($showAll === true) { ?>
     <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>">
-        <?php echo Ui::get_icon('disable', T_('Disable')); ?>
+        <?php echo Ui::get_material_symbol('hide_source', T_('Disable')); ?>
         <?php echo T_('Show Unique'); ?>
     </a>
 <?php } else { ?>
     <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>&all">
-        <?php echo Ui::get_icon('add', T_('Add')); ?>
+        <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
 <?php } ?>

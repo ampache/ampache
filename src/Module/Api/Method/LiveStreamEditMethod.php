@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -56,10 +58,10 @@ final class LiveStreamEditMethod
      */
     public static function live_stream_edit(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
@@ -98,14 +100,14 @@ final class LiveStreamEditMethod
             Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
 
-        $data = array(
+        $data = [
             "object_id" => $object_id,
             "name" => $name,
             "url" => $url,
             "codec" => $codec,
             "catalog" => $catalog_id,
             "site_url" => $site_url
-        );
+        ];
 
         // check for the live_stream first
         $results = $item->update($data);
@@ -118,10 +120,10 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($results));
+                echo Json_Data::live_streams([$results]);
                 break;
             default:
-                echo Xml_Data::live_streams(array($results), $user);
+                echo Xml_Data::live_streams([$results], $user);
         }
 
         return true;

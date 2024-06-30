@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Api\Ajax;
 use Ampache\Config\AmpConfig;
@@ -37,35 +38,38 @@ class Broadcast extends database_object implements library_item
     protected const DB_TABLENAME = 'broadcast';
 
     public int $id = 0;
+
     public int $user;
-    public ?string $name;
-    public ?string $description;
+
+    public ?string $name = null;
+
+    public ?string $description = null;
+
     public bool $is_private;
+
     public int $song;
+
     public bool $started;
+
     public int $listeners;
-    public ?string $key;
+
+    public ?string $key = null;
 
     public ?string $link = null;
-    /**
-     * @var int $song_position
-     */
+
+    /** @var int $song_position */
     public $song_position;
-    /**
-     * @var array $tags
-     */
+
+    /** @var array $tags */
     public $tags;
-    /**
-     * @var null|string $f_name
-     */
+
+    /** @var null|string $f_name */
     public $f_name;
-    /**
-     * @var null|string $f_link
-     */
+
+    /** @var null|string $f_link */
     public $f_link;
-    /**
-     * @var null|string $f_tags
-     */
+
+    /** @var null|string $f_tags */
     public $f_tags;
 
     /**
@@ -77,6 +81,7 @@ class Broadcast extends database_object implements library_item
         if (!$broadcast_id) {
             return;
         }
+
         $info = $this->get_info($broadcast_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -101,7 +106,7 @@ class Broadcast extends database_object implements library_item
     public function update_state($started, $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, array($started, $key, $this->id));
+        Dba::write($sql, [$started, $key, $this->id]);
 
         $this->started = $started;
     }
@@ -113,7 +118,7 @@ class Broadcast extends database_object implements library_item
     public function update_listeners($listeners): void
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
-        Dba::write($sql, array($listeners, $this->id));
+        Dba::write($sql, [$listeners, $this->id]);
         $this->listeners = $listeners;
     }
 
@@ -124,7 +129,7 @@ class Broadcast extends database_object implements library_item
     public function update_song($song_id): void
     {
         $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($song_id, $this->id));
+        Dba::write($sql, [$song_id, $this->id]);
         $this->song          = $song_id;
         $this->song_position = 0;
     }
@@ -137,7 +142,7 @@ class Broadcast extends database_object implements library_item
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
 
-        return Dba::write($sql, array($this->id));
+        return Dba::write($sql, [$this->id]);
     }
 
     /**
@@ -149,7 +154,7 @@ class Broadcast extends database_object implements library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array(Core::get_global('user')->id, $name, $description);
+            $params = [Core::get_global('user')?->getId(), $name, $description];
             Dba::write($sql, $params);
 
             return (int)Dba::insert_id();
@@ -160,19 +165,19 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Update a broadcast from data array.
-     * @param array $data
      */
     public function update(array $data): int
     {
         if (isset($data['edit_tags'])) {
             Tag::update_tag_list($data['edit_tags'], 'broadcast', $this->id, true);
         }
+
         $name        = $data['title'] ?? $this->name;
         $description = $data['description'] ?? '';
         $private     = !empty($data['private']);
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
-        $params = array($name, $description, $private, $this->id);
+        $params = [$name, $description, $private, $this->id];
         Dba::write($sql, $params);
 
         return $this->id;
@@ -192,11 +197,10 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -204,7 +208,7 @@ class Broadcast extends database_object implements library_item
      */
     public function get_fullname(): ?string
     {
-        if (!isset($this->f_name)) {
+        if ($this->f_name === null) {
             $this->f_name = $this->name;
         }
 
@@ -231,7 +235,7 @@ class Broadcast extends database_object implements library_item
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $this->f_link = '<a href="' . $this->get_link() . '">' . scrub_out($this->get_fullname()) . '</a>';
         }
 
@@ -249,39 +253,34 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item childrens.
-     * @return array
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
      * Get all childrens and sub-childrens medias.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string  $filter_type = null): array
     {
         // Not a media, shouldn't be that
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'broadcast') {
-            $medias[] = array(
-                'object_type' => 'broadcast',
-                'object_id' => $this->id
-            );
+            $medias[] = ['object_type' => LibraryItemEnum::BROADCAST, 'object_id' => $this->id];
         }
 
         return $medias;
@@ -289,7 +288,6 @@ class Broadcast extends database_object implements library_item
 
     /**
      * Get item's owner.
-     * @return int|null
      */
     public function get_user_owner(): ?int
     {
@@ -335,18 +333,17 @@ class Broadcast extends database_object implements library_item
     public static function generate_key(): string
     {
         // Should be improved for security reasons!
-        return md5(uniqid((string)rand(), true));
+        return md5(uniqid((string)random_int(0, mt_getrandmax()), true));
     }
 
     /**
      * Get broadcast from its key.
      * @param string $key
-     * @return Broadcast|null
      */
     public static function get_broadcast($key): ?Broadcast
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($key));
+        $db_results = Dba::read($sql, [$key]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return new Broadcast($results['id']);
@@ -360,11 +357,9 @@ class Broadcast extends database_object implements library_item
      */
     public function show_action_buttons(): void
     {
-        if ($this->id) {
-            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
-                echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-                echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
-            }
+        if ($this->id !== 0 && (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))) {
+            echo "<a id=\"edit_broadcast_ " . $this->id . "\" onclick=\"showEditDialog('broadcast_row', '" . $this->id . "', 'edit_broadcast_" . $this->id . "', '" . T_('Broadcast Edit') . "', 'broadcast_row_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
+            echo " <a href=\"" . AmpConfig::get('web_path') . "/broadcast.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 
@@ -374,10 +369,9 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast_link(): string
     {
         $link = "<div class=\"broadcast-action\">";
-        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_icon('broadcast', T_('Broadcast')) . "</a>";
-        $link .= "</div>";
+        $link .= "<a href=\"#\" onclick=\"showBroadcastsDialog(event);\">" . Ui::get_material_symbol('cell_tower', T_('Broadcast')) . "</a>";
 
-        return $link;
+        return $link . "</div>";
     }
 
     /**
@@ -394,9 +388,8 @@ class Broadcast extends database_object implements library_item
             'broadcast_action'
         );
         $link .= "</div>";
-        $link .= "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
 
-        return $link;
+        return $link . "<div class=\"broadcast-info\">(<span id=\"broadcast_listeners\">0</span>)</div>";
     }
 
     /**
@@ -407,9 +400,9 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcasts($user_id): array
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, [$user_id]);
 
-        $broadcasts = array();
+        $broadcasts = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $broadcasts[] = (int)$results['id'];
         }
@@ -429,5 +422,10 @@ class Broadcast extends database_object implements library_item
         unset($additional_params, $player, $local);
 
         return (string)$this->id;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::BROADCAST;
     }
 }

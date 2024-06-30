@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -59,7 +60,7 @@ class AmpacheShoutHome implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('shouthome_max_items', T_('Shoutbox on homepage max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

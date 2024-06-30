@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -59,8 +59,8 @@ final class PlaylistImporter
             $files = self::parse_xspf($data);
         }
 
-        $songs    = array();
-        $import   = array();
+        $songs    = [];
+        $import   = [];
         $pinfo    = pathinfo($playlist_file);
         $track    = 1;
         $web_path = AmpConfig::get('web_path');
@@ -73,7 +73,7 @@ final class PlaylistImporter
                 // Check to see if it's a url from this ampache instance
                 if (array_key_exists('id', $url_data) && !empty($web_path) && substr($file, 0, strlen($web_path)) == $web_path) {
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
-                    $db_results = Dba::read($sql, array($url_data['id']));
+                    $db_results = Dba::read($sql, [$url_data['id']]);
                     if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
                         debug_event(__CLASS__, "import_playlist identified: {" . $url_data['id'] . "}", 5);
                         $songs[$track] = $url_data['id'];
@@ -96,7 +96,7 @@ final class PlaylistImporter
 
                     // First, try to find the file as absolute path
                     $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-                    $db_results = Dba::read($sql, array($file));
+                    $db_results = Dba::read($sql, [$file]);
                     $results    = Dba::fetch_assoc($db_results);
 
                     if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
@@ -110,7 +110,7 @@ final class PlaylistImporter
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {
-                            $db_results = Dba::read($sql, array($file));
+                            $db_results = Dba::read($sql, [$file]);
                             $results    = Dba::fetch_assoc($db_results);
 
                             if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
@@ -126,11 +126,11 @@ final class PlaylistImporter
                     debug_event(__CLASS__, "import_playlist skipped: {{$orig}}", 5);
                 }
                 // add the results to an array to display after
-                $import[] = array(
+                $import[] = [
                     'track' => $track - 1,
                     'file' => $orig,
                     'found' => (int)$found
-                );
+                ];
             }
         }
 
@@ -148,11 +148,11 @@ final class PlaylistImporter
             $playlist->delete_all();
             $playlist->add_songs($songs);
 
-            return array(
+            return [
                 'id' => $playlist_id,
                 'count' => count($songs),
                 'results' => $import
-            );
+            ];
         }
 
         return null;

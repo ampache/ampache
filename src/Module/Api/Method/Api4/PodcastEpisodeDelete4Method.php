@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
@@ -53,23 +55,25 @@ final class PodcastEpisodeDelete4Method
 
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $episode   = new Podcast_Episode($object_id);
         if ($episode->isNew()) {
             Api4::message('error', 'podcast_episode ' . $object_id . ' was not found', '404', $input['api_format']);
+
+            return false;
+        }
+
+        if ($episode->remove()) {
+            Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
+            Catalog::count_table('podcast_episode');
         } else {
-            if ($episode->remove()) {
-                Api4::message('success', 'podcast_episode ' . $object_id . ' deleted', null, $input['api_format']);
-                Catalog::count_table('podcast_episode');
-            } else {
-                Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
-            }
+            Api4::message('error', 'podcast_episode ' . $object_id . ' was not deleted', '401', $input['api_format']);
         }
 
         return true;

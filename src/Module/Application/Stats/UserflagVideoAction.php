@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\Model\Video;
@@ -38,28 +37,16 @@ use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UserflagVideoAction implements ApplicationActionInterface
+final readonly class UserflagVideoAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'userflag_video';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,14 +61,12 @@ final class UserflagVideoAction implements ApplicationActionInterface
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
-        $user    = Core::get_global('user');
-        $user_id = $user->id ?? 0;
 
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $objects = Userflag::get_latest('video', $user_id, -1);
+            $objects = Userflag::get_latest('video', $gatekeeper->getUser(), -1);
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');

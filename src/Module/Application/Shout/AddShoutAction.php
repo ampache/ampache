@@ -30,10 +30,12 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutCreatorInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -75,7 +77,7 @@ final class AddShoutAction implements ApplicationActionInterface
 
         // Must be at least a user to do this
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false ||
             !$this->requestParser->verifyForm('add_shout') ||
             $user === null
         ) {
@@ -83,7 +85,7 @@ final class AddShoutAction implements ApplicationActionInterface
         }
 
         $body       = (array)$request->getParsedBody();
-        $objectType = $body['object_type'] ?? '';
+        $objectType = LibraryItemEnum::from($body['object_type'] ?? '');
         $objectId   = (int) ($body['object_id'] ?? 0);
         $text       = $body['comment'] ?? '';
         $isSticky   = array_key_exists('sticky', $body);
@@ -112,7 +114,7 @@ final class AddShoutAction implements ApplicationActionInterface
                 sprintf(
                     '%s/shout.php?action=show_add_shout&type=%s&id=%d',
                     $this->configContainer->getWebPath(),
-                    $objectType,
+                    $objectType->value,
                     $objectId
                 )
             );

@@ -25,6 +25,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 
 /**
  * API Class
@@ -124,7 +126,7 @@ class Api4
         'user_delete' => Method\Api4\UserDelete4Method::class,
         'user_update' => Method\Api4\UserUpdate4Method::class,
         'video' => Method\Api4\Video4Method::class,
-        'videos' => Method\Api4\Videos4Method::class
+        'videos' => Method\Api4\Videos4Method::class,
     ];
 
     public static string $auth_version = '350001';
@@ -202,16 +204,14 @@ class Api4
      * This function checks the user can perform the function requested
      * 'interface', 100, $user->id
      *
-     * @param string $type
-     * @param int $level
      * @param int $user_id
      * @param string $method
      * @param string $format
      */
-    public static function check_access($type, $level, $user_id, $method = '', $format = 'xml'): bool
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, $user_id, $method = '', $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             Api4::message('error', 'User does not have access to this function', '400', $format);
 
             return false;

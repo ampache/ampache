@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\System;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -49,8 +50,8 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
     {
         // allow replacing empty values when not set on your tab
         $null_allowed = (isset($_REQUEST['tab']) && ($_REQUEST['tab']) == 'plugins')
-            ? array('personalfav_playlist', 'personalfav_smartlist')
-            : array();
+            ? ['personalfav_playlist', 'personalfav_smartlist']
+            : [];
 
         // Get current keys
         $sql = ($user_id == '-1')
@@ -58,14 +59,14 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             : "SELECT `id`, `name`, `type` FROM `preference` WHERE `category` != 'system'";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         // Collect the current possible keys
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
                 'type' => $row['type']
-            );
+            ];
         } // end collecting keys
 
         // Foreach through possible keys and assign them
@@ -85,7 +86,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     $value = (string) Stream::validate_bitrate($value);
                     break;
                 case 'custom_timezone':
-                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: array();
+                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }
@@ -95,10 +96,8 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             if (preg_match('/_pass$/', $name)) {
                 if ($value == '******') {
                     unset($_REQUEST[$name]);
-                } else {
-                    if (preg_match('/md5_pass$/', $name)) {
-                        $value = md5((string) $value);
-                    }
+                } elseif (preg_match('/md5_pass$/', $name)) {
+                    $value = md5((string) $value);
                 }
             }
 
@@ -108,7 +107,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                 Preference::update($pref_id, $user_id, $value, $applyToAll);
             }
 
-            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) && array_key_exists($new_level, $_REQUEST)) {
+            if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && array_key_exists($new_level, $_REQUEST)) {
                 Preference::update_level($pref_id, (int)$_REQUEST[$new_level]);
             }
         } // end foreach preferences

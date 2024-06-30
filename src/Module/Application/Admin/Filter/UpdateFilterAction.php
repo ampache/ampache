@@ -100,7 +100,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         }
 
         $catalogs      = Catalog::get_catalogs();
-        $catalog_array = array();
+        $catalog_array = [];
         foreach ($catalogs as $catalog_id) {
             $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
             $catalog_array[$catalog_id] = $catalog_status;

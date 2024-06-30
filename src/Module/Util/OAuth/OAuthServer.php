@@ -36,7 +36,7 @@ class OAuthServer
 {
     protected $timestamp_threshold = 300; // in seconds, five minutes
     protected $version             = '1.0';
-    protected $signature_methods   = array();
+    protected $signature_methods   = [];
 
     protected $data_store;
 
@@ -120,10 +120,10 @@ class OAuthServer
         $token    = $this->get_token($request, $consumer);
         $this->check_signature($request, $consumer, $token);
 
-        return array(
+        return [
             $consumer,
             $token
-        );
+        ];
     }
 
     // Internals from here

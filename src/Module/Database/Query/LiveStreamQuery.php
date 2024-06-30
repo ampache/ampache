@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class LiveStreamQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'catalog',
         'catalog_enabled',
@@ -44,10 +44,10 @@ final class LiveStreamQuery implements QueryInterface
         'not_starts_with',
         'not_like',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -61,7 +61,7 @@ final class LiveStreamQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`live_stream`.`id`";

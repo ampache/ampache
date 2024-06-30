@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -33,6 +33,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\Podcast;
@@ -120,7 +121,7 @@ class PodcastDeleteMethodTest extends TestCase
 
         $this->privilegeChecker->expects(static::once())
             ->method('check')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(false);
 
         $this->subject->handle(
@@ -150,7 +151,7 @@ class PodcastDeleteMethodTest extends TestCase
 
         $this->privilegeChecker->expects(static::once())
             ->method('check')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(true);
 
         $this->subject->handle(
@@ -186,7 +187,7 @@ class PodcastDeleteMethodTest extends TestCase
 
         $this->privilegeChecker->expects(static::once())
             ->method('check')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(true);
 
         $this->subject->handle(
@@ -223,7 +224,7 @@ class PodcastDeleteMethodTest extends TestCase
 
         $this->privilegeChecker->expects(static::once())
             ->method('check')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $userId)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $userId)
             ->willReturn(true);
 
         $this->podcastDeleter->expects(static::once())

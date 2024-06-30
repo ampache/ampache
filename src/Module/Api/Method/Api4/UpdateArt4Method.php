@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -52,10 +54,10 @@ final class UpdateArt4Method
      */
     public static function update_art(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'id'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'update_art', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_art', $input['api_format'])) {
             return false;
         }
         $type      = (string) $input['type'];
@@ -63,7 +65,7 @@ final class UpdateArt4Method
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('artist', 'album'))) {
+        if (!in_array(strtolower($type), ['artist', 'album'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return true;

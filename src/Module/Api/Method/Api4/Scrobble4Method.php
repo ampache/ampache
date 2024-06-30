@@ -56,7 +56,7 @@ final class Scrobble4Method
      */
     public static function scrobble(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('song', 'artist', 'album'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['song', 'artist', 'album'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -106,7 +106,7 @@ final class Scrobble4Method
             debug_event(self::class, 'scrobble: ' . $item->id . ' for ' . $user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
             // internal scrobbling (user_activity and object_count tables)
-            $item->set_played($user_id, $agent, array(), $date);
+            $item->set_played($user_id, $agent, [], $date);
 
             // scrobble plugins
             User::save_mediaplay($user, $item);

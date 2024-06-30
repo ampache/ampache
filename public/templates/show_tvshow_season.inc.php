@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -63,23 +65,23 @@ Ui::show_box_top($season->f_name . ' - ' . $season->f_tvshow_link, 'info-box'); 
     <ul>
 <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, 'play', T_('Play All'), 'directplay_full_' . $season->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow_season&object_id=' . $season->id, 'play_circle', T_('Play All'), 'directplay_full_' . $season->id); ?>
         </li>
 <?php }
 if (Stream_Playlist::check_autoplay_next()) { ?>
             <li>
-                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_season_' . $season->id); ?>
+                <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_season_' . $season->id); ?>
             </li>
 <?php } ?>
 <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=season&object_id=' . $season->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_season_' . $season->id); ?>
         </li>
 <?php }
-if (Access::check('interface', 50)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_season_' . $season->id; ?>" onclick="showEditDialog('tvshow_season_row', '<?php echo $season->id; ?>', '<?php echo 'edit_tvshow_season_' . $season->id; ?>', '<?php echo addslashes(T_('Season Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit Season'); ?>
             </a>
         </li>
@@ -87,7 +89,7 @@ if (Access::check('interface', 50)) { ?>
 if (Catalog::can_remove($season)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_season_' . $season->id; ?>" href="<?php echo $web_path; ?>/tvshow_seasons.php?action=delete&tvshow_season_id=<?php echo $season->id; ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>

@@ -37,10 +37,10 @@ abstract class database_object
 {
     protected const DB_TABLENAME = null;
 
-    private static $object_cache = array();
+    private static $object_cache = [];
 
-    // Statistics for debugging
-    public static $cache_hit       = 0;
+    public static $cache_hit = 0; // Statistics for debugging
+
     private static ?bool $_enabled = null;
 
     /**
@@ -56,7 +56,7 @@ abstract class database_object
 
         // Make sure we've got a real id and table
         if ($table === null || $object_id < 1) {
-            return array();
+            return [];
         }
 
         if (self::is_cached($table, $object_id)) {
@@ -66,12 +66,12 @@ abstract class database_object
             }
         }
 
-        $params     = array($object_id);
-        $sql        = "SELECT * FROM `$table` WHERE `id` = ?";
+        $params     = [$object_id];
+        $sql        = sprintf('SELECT * FROM `%s` WHERE `id` = ?', $table);
         $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {
-            return array();
+            return [];
         }
 
         $row = Dba::fetch_assoc($db_results);
@@ -90,7 +90,7 @@ abstract class database_object
             $table_name = static::DB_TABLENAME;
 
             if ($table_name === null) {
-                $table_name = Dba::escape(strtolower(get_class($this)));
+                $table_name = Dba::escape(strtolower(static::class));
             }
         }
 
@@ -102,13 +102,12 @@ abstract class database_object
      */
     public static function clear_cache(): void
     {
-        self::$object_cache = array();
+        self::$object_cache = [];
     }
 
     /**
      * is_cached
      * this checks the cache to see if the specified object is there
-     * @param string $index
      * @param int|string $object_id
      */
     public static function is_cached(string $index, $object_id): bool
@@ -132,12 +131,12 @@ abstract class database_object
     {
         // Check if the object is set
         if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {
-            self::$cache_hit++;
+            ++self::$cache_hit;
 
             return self::$object_cache[$index][$object_id];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -155,6 +154,7 @@ abstract class database_object
         if (self::$_enabled === null) {
             self::$_enabled = AmpConfig::get('memory_cache');
         }
+
         if (!self::$_enabled) {
             return false;
         }

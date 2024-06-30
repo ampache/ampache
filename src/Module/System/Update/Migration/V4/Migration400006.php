@@ -33,7 +33,7 @@ final class Migration400006 extends AbstractMigration
 {
     protected array $changelog = [
         'Drop shoutcast_active preferences. (Feature has not existed for years)',
-        'Drop localplay_shoutcast table if present'
+        'Drop localplay_shoutcast table if present',
     ];
 
     public function migrate(): void

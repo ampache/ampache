@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -50,23 +52,23 @@ $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 75)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=show_create">
-                <?php echo Ui::get_icon('add', T_('Add')); ?>
+                <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=show_import_podcasts">
-                <?php echo Ui::get_icon('upload', T_('Import')); ?>
+                <?php echo Ui::get_material_symbol('upload', T_('Import')); ?>
                 <?php echo T_('Import'); ?>
             </a>
         </li>
         <?php } ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=export_podcasts" target="_blank">
-                <?php echo Ui::get_icon('download', T_('Export')); ?>
+                <?php echo Ui::get_material_symbol('download', T_('Export')); ?>
                 <?php echo T_('Export'); ?>
             </a>
         </li>

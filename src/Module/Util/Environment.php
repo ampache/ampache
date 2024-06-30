@@ -33,7 +33,7 @@ use PDO;
  */
 final class Environment implements EnvironmentInterface
 {
-    public const PHP_VERSION = 7.4;
+    public const PHP_VERSION = 8.2;
 
     public function check(): bool
     {
@@ -197,11 +197,20 @@ final class Environment implements EnvironmentInterface
      */
     public function check_upload_size(): bool
     {
-        $upload_max = return_bytes(ini_get('upload_max_filesize'));
-        $post_max   = return_bytes(ini_get('post_max_size'));
+        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string)ini_get('post_max_size'));
         $mini       = 20971520; // 20M
 
-        return (($upload_max >= $mini || $upload_max < 1) && ($post_max >= $mini || $post_max < 1));
+        return (
+            (
+                $upload_max >= $mini ||
+                $upload_max < 1
+            ) &&
+            (
+                $post_max >= $mini ||
+                $post_max < 1
+            )
+        );
     }
 
     public function check_php_int_size(): bool
@@ -237,8 +246,14 @@ final class Environment implements EnvironmentInterface
     public function isSsl(): bool
     {
         return (
-            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https') ||
-            (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') == 'on')
+            (
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+                Core::get_server('HTTP_X_FORWARDED_PROTO') == 'https'
+            ) ||
+            (
+                isset($_SERVER['HTTPS']) &&
+                Core::get_server('HTTPS') == 'on'
+            )
         );
     }
 
@@ -251,6 +266,26 @@ final class Environment implements EnvironmentInterface
             strpos($user_agent, 'iPad') ||
             strpos($user_agent, 'iPhone')
         );
+    }
+
+    public function isDevJS(string $entry): bool
+    {
+        // the default vite port is hardcoded for simplicity
+        $handle = curl_init('http://localhost:5173/' . $entry);
+
+        if ($handle === false) {
+            return false;
+        }
+
+        curl_setopt_array($handle, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => true,
+        ]);
+        curl_exec($handle);
+        $error = curl_errno($handle);
+        curl_close($handle);
+
+        return !$error;
     }
 
     public function getHttpPort(): int
@@ -282,7 +317,7 @@ final class Environment implements EnvironmentInterface
         $current_memory = ini_get('memory_limit');
         if (
             !$current_memory ||
-            (Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M'))
+            Ui::unformat_bytes($current_memory) < Ui::unformat_bytes('32M')
         ) {
             $current_memory = '32M';
         }

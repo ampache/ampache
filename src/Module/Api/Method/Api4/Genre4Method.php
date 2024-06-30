@@ -47,7 +47,7 @@ final class Genre4Method
      */
     public static function genre(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -55,10 +55,10 @@ final class Genre4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::tags(array($uid));
+                echo Json4_Data::tags([$uid]);
                 break;
             default:
-                echo Xml4_Data::tags(array($uid));
+                echo Xml4_Data::tags([$uid]);
         }
 
         return true;

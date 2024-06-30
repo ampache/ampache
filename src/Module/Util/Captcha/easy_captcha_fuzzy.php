@@ -38,7 +38,7 @@ class easy_captcha_fuzzy extends easy_captcha
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
@@ -48,7 +48,7 @@ class easy_captcha_fuzzy extends easy_captcha
             $diff    = levenshtein($pw, $input);
             $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-            return ($pw == $input) || ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+            return ($pw == $input) || ($diff <= $maxdiff); // either matches, or allows around 2 divergent letters
         }
 
         return false;

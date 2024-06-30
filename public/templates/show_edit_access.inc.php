@@ -30,6 +30,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var AccessListItemInterface $access */
+/** @var bool $level_5 */
+/** @var bool $level_25 */
+/** @var bool $level_50 */
+/** @var bool $level_75 */
+/** @var string $sl_stream */
+/** @var string $sl_interface */
+/** @var string $sl_network */
+/** @var string $sl_rpc */
 
 Ui::show_box_top(T_('Edit Access Control List')); ?>
 <?php echo AmpError::display('general');

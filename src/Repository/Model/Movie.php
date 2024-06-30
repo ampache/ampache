@@ -31,12 +31,16 @@ class Movie extends Video
 {
     protected const DB_TABLENAME = 'movie';
 
-    public ?string $original_name;
-    public ?string $summary;
-    public ?int $year;
-    public ?string $prefix;
+    public ?string $original_name = null;
+
+    public ?string $summary = null;
+
+    public ?int $year = null;
+
+    public ?string $prefix = null;
 
     public $video;
+
     public $f_original_name;
 
     /**
@@ -50,12 +54,10 @@ class Movie extends Video
         if (!$movie_id) {
             return;
         }
+
         parent::__construct($movie_id);
 
         $info = $this->get_info($movie_id, static::DB_TABLENAME);
-        if (empty($info)) {
-            return;
-        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -86,14 +88,14 @@ class Movie extends Video
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
         $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
+        Dba::write($sql, [$data['id'], $name, $prefix, $data['summary'], $data['year']]);
 
         return (int)$data['id'];
     }
@@ -101,7 +103,6 @@ class Movie extends Video
     /**
      * update
      * This takes a key'd array of data as input and updates a movie entry
-     * @param array $data
      */
     public function update(array $data): int
     {
@@ -115,11 +116,12 @@ class Movie extends Video
             $name   = $this->original_name;
             $prefix = $this->prefix;
         }
+
         $summary = $data['summary'] ?? $this->summary;
         $year    = Catalog::normalize_year($data['year'] ?? $this->year);
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
+        Dba::write($sql, [$name, $prefix, $summary, $year, $this->id]);
 
         $this->original_name = $name;
         $this->prefix        = $prefix;
@@ -140,7 +142,7 @@ class Movie extends Video
     {
         parent::format($details);
 
-        $this->f_original_name = trim((string)$this->prefix . " " . $this->get_fullname());
+        $this->f_original_name = trim($this->prefix . " " . $this->get_fullname());
         $this->f_name          = ($this->f_original_name ?? $this->get_fullname());
         $this->f_link          = '<a href="' . $this->link . '">' . scrub_out($this->f_name) . '</a>';
     }
@@ -152,16 +154,11 @@ class Movie extends Video
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
         $keywords         = parent::get_keywords();
-        $keywords['type'] = array(
-            'important' => false,
-            'label' => null,
-            'value' => 'movie'
-        );
+        $keywords['type'] = ['important' => false, 'label' => null, 'value' => 'movie'];
 
         return $keywords;
     }
@@ -180,9 +177,14 @@ class Movie extends Video
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `movie` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
         }
 
         return $deleted;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::MOVIE;
     }
 }

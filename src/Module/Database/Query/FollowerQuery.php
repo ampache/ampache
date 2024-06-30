@@ -29,17 +29,17 @@ use Ampache\Repository\Model\Query;
 
 final class FollowerQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'follow_user',
         'user',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'follow_user',
         'follow_date',
         'user',
-    );
+    ];
 
     /** @var string */
     protected $select = "`user_follower`.`id`";

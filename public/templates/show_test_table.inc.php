@@ -51,7 +51,10 @@ function debug_wresult($status = false, $value = null, $comment = ''): string
 // TODO remove me
 global $dic;
 /** @var EnvironmentInterface $environment */
-$environment = $dic->get(EnvironmentInterface::class); ?>
+$environment = $dic->get(EnvironmentInterface::class);
+
+/** @var string $configfile */
+?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td><?php echo debug_result($environment->check_php_version()); ?></td>
@@ -188,7 +191,7 @@ if (!$environment->check_dependencies_folder()) { ?>
     <td><?php echo T_('Web Path'); ?></td>
     <td>
         <?php if ($results && check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_material_symbol('check_circle', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>

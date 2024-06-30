@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api4;
@@ -58,7 +57,7 @@ final class GetIndexes4Method
      */
     public static function get_indexes(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
         $album_artist = ((string)$input['type'] == 'album_artist');
@@ -81,7 +80,7 @@ final class GetIndexes4Method
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'share', 'video'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

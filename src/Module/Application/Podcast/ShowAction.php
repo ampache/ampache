@@ -85,7 +85,8 @@ final class ShowAction implements ApplicationActionInterface
                 [
                     'podcast' => $podcast,
                     'object_ids' => $podcast->getEpisodeIds(),
-                    'object_type' => 'podcast_episode'
+                    'object_type' => 'podcast_episode',
+                    'current_user' => $gatekeeper->getUser(),
                 ]
             );
         }

@@ -12,16 +12,18 @@ use Rector\Config\RectorConfig;
 return RectorConfig::configure()
     ->withPaths([
         __DIR__ . '/tests',
+        __DIR__ . '/src/Repository',
     ])
     ->withCache(__DIR__ . '/build/rector', FileCacheStorage::class)
     ->withImportNames()
     ->withRules([
         InlineConstructorDefaultToPropertyRector::class
     ])
-    ->withPhpSets(php74: true)
+    ->withPhpSets(php82: true)
     ->withPreparedSets(deadCode: true, codeQuality: true, codingStyle: true)
     ->withSkip([
         FlipTypeControlToUseExclusiveTypeRector::class,
         StaticClosureRector::class,
         SymplifyQuoteEscapeRector::class,
+        __DIR__ . '/src/Repository/Model',
     ]);

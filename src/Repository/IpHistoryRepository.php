@@ -38,18 +38,12 @@ use PDO;
  *
  * Table: `ip_history`
  */
-final class IpHistoryRepository implements IpHistoryRepositoryInterface
+final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -69,7 +63,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
             $limit_sql = sprintf('LIMIT %d', $limit);
         }
 
-        if ($distinct === true) {
+        if ($distinct) {
             $group_sql = 'GROUP BY `ip`, `date`';
         }
 

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\System;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -63,7 +64,7 @@ final class ClearCacheAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();

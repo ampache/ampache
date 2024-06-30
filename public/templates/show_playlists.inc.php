@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -35,12 +37,12 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
 $is_table          = $browse->is_grid_view();
 $show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
-$show_playlist_add = Access::check('interface', 25);
+$show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
@@ -80,7 +82,7 @@ foreach ($object_ids as $playlist_id) {
     $libitem->format();
 
     // Don't show empty playlist if not admin or the owner
-    if (Access::check('interface', 100) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) || $libitem->get_user_owner() == $user_id || $libitem->get_media_count() > 0) { ?>
         <tr id="playlist_row_<?php echo $libitem->id; ?>">
             <?php $content = $talFactory->createTalView()
         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))

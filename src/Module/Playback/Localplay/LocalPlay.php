@@ -30,6 +30,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 class LocalPlay
 {
@@ -168,9 +169,10 @@ class LocalPlay
         // Run the players uninstaller
         $this->_player->uninstall();
 
+        $user = Core::get_global('user');
         // If its our current player, reset player to nothing
-        if (AmpConfig::get('localplay_controller') == $this->type) {
-            Preference::update('localplay_controller', Core::get_global('user')->id, '');
+        if ($user instanceof User && AmpConfig::get('localplay_controller') == $this->type) {
+            Preference::update('localplay_controller', $user->getId(), '');
         }
 
         return true;
@@ -296,7 +298,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get status, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;
@@ -315,7 +317,7 @@ class LocalPlay
         if (empty($data) || !is_array($data)) {
             debug_event(self::class, 'Error Unable to get song info, check ' . $this->type . ' controller', 1);
 
-            return array();
+            return [];
         }
 
         return $data;

@@ -24,11 +24,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository\Model;
 
-/**
- * @todo convert to real enums after upgrading to php8
- */
-final class UpdateInfoEnum
+enum UpdateInfoEnum: string
 {
-    public const DB_VERSION = 'db_version';
-    public const CRON_DATE  = 'cron_date';
+    case DB_VERSION = 'db_version';
+    case CRON_DATE  = 'cron_date';
 }

@@ -34,10 +34,10 @@ use Ampache\Module\Util\Ui;
     <td class="cel_description"><?php echo $libitem->getDescription(); ?></td>
     <td class="cel_action">
         <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+            <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
         <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
     </td>
 </tr>

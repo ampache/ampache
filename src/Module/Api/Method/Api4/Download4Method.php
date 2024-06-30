@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -49,7 +50,7 @@ final class Download4Method
      */
     public static function download(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             return false;
         }
         $fileid       = $input['id'];
@@ -67,11 +68,11 @@ final class Download4Method
         }
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
             header('Location: ' . str_replace(':443/play', '/play', $url));

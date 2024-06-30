@@ -31,10 +31,9 @@ use Mockery\MockInterface;
 
 class GuiGatekeeperTest extends MockeryTestCase
 {
-    /** @var MockInterface|PrivilegeCheckerInterface|null */
-    private MockInterface $privilegeChecker;
+    private MockInterface&PrivilegeCheckerInterface $privilegeChecker;
 
-    private ?GuiGatekeeper $subject;
+    private GuiGatekeeper $subject;
 
     protected function setUp(): void
     {
@@ -47,8 +46,8 @@ class GuiGatekeeperTest extends MockeryTestCase
 
     public function testMayAccessPerformsPrivilegeCheck(): void
     {
-        $type  = 'some-type';
-        $level = 666;
+        $type  = AccessTypeEnum::API;
+        $level = AccessLevelEnum::ADMIN;
 
         $this->privilegeChecker->shouldReceive('check')
             ->with($type, $level)

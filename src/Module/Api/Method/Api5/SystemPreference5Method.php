@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -48,10 +50,10 @@ final class SystemPreference5Method
      */
     public static function system_preference(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $pref_name = (string)($input['filter'] ?? '');

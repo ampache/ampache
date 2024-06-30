@@ -49,7 +49,7 @@ final class Playlist4Method
      */
     public static function playlist(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $list_id = scrub_in((string) $input['filter']);
@@ -77,10 +77,10 @@ final class Playlist4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::playlists(array($list_id), $user);
+                echo Json4_Data::playlists([$list_id], $user);
                 break;
             default:
-                echo Xml4_Data::playlists(array($list_id), $user);
+                echo Xml4_Data::playlists([$list_id], $user);
         }
 
         return true;

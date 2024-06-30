@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 
 class UPnPPlaylist
@@ -53,7 +54,7 @@ class UPnPPlaylist
      */
     public function Add($name, $link)
     {
-        $this->_songs[] = array('name' => $name, 'link' => $link);
+        $this->_songs[] = ['name' => $name, 'link' => $link];
         $this->PlayListSave();
     }
 
@@ -68,7 +69,7 @@ class UPnPPlaylist
 
     public function Clear()
     {
-        $this->_songs   = array();
+        $this->_songs   = [];
         $this->_current = 0;
         $this->PlayListSave();
     }
@@ -83,7 +84,7 @@ class UPnPPlaylist
      */
     public function CurrentItem(): array
     {
-        return $this->_songs[$this->_current] ?? array();
+        return $this->_songs[$this->_current] ?? [];
     }
 
     /**
@@ -166,12 +167,12 @@ class UPnPPlaylist
     private function PlayListSave()
     {
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
-        $pls_data = json_encode(array(
+        $pls_data = json_encode([
             'upnp_playlist' => $this->_songs,
             'upnp_current' => $this->_current
-        ));
-        if (!Session::exists('stream', $sid)) {
-            Session::create(array('type' => 'stream', 'sid' => $sid, 'value' => $pls_data));
+        ]);
+        if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
+            Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $pls_data]);
         } else {
             Session::write($sid, $pls_data);
         }

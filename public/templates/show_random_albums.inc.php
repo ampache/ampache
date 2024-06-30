@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Userflag;
@@ -55,19 +57,19 @@ if (!empty($albums)) {
         <?php if ($show_play) { ?>
         <div class="play_album">
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play', T_('Play'), 'play_album_' . $album->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id, 'play_circle', T_('Play'), 'play_album_' . $album->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_album_' . $album->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_album_' . $album->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'play_add', T_('Play last'), 'addplay_album_' . $album->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=album&object_id=' . $album->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_album_' . $album->id); ?>
             <?php } ?>
         <?php } ?>
-        <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $album->id); ?>
+        <?php echo Ajax::button('?action=basket&type=album&id=' . $album->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $album->id); ?>
         </div>
         <?php } ?>
         <?php
-        if (Access::check('interface', 25)) { ?>
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
                 <span class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php echo Rating::show($album->id, 'album'); ?></span>
                 <span class="cel_rating" id="userflag_<?php echo $album->id; ?>_album"><?php echo Userflag::show($album->id, 'album'); ?></span>

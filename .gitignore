@@ -21,19 +21,20 @@ node_modules/
 public/.maintenance
 public/play/.htaccess
 public/rest/.htaccess
+public/client
+public/dist/
 public/lib/components
 public/lib/javascript/custom.js
-public/client
 public/newclient
 public/core
 public/develop
 public/master
 public/foam
 public/ample
+resources/images/material-symbols
 storage/
 tmp/
 vendor/
-composer.lock
 composer.phar
 cs_fixer_tmp_*
 error_log
@@ -52,4 +53,3 @@ web.config
 *.v11.suo
 *~
 .php-cs-fixer.cache
-/resources/images/material-symbols

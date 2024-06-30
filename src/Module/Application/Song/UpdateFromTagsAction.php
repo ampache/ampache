@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -58,7 +59,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         // Make sure they are a 'power' user at least
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false) {
             throw new AccessDeniedException();
         }
 

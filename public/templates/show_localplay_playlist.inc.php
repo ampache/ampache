@@ -29,7 +29,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<array{track: string, id: int, name: string}> $object_ids */
 
 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
 $localplay->connect();
@@ -60,7 +60,7 @@ $status = $localplay->status(); ?>
                 <?php echo $localplay->format_name($object['name'], $object['id']); ?>
             </td>
             <td class="cel_action">
-            <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'delete', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
+            <?php echo Ajax::button('?page=localplay&action=delete_track&browse_id=' . $browse->getId() . '&id=' . (int) ($object['id']), 'close', T_('Delete'), 'localplay_delete_' . (int) ($object['id'])); ?>
             </td>
         </tr>
         <?php

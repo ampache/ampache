@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -177,14 +178,14 @@ final class AddUserAction implements ApplicationActionInterface
         /* Attempt to create the new user */
         switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
             case 'admin':
-                $access = 100;
+                $access = AccessLevelEnum::ADMIN;
                 break;
             case 'user':
-                $access = 25;
+                $access = AccessLevelEnum::USER;
                 break;
             case 'guest':
             default:
-                $access = 5;
+                $access = AccessLevelEnum::GUEST;
                 break;
         } // auto-user level
 

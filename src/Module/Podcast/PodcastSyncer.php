@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -42,34 +42,16 @@ use SimpleXMLElement;
 /**
  * Provides functions for podcast-syncing
  */
-final class PodcastSyncer implements PodcastSyncerInterface
+final readonly class PodcastSyncer implements PodcastSyncerInterface
 {
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
-
-    private PodcastDeleterInterface $podcastDeleter;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        PodcastRepositoryInterface $podcastRepository,
-        ModelFactoryInterface $modelFactory,
-        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
-        PodcastDeleterInterface $podcastDeleter,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        ConfigContainerInterface $configContainer
+        private PodcastRepositoryInterface $podcastRepository,
+        private ModelFactoryInterface $modelFactory,
+        private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
+        private PodcastDeleterInterface $podcastDeleter,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->podcastRepository        = $podcastRepository;
-        $this->modelFactory             = $modelFactory;
-        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
-        $this->podcastDeleter           = $podcastDeleter;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->configContainer          = $configContainer;
     }
 
     /**
@@ -108,7 +90,15 @@ final class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * Sync all podcast-item within the given catalogs
+     * Syncs a single episode
+     */
+    public function syncEpisode(Podcast_Episode $episode): void
+    {
+        $this->podcastEpisodeDownloader->fetch($episode);
+    }
+
+    /**
+     * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
      *
@@ -172,7 +162,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
         /** @var Podcast_Episode $episode */
         foreach ($downloadEpisodes as $episode) {
-            $episode->change_state('pending');
+            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
             if ($gather) {
                 $this->podcastEpisodeDownloader->fetch($episode);
 
@@ -218,11 +208,11 @@ final class PodcastSyncer implements PodcastSyncerInterface
         $itunes   = $episode->children('itunes', true);
         $duration = (string) $itunes->duration;
         // time is missing hour e.g. "15:23"
-        if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", array($duration))) {
+        if (preg_grep("/^[0-9][0-9]\:[0-9][0-9]$/", [$duration])) {
             $duration = '00:' . $duration;
         }
         // process a time string "03:23:01"
-        $ptime = (preg_grep("/[0-9]?[0-9]\:[0-9][0-9]\:[0-9][0-9]/", array($duration)))
+        $ptime = (preg_grep("/[0-9]?[0-9]\:[0-9][0-9]\:[0-9][0-9]/", [$duration]))
             ? date_parse((string)$duration)
             : $duration;
         // process "HH:MM:SS" time OR fall back to a seconds duration string e.g "24325"
@@ -280,11 +270,11 @@ final class PodcastSyncer implements PodcastSyncerInterface
         debug_event(self::class, 'Adding new episode to podcast ' . $podcast->getId() . '... ' . $pubdate, 4);
         $sql = "INSERT INTO `podcast_episode` (`title`, `guid`, `podcast`, `state`, `source`, `website`, `description`, `author`, `category`, `time`, `pubdate`, `addition_time`, `catalog`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        Dba::write($sql, array(
+        Dba::write($sql, [
             $title,
             $guid,
             $podcast->getId(),
-            $state,
+            $state->value,
             $source,
             $website,
             $description,
@@ -294,7 +284,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $pubdate,
             time(),
             $podcast->getCatalogId()
-        ));
+        ]);
     }
 
     /**
@@ -305,7 +295,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private static function get_id_from_source(string $url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `source` = ?";
-        $db_results = Dba::read($sql, array($url));
+        $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -322,7 +312,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private static function get_id_from_guid(string $url): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `guid` = ?";
-        $db_results = Dba::read($sql, array($url));
+        $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -339,7 +329,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private static function get_id_from_title(int $podcast_id, string $title, int $time): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND title = ? AND `time` = ?";
-        $db_results = Dba::read($sql, array($podcast_id, $title, $time));
+        $db_results = Dba::read($sql, [$podcast_id, $title, $time]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -356,7 +346,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
     private static function get_id_from_pubdate(int $podcast_id, int $pubdate): int
     {
         $sql        = "SELECT `id` FROM `podcast_episode` WHERE `podcast` = ? AND pubdate = ?";
-        $db_results = Dba::read($sql, array($podcast_id, $pubdate));
+        $db_results = Dba::read($sql, [$podcast_id, $pubdate]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];

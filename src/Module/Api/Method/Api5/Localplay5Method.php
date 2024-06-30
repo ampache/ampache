@@ -29,8 +29,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
 /**
@@ -55,12 +58,12 @@ final class Localplay5Method
      */
     public static function localplay(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('command'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['command'], self::ACTION)) {
             return false;
         }
         // localplay is actually meant to be behind permissions
-        $level = AmpConfig::get('localplay_level', 100);
-        if (!Api5::check_access('localplay', $level, $user->id, self::ACTION, $input['api_format'])) {
+        $level = AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value));
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, $level, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance
@@ -77,8 +80,9 @@ final class Localplay5Method
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = $input['type'] ? (string) $input['type'] : 'Song';
-                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+
+                if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api5::error(T_('Enable: video'), ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;
@@ -88,12 +92,12 @@ final class Localplay5Method
                 if ($clear == 1) {
                     $localplay->delete_all();
                 }
-                $media = array(
+                $media = [
                     'object_type' => $type,
                     'object_id' => $object_id,
-                );
+                ];
                 $playlist = new Stream_Playlist();
-                $playlist->add(array($media), '&client=' . $localplay->type);
+                $playlist->add([$media], '&client=' . $localplay->type);
                 foreach ($playlist->urls as $streams) {
                     $result = $localplay->add_url($streams);
                 }
@@ -139,8 +143,8 @@ final class Localplay5Method
                 return false;
         } // end switch on command
         $results = (!empty($status))
-            ? array('localplay' => array('command' => array($input['command'] => $status)))
-            : array('localplay' => array('command' => array($input['command'] => $result)));
+            ? ['localplay' => ['command' => [$input['command'] => $status]]]
+            : ['localplay' => ['command' => [$input['command'] => $result]]];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

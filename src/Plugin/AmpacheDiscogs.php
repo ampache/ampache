@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -60,10 +61,10 @@ class AmpacheDiscogs implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -103,7 +104,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['discogs_api_key'])) || !strlen(trim($data['discogs_secret_api_key']))) {
-            $data                           = array();
+            $data                           = [];
             $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
             $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
         }
@@ -201,10 +202,10 @@ class AmpacheDiscogs implements AmpachePluginInterface
         if (!in_array('music', $gather_types)) {
             debug_event(self::class, 'Not a valid media type, skipped.', 5);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
         try {
             if (in_array('artist', $gather_types)) {
                 $artists = $this->search_artist($media_info['title']);
@@ -214,14 +215,12 @@ class AmpacheDiscogs implements AmpachePluginInterface
                         $results['art'] = $artist['images'][0]['uri'];
                     }
                 }
-            } else {
-                if (in_array('album', $gather_types)) {
-                    $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if (!empty($albums['results'])) {
-                        $album = $this->get_album($albums['results'][0]['id']);
-                        if (count($album['images']) > 0) {
-                            $results['art'] = $album['images'][0]['uri'];
-                        }
+            } elseif (in_array('album', $gather_types)) {
+                $albums = $this->search_album($media_info['artist'], $media_info['title']);
+                if (!empty($albums['results'])) {
+                    $album = $this->get_album($albums['results'][0]['id']);
+                    if (count($album['images']) > 0) {
+                        $results['art'] = $album['images'][0]['uri'];
                     }
                 }
             }
@@ -238,7 +237,7 @@ class AmpacheDiscogs implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

@@ -24,12 +24,9 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Stream\AlbumRandomAction;
-use Ampache\Module\Application\Stream\ArtistRandomAction;
 use Ampache\Module\Application\Stream\BasketAction;
 use Ampache\Module\Application\Stream\DemocraticAction;
 use Ampache\Module\Application\Stream\DownloadAction;
-use Ampache\Module\Application\Stream\PlayFavoriteAction;
 use Ampache\Module\Application\Stream\PlayItemAction;
 use Ampache\Module\Application\Stream\PlaylistRandomAction;
 use Ampache\Module\Application\Stream\RandomAction;
@@ -47,14 +44,11 @@ $dic->get(ApplicationRunner::class)->run(
         DownloadAction::REQUEST_KEY => DownloadAction::class,
         DemocraticAction::REQUEST_KEY => DemocraticAction::class,
         PlaylistRandomAction::REQUEST_KEY => PlaylistRandomAction::class,
-        AlbumRandomAction::REQUEST_KEY => AlbumRandomAction::class,
-        ArtistRandomAction::REQUEST_KEY => ArtistRandomAction::class,
         PlayItemAction::REQUEST_KEY => PlayItemAction::class,
-        PlayFavoriteAction::REQUEST_KEY => PlayFavoriteAction::class,
         RandomAction::REQUEST_KEY => RandomAction::class,
         SearchRandomAction::REQUEST_KEY => SearchRandomAction::class,
         TmpPlaylistAction::REQUEST_KEY => TmpPlaylistAction::class,
         BasketAction::REQUEST_KEY => BasketAction::class,
     ],
-    PlayFavoriteAction::REQUEST_KEY
+    RandomAction::REQUEST_KEY
 );

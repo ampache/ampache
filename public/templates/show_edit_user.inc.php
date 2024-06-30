@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
@@ -34,7 +36,7 @@ use Ampache\Repository\Model\Catalog;
 /** @var User $client */
 
 $web_path  = (string)AmpConfig::get('web_path', '');
-$access100 = Access::check('interface', 100); ?>
+$access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
 <form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $web_path . "/admin/users.php"; ?>">
@@ -133,7 +135,7 @@ switch ($var_name) {
             <td><?php
 
     $filters = Catalog::get_catalog_filters();
-    $options = array();
+    $options = [];
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == $client->catalog_filter_group) {
@@ -157,7 +159,7 @@ switch ($var_name) {
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
@@ -167,8 +169,8 @@ switch ($var_name) {
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>&nbsp;
+                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
             </td>
             <td>
                 <span>
@@ -182,8 +184,8 @@ switch ($var_name) {
             <td>
                 <?php echo T_('Stream Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -198,8 +200,8 @@ switch ($var_name) {
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>

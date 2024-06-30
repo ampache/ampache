@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -68,10 +69,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     public function install(): bool
     {
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -101,7 +102,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             return false;
         }
         if ($from_version < (int)$this->version) {
-            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         return true;
@@ -148,10 +149,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
         try {
             if (in_array('album', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
@@ -215,7 +216,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      */
     public function get_external_metadata($object, string $object_type): bool
     {
-        $valid_types = array('artist');
+        $valid_types = ['artist'];
         // Artist metadata only for now
         if (!in_array($object_type, $valid_types)) {
             debug_event('theaudiodb.plugin', 'get_external_metadata only supports Artists', 5);
@@ -223,7 +224,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             return false;
         }
 
-        $data = array();
+        $data = [];
         try {
             if (in_array($object_type, $valid_types)) {
                 $release = null;
@@ -291,7 +292,12 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())) {
+                    if (
+                        $this->overwrite_name &&
+                        $object->mbid !== null &&
+                        VaInfo::is_mbid($object->mbid) &&
+                        strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
+                    ) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
@@ -316,7 +322,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
@@ -331,7 +337,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         //debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = Requests::get($url, [], Core::requests_options());
 
         if ($request->status_code != 200) {
             return null;

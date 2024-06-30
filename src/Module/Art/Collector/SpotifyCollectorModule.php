@@ -171,7 +171,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 $response = null;
             }
         }
-        $items = $response->{$types}->items ?? array();
+        $items = $response->{$types}->items ?? [];
         if (count($items)) {
             foreach ($items as $item) {
                 $item_id = $item->id;

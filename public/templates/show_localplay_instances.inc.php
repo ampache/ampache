@@ -29,8 +29,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var LocalPlay $localplay */
-/** @var array $instances */
-/** @var array $fields */
+/** @var list<string, string> $instances */
+/** @var list<array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances'); ?>
 <table class="tabledata striped-rows">
@@ -54,8 +54,8 @@ Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances');
     </td>
     <?php } ?>
     <td>
-        <a href="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo Ui::get_icon('edit', T_('Edit Instance')); ?></a>
-        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'delete', T_('Delete'), 'delete_instance_' . $uid); ?>
+        <a href="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=edit_instance&instance=<?php echo $uid; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit Instance')); ?></a>
+        <?php echo Ajax::button('?page=localplay&action=delete_instance&instance=' . $uid, 'close', T_('Delete'), 'delete_instance_' . $uid); ?>
     </td>
 </tr>
 <?php

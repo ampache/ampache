@@ -72,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
         $content .= $this->arrayToJSON($search->basetypes) . ";\n";
         $content .= sprintf(
             'removeIcon = \'<a href="javascript:void(0)">%s</a>\';',
-            Ui::get_icon('disable', T_('Remove'))
+            Ui::get_material_symbol('hide_source', T_('Remove'))
         );
 
         return $this->responseFactory

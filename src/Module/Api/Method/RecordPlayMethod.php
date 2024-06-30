@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -54,7 +56,7 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
         $play_user = $user;
@@ -72,7 +74,7 @@ final class RecordPlayMethod
             return false;
         }
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if ($play_user->id !== $user->id && !Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         ob_end_clean();
@@ -92,7 +94,7 @@ final class RecordPlayMethod
         debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($play_user->id, $agent, array(), $date)) {
+        if ($media->set_played($play_user->id, $agent, [], $date)) {
             // scrobble plugins
             User::save_mediaplay($play_user, $media);
         }

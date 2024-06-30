@@ -23,25 +23,22 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 /** @var string $object_type */
+/** @var User $user */
 
 $threshold      = AmpConfig::get('stats_threshold', 7);
 $limit          = (int)AmpConfig::get('popular_threshold', 10);
-$catalog_filter = AmpConfig::get('catalog_filter');
 $web_path       = AmpConfig::get('web_path');
-$user_id        = ($catalog_filter && !empty(Core::get_global('user')))
-    ? Core::get_global('user')->id
-    : null;
 
 require_once Ui::find_template('show_form_mashup.inc.php');
 echo "<a href=\"" . $web_path . "/stats.php?action=newest_" . $object_type . "\">";
 Ui::show_box_top(T_('Newest'));
 echo "</a>";
-$object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user_id);
+$object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user);
 $browse     = new Browse();
 $browse->set_type($object_type);
 $browse->set_use_filters(false);
@@ -77,7 +74,7 @@ if ($object_type == 'podcast_episode') {
     Ui::show_box_top(T_('Popular'));
     echo "</a>";
 }
-$object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user_id);
+$object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user);
 shuffle($object_ids);
 $object_ids = array_slice($object_ids, 0, $limit);
 $browse     = new Browse();

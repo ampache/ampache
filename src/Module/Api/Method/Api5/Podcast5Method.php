@@ -56,7 +56,7 @@ final class Podcast5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -74,10 +74,10 @@ final class Podcast5Method
         $episodes = ($include == 'episodes' || (int)$include == 1);
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($object_id), $user, $episodes, false);
+                echo Json5_Data::podcasts([$object_id], $user, $episodes, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($object_id), $user, $episodes);
+                echo Xml5_Data::podcasts([$object_id], $user, $episodes);
         }
 
         return true;

@@ -29,6 +29,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 
 /**
@@ -54,15 +55,15 @@ final class Ping5Method
         $version       = (isset($input['version'])) ? $input['version'] : Api5::$version;
         Api5::$version = ((int)$version >= 350001) ? Api5::$version_numeric : Api5::$version;
         $data_version  = (int)substr($version, 0, 1);
-        $results       = array(
+        $results       = [
             'server' => AmpConfig::get('version'),
             'version' => Api5::$version,
             'compatible' => '350001'
-        );
+        ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
-            Session::extend($input['auth'], 'api');
+        if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
             $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
             $session_expire = ($perpetual)
@@ -72,7 +73,7 @@ final class Ping5Method
                 Session::write($input['auth'], $data_version, $perpetual);
             }
             $results = array_merge(
-                array('session_expire' => $session_expire),
+                ['session_expire' => $session_expire],
                 $results,
                 Api5::server_details($input['auth'])
             );

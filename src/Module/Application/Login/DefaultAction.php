@@ -26,6 +26,7 @@ namespace Ampache\Module\Application\Login;
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -94,7 +95,7 @@ final class DefaultAction implements ApplicationActionInterface
         if ($this->configContainer->get('use_auth') && !isset($_GET['force_display'])) {
             $auth = false;
             $name = $this->configContainer->getSessionName();
-            if (array_key_exists($name, $_COOKIE) && Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()])) {
+            if (array_key_exists($name, $_COOKIE) && Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()])) {
                 $auth = true;
             } elseif (Session::auth_remember()) {
                 $auth = true;
@@ -122,7 +123,7 @@ final class DefaultAction implements ApplicationActionInterface
          * page if they aren't in the ACL
          */
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ACCESS_CONTROL)) {
-            if (!$this->networkChecker->check(AccessLevelEnum::TYPE_INTERFACE, null, AccessLevelEnum::LEVEL_GUEST)) {
+            if (!$this->networkChecker->check(AccessTypeEnum::INTERFACE, null, AccessLevelEnum::GUEST)) {
                 throw new AccessDeniedException(
                     sprintf(
                         'Access denied: %s is not in the Interface Access list',
@@ -143,7 +144,7 @@ final class DefaultAction implements ApplicationActionInterface
             ) {
                 /* If we are in demo mode let's force auth success */
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-                    $auth                         = array();
+                    $auth                         = [];
                     $auth['success']              = true;
                     $auth['info']['username']     = 'Admin - DEMO';
                     $auth['info']['fullname']     = 'Administrative User';
@@ -235,7 +236,7 @@ final class DefaultAction implements ApplicationActionInterface
                 }
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
-                $access   = User::access_name_to_level($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
+                $access   = AccessLevelEnum::fromTextual($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
                 $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
                 $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
                 $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
@@ -284,14 +285,14 @@ final class DefaultAction implements ApplicationActionInterface
         /* If the authentication was a success */
         if (isset($auth) && $auth['success'] && $user instanceof User) {
             // $auth->info are the fields specified in the config file
-            //   to retrieve for each user
+            // to retrieve for each user
             Session::create($auth);
 
             // Not sure if it was me or php tripping out, but naming this 'user' didn't work at all
             $_SESSION['userdata'] = $auth;
 
             // You really don't want to store the avatar
-            //   in the SESSION.
+            // in the SESSION.
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!
@@ -330,7 +331,7 @@ final class DefaultAction implements ApplicationActionInterface
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&
-                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ) {
                 // admins need to know if an update is available
                 AutoUpdate::is_update_available();

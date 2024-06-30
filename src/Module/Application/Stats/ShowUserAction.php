@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -38,40 +39,20 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-final class ShowUserAction implements ApplicationActionInterface
+final readonly class ShowUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_user';
 
-    private UiInterface $ui;
-
-    private LoggerInterface $logger;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private UserActivityRepositoryInterface $useractivityRepository;
-
-    private UserActivityRendererInterface $userActivityRenderer;
-
-    private UserFollowerRepositoryInterface $userFollowerRepository;
-
-    private UserFollowStateRendererInterface $userFollowStateRenderer;
-
     public function __construct(
-        UiInterface $ui,
-        LoggerInterface $logger,
-        ModelFactoryInterface $modelFactory,
-        UserActivityRepositoryInterface $useractivityRepository,
-        UserActivityRendererInterface $userActivityRenderer,
-        UserFollowerRepositoryInterface $userFollowerRepository,
-        UserFollowStateRendererInterface $userFollowStateRenderer
+        private UiInterface $ui,
+        private LoggerInterface $logger,
+        private ModelFactoryInterface $modelFactory,
+        private UserActivityRepositoryInterface $useractivityRepository,
+        private UserActivityRendererInterface $userActivityRenderer,
+        private UserFollowerRepositoryInterface $userFollowerRepository,
+        private UserFollowStateRendererInterface $userFollowStateRenderer,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->ui                      = $ui;
-        $this->logger                  = $logger;
-        $this->modelFactory            = $modelFactory;
-        $this->useractivityRepository  = $useractivityRepository;
-        $this->userActivityRenderer    = $userActivityRenderer;
-        $this->userFollowerRepository  = $userFollowerRepository;
-        $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -97,10 +78,11 @@ final class ShowUserAction implements ApplicationActionInterface
                 [
                     'client' => $client,
                     'activities' => $this->useractivityRepository->getActivities($userId),
-                    'followers' => $this->userFollowerRepository->getFollowers($userId),
-                    'following' => $this->userFollowerRepository->getFollowing($userId),
+                    'followers' => $this->userFollowerRepository->getFollowers($client),
+                    'following' => $this->userFollowerRepository->getFollowing($client),
                     'userFollowStateRenderer' => $this->userFollowStateRenderer,
-                    'userActivityRenderer' => $this->userActivityRenderer
+                    'userActivityRenderer' => $this->userActivityRenderer,
+                    'libraryItemLoader' => $this->libraryItemLoader,
                 ]
             );
             show_table_render(false, true);

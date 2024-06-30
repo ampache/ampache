@@ -77,7 +77,7 @@ final class UserMethod
             }
 
             // get full info when you're an admin or searching for yourself
-            $fullinfo = $check_user->getId() === $user->getId() || $user->access === AccessLevelEnum::LEVEL_ADMIN;
+            $fullinfo = $check_user->getId() === $user->getId() || $user->access === AccessLevelEnum::ADMIN->value;
         }
 
         ob_end_clean();

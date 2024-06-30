@@ -62,7 +62,7 @@ class Ajax
      */
     public static function observe($source, $method, $action, $confirm = ''): string
     {
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -111,7 +111,7 @@ class Ajax
     {
         $url = self::url($action);
 
-        $non_quoted = array('document', 'window');
+        $non_quoted = ['document', 'window'];
 
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
@@ -140,8 +140,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button(
+        $action,
+        $icon,
+        $alt,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -150,7 +157,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = Ui::get_icon($icon, $alt);
+        $string = Ui::get_material_symbol($icon, $alt);
 
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
@@ -174,8 +181,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button_with_text(
+        $action,
+        $icon,
+        $text,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -184,7 +198,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $button = Ui::get_icon($icon, $text);
+        $button = Ui::get_material_symbol($icon, $text);
 
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $button . " " . $text . "</a>\n";
 

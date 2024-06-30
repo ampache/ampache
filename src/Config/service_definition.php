@@ -39,8 +39,6 @@ use Ampache\Module\Util\EnvironmentInterface;
 use getID3;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 use MusicBrainz\MusicBrainz;
-use Narrowspark\HttpEmitter\AbstractSapiEmitter;
-use Narrowspark\HttpEmitter\SapiEmitter;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -53,6 +51,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
+use Slim\ResponseEmitter;
 use SpotifyWebAPI\SpotifyWebAPI;
 
 use function DI\autowire;
@@ -91,10 +90,9 @@ return [
     StreamFactoryInterface::class => autowire(Psr17Factory::class),
     UriFactoryInterface::class => autowire(Psr17Factory::class),
     UploadedFileFactoryInterface::class => autowire(Psr17Factory::class),
-    AbstractSapiEmitter::class => autowire(SapiEmitter::class),
+    ResponseEmitter::class => autowire(ResponseEmitter::class),
     ServerRequestCreatorInterface::class => autowire(ServerRequestCreator::class),
     ServerRequestFactoryInterface::class => autowire(Psr17Factory::class),
     PhpTalInterface::class => autowire(PHPTAL::class),
-    SapiEmitter::class => autowire(SapiEmitter::class),
     DatabaseConnectionInterface::class => autowire(DbaDatabaseConnection::class),
 ];

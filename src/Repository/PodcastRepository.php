@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -35,18 +35,12 @@ use Generator;
  *
  * Tables: `podcast`, `podcast_episode`, `deleted_podcast_episodes`
  */
-final class PodcastRepository implements PodcastRepositoryInterface
+final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->connection      = $connection;
     }
 
     /**

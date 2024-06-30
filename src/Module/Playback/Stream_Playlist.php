@@ -25,7 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Media;
 use Ampache\Module\Playback\Localplay\LocalPlay;
@@ -88,18 +90,23 @@ class Stream_Playlist
             }
 
             $this->id = Stream::get_session();
-
-            if (!Session::exists('stream', $this->id)) {
+            if (!Session::exists(AccessTypeEnum::STREAM->value, $this->id)) {
                 debug_event(self::class, 'Session::exists failed', 2);
 
                 return;
             }
-            $user              = Core::get_global('user');
+
+            $user = Core::get_global('user');
+            if (!$user instanceof User) {
+                debug_event(self::class, 'No User found', 2);
+
+                return;
+            }
             $this->user        = $user->id;
             $this->streamtoken = $user->streamtoken;
 
             $sql        = 'SELECT * FROM `stream_playlist` WHERE `sid` = ? ORDER BY `id`';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 $this->urls[] = new Stream_Url($row);
@@ -112,11 +119,11 @@ class Stream_Playlist
         debug_event(self::class, "Adding url {" . json_encode($url) . "}...", 5);
 
         $this->urls[] = $url;
-        $fields       = array();
+        $fields       = [];
         $fields[]     = '`sid`';
-        $values       = array();
+        $values       = [];
         $values[]     = $this->id;
-        $holders      = array();
+        $holders      = [];
         $holders[]    = '?';
 
         foreach ($url->properties as $field) {
@@ -138,16 +145,16 @@ class Stream_Playlist
     {
         debug_event(self::class, "Adding urls to {" . $this->id . "}...", 5);
         $sql         = '';
-        $fields      = array();
-        $values      = array();
-        $holders_arr = array();
+        $fields      = [];
+        $values      = [];
+        $holders_arr = [];
 
         foreach ($urls as $url) {
             $this->urls[] = $url;
-            $fields       = array();
+            $fields       = [];
             $fields[]     = '`sid`';
             $values[]     = $this->id;
-            $holders      = array();
+            $holders      = [];
             $holders[]    = '?';
 
             foreach ($url->properties as $field) {
@@ -188,7 +195,7 @@ class Stream_Playlist
      * media_to_urlarray
      * Formats the URL and media information and adds it to the object
      * @param list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  client?: string,
      *  action?: string,
@@ -202,7 +209,7 @@ class Stream_Playlist
      */
     public static function media_to_urlarray(array $media, string $additional_params = ''): array
     {
-        $urls = array();
+        $urls = [];
         foreach ($media as $medium) {
             $surl = self::media_to_url($medium, $additional_params);
             if ($surl != null) {
@@ -216,7 +223,7 @@ class Stream_Playlist
     /**
      * media_to_url
      * @param array{
-     *  object_type?: string,
+     *  object_type?: LibraryItemEnum,
      *  object_id?: int,
      *  client?: string,
      *  action?: string,
@@ -227,9 +234,14 @@ class Stream_Playlist
      *  custom_play_action?: string
      * } $media
      */
-    public static function media_to_url(array $media, string $additional_params = '', string $urltype = 'web', ?User $user = null): ?Stream_Url
-    {
-        $type      = $media['object_type'] ?? null;
+    public static function media_to_url(
+        array $media,
+        string $additional_params = '',
+        string $urltype = 'web',
+        ?User $user = null
+    ): ?Stream_Url {
+        // @todo use LibraryItemLoader
+        $type      = $media['object_type']->value ?? null;
         $object_id = $media['object_id'] ?? null;
         if ($type === null || $object_id === null) {
             return null;
@@ -282,9 +294,10 @@ class Stream_Playlist
         if (!$user) {
             $user = Core::get_global('user');
         }
-        $className   = get_class($object);
-        $type        = ObjectTypeToClassNameMapper::reverseMap($className);
-        $url['type'] = $type;
+
+        $type = $object->getMediaType();
+
+        $url['type'] = $type->value;
 
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
@@ -301,18 +314,13 @@ class Stream_Playlist
                         $url['url'] = substr($url['url'], 1);
                     }
                 }
+            } elseif (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
+                /** @var Song|Podcast_Episode|Video $object */
+                $url['url'] = (!empty($user))
+                    ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
+                    : $object->play_url($additional_params);
             } else {
-                if (in_array($type, array('song', 'podcast_episode', 'video'))) {
-                    /** @var Song|Podcast_Episode|Video $object */
-                    $url['url'] = (!empty($user))
-                        ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
-                        : $object->play_url($additional_params);
-                } elseif ($type == 'democratic') {
-                    /** @var Democratic $object */
-                    $url['url'] = $object->play_url();
-                } else {
-                    $url['url'] = $object->play_url($additional_params);
-                }
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -321,7 +329,7 @@ class Stream_Playlist
             $url['author'] = 'Ampache';
             $url['time']   = (isset($object->time)) ? $object->time : 0;
             switch ($type) {
-                case 'song':
+                case LibraryItemEnum::SONG:
                     /** @var Song $object */
                     $url['title']     = $object->title;
                     $url['author']    = $object->get_artist_fullname();
@@ -335,7 +343,7 @@ class Stream_Playlist
                     $url['codec']     = $object->type;
                     $url['track_num'] = (string)$object->track;
                     break;
-                case 'video':
+                case LibraryItemEnum::VIDEO:
                     /** @var Video $object */
                     $url['title']     = 'Video - ' . $object->title;
                     $url['author']    = $object->get_artist_fullname();
@@ -343,7 +351,7 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->id, 'video', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->type;
                     break;
-                case 'live_stream':
+                case LibraryItemEnum::LIVE_STREAM:
                     /** @var Live_Stream $object */
                     $url['title'] = 'Radio - ' . $object->name;
                     if (!empty($object->site_url)) {
@@ -353,13 +361,13 @@ class Stream_Playlist
                     $url['image_url'] = Art::url($object->id, 'live_stream', $api_session, (AmpConfig::get('ajax_load') ? 3 : 4));
                     $url['codec']     = $object->codec;
                     break;
-                case 'song_preview':
+                case LibraryItemEnum::SONG_PREVIEW:
                     /** @var Song_Preview $object */
                     $url['title']  = $object->title;
                     $url['author'] = $object->get_artist_fullname();
                     $url['codec']  = $object->type;
                     break;
-                case 'podcast_episode':
+                case LibraryItemEnum::PODCAST_EPISODE:
                     /** @var Podcast_Episode $object */
                     $url['title']     = $object->f_name;
                     $url['author']    = $object->getPodcastName();
@@ -514,7 +522,7 @@ class Stream_Playlist
      * add
      * Adds an array of media
      * @param list<array{
-     *  object_type: string,
+     *  object_type: LibraryItemEnum,
      *  object_id: int,
      *  client?: string,
      *  action?: string,
@@ -526,7 +534,7 @@ class Stream_Playlist
      * }> $media
      * @param string $additional_params
      */
-    public function add(array $media = array(), string $additional_params = ''): void
+    public function add(array $media = [], string $additional_params = ''): void
     {
         $urls = self::media_to_urlarray($media, $additional_params);
         $this->_add_urls($urls);
@@ -538,15 +546,15 @@ class Stream_Playlist
      * from media objects like democratic playlists
      * @param list<string> $urls
      */
-    public function add_urls(array $urls = array()): bool
+    public function add_urls(array $urls = []): bool
     {
         foreach ($urls as $url) {
-            $this->_add_url(new Stream_Url(array(
+            $this->_add_url(new Stream_Url([
                 'url' => $url,
                 'title' => Stream_Url::get_title($url),
                 'author' => T_('Ampache'),
                 'time' => '-1'
-            )));
+            ]));
         }
 
         return true;
@@ -635,20 +643,20 @@ class Stream_Playlist
     {
         $result = "";
         foreach ($this->urls as $url) {
-            $xml = array();
+            $xml = [];
 
-            $xml['track'] = array(
+            $xml['track'] = [
                 'title' => $url->title,
                 'creator' => $url->author,
                 'duration' => (int) $url->time * 1000,
                 'location' => $url->url,
                 'identifier' => $url->url
-            );
+            ];
             if ($url->type == 'video') {
-                $xml['track']['meta'] = array(
+                $xml['track']['meta'] = [
                     'attribute' => 'rel="provider"',
                     'value' => 'video'
-                );
+                ];
             }
             if ($url->info_url) {
                 $xml['track']['info'] = $url->info_url;
@@ -666,10 +674,9 @@ class Stream_Playlist
             $result .= Xml_Data::keyed_array($xml, true);
         } // end foreach
 
-        Xml_Data::set_type('xspf');
-        $ret = Xml_Data::header($this->title);
+        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get('web_path') . "</info>\n<trackList>\n";
         $ret .= $result;
-        $ret .= Xml_Data::footer();
+        $ret .= "</trackList>\n</playlist>\n";
 
         echo $ret;
     }
@@ -775,11 +782,11 @@ class Stream_Playlist
     {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
-        $items = array();
+        $items = [];
 
         foreach ($this->urls as $url) {
             $url_data = Stream_Url::parse($url->url);
-            $items[]  = array($url_data['type'], $url_data['id']);
+            $items[]  = [$url_data['type'], $url_data['id']];
         }
         if (!empty($items)) {
             $democratic->add_vote($items);

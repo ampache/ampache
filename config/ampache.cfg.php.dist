@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 71
+config_version = 73
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -29,6 +29,11 @@ config_version = 71
 ; Either a binary name in $PATH as well as a fully qualified path is possible
 ; DEFAULT: composer
 ;composer_binary_path = "composer"
+
+; This value allows to override the npm binary path to distinguish between multiple npm versions
+; Either a binary name in $PATH as well as a fully qualified path is possible
+; DEFAULT: npm
+;npm_binary_path = "npm"
 
 ; We sometimes need to talk and will show a warning to admin users
 ; Enable this setting if you don't want to see warnings (When we enable them)
@@ -107,7 +112,6 @@ database_password = "password"
 
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
-;
 ; DEFAULT: "utf8mb4"
 ;database_charset = "utf8mb4"
 
@@ -121,6 +125,11 @@ database_password = "password"
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
 ; DEFAULT: "utf8mb4_unicode_ci"
 ;database_collation = "utf8mb4_unicode_ci"
+
+; Set a default table engine for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+; DEFAULT: "InnoDB"
+;database_engine = "InnoDB"
 
 ;#########################################################
 ; Session and Security                                   #
@@ -169,7 +178,7 @@ session_cookiesecure = 0
 ; This defines which auth methods Auth will attempt to use and in which order.
 ; If auto_create isn't enabled the user must exist locally.
 ; DEFAULT: mysql
-; VALUES: mysql,ldap,http,pam,external,openid
+; VALUES: mysql,ldap,http,pam,external
 auth_methods = "mysql"
 
 ; External authentication
@@ -230,8 +239,8 @@ require_localnet_session = "true"
 ; Add a STREAMTOKEN to the account when a new user is created
 ; Streamtoken's allow a user to play without having a valid session (links do not expire)
 ; https://github.com/ampache/ampache/wiki/ampache6-details#allow-permalink-user-streams
-; DEFAULT: "false"
-;user_create_streamtoken = "true"
+; DEFAULT: "true"
+user_create_streamtoken = "true"
 
 ;#########################################################
 ; Metadata                                               #
@@ -983,15 +992,6 @@ site_charset = "UTF-8"
 ; DEFAULT: member
 ;ldap_member_attribute = "member"
 ;ldap_member_attribute = "memberuid"
-
-;#########################################################
-; OpenID login info (optional)                           #
-;#########################################################
-
-; Requires specific OpenID Provider Authentication Policy
-; DEFAULT: none
-; VALUES: PAPE_AUTH_MULTI_FACTOR_PHYSICAL,PAPE_AUTH_MULTI_FACTOR,PAPE_AUTH_PHISHING_RESISTANT
-;openid_required_pape = ""
 
 ;#########################################################
 ; Public Registration settings, defaults to disabled     #

@@ -24,7 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Application\Register\AddUserAction;
 use Ampache\Module\Util\Ui;
+
+/** @var AddUserAction $this */
 
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path          = (string)AmpConfig::get('web_path', '');
@@ -44,8 +47,6 @@ $_SESSION['login'] = true; ?>
                 <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div id="content">
                 <div id="guts">
 <?php $url = $web_path . '/login.php';

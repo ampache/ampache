@@ -37,7 +37,7 @@ final class Migration500013 extends AbstractMigration
 {
     protected array $changelog = [
         'Add tables for tracking deleted files. (deleted_song, deleted_video, deleted_podcast_episode)',
-        'Add username to the playlist table to stop pulling user all the time'
+        'Add username to the playlist table to stop pulling user all the time',
     ];
 
     public function migrate(): void
@@ -64,8 +64,8 @@ final class Migration500013 extends AbstractMigration
         // fill the data
         $this->updateDatabase("UPDATE `playlist`, (SELECT `id`, `username` FROM `user`) AS `user` SET `playlist`.`username` = `user`.`username` WHERE `playlist`.`user` = `user`.`id`;");
         $this->updateDatabase("UPDATE `search`, (SELECT `id`, `username` FROM `user`) AS `user` SET `search`.`username` = `user`.`username` WHERE `search`.`user` = `user`.`id`;");
-        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;", array(T_('System')));
-        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;", array(T_('System')));
+        $this->updateDatabase("UPDATE `playlist` SET `playlist`.`username` = ? WHERE `playlist`.`user` = -1;", [T_('System')]);
+        $this->updateDatabase("UPDATE `search` SET `search`.`username` = ? WHERE `search`.`user` = -1;", [T_('System')]);
     }
 
     public function getTableMigrations(

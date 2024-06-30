@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration360049 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('album_group', 'Album - Group multiple disks', '0', 25, 'boolean', 'interface');
+        $this->updatePreferences('album_group', 'Album - Group multiple disks', '0', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

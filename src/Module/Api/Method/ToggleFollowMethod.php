@@ -54,7 +54,7 @@ final class ToggleFollowMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         $username = $input['username'];
@@ -62,8 +62,8 @@ final class ToggleFollowMethod
             $leader = User::get_from_username($username);
             if ($leader instanceof User) {
                 static::getUserFollowToggler()->toggle(
-                    $leader->getId(),
-                    $user->getId()
+                    $leader,
+                    $user
                 );
                 ob_end_clean();
                 Api::message('follow toggled for: ' . $user->id, $input['api_format']);

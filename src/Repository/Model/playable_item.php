@@ -62,8 +62,7 @@ interface playable_item
     public function get_f_link(): string;
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array;
 
@@ -71,21 +70,19 @@ interface playable_item
      * get_childrens
      *
      * Get direct childrens. Return an array of `object_type`, `object_id` childrens.
-     * @return array
      */
     public function get_childrens(): array;
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array;
 
     /**
      * Get all medias from all childrens. Return an array of `object_type`, `object_id` medias.
      *
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array;
 

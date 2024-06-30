@@ -32,11 +32,14 @@ class Clip extends Video
 {
     protected const DB_TABLENAME = 'clip';
 
-    public ?int $artist;
-    public ?int $song;
+    public ?int $artist = null;
+
+    public ?int $song = null;
 
     public $video;
+
     public $f_artist;
+
     public $f_song;
 
     /**
@@ -50,6 +53,7 @@ class Clip extends Video
         if (!$clip_id) {
             return;
         }
+
         parent::__construct($clip_id);
 
         $info = $this->get_info($clip_id, static::DB_TABLENAME);
@@ -83,16 +87,17 @@ class Clip extends Video
      * _get_artist_id
      * Look-up an artist id from artist tag data... creates one if it doesn't exist already
      * @param array $data
-     * @return int|null
      */
     private static function _get_artist_id($data): ?int
     {
         if (array_key_exists('artist_id', $data) && !empty($data['artist_id'])) {
             return $data['artist_id'];
         }
+
         if (!array_key_exists('artist_id', $data) || empty($data['artist'])) {
             return null;
         }
+
         $artist_mbid = $data['mbid_artistid'] ?? null;
         if ($artist_mbid) {
             $artist_mbid = Catalog::trim_slashed_list($artist_mbid);
@@ -105,19 +110,20 @@ class Clip extends Video
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         debug_event(self::class, 'insert ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
         $song_id   = Song::find($data);
-        if (empty($song_id)) {
+        if ($song_id === false) {
             $song_id = null;
         }
+
         if ($artist_id || $song_id) {
-            debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
+            debug_event(self::class, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
             $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
-            Dba::write($sql, array($data['id'], $artist_id, $song_id));
+            Dba::write($sql, [$data['id'], $artist_id, $song_id]);
         }
 
         return (int)$data['id'];
@@ -135,7 +141,7 @@ class Clip extends Video
         debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($artist_id, $song_id, $this->id));
+        Dba::write($sql, [$artist_id, $song_id, $this->id]);
 
         return $this->id;
     }
@@ -179,33 +185,27 @@ class Clip extends Video
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
         $keywords = parent::get_keywords();
         if ($this->artist) {
-            $keywords['artist'] = array(
-                'important' => true,
-                'label' => T_('Artist'),
-                'value' => $this->f_artist
-            );
+            $keywords['artist'] = ['important' => true, 'label' => T_('Artist'), 'value' => $this->f_artist];
         }
 
         return $keywords;
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array
     {
         if ($this->artist) {
-            return array(
-                'object_type' => 'artist',
+            return [
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => $this->artist
-            );
+            ];
         }
 
         return null;
@@ -222,11 +222,16 @@ class Clip extends Video
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `clip` SET `artist` = ? WHERE `artist` = ?";
-            $params = array($new_object_id, $old_object_id);
+            $params = [$new_object_id, $old_object_id];
 
             return Dba::write($sql, $params);
         }
 
         return false;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::CLIP;
     }
 }

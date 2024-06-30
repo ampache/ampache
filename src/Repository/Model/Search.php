@@ -27,6 +27,8 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playlist\Search\AlbumDiskSearch;
 use Ampache\Module\Playlist\Search\AlbumSearch;
 use Ampache\Module\Playlist\Search\ArtistSearch;
@@ -50,7 +52,8 @@ use Ampache\Repository\UserRepositoryInterface;
 class Search extends playlist_object
 {
     protected const DB_TABLENAME = 'search';
-    public const VALID_TYPES     = array(
+
+    public const VALID_TYPES = [
         'song',
         'album',
         'album_disk',
@@ -65,23 +68,30 @@ class Search extends playlist_object
         'tag',
         'user',
         'video',
-    );
+    ];
 
-    // override playlist_object
-    public ?string $type = 'public';
-    // rules used to run a search (User chooses rules from available types for that object)
-    public $rules; // JSON string to decoded to array
+    public ?string $type = 'public'; // override playlist_object
+
+    public $rules; // rules used to run a search (User chooses rules from available types for that object). JSON string to decoded to array
+
     public ?string $logic_operator = 'AND';
-    public ?int $random            = 0;
-    public int $limit              = 0;
+
+    public ?int $random = 0;
+
+    public int $limit = 0;
 
     public $objectType; // the type of object you want to return (self::VALID_TYPES)
-    public $search_user; // user running the search
-    public $types     = array(); // rules that are available to the objectType (title, year, rating, etc)
-    public $basetypes = array(); // rule operator subtypes (numeric, text, boolean, etc)
 
-    private $searchType; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
-    private $stars;
+    public $search_user; // user running the search
+
+    public $types = []; // rules that are available to the objectType (title, year, rating, etc)
+
+    public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
+
+    private $searchType;
+
+    private $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
+
     private $order_by;
 
     /**
@@ -90,12 +100,16 @@ class Search extends playlist_object
      * @param string $object_type // map to self::VALID_TYPES
      * @param User|null $user
      */
-    public function __construct($search_id = 0, $object_type = 'song', ?User $user = null)
-    {
+    public function __construct(
+        $search_id = 0,
+        $object_type = 'song',
+        ?User $user = null
+    ) {
         $this->search_user = $user;
         if (!$this->search_user instanceof User) {
             $this->search_user = User::get_from_global() ?? new User(-1);
         }
+
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
             : 'song';
@@ -106,35 +120,39 @@ class Search extends playlist_object
                 if ($key == 'rules') {
                     $this->rules = json_decode((string)$value, true);
                     if (!is_array($this->rules)) {
-                        debug_event(__CLASS__, "Can't decode key 'rules'. Not a valid json.", 1);
-                        $this->rules = array();
+                        debug_event(self::class, "Can't decode key 'rules'. Not a valid json.", 1);
+                        $this->rules = [];
                     }
                 } else {
                     $this->$key = $value;
                 }
             }
+
             if (!is_array($this->rules)) {
-                $this->rules = array();
+                $this->rules = [];
             }
+
             // make sure saved rules match the correct names
             $rule_count = 0;
             foreach ($this->rules as $rule) {
                 $this->rules[$rule_count][0] = $this->_get_rule_name($rule[0]);
-                $rule_count++;
+                ++$rule_count;
             }
+
             // When loading a search use the owner ID for the search
             if ($this->user > 0) {
                 $this->search_user = new User($this->user);
             }
         }
-        $this->stars = array(
+
+        $this->stars = [
             T_('0 Stars'),
             T_('1 Star'),
             T_('2 Stars'),
             T_('3 Stars'),
             T_('4 Stars'),
-            T_('5 Stars')
-        );
+            T_('5 Stars'),
+        ];
 
         // Define our basetypes
         $this->_set_basetypes();
@@ -199,7 +217,7 @@ class Search extends playlist_object
                 $this->searchType = new VideoSearch();
                 $this->order_by   = '`video`.`file`';
                 break;
-        } // end switch on objectType
+        }
     }
 
     public function getId(): int
@@ -219,278 +237,278 @@ class Search extends playlist_object
      */
     private function _set_basetypes(): void
     {
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'gte',
             'description' => T_('is greater than or equal to'),
-            'sql' => '>='
-        );
+            'sql' => '>=',
+        ];
 
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql' => '<='
-        );
+            'sql' => '<='];
 
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'equal',
             'description' => T_('equals'),
-            'sql' => '<=>'
-        );
+            'sql' => '<=>',
+        ];
 
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'ne',
             'description' => T_('does not equal'),
-            'sql' => '<>'
-        );
+            'sql' => '<>',
+        ];
 
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'gt',
             'description' => T_('is greater than'),
-            'sql' => '>'
-        );
+            'sql' => '>',
+        ];
 
-        $this->basetypes['numeric'][] = array(
+        $this->basetypes['numeric'][] = [
             'name' => 'lt',
             'description' => T_('is less than'),
-            'sql' => '<'
-        );
+            'sql' => '<',
+        ];
 
-        $this->basetypes['is_true'][] = array(
+        $this->basetypes['is_true'][] = [
             'name' => 'true',
             'description' => T_('is true'),
-            'sql' => '1'
-        );
+            'sql' => '1',
+        ];
 
-        $this->basetypes['boolean'][] = array(
+        $this->basetypes['boolean'][] = [
             'name' => 'true',
             'description' => T_('is true'),
-            'sql' => '1'
-        );
+            'sql' => '1',
+        ];
 
-        $this->basetypes['boolean'][] = array(
+        $this->basetypes['boolean'][] = [
             'name' => 'false',
             'description' => T_('is false'),
-            'sql' => '0'
-        );
+            'sql' => '0',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'contain',
             'description' => T_('contains'),
             'sql' => 'LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
+            'preg_match' => ['/^/', '/$/'],
+            'preg_replace' => ['%', '%'],
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'notcontain',
             'description' => T_('does not contain'),
             'sql' => 'NOT LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
+            'preg_match' => ['/^/', '/$/'],
+            'preg_replace' => ['%', '%'],
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'start',
             'description' => T_('starts with'),
             'sql' => 'LIKE',
             'preg_match' => '/$/',
-            'preg_replace' => '%'
-        );
+            'preg_replace' => '%',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'end',
             'description' => T_('ends with'),
             'sql' => 'LIKE',
             'preg_match' => '/^/',
-            'preg_replace' => '%'
-        );
+            'preg_replace' => '%',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'equal',
             'description' => T_('is'),
-            'sql' => '='
-        );
+            'sql' => '=',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'not equal',
             'description' => T_('is not'),
-            'sql' => '!='
-        );
+            'sql' => '!=',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'sounds',
             'description' => T_('sounds like'),
-            'sql' => 'SOUNDS LIKE'
-        );
+            'sql' => 'SOUNDS LIKE',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'notsounds',
             'description' => T_('does not sound like'),
-            'sql' => 'NOT SOUNDS LIKE'
-        );
+            'sql' => 'NOT SOUNDS LIKE',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'regexp',
             'description' => T_('matches regular expression'),
-            'sql' => 'REGEXP'
-        );
+            'sql' => 'REGEXP',
+        ];
 
-        $this->basetypes['text'][] = array(
+        $this->basetypes['text'][] = [
             'name' => 'notregexp',
             'description' => T_('does not match regular expression'),
-            'sql' => 'NOT REGEXP'
-        );
+            'sql' => 'NOT REGEXP',
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'contain',
             'description' => T_('contains'),
             'sql' => 'LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
+            'preg_match' => ['/^/', '/$/'],
+            'preg_replace' => ['%', '%'],
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'notcontain',
             'description' => T_('does not contain'),
             'sql' => 'NOT LIKE',
-            'preg_match' => array('/^/', '/$/'),
-            'preg_replace' => array('%', '%')
-        );
+            'preg_match' => ['/^/', '/$/'],
+            'preg_replace' => ['%', '%'],
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'start',
             'description' => T_('starts with'),
             'sql' => 'LIKE',
             'preg_match' => '/$/',
-            'preg_replace' => '%'
-        );
+            'preg_replace' => '%',
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'end',
             'description' => T_('ends with'),
             'sql' => 'LIKE',
             'preg_match' => '/^/',
-            'preg_replace' => '%'
-        );
+            'preg_replace' => '%',
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'equal',
             'description' => T_('is'),
-            'sql' => '>'
-        );
+            'sql' => '>',
+        ];
 
-        $this->basetypes['tags'][] = array(
+        $this->basetypes['tags'][] = [
             'name' => 'not equal',
             'description' => T_('is not'),
-            'sql' => '='
-        );
+            'sql' => '=',
+        ];
 
-        $this->basetypes['boolean_numeric'][] = array(
+        $this->basetypes['boolean_numeric'][] = [
             'name' => 'equal',
             'description' => T_('is'),
-            'sql' => '<=>'
-        );
+            'sql' => '<=>',
+        ];
 
-        $this->basetypes['boolean_numeric'][] = array(
+        $this->basetypes['boolean_numeric'][] = [
             'name' => 'ne',
             'description' => T_('is not'),
-            'sql' => '<>'
-        );
+            'sql' => '<>',
+        ];
 
-        $this->basetypes['boolean_subsearch'][] = array(
+        $this->basetypes['boolean_subsearch'][] = [
             'name' => 'equal',
             'description' => T_('is'),
-            'sql' => ''
-        );
+            'sql' => '',
+        ];
 
-        $this->basetypes['boolean_subsearch'][] = array(
+        $this->basetypes['boolean_subsearch'][] = [
             'name' => 'ne',
             'description' => T_('is not'),
-            'sql' => 'NOT'
-        );
+            'sql' => 'NOT',
+        ];
 
-        $this->basetypes['date'][] = array(
+        $this->basetypes['date'][] = [
             'name' => 'lt',
             'description' => T_('before'),
-            'sql' => '<'
-        );
+            'sql' => '<',
+        ];
 
-        $this->basetypes['date'][] = array(
+        $this->basetypes['date'][] = [
             'name' => 'gt',
             'description' => T_('after'),
-            'sql' => '>'
-        );
+            'sql' => '>',
+        ];
 
-        $this->basetypes['days'][] = array(
+        $this->basetypes['days'][] = [
             'name' => 'lt',
             'description' => T_('before (x) days ago'),
-            'sql' => '<'
-        );
+            'sql' => '<',
+        ];
 
-        $this->basetypes['days'][] = array(
+        $this->basetypes['days'][] = [
             'name' => 'gt',
             'description' => T_('after (x) days ago'),
-            'sql' => '>'
-        );
+            'sql' => '>',
+        ];
 
-        $this->basetypes['recent_played'][] = array(
+        $this->basetypes['recent_played'][] = [
             'name' => 'ply',
             'description' => T_('Limit'),
-            'sql' => '`date`'
-        );
-        $this->basetypes['recent_added'][] = array(
+            'sql' => '`date`',
+        ];
+        $this->basetypes['recent_added'][]  = [
             'name' => 'add',
             'description' => T_('Limit'),
-            'sql' => '`addition_time`'
-        );
+            'sql' => '`addition_time`',
+        ];
 
-        $this->basetypes['recent_updated'][] = array(
+        $this->basetypes['recent_updated'][] = [
             'name' => 'upd',
             'description' => T_('Limit'),
-            'sql' => '`update_time`'
-        );
+            'sql' => '`update_time`',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => 'love',
             'description' => T_('has loved'),
-            'sql' => 'userflag'
-        );
+            'sql' => 'userflag',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => '5star',
             'description' => T_('has rated 5 stars'),
-            'sql' => '`rating` = 5'
-        );
+            'sql' => '`rating` = 5',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => '4star',
             'description' => T_('has rated 4 stars'),
-            'sql' => '`rating` = 4'
-        );
+            'sql' => '`rating` = 4',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => '3star',
             'description' => T_('has rated 3 stars'),
-            'sql' => '`rating` = 3'
-        );
+            'sql' => '`rating` = 3',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => '2star',
             'description' => T_('has rated 2 stars'),
-            'sql' => '`rating` = 2'
-        );
+            'sql' => '`rating` = 2',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => '1star',
             'description' => T_('has rated 1 star'),
-            'sql' => '`rating` = 1'
-        );
+            'sql' => '`rating` = 1',
+        ];
 
-        $this->basetypes['user_numeric'][] = array(
+        $this->basetypes['user_numeric'][] = [
             'name' => 'unrated',
             'description' => T_('has not rated'),
-            'sql' => 'unrated'
-        );
+            'sql' => 'unrated',
+        ];
+
         $this->basetypes['multiple'] = array_merge($this->basetypes['text'], $this->basetypes['numeric']);
     }
 
@@ -505,13 +523,16 @@ class Search extends playlist_object
      */
     private function _add_type_numeric($name, $label, $type = 'numeric', $group = ''): void
     {
-        $this->types[] = array(
+        $this->types[] = [
             'name' => $name,
             'label' => $label,
             'type' => $type,
-            'widget' => array('input', 'number'),
-            'title' => $group
-        );
+            'widget' => [
+                'input',
+                'number',
+            ],
+            'title' => $group,
+        ];
     }
 
     /**
@@ -524,13 +545,16 @@ class Search extends playlist_object
      */
     private function _add_type_date($name, $label, $group = ''): void
     {
-        $this->types[] = array(
+        $this->types[] = [
             'name' => $name,
             'label' => $label,
             'type' => 'date',
-            'widget' => array('input', 'datetime-local'),
-            'title' => $group
-        );
+            'widget' => [
+                'input',
+                'datetime-local',
+            ],
+            'title' => $group,
+        ];
     }
 
     /**
@@ -543,13 +567,16 @@ class Search extends playlist_object
      */
     private function _add_type_text($name, $label, $group = ''): void
     {
-        $this->types[] = array(
+        $this->types[] = [
             'name' => $name,
             'label' => $label,
             'type' => 'text',
-            'widget' => array('input', 'text'),
-            'title' => $group
-        );
+            'widget' => [
+                'input',
+                'text',
+            ],
+            'title' => $group,
+        ];
     }
 
     /**
@@ -564,13 +591,16 @@ class Search extends playlist_object
      */
     private function _add_type_select($name, $label, $type, $array, $group = ''): void
     {
-        $this->types[] = array(
+        $this->types[] = [
             'name' => $name,
             'label' => $label,
             'type' => $type,
-            'widget' => array('select', $array),
-            'title' => $group
-        );
+            'widget' => [
+                'select',
+                $array,
+            ],
+            'title' => $group,
+        ];
     }
 
     /**
@@ -584,13 +614,16 @@ class Search extends playlist_object
      */
     private function _add_type_boolean($name, $label, $type = 'boolean', $group = ''): void
     {
-        $this->types[] = array(
+        $this->types[] = [
             'name' => $name,
             'label' => $label,
             'type' => $type,
-            'widget' => array('input', 'hidden'),
-            'title' => $group
-        );
+            'widget' => [
+                'input',
+                'hidden',
+            ],
+            'title' => $group,
+        ];
     }
 
     /**
@@ -659,18 +692,20 @@ class Search extends playlist_object
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
-        if (!empty($playlists)) {
+        if ($playlists !== []) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+
         $playlists = self::get_search_array($this->user);
-        if (!empty($playlists)) {
+        if ($playlists !== []) {
             $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+
         $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
         $this->_add_type_text('file', T_('Filename'), $t_file_data);
-        $bitrate_array = array(
+        $bitrate_array = [
             '32',
             '40',
             '48',
@@ -686,8 +721,8 @@ class Search extends playlist_object
             '256',
             '320',
             '640',
-            '1280'
-        );
+            '1280',
+        ];
         $this->_add_type_select('bitrate', T_('Bitrate'), 'numeric', $bitrate_array, $t_file_data);
         $this->_add_type_date('added', T_('Added'), $t_file_data);
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
@@ -697,21 +732,24 @@ class Search extends playlist_object
             );
             $this->_add_type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
         }
+
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
         $this->_add_type_numeric('recent_updated', T_('Recently updated'), 'recent_updated', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
         $this->_add_type_boolean('orphaned_album', T_('Orphaned Album'), 'is_true', $t_file_data);
-        $catalogs = array();
+        $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             if ($catalog === null) {
                 break;
             }
+
             $catalogs[$catid] = $catalog->name;
         }
-        if (!empty($catalogs)) {
+
+        if ($catalogs !== []) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
@@ -722,14 +760,19 @@ class Search extends playlist_object
 
         $t_metadata = T_('Metadata');
         if (AmpConfig::get('enable_custom_metadata')) {
-            $this->types[] = array(
+            $this->types[] = [
                 'name' => 'metadata',
                 'label' => $t_metadata,
                 'type' => 'multiple',
                 'subtypes' => iterator_to_array($this->getMetadataFieldRepository()->getPropertyList()),
-                'widget' => array('subtypes', array('input', 'text')),
-                'title' => $t_metadata
-            );
+                'widget' => [
+                    'subtypes',
+                    [
+                        'input',
+                        'text',
+                    ],
+                ],
+                'title' => $t_metadata];
         }
     }
 
@@ -779,9 +822,10 @@ class Search extends playlist_object
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
-        if (!empty($playlists)) {
+        if ($playlists !== []) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+
         $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
@@ -791,15 +835,17 @@ class Search extends playlist_object
         $this->_add_type_numeric('image_height', T_('Image Height'), 'numeric', $t_file_data);
         $this->_add_type_boolean('possible_duplicate', T_('Possible Duplicate'), 'is_true', $t_file_data);
         $this->_add_type_boolean('possible_duplicate_album', T_('Possible Duplicate Albums'), 'is_true', $t_file_data);
-        $catalogs = array();
+        $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             if ($catalog === null) {
                 break;
             }
+
             $catalogs[$catid] = $catalog->name;
         }
-        if (!empty($catalogs)) {
+
+        if ($catalogs !== []) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
@@ -860,13 +906,15 @@ class Search extends playlist_object
 
         $t_playlists = T_('Playlists');
         $playlists   = Playlist::get_playlist_array($this->user);
-        if (!empty($playlists)) {
+        if ($playlists !== []) {
             $this->_add_type_select('playlist', T_('Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+
         $playlists = self::get_search_array($this->user);
-        if (!empty($playlists)) {
+        if ($playlists !== []) {
             $this->_add_type_select('smartplaylist', T_('Smart Playlist'), 'boolean_subsearch', $playlists, $t_playlists);
         }
+
         $this->_add_type_text('playlist_name', T_('Playlist Name'), $t_playlists);
 
         $t_file_data = T_('File Data');
@@ -878,15 +926,17 @@ class Search extends playlist_object
         $this->_add_type_boolean('duplicate_tracks', T_('Duplicate Album Tracks'), 'is_true', $t_file_data);
         $this->_add_type_boolean('duplicate_mbid_group', T_('Duplicate MusicBrainz Release Group'), 'is_true', $t_file_data);
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
-        $catalogs = array();
+        $catalogs = [];
         foreach (Catalog::get_catalogs('music', $this->user) as $catid) {
             $catalog = Catalog::create_from_id($catid);
             if ($catalog === null) {
                 break;
             }
+
             $catalogs[$catid] = $catalog->name;
         }
-        if (!empty($catalogs)) {
+
+        if ($catalogs !== []) {
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
@@ -915,10 +965,7 @@ class Search extends playlist_object
     {
         $t_playlist = T_('Playlist');
         $this->_add_type_text('title', T_('Name'), $t_playlist);
-        $playlist_types = array(
-            0 => T_('public'),
-            1 => T_('private')
-        );
+        $playlist_types = [0 => T_('public'), 1 => T_('private')];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
         $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
@@ -937,11 +984,7 @@ class Search extends playlist_object
 
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
-        $episode_states = array(
-            0 => T_('skipped'),
-            1 => T_('pending'),
-            2 => T_('completed')
-        );
+        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -975,11 +1018,7 @@ class Search extends playlist_object
         $t_podcast_episodes = T_('Podcast Episode');
         $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
         $this->_add_type_text('podcast', T_('Podcast'), $t_podcast_episodes);
-        $episode_states = array(
-            0 => T_('skipped'),
-            1 => T_('pending'),
-            2 => T_('completed')
-        );
+        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -1040,36 +1079,33 @@ class Search extends playlist_object
      *
      * Sanitizes raw search data
      * @param array $data
-     * @return array
      */
-    private static function _filter_request($data): array
+    private function _filter_request($data): array
     {
-        $request = array();
+        $request = [];
         foreach ($data as $key => $value) {
             $prefix = substr($key, 0, 4);
             $value  = (string)$value;
 
-            if ($prefix == 'rule' && strlen((string)$value)) {
+            if ($prefix == 'rule' && strlen($value)) {
                 $request[$key] = Dba::escape($value);
             }
         }
+
         // Figure out if they want an AND based search or an OR based search
-        $operator = $data['operator'] ?? '';
-        switch (strtolower($operator)) {
-            case 'or':
-                $request['operator'] = 'OR';
-                break;
-            case 'and':
-            default:
-                $request['operator'] = 'AND';
-                break;
-        }
+        $operator            = $data['operator'] ?? '';
+        $request['operator'] = match (strtolower((string) $operator)) {
+            'or' => 'OR',
+            default => 'AND',
+        };
         if (array_key_exists('limit', $data)) {
             $request['limit'] = $data['limit'];
         }
+
         if (array_key_exists('offset', $data)) {
             $request['offset'] = $data['offset'];
         }
+
         if (array_key_exists('random', $data)) {
             $request['random'] = (int)$data['random'];
         }
@@ -1097,7 +1133,7 @@ class Search extends playlist_object
                 $request['type'] = 'tag';
                 break;
             default:
-                debug_event(self::class, "_filter_request: search_type '$search_type' reset to: song", 5);
+                debug_event(self::class, sprintf('_filter_request: search_type \'%s\' reset to: song', $search_type), 5);
                 $request['type'] = 'song';
                 break;
         }
@@ -1109,31 +1145,32 @@ class Search extends playlist_object
      * get_searches
      *
      * Return the IDs of all saved searches accessible by the current user.
-     * @param int $user_id
-     * @return array
+     * @param int|null  $user_id
      */
     public static function get_searches($user_id = null): array
     {
         if ($user_id === null) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?: 0;
+            $user_id = (int)(Core::get_global('user')?->id);
         }
+
         $key = 'searches';
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
         $sql      = "SELECT `id`, `name` FROM `search` ";
-        $params   = array();
+        $params   = [];
 
         if (!$is_admin) {
             $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
             $params[] = $user_id;
         }
+
         $sql .= "ORDER BY `name`";
 
         $db_results = Dba::read($sql, $params);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -1147,31 +1184,32 @@ class Search extends playlist_object
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
      * @param int|null $user_id
-     * @return array
      */
-    public static function get_search_array($user_id = 0): array
+    public static function get_search_array($user_id = null): array
     {
-        if ($user_id === 0) {
-            $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+        if ($user_id === null) {
+            $user_id = (int)(Core::get_global('user')?->id);
         }
+
         $key = 'searcharray';
         if (parent::is_cached($key, $user_id)) {
             return parent::get_from_cache($key, $user_id);
         }
-        $is_admin = (Access::check('interface', 100, $user_id) || $user_id == -1);
+
+        $is_admin = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1);
         $sql      = "SELECT `id`, IF(`user` = ?, `name`, CONCAT(`name`, ' (', `username`, ')')) AS `name` FROM `search` ";
-        $params   = array($user_id);
+        $params   = [$user_id];
 
         if (!$is_admin) {
             $sql .= "WHERE (`user` = ? OR `type` = 'public') ";
             $params[] = $user_id;
         }
+
         $sql .= "ORDER BY `name`";
         //debug_event(self::class, 'get_searches query: ' . $sql . "\n" . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -1206,6 +1244,7 @@ class Search extends playlist_object
             if ($offset > 0) {
                 $limit_sql .= $offset . ", ";
             }
+
             $limit_sql .= $limit;
         }
 
@@ -1213,26 +1252,28 @@ class Search extends playlist_object
         if ($require_rules && empty($search_info['where'])) {
             debug_event(self::class, 'require_rules: No rules were set on this search', 5);
 
-            return array();
+            return [];
         }
 
         $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
         }
+
         if (!empty($search_info['group_sql'])) {
             $sql .= ' GROUP BY ' . $search_info['group_sql'];
             if (!empty($search_info['having_sql'])) {
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
         }
+
         $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
-        $sql = trim((string)$sql);
+        $sql = trim($sql);
         //debug_event(self::class, 'SQL run: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
 
         $db_results = Dba::read($sql, $search_info['parameters']);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1248,7 +1289,7 @@ class Search extends playlist_object
     public function delete(): bool
     {
         $sql = "DELETE FROM `search` WHERE `id` = ?";
-        Dba::write($sql, array($this->id));
+        Dba::write($sql, [$this->id]);
         Catalog::count_table('search');
 
         return true;
@@ -1270,42 +1311,46 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
-     * @return array
      */
     public function get_items(): array
     {
-        $results = array();
+        $results = [];
         if ($this->isNew()) {
             return $results;
         }
+
         $sqltbl = $this->to_sql();
         $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
+
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
         }
+
         if (!empty($sqltbl['having_sql'])) {
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
         $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
         if ($this->limit > 0) {
-            $sql .= " LIMIT " . (string)($this->limit);
+            $sql .= " LIMIT " . $this->limit;
         }
+
         //debug_event(self::class, 'SQL get_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
 
         $count      = 1;
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'object_id' => $row['id'],
-                'object_type' => $this->objectType,
+                'object_type' => LibraryItemEnum::from($this->objectType),
                 'track' => $count++,
-                'track_id' => $row['id'],
-            );
+                'track_id' => $row['id']
+            ];
         }
+
         $this->date = time();
         $this->set_last(count($results), 'last_count');
         $this->set_last(self::get_total_duration($results), 'last_duration');
@@ -1317,32 +1362,34 @@ class Search extends playlist_object
      * get_subsearch
      *
      * get SQL for an item subsearch
-     * @return array
      */
     public function get_subsearch($table): array
     {
         $sqltbl = $this->to_sql();
-        $sql    = "SELECT DISTINCT(`$table`.`id`) FROM `$table` " . $sqltbl['table_sql'];
+        $sql    = sprintf('SELECT DISTINCT(`%s`.`id`) FROM `%s` ', $table, $table) . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
+
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
         }
+
         if (!empty($sqltbl['having_sql'])) {
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
         //$sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by; // MYSQL would want file for order by
         if ($this->limit > 0) {
-            $sql .= " LIMIT " . (string)($this->limit);
+            $sql .= " LIMIT " . $this->limit;
         }
+
         //debug_event(self::class, 'SQL get_subsearch: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
 
-        return array(
+        return [
             'sql' => $sql,
             'parameters' => $sqltbl['parameters']
-        );
+        ];
     }
 
     /**
@@ -1353,9 +1400,9 @@ class Search extends playlist_object
      */
     private function set_last($count, $column): void
     {
-        if (in_array($column, array('last_count', 'last_duration'))) {
+        if (in_array($column, ['last_count', 'last_duration'])) {
             $sql = "UPDATE `search` SET `" . Dba::escape($column) . "` = ? WHERE `id` = ?";
-            Dba::write($sql, array($count, $this->id));
+            Dba::write($sql, [$count, $this->id]);
         }
     }
 
@@ -1365,43 +1412,42 @@ class Search extends playlist_object
      * Returns a randomly sorted array (with an optional limit) of the items
      * output by our search (part of the playlist interface)
      * @param string|null $limit
-     * @return array
      */
     public function get_random_items($limit = ''): array
     {
-        $results = array();
+        $results = [];
         $sqltbl  = $this->to_sql();
         $sql     = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
+
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0) {
+        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
             $user_id = Core::get_global('user')->id;
             $sql .= (empty($sqltbl['where_sql']))
                 ? " WHERE "
                 : " AND ";
-            $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . "' AND `rating`.`rating` <=$rating_filter AND `rating`.`user` = $user_id)";
+            $sql .= "`" . $this->objectType . "`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = '" . $this->objectType . sprintf('\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
         }
+
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
         }
+
         if (!empty($sqltbl['having_sql'])) {
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
         $sql .= " ORDER BY RAND()";
-        $sql .= (!empty($limit))
-            ? " LIMIT " . $limit
-            : "";
+        $sql .= (empty($limit))
+            ? ""
+            : " LIMIT " . $limit;
 
         //debug_event(self::class, 'SQL get_random_items: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
         $db_results = Dba::read($sql, $sqltbl['parameters']);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
-                'object_id' => $row['id'],
-                'object_type' => $this->objectType
-            );
+            $results[] = ['object_id' => $row['id'], 'object_type' => $this->objectType];
         }
 
         return $results;
@@ -1415,26 +1461,30 @@ class Search extends playlist_object
      */
     public function get_songs(): array
     {
-        $results = array();
+        $results = [];
         if ($this->isNew()) {
             return $results;
         }
+
         $sqltbl = $this->to_sql();
         $sql    = $sqltbl['base'] . ' ' . $sqltbl['table_sql'];
         if (!empty($sqltbl['where_sql'])) {
             $sql .= ' WHERE ' . $sqltbl['where_sql'];
         }
+
         if (!empty($sqltbl['group_sql'])) {
             $sql .= ' GROUP BY ' . $sqltbl['group_sql'];
         }
+
         if (!empty($sqltbl['having_sql'])) {
             $sql .= ' HAVING ' . $sqltbl['having_sql'];
         }
 
         $sql .= ($this->random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $this->order_by;
         if ($this->limit > 0) {
-            $sql .= " LIMIT " . (string)($this->limit);
+            $sql .= " LIMIT " . $this->limit;
         }
+
         //debug_event(self::class, 'SQL get_songs: ' . $sql . "\n" . print_r($sqltbl['parameters'], true), 5);
 
         $db_results = Dba::read($sql, $sqltbl['parameters']);
@@ -1452,15 +1502,17 @@ class Search extends playlist_object
      */
     public static function get_total_duration($songs): int
     {
-        $song_ids = array();
+        $song_ids = [];
         foreach ($songs as $objects) {
             $song_ids[] = (string)$objects['object_id'];
         }
+
         $idlist = '(' . implode(',', $song_ids) . ')';
         if ($idlist == '()') {
             return 0;
         }
-        $sql = "SELECT SUM(`time`) FROM `song` WHERE `id` IN $idlist";
+
+        $sql = 'SELECT SUM(`time`) FROM `song` WHERE `id` IN ' . $idlist;
 
         $db_results = Dba::read($sql);
         $row        = Dba::fetch_row($db_results);
@@ -1513,6 +1565,7 @@ class Search extends playlist_object
                         $name = 'mbid';
                         break;
                 }
+
                 break;
             case 'album':
             case 'album_disk':
@@ -1552,6 +1605,7 @@ class Search extends playlist_object
                         $name = 'version';
                         break;
                 }
+
                 break;
             case 'artist':
                 switch ($name) {
@@ -1581,6 +1635,7 @@ class Search extends playlist_object
                         $name = 'mbid';
                         break;
                 }
+
                 break;
             case 'podcast':
                 switch ($name) {
@@ -1594,6 +1649,7 @@ class Search extends playlist_object
                         $name = 'state';
                         break;
                 }
+
                 break;
             case 'podcast_episode':
                 switch ($name) {
@@ -1607,18 +1663,19 @@ class Search extends playlist_object
                         $name = 'state';
                         break;
                 }
+
                 break;
             case 'genre':
             case 'tag':
             case 'label':
             case 'playlist':
-                switch ($name) {
-                    case 'name':
-                        $name = 'title';
-                        break;
+                if ($name === 'name') {
+                    $name = 'title';
                 }
+
                 break;
         }
+
         //debug_event(self::class, '__get_rule_name: ' . $name, 5);
 
         return $name;
@@ -1654,23 +1711,26 @@ class Search extends playlist_object
         if (isset($data['playlist_name'])) {
             $this->name = (string)$data['playlist_name'];
         }
+
         if (isset($data['playlist_type'])) {
             $this->type = (string)$data['playlist_type'];
         }
+
         // check that a limit or random flag and operator have been sent
         $this->random = (isset($data['random'])) ? (int)$data['random'] : $this->random;
         $this->limit  = (isset($data['limit'])) ? (int) $data['limit'] : $this->limit;
         // the rules array needs to be filtered to just have rules
-        $data                 = self::_filter_request($data);
-        $this->rules          = array();
-        $user_rules           = array();
+        $data                 = $this->_filter_request($data);
+        $this->rules          = [];
+        $user_rules           = [];
         $this->logic_operator = $data['operator'] ?? 'AND';
         // match the numeric rules you send (e.g. rule_1, rule_6000)
-        foreach ($data as $rule => $value) {
+        foreach (array_keys($data) as $rule) {
             if (preg_match('/^rule_(\d+)$/', $rule, $ruleID)) {
                 $user_rules[] = $ruleID[1];
             }
         }
+
         // get the data for each rule group the user sent
         foreach ($user_rules as $ruleID) {
             $rule_name = $this->_get_rule_name($data["rule_" . $ruleID]);
@@ -1678,6 +1738,7 @@ class Search extends playlist_object
             if ($rule_type === null) {
                 continue;
             }
+
             $rule_input    = (string)($data['rule_' . $ruleID . '_input'] ?? '');
             $rule_operator = $this->basetypes[$rule_type][$data['rule_' . $ruleID . '_operator']]['name'] ?? '';
             // keep vertical bar in regular expression
@@ -1685,14 +1746,18 @@ class Search extends playlist_object
             if ($is_regex) {
                 $rule_input = str_replace("|", "\0", $rule_input);
             }
+
             // attach the rules to the search
             foreach (explode('|', $rule_input) as $input) {
-                $this->rules[] = array(
-                    $rule_name, // name
-                    $rule_operator, // operator
-                    ($is_regex) ? str_replace("\0", "|", $input) : $input, // input
-                    $data['rule_' . $ruleID . '_subtype'] ?? null, // subtype
-                );
+                $this->rules[] = [
+                    $rule_name,
+                    // name
+                    $rule_operator,
+                    // operator
+                    ($is_regex) ? str_replace("\0", "|", $input) : $input,
+                    // input
+                    $data['rule_' . $ruleID . '_subtype'] ?? null,
+                ];
             }
         }
     }
@@ -1705,34 +1770,30 @@ class Search extends playlist_object
     public function create(): ?string
     {
         $user = Core::get_global('user');
+        if (!$user instanceof $user) {
+            return null;
+        }
+
         // Make sure we have a unique name
-        if (empty($this->name)) {
+        if ($this->name === null || $this->name === '' || $this->name === '0') {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
+
         $sql        = "SELECT `id` FROM `search` WHERE `name` = ? AND `user` = ? AND `type` = ?;";
-        $db_results = Dba::read($sql, array($this->name, $user->id, $this->type));
-        if (Dba::num_rows($db_results)) {
+        $db_results = Dba::read($sql, [$this->name, $user->id, $this->type]);
+        if (Dba::num_rows($db_results) !== 0) {
             $this->name .= uniqid('', true);
         }
+
         $time = time();
 
         $sql = "INSERT INTO `search` (`name`, `type`, `user`, `username`, `rules`, `logic_operator`, `random`, `limit`, `date`, `last_update`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array(
-            $this->name,
-            $this->type,
-            $user->id,
-            $user->username,
-            json_encode($this->rules),
-            $this->logic_operator,
-            ($this->random > 0) ? 1 : 0,
-            $this->limit,
-            $time,
-            $time
-        ));
+        Dba::write($sql, [$this->name, $this->type, $user->id, $user->username, json_encode($this->rules), $this->logic_operator, ($this->random > 0) ? 1 : 0, $this->limit, $time, $time]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
         }
+
         $this->id = (int)$insert_id;
         Catalog::count_table('search');
 
@@ -1749,7 +1810,7 @@ class Search extends playlist_object
         $javascript = "";
         foreach ($this->rules as $rule) {
             // @see search.js SearchRow.add(ruleType, operator, input, subtype)
-            $javascript .= '<script>' . 'SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
+            $javascript .= '<script>SearchRow.add("' . scrub_out($rule[0]) . '","' . scrub_out($rule[1]) . '","' . scrub_out($rule[2]) . '", "' . scrub_out($rule[3]) . '"); </script>';
         }
 
         return $javascript;
@@ -1759,7 +1820,6 @@ class Search extends playlist_object
      * to_sql
      *
      * Call the appropriate real function.
-     * @return array
      */
     public function to_sql(): array
     {
@@ -1781,6 +1841,7 @@ class Search extends playlist_object
             $this->random = $data['random'] ?? $this->random;
             $this->limit  = $data['limit'] ?? $this->limit;
         }
+
         $this->username = User::get_username((int)$this->user);
 
         if ($this->isNew()) {
@@ -1788,18 +1849,7 @@ class Search extends playlist_object
         }
 
         $sql = "UPDATE `search` SET `name` = ?, `type` = ?, `user` = ?, `username` = ?, `rules` = ?, `logic_operator` = ?, `random` = ?, `limit` = ?, `last_update` = ? WHERE `id` = ?";
-        Dba::write($sql, array(
-            $this->name,
-            $this->type,
-            $this->user,
-            $this->username,
-            json_encode($this->rules),
-            $this->logic_operator,
-            (int)$this->random,
-            $this->limit,
-            time(),
-            $this->id
-        ));
+        Dba::write($sql, [$this->name, $this->type, $this->user, $this->username, json_encode($this->rules), $this->logic_operator, (int)$this->random, $this->limit, time(), $this->id]);
         // reformat after an update
         $this->format();
 
@@ -1812,14 +1862,21 @@ class Search extends playlist_object
      * Private convenience function.  Mangles the input according to a set
      * of predefined rules so that we don't have to include this logic in
      * _get_sql_foo.
-     * @param string $data
-     * @param string $type
-     * @param array $operator
+     * @param array{
+     *  name: string,
+     *  description: string,
+     *  sql: string,
+     *  preg_match?: string|array,
+     *  preg_replace?: string|array,
+     * } $operator
      * @return bool|int|null|string
      */
     public function filter_data(string $data, string $type, array $operator)
     {
-        if (array_key_exists('preg_match', $operator)) {
+        if (
+            array_key_exists('preg_match', $operator) &&
+            array_key_exists('preg_replace', $operator)
+        ) {
             $data = preg_replace($operator['preg_match'], $operator['preg_replace'], $data);
         }
 
@@ -1842,11 +1899,10 @@ class Search extends playlist_object
      * @param int $toYear
      * @param int $size
      * @param int $offset
-     * @return array
      */
     public static function year_search($fromYear, $toYear, $size, $offset): array
     {
-        $search           = array();
+        $search           = [];
         $search['limit']  = $size;
         $search['offset'] = $offset;
         $search['type']   = "album";
@@ -1855,6 +1911,7 @@ class Search extends playlist_object
             $search['rule_0_operator'] = 0;
             $search['rule_0']          = "original_year";
         }
+
         if ($toYear) {
             $search['rule_1_input']    = $toYear;
             $search['rule_1_operator'] = 1;
@@ -1862,6 +1919,11 @@ class Search extends playlist_object
         }
 
         return $search;
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::SEARCH;
     }
 
     /**

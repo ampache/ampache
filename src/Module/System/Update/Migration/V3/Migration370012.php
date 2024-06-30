@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -44,6 +45,6 @@ final class Migration370012 extends AbstractMigration
 
         $this->updateDatabase("ALTER TABLE `video` ADD COLUMN `channels` MEDIUMINT NULL, ADD COLUMN `bitrate` MEDIUMINT(8) NULL, ADD COLUMN `video_bitrate` MEDIUMINT(8) NULL, ADD COLUMN `display_x` MEDIUMINT(8) NULL, ADD COLUMN `display_y` MEDIUMINT(8) NULL, ADD COLUMN `frame_rate` FLOAT NULL, ADD COLUMN `mode` enum('abr','vbr','cbr') NULL DEFAULT 'cbr'");
 
-        $this->updatePreferences('allow_video', 'Allow video features', '1', 75, 'integer', 'options');
+        $this->updatePreferences('allow_video', 'Allow video features', '1', AccessLevelEnum::MANAGER->value, 'integer', 'options');
     }
 }

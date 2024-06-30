@@ -41,7 +41,7 @@ class easy_captcha_utility
     {
         return current(array_filter( // filter by writability
             array_filter( // filter empty entries
-                array(
+                [
                     $_SERVER['TMPDIR'] ?? null,
                     $_SERVER['REDIRECT_TMPDIR'] ?? null,
                     $_SERVER['TEMP'] ?? null,
@@ -50,7 +50,7 @@ class easy_captcha_utility
                     $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
-                )
+                ]
             ),
             "is_writeable"
         ));
@@ -60,7 +60,7 @@ class easy_captcha_utility
     #-- script was called directly
 
     /**
-     * @return boolean
+     * @return bool
      */
     public static function API()
     {
@@ -261,7 +261,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
             $url = $path['path'];
         }
 
-        $path    = array();
+        $path    = [];
         $abspath = substr("$url ", 0, 1) == '/' ? '/' : '';
         $ncomp   = 0;
 

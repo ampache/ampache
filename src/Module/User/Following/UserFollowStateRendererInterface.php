@@ -23,13 +23,15 @@
 
 namespace Ampache\Module\User\Following;
 
+use Ampache\Repository\Model\User;
+
 interface UserFollowStateRendererInterface
 {
     /**
      * Get html code to display the follow/unfollow link
-     *
-     * @param int $userId
-     * @param int $foreignUserId
      */
-    public function render(int $userId, int $foreignUserId): string;
+    public function render(
+        User $user,
+        User $foreignUser
+    ): string;
 }

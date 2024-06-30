@@ -27,6 +27,9 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
 /** @var array<string, mixed> $preferences */
+/** @var bool $is_25 */
+/** @var bool $is_5 */
+/** @var bool $is_100 */
 
 Ui::show_box_top(T_('Preferences')); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/preferences.php" enctype="multipart/form-data">

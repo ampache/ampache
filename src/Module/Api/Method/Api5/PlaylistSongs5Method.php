@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -53,7 +54,7 @@ final class PlaylistSongs5Method
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -86,9 +87,9 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
-            if ($object['object_type'] == 'song') {
+            if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
         } // end foreach

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -50,12 +52,12 @@ final class PreferenceEdit5Method
      */
     public static function preference_edit(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'value'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter', 'value'], self::ACTION)) {
             return false;
         }
         $all = array_key_exists('all', $input) && (int)$input['all'] == 1;
         // don't apply to all when you aren't an admin
-        if ($all && !Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if ($all && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // fix preferences that are missing for user
@@ -76,9 +78,9 @@ final class PreferenceEdit5Method
             return false;
         }
         $preference = Preference::get($pref_name, $user->id);
-        $results    = array(
+        $results    = [
             'preference' => $preference
-        );
+        ];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

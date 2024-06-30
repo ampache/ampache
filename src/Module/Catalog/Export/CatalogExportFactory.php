@@ -63,16 +63,11 @@ final class CatalogExportFactory implements CatalogExportFactoryInterface
     /**
      * Returns the exporter class based on the export type
      */
-    public function createFromExportType(string $exportType): CatalogExporterInterface
+    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface
     {
-        switch ($exportType) {
-            case CatalogExportTypeEnum::ITUNES:
-                $exporter = $this->createItunesExporter();
-                break;
-            default:
-                $exporter = $this->createCsvExporter();
-        }
-
-        return $exporter;
+        return match ($type) {
+            CatalogExportTypeEnum::ITUNES => $this->createItunesExporter(),
+            default => $this->createCsvExporter(),
+        };
     }
 }

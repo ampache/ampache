@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -33,12 +34,12 @@ final class Migration530015 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `show_album_artist` and `show_artist` preferences to show/hide Sidebar Browse menu links',
-        'Fallback to Album Artist if both disabled'
+        'Fallback to Album Artist if both disabled',
     ];
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_album_artist', 'Show \'Album Artists\' link in the main sidebar', '1', 25, 'boolean', 'interface', 'theme');
-        $this->updatePreferences('show_artist', 'Show \'Artists\' link in the main sidebar', '0', 25, 'boolean', 'interface', 'theme');
+        $this->updatePreferences('show_album_artist', 'Show \'Album Artists\' link in the main sidebar', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme');
+        $this->updatePreferences('show_artist', 'Show \'Artists\' link in the main sidebar', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme');
     }
 }

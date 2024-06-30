@@ -27,6 +27,8 @@ namespace Ampache\Gui\Playlist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
@@ -116,7 +118,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_playlist_' . $playlistId
         );
@@ -128,7 +130,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_playlist_' . $playlistId
         );
@@ -140,7 +142,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=playlist&object_id=' . $playlistId . '&append=true',
-            'play_add',
+            'low_priority',
             T_('Play last'),
             'addplay_playlist_' . $playlistId
         );
@@ -152,7 +154,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=playlist&id=' . $playlistId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_playlist_' . $playlistId
         );
@@ -164,7 +166,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=playlist_random&id=' . $playlistId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_playlist_' . $playlistId
         );
@@ -172,7 +174,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -183,7 +185,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
             $this->zipHandler->isZipable('playlist');
     }
@@ -199,7 +201,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getBatchDownloadIcon(): string
     {
-        return Ui::get_icon('batch_download', T_('Batch download'));
+        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
     }
 
     public function isEditable(): bool
@@ -214,7 +216,7 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function canBeDeleted(): bool
@@ -268,12 +270,12 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
 
     public function getRefreshIcon(): string
     {
-        return Ui::get_icon('file_refresh', T_('Refresh from Smartlist'));
+        return Ui::get_material_symbol('sync_alt', T_('Refresh from Smartlist'));
     }
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function getPlaylistUrl(): string

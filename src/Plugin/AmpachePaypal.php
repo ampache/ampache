@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -59,10 +60,10 @@ class AmpachePaypal implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

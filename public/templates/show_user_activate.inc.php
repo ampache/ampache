@@ -46,8 +46,6 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-            <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
             <div>
 <?php if ($validationResult) { ?>
 <h3><?php echo T_('User Activated'); ?></h3>

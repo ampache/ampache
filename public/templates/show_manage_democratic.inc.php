@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var array $playlists */
+/** @var list<int> $playlists */
 
 $web_path = AmpConfig::get('web_path');
 Ui::show_box_top(T_('Manage')); ?>
@@ -60,8 +60,8 @@ Ui::show_box_top(T_('Manage')); ?>
         <td><?php echo $democratic->f_primary; ?></td>
         <td><?php echo $democratic->count_items(); ?></td>
         <td>
-        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'all', T_('Play'), 'play_democratic'); ?>
-        <a href="<?php echo $web_path; ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <?php echo Ajax::button('?page=democratic&action=send_playlist&democratic_id=' . $democratic->id, 'cell_tower', T_('Play'), 'play_democratic'); ?>
+        <a href="<?php echo $web_path; ?>/democratic.php?action=delete&democratic_id=<?php echo scrub_out((string)$democratic->id); ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
         </td>
     </tr>
     <?php

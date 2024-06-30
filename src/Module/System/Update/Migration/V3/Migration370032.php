@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370032 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('webdav_backend', 'Use WebDAV backend', '0', 100, 'boolean', 'system');
+        $this->updatePreferences('webdav_backend', 'Use WebDAV backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
     }
 }

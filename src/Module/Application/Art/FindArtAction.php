@@ -107,7 +107,7 @@ final class FindArtAction extends AbstractArtAction
         // If we've got an upload ignore the rest and just insert it
         if (!empty($_FILES['file']['tmp_name'])) {
             $path_info      = pathinfo($_FILES['file']['name']);
-            $upload         = array();
+            $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
             $upload['mime'] = 'image/' . $path_info['extension'];
             $image_data     = Art::get_from_source($upload, $object_type);

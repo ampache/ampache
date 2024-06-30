@@ -45,6 +45,6 @@ final class Playlist3Method
         $uid = scrub_in((string) $input['filter']);
 
         ob_end_clean();
-        echo Xml3_Data::playlists(array($uid));
+        echo Xml3_Data::playlists([$uid]);
     }
 }

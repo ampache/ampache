@@ -24,13 +24,14 @@
 namespace Ampache\Module\Playback\Localplay\Mpd;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -92,13 +93,13 @@ class AmpacheMpd extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
         /* We need to create the MPD table */
         $sql = "CREATE TABLE `localplay_mpd` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600', `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, 25, 'integer', 'internal', 'mpd');
+        Preference::insert('mpd_active', T_('MPD Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'mpd');
 
         return true;
     }
@@ -126,11 +127,11 @@ class AmpacheMpd extends localplay_controller
     public function add_instance($data)
     {
         $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
+        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
@@ -157,7 +158,7 @@ class AmpacheMpd extends localplay_controller
         $sql = "SELECT * FROM `localplay_mpd` ORDER BY `name`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -176,7 +177,7 @@ class AmpacheMpd extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -207,11 +208,11 @@ class AmpacheMpd extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = array();
-        $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields             = [];
+        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -224,7 +225,7 @@ class AmpacheMpd extends localplay_controller
     public function set_active_instance($uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (empty($user)) {
             return false;
         }
         Preference::update('mpd_active', $user->id, $uid);
@@ -429,7 +430,7 @@ class AmpacheMpd extends localplay_controller
     public function get(): array
     {
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
-            return array();
+            return [];
         }
         // If we don't have the playlist yet, pull it
         if (!isset($this->_mpd->playlist)) {
@@ -438,14 +439,14 @@ class AmpacheMpd extends localplay_controller
 
         /* Get the Current Playlist */
         $playlist = $this->_mpd->playlist;
-        $results  = array();
+        $results  = [];
         // if there isn't anything to return don't do it
         if (empty($playlist)) {
             return $results;
         }
 
         foreach ($playlist as $entry) {
-            $data = array();
+            $data = [];
 
             /* Required Elements */
             $data['id']  = $entry['Pos'];
@@ -522,7 +523,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function status(): array
     {
-        $array = array();
+        $array = [];
         if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
             return $array;
         }
@@ -538,8 +539,8 @@ class AmpacheMpd extends localplay_controller
         $array['track_artist'] = '';
         $array['track_album']  = '';
 
-        $playlist_item = array();
-        $url_data      = array();
+        $playlist_item = [];
+        $url_data      = [];
         if (is_array($this->_mpd->playlist) && array_key_exists($track, $this->_mpd->playlist)) {
             $playlist_item = $this->_mpd->playlist[$track];
             $url_data      = $this->parse_url($playlist_item['file']);
@@ -561,16 +562,16 @@ class AmpacheMpd extends localplay_controller
         } elseif (!empty($playlist_item)) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
+            } elseif (!empty($playlist_item['Name'])) {
+                $array['track_title'] = $playlist_item['Name'];
             } else {
-                if (!empty($playlist_item['Name'])) {
-                    $array['track_title'] = $playlist_item['Name'];
-                } else {
-                    $array['track_title'] = $playlist_item['file'] ?? '';
-                }
+                $array['track_title'] = $playlist_item['file'] ?? '';
             }
+
             if (!empty($playlist_item['Artist'])) {
                 $array['track_artist'] = $playlist_item['Artist'];
             }
+
             if (!empty($playlist_item['Album'])) {
                 $array['track_album'] = $playlist_item['Album'];
             }

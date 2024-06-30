@@ -25,7 +25,10 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -40,7 +43,7 @@ class Preference extends database_object
     /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
-    public const SYSTEM_LIST = array(
+    public const SYSTEM_LIST = [
         'ajax_load',
         'album_group',
         'album_release_type',
@@ -98,7 +101,6 @@ class Preference extends database_object
         'home_moment_videos',
         'home_now_playing',
         'home_recently_played',
-        'home_recently_played_all',
         'httpq_active',
         'jp_volume',
         'lang',
@@ -134,6 +136,13 @@ class Preference extends database_object
         'show_skipped_times',
         'show_wrapped',
         'sidebar_light',
+        'sidebar_hide_browse',
+        'sidebar_hide_dashboard',
+        'sidebar_hide_information',
+        'sidebar_hide_playlist',
+        'sidebar_hide_search',
+        'sidebar_hide_switcher',
+        'sidebar_hide_video',
         'site_title',
         'slideshow_time',
         'song_page_title',
@@ -226,7 +235,7 @@ class Preference extends database_object
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
-    );
+    ];
 
     /**
      * __constructor
@@ -256,11 +265,12 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, array($pref_id, $user_id));
+        $db_results = Dba::read($sql, [$pref_id, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
             $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
-            $db_results = Dba::read($sql, array($pref_id));
+            $db_results = Dba::read($sql, [$pref_id]);
         }
+
         $data = Dba::fetch_assoc($db_results);
 
         parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
@@ -273,13 +283,13 @@ class Preference extends database_object
      * This updates a single preference from the given name or id
      * @param string|int $preference
      * @param int $user_id
-     * @param array|string|int|bool|\SimpleXMLElement $value
+     * @param array|string|int|bool|SimpleXMLElement $value
      * @param bool $applytoall
      * @param bool $applytodefault
      */
     public static function update($preference, $user_id, $value, $applytoall = false, $applytodefault = false): bool
     {
-        $access100 = Access::check('interface', 100);
+        $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         // First prepare
         if (!is_numeric($preference)) {
             $pref_id = self::id_from_name($preference);
@@ -288,13 +298,24 @@ class Preference extends database_object
             $pref_id = (int)$preference;
             $name    = self::name_from_id($preference);
         }
-        if (empty($pref_id) || empty($name)) {
+
+        if (
+            $pref_id === null ||
+            $pref_id === 0 ||
+            (
+                $name === null ||
+                $name === '' ||
+                $name === '0'
+            )
+        ) {
             return false;
         }
+
         if (is_array($value)) {
             $value = implode(',', $value);
         }
-        $params = array($value, $pref_id);
+
+        $params = [$value, $pref_id];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -309,7 +330,7 @@ class Preference extends database_object
         }
 
         if (self::has_access($name)) {
-            $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? $user_check";
+            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? ' . $user_check;
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -317,7 +338,7 @@ class Preference extends database_object
 
             return true;
         } else {
-            debug_event(self::class, Core::get_global('user') ? Core::get_global('user')->username : '???' . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
+            debug_event(self::class, (Core::get_global('user')?->username ?? T_('Unknown')) . ' attempted to update ' . $name . ' but does not have sufficient permissions', 3);
         }
 
         return false;
@@ -332,14 +353,10 @@ class Preference extends database_object
     public static function update_level($preference, $level): bool
     {
         // First prepare
-        if (!is_numeric($preference)) {
-            $preference_id = self::id_from_name($preference);
-        } else {
-            $preference_id = $preference;
-        }
+        $preference_id = is_numeric($preference) ? $preference : self::id_from_name($preference);
 
         $sql = "UPDATE `preference` SET `level` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($level, $preference_id));
+        Dba::write($sql, [$level, $preference_id]);
 
         return true;
     }
@@ -355,11 +372,12 @@ class Preference extends database_object
         if ((int)$preference_id == 0) {
             return false;
         }
+
         $preference_id = Dba::escape($preference_id);
         $value         = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
-        Dba::write($sql, array($value, $preference_id));
+        Dba::write($sql, [$value, $preference_id]);
 
         parent::clear_cache();
 
@@ -379,7 +397,8 @@ class Preference extends database_object
         } else {
             $sql = "SELECT * FROM `preference` WHERE `id` = ?";
         }
-        $db_results = Dba::read($sql, array($preference));
+
+        $db_results = Dba::read($sql, [$preference]);
 
         return Dba::num_rows($db_results);
     }
@@ -398,14 +417,10 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `level` FROM `preference` WHERE `name` = ?;";
-        $db_results = Dba::read($sql, array($preference));
+        $db_results = Dba::read($sql, [$preference]);
         $data       = Dba::fetch_assoc($db_results);
 
-        if (Access::check('interface', $data['level'])) {
-            return true;
-        }
-
-        return false;
+        return Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::from((int) $data['level']));
     }
 
     /**
@@ -420,10 +435,10 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
-        $db_results = Dba::read($sql, array($name));
+        $db_results = Dba::read($sql, [$name]);
         $results    = Dba::fetch_assoc($db_results);
         if (array_key_exists('id', $results)) {
-            parent::add_to_cache('id_from_name', $name, array($results['id']));
+            parent::add_to_cache('id_from_name', $name, [$results['id']]);
 
             return (int)$results['id'];
         }
@@ -441,9 +456,9 @@ class Preference extends database_object
     {
         $pref_id    = Dba::escape($pref_id);
         $sql        = "SELECT `name` FROM `preference` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($pref_id));
+        $db_results = Dba::read($sql, [$pref_id]);
         $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
+        if ($results === []) {
             return null;
         }
 
@@ -454,19 +469,18 @@ class Preference extends database_object
      * get_categories
      * This returns an array of the names of the different possible sections
      * it ignores the 'internal' category
-     * @return array
      */
     public static function get_categories(): array
     {
         $sql = "SELECT `preference`.`category` FROM `preference` GROUP BY `category` ORDER BY `category`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['category'] != 'internal') {
                 $results[] = $row['category'];
             }
-        } // end while
+        }
 
         return $results;
     }
@@ -476,20 +490,19 @@ class Preference extends database_object
      * This returns a nice flat array of all of the possible preferences for the specified user
      * @param string $pref_name
      * @param int $user_id
-     * @return array
      */
     public static function get($pref_name, $user_id): array
     {
         $user_id    = Dba::escape($user_id);
         $user_limit = ($user_id != -1) ? "AND `preference`.`category` != 'system'" : "";
 
-        $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != 'internal' $user_limit ORDER BY `preference`.`subcategory`, `preference`.`description`";
+        $sql = sprintf('SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != \'internal\' %s ORDER BY `preference`.`subcategory`, `preference`.`description`', $user_limit);
 
-        $db_results = Dba::read($sql, array($pref_name, $user_id));
-        $results    = array();
+        $db_results = Dba::read($sql, [$pref_name, $user_id]);
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
                 'level' => $row['level'],
@@ -497,8 +510,8 @@ class Preference extends database_object
                 'value' => $row['value'],
                 'type' => $row['type'],
                 'category' => $row['category'],
-                'subcategory' => $row['subcategory']
-            );
+                'subcategory' => $row['subcategory'],
+            ];
         }
 
         return $results;
@@ -517,30 +530,43 @@ class Preference extends database_object
      * @param null|string $subcategory
      * @param bool $replace
      */
-    public static function insert($name, $description, $default, $level, $type, $category, $subcategory = null, $replace = false): bool
-    {
+    public static function insert(
+        $name,
+        $description,
+        $default,
+        $level,
+        $type,
+        $category,
+        $subcategory = null,
+        $replace = false
+    ): bool {
         if ($replace) {
             self::delete($name);
         }
+
         if (!$replace && self::exists($name)) {
             return true;
         }
+
         if ($subcategory !== null) {
             $subcategory = strtolower((string)$subcategory);
         }
+
         $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int)$level, $type, $category, $subcategory));
+        $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
 
         if (!$db_results) {
             return false;
         }
+
         $pref_id    = Dba::insert_id();
-        $params     = array($pref_id, $default);
+        $params     = [$pref_id, $default];
         $sql        = "INSERT INTO `user_preference` VALUES (-1, ?, ?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
+
         if ($category !== "system") {
             $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
             $db_results = Dba::write($sql, $params);
@@ -548,6 +574,7 @@ class Preference extends database_object
                 return false;
             }
         }
+
         debug_event(self::class, 'Inserted preference: ' . $name, 3);
 
         return true;
@@ -560,9 +587,10 @@ class Preference extends database_object
      */
     public static function delete($preference): bool
     {
-        if (!Preference::exists($preference)) {
+        if (Preference::exists($preference) === 0) {
             return true;
         }
+
         // First prepare
         if (!is_numeric($preference)) {
             $sql = "DELETE FROM `preference` WHERE `name` = ?";
@@ -570,7 +598,7 @@ class Preference extends database_object
             $sql = "DELETE FROM `preference` WHERE `id` = ?";
         }
 
-        if (Dba::write($sql, array($preference)) !== false) {
+        if (Dba::write($sql, [$preference]) !== false) {
             self::clean_preferences();
 
             return true;
@@ -588,7 +616,7 @@ class Preference extends database_object
     public static function rename($old, $new): void
     {
         $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
-        Dba::write($sql, array($new, $old));
+        Dba::write($sql, [$new, $old]);
     }
 
     /**
@@ -607,11 +635,10 @@ class Preference extends database_object
      * This takes the preferences, explodes what needs to
      * become an array and boolean everything
      * @param array $results
-     * @return array
      */
     public static function fix_preferences($results): array
     {
-        $arrays = array(
+        $arrays = [
             'allow_zip_types',
             'art_order',
             'auth_methods',
@@ -620,13 +647,13 @@ class Preference extends database_object
             'metadata_order_video',
             'registration_display_fields',
             'registration_mandatory_fields',
-            'wanted_types'
-        );
+            'wanted_types',
+        ];
 
         foreach ($arrays as $item) {
             $results[$item] = (array_key_exists($item, $results) && trim((string)$results[$item]))
-                ? explode(',', $results[$item])
-                : array();
+                ? explode(',', (string) $results[$item])
+                : [];
         }
 
         foreach ($results as $key => $data) {
@@ -634,6 +661,7 @@ class Preference extends database_object
                 if (strcasecmp((string)$data, "true") == "0") {
                     $results[$key] = 1;
                 }
+
                 if (strcasecmp((string)$data, "false") == "0") {
                     $results[$key] = 0;
                 }
@@ -650,121 +678,121 @@ class Preference extends database_object
     public static function set_defaults(): void
     {
         $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES " .
-            "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
-            "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
-            "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
-            "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
-            "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-            "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
-            "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
-            "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
+            "(1, 'download', '1', 'Allow Downloads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(4, 'popular_threshold', '10', 'Popular Threshold', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'query'), " .
+            "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', " . AccessLevelEnum::USER->value . ", 'string', 'streaming', 'transcoding'), " .
+            "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', " . AccessLevelEnum::ADMIN->value . ", 'string', 'interface', 'custom'), " .
+            "(23, 'lock_songs', '0', 'Lock Songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', null), " .
+            "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', null), " .
+            "(29, 'play_type', 'web_player', 'Playback Type', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', null), " .
+            "(31, 'lang', 'en_US', 'Language', " . AccessLevelEnum::ADMIN->value . ", 'special', 'interface', null), " .
+            "(32, 'playlist_type', 'm3u', 'Playlist Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'playlist', null), " .
             "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-            "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
-            "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
-            "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
-            "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
-            "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
-            "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
-            "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
-            "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
-            "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
+            "(40, 'localplay_level', '0', 'Localplay Access', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
+            "(41, 'localplay_controller', '0', 'Localplay Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
+            "(44, 'allow_stream_playback', '1', 'Allow Streaming', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'localplay'), " .
+            "(47, 'stats_threshold', '7', 'Statistics Day Threshold', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'query'), " .
+            "(51, 'offset_limit', '50', 'Offset Limit', " . AccessLevelEnum::GUEST->value . ", 'integer', 'interface', 'query'), " .
+            "(52, 'rate_limit', '8192', 'Rate Limit', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'streaming', 'transcoding'), " .
+            "(53, 'playlist_method', 'default', 'Playlist Method', " . AccessLevelEnum::GUEST->value . ", 'string', 'playlist', null), " .
+            "(55, 'transcode', 'default', 'Allow Transcoding', " . AccessLevelEnum::USER->value . ", 'string', 'streaming', 'transcoding'), " .
             "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
-            "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " .
-            "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
-            "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
-            "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-            "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
-            "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-            "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'), " .
-            "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
-            "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
-            "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
-            "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
-            "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'), " .
-            "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
-            "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
-            "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
-            "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
-            "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
-            "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
-            "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-            "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
-            "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
-            "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-            "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
-            "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
-            "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
-            "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'), " .
-            "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'), " .
-            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'), " .
-            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'), " .
-            "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
-            "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
-            "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
-            "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
-            "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
-            "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " .
-            "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " .
-            "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " .
-            "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " .
-            "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " .
-            "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
-            "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
-            "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
-            "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
-            "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
-            "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " .
-            "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " .
+            "(70, 'mpd_active', '0', 'MPD Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'mpd'), " .
+            "(71, 'httpq_active', '0', 'httpQ Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'httpq'), " .
+            "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'lastfm'), " .
+            "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'lastfm'), " .
+            "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', " . AccessLevelEnum::CONTENT_MANAGER->value . ", 'boolean', 'interface', 'home'), " .
+            "(83, 'album_sort', '0', 'Album - Default sort', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'library'), " .
+            "(84, 'show_played_times', '0', 'Show # played', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'browse'), " .
+            "(85, 'song_page_title', '1', 'Show current song in Web player page title', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(86, 'subsonic_backend', '1', 'Use Subsonic backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'privacy'), " .
+            "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'update'), " .
+            "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'update'), " .
+            "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'update'), " .
+            "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', " . AccessLevelEnum::USER->value . ", 'boolean', 'internal', 'update'), " .
+            "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'player'), " .
+            "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'streaming', null), " .
+            "(102, 'share', '0', 'Allow Share', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
+            "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'share'), " .
+            "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'player'), " .
+            "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(108, 'album_group', '1', 'Album - Group multiple disks', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'library'), " .
+            "(109, 'topmenu', '0', 'Top menu', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', " . AccessLevelEnum::USER->value . ", 'boolean', 'playlist', null), " .
+            "(111, 'show_donate', '1', 'Show donate button in footer', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', null), " .
+            "(112, 'upload_catalog', '-1', 'Destination catalog', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'upload'), " .
+            "(113, 'allow_upload', '0', 'Allow user uploads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'upload'), " .
+            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(118, 'daap_backend', '0', 'Use DAAP backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(119, 'daap_pass', '', 'DAAP backend password', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'backend'), " .
+            "(120, 'upnp_backend', '0', 'Use UPnP backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(121, 'allow_video', '0', 'Allow Video Features', " . AccessLevelEnum::MANAGER->value . ", 'integer', 'options', 'feature'), " .
+            "(122, 'album_release_type', '1', 'Album - Group per release type', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'library'), " .
+            "(123, 'ajax_load', '1', 'Ajax page load', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', null), " .
+            "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'player'), " .
+            "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(127, 'home_recently_played', '1', 'Show Recently Played', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(128, 'home_now_playing', '1', 'Show Now Playing', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(129, 'custom_logo', '', 'Custom URL - Logo', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
+            "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'library'), " .
+            "(131, 'browser_notify', '1', 'Web Player browser notifications', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'notification'), " .
+            "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'notification'), " .
+            "(133, 'geolocation', '0', 'Allow Geolocation', " . AccessLevelEnum::USER->value . ", 'integer', 'options', 'feature'), " .
+            "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(137, 'custom_favicon', '', 'Custom URL - Favicon', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(138, 'custom_text_footer', '', 'Custom text footer', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(139, 'webdav_backend', '0', 'Use WebDAV backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(140, 'notify_email', '0', 'Allow E-mail notifications', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', null), " .
             "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
-            "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
-            "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
-            "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-            "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
+            "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
+            "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
+            "(144, 'podcast_keep', '0', '# latest episodes to keep', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
+            "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
             "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
-            "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'), " .
-            "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
-            "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
-            "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
-            "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
-            "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
-            "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'), " .
-            "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
-            "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'), " .
-            "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'), " .
-            "(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
-            "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'), " .
-            "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'), " .
-            "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'), " .
-            "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'), " .
-            "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
-            "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
-            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null), " .
-            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
-            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
+            "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
+            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'catalog'), " .
+            "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(150, 'sidebar_light', '0', 'Light sidebar by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(151, 'custom_blankalbum', '', 'Custom blank album default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(152, 'custom_blankmovie', '', 'Custom blank video default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'browse'), " .
+            "(154, 'show_skipped_times', '0', 'Show # skipped', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(155, 'custom_datetime', '', 'Custom datetime', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
+            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'catalog'), " .
+            "(157, 'unique_playlist', '0', 'Only add unique items to playlists', " . AccessLevelEnum::USER->value . ", 'boolean', 'playlist', NULL), " .
+            "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', " . AccessLevelEnum::USER->value . ", 'integer', 'interface', 'home'), " .
+            "(159, 'custom_login_background', '', 'Custom URL - Login page background', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
+            "(160, 'show_license', '1', 'Show License', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'subsonic'), " .
+            "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'ampache'), " .
+            "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', " . AccessLevelEnum::USER->value . ", 'special', 'options', 'ampache'), " .
+            "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', " . AccessLevelEnum::USER->value . ", 'string', 'options', null), " .
+            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
+            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
+            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', NULL);";
         Dba::write($sql);
     }
 
@@ -775,7 +803,7 @@ class Preference extends database_object
     public static function translate_db(): void
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
-        $pref_array = array(
+        $pref_array = [
             '7digital_api_key' => T_('7digital consumer key'),
             '7digital_secret_api_key' => T_('7digital secret'),
             'ajax_load' => T_('Ajax page load'),
@@ -852,7 +880,6 @@ class Preference extends database_object
             'home_moment_videos' => T_('Show Videos of the Moment'),
             'home_now_playing' => T_('Show Now Playing'),
             'home_recently_played' => T_('Show Recently Played'),
-            'home_recently_played_all' => T_('Show all media types in Recently Played'),
             'httpq_active' => T_('HTTPQ Active Instance'),
             'jp_volume' => T_('Default webplayer volume'),
             'lang' => T_('Language'),
@@ -914,6 +941,13 @@ class Preference extends database_object
             'show_subtitle' => T_('Show Album subtitle on links (if available)'),
             'show_wrapped' => T_('Enable access to your personal "Spotify Wrapped" from your user page'),
             'sidebar_light' => T_('Light sidebar by default'),
+            'sidebar_hide_browse' => T_('Hide the Browse menu in the sidebar'),
+            'sidebar_hide_dashboard' => T_('Hide the Dashboard menu in the sidebar'),
+            'sidebar_hide_information' => T_('Hide the Information menu in the sidebar'),
+            'sidebar_hide_playlist' => T_('Hide the Playlist menu in the sidebar'),
+            'sidebar_hide_search' => T_('Hide the Search menu in the sidebar'),
+            'sidebar_hide_switcher' => T_('Hide sidebar switcher arrows'),
+            'sidebar_hide_video' => T_('Hide the Video menu in the sidebar'),
             'site_title' => T_('Website Title'),
             'slideshow_time' => T_('Artist slideshow inactivity time'),
             'song_page_title' => T_('Show current song in Web player page title'),
@@ -960,10 +994,10 @@ class Preference extends database_object
             'xbmc_active' => T_('XBMC Active Instance'),
             'yourls_api_key' => T_('YOURLS API key'),
             'yourls_domain' => T_('YOURLS domain name'),
-            'yourls_use_idn' => T_('YOURLS use IDN')
-        );
+            'yourls_use_idn' => T_('YOURLS use IDN'),
+        ];
         foreach ($pref_array as $key => $value) {
-            Dba::write($sql, array($value, $key, $value));
+            Dba::write($sql, [$value, $key, $value]);
         }
     }
 
@@ -977,7 +1011,13 @@ class Preference extends database_object
         if (!isset($_SESSION)) {
             return false;
         }
-        if (array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
+
+        if (
+            array_key_exists('userdata', $_SESSION) &&
+            array_key_exists('preferences', $_SESSION['userdata']) &&
+            is_array($_SESSION['userdata']['preferences']) &&
+            $_SESSION['userdata']['uid'] == $uid
+        ) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;
@@ -1007,7 +1047,7 @@ class Preference extends database_object
      */
     public static function is_boolean($key): bool
     {
-        $boolean_array = array(
+        $boolean_array = [
             'access_control',
             'access_list',
             'admin_enable_required',
@@ -1097,7 +1137,6 @@ class Preference extends database_object
             'home_moment_videos',
             'home_now_playing',
             'home_recently_played',
-            'home_recently_played_all',
             'httpq_active',
             'label',
             'ldap_start_tls',
@@ -1149,6 +1188,13 @@ class Preference extends database_object
             'show_subtitle',
             'show_wrapped',
             'sidebar_light',
+            'sidebar_hide_browse',
+            'sidebar_hide_dashboard',
+            'sidebar_hide_information',
+            'sidebar_hide_playlist',
+            'sidebar_hide_search',
+            'sidebar_hide_switcher',
+            'sidebar_hide_video',
             'simple_user_mode',
             'sociable',
             'song_page_title',
@@ -1191,14 +1237,10 @@ class Preference extends database_object
             'webplayer_html5',
             'webplayer_pausetabs',
             'write_tags',
-            'xml_rpc'
-        );
+            'xml_rpc',
+        ];
 
-        if (in_array($key, $boolean_array)) {
-            return true;
-        }
-
-        return false;
+        return in_array($key, $boolean_array);
     }
 
     /**
@@ -1218,14 +1260,14 @@ class Preference extends database_object
 
         /* Get Global Preferences */
         $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`category`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`category` !='system'";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, [$user_id]);
 
-        $results = array();
+        $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $value          = $row['system_value'] ?? $row['value'];
             $name           = $row['name'];
             $results[$name] = $value;
-        } // end while sys prefs
+        }
 
         /* Set the Theme mojo */
         if (array_key_exists('theme_name', $results) && strlen((string)$results['theme_name']) > 0) {
@@ -1236,12 +1278,14 @@ class Preference extends database_object
         } else {
             unset($results['theme_name']);
         }
+
         // Default theme if we don't get anything from their
         // preferences because we're going to want at least something otherwise
         // the page is going to be really ugly
         if (!isset($results['theme_name'])) {
             $results['theme_name'] = 'reborn';
         }
+
         $results['theme_path'] = '/themes/' . $results['theme_name'];
 
         // Load theme settings
@@ -1256,6 +1300,7 @@ class Preference extends database_object
         } else {
             unset($results['theme_color']);
         }
+
         if (!isset($results['theme_color'])) {
             $results['theme_color'] = strtolower((string)$theme_cfg['colors'][0]);
         }

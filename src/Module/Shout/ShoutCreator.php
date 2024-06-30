@@ -31,37 +31,25 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
 use PHPMailer\PHPMailer\Exception;
 
 /**
  * Creates a new shout item
  */
-final class ShoutCreator implements ShoutCreatorInterface
+final readonly class ShoutCreator implements ShoutCreatorInterface
 {
-    private UserActivityPosterInterface $userActivityPoster;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ShoutRepositoryInterface $shoutRepository;
-    private UtilityFactoryInterface $utilityFactory;
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        UserActivityPosterInterface $userActivityPoster,
-        ConfigContainerInterface $configContainer,
-        ShoutRepositoryInterface $shoutRepository,
-        UtilityFactoryInterface $utilityFactory,
-        ModelFactoryInterface $modelFactory
+        private UserActivityPosterInterface $userActivityPoster,
+        private ConfigContainerInterface $configContainer,
+        private ShoutRepositoryInterface $shoutRepository,
+        private UtilityFactoryInterface $utilityFactory,
+        private UserRepositoryInterface $userRepository,
     ) {
-        $this->userActivityPoster = $userActivityPoster;
-        $this->configContainer    = $configContainer;
-        $this->shoutRepository    = $shoutRepository;
-        $this->utilityFactory     = $utilityFactory;
-        $this->modelFactory       = $modelFactory;
     }
 
     /**
@@ -74,7 +62,7 @@ final class ShoutCreator implements ShoutCreatorInterface
     public function create(
         User $user,
         library_item $libItem,
-        string $objectType,
+        LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
         int $offset
@@ -96,17 +84,17 @@ final class ShoutCreator implements ShoutCreatorInterface
         $this->userActivityPoster->post(
             $user->getId(),
             'shout',
-            $objectType,
+            $objectType->value,
             $objectId,
             $date->getTimestamp()
         );
 
         // send email to the item owner
-        $item_owner_id = $libItem->get_user_owner();
-        if ($item_owner_id) {
-            $item_owner = $this->modelFactory->createUser($item_owner_id);
-            if ($item_owner->getPreferenceValue(ConfigurationKeyEnum::NOTIFY_EMAIL)) {
-                $emailAddress = $item_owner->email;
+        $itemOwnerId = $libItem->get_user_owner();
+        if ($itemOwnerId) {
+            $itemOwner = $this->userRepository->findById($itemOwnerId);
+            if ($itemOwner?->getPreferenceValue(ConfigurationKeyEnum::NOTIFY_EMAIL)) {
+                $emailAddress = $itemOwner->email;
 
                 if (!empty($emailAddress) && Mailer::is_mail_enabled()) {
                     /* HINT: %1 username %2 item name being commented on */
@@ -121,14 +109,14 @@ final class ShoutCreator implements ShoutCreatorInterface
                     $message .= sprintf(
                         '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
                         $this->configContainer->getWebPath(),
-                        $objectType,
+                        $objectType->value,
                         $libItem->getId(),
                         $shout->getId()
                     );
 
                     $this->utilityFactory->createMailer()
                         ->set_default_sender()
-                        ->setRecipient($emailAddress, (string) $item_owner->get_fullname())
+                        ->setRecipient($emailAddress, (string) $itemOwner->get_fullname())
                         ->setSubject(T_('New shout on your content'))
                         ->setMessage($message)
                         ->send();

@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\User;
@@ -55,7 +57,7 @@ final class PodcastEpisodeDeleteMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -66,7 +68,7 @@ final class PodcastEpisodeDeleteMethod
 
             return false;
         }
-        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
 

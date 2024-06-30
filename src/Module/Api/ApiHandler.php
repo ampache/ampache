@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
@@ -251,7 +252,7 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public &&
             (
                 !$user instanceof User || // User is required for non-public methods
-                (!$header_auth && $input['auth'] === md5((string)$user->username)) || // require header auth for simplified session
+                !$header_auth && $input['auth'] === md5((string)$user->username) || // require header auth for simplified session
                 $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
@@ -306,7 +307,7 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
+        if (!$this->networkChecker->check(AccessTypeEnum::API, $userId, AccessLevelEnum::GUEST)) {
             $this->logger->warning(
                 sprintf('Unauthorized access attempt to API [%s]', filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]

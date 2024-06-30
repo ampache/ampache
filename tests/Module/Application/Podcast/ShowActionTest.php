@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -122,7 +123,13 @@ class ShowActionTest extends TestCase
 
     public function testRunRenders(): void
     {
-        $podcast     = $this->createMock(Podcast::class);
+        $podcast = $this->createMock(Podcast::class);
+        $user    = $this->createMock(User::class);
+
+        $this->gatekeeper->expects(static::once())
+            ->method('getUser')
+            ->willReturn($user);
+
         $episodeList = [123, 456];
 
         $this->request->expects(static::once())
@@ -147,7 +154,8 @@ class ShowActionTest extends TestCase
                 [
                     'podcast' => $podcast,
                     'object_ids' => $episodeList,
-                    'object_type' => 'podcast_episode'
+                    'object_type' => 'podcast_episode',
+                    'current_user' => $user,
                 ]
             );
         $this->ui->expects(static::once())

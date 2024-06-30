@@ -30,6 +30,8 @@ use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\Catalog;
@@ -58,10 +60,10 @@ final class PodcastCreate5Method
 
             return false;
         }
-        if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -88,10 +90,10 @@ final class PodcastCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($podcast->getId()), $user, false, false);
+                echo Json5_Data::podcasts([$podcast->getId()], $user, false, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml5_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

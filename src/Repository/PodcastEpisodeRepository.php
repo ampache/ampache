@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -39,32 +39,23 @@ use Generator;
  *
  * Tables: `podcast_episode`
  */
-final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterface
+final readonly class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
      * Returns all episode-ids for the given podcast
      *
-     * @param string $stateFilter Return only items with this state
+     * @param null|PodcastEpisodeStateEnum $stateFilter Return only items with this state
      *
      * @return list<int>
      */
-    public function getEpisodes(Podcast $podcast, string $stateFilter = ''): array
+    public function getEpisodes(Podcast $podcast, ?PodcastEpisodeStateEnum $stateFilter = null): array
     {
         $skipDisabledCatalogs = $this->configContainer->get(ConfigurationKeyEnum::CATALOG_DISABLE);
 
@@ -77,9 +68,9 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
 
         $sql .= 'WHERE `podcast_episode`.`podcast` = ? ';
 
-        if (!empty($stateFilter)) {
+        if ($stateFilter !== null) {
             $sql .= 'AND `podcast_episode`.`state` = ? ';
-            $params[] = $stateFilter;
+            $params[] = $stateFilter->value;
         }
 
         if ($skipDisabledCatalogs) {
@@ -190,7 +181,7 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
             [
                 $podcast->getId(),
                 $podcast->getLastSyncDate()->getTimestamp(),
-                PodcastEpisodeStateEnum::PENDING
+                PodcastEpisodeStateEnum::PENDING->value
             ]
         );
 
@@ -212,16 +203,14 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
 
     /**
      * Updates the state of an episode
-     *
-     * @todo replace state by enum after switching to php 8
      */
     public function updateState(
         Podcast_Episode $episode,
-        string $state
+        PodcastEpisodeStateEnum $state
     ): void {
         $this->connection->query(
             'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
-            [$state, $episode->getId()]
+            [$state->value, $episode->getId()]
         );
     }
 
@@ -233,5 +222,18 @@ final class PodcastEpisodeRepository implements PodcastEpisodeRepositoryInterfac
         $this->connection->query(
             'DELETE FROM `podcast_episode` USING `podcast_episode` LEFT JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`id` IS NULL'
         );
+    }
+
+    /**
+     * Finds a single item by its id
+     */
+    public function findById(int $itemId): ?Podcast_Episode
+    {
+        $item = new Podcast_Episode($itemId);
+        if ($item->isNew()) {
+            return null;
+        }
+
+        return $item;
     }
 }
