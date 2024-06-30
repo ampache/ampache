@@ -39,13 +39,13 @@ final class UpdateConfigFileCommand extends Command
         ConfigContainerInterface $configContainer,
         InstallationHelperInterface $installationHelper
     ) {
-        parent::__construct('run:updateConfigFile', T_('Update the Ampache config file'));
+        parent::__construct('admin:updateConfigFile', T_('Update the Ampache config file'));
 
         $this->configContainer    = $configContainer;
         $this->installationHelper = $installationHelper;
         $this
             ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
-            ->usage('<bold>  run:updateConfigFile</end> <comment> ## ' . T_('Update the config file') . '<eol/>');
+            ->usage('<bold>  admin:updateConfigFile</end> <comment> ## ' . T_('Update the config file') . '<eol/>');
     }
 
     public function execute(): void
