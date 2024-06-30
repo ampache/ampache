@@ -31,7 +31,9 @@
         "allow-plugins": {
             "composer/installers": true,
             "php-http/discovery": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "oomphinc/composer-installers-extender": false,
+            "robloach/component-installer": false
         }
     },
     "require": {
