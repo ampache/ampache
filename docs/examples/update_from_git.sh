@@ -28,6 +28,9 @@ git pull
 ### Check for database updates
 php bin/cli admin:updateDatabase -e
 
+### Check for config file updates
+php bin/cli admin:updateConfigFile -e
+
 ### Clean up your garbage data
 php bin/cli run:updateCatalog -t
 
