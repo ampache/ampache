@@ -70,16 +70,13 @@ final class UpdateConfigFileCommand extends Command
                 "\n" . T_('No changes have been made'),
                 true
             );
-        } else {
+        } elseif ($outOfDate) {
             $interactor->warn(
                 "\n" . "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                 true
             );
 
-            if (
-                $outOfDate &&
-                $this->installationHelper->write_config(__DIR__ . '/../../../config/ampache.cfg.php')
-            ) {
+            if ($this->installationHelper->write_config(__DIR__ . '/../../../config/ampache.cfg.php')) {
                 $interactor->ok(
                     "\n" . T_('Updated'),
                     true
