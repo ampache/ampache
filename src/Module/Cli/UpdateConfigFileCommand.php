@@ -44,7 +44,7 @@ final class UpdateConfigFileCommand extends Command
         $this->configContainer    = $configContainer;
         $this->installationHelper = $installationHelper;
         $this
-            ->option('-x|--execute', T_('Disables dry-run'), 'boolval', false)
+            ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->usage('<bold>  admin:updateConfigFile</end> <comment> ## ' . T_('Update the config file') . '<eol/>');
     }
 
@@ -63,7 +63,7 @@ final class UpdateConfigFileCommand extends Command
 
         if ($dryRun === true) {
             $interactor->info(
-                "\n" . T_('Running in Test Mode. Use -x to execute'),
+                "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
             );
             $interactor->ok(
