@@ -27,12 +27,12 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\PodcastRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,18 +41,14 @@ final class PodcastEpisodesMethod implements MethodInterface
 {
     public const ACTION = 'podcast_episodes';
 
-    private ModelFactoryInterface $modelFactory;
-
     private PodcastRepositoryInterface $podcastRepository;
 
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         PodcastRepositoryInterface $podcastRepository,
         ConfigContainerInterface $configContainer
     ) {
-        $this->modelFactory      = $modelFactory;
         $this->podcastRepository = $podcastRepository;
         $this->configContainer   = $configContainer;
     }
@@ -114,7 +110,7 @@ final class PodcastEpisodesMethod implements MethodInterface
             );
         }
 
-        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse = Api::getBrowse($user);
         $browse->set_type('podcast_episode');
 
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['pubdate','DESC']);
