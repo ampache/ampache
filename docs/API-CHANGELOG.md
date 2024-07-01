@@ -15,6 +15,8 @@
 * API6
   * flag: id smartplaylists correctly
   * rate: id smartplaylists correctly
+  * albums: Browse user may not be set
+  * podcast_episodes: Browse user may not be set
 
 ## API 6.5.0
 
