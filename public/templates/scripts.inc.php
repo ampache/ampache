@@ -44,7 +44,7 @@ if (file_exists($manifest)) {
 <script src="<?php echo $web_path; ?>/lib/components/prettyphoto/js/jquery.prettyPhoto.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/tag-it/js/tag-it.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
-<script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js" defer></script>
+<script src="<?php echo $web_path; ?>/lib/components/jscroll/jquery.jscroll.min.js"></script>
 <script src="<?php echo $web_path; ?>/lib/components/jquery-qrcode/jquery.qrcode.min.js" defer></script>
 <script src="<?php echo $web_path; ?>/lib/modules/rhinoslider/js/rhinoslider-1.05.min.js" defer></script>
 <script src="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.full.min.js" defer></script>

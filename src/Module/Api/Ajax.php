@@ -119,11 +119,15 @@ class Ajax
             $source_txt = "'$source'";
         }
 
+        $ajax_string = '$(document).ready(function () {';
+
         if ($post) {
-            $ajax_string = "ajaxPost('$url', '$post', $source_txt)";
+            $ajax_string .= "ajaxPost('$url', '$post', $source_txt)";
         } else {
-            $ajax_string = "ajaxPut('$url', $source_txt)";
+            $ajax_string .= "ajaxPut('$url', $source_txt)";
         }
+
+        $ajax_string .= '});';
 
         return $ajax_string;
     }
