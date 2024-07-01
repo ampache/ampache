@@ -27,6 +27,34 @@
   * artist_albums: add `album_artist` as an optional parameter
   * get_indexes: add `catalog`, `album_artist` and `song_artist` as possible `type` values
   * list: add `catalog` and `song_artist` as possible `type` values
+  * Add `cond` and `sort` parameters to browse methods
+    * album_songs
+    * albums
+    * artist_albums
+    * artist_songs
+    * artists
+    * browse
+    * catalogs
+    * followers
+    * genre_albums
+    * genre_artists
+    * genre_songs
+    * genres
+    * get_indexes
+    * index
+    * label_artists
+    * labels
+    * license_songs
+    * licenses
+    * list
+    * live_streams
+    * playlists
+    * podcasts
+    * podcast_episodes
+    * shares
+    * songs
+    * user_playlists
+    * user_smartlists
 
 ### Changed
 
@@ -73,34 +101,6 @@
   * download: The API can use searches as playlists so check for the `smart_` prefix
   * stream: The API can use searches as playlists so check for the `smart_` prefix
   * Respect album sort preferences in all album object responses
-  * Add `cond` and `sort` parameters to browse methods
-    * album_songs
-    * albums
-    * artist_albums
-    * artist_songs
-    * artists
-    * browse
-    * catalogs
-    * followers
-    * genre_albums
-    * genre_artists
-    * genre_songs
-    * genres
-    * get_indexes
-    * index
-    * label_artists
-    * labels
-    * license_songs
-    * licenses
-    * list
-    * live_streams
-    * playlists
-    * podcasts
-    * podcast_episodes
-    * shares
-    * songs
-    * user_playlists
-    * user_smartlists
 
 ## API 6.4.0
 
