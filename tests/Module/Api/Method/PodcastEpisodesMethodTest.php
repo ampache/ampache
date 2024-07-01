@@ -224,7 +224,6 @@ class PodcastEpisodesMethodTest extends TestCase
         $browse  = $this->createMock(Browse::class);
         $user    = $this->createMock(User::class);
 
-        $user->id  = 1;
         $result    = '';
         $podcastId = 666;
         $episodeId = 42;

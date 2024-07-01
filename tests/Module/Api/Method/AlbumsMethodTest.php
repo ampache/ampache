@@ -69,20 +69,19 @@ class AlbumsMethodTest extends MockeryTestCase
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $user->id = 1;
-        $result   = '';
-        $include  = [];
-        $limit    = 0;
-        $offset   = 0;
+        $result  = '';
+        $include = [];
+        $limit   = 0;
+        $offset  = 0;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
 
-        $browse->expects(static::once())
-            ->method('set_user_id')
-            ->with($user);
+        $browse->shouldReceive('set_user_id')
+            ->with($user)
+            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
@@ -158,20 +157,19 @@ class AlbumsMethodTest extends MockeryTestCase
         $user       = $this->mock(User::class);
         $stream     = $this->mock(StreamInterface::class);
 
-        $user->id = 1;
-        $result   = 'some-result';
-        $include  = [123, 456];
-        $limit    = 42;
-        $offset   = 33;
+        $result  = 'some-result';
+        $include = [123, 456];
+        $limit   = 42;
+        $offset  = 33;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
             ->once()
             ->andReturn($browse);
 
-        $browse->expects(static::once())
-            ->method('set_user_id')
-            ->with($user);
+        $browse->shouldReceive('set_user_id')
+            ->with($user)
+            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
