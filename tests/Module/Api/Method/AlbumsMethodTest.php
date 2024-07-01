@@ -79,6 +79,9 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
+        $browse->shouldReceive('set_user_id')
+            ->with($user)
+            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();
@@ -164,6 +167,9 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn($browse);
 
+        $browse->shouldReceive('set_user_id')
+            ->with($user)
+            ->once();
         $browse->shouldReceive('set_type')
             ->with('album')
             ->once();

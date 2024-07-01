@@ -202,7 +202,7 @@ class Api
         }
 
         // ensure user_id is set
-        self::$browse->set_user_id($user->getId());
+        self::$browse->set_user_id($user);
 
         return self::$browse;
     }

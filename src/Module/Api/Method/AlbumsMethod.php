@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Api\Api;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Api\Authentication\GatekeeperInterface;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Repository\Model\User;
@@ -43,10 +43,14 @@ final class AlbumsMethod implements MethodInterface
 
     private StreamFactoryInterface $streamFactory;
 
+    private ModelFactoryInterface $modelFactory;
+
     public function __construct(
-        StreamFactoryInterface $streamFactory
+        StreamFactoryInterface $streamFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->streamFactory = $streamFactory;
+        $this->modelFactory  = $modelFactory;
     }
 
     /**
@@ -77,7 +81,8 @@ final class AlbumsMethod implements MethodInterface
         array $input,
         User $user
     ): ResponseInterface {
-        $browse = Api::getBrowse($user);
+        $browse = $this->modelFactory->createBrowse(null, false);
+        $browse->set_user_id($user);
         $browse->set_type('album');
         $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
         $sort_type     = AmpConfig::get('album_sort');
