@@ -181,8 +181,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.5.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '650000'; // AMPACHE_VERSION
+    public static string $version         = '6.5.1'; // AMPACHE_VERSION
+    public static string $version_numeric = '651000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -202,7 +202,7 @@ class Api
         }
 
         // ensure user_id is set
-        self::$browse->set_user_id($user->getId());
+        self::$browse->set_user_id($user);
 
         return self::$browse;
     }
@@ -366,7 +366,8 @@ class Api
             'shares' => $counts['share'],
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label']
+            'labels' => $counts['label'],
+            'username' => $client->getUsername(),
         );
 
         return array_merge($autharray, $outarray);

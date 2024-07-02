@@ -626,7 +626,13 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                     if (AmpConfig::get('autoupdate')) {
                         $current_version = AutoUpdate::get_current_version();
                         $latest_version  = AutoUpdate::get_latest_version();
-                        if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
+                        if (
+                            (
+                                !empty($latest_version) &&
+                                $current_version !== $latest_version
+                            ) ||
+                            AutoUpdate::is_update_available()
+                        ) {
                             AutoUpdate::show_new_version();
                             echo '<br />';
                         }

@@ -66,10 +66,17 @@ final class PlaylistEdit4Method
         }
 
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $object_id = (int)$input['filter'];
+        $playlist  = new Playlist($object_id);
+
+        if ($playlist->isNew()) {
+            Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
+
+            return false;
+        }
 
         // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (!$playlist->has_access($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;

@@ -68,10 +68,18 @@ final class PlaylistEdit5Method
         }
 
         ob_end_clean();
-        $playlist = new Playlist($input['filter']);
+        $object_id = (int)$input['filter'];
+        $playlist  = new Playlist($object_id);
+
+        if ($playlist->isNew()) {
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            Api5::error(sprintf(T_('Not Found: %s'), $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
+
+            return false;
+        }
 
         // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->id || (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (!$playlist->has_access($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;

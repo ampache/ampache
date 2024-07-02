@@ -82,6 +82,7 @@ final class AlbumsMethod implements MethodInterface
         User $user
     ): ResponseInterface {
         $browse = $this->modelFactory->createBrowse(null, false);
+        $browse->set_user_id($user);
         $browse->set_type('album');
         $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
         $sort_type     = AmpConfig::get('album_sort');

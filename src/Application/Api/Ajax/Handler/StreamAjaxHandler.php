@@ -41,6 +41,7 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
     ) {
         $this->requestParser = $requestParser;
     }
+
     public function handle(): void
     {
         $results = array();

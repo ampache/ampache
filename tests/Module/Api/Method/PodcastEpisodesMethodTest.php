@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * vim:set softtabstop=3 shiftwidth=4 expandtab:
+ * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
  * Copyright Ampache.org, 2001-2024
@@ -222,6 +222,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $stream  = $this->createMock(StreamInterface::class);
         $podcast = $this->createMock(Podcast::class);
         $browse  = $this->createMock(Browse::class);
+        $user    = $this->createMock(User::class);
 
         $result    = '';
         $podcastId = 666;
@@ -243,6 +244,12 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with(null, false)
             ->willReturn($browse);
 
+        $browse->expects(static::once())
+            ->method('set_user_id')
+            ->with($user);
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('podcast_episode');
         $browse->expects(static::once())
             ->method('set_type')
             ->with('podcast_episode');

@@ -707,11 +707,11 @@ class Query
 
     /**
      * set_user_id
-     * @param int $user_id
+     * @param User $user
      */
-    public function set_user_id($user_id): void
+    public function set_user_id($user): void
     {
-        $this->user_id = $user_id;
+        $this->user_id = $user->getId();
     }
 
     /**

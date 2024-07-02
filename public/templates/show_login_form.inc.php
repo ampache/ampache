@@ -78,7 +78,7 @@ $_SESSION['login'] = true; ?>
                 </div>
                 <div class="loginfield" id="passwordfield">
                     <label for="password"><?php echo T_('Password'); ?>:</label>
-                    <input type="password" id="password" name="password" value="" />
+                    <input id="password" type="password" name="password" maxlength="64" value="" />
                 </div>
                 <?php echo AmpError::display('general'); ?>
                 <div class="loginfield">
