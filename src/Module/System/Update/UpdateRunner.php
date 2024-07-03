@@ -67,11 +67,11 @@ final class UpdateRunner implements UpdateRunnerInterface
     }
 
     /**
-     * Runs the migrations with are determined by the given updates
+     * Run the rollback queries on the database
      *
      * @throws UpdateFailedException
      */
-    public function downgrade(
+    public function runRollback(
         int $currentVersion,
         ?Interactor $interactor = null
     ): void {
@@ -118,7 +118,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         $this->logger->notice(
-            sprintf('Successful downgrade to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
+            sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
             [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 

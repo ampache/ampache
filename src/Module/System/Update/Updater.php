@@ -121,7 +121,7 @@ final class Updater implements UpdaterInterface
 
         $currentVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
 
-        $this->updateRunner->downgrade(
+        $this->updateRunner->runRollback(
             $currentVersion,
             $interactor
         );

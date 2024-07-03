@@ -126,8 +126,13 @@ final class AdminUpdateDatabaseCommand extends Command
                 try {
                     $this->updater->rollback();
 
+                    $interactor->ok(
+                        "\n" . T_('Updated'),
+                        true
+                    );
+                    /* HINT: db version string (e.g. 5.2.0 Build: 006) */
                     $interactor->info(
-                        T_('Updated'),
+                        sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                         true
                     );
                 } catch (Update\Exception\UpdateFailedException $e) {
@@ -141,7 +146,7 @@ final class AdminUpdateDatabaseCommand extends Command
                 }
             } else {
                 $interactor->error(
-                    T_('Your database version is higher than the Ampache version. Use -e|--execute to downgrade'),
+                    T_('Your database version is higher than the Ampache version. Use -e|--execute to rollback'),
                     true
                 );
                 $interactor->eol();
@@ -181,7 +186,7 @@ final class AdminUpdateDatabaseCommand extends Command
         if ($result->valid() === false) {
             if ($updated) {
                 // tell the user that the database was updated and the version
-                $interactor->info(
+                $interactor->ok(
                     "\n" . T_('Updated'),
                     true
                 );
