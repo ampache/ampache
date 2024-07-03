@@ -33,6 +33,13 @@ use Traversable;
 interface UpdateRunnerInterface
 {
     /**
+     * Run the downgrade migrations on the database
+     *
+     * @throws UpdateFailedException
+     */
+    public function downgrade(int $currentVersion, ?Interactor $interactor = null): void;
+
+    /**
      * Runs the migrations with are determined by the given updates
      *
      * @param Traversable<array{
