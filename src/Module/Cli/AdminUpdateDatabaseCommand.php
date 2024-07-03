@@ -155,7 +155,7 @@ final class AdminUpdateDatabaseCommand extends Command
             }
         }
 
-        if ($this->updater->hasPendingUpdates() && $execute) {
+        if ($this->updater->hasPendingUpdates()) {
             if ($execute) {
                 $interactor->info(
                     "\n" . T_('Update Now!'),
