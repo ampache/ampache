@@ -75,7 +75,7 @@ final class ShowEditObjectAction extends AbstractEditAction
             'show_edit_' . $object_type . '.inc.php',
             [
                 'libitem' => $libitem,
-                $users
+                'users' => $users
             ]
         );
 

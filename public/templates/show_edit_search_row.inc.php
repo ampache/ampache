@@ -61,6 +61,7 @@ use Ampache\Repository\Model\Search;
                 </td>
                 <td>
                     <?php $options = [];
+/** @var array $users */
 if (!empty($users)) {
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
