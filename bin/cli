@@ -45,6 +45,7 @@ $app = new Ahc\Cli\Application(
     $dic->get(ConfigContainerInterface::class)->get('version')
 );
 $app->add($dic->get(Cli\AdminAddUserCommand::class));
+$app->add($dic->get(Cli\AdminUpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\AdminUpdateDatabaseCommand::class));
 $app->add($dic->get(Cli\AddCatalogCommand::class));
 $app->add($dic->get(Cli\ArtCleanupCommand::class));
@@ -66,7 +67,6 @@ $app->add($dic->get(Cli\SortFilesCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFileCommand::class));
 $app->add($dic->get(Cli\UpdateCatalogFolderCommand::class));
-$app->add($dic->get(Cli\UpdateConfigFileCommand::class));
 $app->add($dic->get(Cli\UpdateDbCommand::class));
 
 $logo = <<<LOGO

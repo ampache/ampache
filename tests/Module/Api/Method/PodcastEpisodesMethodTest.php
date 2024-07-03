@@ -222,6 +222,7 @@ class PodcastEpisodesMethodTest extends TestCase
         $stream  = $this->createMock(StreamInterface::class);
         $podcast = $this->createMock(Podcast::class);
         $browse  = $this->createMock(Browse::class);
+        $user    = $this->createMock(User::class);
 
         $result    = '';
         $podcastId = 666;
@@ -243,6 +244,12 @@ class PodcastEpisodesMethodTest extends TestCase
             ->with(null, false)
             ->willReturn($browse);
 
+        $browse->expects(static::once())
+            ->method('set_user_id')
+            ->with($user);
+        $browse->expects(static::once())
+            ->method('set_type')
+            ->with('podcast_episode');
         $browse->expects(static::once())
             ->method('set_type')
             ->with('podcast_episode');

@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Catalog $catalog */
 
 /* HINT: Catalog Name */
-Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
+Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->name) . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>

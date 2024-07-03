@@ -1129,7 +1129,11 @@ function show_table_render($render = false, $force = false): void
             define('TABLE_RENDERED', 1);
         } ?>
         <?php if ($render) { ?>
-            <script>sortPlaylistRender();</script>
+            <script>
+                $(document).ready(function () {
+                    sortPlaylistRender();
+                });
+            </script>
             <?php
         }
     }

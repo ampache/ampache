@@ -29,7 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\InstallationHelperInterface;
 
-final class UpdateConfigFileCommand extends Command
+final class AdminUpdateConfigFileCommand extends Command
 {
     private ConfigContainerInterface $configContainer;
 
