@@ -4102,6 +4102,12 @@ abstract class Catalog extends database_object
                             }
 
                             if ($changed > 0) {
+                                if ($catalog->gather_types === 'music') {
+                                    Catalog::clean_empty_albums();
+                                    Album::update_album_artist();
+                                    Album::update_table_counts();
+                                    Artist::update_table_counts();
+                                }
                                 self::update_catalog_map($catalog->gather_types);
                             }
                         }
