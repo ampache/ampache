@@ -73,7 +73,10 @@ final class ShowEditObjectAction extends AbstractEditAction
 
         $this->ui->show(
             'show_edit_' . $object_type . '.inc.php',
-            ['libitem' => $libitem]
+            [
+                'libitem' => $libitem,
+                'users' => $users
+            ]
         );
 
         $results = ob_get_contents();
