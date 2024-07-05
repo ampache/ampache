@@ -424,8 +424,8 @@ class TVShow_Season extends database_object implements
                 $this->getArtCleanup()->collectGarbageForObject('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);
                 Rating::garbage_collection('tvshow_season', $this->id);
-                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->getId());
-                $this->getUseractivityRepository()->collectGarbage('tvshow_season', $this->getId());
+                $this->getShoutRepository()->collectGarbage('tvshow_season', $this->id);
+                $this->getUseractivityRepository()->collectGarbage('tvshow_season', $this->id);
             }
         }
 

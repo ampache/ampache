@@ -1463,7 +1463,7 @@ class User extends database_object
      */
     public function getPreferenceValue(string $preferenceName)
     {
-        return Preference::get_by_user($this->getId(), $preferenceName);
+        return Preference::get_by_user($this->id, $preferenceName);
     }
 
     public function getRssToken(): string
