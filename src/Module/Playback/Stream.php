@@ -510,9 +510,7 @@ class Stream
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event(self::class, 'Transcode command failed to open.', 1);
-            $parray = [
-                'handle' => null
-            ];
+            $parray = ['handle' => null];
         } else {
             $parray = [
                 'process' => $process,

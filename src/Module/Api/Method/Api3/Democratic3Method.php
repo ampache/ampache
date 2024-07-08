@@ -54,12 +54,14 @@ final class Democratic3Method
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
                 }
-                $democratic->add_vote([
+                $democratic->add_vote(
                     [
-                        'object_type' => 'song',
-                        'object_id' => $media->id
+                        [
+                            'object_type' => 'song',
+                            'object_id' => $media->id
+                        ]
                     ]
-                ]);
+                );
 
                 // If everything was ok
                 $results = [
@@ -92,9 +94,7 @@ final class Democratic3Method
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = [
-                    'url' => $url
-                ];
+                $results = ['url' => $url];
                 echo Xml3_Data::keyed_array($results);
                 break;
             default:

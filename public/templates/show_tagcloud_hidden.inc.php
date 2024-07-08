@@ -50,9 +50,7 @@ $ui = $dic->get(UiInterface::class);
 
 $ui->show(
     'show_form_genre.inc.php',
-    [
-        'type' => 'tag_hidden'
-    ]
+    ['type' => 'tag_hidden']
 ); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>

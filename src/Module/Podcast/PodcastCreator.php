@@ -123,9 +123,7 @@ final class PodcastCreator implements PodcastCreatorInterface
         } catch (PodcastFolderException $e) {
             $this->logger->critical(
                 $e->getMessage(),
-                [
-                    LegacyLogger::CONTEXT_TYPE => self::class
-                ]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

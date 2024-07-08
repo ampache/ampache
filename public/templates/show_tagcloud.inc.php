@@ -51,9 +51,7 @@ $ui = $dic->get(UiInterface::class);
 
 $ui->show(
     'show_form_genre.inc.php',
-    [
-        'type' => $browse_type
-    ]
+    ['type' => $browse_type]
 ); ?>
 <?php Ajax::start_container('tag_filter'); ?>
 <?php foreach ($object_ids as $data) { ?>

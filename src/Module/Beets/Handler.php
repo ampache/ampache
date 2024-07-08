@@ -88,9 +88,7 @@ abstract class Handler
      */
     public function getTimedCommand($command, $tag, $time): string
     {
-        $commandParts = [
-            $command
-        ];
+        $commandParts = [$command];
         if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {

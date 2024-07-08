@@ -328,7 +328,7 @@ final class Session implements SessionInterface
                 break;
         } // end switch on data type
 
-        if (Session::exists($type, $key)) {
+        if (self::exists($type, $key)) {
             debug_event(self::class, $type . ' session already exists.', 3);
 
             return $key;
@@ -799,11 +799,13 @@ final class Session implements SessionInterface
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
                 if (Dba::num_rows($db_results) > 0) {
-                    Session::create_cookie();
-                    self::create([
-                        'type' => 'mysql',
-                        'username' => $username
-                    ]);
+                    self::create_cookie();
+                    self::create(
+                        [
+                            'type' => 'mysql',
+                            'username' => $username
+                        ]
+                    );
                     $_SESSION['userdata']['username'] = $username;
                     $auth                             = true;
                 }

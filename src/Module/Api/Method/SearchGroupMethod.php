@@ -140,9 +140,7 @@ final class SearchGroupMethod
                 ];
                 break;
             case 'video':
-                $search_types = [
-                    'video'
-                ];
+                $search_types = ['video'];
         }
         $offset         = $input['offset'] ?? 0;
         $limit          = $input['limit'] ?? 0;

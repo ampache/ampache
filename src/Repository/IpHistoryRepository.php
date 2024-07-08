@@ -113,9 +113,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-            [
-                86400 * (int) $this->configContainer->get('user_ip_cardinality')
-            ]
+            [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
         );
     }
 
