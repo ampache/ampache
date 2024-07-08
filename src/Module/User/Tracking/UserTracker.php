@@ -66,9 +66,7 @@ final class UserTracker implements UserTrackerInterface
 
         $this->logger->warning(
             sprintf('Login from IP address: %s', $ip),
-            [
-                LegacyLogger::CONTEXT_TYPE => self::class
-            ]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // Remove port information if any

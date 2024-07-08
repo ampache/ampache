@@ -84,17 +84,23 @@ final class DefaultAction implements ApplicationActionInterface
         $port       = scrub_in((string) ($_REQUEST['local_port'] ?? ''));
         $skip_admin = isset($_REQUEST['skip_admin']);
 
-        AmpConfig::set_by_array([
-            'web_path' => $web_path,
-            'database_name' => $database,
-            'database_hostname' => $hostname,
-            'database_port' => $port
-        ], true);
+        AmpConfig::set_by_array(
+            [
+                'web_path' => $web_path,
+                'database_name' => $database,
+                'database_hostname' => $hostname,
+                'database_port' => $port
+            ],
+            true
+        );
         if (!$skip_admin) {
-            AmpConfig::set_by_array([
-                'database_username' => $username,
-                'database_password' => $password
-            ], true);
+            AmpConfig::set_by_array(
+                [
+                    'database_username' => $username,
+                    'database_password' => $password
+                ],
+                true
+            );
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {

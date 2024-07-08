@@ -67,9 +67,7 @@ final readonly class PodcastRepository implements PodcastRepositoryInterface
     ): ?Podcast {
         $podcastId = $this->connection->fetchOne(
             'SELECT `id` FROM `podcast` WHERE `feed` = ?',
-            [
-                $feedUrl
-            ]
+            [$feedUrl]
         );
 
         if ($podcastId !== false) {

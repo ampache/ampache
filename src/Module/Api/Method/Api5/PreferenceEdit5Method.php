@@ -78,9 +78,7 @@ final class PreferenceEdit5Method
             return false;
         }
         $preference = Preference::get($pref_name, $user->id);
-        $results    = [
-            'preference' => $preference
-        ];
+        $results    = ['preference' => $preference];
         switch ($input['api_format']) {
             case 'json':
                 echo json_encode($results, JSON_PRETTY_PRINT);

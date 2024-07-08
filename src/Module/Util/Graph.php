@@ -846,10 +846,12 @@ class Graph
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if ($plugin->_plugin->display_map($pts)) {
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     /**

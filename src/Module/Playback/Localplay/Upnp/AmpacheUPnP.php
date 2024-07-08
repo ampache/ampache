@@ -419,9 +419,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->Repeat([
-            'repeat' => ($state ? 'all' : 'off')
-        ]);
+        $this->_upnp->Repeat(['repeat' => ($state ? 'all' : 'off')]);
 
         return true;
     }

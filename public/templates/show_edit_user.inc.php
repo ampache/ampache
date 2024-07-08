@@ -45,13 +45,13 @@ $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>
         <tr>
-            <td><?php echo T_('Username'); ?>:</td>
+            <td><?php echo T_('Username'); ?></td>
             <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autocomplete="off" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Full Name'); ?>:</td>
+            <td><?php echo T_('Full Name'); ?></td>
             <td><input type="text" name="fullname" maxlength="255" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
                     echo "checked";
@@ -60,41 +60,41 @@ $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('E-mail'); ?>:</td>
+            <td><?php echo T_('E-mail'); ?></td>
             <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out($client->email); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Website'); ?>:</td>
+            <td><?php echo T_('Website'); ?></td>
             <td><input type="text" name="website" maxlength="255" value="<?php echo scrub_out($client->website); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('State'); ?>:</td>
+            <td><?php echo T_('State'); ?></td>
             <td><input type="text" name="state" maxlength="64" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php echo AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('City'); ?>:</td>
+            <td><?php echo T_('City'); ?></td>
             <td><input type="text" name="city" maxlength="64" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php echo AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Password'); ?>:</td>
+            <td><?php echo T_('Password'); ?></td>
             <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="new-password" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Confirm Password'); ?>:</td>
+            <td><?php echo T_('Confirm Password'); ?></td>
             <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
         </tr>
         <tr>
-            <td><?php echo T_('User Access Level'); ?>:</td>
+            <td><?php echo T_('User Access Level'); ?></td>
             <td>
                 <?php $var_name = 'on_' . (string)$client->access;
 $on_5                           = '';
@@ -131,7 +131,7 @@ switch ($var_name) {
 
 <?php if (AmpConfig::get('catalog_filter')) { ?>
         <tr>
-            <td><?php echo T_('Catalog Filter'); ?>:</td>
+            <td><?php echo T_('Catalog Filter'); ?></td>
             <td><?php
 
     $filters = Catalog::get_catalog_filters();

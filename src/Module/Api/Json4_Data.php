@@ -160,9 +160,7 @@ class Json4_Data
 
             foreach ($atags as $tag_id => $data) {
                 if ($simple) {
-                    $JSON[] = [
-                        "name" => $data['name']
-                    ];
+                    $JSON[] = ["name" => $data['name']];
                 } else {
                     $JSON[] = [
                         "id" => (string)$tag_id,
@@ -277,9 +275,7 @@ class Json4_Data
         } // end foreach
 
         // return a tag object
-        $JSON[] = [
-            "tag" => $TAGS
-        ];
+        $JSON[] = ["tag" => $TAGS];
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     }
@@ -1031,9 +1027,7 @@ class Json4_Data
         } // end foreach
 
         // return a user object
-        $JSON[] = [
-            "user" => $user_array
-        ];
+        $JSON[] = ["user" => $user_array];
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     }

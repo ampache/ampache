@@ -72,9 +72,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata_field` WHERE `id` = ?',
-            [
-                $fieldId
-            ],
+            [$fieldId],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);
@@ -95,9 +93,7 @@ final readonly class MetadataFieldRepository implements MetadataFieldRepositoryI
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
-            [
-                $name
-            ],
+            [$name],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);

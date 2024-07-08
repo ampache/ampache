@@ -47,7 +47,7 @@ use Ampache\Repository\Model\Playlist;
             </tr>
             <tr>
                 <td>
-                    <?php echo T_('Owner'); ?>:<br />
+                    <?php echo T_('Owner'); ?><br />
                 </td>
                 <td>
                     <?php

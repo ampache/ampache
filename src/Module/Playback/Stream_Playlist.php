@@ -549,12 +549,16 @@ class Stream_Playlist
     public function add_urls(array $urls = []): bool
     {
         foreach ($urls as $url) {
-            $this->_add_url(new Stream_Url([
-                'url' => $url,
-                'title' => Stream_Url::get_title($url),
-                'author' => T_('Ampache'),
-                'time' => '-1'
-            ]));
+            $this->_add_url(
+                new Stream_Url(
+                    [
+                        'url' => $url,
+                        'title' => Stream_Url::get_title($url),
+                        'author' => T_('Ampache'),
+                        'time' => '-1'
+                    ]
+                )
+            );
         }
 
         return true;
@@ -786,7 +790,10 @@ class Stream_Playlist
 
         foreach ($this->urls as $url) {
             $url_data = Stream_Url::parse($url->url);
-            $items[]  = [$url_data['type'], $url_data['id']];
+            $items[]  = [
+                $url_data['type'],
+                $url_data['id']
+            ];
         }
         if (!empty($items)) {
             $democratic->add_vote($items);

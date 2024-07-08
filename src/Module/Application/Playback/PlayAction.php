@@ -702,7 +702,7 @@ final class PlayAction implements ApplicationActionInterface
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file((string)$stream_file))) {
             $this->logger->error(
-                "Media " . $stream_file . " ($media->title) does not have a valid filename specified",
+                "Media " . $stream_file . " ($media->title). Invalid media, file not found or file unreadable",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');

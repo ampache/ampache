@@ -307,9 +307,7 @@ class AmpacheXbmc extends localplay_controller
             $this->stop();
 
             $clear = $this->_xbmc->Playlist->Clear(
-                [
-                    'playlistid' => $this->_playlistId
-                ]
+                ['playlistid' => $this->_playlistId]
             );
 
             //we have a delay between the stop/clear playlist in kodi and kodi notify it in the status, so, we add a mininal sleep
@@ -347,13 +345,7 @@ class AmpacheXbmc extends localplay_controller
                     ]
                 );
             } elseif ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(
-                    [
-                       'item' => [
-                           'playlistid' => $this->_playlistId
-                       ]
-                    ]
-                );
+                $this->_xbmc->Player->Open(['item' => ['playlistid' => $this->_playlistId]]);
 
             }
 
@@ -413,9 +405,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->Stop(
-                [
-                    'playerid' => $this->_playerId
-                ]
+                ['playerid' => $this->_playerId]
             );
 
             return true;
@@ -467,9 +457,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => 'increment'
-                ]
+                ['volume' => 'increment']
             );
 
             return true;
@@ -491,9 +479,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => 'decrement'
-                ]
+                ['volume' => 'decrement']
             );
 
             return true;
@@ -569,9 +555,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => $volume
-                ]
+                ['volume' => $volume]
             );
 
             return true;
@@ -700,9 +684,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $appprop = $this->_xbmc->Application->GetProperties(
-                [
-                    'properties' => ['volume']
-                ]
+                ['properties' => ['volume']]
             );
             $array['volume']       = (int)($appprop['volume']);
             $array['track_title']  = '';

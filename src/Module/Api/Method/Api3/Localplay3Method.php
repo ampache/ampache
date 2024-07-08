@@ -73,11 +73,7 @@ final class Localplay3Method
         } // end switch on command
 
         $results = [
-            'localplay' => [
-                'command' => [
-                    $input['command'] => $result
-                ]
-            ]
+            'localplay' => ['command' => [$input['command'] => $result]]
         ];
         echo Xml3_Data::keyed_array($results);
 

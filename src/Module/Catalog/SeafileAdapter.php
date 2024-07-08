@@ -127,14 +127,14 @@ class SeafileAdapter
             return false;
         }
 
-        $client = new Client([
-            'base_uri' => $this->server,
-            'debug' => false,
-            'delay' => $this->call_delay,
-            'headers' => [
-                'Authorization' => 'Token ' . $this->api_key
+        $client = new Client(
+            [
+                'base_uri' => $this->server,
+                'debug' => false,
+                'delay' => $this->call_delay,
+                'headers' => ['Authorization' => 'Token ' . $this->api_key]
             ]
-        ]);
+        );
 
         $this->client = [
             'Libraries' => new Library($client),

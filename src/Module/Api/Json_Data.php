@@ -137,9 +137,7 @@ class Json_Data
      */
     public static function success($string, $return_data = []): string
     {
-        $message = [
-            "success" => $string
-        ];
+        $message = ["success" => $string];
         foreach ($return_data as $title => $data) {
             $message[$title] = $data;
         }
@@ -414,15 +412,14 @@ class Json_Data
      */
     public static function lists($objects): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
-        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $JSON = [];
+
+        $JSON    = [];
+        $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         foreach ($objects as $object) {
             $trimmed  = Catalog::trim_prefix(trim((string)$object['name']), $pattern);
             $prefix   = $trimmed['prefix'];
@@ -491,9 +488,7 @@ class Json_Data
      */
     public static function live_streams($objects, $object = true): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -533,9 +528,7 @@ class Json_Data
      */
     public static function licenses($objects, $object = true): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -577,9 +570,7 @@ class Json_Data
      */
     public static function labels($objects, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -633,9 +624,7 @@ class Json_Data
      */
     public static function genres($objects, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -684,9 +673,7 @@ class Json_Data
      */
     public static function artists($objects, $include, $user, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -765,9 +752,8 @@ class Json_Data
      */
     public static function albums($objects, $include, $user, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
+
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
@@ -867,9 +853,7 @@ class Json_Data
      */
     public static function playlists($objects, $user, $songs = false, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
@@ -956,9 +940,7 @@ class Json_Data
      */
     public static function shares($objects, $object = true): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1019,9 +1001,7 @@ class Json_Data
      */
     public static function bookmarks($objects, $include = false, $object = true): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1090,9 +1070,7 @@ class Json_Data
      */
     public static function catalogs($objects, $object = true): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1152,9 +1130,7 @@ class Json_Data
      */
     public static function podcasts($objects, $user, $episodes = false, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1236,9 +1212,7 @@ class Json_Data
      */
     public static function podcast_episodes($objects, $user, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $encode)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
@@ -1317,9 +1291,8 @@ class Json_Data
      */
     public static function songs($objects, $user, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
+
         Stream::set_session($_REQUEST['auth'] ?? '');
         $playlist_track = 0;
 
@@ -1470,9 +1443,8 @@ class Json_Data
      */
     public static function videos($objects, $user, $encode = true, $object = true)
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
+
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
@@ -1791,9 +1763,7 @@ class Json_Data
      */
     public static function deleted($object_type, $objects): string
     {
-        $output = [
-            "total_count" => count($objects)
-        ];
+        $output = ["total_count" => count($objects)];
 
         if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);

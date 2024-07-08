@@ -62,11 +62,12 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
         bool $gather = false
     ): bool {
         $feed = $podcast->getFeedUrl();
-
-        debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
         if ($feed === '') {
             return false;
         }
+
+        debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
+
         $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event(self::class, 'Cannot access feed ' . $feed, 1);

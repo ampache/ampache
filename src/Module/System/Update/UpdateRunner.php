@@ -169,9 +169,7 @@ final class UpdateRunner implements UpdateRunnerInterface
                 } catch (DatabaseException $e) {
                     $this->logger->warning(
                         'Missing table: ' . $tableName,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     if (!$migrate) {
@@ -188,9 +186,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                     $this->logger->critical(
                         $error,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     throw new UpdateFailedException($error);
@@ -198,9 +194,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 $this->logger->critical(
                     sprintf('Created missing table: %s', $tableName),
-                    [
-                        LegacyLogger::CONTEXT_TYPE => self::class
-                    ]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 yield $tableName;

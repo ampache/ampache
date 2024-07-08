@@ -402,7 +402,10 @@ class Dba
      */
     private static function _setup_dbh($dbh, $database): bool
     {
-        if (!$dbh) {
+        if (
+            !$dbh ||
+            $dbh->errorCode()
+        ) {
             return false;
         }
 
@@ -507,15 +510,18 @@ class Dba
         $handle = sprintf('dbh_%s', $database);
 
         /** * @var null|PDO $connection */
-        $connection = AmpConfig::get($handle);
+        $dbh = AmpConfig::get($handle);
 
-        if ($connection === null) {
-            $connection = self::_connect();
-            self::_setup_dbh($connection, $database);
-            AmpConfig::set($handle, $connection, true);
+        if ($dbh === null) {
+            $dbh = self::_connect();
+            if (!self::_setup_dbh($dbh, $database)) {
+                return null;
+            }
+
+            AmpConfig::set($handle, $dbh, true);
         }
 
-        return $connection;
+        return $dbh;
     }
 
     /**

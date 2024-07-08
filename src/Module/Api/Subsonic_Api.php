@@ -499,9 +499,7 @@ class Subsonic_Api
         }
 
         // return node as array
-        return [
-            $xml->getName() => $propertiesArray
-        ];
+        return [$xml->getName() => $propertiesArray];
     }
 
     /**

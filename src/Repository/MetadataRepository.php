@@ -74,9 +74,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `id` = ?',
-            [
-                $metadataId
-            ],
+            [$metadataId],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, Metadata::class, [$this, $this->metadataFieldRepository]);
@@ -149,9 +147,7 @@ final readonly class MetadataRepository implements MetadataRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `metadata` where `id` = ?',
-            [
-                $metadata->getId()
-            ]
+            [$metadata->getId()]
         );
     }
 
