@@ -1236,17 +1236,22 @@ class Preference extends database_object
         } else {
             unset($results['theme_name']);
         }
-        // Default theme if we don't get anything from their
-        // preferences because we're going to want at least something otherwise
-        // the page is going to be really ugly
+
+        // Default theme fallback
         if (!isset($results['theme_name'])) {
             $results['theme_name'] = 'reborn';
         }
+
         $results['theme_path'] = '/themes/' . $results['theme_name'];
 
         // Load theme settings
         $theme_cfg                 = get_theme($results['theme_name']);
         $results['theme_css_base'] = $theme_cfg['base'];
+
+        // Default theme color fallback
+        if (!isset($results['theme_color'])) {
+            $results['theme_color'] = 'dark';
+        }
 
         if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed
