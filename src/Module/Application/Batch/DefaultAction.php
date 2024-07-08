@@ -188,9 +188,12 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $media_files = [];
         $total_size  = 0;
         foreach ($medias as $element) {
+            $object_type = ($element['object_type'] instanceof LibraryItemEnum)
+                ? $element['object_type']
+                : LibraryItemEnum::tryFrom($element['object_type']);
             if (is_array($element)) {
                 $media = $this->libraryItemLoader->load(
-                    $element['object_type'],
+                    $object_type,
                     $element['object_id']
                 );
             } else {
