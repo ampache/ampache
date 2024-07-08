@@ -123,9 +123,11 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $medias = Core::get_global('user')->playlist->get_items();
                 }
 
-                if (count($medias) > 0) {
+                if (
+                    count($medias) > 0 &&
+                    $playlist->add_medias($medias)
+                ) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
