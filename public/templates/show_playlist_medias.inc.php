@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
@@ -75,16 +76,17 @@ $count     = 1; ?>
                 if (!is_array($object)) {
                     $object = (array) $object;
                 }
-
+                $libtype = ($object['object_type'] instanceof LibraryItemEnum)
+                    ? $object['object_type']
+                    : LibraryItemEnum::tryFrom($object['object_type']);
                 $libitem = $libraryItemLoader->load(
-                    $object['object_type'],
+                    $libtype,
                     $object['object_id'],
                 );
                 if ($libitem !== null) {
                     $libitem->format();
 
-                    $object_type = $object['object_type']->value;
-
+                    $object_type    = $libtype->value;
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>
