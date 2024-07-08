@@ -644,8 +644,8 @@ class Playlist extends playlist_object
 
         debug_event(self::class, "add_medias to: " . $this->id, 5);
         $unique     = (bool) AmpConfig::get('unique_playlist', false);
-        $track_data = ($unique) ?
-            $this->get_songs()
+        $track_data = ($unique)
+            ? $this->get_songs()
             : [];
         $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ? ";
         $db_results = Dba::read($sql, [$this->id]);
