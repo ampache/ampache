@@ -50,6 +50,7 @@ $limit100        = ($limit == 100) ? 'selected="selected"' : '';
 $limit250        = ($limit == 250) ? 'selected="selected"' : '';
 $limit500        = ($limit == 500) ? 'selected="selected"' : '';
 $random          = $data['random'] ?? 0;
+$cache           = $data['cache'] ?? 0;
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
@@ -112,6 +113,12 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
         <td><input type="checkbox" name="random" value="1" <?php if ($random == 1) {
             echo "checked";
         } ?> /></td>
+    </tr>
+    <tr id="cache_results">
+        <td><?php echo T_('Cache'); ?></td>
+        <td><input type="checkbox" name="cache" value="1" <?php if ($cache == 1) {
+                echo "checked";
+            } ?> /></td>
     </tr>
 </table>
 

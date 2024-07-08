@@ -62,7 +62,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
     );
     foreach ($playlists as $playlist) { ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->get_fullname(), 'rb_append_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, scrub_out($playlist->get_fullname()), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php } ?>
             </ul>

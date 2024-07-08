@@ -77,6 +77,8 @@ interface PlaylistViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string;
 
+    public function getFullname(): string;
+
     public function getPlaylistUrl(): string;
 
     public function getPlaylistLink(): string;
