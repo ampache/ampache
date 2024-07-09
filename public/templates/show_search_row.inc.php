@@ -76,7 +76,7 @@ use Ampache\Repository\Model\Userflag;
         </span>
     </td>
 <?php } ?>
-<td class="cel_owner"><?php echo $libitem->username; ?></td>
+<td class="cel_owner"><?php echo scrub_out($libitem->username); ?></td>
 <td class="cel_action">
 <?php global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);

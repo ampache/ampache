@@ -65,7 +65,7 @@ use Ampache\Repository\Model\Search;
 if (!empty($users)) {
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
-        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
     }
     echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
 } ?>
