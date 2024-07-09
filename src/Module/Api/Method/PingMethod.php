@@ -32,6 +32,8 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Session;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class PingMethod
@@ -83,9 +85,11 @@ final class PingMethod
                 Api::server_details($input['auth'])
             );
 
+            $user = static::getUserRepository()->findByApiKey($input['auth']);
+
             // We're about to start. Record this user's IP.
-            if (AmpConfig::get('track_user_ip') && !empty(Core::get_global('user'))) {
-                static::getUserTracker()->trackIpAddress(Core::get_global('user'));
+            if (AmpConfig::get('track_user_ip') && $user instanceof User) {
+                static::getUserTracker()->trackIpAddress($user);
             }
         }
 
@@ -99,6 +103,16 @@ final class PingMethod
             default:
                 echo Xml_Data::keyed_array($results);
         }
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 
     /**
