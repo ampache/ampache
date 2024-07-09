@@ -51,7 +51,7 @@ use Ampache\Module\Api\Ajax;
                     </div>
                     <?php
                         } else {
-                            echo $libitem->get_artist_fullname();
+                            echo scrub_out($libitem->get_artist_fullname());
                         } ?>
                 </td>
             </tr>
