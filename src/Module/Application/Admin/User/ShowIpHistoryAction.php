@@ -64,19 +64,18 @@ final class ShowIpHistoryAction extends AbstractUserAction
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $userId      = (int) ($queryParams['user_id'] ?? 0);
-        $showAll     = isset($queryParams['all']);
+        $userId      = (int)($queryParams['user_id'] ?? 0);
+        $showAll     = (bool)($queryParams['all'] ?? 0);
 
         $user = $this->modelFactory->createUser($userId);
         if ($user->isNew()) {
             throw new ObjectNotFoundException($userId);
         }
 
-        if ($showAll === false) {
+        if ($showAll === true) {
             $history = $this->ipHistoryRepository->getHistory(
                 $user,
-                (int) $this->configContainer->get('user_ip_cardinality'),
-                true,
+                0
             );
         } else {
             $history = $this->ipHistoryRepository->getHistory(
