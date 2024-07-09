@@ -32,7 +32,7 @@ $web_path = (string)AmpConfig::get('web_path', '');
 /** @var int $num_users */
 /** @var int $num_catalogs */
 ?>
-<td class="cel_name"><?php echo $filter['name']; ?></td>
+<td class="cel_name"><?php echo scrub_out($filter['name']); ?></td>
 <td class="cel_num_users"><?php echo $num_users; ?></td>
 <td class="cel_num_catalogs"><?php echo $num_catalogs; ?></td>
 <td class="cel_action">

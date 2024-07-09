@@ -139,7 +139,7 @@ switch ($var_name) {
         if ($filter['id'] == $client->catalog_filter_group) {
             $selected = ' selected = "selected" ';
         }
-        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . scrub_out($filter['name']) . '</option>';
     }
     echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
 } ?>
