@@ -73,7 +73,7 @@ final class ShowDeleteAction extends AbstractUserAction
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: User Fullname */
-            sprintf(T_('This will permanently delete the user "%s"'), $user->getFullDisplayName()),
+            sprintf(T_('This will permanently delete the user "%s"'), scrub_out($user->getFullDisplayName())),
             sprintf(
                 'admin/users.php?action=confirm_delete&user_id=%s',
                 $userId

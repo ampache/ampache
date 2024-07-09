@@ -44,10 +44,10 @@ use Ampache\Config\AmpConfig;
             <?php foreach ($songs as $song) { ?>
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
-                    <td class="cel_song"><?php echo $song->title; ?></td>
-                    <td class="cel_album"><?php echo $song->get_album_fullname(); ?></td>
-                    <td class="cel_artist"><?php echo $song->get_artist_fullname(); ?></td>
-                    <td class="cel_filename"><?php echo $song->file; ?></td>
+                    <td class="cel_song"><?php echo scrub_out($song->title); ?></td>
+                    <td class="cel_album"><?php echo scrub_out($song->get_album_fullname()); ?></td>
+                    <td class="cel_artist"><?php echo scrub_out($song->get_artist_fullname()); ?></td>
+                    <td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>
             <?php } ?>
