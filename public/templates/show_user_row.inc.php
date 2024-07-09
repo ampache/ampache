@@ -44,9 +44,9 @@ use Ampache\Module\Util\Ui;
                 if ($libitem->f_avatar_mini) {
                     echo $libitem->f_avatar_mini;
                 }
-echo $libitem->username;
+echo scrub_out($libitem->username);
 if ($libitem->fullname_public || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
-    echo " (" . $libitem->fullname . ")";
+    echo " (" . scrub_out($libitem->fullname) . ")";
 } ?>
         </a>
     </td>
@@ -71,7 +71,7 @@ if (Core::get_global('user') instanceof User && Access::check(AccessTypeEnum::IN
     <td class="cel_action">
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode($libitem->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

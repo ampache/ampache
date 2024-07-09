@@ -87,9 +87,9 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 <dl class="media_details">
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
-        <?php echo $client->get_fullname(); ?>
+        <?php echo scrub_out($client->get_fullname()); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode($client->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
