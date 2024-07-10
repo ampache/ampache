@@ -283,6 +283,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return scrub_out($this->playlist->get_fullname());
     }
 
+    public function getFullname(): string
+    {
+        return scrub_out($this->playlist->get_fullname());
+    }
+
     public function getPlaylistUrl(): string
     {
         return (string)$this->playlist->get_link();

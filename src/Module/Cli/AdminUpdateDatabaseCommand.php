@@ -82,6 +82,7 @@ final class AdminUpdateDatabaseCommand extends Command
 
             return;
         }
+
         /* HINT: db version string (e.g. 5.2.0 Build: 006) */
         $interactor->info(
             sprintf(T_('Database version: %s'), $this->retrieveVersion()),
@@ -119,30 +120,65 @@ final class AdminUpdateDatabaseCommand extends Command
             return;
         }
 
-        if ($this->updater->hasPendingUpdates() && $execute) {
-            $interactor->info(
-                "\n" . T_('Update Now!'),
-                true
-            );
-            $interactor->eol();
-            $updated = true;
-            try {
-                $this->updater->update($interactor);
-            } catch (Update\Exception\UpdateException $e) {
+        // Downgrade higher versions to the correct version
+        if ($this->updater->hasOverUpdated()) {
+            if ($execute) {
+                try {
+                    $this->updater->rollback();
+
+                    $interactor->ok(
+                        "\n" . T_('Updated'),
+                        true
+                    );
+                    /* HINT: db version string (e.g. 5.2.0 Build: 006) */
+                    $interactor->info(
+                        sprintf(T_('Database version: %s'), $this->retrieveVersion()),
+                        true
+                    );
+                } catch (Update\Exception\UpdateFailedException $e) {
+                    $interactor->error(
+                        sprintf(
+                            T_('Update failed! %s'),
+                            $e->getMessage()
+                        ),
+                        true
+                    );
+                }
+            } else {
                 $interactor->error(
-                    "\n" . T_('Error'),
+                    T_('Your database version is higher than the Ampache version. Use -e|--execute to rollback'),
                     true
                 );
+                $interactor->eol();
 
                 return;
             }
         }
 
         if ($this->updater->hasPendingUpdates()) {
-            $interactor->warn(
-                "\n" . T_('The following updates need to be performed:'),
-                true
-            );
+            if ($execute) {
+                $interactor->info(
+                    "\n" . T_('Update Now!'),
+                    true
+                );
+                $interactor->eol();
+                $updated = true;
+                try {
+                    $this->updater->update($interactor);
+                } catch (Update\Exception\UpdateException $e) {
+                    $interactor->error(
+                        "\n" . T_('Error'),
+                        true
+                    );
+
+                    return;
+                }
+            } else {
+                $interactor->warn(
+                    "\n" . T_('The following updates need to be performed:'),
+                    true
+                );
+            }
         }
 
         $result = $this->updater->getPendingUpdates();
@@ -150,7 +186,7 @@ final class AdminUpdateDatabaseCommand extends Command
         if ($result->valid() === false) {
             if ($updated) {
                 // tell the user that the database was updated and the version
-                $interactor->info(
+                $interactor->ok(
                     "\n" . T_('Updated'),
                     true
                 );
