@@ -79,13 +79,13 @@ final class PingMethod
                 $results,
                 Api::server_details($input['auth'])
             );
-        }
 
-        $user = static::getUserRepository()->findByApiKey($input['auth']);
+            $user = static::getUserRepository()->findByApiKey($input['auth']);
 
-        // We're about to start. Record this user's IP.
-        if (AmpConfig::get('track_user_ip') && $user instanceof User) {
-            static::getUserTracker()->trackIpAddress($user);
+            // We're about to start. Record this user's IP.
+            if (AmpConfig::get('track_user_ip') && $user instanceof User) {
+                static::getUserTracker()->trackIpAddress($user);
+            }
         }
 
         debug_event(self::class, "Ping$data_version Received from: " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
