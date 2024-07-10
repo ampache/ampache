@@ -143,7 +143,13 @@ class Playlist extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
 
-        $is_admin = ($userOnly === false || (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1));
+        $is_admin = (
+            $userOnly === false ||
+            (
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) ||
+                $user_id == -1
+            )
+        );
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = [];
         $join     = 'WHERE';

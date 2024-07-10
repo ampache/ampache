@@ -200,7 +200,7 @@ class Random
             $playlist->isNew() === false &&
             (
                 $playlist->type === 'public' ||
-                $playlist->has_access($user)
+                $playlist->has_collaborate($user)
             )
         ) {
             foreach ($playlist->get_random_items('1') as $songs) {

@@ -40,13 +40,18 @@ final class PlaylistLoader implements PlaylistLoaderInterface
 
     public function loadByUserId(int $userId): array
     {
-        $playlists = Playlist::get_playlists($userId, '', true, false);
-        Playlist::build_cache($playlists);
-
         $result = [];
 
+        $playlists = Playlist::get_playlists($userId);
+        Playlist::build_cache($playlists);
+
+        $user = $this->modelFactory->createUser($userId);
+
         foreach ($playlists as $playlist_id) {
-            $result[] = $this->modelFactory->createPlaylist((int) $playlist_id);
+            $playlist = $this->modelFactory->createPlaylist($playlist_id);
+            if ($playlist->has_collaborate($user)) {
+                $result[] = $playlist;
+            }
         }
 
         return $result;

@@ -55,7 +55,7 @@ final class PlaylistAddSong4Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];
-        if (!$playlist->has_access($user)) {
+        if (!$playlist->has_collaborate($user)) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 
             return false;

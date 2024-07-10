@@ -113,6 +113,38 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * has_collaborate
+     * This function returns true or false if the current user
+     * has access to collaborate (Add/remove items) for this playlist
+     * @param User|null $user
+     */
+    public function has_collaborate($user = null): bool
+    {
+        if ($this->has_access($user)) {
+            return true;
+        }
+
+        // only playlists have collaborative users
+        if ($this instanceof Search) {
+            return false;
+        }
+
+        $user = ($user instanceof User)
+            ? $user
+            : Core::get_global('user');
+
+        if (
+            $user instanceof User &&
+            !empty($this->collaborate) &&
+            in_array($user->getId(), explode(',', $this->collaborate))
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
