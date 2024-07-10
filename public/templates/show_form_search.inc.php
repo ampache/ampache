@@ -114,12 +114,6 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
             echo "checked";
         } ?> /></td>
     </tr>
-    <tr id="cache_results">
-        <td><?php echo T_('Cache'); ?></td>
-        <td><input type="checkbox" name="cache" value="1" <?php if ($cache == 1) {
-                echo "checked";
-            } ?> /></td>
-    </tr>
 </table>
 
 <?php require Ui::find_template('show_rules.inc.php'); ?>

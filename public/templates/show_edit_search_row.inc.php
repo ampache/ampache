@@ -52,12 +52,6 @@ use Ampache\Repository\Model\Search;
                 } ?> /></td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Cache'); ?></td>
-                <td><input type="checkbox" name="cache" value="1" <?php if ($libitem->cache) {
-                        echo "checked";
-                    } ?> /></td>
-            </tr>
-            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)'); ?></td>
                 <td><input type="number" name="limit" value="<?php echo scrub_out((string)$libitem->limit); ?>" /></td>
             </tr>
