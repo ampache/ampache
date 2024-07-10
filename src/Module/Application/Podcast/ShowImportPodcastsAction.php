@@ -70,9 +70,7 @@ final class ShowImportPodcastsAction implements ApplicationActionInterface
         $this->ui->showBoxTop(T_('Import Podcasts'), 'box box_add_podcast');
         $this->ui->show(
             'show_import_podcasts.inc.php',
-            [
-                'catalogId' => 0,
-            ]
+            ['catalogId' => 0]
         );
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();

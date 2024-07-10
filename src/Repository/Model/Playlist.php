@@ -40,6 +40,8 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
+    public ?string $collaborate = '';
+
     /* Generated Elements */
     public $genre;
 
@@ -141,7 +143,13 @@ class Playlist extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
 
-        $is_admin = ($userOnly === false || (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1));
+        $is_admin = (
+            $userOnly === false ||
+            (
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) ||
+                $user_id == -1
+            )
+        );
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = [];
         $join     = 'WHERE';
@@ -495,9 +503,15 @@ class Playlist extends playlist_object
         if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
             $this->_update_user($data['pl_user']);
         }
+
+        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
+            $this->_update_collaborate($data['collaborate']);
+        }
+
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
             $this->_set_last($data['last_count'], 'last_count');
         }
+
         if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
             $this->_set_last($data['last_duration'], 'last_duration');
         }
@@ -544,6 +558,27 @@ class Playlist extends playlist_object
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
+        }
+    }
+
+    /**
+     * _update_collaborate
+     * This updates playlist collaborators, it calls the generic update_item function
+     * @param string[] $new_list
+     */
+    private function _update_collaborate(array $new_list): void
+    {
+        $collaborate = implode(',', $new_list);
+        if ($this->_update_item('collaborate', $collaborate)) {
+            $this->collaborate = $collaborate;
+        }
+
+        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        Dba::write($sql, [$this->id]);
+
+        foreach ($new_list as $user_id) {
+            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+            Dba::write($sql, [$this->id, $user_id]);
         }
     }
 

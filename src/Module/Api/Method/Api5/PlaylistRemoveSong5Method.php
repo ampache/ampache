@@ -59,7 +59,7 @@ final class PlaylistRemoveSong5Method
         }
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user)) {
+        if (!$playlist->has_collaborate($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;

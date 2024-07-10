@@ -75,9 +75,7 @@ final class ShowAction implements ApplicationActionInterface
         $this->ui->showHeader();
         $this->ui->show(
             'show_access_list.inc.php',
-            [
-                'list' => $items,
-            ]
+            ['list' => $items]
         );
 
         $this->ui->showQueryStats();

@@ -73,9 +73,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
 
         try {
             // Need this to not be considered as a bot (are we? ^^)
-            $headers = [
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
-            ];
+            $headers = ['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',];
 
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;

@@ -58,7 +58,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
                 $playlist->format();
-                if ($playlist->has_access()) {
+                if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
                     // This could have performance issues
                     $playlist->regenerate_track_numbers();
@@ -97,7 +97,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist = new Playlist($_REQUEST['playlist_id']);
                 }
 
-                if (!$playlist->has_access()) {
+                if (!$playlist->has_collaborate()) {
                     break;
                 }
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);

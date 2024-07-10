@@ -68,7 +68,7 @@ final class Playlist4Method
         }
         if (
             $playlist->type !== 'public' &&
-            !$playlist->has_access($user)
+            !$playlist->has_collaborate($user)
         ) {
             Api4::message('error', T_('Access denied to this playlist'), '401', $input['api_format']);
 

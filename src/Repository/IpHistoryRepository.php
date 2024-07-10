@@ -53,30 +53,18 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        int $limit = 1,
-        bool $distinct = false
+        ?int $limit = 100
     ): Generator {
-        $group_sql = '';
-        $limit_sql = '';
-
-        if ($limit > 0) {
-            $limit_sql = sprintf('LIMIT %d', $limit);
-        }
-
-        if ($distinct) {
-            $group_sql = 'GROUP BY `ip`, `date`';
-        }
-
+        $limit_sql = ($limit)
+            ? sprintf('LIMIT %d', $limit)
+            : '';
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? %s ORDER BY `date` DESC %s',
-                $group_sql,
+                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC %s',
                 $limit_sql,
             ),
-            [
-                $user->getId(),
-            ]
+            [$user->getId()]
         );
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -94,9 +82,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $result = $this->connection->fetchOne(
             'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-            [
-                $user->getId(),
-            ]
+            [$user->getId()]
         );
 
         if ($result !== false) {

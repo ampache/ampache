@@ -46,7 +46,7 @@ final class PlaylistAddSong3Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_collaborate()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
             $playlist->add_songs([$song]);

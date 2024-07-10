@@ -1016,7 +1016,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
         if (!empty($row['external_link'])) {
             echo " data-link=\"" . $row['external_link'] . "\"";
         }
-        echo ">" . $row['name'] . "</option>\n";
+        echo ">" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     echo "</select>\n";

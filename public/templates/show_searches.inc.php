@@ -69,7 +69,7 @@ use Ampache\Repository\Model\User;
     <tbody>
 <?php foreach ($object_ids as $playlist_id) {
     $libitem = new Search($playlist_id, 'song');
-    if ($libitem->isNew() || (!$libitem->has_access() and $libitem->type === 'private')) {
+    if ($libitem->isNew() || (!$libitem->has_access() && $libitem->type === 'private')) {
         continue;
     }
     $libitem->format(); ?>
