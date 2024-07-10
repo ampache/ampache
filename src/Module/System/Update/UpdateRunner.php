@@ -86,55 +86,6 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
-        if ($currentVersion >= 700008) {
-            if (Dba::read('SELECT SUM(`user_id`) FROM `user_playlist_map`;')) {
-                // Migration700008
-                if (!Dba::write('DROP TABLE IF EXISTS `user_playlist_map`;')) {
-                    throw new UpdateFailedException();
-                }
-            }
-        }
-
-        if ($currentVersion >= 700007) {
-            if (Dba::read('SELECT SUM(`collaborate`) from `playlist`;')) {
-                // Migration700007
-                if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;")) {
-                    throw new UpdateFailedException();
-                }
-            }
-        }
-
-        if ($currentVersion >= 700006) {
-            // Migration700006
-            if (!Preference::insert('home_recently_played_all', 'Show all media types in Recently Played', '1', 25, 'bool', 'interface', 'home', true)) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700005) {
-            if (Dba::read('SELECT SUM(`last_count`) from `playlist`;')) {
-                // Migration700005
-                if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")) {
-                    throw new UpdateFailedException();
-                }
-            }
-        }
-
-        if ($currentVersion >= 700001) {
-            // Migration700001
-            if (
-                !Preference::delete('sidebar_hide_switcher') ||
-                !Preference::delete('sidebar_hide_browse') ||
-                !Preference::delete('sidebar_hide_dashboard') ||
-                !Preference::delete('sidebar_hide_video') ||
-                !Preference::delete('sidebar_hide_search') ||
-                !Preference::delete('sidebar_hide_playlist') ||
-                !Preference::delete('sidebar_hide_information')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
         $this->logger->notice(
             sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
             [LegacyLogger::CONTEXT_TYPE => self::class]
