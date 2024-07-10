@@ -50,7 +50,6 @@ $limit100        = ($limit == 100) ? 'selected="selected"' : '';
 $limit250        = ($limit == 250) ? 'selected="selected"' : '';
 $limit500        = ($limit == 500) ? 'selected="selected"' : '';
 $random          = $data['random'] ?? 0;
-$cache           = $data['cache'] ?? 0;
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
