@@ -76,7 +76,7 @@ if (!empty($users)) {
                             $selected  = in_array($user_id, $ids) ? ' selected="selected"' : '';
                             $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($user_name) . '</option>';
                         }
-                        echo '<select multiple size="5" name="collaborate[]">' . implode("\n", $options) . '</select>';
+                        echo '<select multiple size="5" name="collaborate[]" style="height: 90px;">' . implode("\n", $options) . '</select>';
                     } ?>
                 </td>
             </tr>
