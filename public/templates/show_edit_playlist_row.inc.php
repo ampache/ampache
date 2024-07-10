@@ -68,7 +68,7 @@ if (!empty($users)) {
                 </td>
                 <td>
 <?php $ids = explode(',', $libitem->collaborate);
-$options   = array();
+$options   = [];
 $users     = User::getValidArray();
 if (!empty($users)) {
     foreach ($users as $user_id => $user_name) {
