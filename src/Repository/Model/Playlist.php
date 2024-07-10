@@ -40,7 +40,7 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
-    public string $collaborate = '';
+    public ?string $collaborate = '';
 
     /* Generated Elements */
     public $genre;
