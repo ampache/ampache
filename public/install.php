@@ -31,8 +31,6 @@ $dic = require_once __DIR__ . '/../src/Config/Bootstrap.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-    ],
+    [DefaultAction::REQUEST_KEY => DefaultAction::class],
     DefaultAction::REQUEST_KEY
 );
