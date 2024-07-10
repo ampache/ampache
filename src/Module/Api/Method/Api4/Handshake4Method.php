@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Method\Api4;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Dba;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -165,6 +166,11 @@ final class Handshake4Method
                     $token = $data['apikey'];
                 }
 
+                // We're about to start. Record this user's IP.
+                if (AmpConfig::get('track_user_ip')) {
+                    static::getUserTracker()->trackIpAddress($client);
+                }
+
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
                 // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
                 $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
@@ -228,5 +234,15 @@ final class Handshake4Method
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserTracker(): UserTrackerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserTrackerInterface::class);
     }
 }
