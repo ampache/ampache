@@ -577,7 +577,7 @@ class Playlist extends playlist_object
         Dba::write($sql, [$this->id]);
 
         foreach ($new_list as $user_id) {
-            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist`, `user`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `playlist` = `playlist`;";
+            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
             Dba::write($sql, [$this->id, $user_id]);
         }
     }
