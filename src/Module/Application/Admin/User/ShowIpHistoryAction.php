@@ -75,7 +75,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
         if ($showAll === true) {
             $history = $this->ipHistoryRepository->getHistory(
                 $user,
-                0,
+                false,
             );
         } else {
             $history = $this->ipHistoryRepository->getHistory(
