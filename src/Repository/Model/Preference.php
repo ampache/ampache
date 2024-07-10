@@ -1230,7 +1230,6 @@ class Preference extends database_object
             'upload',
             'upload_allow_edit',
             'upload_allow_remove',
-            'upload_catalog',
             'upload_catalog_pattern',
             'upload_script',
             'upload_subdir',
