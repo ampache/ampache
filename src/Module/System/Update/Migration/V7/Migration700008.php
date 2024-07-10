@@ -39,7 +39,8 @@ final class Migration700008 extends AbstractMigration
 
         $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
         $this->updateDatabase(
-            sprintf('CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
+            sprintf(
+                'CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
                 $engine,
                 $charset,
                 $collation
