@@ -221,6 +221,11 @@ abstract class playlist_object extends database_object implements library_item
         return $this->f_name;
     }
 
+    public function getFullname(): string
+    {
+        return scrub_out($this->get_fullname());
+    }
+
     /**
      * Get item link.
      */
