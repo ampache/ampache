@@ -62,7 +62,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
         return str_replace(
             '_',
             '-',
-            $this->configContainer->get(ConfigurationKeyEnum::LANG) ?? 'en-US'
+            $this->configContainer->get(ConfigurationKeyEnum::LANG) ?? 'en_US'
         );
     }
 
