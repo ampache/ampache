@@ -64,7 +64,7 @@ if (!empty($users)) {
             </tr>
             <tr>
                 <td>
-                    <?php echo T_('Collaborate'); ?>:<br />
+                    <?php echo T_('Collaborate'); ?><br />
                 </td>
                 <td>
 <?php $ids = explode(',', $libitem->collaborate);
