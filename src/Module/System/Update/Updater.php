@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update;
 
 use Ahc\Cli\IO\Interactor;
-use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\Update\Exception\UpdateException;
 use Ampache\Module\System\Update\Exception\UpdateFailedException;
 use Ampache\Module\System\Update\Exception\VersionNotUpdatableException;
