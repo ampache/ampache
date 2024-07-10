@@ -29,6 +29,7 @@
 * XSS scenarios that a user could create (and some admin ones as well)
 * URL encode name parameters for links
 * User IP history page didn't show what you expected and was very confusing
+* Edit search and playlist pages not reloading the user list
 
 ## Ampache 6.5.0
 
