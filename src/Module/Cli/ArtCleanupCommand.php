@@ -83,6 +83,9 @@ final class ArtCleanupCommand extends Command
 
         $this->artCleanup->cleanup();
 
-        $interactor->ok('Clean Completed', true);
+        $interactor->ok(
+            'Clean Completed',
+            true
+        );
     }
 }

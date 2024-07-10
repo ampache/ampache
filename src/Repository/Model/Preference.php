@@ -1292,6 +1292,11 @@ class Preference extends database_object
         $theme_cfg                 = get_theme($results['theme_name']);
         $results['theme_css_base'] = $theme_cfg['base'];
 
+        // Default theme color fallback
+        if (!isset($results['theme_color'])) {
+            $results['theme_color'] = 'dark';
+        }
+
         if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed
             if (!Core::is_readable(__DIR__ . '/../../../public/themes/' . $results['theme_name'] . '/templates/' . $results['theme_color'] . '.css')) {

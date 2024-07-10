@@ -49,6 +49,37 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 * Enforce sidebar_light when enabled, ignoring cookie if set
 
+## Ampache 6.5.1
+
+### Added
+
+* Add maxlength to the user data fields on the registration and edit pages
+* Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
+* Default theme fallback to 'Dark' color scheme
+* CLI
+  * admin:updateDatabase: allow downgrading database from Ampache7 databases
+
+### Changed
+
+* Split out API change documentation from CHANGELOG.md to API-CHANGELOG.md
+* Simplify and speed up playlist access checks by sending the user object
+* User IP history defaults to grouped values and 100 results
+* Don't notify that items are added in the WebUI when nothing was added
+
+### Removed
+
+* Don't track user IP from stream URL access
+
+### Fixed
+
+* Total table counts for artists didn't include all artists
+* Check valid playlist / search on random actions
+* Autoupdate version check tweak for empty latest version
+* XSS scenarios that a user could create (and some admin ones as well)
+* URL encode name parameters for links
+* User IP history page didn't show what you expected and was very confusing
+* Edit search and playlist pages not reloading the user list
+
 ## Ampache 6.5.0
 
 This release is the final Ampache6 release with new features. Bug fixes and API extenstion only from now on!

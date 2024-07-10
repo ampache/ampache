@@ -5,6 +5,7 @@
 ### Added
 
 * ALL
+  * Track user IP on handshake and ping calls
   * playlist_edit: separate error when the playlist doesn't exist
 * API6
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
@@ -12,7 +13,10 @@
 
 ### Fixed
 
+* ALL
+  * User preferences were not initiated and the server preferences would overwrite differences
 * API6
+  * lost_password: function name incorrect
   * flag: id smartplaylists correctly
   * rate: id smartplaylists correctly
   * albums: Browse user may not be set

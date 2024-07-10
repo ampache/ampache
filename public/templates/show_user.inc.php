@@ -59,7 +59,7 @@ $create_date  = $client->create_date ? get_datetime((int) $client->create_date) 
 $web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
-Ui::show_box_top((string)$client->get_fullname()); ?>
+Ui::show_box_top(scrub_out($client->get_fullname())); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
