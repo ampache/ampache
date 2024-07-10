@@ -42,7 +42,7 @@ use Ampache\Module\System\Core;
         <tr>
             <td><?php echo T_('Catalog'); ?></td>
             <td>
-                <?php show_catalog_select('catalog', $catalogId, '', false, 'podcast'); ?>
+                <?php show_catalog_select('catalog', $catalogId, '', false, 'podcast', 'local'); ?>
                 <?php echo AmpError::display('catalog'); ?>
             </td>
         </tr>
