@@ -566,11 +566,19 @@ class Playlist extends playlist_object
      * This updates playlist collaborators, it calls the generic update_item function
      * @param string[] $new_list
      */
-    private function _update_collaborate($new_list): void
+    private function _update_collaborate(array $new_list): void
     {
         $collaborate = implode(',', $new_list);
         if ($this->_update_item('collaborate', $collaborate)) {
             $this->collaborate = $collaborate;
+        }
+
+        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        Dba::write($sql, [$this->id]);
+
+        foreach ($new_list as $user_id) {
+            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist`, `user`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `playlist` = `playlist`;";
+            Dba::write($sql, [$this->id, $user_id]);
         }
     }
 
