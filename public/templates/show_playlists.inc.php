@@ -35,7 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
 $is_table          = $browse->is_grid_view();
 $show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();
@@ -74,7 +74,7 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 $user_id    = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 0;
 foreach ($object_ids as $playlist_id) {
     $libitem = new Playlist($playlist_id);
-    if ($libitem->isNew() || (!$libitem->has_access() and $libitem->type === 'private')) {
+    if ($libitem->isNew() || (!$libitem->has_collaborate() && $libitem->type === 'private')) {
         continue;
     }
     $libitem->format();

@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class PlaylistSearchQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -46,10 +46,10 @@ final class PlaylistSearchQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'rand',
         'date',
@@ -64,7 +64,7 @@ final class PlaylistSearchQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`playlist`.`id`";
@@ -150,7 +150,8 @@ final class PlaylistSearchQuery implements QueryInterface
                 $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
                 break;
             case 'playlist_open':
-                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . ") AND ";
+                $query->set_join_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`id`', "`user_playlist_map`.`user_id`", (int)$value, 100);
+                $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 break;
             case 'playlist_user':
                 $filter_sql = " `playlist`.`user` = " . (int)$value . " AND ";
@@ -162,7 +163,8 @@ final class PlaylistSearchQuery implements QueryInterface
                 if ($value == 0) {
                     $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                 } else {
-                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`='$user_id') AND ";
+                    $query->set_join_and_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`object_type`', "'playlist'", '`playlist`.`id`', "`user_playlist_map`.`user_id`", $user_id, 100);
+                    $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
                 break;
         }

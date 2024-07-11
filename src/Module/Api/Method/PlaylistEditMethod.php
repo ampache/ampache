@@ -56,14 +56,14 @@ final class PlaylistEditMethod
      */
     public static function playlist_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $items = explode(',', html_entity_decode((string)($input['items'] ?? '')));
         $order = explode(',', html_entity_decode((string)($input['tracks'] ?? '')));
         $sort  = (int)($input['sort'] ?? 0);
         // calculate whether we are editing the track order too
-        $playlist_edit = array();
+        $playlist_edit = [];
         if (!empty($items) && (count($items) == count($order))) {
             $playlist_edit = array_combine($order, $items);
         }
@@ -79,31 +79,14 @@ final class PlaylistEditMethod
             return false;
         }
 
-        // don't continue if you didn't actually get a playlist or the access level
-        if (!$playlist->has_access($user)) {
-            Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+        $has_access = $playlist->has_access($user);
+        $has_collab = $playlist->has_collaborate($user);
 
-            return false;
-        }
-        $name  = $input['name'] ?? $playlist->name;
-        $type  = $input['type'] ?? $playlist->type;
-        $owner = $input['owner'] ?? $playlist->user;
-        if ((int)$owner === 0) {
-            $lookup = User::get_from_username($owner);
-            $owner  = $lookup->id ?? $playlist->user;
-        }
-        // update name/type
-        if ($name !== $playlist->name || $type !== $playlist->type || $owner !== $playlist->user) {
-            $array = [
-                "name" => $name,
-                "pl_type" => $type,
-                "pl_user" => $owner,
-            ];
-            $playlist->update($array);
-        }
         $change_made = false;
-        // update track order with new id's
-        if (!empty($playlist_edit)) {
+        if (
+            $has_collab &&
+            !empty($playlist_edit)
+        ) {
             foreach ($playlist_edit as $track => $song) {
                 if ($song > 0 && $track > 0) {
                     $playlist->set_by_track_number((int) $song, (int) $track);
@@ -111,16 +94,57 @@ final class PlaylistEditMethod
                 }
             }
         }
+
+        // don't continue if you don't actually have the access level to edit
+        if (!$has_access) {
+            if ($change_made) {
+                // has_collaborate allows playlist track editing
+                Api::message('playlist track changes saved', $input['api_format']);
+
+                return true;
+            } else {
+                // you didn't have edit access
+                Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
+
+                return false;
+            }
+        }
+
+        $name  = $input['name'] ?? $playlist->name;
+        $type  = $input['type'] ?? $playlist->type;
+        $owner = $input['owner'] ?? $playlist->user;
+        if ((int)$owner === 0) {
+            $lookup = User::get_from_username($owner);
+            $owner  = $lookup->id ?? $playlist->user;
+        }
+
+        // update name/type
+        if (
+            $name !== $playlist->name ||
+            $type !== $playlist->type ||
+            $owner !== $playlist->user
+        ) {
+            $array = [
+                "name" => $name,
+                "pl_type" => $type,
+                "pl_user" => $owner,
+            ];
+            $playlist->update($array);
+            $change_made = true;
+        }
+
         if ($sort > 0) {
             $playlist->sort_tracks();
             $change_made = true;
         }
+
         // if you didn't make any changes; tell me
-        if (!($name || $type) && !$change_made) {
+        if (!$change_made) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'input', $input['api_format']);
 
             return false;
         }
+
         Api::message('playlist changes saved', $input['api_format']);
 
         return true;

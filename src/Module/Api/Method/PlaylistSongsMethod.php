@@ -54,7 +54,7 @@ final class PlaylistSongsMethod
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
@@ -72,7 +72,7 @@ final class PlaylistSongsMethod
         }
         if (
             $playlist->type !== 'public' &&
-            !$playlist->has_access($user)
+            !$playlist->has_collaborate($user)
         ) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
@@ -88,7 +88,7 @@ final class PlaylistSongsMethod
 
             return false;
         }
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
                 $results[] = $object['object_id'];

@@ -26,10 +26,11 @@ namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
-final class Migration600072 extends AbstractMigration
+final class Migration600075 extends AbstractMigration
 {
-    protected array $changelog = ['Drop and recreate `tmp_browse` to allow InnoDB conversion'];
+    protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
 
     public function migrate(): void
     {
@@ -37,14 +38,22 @@ final class Migration600072 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase('DROP TABLE IF EXISTS `tmp_browse`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
         $this->updateDatabase(
             sprintf(
-                "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) NOT NULL, `data` longtext NOT NULL, `object_data` longtext DEFAULT NULL, PRIMARY KEY (`id`), KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
+                "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
                 $engine,
                 $charset,
                 $collation
             )
         );
+    }
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine
+    ): Generator {
+        yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
     }
 }

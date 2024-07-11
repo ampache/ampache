@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,37 +20,24 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Api\Method\Api3;
+namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Module\Api\Xml3_Data;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\User;
 
 /**
- * Class PlaylistRemoveSong3Method
+ * Add a `collaborate` to playlist table to allow other users to add songs to the list
  */
-final class PlaylistRemoveSong3Method
+final class Migration600074 extends AbstractMigration
 {
-    public const ACTION = 'playlist_remove_song';
+    protected array $changelog = ['Add a `collaborate` to playlist table to allow other users to add songs to the list'];
 
-    /**
-     * playlist_remove_song
-     * This remove a song from a playlist
-     */
-    public static function playlist_remove_song(array $input, User $user): void
+    public function migrate(): void
     {
-        unset($user);
-        ob_end_clean();
-        $playlist = new Playlist($input['filter']);
-        $track    = (int) scrub_in((string) $input['track']);
-        if (!$playlist->has_collaborate()) {
-            echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
-        } else {
-            $playlist->delete_track_number($track);
-            echo Xml3_Data::single_string('success');
-        }
+        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
+        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
     }
 }

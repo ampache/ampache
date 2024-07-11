@@ -55,7 +55,7 @@ final class PlaylistAddMethod
      */
     public static function playlist_add(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'id', 'type'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -64,13 +64,13 @@ final class PlaylistAddMethod
         $object_type = $input['type'];
 
         // confirm the correct data
-        if (!$playlist->has_access($user)) {
+        if (!$playlist->has_collaborate($user)) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
         }
 
-        if (!in_array(strtolower($object_type), array('song', 'album', 'artist', 'playlist'))) {
+        if (!in_array(strtolower($object_type), ['song', 'album', 'artist', 'playlist'])) {
             Api::error(sprintf('Bad Request: %s', $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -91,11 +91,11 @@ final class PlaylistAddMethod
             return false;
         }
 
-        $results = array();
+        $results = [];
         switch ($object_type) {
             case 'song':
                 /** @var Song $item */
-                $results = array($item->getId());
+                $results = [$item->getId()];
                 break;
             case 'album':
             case 'artist':
@@ -105,7 +105,7 @@ final class PlaylistAddMethod
                 $results = $item->get_songs();
                 break;
         }
-        if (empty($results)) {
+        if ($results === []) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
 

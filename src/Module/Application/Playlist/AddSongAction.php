@@ -58,12 +58,12 @@ final class AddSongAction implements ApplicationActionInterface
     {
         $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_collaborate()) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();
 
-        $playlist->add_songs(array($_REQUEST['song_id']));
+        $playlist->add_songs([$_REQUEST['song_id']]);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
