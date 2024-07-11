@@ -9,7 +9,7 @@
 * Default theme fallback to 'Dark' color scheme
 * Add users as a playlist collaborator (These users can add and remove songs from a playlist)
 * Database 600075
-  * Add a `collaborate` to playlist table to allow other users to add songs to the list
+  * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` to allow browse access to playlists with collaborate access
 * CLI
   * admin:updateDatabase: allow downgrading database from Ampache7 databases
