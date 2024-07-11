@@ -1002,7 +1002,10 @@ class Playlist extends playlist_object
         $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['id' => $row['id'], 'track' => $count];
+            $results[] = [
+                'id' => $row['id'],
+                'track' => $count
+            ];
             ++$count;
         }
 
