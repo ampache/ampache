@@ -20,19 +20,27 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Module\Application\Admin\Index\ShowAction;
-use Ampache\Module\Application\ApplicationRunner;
-use Nyholm\Psr7Server\ServerRequestCreatorInterface;
-use Psr\Container\ContainerInterface;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-/** @var ContainerInterface $dic */
-$dic = require __DIR__ . '/../../src/Config/Init.php';
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 
-$dic->get(ApplicationRunner::class)->run(
-    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [ShowAction::REQUEST_KEY => ShowAction::class],
-    ShowAction::REQUEST_KEY
-);
+final class Migration700009 extends AbstractMigration
+{
+    protected array $changelog = ['Convert system preference `upload_catalog` into a user preference'];
+
+    public function migrate(): void
+    {
+        $upload_catalog = (empty(Preference::get_by_user(-1, 'upload_catalog')))
+            ? Preference::get_by_user(-1, 'upload_catalog')
+            : -1;
+
+        if ($this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload')) {
+            $pref_id = Preference::id_from_name('upload_catalog');
+            Preference::update_all($pref_id, $upload_catalog);
+        }
+    }
+}

@@ -10,6 +10,12 @@
 * API6
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
   * Add `has_access` property to playlist responses. (Can edit the playlist if true)
+  * Add `has_collaborate` property to playlist responses. (Can add and remove songs to the playlist if true)
+
+### Changed
+
+* API6
+  * playlist_edit: Add songs if you're a collaborator and ignore edit parameters if you fail has_access check
 
 ### Fixed
 

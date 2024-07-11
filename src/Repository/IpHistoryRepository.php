@@ -53,16 +53,16 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        ?int $limit = 100
+        ?bool $limited = true
     ): Generator {
-        $limit_sql = ($limit)
-            ? sprintf('LIMIT %d', $limit)
+        $where_sql = ($limited)
+            ? 'AND `date` >= ' . (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)))
             : '';
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC %s',
-                $limit_sql,
+                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date` ORDER BY `date` DESC',
+                $where_sql,
             ),
             [$user->getId()]
         );

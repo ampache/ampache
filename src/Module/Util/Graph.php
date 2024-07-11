@@ -102,7 +102,7 @@ class Graph
             $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
-        if (InterfaceImplementationChecker::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item((string)$object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
@@ -438,7 +438,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
@@ -469,7 +469,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = ($object_type == 'album')

@@ -29,15 +29,17 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Playlist;
 
 /**
- * Add a `collaborate` to playlist table to allow other users to add songs to the list
+ * Add `collaborate` to the playlist table to allow other users to add songs to the list
  */
 final class Migration700007 extends AbstractMigration
 {
-    protected array $changelog = ['Add a `collaborate` to playlist table to allow other users to add songs to the list'];
+    protected array $changelog = ['Add `collaborate` to the playlist table to allow other users to add songs to the list'];
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
-        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
+        if (!Dba::read('SELECT SUM(`collaborate`) from `playlist`;')) {
+            Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
+            $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
+        }
     }
 }

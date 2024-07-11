@@ -25,11 +25,13 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
 final class Migration700008 extends AbstractMigration
 {
-    protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
+    protected array $changelog = ['Create `user_playlist_map` table to allow browse access to playlists with collaborators'];
 
     public function migrate(): void
     {
@@ -37,14 +39,24 @@ final class Migration700008 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
-        $this->updateDatabase(
-            sprintf(
-                'CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
-                $engine,
-                $charset,
-                $collation
-            )
-        );
+        if (!Dba::read('SELECT SUM(`user_id`) FROM `user_playlist_map`;')) {
+            $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
+            $this->updateDatabase(
+                sprintf(
+                    "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
+                    $engine,
+                    $charset,
+                    $collation
+                )
+            );
+        }
+    }
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine
+    ): Generator {
+        yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
     }
 }

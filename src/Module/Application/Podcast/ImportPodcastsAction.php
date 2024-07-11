@@ -113,9 +113,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_import_podcasts.inc.php',
-                [
-                    'catalogId' => (int)($data['catalog'] ?? 0),
-                ]
+                ['catalogId' => (int)($data['catalog'] ?? 0)]
             );
         } else {
             $this->ui->showConfirmation(

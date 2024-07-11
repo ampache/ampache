@@ -97,9 +97,7 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
      */
     protected function getPrototypeParameters(): array
     {
-        return [
-            $this,
-        ];
+        return [$this];
     }
 
     /**

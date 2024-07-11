@@ -44,9 +44,7 @@ if (empty($action) || $action == 'stream' || $action == 'download') {
 
     $dic->get(ApplicationRunner::class)->run(
         $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-        [
-            ConsumeAction::REQUEST_KEY => ConsumeAction::class,
-        ],
+        [ConsumeAction::REQUEST_KEY => ConsumeAction::class],
         ConsumeAction::REQUEST_KEY
     );
 } else {

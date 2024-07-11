@@ -170,14 +170,6 @@ abstract class playlist_object extends database_object implements library_item
             return false;
         }
 
-        // allow the owner
-        if (
-            !empty(Core::get_global('user')) &&
-            $this->user == Core::get_global('user')->id
-        ) {
-            return true;
-        }
-
         return (
             Core::get_global('user') instanceof User &&
             $this->user == Core::get_global('user')->id

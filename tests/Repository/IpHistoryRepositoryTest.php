@@ -69,10 +69,8 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId
-                ]
+                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? AND `date` >= ' . (time() - (86400 * 42)) . ' GROUP BY `ip`, `date` ORDER BY `date` DESC',
+                [$userId]
             )
             ->willReturn($result);
 
@@ -88,7 +86,7 @@ class IpHistoryRepositoryTest extends TestCase
             );
 
         $result = current(
-            iterator_to_array($this->subject->getHistory($user, 1, true))
+            iterator_to_array($this->subject->getHistory($user))
         );
 
         static::assertSame(
