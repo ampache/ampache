@@ -1290,6 +1290,15 @@ class User extends database_object
     }
 
     /**
+     * Get item name based on whether they allow public fullname access.
+     * @return string[]
+     */
+    public static function getValidArray(): array
+    {
+        return static::getUserRepository()->getValidArray();
+    }
+
+    /**
      * get_avatar
      * Get the user avatar
      * @param bool $local
