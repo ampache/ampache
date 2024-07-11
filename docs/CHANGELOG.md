@@ -7,6 +7,10 @@
 * Add maxlength to the user data fields on the registration and edit pages
 * Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
 * Default theme fallback to 'Dark' color scheme
+* Add users as a playlist collaborator (These users can add and remove songs from a playlist)
+* Database 600075
+  * Add a `collaborate` to playlist table to allow other users to add songs to the list
+  * Create `user_playlist_map` to allow browse access to playlists with collaborate access
 * CLI
   * admin:updateDatabase: allow downgrading database from Ampache7 databases
 
@@ -16,6 +20,8 @@
 * Simplify and speed up playlist access checks by sending the user object
 * User IP history defaults to grouped values and 100 results
 * Don't notify that items are added in the WebUI when nothing was added
+* Users will see additional playlists if they are added as a collaborator
+* Don't notify that items are added to a playlist in the WebUI when nothing happened
 
 ### Removed
 
@@ -30,6 +36,7 @@
 * URL encode name parameters for links
 * User IP history page didn't show what you expected and was very confusing
 * Edit search and playlist pages not reloading the user list
+* Missing table check for database update 500006
 
 ## Ampache 6.5.0
 
