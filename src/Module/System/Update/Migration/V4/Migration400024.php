@@ -33,7 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration400024 extends AbstractMigration
 {
     protected array $changelog = [
-        'IMPORTANT UPDATE NOTES: These columns will fill dynamically in the web UI but you should do a catalog \'add\' as soon as possible to fill them. It will take a while for large libraries but will help API and SubSonic clients',
+        '**IMPORTANT UPDATE NOTES** These columns will fill dynamically in the web UI but you should do a catalog \'add\' as soon as possible to fill them. It will take a while for large libraries but will help API and SubSonic clients',
         'Add \'song_count\', \'album_count\' and \'album_group_count\' to artist.',
     ];
 

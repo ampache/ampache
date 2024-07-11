@@ -373,9 +373,6 @@ class Preference extends database_object
             return false;
         }
 
-        $preference_id = Dba::escape($preference_id);
-        $value         = Dba::escape($value);
-
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
         Dba::write($sql, [$value, $preference_id]);
 

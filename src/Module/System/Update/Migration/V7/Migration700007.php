@@ -29,11 +29,11 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\Playlist;
 
 /**
- * Add a `collaborate` to playlist table to allow other users to add songs to the list
+ * Add `collaborate` to the playlist table to allow other users to add songs to the list
  */
 final class Migration700007 extends AbstractMigration
 {
-    protected array $changelog = ['Add a `collaborate` to playlist table to allow other users to add songs to the list'];
+    protected array $changelog = ['Add `collaborate` to the playlist table to allow other users to add songs to the list'];
 
     public function migrate(): void
     {

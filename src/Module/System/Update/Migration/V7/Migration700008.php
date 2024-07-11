@@ -31,7 +31,7 @@ use Generator;
 
 final class Migration700008 extends AbstractMigration
 {
-    protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
+    protected array $changelog = ['Create `user_playlist_map` table to allow browse access to playlists with collaborators'];
 
     public function migrate(): void
     {
