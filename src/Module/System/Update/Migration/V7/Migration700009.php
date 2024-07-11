@@ -26,13 +26,21 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 
 final class Migration700009 extends AbstractMigration
 {
-    protected array $changelog = ['Create `user_playlist_map` to allow browse access to playlists with collaborate access'];
+    protected array $changelog = ['Convert system preference `upload_catalog` into a user preference'];
 
     public function migrate(): void
     {
-        $this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload');
+        $upload_catalog = (empty(Preference::get_by_user(-1, 'upload_catalog')))
+            ? Preference::get_by_user(-1, 'upload_catalog')
+            : -1;
+
+        if ($this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload')) {
+            $pref_id = Preference::id_from_name('upload_catalog');
+            Preference::update_all($pref_id, $upload_catalog);
+        }
     }
 }
