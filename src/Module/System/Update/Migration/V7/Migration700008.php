@@ -27,6 +27,7 @@ namespace Ampache\Module\System\Update\Migration\V7;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Generator;
 
 final class Migration700008 extends AbstractMigration
 {
@@ -42,12 +43,20 @@ final class Migration700008 extends AbstractMigration
             $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
             $this->updateDatabase(
                 sprintf(
-                    'CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
+                    "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
                     $engine,
                     $charset,
                     $collation
                 )
             );
         }
+    }
+
+    public function getTableMigrations(
+        string $collation,
+        string $charset,
+        string $engine
+    ): Generator {
+        yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
     }
 }
