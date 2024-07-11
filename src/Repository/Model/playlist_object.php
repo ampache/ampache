@@ -241,7 +241,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $link_text    = scrub_out($this->get_fullname());
+            $link_text    = $this->getFullname();
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
         }
 

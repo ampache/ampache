@@ -50,7 +50,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 /** @var list<int> $object_ids */
 
 ob_start();
-echo scrub_out($playlist->get_fullname());
+echo $playlist->getFullname();
 $title    = ob_get_contents();
 $web_path = (string)AmpConfig::get('web_path', '');
 ob_end_clean();
