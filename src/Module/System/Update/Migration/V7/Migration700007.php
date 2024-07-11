@@ -37,7 +37,9 @@ final class Migration700007 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
-        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
+        if (!Dba::read('SELECT SUM(`collaborate`) from `playlist`;')) {
+            Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
+            $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
+        }
     }
 }
