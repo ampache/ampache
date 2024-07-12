@@ -1775,7 +1775,11 @@ class Search extends playlist_object
         }
 
         // Make sure we have a unique name
-        if ($this->name === null || $this->name === '' || $this->name === '0') {
+        if (
+            $this->name === null ||
+            $this->name === '' ||
+            $this->name === '0'
+        ) {
             $this->name = $user->username . ' - ' . get_datetime(time());
         }
 

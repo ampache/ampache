@@ -3346,7 +3346,11 @@ abstract class Catalog extends database_object
     public function get_gather_types($media_type = ''): array
     {
         $catalog_media_type = $this->gather_types;
-        if ($catalog_media_type === null || $catalog_media_type === '' || $catalog_media_type === '0') {
+        if (
+            $catalog_media_type === null ||
+            $catalog_media_type === '' ||
+            $catalog_media_type === '0'
+        ) {
             $catalog_media_type = "music";
         }
 

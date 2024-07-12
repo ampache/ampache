@@ -184,7 +184,10 @@ class Playlist extends playlist_object
             $results[] = (int)$row['id'];
         }
 
-        if ($playlist_name === '' || $playlist_name === '0') {
+        if (
+            $playlist_name === '' ||
+            $playlist_name === '0'
+        ) {
             parent::add_to_cache($key, $user_id, $results);
         }
 

@@ -88,7 +88,7 @@ final class ConfirmDisableAction extends AbstractUserAction
         if ($this->userStateToggler->disable($user) === true) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                sprintf(T_('%s has been disabled'), $user->getFullDisplayName()),
+                sprintf(T_('%s has been disabled'), scrub_out($user->getFullDisplayName())),
                 'admin/users.php'
             );
         } else {

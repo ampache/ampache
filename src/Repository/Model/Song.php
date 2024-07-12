@@ -1083,7 +1083,11 @@ class Song extends database_object implements
         // Foreach them
         foreach (array_keys($fields) as $key) {
             $key = trim((string)$key);
-            if ($key === '' || $key === '0' || in_array($key, $skip_array)) {
+            if (
+                $key === '' ||
+                $key === '0' ||
+                in_array($key, $skip_array)
+            ) {
                 continue;
             }
 

@@ -1312,7 +1312,11 @@ class Query
                 break;
         }
 
-        if (!($sql === '' || $sql === '0') && $table != 'video') {
+        if (
+            $sql !== '' &&
+            $sql !== '0' &&
+            $table != 'video'
+        ) {
             $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
 

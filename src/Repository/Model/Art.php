@@ -412,12 +412,23 @@ class Art extends database_object
                 $ndata      = [];
                 $data       = $vainfo->read_id3();
                 $fileformat = $data['fileformat'];
-                $apics      = $fileformat == 'flac' || $fileformat == 'ogg' ? $data['flac']['PICTURE'] : $data['id3v2']['APIC'];
+                $apics      = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? $data['flac']['PICTURE']
+                    : $data['id3v2']['APIC'];
 
                 /* is the file flac or mp3? */
-                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
-                $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = ['data' => $source, 'mime' => $mime, 'picturetypeid' => $picturetypeid, 'description' => $description];
+                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? 'typeid'
+                    : 'picturetypeid';
+                $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? 'image_mime'
+                    : 'mime';
+                $new_pic       = [
+                    'data' => $source,
+                    'mime' => $mime,
+                    'picturetypeid' => $picturetypeid,
+                    'description' => $description
+                ];
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][] = $new_pic;
@@ -1110,7 +1121,10 @@ class Art extends database_object
         $extension = self::extension($mime);
 
         if (AmpConfig::get('stream_beautiful_url')) {
-            if ($extension === '' || $extension === '0') {
+            if (
+                $extension === '' ||
+                $extension === '0'
+            ) {
                 $extension = 'jpg';
             }
 
