@@ -76,7 +76,7 @@ $count     = 1; ?>
                 if (!is_array($object)) {
                     $object = (array) $object;
                 }
-                $libtype = ($object['object_type'] instanceof LibraryItemEnum)
+                $libtype = (isset($element['object_type']) && $object['object_type'] instanceof LibraryItemEnum)
                     ? $object['object_type']
                     : LibraryItemEnum::tryFrom($object['object_type']);
                 $libitem = $libraryItemLoader->load(

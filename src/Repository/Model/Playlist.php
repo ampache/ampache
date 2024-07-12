@@ -693,7 +693,7 @@ class Playlist extends playlist_object
         $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = [];
         foreach ($medias as $data) {
-            $object_type = ($data['object_type'] instanceof LibraryItemEnum)
+            $object_type = (isset($data['object_type']) && $data['object_type'] instanceof LibraryItemEnum)
                 ? $data['object_type']
                 : LibraryItemEnum::tryFrom($data['object_type']);
             if ($unique && in_array($data['object_id'], $track_data)) {
