@@ -286,21 +286,27 @@ class Waveform
         list($red, $green, $blue) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
+        if ($handle === false) {
+            debug_event(self::class, 'Cannot open filename.', 1);
+
+            return null;
+        }
+
         // wav file header retrieval
         $heading   = [];
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
         $heading[] = fread($handle, 4);
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 2));
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
 
         // wav bitrate
         $peek = hexdec(substr($heading[10], 0, 2));
