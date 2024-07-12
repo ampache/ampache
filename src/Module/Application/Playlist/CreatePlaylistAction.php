@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Playlist;
 
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Core;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -40,12 +42,16 @@ final class CreatePlaylistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'create_playlist';
 
+    private RequestParserInterface $requestParser;
+
     private UiInterface $ui;
 
     public function __construct(
+        RequestParserInterface $requestParser,
         UiInterface $ui
     ) {
-        $this->ui = $ui;
+        $this->requestParser = $requestParser;
+        $this->ui            = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -56,8 +62,14 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         }
         $this->ui->showHeader();
 
-        $playlist_name = scrub_in((string) $_REQUEST['playlist_name']);
-        $playlist_type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
+        // Make sure we have a unique name
+        $playlist_name = (isset($_POST['playlist_name']))
+            ? htmlspecialchars_decode($this->requestParser->getFromPost('playlist_name'))
+            : Core::get_global('user')->username . ' - ' . get_datetime(time());
+        // keep the same public/private type as the search
+        $playlist_type = (isset($_POST['playlist_type']))
+            ? $this->requestParser->getFromPost('playlist_type')
+            : 'public';
 
         $playlist_id                     = Playlist::create($playlist_name, $playlist_type);
         $_SESSION['data']['playlist_id'] = $playlist_id;
