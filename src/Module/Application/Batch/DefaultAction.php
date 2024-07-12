@@ -191,7 +191,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $object_type = ($element['object_type'] instanceof LibraryItemEnum)
                 ? $element['object_type']
                 : LibraryItemEnum::tryFrom($element['object_type']);
-            if (is_array($element)) {
+            if (
+                is_array($element) &&
+                $object_type instanceof LibraryItemEnum
+            ) {
                 $media = $this->libraryItemLoader->load(
                     $object_type,
                     $element['object_id']
@@ -199,6 +202,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
+
             if ($media === null || $media->isNew()) {
                 continue;
             }
