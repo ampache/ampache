@@ -86,7 +86,7 @@ $count     = 1; ?>
                 if ($libitem !== null) {
                     $libitem->format();
 
-                    $object_type    = $libtype->value;
+                    $object_type    = $libtype?->value;
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>

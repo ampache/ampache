@@ -672,7 +672,7 @@ class Playlist extends playlist_object
 
     /**
      * add_medias
-     * @param array<array{object_type: LibraryItemEnum, object_id: int}> $medias
+     * @param array<array{object_type: LibraryItemEnum|string, object_id: int}> $medias
      */
     public function add_medias(array $medias): bool
     {

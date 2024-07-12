@@ -136,7 +136,7 @@ abstract class playlist_object extends database_object implements library_item
         if (
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), explode(',', $this->collaborate))
+            in_array($user->getId(), explode(',', (string)$this->collaborate))
         ) {
             return true;
         }

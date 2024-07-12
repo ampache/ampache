@@ -177,7 +177,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     /**
      * Takes an array of media ids and returns an array of the actual filenames
      *
-     * @param iterable<int|array{object_type: LibraryItemEnum, object_id: int}> $medias Media IDs.
+     * @param iterable<int|array{object_type: LibraryItemEnum|string, object_id: int}> $medias Media IDs.
      * @return array{
      *     files: array<string, list<string>>,
      *     total_size: int
