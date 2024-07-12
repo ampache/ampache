@@ -37,6 +37,8 @@
 * User IP history page didn't show what you expected and was very confusing
 * Edit search and playlist pages not reloading the user list
 * Missing table check for database update 500006
+* Over-escaped playlist name when saving from smartplaylist
+* Skip caching missing files
 
 ## Ampache 6.5.0
 
