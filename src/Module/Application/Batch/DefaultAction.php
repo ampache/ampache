@@ -188,7 +188,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $media_files = [];
         $total_size  = 0;
         foreach ($medias as $element) {
-            $object_type = ($element['object_type'] instanceof LibraryItemEnum)
+            $object_type = (isset($element['object_type']) && $element['object_type'] instanceof LibraryItemEnum)
                 ? $element['object_type']
                 : LibraryItemEnum::tryFrom($element['object_type']);
             if (
