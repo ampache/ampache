@@ -896,9 +896,11 @@ class Json_Data
             } else {
                 $items = (int)($playitem_total ?? 0);
             }
-            $rating      = new Rating($playlist->id, $object_type);
-            $user_rating = $rating->get_user_rating($user->getId());
-            $flag        = new Userflag($playlist->id, $object_type);
+            $rating          = new Rating($playlist->id, $object_type);
+            $user_rating     = $rating->get_user_rating($user->getId());
+            $flag            = new Userflag($playlist->id, $object_type);
+            $has_access      = $playlist->has_access($user);
+            $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
             $JSON[] = [
@@ -908,8 +910,8 @@ class Json_Data
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
-                "has_access" => $playlist->has_access($user),
-                "has_collaborate" => $playlist->has_collaborate($user),
+                "has_access" => $has_access,
+                "has_collaborate" => $has_collaborate,
                 "has_art" => $playlist->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
