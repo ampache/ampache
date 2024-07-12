@@ -65,7 +65,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         // Make sure we have a unique name
         $playlist_name = (isset($_POST['playlist_name']))
             ? htmlspecialchars_decode($this->requestParser->getFromPost('playlist_name'))
-            : Core::get_global('user')->username . ' - ' . get_datetime(time());
+            : Core::get_global('user')?->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
         $playlist_type = (isset($_POST['playlist_type']))
             ? $this->requestParser->getFromPost('playlist_type')

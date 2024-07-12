@@ -150,7 +150,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 $filter_sql = " (`playlist`.`id` NOT LIKE 'smart_%' OR (`playlist`.`id` like 'smart_%' AND CONCAT(`playlist`.`name`, `playlist`.`user`) NOT IN (SELECT CONCAT(`playlist`.`name`, `playlist`.`user`) FROM `playlist`))) AND ";
                 break;
             case 'playlist_open':
-                $query->set_join_and_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`object_type`', "'playlist'", '`playlist`.`id`', "`user_playlist_map`.`user_id`", (int)$value, 100);
+                $query->set_join_and_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`object_type`', "'playlist'", '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$value, 100);
                 $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . (int)$value . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 break;
             case 'playlist_user':
@@ -163,7 +163,7 @@ final class PlaylistSearchQuery implements QueryInterface
                 if ($value == 0) {
                     $filter_sql = " (`playlist`.`user`='$user_id') AND ";
                 } else {
-                    $query->set_join_and_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`object_type`', "'playlist'", '`playlist`.`id`', "`user_playlist_map`.`user_id`", $user_id, 100);
+                    $query->set_join_and_and('LEFT', '`user_playlist_map`', '`user_playlist_map`.`playlist_id`', '`playlist`.`object_type`', "'playlist'", '`playlist`.`id`', "`user_playlist_map`.`user_id`", (string)$user_id, 100);
                     $filter_sql = " (`playlist`.`type` = 'public' OR `playlist`.`user`=" . $user_id . " OR `user_playlist_map`.`user_id` IS NOT NULL) AND ";
                 }
                 break;

@@ -7,6 +7,8 @@ parameters:
     - public/lib
     - public/themes
     - public/upnp
+    - public/ample
+    - public/foam
     - src/Module/Playback/Scrobble/ScrobblerAsync.php
     - tests
 includes:

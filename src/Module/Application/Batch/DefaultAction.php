@@ -177,7 +177,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     /**
      * Takes an array of media ids and returns an array of the actual filenames
      *
-     * @param iterable<int|array{object_type: LibraryItemEnum, object_id: int}> $medias Media IDs.
+     * @param iterable<int|array{object_type: LibraryItemEnum|string, object_id: int}> $medias Media IDs.
      * @return array{
      *     files: array<string, list<string>>,
      *     total_size: int
@@ -191,7 +191,10 @@ final readonly class DefaultAction implements ApplicationActionInterface
             $object_type = ($element['object_type'] instanceof LibraryItemEnum)
                 ? $element['object_type']
                 : LibraryItemEnum::tryFrom($element['object_type']);
-            if (is_array($element)) {
+            if (
+                is_array($element) &&
+                $object_type instanceof LibraryItemEnum
+            ) {
                 $media = $this->libraryItemLoader->load(
                     $object_type,
                     $element['object_id']
@@ -199,6 +202,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
             } else {
                 $media = $this->modelFactory->createSong((int) $element);
             }
+
             if ($media === null || $media->isNew()) {
                 continue;
             }

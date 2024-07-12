@@ -48,6 +48,8 @@ final class AddUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_user';
 
+    public UiInterface $ui;
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -55,8 +57,6 @@ final class AddUserAction implements ApplicationActionInterface
     private UserRepositoryInterface $userRepository;
 
     private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
-    private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,

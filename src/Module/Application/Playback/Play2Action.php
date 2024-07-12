@@ -40,7 +40,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
-use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
@@ -74,16 +73,13 @@ final class Play2Action implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
-    private UserTrackerInterface $userTracker;
-
     public function __construct(
         RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger,
-        UserTrackerInterface $userTracker
+        LoggerInterface $logger
     ) {
         $this->requestParser         = $requestParser;
         $this->browser               = $browser;
@@ -91,7 +87,6 @@ final class Play2Action implements ApplicationActionInterface
         $this->networkChecker        = $networkChecker;
         $this->userRepository        = $userRepository;
         $this->logger                = $logger;
-        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -798,7 +793,7 @@ final class Play2Action implements ApplicationActionInterface
             // Check to see if we should be throttling because we can get away with it
             if (AmpConfig::get('rate_limit') > 0) {
                 while (!feof($filepointer)) {
-                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit') * 1024)));
+                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit', 8192) * 1024)));
                     flush();
                     sleep(1);
                 }
