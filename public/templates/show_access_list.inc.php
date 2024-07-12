@@ -76,7 +76,7 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
     <td><?php echo $access->getStartIp(); ?></td>
     <td><?php echo $access->getEndIp(); ?></td>
     <td><?php echo $access->getLevelName(); ?></td>
-    <td><?php echo scrub_out($access->getUserName()); ?></td>
+    <td><?php echo $access->getUserName(); ?></td>
     <td><?php echo $access->getTypeName(); ?></td>
     <td>
         <a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>

@@ -683,7 +683,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         // if all else fails, insert a new artist, cache it and return the id
         $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) VALUES(?, ?, ?)';
-        $mbid = $mbid === null || $mbid === '' || $mbid === '0' ? null : $mbid;
+        $mbid = ($mbid === null || $mbid === '' || $mbid === '0')
+            ? null
+            : $mbid;
 
         $db_results = Dba::write($sql, [$name, $prefix, $mbid]);
         if (!$db_results) {
