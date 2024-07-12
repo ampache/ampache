@@ -897,6 +897,7 @@ class Json_Data
             } else {
                 $items = (int)($playitem_total ?? 0);
             }
+
             $rating          = new Rating($playlist->id, $object_type);
             $user_rating     = $rating->get_user_rating($user->getId());
             $flag            = new Userflag($playlist->id, $object_type);

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Art\Export\ArtExporterInterface;
 use Ampache\Module\Art\Export\Exception\ArtExportException;
 use Ampache\Module\Art\Export\Writer\MetadataWriter;
@@ -59,7 +60,11 @@ final class ExportArtCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
 
         $interactor->info(
             T_('Start Art Dump'),

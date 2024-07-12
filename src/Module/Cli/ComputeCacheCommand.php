@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Cache\ObjectCacheInterface;
 
 final class ComputeCacheCommand extends Command
@@ -42,7 +43,11 @@ final class ComputeCacheCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
 
         debug_event('compute_cache', 'started cache process', 5);
         $interactor->info(

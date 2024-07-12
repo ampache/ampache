@@ -188,25 +188,30 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $media_files = [];
         $total_size  = 0;
         foreach ($medias as $element) {
-            $object_type = (isset($element['object_type']) && $element['object_type'] instanceof LibraryItemEnum)
-                ? $element['object_type']
-                : LibraryItemEnum::tryFrom($element['object_type']);
-            if (
-                is_array($element) &&
-                $object_type instanceof LibraryItemEnum
-            ) {
-                $media = $this->libraryItemLoader->load(
-                    $object_type,
-                    $element['object_id']
-                );
-            } else {
+            $media = null;
+            if (!is_array($element)) {
                 $media = $this->modelFactory->createSong((int) $element);
+            } else {
+                $object_type = (is_string($element['object_type']))
+                    ? LibraryItemEnum::tryFrom($element['object_type'])
+                    : $element['object_type'];
+                if ($object_type instanceof LibraryItemEnum) {
+                    $media = $this->libraryItemLoader->load(
+                        $object_type,
+                        $element['object_id']
+                    );
+                }
             }
 
             if ($media === null || $media->isNew()) {
                 continue;
             }
-            if ($media->enabled) {
+
+            if (
+                isset($media->enabled) &&
+                $media->enabled &&
+                !empty($media->file)
+            ) {
                 $total_size += $media->size ?? 0;
                 $dirname    = '';
                 $parent     = $media->get_parent();

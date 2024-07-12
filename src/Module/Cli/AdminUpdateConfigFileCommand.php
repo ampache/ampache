@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\System\InstallationHelperInterface;
 
@@ -50,7 +51,11 @@ final class AdminUpdateConfigFileCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
         $dryRun     = $this->values()['execute'] === false;
         $outOfDate  = $this->configContainer->get('int_config_version') > $this->configContainer->get('config_version');
 
