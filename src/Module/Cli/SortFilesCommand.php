@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\IO\Interactor;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Song\SongSorterInterface;
 
@@ -52,7 +53,12 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName
     ): void {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
+
         $values     = $this->values();
         $dryRun     = $values['execute'] === false;
 

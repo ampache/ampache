@@ -41,7 +41,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = [];
         $ret       = [];
         $in_string = false;
@@ -146,7 +146,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $file .= '.dist';
         }
         $valid     = true;
-        $htaccess  = file_get_contents($file);
+        $htaccess  = (string)file_get_contents($file);
         $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {

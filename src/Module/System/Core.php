@@ -192,7 +192,9 @@ class Core
      */
     public static function gen_secure_token($length)
     {
-        if (function_exists('random_bytes')) {
+        if ($length < 1) {
+            return false;
+        } elseif (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
@@ -202,7 +204,7 @@ class Core
             return false;
         }
 
-        return bin2hex($buffer);
+        return bin2hex((string)$buffer);
     }
 
     /**
@@ -237,7 +239,10 @@ class Core
 
         $width  = imagesx($image);
         $height = imagesy($image);
-        if (!$width || !$height) {
+        if (
+            $width > 1 ||
+            $height > 1
+        ) {
             return $empty;
         }
 
@@ -309,7 +314,7 @@ class Core
             }
             $chunksize = 8192;
             while (!feof($filepointer)) {
-                $size += strlen(fread($filepointer, $chunksize));
+                $size += strlen((string)fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...

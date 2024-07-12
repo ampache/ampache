@@ -693,9 +693,9 @@ class Playlist extends playlist_object
         $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = [];
         foreach ($medias as $data) {
-            $object_type = ($data['object_type'] instanceof LibraryItemEnum)
-                ? $data['object_type']
-                : LibraryItemEnum::tryFrom($data['object_type']);
+            $object_type = (is_string($data['object_type']))
+                ? LibraryItemEnum::tryFrom((string)$data['object_type'])
+                : $data['object_type'];
             if ($unique && in_array($data['object_id'], $track_data)) {
                 debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {

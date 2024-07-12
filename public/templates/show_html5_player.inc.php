@@ -40,7 +40,7 @@ if ($removePlayed && $removeCount === 999) {
 if ($isShare) {
     $autoplay = (array_key_exists('autoplay', $_REQUEST) && make_bool($_REQUEST['autoplay']));
 }
-if (!$iframed) {
+if ($iframed === false) {
     require_once Ui::find_template('show_html5_player_headers.inc.php');
 }
 $prev       = addslashes(T_('Previous'));
@@ -122,7 +122,7 @@ echo implode(',', $solutions); ?>",
             <?php if (AmpConfig::get('webplayer_aurora')) { ?>
             auroraFormats: "wav, mp3, flac, aac, opus, m4a, oga, ogg, m3u, m3u8",
             <?php } ?>
-            <?php if (!$isShare) { ?>
+            <?php if ($isShare === false) { ?>
             size: {
                 <?php if ($isVideo) {
                     if ($iframed) { ?>
@@ -243,7 +243,11 @@ echo implode(',', $solutions); ?>",
                         var currentobject = 'song_id'
                     }
 
-                    <?php if (!$isVideo && !$isRadio && !$isShare) {
+                    <?php if (
+                        $isVideo === false &&
+                        $isRadio === false &&
+                        $isShare === false
+                    ) {
                         if ($iframed) {
                             if (AmpConfig::get('sociable')) {
                                 echo "ajaxPut(jsAjaxUrl + '?page=' + currenttype + '&action=shouts&object_type=' + currenttype + '&object_id=' + currentjpitem.attr('data-media_id'), 'shouts_data');";
@@ -278,27 +282,27 @@ echo implode(',', $solutions); ?>",
                     $('.playing_artist').html(artistobj);
                     <?php if (
                         $iframed &&
-                        !$isRadio &&
-                        !$isRandom &&
-                        !$isDemocratic
+                        $isRadio === false &&
+                        $isRandom === false &&
+                        $isDemocratic === false
                     ) { ?>
                     $('.playing_actions').html(actionsobj);
                     <?php if (AmpConfig::get('show_lyrics')) { ?>
                     $('.playing_lyrics').html(lyricsobj);
                     <?php }
-                    if (AmpConfig::get('waveform') && !$isShare) { ?>
+                    if (AmpConfig::get('waveform') && $isShare === false) { ?>
                     $('.waveform').html(waveformobj);
                     <?php }
                     }
                     }
-if (AmpConfig::get('song_page_title') && !$isShare) {
+if (AmpConfig::get('song_page_title') && $isShare === false) {
     echo "var mediaTitle = obj.title;\n";
     echo "if (obj.artist !== null) mediaTitle += ' - ' + obj.artist;\n";
     echo "document.title = mediaTitle + ' | " . addslashes(AmpConfig::get('site_title', '')) . "';";
 } ?>
                 }
             });
-            <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
+            <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
             HideWaveform();
             <?php } ?>
 
@@ -311,7 +315,7 @@ if (AmpConfig::get('song_page_title') && !$isShare) {
             if (brkey != '') {
                 sendBroadcastMessage('SONG_POSITION', event.jPlayer.status.currentTime);
             }
-            <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
+            <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
             var int_position = Math.floor(event.jPlayer.status.currentTime);
             if (int_position != last_int_position && event.jPlayer.status.currentTime > 0) {
                 last_int_position = int_position;
@@ -376,7 +380,7 @@ if (AmpConfig::get('song_page_title') && !$isShare) {
 if (AmpConfig::get('webplayer_aurora')) {
     $atypes = ['mp3', 'flac', 'ogg', 'vorbis', 'opus', 'aac', 'alac'];
     // Load only existing codec scripts
-    if (!$isVideo) {
+    if ($isVideo === false) {
         foreach ($atypes as $atype) {
             $spath = $web_path . '/lib/modules/aurora.js/' . $atype . '.js';
             if (Core::is_readable($spath)) {
@@ -412,7 +416,7 @@ $shareStyle = ($isShare || $isRandom)
     ? "display: none;"
     : '';
 
-if (!$isVideo) {
+if ($isVideo === false) {
     $containerClass = "jp-audio";
     $playerClass    = "jp-jplayer-audio"; ?>
     <div class="playing_info"<?php echo ($isRandom) ? ' style="left: 10px;"' : '' ?>>
@@ -501,13 +505,13 @@ if (!$isVideo) {
                             <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="<?php echo $repeaton; ?>"><?php echo $repeaton; ?></a></li>
                             <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="<?php echo $repeatoff; ?>"><?php echo $repeatoff; ?></a></li>
                         </ul>
-                        <?php if (AmpConfig::get('waveform') && !$isShare) { ?>
+                        <?php if (AmpConfig::get('waveform') && $isShare === false) { ?>
                             <div class="waveform"></div>
                         <?php } ?>
                     <?php } ?>
                 </div>
             </div>
-            <?php if (!$isShare && !$environment->isMobile()) { ?>
+            <?php if ($isShare === false && !$environment->isMobile()) { ?>
                 <div class="player_actions">
                     <?php if (AmpConfig::get('broadcast') && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                         <div id="broadcast" class="broadcast action_button">
@@ -528,7 +532,7 @@ if (!$isVideo) {
                             } ?>
                         </div>
                     <?php } ?>
-                    <?php if ($iframed && (!$isRadio && !$isRandom && !$isDemocratic)) { ?>
+                    <?php if ($iframed && ($isRadio === false && $isRandom === false && $isDemocratic === false)) { ?>
                         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
                             <div class="action_button">
                                 <a href="javascript:SaveToExistingPlaylist(event);">
@@ -574,10 +578,10 @@ if (!$isVideo) {
         </div>
     </div>
 </div>
-<?php if (!$iframed || $isShare) {
+<?php if ($iframed === false || $isShare) {
     require_once Ui::find_template('uberviz.inc.php');
 } ?>
-<?php if (!$isShare) { ?>
+<?php if ($isShare === false) { ?>
 </body>
     </html>
 <?php } ?>

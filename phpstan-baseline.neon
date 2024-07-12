@@ -1,34 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 2
-			path: public/templates/show_html5_player.inc.php
-
-		-
-			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Installation\\\\DefaultAction\\:\\:\\$installationHelper\\.$#"
-			count: 4
-			path: public/templates/show_install_config.inc.php
-
-		-
-			message: "#^Variable \\$is_100 might not be defined\\.$#"
+			message: "#^PHPDoc tag @var for variable \\$users has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: public/templates/show_preference_admin.inc.php
-
-		-
-			message: "#^Variable \\$is_25 might not be defined\\.$#"
-			count: 1
-			path: public/templates/show_preference_admin.inc.php
-
-		-
-			message: "#^Variable \\$is_5 might not be defined\\.$#"
-			count: 1
-			path: public/templates/show_preference_admin.inc.php
-
-		-
-			message: "#^Access to private property Ampache\\\\Module\\\\Application\\\\Register\\\\AddUserAction\\:\\:\\$ui\\.$#"
-			count: 1
-			path: public/templates/show_registration_confirmation.inc.php
+			path: public/templates/show_edit_search_row.inc.php
 
 		-
 			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
@@ -326,7 +301,7 @@ parameters:
 			path: src/Module/Api/ApiHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', string\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/DaapApiApplication.php
 
@@ -2946,7 +2921,7 @@ parameters:
 			path: src/Module/Api/Method/LocalplaySongsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LostPasswordMethod\\:\\:handshake\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LostPasswordMethod\\:\\:lost_password\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LostPasswordMethod.php
 
@@ -4816,16 +4791,6 @@ parameters:
 			path: src/Module/Application/Art/SelectArtAction.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$enabled\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\library_item\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Application/Batch/DefaultAction.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/Application/Image/AbstractShowAction.php
@@ -4861,7 +4826,7 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
 
@@ -4871,7 +4836,7 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -6191,18 +6156,8 @@ parameters:
 			path: src/Module/Catalog/Update/AbstractCatalogUpdater.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Catalog/Update/AddCatalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 8
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
@@ -6211,19 +6166,24 @@ parameters:
 			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFile.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of method Ampache\\\\Module\\\\Catalog\\\\Update\\\\AbstractCatalogUpdater\\:\\:cleanBuffer\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateSingleCatalogFolder.php
-
-		-
 			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Cli/AdminAddUserCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
+			count: 2
+			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
+			count: 2
+			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
@@ -6241,18 +6201,8 @@ parameters:
 			path: src/Module/Cli/ArtCleanupCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ArtCleanupCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:white\\(\\)\\.$#"
 			count: 2
-			path: src/Module/Cli/ArtSizeCalculationCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
 			path: src/Module/Cli/ArtSizeCalculationCommand.php
 
 		-
@@ -6266,37 +6216,17 @@ parameters:
 			path: src/Module/Cli/BroadcastCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/BroadcastCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
 			count: 2
 			path: src/Module/Cli/CacheProcessCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/CacheProcessCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
 			count: 2
-			path: src/Module/Cli/ComputeCacheCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
 			path: src/Module/Cli/ComputeCacheCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ConvertFileNamesCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/ConvertFileNamesCommand.php
 
@@ -6312,11 +6242,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/CronProcessCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/CronProcessCommand.php
 
@@ -6351,11 +6276,6 @@ parameters:
 			path: src/Module/Cli/ExportArtCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportArtCommand.php
-
-		-
 			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Art\\\\Export\\\\ArtExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
 			count: 1
 			path: src/Module/Cli/ExportArtCommand.php
@@ -6381,22 +6301,12 @@ parameters:
 			path: src/Module/Cli/PrintTagsCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/PrintTagsCommand.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
 			count: 1
 			path: src/Module/Cli/RunWebsocketCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ShowVersionCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/ShowVersionCommand.php
 
@@ -6416,22 +6326,12 @@ parameters:
 			path: src/Module/Cli/SongCleanupCommand.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/SongCleanupCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Cli/SortFilesCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SortFilesCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/SortFilesCommand.php
 
@@ -6452,11 +6352,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/UpdateDbCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/UpdateDbCommand.php
 
@@ -8521,26 +8416,6 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function bin2hex expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
-			message: "#^Parameter \\#5 \\$length of function file_get_contents expects int\\<0, max\\>\\|null, int given\\.$#"
-			count: 1
-			path: src/Module/System/Core.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Dba\\:\\:_query\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/Dba.php
@@ -8661,11 +8536,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Offset int\\<0, max\\> does not exist on string\\|null\\.$#"
-			count: 4
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of static method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelper.php
@@ -8696,23 +8566,13 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|false given\\.$#"
-			count: 1
 			path: src/Module/System/InstallationHelper.php
 
 		-
@@ -9451,11 +9311,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
-			message: "#^Parameter \\#1 \\$image of function imagefilledrectangle expects GdImage, GdImage\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
 			message: "#^Parameter \\#1 \\$min of function rand expects int, float\\|int given\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
@@ -9497,11 +9352,6 @@ parameters:
 
 		-
 			message: "#^Elseif condition is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:create\\(\\) should return resource\\|false but returns GdImage\\|false\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
@@ -9581,18 +9431,8 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#1 \\$image of function imageantialias expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Parameter \\#1 \\$image of function imagecolorallocate expects GdImage, resource\\|false given\\.$#"
 			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagefilledrectangle expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
@@ -9601,7 +9441,7 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\<0, max\\>\\|false given\\.$#"
 			count: 3
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
@@ -9971,11 +9811,6 @@ parameters:
 			path: src/Module/Util/Graph.php
 
 		-
-			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
 			message: "#^Parameter \\#2 \\$Format of method CpChart\\\\Data\\:\\:setXAxisDisplay\\(\\) expects array\\|null, string given\\.$#"
 			count: 4
 			path: src/Module/Util/Graph.php
@@ -10016,21 +9851,6 @@ parameters:
 			path: src/Module/Util/Horde_Browser.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setFeature\\(\\) expects bool, float given\\.$#"
-			count: 14
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setFeature\\(\\) expects bool, int given\\.$#"
-			count: 2
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setFeature\\(\\) expects bool, int\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Module/Util/Horde_Browser.php
@@ -10047,12 +9867,12 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_majorVersion \\(int\\) does not accept string\\.$#"
-			count: 9
+			count: 7
 			path: src/Module/Util/Horde_Browser.php
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:\\$_minorVersion \\(int\\) does not accept string\\.$#"
-			count: 8
+			count: 7
 			path: src/Module/Util/Horde_Browser.php
 
 		-
@@ -11296,46 +11116,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function feof expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fgetc expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
-			count: 13
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fseek expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function bin2hex expects string, string\\|false given\\.$#"
-			count: 9
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#4 \\$color of function imagefill expects int, int\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#6 \\$color of function imageline expects int, int\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:\\$id has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -12216,36 +11996,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Parameter \\#1 \\$dst_image of function imagecopyresampled expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagedestroy expects GdImage, GdImage\\|false given\\.$#"
-			count: 2
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagegif expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagejpeg expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagepng expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagewebp expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 2
 			path: src/Repository/Model/Art.php
@@ -12257,11 +12007,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:is_valid_type\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -14032,7 +13777,7 @@ parameters:
 
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 5
+			count: 6
 			path: src/Repository/Model/User.php
 
 		-
