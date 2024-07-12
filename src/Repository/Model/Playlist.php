@@ -697,14 +697,14 @@ class Playlist extends playlist_object
                 ? $data['object_type']
                 : LibraryItemEnum::tryFrom($data['object_type']);
             if ($unique && in_array($data['object_id'], $track_data)) {
-                debug_event(self::class, "Can't add a duplicate " . $object_type->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+                debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 ++$count;
                 $track = $base_track + $count;
                 $sql .= "(?, ?, ?, ?), ";
                 $values[] = $this->id;
                 $values[] = $data['object_id'];
-                $values[] = $object_type->value;
+                $values[] = $object_type?->value;
                 $values[] = $track;
             } // if valid id
         }
