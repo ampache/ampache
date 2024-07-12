@@ -44,7 +44,7 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
-    private InstallationHelperInterface $installationHelper;
+    public InstallationHelperInterface $installationHelper;
 
     private EnvironmentInterface $environment;
 
