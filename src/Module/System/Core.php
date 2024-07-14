@@ -240,16 +240,16 @@ class Core
         $width  = imagesx($image);
         $height = imagesy($image);
         if (
-            $width > 1 ||
+            $width > 1 &&
             $height > 1
         ) {
-            return $empty;
+            return [
+                'width' => $width,
+                'height' => $height
+            ];
         }
 
-        return [
-            'width' => $width,
-            'height' => $height
-        ];
+        return $empty;
     }
 
     /**
