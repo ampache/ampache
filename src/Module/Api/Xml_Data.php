@@ -817,7 +817,7 @@ class Xml_Data
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n";
 
         $labelRepository = self::getLabelRepository();
 
@@ -1328,7 +1328,7 @@ class Xml_Data
         if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
             $videos = array_slice($videos, self::$offset, self::$limit);
         }
-        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n" : '';
+        $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n" : '';
 
         foreach ($videos as $video_id) {
             $video = new Video($video_id);

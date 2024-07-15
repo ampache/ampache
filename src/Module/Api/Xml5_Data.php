@@ -448,7 +448,7 @@ class Xml5_Data
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n";
 
         $labelRepository = self::getLabelRepository();
 
@@ -764,8 +764,6 @@ class Xml5_Data
         if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
             $podcasts = array_splice($podcasts, self::$offset, self::$limit);
         }
-
-        $podcastRepository = self::getPodcastRepository();
 
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
