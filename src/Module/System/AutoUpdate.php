@@ -202,10 +202,10 @@ class AutoUpdate
             $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
             if (empty($str)) {
                 $lastversion = $release->name;
-                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')?->getId()), $lastversion);
+                Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')?->getId()), $available);
+                Preference::update_all('autoupdate_lastversion_new', $available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -427,6 +427,8 @@ class AutoUpdate
             $config->getNpmBinaryPath()
         );
 
+        debug_event(self::class, T_('Updating dependencies with `' . $cmdComposer . '` ...'), 5);
+        debug_event(self::class, T_('Updating dependencies with `' . $cmdNpm . '` ...'), 5);
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
             echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
