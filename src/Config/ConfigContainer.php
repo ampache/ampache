@@ -108,7 +108,7 @@ final class ConfigContainer implements ConfigContainerInterface
 
     public function getComposerParameters(): string
     {
-        return ($this->configuration[ConfigurationKeyEnum::COMPOSER_NO_DEV ?? false])
+        return ($this->configuration[ConfigurationKeyEnum::COMPOSER_NO_DEV] ?? false)
             ? '--no-dev --prefer-source --no-interaction'
             : '--prefer-source --no-interaction';
     }
