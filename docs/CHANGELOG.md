@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Ampache 6.5.1
+## Ampache 6.6.0
 
 Another version bump due to additions in API6 related to playlists
 
