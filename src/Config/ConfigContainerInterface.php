@@ -79,6 +79,11 @@ interface ConfigContainerInterface
     public function getComposerBinaryPath(): string;
 
     /**
+     * Return the path to the composer binary
+     */
+    public function getComposerParameters(): string;
+
+    /**
      * Return the path to the npm binary
      */
     public function getNpmBinaryPath(): string;

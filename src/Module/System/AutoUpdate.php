@@ -417,17 +417,21 @@ class AutoUpdate
         bool $api = false
     ): void {
         $cmdComposer = sprintf(
-            '%s install --no-dev --prefer-source --no-interaction',
-            $config->getComposerBinaryPath()
+            '%s install %s',
+            $config->getComposerBinaryPath(),
+            $config->getComposerParameters()
         );
+
         $cmdNpm = sprintf(
             '%s install',
             $config->getNpmBinaryPath()
         );
+
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
             echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
         }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
         exec($cmdComposer);
@@ -435,6 +439,7 @@ class AutoUpdate
         if (!$api) {
             echo T_('Done') . '<br />';
         }
+
         ob_flush();
     }
 }
