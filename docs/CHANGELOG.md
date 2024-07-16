@@ -2,9 +2,15 @@
 
 ## Ampache 6.5.1
 
+Another version bump due to additions in API6 related to playlists
+
+Users can now share a playlist with specific users and keep the list private from everyone else
+
+You can downgrade from Ampache7 if you try it out and have issues using the cli
+
 ### Added
 
-* Add maxlength to the user data fields on the registration and edit pages
+* Add `maxlength` to the user data fields on the registration and edit pages
 * Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
 * Default theme fallback to 'Dark' color scheme
 * Add users as a playlist collaborator (These users can add and remove songs from a playlist)

@@ -2,12 +2,17 @@
 
 ## API 6.5.1
 
+Like with `total_count`, we've added an md5sum of the results (called `md5`) in responses
+
+This is useful for recording whether you need to update or change results.
+
 ### Added
 
 * ALL
   * Track user IP on handshake and ping calls
   * playlist_edit: separate error when the playlist doesn't exist
 * API6
+  * Add `md5` property to object responses. (Hash objects in the response before slicing and limiting)
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
   * Add `has_access` property to playlist responses. (Can edit the playlist if true)
   * Add `has_collaborate` property to playlist responses. (Can add and remove songs to the playlist if true)
