@@ -921,6 +921,9 @@ class Json_Data
                         "playlisttrack" => $objects['track'],
                     ];
                 }
+
+                // hash the results
+                $song_hash = md5(serialize($playlisttracks));
             } else {
                 $items = (int)($playitem_total ?? 0);
             }
@@ -944,7 +947,8 @@ class Json_Data
                 "has_art" => $playlist->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
-                "averagerating" => $rating->get_average_rating()
+                "averagerating" => $rating->get_average_rating(),
+                "song_hash" => $song_hash
             ];
         } // end foreach
 

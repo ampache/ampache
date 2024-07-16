@@ -52,16 +52,22 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 * Enforce sidebar_light when enabled, ignoring cookie if set
 
-## Ampache 6.5.1
+## Ampache 6.6.0
+
+Another version bump due to additions in API6 related to playlists
+
+Users can now share a playlist with specific users and keep the list private from everyone else
+
+You can downgrade from Ampache7 if you try it out and have issues using the cli
 
 ### Added
 
-* Add maxlength to the user data fields on the registration and edit pages
+* Add `maxlength` to the user data fields on the registration and edit pages
 * Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
 * Default theme fallback to 'Dark' color scheme
 * Add users as a playlist collaborator (These users can add and remove songs from a playlist)
 * Database 600075
-  * Add a `collaborate` to playlist table to allow other users to add songs to the list
+  * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` to allow browse access to playlists with collaborate access
 * CLI
   * admin:updateDatabase: allow downgrading database from Ampache7 databases
@@ -89,6 +95,8 @@ Information and changes for this major release are recorded in the wiki [here](h
 * User IP history page didn't show what you expected and was very confusing
 * Edit search and playlist pages not reloading the user list
 * Missing table check for database update 500006
+* Over-escaped playlist name when saving from smartplaylist
+* Skip caching missing files
 
 ## Ampache 6.5.0
 
