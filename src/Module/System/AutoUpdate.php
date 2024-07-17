@@ -162,7 +162,6 @@ class AutoUpdate
             return $lastversion;
         }
 
-
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
         $time       = time();
         $git_branch = self::is_force_git_branch();
@@ -427,8 +426,6 @@ class AutoUpdate
             $config->getNpmBinaryPath()
         );
 
-        debug_event(self::class, T_('Updating dependencies with `' . $cmdComposer . '` ...'), 5);
-        debug_event(self::class, T_('Updating dependencies with `' . $cmdNpm . '` ...'), 5);
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
             echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
