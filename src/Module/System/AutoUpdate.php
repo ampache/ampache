@@ -405,7 +405,15 @@ class AutoUpdate
             echo T_('Done') . '<br />';
         }
         ob_flush();
-        self::get_latest_version(true);
+
+        $commit = self::get_current_commit();
+        if (!empty($commit)) {
+            // reset the update status
+            Preference::update_all('autoupdate_lastversion', $commit);
+            AmpConfig::set('autoupdate_lastversion', $commit, true);
+            Preference::update_all('autoupdate_lastversion_new', false);
+            AmpConfig::set('autoupdate_lastversion_new', false, true);
+        }
     }
 
     /**
