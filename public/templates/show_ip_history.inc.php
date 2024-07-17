@@ -71,7 +71,7 @@ use Ampache\Repository\Model\User;
         <?php echo $data['ip'] ?: T_('Invalid'); ?>
     </td>
     <td class="col_agent">
-        <?php echo $data['agent'] ?: T_('Invalid'); ?>
+        <?php echo $data['agent'] ?: T_('Unknown'); ?>
     </td>
 </tr>
 <?php } ?>
