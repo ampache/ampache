@@ -15,8 +15,9 @@ This is useful for recording whether you need to update or change results.
   * Add `md5` to responses. (Hash objects in the response before slicing and limiting)
   * Add `md5` property to playlist objects. (Hash of song objects in the response)
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
-  * Add `has_access` property to playlist responses. (Can edit the playlist if true)
-  * Add `has_collaborate` property to playlist responses. (Can add and remove songs to the playlist if true)
+  * Add `has_access` property to playlist objects. (Can edit the playlist if true)
+  * Add `has_collaborate` property to playlist objects. (Can add and remove songs to the playlist if true)
+  * Add `last_update` property to playlist objects. (Time a playlist changed. Smartplaylists do not change based on returned songs)
 
 ### Changed
 

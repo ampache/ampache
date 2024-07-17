@@ -910,6 +910,7 @@ class Json_Data
             $playlist_name = $playlist->get_fullname();
             $playlist_user = $playlist->username;
             $playlist_type = $playlist->type;
+            $last_update   = $playlist->last_update;
 
             if ($songs) {
                 $items          = [];
@@ -948,7 +949,8 @@ class Json_Data
                 "flag" => (bool)$flag->get_flag($user->getId()),
                 "rating" => $user_rating,
                 "averagerating" => $rating->get_average_rating(),
-                "md5" => $md5
+                "md5" => $md5,
+                "last_update" => $last_update,
             ];
         } // end foreach
 
