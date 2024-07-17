@@ -82,7 +82,7 @@ class AutoUpdate
             if (
                 is_string($current) &&
                 preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))
+                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
             ) {
                 return (string)$matches[1];
             }
@@ -109,12 +109,13 @@ class AutoUpdate
         try {
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, array(), Core::requests_options());
-
+            $request = Requests::get($url, [], Core::requests_options());
+            $time    = time();
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
                 // Not connected / API rate limit exceeded: just ignore, it will pass next time
-                AmpConfig::set('autoupdate_lastcheck', time(), true);
+                Preference::update_all('autoupdate_lastcheck', $time);
+                AmpConfig::set('autoupdate_lastcheck', $time, true);
 
                 return null;
             }
@@ -137,6 +138,7 @@ class AutoUpdate
         if (!AmpConfig::get('autoupdate', false)) {
             return false;
         }
+
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
             Preference::update_all('autoupdate_lastcheck', 1);
@@ -156,12 +158,11 @@ class AutoUpdate
 
         // Don't spam the GitHub API
         if (
-            $force === false ||
+            $force === false &&
             self::lastcheck_expired() === false
         ) {
             return $lastversion;
         }
-
 
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
         $time       = time();
@@ -270,11 +271,12 @@ class AutoUpdate
     public static function is_update_available($force = false): bool
     {
         if (
-            $force === false ||
+            $force === false &&
             self::lastcheck_expired() === false
         ) {
             return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
         }
+
         $time = time();
         Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
@@ -282,7 +284,7 @@ class AutoUpdate
         $available  = false;
         $git_branch = self::is_force_git_branch();
         $current    = self::get_current_version();
-        $latest     = self::get_latest_version($force);
+        $latest     = self::get_latest_version();
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
@@ -406,7 +408,15 @@ class AutoUpdate
             echo T_('Done') . '<br />';
         }
         ob_flush();
-        self::get_latest_version(true);
+
+        $commit = self::get_current_commit();
+        if (!empty($commit)) {
+            // reset the update status
+            Preference::update_all('autoupdate_lastversion', $commit);
+            AmpConfig::set('autoupdate_lastversion', $commit, true);
+            Preference::update_all('autoupdate_lastversion_new', false);
+            AmpConfig::set('autoupdate_lastversion_new', false, true);
+        }
     }
 
     /**
@@ -416,19 +426,22 @@ class AutoUpdate
         ConfigContainerInterface $config,
         bool $api = false
     ): void {
-        $cmd = sprintf(
+        $cmdComposer = sprintf(
             '%s install --no-dev --prefer-source --no-interaction',
             $config->getComposerBinaryPath()
         );
+
         if (!$api) {
-            echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+            echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
         }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
-        exec($cmd);
+        exec($cmdComposer);
         if (!$api) {
             echo T_('Done') . '<br />';
         }
+
         ob_flush();
     }
 }

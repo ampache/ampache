@@ -356,17 +356,15 @@ class Preference extends database_object
             ? (int)Preference::id_from_name($preference)
             : (int)$preference;
 
-        if ((int)$preference_id == 0) {
+        if ($preference_id == 0) {
             return false;
         }
 
-        $preference_id = Dba::escape($preference_id);
-        $value         = Dba::escape($value);
-
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
-        Dba::write($sql, array($value, $preference_id));
+        Dba::write($sql, [$value, $preference_id]);
 
         parent::clear_cache();
+        self::clear_from_session();
 
         return true;
     }
