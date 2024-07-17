@@ -11,10 +11,11 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Restore composer.lock
 * CLI
   * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
-* Config version 73
+* Config version 74
   * Add `npm_binary_path`
   * Remove OpenID config
   * Add `database_engine` to allow you to change from InnoDB if you want to
+  * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
 * Database 700009
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
