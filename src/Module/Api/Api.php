@@ -114,6 +114,7 @@ class Api
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
         Method\PlaylistEditMethod::ACTION => Method\PlaylistEditMethod::class,
         Method\PlaylistGenerateMethod::ACTION => Method\PlaylistGenerateMethod::class,
+        Method\PlaylistHashMethod::ACTION => Method\PlaylistHashMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         Method\PlaylistRemoveSongMethod::ACTION => Method\PlaylistRemoveSongMethod::class,
         Method\PlaylistsMethod::ACTION => Method\PlaylistsMethod::class,
