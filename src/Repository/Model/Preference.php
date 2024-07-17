@@ -381,6 +381,7 @@ class Preference extends database_object
         Dba::write($sql, [$value, $preference_id]);
 
         parent::clear_cache();
+        self::clear_from_session();
 
         return true;
     }
