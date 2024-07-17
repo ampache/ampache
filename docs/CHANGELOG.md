@@ -66,6 +66,7 @@ You can downgrade from Ampache7 if you try it out and have issues using the cli
 * Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
 * Default theme fallback to 'Dark' color scheme
 * Add users as a playlist collaborator (These users can add and remove songs from a playlist)
+* Expand user IP History to show user Agent string
 * Database 600075
   * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` to allow browse access to playlists with collaborate access
@@ -76,7 +77,7 @@ You can downgrade from Ampache7 if you try it out and have issues using the cli
 
 * Split out API change documentation from CHANGELOG.md to API-CHANGELOG.md
 * Simplify and speed up playlist access checks by sending the user object
-* User IP history defaults to grouped values and 100 results
+* User IP history will always group duplicates values
 * Don't notify that items are added in the WebUI when nothing was added
 * Users will see additional playlists if they are added as a collaborator
 * Don't notify that items are added to a playlist in the WebUI when nothing happened
@@ -87,6 +88,7 @@ You can downgrade from Ampache7 if you try it out and have issues using the cli
 
 ### Fixed
 
+* AutoUpdate preferences were not being saved, respected or updated
 * Total table counts for artists didn't include all artists
 * Check valid playlist / search on random actions
 * Autoupdate version check tweak for empty latest version

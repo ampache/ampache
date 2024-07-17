@@ -27,6 +27,7 @@ This is useful for recording whether you need to update or change results.
 
 * ALL
   * User preferences were not initiated and the server preferences would overwrite differences
+  * Api::set_user_id function sending an int instead of a user
 * API6
   * lost_password: function name incorrect
   * flag: id smartplaylists correctly
