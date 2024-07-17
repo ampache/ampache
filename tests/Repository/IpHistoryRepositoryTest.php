@@ -71,9 +71,7 @@ class IpHistoryRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC %s',
-                [
-                    $userId
-                ]
+                [$userId]
             )
             ->willReturn($result);
 
@@ -84,13 +82,13 @@ class IpHistoryRepositoryTest extends TestCase
                 [
                     'ip' => inet_pton($ip),
                     'date' => (string) $date,
-                    'agent' => $agent,
+                    'agent' => (string) $agent,
                 ],
                 false
             );
 
         $result = current(
-            iterator_to_array($this->subject->getHistory($user, 1, true))
+            iterator_to_array($this->subject->getHistory($user))
         );
 
         static::assertSame(
