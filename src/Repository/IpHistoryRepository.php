@@ -55,10 +55,10 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         User $user,
         ?bool $limited = true
     ): Generator {
-        $params    = [$user->getId()];
         $where_sql = '';
+        $params    = [$user->getId()];
         if ($limited) {
-            $where_sql = 'AND `date` >= ?' . 
+            $where_sql = 'AND `date` >= ?';
             $params[]  = (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)));
         }
 
