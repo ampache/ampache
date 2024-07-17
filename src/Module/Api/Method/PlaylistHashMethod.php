@@ -33,22 +33,22 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 
 /**
- * Class PlaylistSongsMethod
+ * Class PlaylistHashMethod
  * @package Lib\ApiMethods
  */
 final class PlaylistHashMethod
 {
-    public const ACTION = 'playlist_check_hash';
+    public const ACTION = 'playlist_hash';
 
     /**
-     * playlist_check_hash
+     * playlist_hash
      * MINIMUM_API_VERSION=6.6.0
      *
      * This returns the md5 hash for the songs in a playlist
      *
      * filter = (string) UID of playlist
      */
-    public static function playlist_songs(array $input, User $user): bool
+    public static function playlist_hash(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
