@@ -37,12 +37,12 @@ use Ampache\Repository\Model\User;
 <li>
 <?php if ($showAll === true) { ?>
     <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>">
-        <?php echo Ui::get_material_symbol('schedule', T_('Recent')); ?>
+        <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Recent'); ?>
     </a>
 <?php } else { ?>
     <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>&all=1">
-        <?php echo Ui::get_material_symbol('visibility', T_('Show All')); ?>
+        <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>
 <?php } ?>
@@ -55,10 +55,12 @@ use Ampache\Repository\Model\User;
 <colgroup>
   <col id="col_date" />
   <col id="col_ipaddress" />
+  <col id="col_agent" />
 </colgroup>
 <tr class="th-top">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="col_agent"><?php echo T_('Agent'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr>
@@ -68,11 +70,15 @@ use Ampache\Repository\Model\User;
     <td class="cel_ipaddress">
         <?php echo $data['ip'] ?: T_('Invalid'); ?>
     </td>
+    <td class="col_agent">
+        <?php echo $data['agent'] ?: T_('Invalid'); ?>
+    </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="col_agent"><?php echo T_('Agent'); ?></th>
 </tr>
 
 </table>
