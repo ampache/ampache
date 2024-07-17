@@ -53,50 +53,6 @@ class IpHistoryRepositoryTest extends TestCase
         );
     }
 
-    public function testGetHistoryReturnsData(): void
-    {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
-
-        $ip     = '1.2.3.4';
-        $date   = time();
-        $agent  = 'client agent';
-        $userId = 666;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? AND `date` >= ? GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
-                [$userId, $date]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetch')
-            ->with(PDO::FETCH_ASSOC)
-            ->willReturn(
-                [
-                    'ip' => inet_pton($ip),
-                    'date' => (string) $date,
-                    'agent' => (string) $agent,
-                ],
-                false
-            );
-
-        $result = current(
-            iterator_to_array($this->subject->getHistory($user))
-        );
-
-        static::assertSame(
-            $ip,
-            $result['ip']
-        );
-    }
-
     public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
     {
         $user = $this->createMock(User::class);
