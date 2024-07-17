@@ -71,7 +71,7 @@ class IpHistoryRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? AND `date` >= ? GROUP BY `ip`, `date` ORDER BY `date` DESC',
-                [$userId]
+                [$userId, $date]
             )
             ->willReturn($result);
 
