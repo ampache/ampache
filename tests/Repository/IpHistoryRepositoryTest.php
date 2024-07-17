@@ -60,6 +60,7 @@ class IpHistoryRepositoryTest extends TestCase
 
         $ip     = '1.2.3.4';
         $date   = time();
+        $agent  = 'client agent';
         $userId = 666;
 
         $user->expects(static::once())
@@ -69,8 +70,8 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? AND `date` >= ' . (time() - (86400 * 42)) . ' GROUP BY `ip`, `date` ORDER BY `date` DESC',
-                [$userId]
+                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? AND `date` >= ? GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
+                [$userId, $date]
             )
             ->willReturn($result);
 
@@ -81,6 +82,7 @@ class IpHistoryRepositoryTest extends TestCase
                 [
                     'ip' => inet_pton($ip),
                     'date' => (string) $date,
+                    'agent' => (string) $agent,
                 ],
                 false
             );

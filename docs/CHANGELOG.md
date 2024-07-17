@@ -52,16 +52,23 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 * Enforce sidebar_light when enabled, ignoring cookie if set
 
-## Ampache 6.5.1
+## Ampache 6.6.0
+
+Another version bump due to additions in API6 related to playlists
+
+Users can now share a playlist with specific users and keep the list private from everyone else
+
+You can downgrade from Ampache7 if you try it out and have issues using the cli
 
 ### Added
 
-* Add maxlength to the user data fields on the registration and edit pages
+* Add `maxlength` to the user data fields on the registration and edit pages
 * Use `autocomplete="new-password"` to stop trying to autocomplete on edit pages
 * Default theme fallback to 'Dark' color scheme
 * Add users as a playlist collaborator (These users can add and remove songs from a playlist)
+* Expand user IP History to show user Agent string
 * Database 600075
-  * Add a `collaborate` to playlist table to allow other users to add songs to the list
+  * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` to allow browse access to playlists with collaborate access
 * CLI
   * admin:updateDatabase: allow downgrading database from Ampache7 databases
@@ -70,7 +77,7 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 * Split out API change documentation from CHANGELOG.md to API-CHANGELOG.md
 * Simplify and speed up playlist access checks by sending the user object
-* User IP history defaults to grouped values and 100 results
+* User IP history will always group duplicates values
 * Don't notify that items are added in the WebUI when nothing was added
 * Users will see additional playlists if they are added as a collaborator
 * Don't notify that items are added to a playlist in the WebUI when nothing happened
@@ -81,6 +88,7 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 ### Fixed
 
+* AutoUpdate preferences were not being saved, respected or updated
 * Total table counts for artists didn't include all artists
 * Check valid playlist / search on random actions
 * Autoupdate version check tweak for empty latest version
@@ -89,6 +97,8 @@ Information and changes for this major release are recorded in the wiki [here](h
 * User IP history page didn't show what you expected and was very confusing
 * Edit search and playlist pages not reloading the user list
 * Missing table check for database update 500006
+* Over-escaped playlist name when saving from smartplaylist
+* Skip caching missing files
 
 ## Ampache 6.5.0
 

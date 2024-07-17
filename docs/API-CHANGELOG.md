@@ -1,6 +1,10 @@
 # API CHANGELOG
 
-## API 6.5.1
+## API 6.6.0
+
+Like with `total_count`, we've added an md5sum of the results (called `md5`) in responses
+
+This is useful for recording whether you need to update or change results.
 
 ### Added
 
@@ -8,6 +12,8 @@
   * Track user IP on handshake and ping calls
   * playlist_edit: separate error when the playlist doesn't exist
 * API6
+  * Add `md5` to responses. (Hash objects in the response before slicing and limiting)
+  * Add `md5` property to playlist objects. (Hash of song objects in the response)
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
   * Add `has_access` property to playlist responses. (Can edit the playlist if true)
   * Add `has_collaborate` property to playlist responses. (Can add and remove songs to the playlist if true)
@@ -21,6 +27,7 @@
 
 * ALL
   * User preferences were not initiated and the server preferences would overwrite differences
+  * Api::set_user_id function sending an int instead of a user
 * API6
   * lost_password: function name incorrect
   * flag: id smartplaylists correctly

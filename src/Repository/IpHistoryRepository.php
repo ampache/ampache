@@ -55,22 +55,26 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         User $user,
         ?bool $limited = true
     ): Generator {
-        $where_sql = ($limited)
-            ? 'AND `date` >= ' . (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)))
-            : '';
+        $where_sql = '';
+        $params    = [$user->getId()];
+        if ($limited) {
+            $where_sql = 'AND `date` >= ?';
+            $params[]  = (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)));
+        }
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date` ORDER BY `date` DESC',
+                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
                 $where_sql,
             ),
-            [$user->getId()]
+            $params
         );
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield [
                 'ip' => (string) inet_ntop($row['ip']),
-                'date' => new DateTimeImmutable(sprintf('@%d', $row['date']))
+                'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
+                'agent' => $row['agent'],
             ];
         }
     }

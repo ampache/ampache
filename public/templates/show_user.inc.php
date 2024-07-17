@@ -104,7 +104,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>
 <?php } ?>
 <?php if (AmpConfig::get('show_wrapped')) { ?>
-        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('info', T_('Wrapped')); ?></a>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('featured_seasonal_and_gifts', T_('Wrapped')); ?></a>
 <?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>

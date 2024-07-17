@@ -1843,7 +1843,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
             'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
 
-            'res' => $video->play_url('', 'api'),
+            'res' => $video->play_url('', AccessTypeEnum::API->value),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
             'duration' => $video->f_time_h . '.0',
@@ -1890,7 +1890,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url
         ];
         if (isset($arrFileType['mime'])) {
-            $ret['res']          = $episode->play_url('', 'api');
+            $ret['res']          = $episode->play_url('', AccessTypeEnum::API->value);
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
             $ret['duration']     = $episode->f_time_h . '.0';
