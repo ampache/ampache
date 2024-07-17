@@ -158,7 +158,7 @@ class AutoUpdate
 
         // Don't spam the GitHub API
         if (
-            $force === false &&
+            $force === false ||
             self::lastcheck_expired() === false
         ) {
             return $lastversion;
@@ -271,7 +271,7 @@ class AutoUpdate
     public static function is_update_available($force = false): bool
     {
         if (
-            $force === false &&
+            $force === false ||
             self::lastcheck_expired() === false
         ) {
             return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
