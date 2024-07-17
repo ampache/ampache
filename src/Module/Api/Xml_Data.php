@@ -859,10 +859,11 @@ class Xml_Data
      */
     public static function labels($labels, $user): string
     {
+        $md5 = md5(serialize($labels));
         if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
             $labels = array_splice($labels, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n";
+        $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         $labelRepository = self::getLabelRepository();
 
