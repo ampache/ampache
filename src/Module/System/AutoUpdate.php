@@ -139,7 +139,7 @@ class AutoUpdate
         }
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), 1);
+            Preference::update_all('autoupdate_lastcheck', 1);
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -166,7 +166,7 @@ class AutoUpdate
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
         $time       = time();
         $git_branch = self::is_force_git_branch();
-        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         // Development version, get latest commit on develop branch
@@ -184,10 +184,10 @@ class AutoUpdate
             }
             if (!empty($commits)) {
                 $lastversion = $commits->sha;
-                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                Preference::update_all('autoupdate_lastversion_new', $available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -202,10 +202,10 @@ class AutoUpdate
             $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
             if (empty($str)) {
                 $lastversion = $release->name;
-                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                Preference::update_all('autoupdate_lastversion_new', $available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -276,7 +276,7 @@ class AutoUpdate
             return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
         }
         $time = time();
-        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;

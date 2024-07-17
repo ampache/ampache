@@ -347,14 +347,19 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param int $preference_id
+     * @param int|string $preference
      * @param string $value
      */
-    public static function update_all($preference_id, $value): bool
+    public static function update_all($preference, $value): bool
     {
+        $preference_id = (is_string($preference))
+            ? (int)Preference::id_from_name($preference)
+            : (int)$preference;
+
         if ((int)$preference_id == 0) {
             return false;
         }
+
         $preference_id = Dba::escape($preference_id);
         $value         = Dba::escape($value);
 
