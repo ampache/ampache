@@ -76,7 +76,8 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield [
                 'ip' => (string) inet_ntop($row['ip']),
-                'date' => new DateTimeImmutable(sprintf('@%d', $row['date']))
+                'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
+                'agent' => $row['agent'],
             ];
         }
     }
