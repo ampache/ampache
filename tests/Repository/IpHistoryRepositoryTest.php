@@ -70,7 +70,7 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC %s',
+                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? AND `date` >= ' . ($date - (86400 * 42)) . ' GROUP BY `ip`, `date` ORDER BY `date` DESC',
                 [$userId]
             )
             ->willReturn($result);
