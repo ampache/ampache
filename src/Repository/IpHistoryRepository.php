@@ -67,7 +67,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC %s',
+                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC %s',
                 $limit_sql,
             ),
             [$user->getId()]

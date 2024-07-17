@@ -55,10 +55,12 @@ use Ampache\Repository\Model\User;
 <colgroup>
   <col id="col_date" />
   <col id="col_ipaddress" />
+  <col id="col_agent" />
 </colgroup>
 <tr class="th-top">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="col_agent"><?php echo T_('Agent'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr>
@@ -68,11 +70,15 @@ use Ampache\Repository\Model\User;
     <td class="cel_ipaddress">
         <?php echo $data['ip'] ?: T_('Invalid'); ?>
     </td>
+    <td class="col_agent">
+        <?php echo $data['agent'] ?: T_('Invalid'); ?>
+    </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
+    <th class="col_agent"><?php echo T_('Agent'); ?></th>
 </tr>
 
 </table>
