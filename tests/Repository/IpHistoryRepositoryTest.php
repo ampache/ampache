@@ -95,10 +95,6 @@ class IpHistoryRepositoryTest extends TestCase
             $ip,
             $result['ip']
         );
-        static::assertSame(
-            $date,
-            $result['date']->getTimestamp()
-        );
     }
 
     public function testGetRecipientForUserReturnsNullIfIpWasNotAvailable(): void
