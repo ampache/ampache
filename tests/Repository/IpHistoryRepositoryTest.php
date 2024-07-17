@@ -29,8 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
 use DateTime;
-use PDO;
-use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
