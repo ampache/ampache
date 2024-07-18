@@ -2034,6 +2034,28 @@ INDEX [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/d
 
 ID [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_generate%20\(id\).json)
 
+### playlist_hash
+
+This returns the md5 hash for the songs in a playlist
+
+| Input    | Type    | Description                          | Optional |
+| -------- | ------- | ------------------------------------ | -------: |
+| 'filter' | string  | UID of Playlist                      |       NO |
+
+* return object
+
+```JSON
+"md5": ""
+```
+
+* throws object
+
+```JSON
+"error": ""
+```
+
+[Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/json-responses/playlist_hash.json)
+
 ### playlist_remove_song
 
 This remove a song from a playlist.
