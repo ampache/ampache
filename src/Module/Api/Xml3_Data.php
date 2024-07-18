@@ -605,6 +605,9 @@ class Xml3_Data
         $string = "<users>\n";
         foreach ($users as $user_id) {
             $user = new User($user_id);
+            if ($user->isNew() === false) {
+                $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
+            }
             $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         }
         $string .= "</users>\n";
