@@ -71,7 +71,7 @@ final class VideoMethod
                 echo Json_Data::videos(array($object_id), $user, true, false);
                 break;
             default:
-                echo Xml_Data::videos(array($object_id), $user);
+                echo Xml_Data::videos(array($object_id), $user, false);
         }
 
         return true;
