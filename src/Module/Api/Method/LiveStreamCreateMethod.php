@@ -90,7 +90,7 @@ final class LiveStreamCreateMethod
 
         $results = Live_Stream::create($data);
         if (empty($results)) {
-            Api::empty('live_stream', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
