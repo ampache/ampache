@@ -111,7 +111,7 @@ final class BookmarkCreateMethod
         Bookmark::create($object, $user->getId(), $time);
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
