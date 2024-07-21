@@ -585,16 +585,21 @@ Get a single bookmark by bookmark_id
 
 * return
 
-```XML
-<root>
-    <bookmark>
-</root>
+```JSON
+"id": "",
+"owner": "",
+"object_type": "",
+"object_id": "",
+"position": 0,
+"client": "",
+"creation_date": 0,
+"update_date": 0
 ```
 
 * throws
 
-```XML
-<root><error></root>
+```JSON
+"error": ""
 ```
 
 [Example](https://raw.githubusercontent.com/ampache/python3-ampache/api6/docs/xml-responses/bookmark.json)
@@ -616,7 +621,14 @@ Create a placeholder for the current media that you can return to later.
 * return array
 
 ```JSON
-"bookmark": []
+"id": "",
+"owner": "",
+"object_type": "",
+"object_id": "",
+"position": 0,
+"client": "",
+"creation_date": 0,
+"update_date": 0
 ```
 
 * throws object
@@ -833,7 +845,17 @@ Takes the file id with optional description and expires parameters.
 * return array
 
 ```JSON
-"catalog": []
+"id": "",
+"name": "",
+"type": "",
+"gather_types": "",
+"enabled": 0,
+"last_add": "",
+"last_clean": "",
+"last_update": "",
+"path": "",
+"rename_pattern": "",
+"sort_pattern": ""
 ```
 
 * throws object
@@ -1707,7 +1729,16 @@ Create a live_stream (radio station) object.
 * return array
 
 ```JSON
-"live_stream": []
+"id": "",
+"name": "",
+"artists": 0,
+"summary": "",
+"external_link": "'",
+"address": "",
+"category": "",
+"email": "",
+"website": "",
+"user": 0
 ```
 
 * throws object
@@ -1761,7 +1792,16 @@ Edit a live_stream (radio station) object.
 * return array
 
 ```JSON
-"live_stream": []
+"id": "",
+"name": "",
+"artists": 0,
+"summary": "",
+"external_link": "'",
+"address": "",
+"category": "",
+"email": "",
+"website": "",
+"user": 0
 ```
 
 * throws object

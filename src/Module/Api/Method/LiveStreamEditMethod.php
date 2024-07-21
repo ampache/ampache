@@ -118,7 +118,7 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($results));
+                echo Json_Data::live_streams(array($results), false);
                 break;
             default:
                 echo Xml_Data::live_streams(array($results), $user);
