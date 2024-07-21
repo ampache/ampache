@@ -129,7 +129,7 @@ final class CatalogAddMethod
         }
         $catalog = Catalog::create_from_id($catalog_id);
         if ($catalog === null) {
-            Api::empty('catalog', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
@@ -138,7 +138,7 @@ final class CatalogAddMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::catalogs($results);
+                echo Json_Data::catalogs($results, false);
                 break;
             default:
                 echo Xml_Data::catalogs($results, $user);
