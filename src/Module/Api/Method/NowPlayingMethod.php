@@ -47,13 +47,8 @@ final class NowPlayingMethod
      */
     public static function now_playing(array $input, User $user): bool
     {
-        $results = Stream::get_now_playing();
-        if (empty($results)) {
-            Api::empty('now_playing', $input['api_format']);
-
-            return false;
-        }
         unset($user);
+        $results = Stream::get_now_playing();
 
         ob_end_clean();
         switch ($input['api_format']) {
