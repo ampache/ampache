@@ -6,6 +6,8 @@ Like with `total_count`, we've added an md5sum of the results (called `md5`) in 
 
 This is useful for recording whether you need to update or change results.
 
+Inconsistency with the return of object arrays and single items have been fixed and docs updated.
+
 ### Added
 
 * ALL
@@ -24,6 +26,8 @@ This is useful for recording whether you need to update or change results.
 
 * API6
   * playlist_edit: Add songs if you're a collaborator and ignore edit parameters if you fail has_access check
+  * catalog_add: Do not return an object. (We return a single item)
+  * bookmark_create: Do not return an object. (We return a single item)
 
 ### Fixed
 
@@ -31,6 +35,7 @@ This is useful for recording whether you need to update or change results.
   * User preferences were not initiated and the server preferences would overwrite differences
   * Api::set_user_id function sending an int instead of a user
 * API6
+  * JSON: Send empty array for missing single item methods
   * lost_password: function name incorrect
   * flag: id smartplaylists correctly
   * rate: id smartplaylists correctly
