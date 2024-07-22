@@ -1552,10 +1552,10 @@ abstract class Catalog extends database_object
         if (!empty($sort)) {
             switch ($sort) {
                 case 'name_year':
-                    $sort_sql = " ORDER BY `name` " . $order . " `year` " . $order . ";";
+                    $sort_sql = " ORDER BY `name` " . $order . ", `year` " . $order . ";";
                     break;
                 case 'name_original_year':
-                    $sort_sql = " ORDER BY `name` " . $order . " `original_year` " . $order . ";";
+                    $sort_sql = " ORDER BY `name` " . $order . ", `original_year` " . $order . ";";
                     break;
                 default:
                     $sort_sql = " ORDER BY " . $sort . " " . $order . ";";
