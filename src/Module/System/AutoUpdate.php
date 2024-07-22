@@ -82,7 +82,7 @@ class AutoUpdate
             if (
                 is_string($current) &&
                 preg_match($pattern, $current, $matches) &&
-                !in_array((string)$matches[1], array('master', 'release5', 'release6', 'release7'))
+                !in_array((string)$matches[1], ['master', 'release5', 'release6', 'release7'])
             ) {
                 return (string)$matches[1];
             }
@@ -109,12 +109,13 @@ class AutoUpdate
         try {
             // https is mandatory
             $url     = "https://api.github.com/repos/ampache/ampache" . $action;
-            $request = Requests::get($url, array(), Core::requests_options());
-
+            $request = Requests::get($url, [], Core::requests_options());
+            $time    = time();
             if ($request->status_code != 200) {
                 debug_event(self::class, 'GitHub API request ' . $url . ' failed with http code ' . $request->status_code, 1);
                 // Not connected / API rate limit exceeded: just ignore, it will pass next time
-                AmpConfig::set('autoupdate_lastcheck', time(), true);
+                Preference::update_all('autoupdate_lastcheck', $time);
+                AmpConfig::set('autoupdate_lastcheck', $time, true);
 
                 return null;
             }
@@ -137,9 +138,10 @@ class AutoUpdate
         if (!AmpConfig::get('autoupdate', false)) {
             return false;
         }
+
         $lastcheck = AmpConfig::get('autoupdate_lastcheck');
         if (!$lastcheck) {
-            Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), 1);
+            Preference::update_all('autoupdate_lastcheck', 1);
             AmpConfig::set('autoupdate_lastcheck', '1', true);
         }
 
@@ -162,11 +164,10 @@ class AutoUpdate
             return $lastversion;
         }
 
-
         // Always update last check time to avoid infinite check on permanent errors (proxy, firewall, ...)
         $time       = time();
         $git_branch = self::is_force_git_branch();
-        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         // Development version, get latest commit on develop branch
@@ -184,10 +185,10 @@ class AutoUpdate
             }
             if (!empty($commits)) {
                 $lastversion = $commits->sha;
-                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                Preference::update_all('autoupdate_lastversion_new', $available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -202,10 +203,10 @@ class AutoUpdate
             $str = strstr($release->name, "-"); // ignore ALL tagged releases (e.g. 4.2.5-preview 4.2.5-beta)
             if (empty($str)) {
                 $lastversion = $release->name;
-                Preference::update('autoupdate_lastversion', (int)(Core::get_global('user')->id ?? 0), $lastversion);
+                Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update('autoupdate_lastversion_new', (int)(Core::get_global('user')->id ?? 0), $available);
+                Preference::update_all('autoupdate_lastversion_new', $available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -275,8 +276,9 @@ class AutoUpdate
         ) {
             return (bool)AmpConfig::get('autoupdate_lastversion_new', false);
         }
+
         $time = time();
-        Preference::update('autoupdate_lastcheck', (int)(Core::get_global('user')->id ?? 0), $time);
+        Preference::update_all('autoupdate_lastcheck', $time);
         AmpConfig::set('autoupdate_lastcheck', $time, true);
 
         $available  = false;
@@ -286,7 +288,7 @@ class AutoUpdate
 
         debug_event(self::class, 'Checking latest version online...', 5);
         if (
-            !empty($current) &&
+            !empty($latest) &&
             $current !== $latest
         ) {
             if (
@@ -406,7 +408,15 @@ class AutoUpdate
             echo T_('Done') . '<br />';
         }
         ob_flush();
-        self::get_latest_version(true);
+
+        $commit = self::get_current_commit();
+        if (!empty($commit)) {
+            // reset the update status
+            Preference::update_all('autoupdate_lastversion', $commit);
+            AmpConfig::set('autoupdate_lastversion', $commit, true);
+            Preference::update_all('autoupdate_lastversion_new', false);
+            AmpConfig::set('autoupdate_lastversion_new', false, true);
+        }
     }
 
     /**
@@ -416,19 +426,22 @@ class AutoUpdate
         ConfigContainerInterface $config,
         bool $api = false
     ): void {
-        $cmd = sprintf(
+        $cmdComposer = sprintf(
             '%s install --no-dev --prefer-source --no-interaction',
             $config->getComposerBinaryPath()
         );
+
         if (!$api) {
-            echo T_('Updating dependencies with `' . $cmd . '` ...') . '<br />';
+            echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
         }
+
         ob_flush();
         chdir(__DIR__ . '/../../../');
-        exec($cmd);
+        exec($cmdComposer);
         if (!$api) {
             echo T_('Done') . '<br />';
         }
+
         ob_flush();
     }
 }

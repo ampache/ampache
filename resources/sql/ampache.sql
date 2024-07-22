@@ -1,5 +1,5 @@
 -- GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
--- Copyright Ampache.org, 2001-2023
+-- Copyright Ampache.org, 2001-2024
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU Affero General Public License as published by
@@ -17,10 +17,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.9
--- Generation Time: Jun 06, 2024 at 05:50 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1
--- PHP Version: 8.2.18
+-- Host: 192.168.1.20
+-- Generation Time: Jul 17, 2024 at 09:35 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- PHP Version: 8.2.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -796,6 +796,7 @@ CREATE TABLE IF NOT EXISTS `playlist` (
   `last_duration` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `username` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `last_count` int(11) DEFAULT NULL,
+  `collaborate` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `type` (`type`)
@@ -1483,7 +1484,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600073'),
+('db_version', '600075'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1603,6 +1604,19 @@ CREATE TABLE IF NOT EXISTS `user_playlist` (
   KEY `user` (`user`),
   KEY `object_type` (`object_type`),
   KEY `object_id` (`object_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_playlist_map`
+--
+
+DROP TABLE IF EXISTS `user_playlist_map`;
+CREATE TABLE IF NOT EXISTS `user_playlist_map` (
+  `playlist_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

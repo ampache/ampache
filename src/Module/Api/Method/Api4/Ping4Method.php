@@ -31,8 +31,10 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class PingMethod
@@ -110,6 +112,13 @@ final class Ping4Method
                 $results,
                 $countarray
             );
+
+            $user = static::getUserRepository()->findByApiKey($input['auth']);
+
+            // We're about to start. Record this user's IP.
+            if (AmpConfig::get('track_user_ip') && $user instanceof User) {
+                static::getUserTracker()->trackIpAddress($user);
+            }
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
@@ -122,5 +131,25 @@ final class Ping4Method
             default:
                 echo Xml4_Data::keyed_array($results);
         }
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserTracker(): UserTrackerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserTrackerInterface::class);
     }
 }

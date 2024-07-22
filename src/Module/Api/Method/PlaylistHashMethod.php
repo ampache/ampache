@@ -30,36 +30,31 @@ use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
-use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
 
 /**
- * Class PlaylistSongsMethod
+ * Class PlaylistHashMethod
  * @package Lib\ApiMethods
  */
-final class PlaylistSongsMethod
+final class PlaylistHashMethod
 {
-    public const ACTION = 'playlist_songs';
+    public const ACTION = 'playlist_hash';
 
     /**
-     * playlist_songs
-     * MINIMUM_API_VERSION=380001
+     * playlist_hash
+     * MINIMUM_API_VERSION=6.6.0
      *
-     * This returns the songs for a playlist
+     * This returns the md5 hash for the songs in a playlist
      *
      * filter = (string) UID of playlist
-     * random = (integer) 0,1, if true get random songs using limit //optional
-     * offset = (integer) //optional
-     * limit  = (integer) //optional
      */
-    public static function playlist_songs(array $input, User $user): bool
+    public static function playlist_hash(array $input, User $user): bool
     {
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
         $object_id = $input['filter'];
-        $random    = (array_key_exists('random', $input) && (int)$input['random'] == 1);
         $playlist  = ((int) $object_id === 0)
             ? new Search((int) str_replace('smart_', '', $object_id), 'song', $user)
             : new Playlist((int) $object_id);
@@ -70,6 +65,7 @@ final class PlaylistSongsMethod
 
             return false;
         }
+
         if (
             $playlist->type !== 'public' &&
             !$playlist->has_collaborate($user)
@@ -80,32 +76,24 @@ final class PlaylistSongsMethod
         }
 
         debug_event(self::class, 'User ' . $user->id . ' loading playlist: ' . $object_id, 5);
-        $items = ($random)
-            ? $playlist->get_random_items()
-            : $playlist->get_items();
+        $items = $playlist->get_items();
         if (empty($items)) {
-            Api::empty('song', $input['api_format']);
-
-            return false;
+            $results = [
+                'md5' => null
+            ];
+        } else {
+            $results = [
+                'md5' => md5(serialize($items))
+            ];
         }
-        $results = [];
-        foreach ($items as $object) {
-            if ($object['object_type'] == 'song') {
-                $results[] = $object['object_id'];
-            }
-        } // end foreach
 
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                Json_Data::set_offset((int)($input['offset'] ?? 0));
-                Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::songs($results, $user);
+                echo json_encode($results, JSON_PRETTY_PRINT);
                 break;
             default:
-                Xml_Data::set_offset((int)($input['offset'] ?? 0));
-                Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::songs($results, $user);
+                echo Xml_Data::keyed_array($results);
         }
 
         return true;

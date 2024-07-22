@@ -115,11 +115,11 @@ class License extends BaseModel
             return sprintf(
                 '<a href="%s">%s</a>',
                 $this->external_link,
-                $this->name
+                scrub_out($this->name)
             );
         }
 
-        return (string) $this->name;
+        return scrub_out($this->name);
     }
 
     /**

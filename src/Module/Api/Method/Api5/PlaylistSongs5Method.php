@@ -53,7 +53,7 @@ final class PlaylistSongs5Method
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -68,7 +68,10 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (
+            $playlist->type !== 'public' &&
+            !$playlist->has_collaborate($user)
+        ) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -83,7 +86,7 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
                 $results[] = $object['object_id'];

@@ -99,6 +99,34 @@ final class Updater implements UpdaterInterface
     }
 
     /**
+     * Checks to see if the database db_version is higher than the code db_version
+     */
+    public function hasOverUpdated(): bool
+    {
+        return Versions::MAXIMUM_UPDATABLE_VERSION < (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+    }
+
+    /**
+     * Rollback the database to the required version
+     *
+     * @throws UpdateFailedException
+     */
+    public function rollback(
+        ?Interactor $interactor = null
+    ): void {
+        if (!$this->hasOverUpdated()) {
+            return;
+        }
+
+        $currentVersion = (int) $this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+
+        $this->updateRunner->runRollback(
+            $currentVersion,
+            $interactor
+        );
+    }
+
+    /**
      * Performs update migrations
      *
      * @throws UpdateException

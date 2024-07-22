@@ -111,7 +111,7 @@ final class BookmarkCreateMethod
         Bookmark::create($object, $user->getId(), $time);
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
@@ -121,7 +121,7 @@ final class BookmarkCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, $include);
+                echo Json_Data::bookmarks($results, $include, false);
                 break;
             default:
                 echo Xml_Data::bookmarks($results, $include);

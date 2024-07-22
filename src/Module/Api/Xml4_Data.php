@@ -870,7 +870,9 @@ class Xml4_Data
         $string = "<users>\n";
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            $string .= "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            if ($user->isNew() === false) {
+                $string .= "<user id=\"" . (string) $user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            }
         }
         $string .= "</users>\n";
 

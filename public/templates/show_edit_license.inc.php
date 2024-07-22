@@ -34,7 +34,7 @@ use Ampache\Repository\Model\License;
 <table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php echo $license->getName(); ?>" autofocus /></td>
+    <td><input type="text" name="name" value="<?php echo scrub_out($license->getName()); ?>" autofocus /></td>
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>

@@ -770,7 +770,7 @@ class Xml5_Data
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
         foreach ($podcasts as $podcast_id) {
-            $podcast = self::getPodcastRepository()->findById($podcast_id);
+            $podcast = $podcastRepository->findById($podcast_id);
             if ($podcast === null) {
                 continue;
             }
@@ -1010,7 +1010,9 @@ class Xml5_Data
         $string = "";
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            if ($user->isNew() === false) {
+                $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            }
         }
 
         return Xml_Data::output_xml($string);

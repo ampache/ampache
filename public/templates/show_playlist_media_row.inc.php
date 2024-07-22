@@ -103,7 +103,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             echo Share::display_ui($object_type, $libitem->getId(), false);
         }
     }
-    if (isset($playlist) && $playlist->has_access()) {
+    if (isset($playlist) && $playlist->has_collaborate()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
