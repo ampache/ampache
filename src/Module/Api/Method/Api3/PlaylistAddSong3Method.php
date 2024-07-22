@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,10 +46,10 @@ final class PlaylistAddSong3Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = (int)$input['song'];
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_collaborate()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
-            $playlist->add_songs(array($song));
+            $playlist->add_songs([$song]);
             echo Xml3_Data::single_string('success');
         }
     }

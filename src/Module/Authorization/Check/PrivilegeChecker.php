@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
      * This is the global 'has_access' function. it can check for any 'type'
      * of object.
      *
-     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userid is provided
+     * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userId is provided
      */
     public function check(string $type, int $level, ?int $userId = null): bool
     {

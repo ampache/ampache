@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ use Ampache\Repository\Model\License;
 <table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Name'); ?></td>
-    <td><input type="text" name="name" value="<?php echo $license->getName(); ?>" autofocus /></td>
+    <td><input type="text" name="name" value="<?php echo scrub_out($license->getName()); ?>" autofocus /></td>
 </tr>
 <tr>
     <td><?php echo T_('Description:'); ?></td>

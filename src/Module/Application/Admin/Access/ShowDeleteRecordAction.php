@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -77,7 +77,7 @@ final class ShowDeleteRecordAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: ACL Name */
-            sprintf(T_('This will permanently delete the ACL "%s"'), $access->name),
+            sprintf(T_('This will permanently delete the ACL "%s"'), scrub_out($access->name)),
             sprintf('admin/access.php?action=delete_record&access_id=%d', $access->id),
             1,
             'delete_access'

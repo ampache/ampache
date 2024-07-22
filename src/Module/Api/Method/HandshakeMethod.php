@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,9 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
@@ -167,6 +169,11 @@ final class HandshakeMethod
                     $token = $data['apikey'];
                 }
 
+                // We're about to start. Record this user's IP.
+                if (AmpConfig::get('track_user_ip')) {
+                    static::getUserTracker()->trackIpAddress($client);
+                }
+
                 debug_event(self::class, 'Login Success, passphrase matched', 1);
                 $results = Api::server_details($token);
 
@@ -196,5 +203,15 @@ final class HandshakeMethod
         global $dic;
 
         return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserTracker(): UserTrackerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserTrackerInterface::class);
     }
 }

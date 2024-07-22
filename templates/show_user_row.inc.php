@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,9 +42,9 @@ use Ampache\Module\Util\Ui;
                 if ($libitem->f_avatar_mini) {
                     echo $libitem->f_avatar_mini;
                 }
-echo $libitem->username;
+echo scrub_out($libitem->username);
 if ($libitem->fullname_public || Access::check('interface', 100)) {
-    echo " (" . $libitem->fullname . ")";
+    echo " (" . scrub_out($libitem->fullname) . ")";
 } ?>
         </a>
     </td>
@@ -69,7 +69,7 @@ if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
     <td class="cel_action">
     <?php
 if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $libitem->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode($libitem->username); ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

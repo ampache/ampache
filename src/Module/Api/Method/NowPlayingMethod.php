@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,13 +47,8 @@ final class NowPlayingMethod
      */
     public static function now_playing(array $input, User $user): bool
     {
-        $results = Stream::get_now_playing();
-        if (empty($results)) {
-            Api::empty('now_playing', $input['api_format']);
-
-            return false;
-        }
         unset($user);
+        $results = Stream::get_now_playing();
 
         ob_end_clean();
         switch ($input['api_format']) {

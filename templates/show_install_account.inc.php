@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -54,19 +54,19 @@ require __DIR__ . '/install_header.inc.php'; ?>
 <div class="form-group">
     <label for="local_username" class="col-sm-3 control-label"><?php echo T_('Username'); ?></label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" id="local_username" name="local_username" value="admin">
+        <input type="text" class="form-control" id="local_username" name="local_username" maxlength="128" value="admin">
     </div>
 </div>
 <div class="form-group">
     <label for="local_pass" class="col-sm-3 control-label"><?php echo T_('Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass" name="local_pass" placeholder="<?php echo T_("Password"); ?>">
+        <input type="password" class="form-control" id="local_pass" name="local_pass" maxlength="64" placeholder="<?php echo T_("Password"); ?>">
     </div>
 </div>
 <div class="form-group">
     <label for="local_pass2" class="col-sm-3 control-label"><?php echo T_('Confirm Password'); ?></label>
     <div class="col-sm-9">
-        <input type="password" class="form-control" id="local_pass2" name="local_pass2" placeholder="<?php echo T_("Confirm Password"); ?>">
+        <input type="password" class="form-control" id="local_pass2" name="local_pass2" maxlength="64" placeholder="<?php echo T_("Confirm Password"); ?>">
     </div>
 </div>
 <div class="col-sm-9">

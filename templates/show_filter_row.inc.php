@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,16 +32,16 @@ $web_path = (string)AmpConfig::get('web_path', '');
 /** @var int $num_users */
 /** @var int $num_catalogs */
 ?>
-<td class="cel_name"><?php echo $filter['name']; ?></td>
+<td class="cel_name"><?php echo scrub_out($filter['name']); ?></td>
 <td class="cel_num_users"><?php echo $num_users; ?></td>
 <td class="cel_num_catalogs"><?php echo $num_catalogs; ?></td>
 <td class="cel_action">
 <?php if (Access::check('interface', 100)) { ?>
-        <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo $filter['name']; ?>">
+        <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
             <?php echo Ui::get_icon('edit', T_('Edit')); ?>
         </a>
         <?php if ($filter['id'] > 0) { ?>
-           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo $filter['name']; ?>">
+           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
            </a>
         <?php } ?>

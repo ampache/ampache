@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ final class PlaylistSongs5Method
      */
     public static function playlist_songs(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -68,7 +68,10 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (
+            $playlist->type !== 'public' &&
+            !$playlist->has_collaborate($user)
+        ) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -83,7 +86,7 @@ final class PlaylistSongs5Method
 
             return false;
         }
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
             if ($object['object_type'] == 'song') {
                 $results[] = $object['object_id'];

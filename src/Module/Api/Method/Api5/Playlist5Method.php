@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ final class Playlist5Method
      */
     public static function playlist(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -64,7 +64,10 @@ final class Playlist5Method
 
             return false;
         }
-        if (!$playlist->type == 'public' && (!$playlist->has_access($user->id) && $user->access !== 100)) {
+        if (
+            $playlist->type !== 'public' &&
+            !$playlist->has_collaborate($user)
+        ) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -73,10 +76,10 @@ final class Playlist5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::playlists(array($object_id), $user, false, false);
+                echo Json5_Data::playlists([$object_id], $user, false, false);
                 break;
             default:
-                echo Xml5_Data::playlists(array($object_id), $user);
+                echo Xml5_Data::playlists([$object_id], $user);
         }
 
         return true;

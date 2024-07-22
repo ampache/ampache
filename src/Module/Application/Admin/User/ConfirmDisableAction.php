@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -88,7 +88,7 @@ final class ConfirmDisableAction extends AbstractUserAction
         if ($this->userStateToggler->disable($user) === true) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                sprintf(T_('%s has been disabled'), $user->getFullDisplayName()),
+                sprintf(T_('%s has been disabled'), scrub_out($user->getFullDisplayName())),
                 'admin/users.php'
             );
         } else {

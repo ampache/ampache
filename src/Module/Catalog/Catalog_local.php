@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1337,6 +1337,17 @@ class Catalog_local extends Catalog
             }
             $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
+
+            if (
+                $media->isNew() ||
+                !$media->file ||
+                !is_file($media->file)
+            ) {
+                debug_event('local.catalog', sprintf('Not Found: %s', $media->file), 3);
+
+                return false;
+            }
+
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare

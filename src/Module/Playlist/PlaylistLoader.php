@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,13 +40,18 @@ final class PlaylistLoader implements PlaylistLoaderInterface
 
     public function loadByUserId(int $userId): array
     {
-        $playlists = Playlist::get_playlists($userId, '', true, false);
-        Playlist::build_cache($playlists);
-
         $result = [];
 
+        $playlists = Playlist::get_playlists($userId);
+        Playlist::build_cache($playlists);
+
+        $user = $this->modelFactory->createUser($userId);
+
         foreach ($playlists as $playlist_id) {
-            $result[] = $this->modelFactory->createPlaylist((int) $playlist_id);
+            $playlist = $this->modelFactory->createPlaylist($playlist_id);
+            if ($playlist->has_collaborate($user)) {
+                $result[] = $playlist;
+            }
         }
 
         return $result;

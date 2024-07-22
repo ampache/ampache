@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,7 @@ final class Migration600072 extends AbstractMigration
         $this->updateDatabase('DROP TABLE IF EXISTS `tmp_browse`;');
         $this->updateDatabase(
             sprintf(
-                'CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) NOT NULL, `data` longtext NOT NULL, `object_data` longtext DEFAULT NULL, PRIMARY KEY (`id`), KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;',
+                "CREATE TABLE `tmp_browse` (`id` int(13) NOT NULL AUTO_INCREMENT, `sid` varchar(128) NOT NULL, `data` longtext NOT NULL, `object_data` longtext DEFAULT NULL, PRIMARY KEY (`id`), KEY `tmp_browse_id_sid_IDX` (`sid`, `id`) USING BTREE) ENGINE=%s DEFAULT CHARSET=%s COLLATE=%s ;",
                 $engine,
                 $charset,
                 $collation

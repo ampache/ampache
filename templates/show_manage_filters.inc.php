@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,7 +50,7 @@ foreach ($filters as $filter) {
     $num_users    = Catalog::filter_user_count($filter['id']);
     $num_catalogs = Catalog::filter_catalog_count($filter['id']);
     //debug_event(self::class, "Values:  fname:$filter_name, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);?>
-        <tr id="<?php echo $filter['name']; ?>">
+        <tr id="<?php echo scrub_out($filter['name']); ?>">
             <?php require Ui::find_template('show_filter_row.inc.php'); ?>
         </tr>
 <?php

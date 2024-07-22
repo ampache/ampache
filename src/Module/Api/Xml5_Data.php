@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -770,7 +770,7 @@ class Xml5_Data
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n";
 
         foreach ($podcasts as $podcast_id) {
-            $podcast = self::getPodcastRepository()->findById($podcast_id);
+            $podcast = $podcastRepository->findById($podcast_id);
             if ($podcast === null) {
                 continue;
             }
@@ -1010,7 +1010,9 @@ class Xml5_Data
         $string = "";
         foreach ($users as $user_id) {
             $user = new User($user_id);
-            $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            if ($user->isNew() === false) {
+                $string .= "<user id=\"" . (string)$user->id . "\">\n\t<username><![CDATA[" . $user->username . "]]></username>\n</user>\n";
+            }
         }
 
         return Xml_Data::output_xml($string);

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,6 +32,8 @@ use Generator;
  */
 final class Versions
 {
+    public const MAXIMUM_UPDATABLE_VERSION = 600075; // AMPACHE_VERSION (db_version)
+
     /** @var array<int, class-string<MigrationInterface>> List of available migrations */
     private static array $versions = [
         360001 => Migration\V3\Migration360001::class,
@@ -280,6 +282,8 @@ final class Versions
         600071 => Migration\V6\Migration600071::class,
         600072 => Migration\V6\Migration600072::class,
         600073 => Migration\V6\Migration600073::class,
+        600074 => Migration\V6\Migration600074::class,
+        600075 => Migration\V6\Migration600075::class,
     ];
 
     /**

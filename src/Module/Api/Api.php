@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -114,6 +114,7 @@ class Api
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
         Method\PlaylistEditMethod::ACTION => Method\PlaylistEditMethod::class,
         Method\PlaylistGenerateMethod::ACTION => Method\PlaylistGenerateMethod::class,
+        Method\PlaylistHashMethod::ACTION => Method\PlaylistHashMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         Method\PlaylistRemoveSongMethod::ACTION => Method\PlaylistRemoveSongMethod::class,
         Method\PlaylistsMethod::ACTION => Method\PlaylistsMethod::class,
@@ -181,8 +182,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.5.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '650000'; // AMPACHE_VERSION
+    public static string $version         = '6.6.0'; // AMPACHE_VERSION
+    public static string $version_numeric = '660000'; // AMPACHE_VERSION
 
     /**
      * @var Browse $browse
@@ -202,7 +203,7 @@ class Api
         }
 
         // ensure user_id is set
-        self::$browse->set_user_id($user->getId());
+        self::$browse->set_user_id($user);
 
         return self::$browse;
     }
@@ -248,7 +249,7 @@ class Api
     /**
      * empty
      * call the correct empty message depending on format
-     * @param string $empty_type
+     * @param string|null $empty_type
      * @param string $format
      */
     public static function empty($empty_type, $format = 'xml'): void
@@ -366,7 +367,8 @@ class Api
             'shares' => $counts['share'],
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label']
+            'labels' => $counts['label'],
+            'username' => $client->getUsername(),
         );
 
         return array_merge($autharray, $outarray);

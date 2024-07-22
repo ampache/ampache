@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -50,6 +50,7 @@ final class Migration500006 extends AbstractMigration
         string $charset,
         string $engine
     ): Generator {
+        yield 'user_playlist' => "CREATE TABLE IF NOT EXISTS `user_playlist` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `user` int(11) DEFAULT NULL, `object_type` enum('song','live_stream','video','podcast_episode') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL DEFAULT '0', `track` smallint(6) DEFAULT NULL, `current_track` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, `current_time` smallint(5) UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`),KEY `user` (`user`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         yield 'user_data' => "CREATE TABLE IF NOT EXISTS `user_data` (`user` int(11) DEFAULT NULL, `key` varchar(128) COLLATE $collation DEFAULT NULL, `value` varchar(255) COLLATE $collation DEFAULT NULL, UNIQUE KEY `unique_data` (`user`, `key`), KEY `user` (`user`), KEY `key` (`key`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
     }
 }

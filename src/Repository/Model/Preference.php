@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -347,21 +347,24 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param int $preference_id
+     * @param int|string $preference
      * @param string $value
      */
-    public static function update_all($preference_id, $value): bool
+    public static function update_all($preference, $value): bool
     {
-        if ((int)$preference_id == 0) {
+        $preference_id = (is_string($preference))
+            ? (int)Preference::id_from_name($preference)
+            : (int)$preference;
+
+        if ($preference_id == 0) {
             return false;
         }
-        $preference_id = Dba::escape($preference_id);
-        $value         = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
-        Dba::write($sql, array($value, $preference_id));
+        Dba::write($sql, [$value, $preference_id]);
 
         parent::clear_cache();
+        self::clear_from_session();
 
         return true;
     }
@@ -1236,17 +1239,22 @@ class Preference extends database_object
         } else {
             unset($results['theme_name']);
         }
-        // Default theme if we don't get anything from their
-        // preferences because we're going to want at least something otherwise
-        // the page is going to be really ugly
+
+        // Default theme fallback
         if (!isset($results['theme_name'])) {
             $results['theme_name'] = 'reborn';
         }
+
         $results['theme_path'] = '/themes/' . $results['theme_name'];
 
         // Load theme settings
         $theme_cfg                 = get_theme($results['theme_name']);
         $results['theme_css_base'] = $theme_cfg['base'];
+
+        // Default theme color fallback
+        if (!isset($results['theme_color'])) {
+            $results['theme_color'] = 'dark';
+        }
 
         if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed

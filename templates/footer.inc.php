@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,7 @@ if (!isset($_SESSION['login']) || !$_SESSION['login']) {
         <?php if (AmpConfig::get('custom_text_footer')) {
             echo AmpConfig::get('custom_text_footer');
         } else { ?>
-            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © 2001 - 2022 Ampache.org"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
+            <a id="ampache_link" href="https://github.com/ampache/ampache#readme" target="_blank" title="<?php echo T_('Copyright'); ?> © Ampache.org, 2001-2024"><?php echo T_('Ampache') . ' ' . AmpConfig::get('version'); ?></a>
         <?php } ?>
         </div>
         <?php if (AmpConfig::get('ajax_load') && (!isset($_SESSION['login']) || !$_SESSION['login'])) { ?>

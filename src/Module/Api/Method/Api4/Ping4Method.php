@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,8 +31,10 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class PingMethod
@@ -110,6 +112,13 @@ final class Ping4Method
                 $results,
                 $countarray
             );
+
+            $user = static::getUserRepository()->findByApiKey($input['auth']);
+
+            // We're about to start. Record this user's IP.
+            if (AmpConfig::get('track_user_ip') && $user instanceof User) {
+                static::getUserTracker()->trackIpAddress($user);
+            }
         }
 
         debug_event(self::class, "Ping$data_version Received from " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
@@ -122,5 +131,25 @@ final class Ping4Method
             default:
                 echo Xml4_Data::keyed_array($results);
         }
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserTracker(): UserTrackerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserTrackerInterface::class);
     }
 }

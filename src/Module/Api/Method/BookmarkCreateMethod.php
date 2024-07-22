@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -111,7 +111,7 @@ final class BookmarkCreateMethod
         Bookmark::create($object, $user->getId(), $time);
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
@@ -121,7 +121,7 @@ final class BookmarkCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::bookmarks($results, $include);
+                echo Json_Data::bookmarks($results, $include, false);
                 break;
             default:
                 echo Xml_Data::bookmarks($results, $include);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,10 +44,10 @@ use Ampache\Config\AmpConfig;
             <?php foreach ($songs as $song) { ?>
                 <tr>
                     <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
-                    <td class="cel_song"><?php echo $song->title; ?></td>
-                    <td class="cel_album"><?php echo $song->get_album_fullname(); ?></td>
-                    <td class="cel_artist"><?php echo $song->get_artist_fullname(); ?></td>
-                    <td class="cel_filename"><?php echo $song->file; ?></td>
+                    <td class="cel_song"><?php echo scrub_out($song->title); ?></td>
+                    <td class="cel_album"><?php echo scrub_out($song->get_album_fullname()); ?></td>
+                    <td class="cel_artist"><?php echo scrub_out($song->get_artist_fullname()); ?></td>
+                    <td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
                     <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
                 </tr>
             <?php } ?>

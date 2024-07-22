@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1016,7 +1016,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
         if (!empty($row['external_link'])) {
             echo " data-link=\"" . $row['external_link'] . "\"";
         }
-        echo ">" . $row['name'] . "</option>\n";
+        echo ">" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     echo "</select>\n";

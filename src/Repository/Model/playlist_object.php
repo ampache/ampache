@@ -4,7 +4,7 @@
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,21 +38,34 @@ abstract class playlist_object extends database_object implements library_item
 {
     // Database variables
     public int $id = 0;
-    public ?string $name;
-    public ?int $user;
-    public ?string $username;
-    public ?string $type;
 
-    public ?string $link       = null;
-    public int $date           = 0;
-    public ?int $last_count    = 0;
+    public ?string $name = null;
+
+    public ?int $user = null;
+
+    public ?string $username = null;
+
+    public ?string $type = null;
+
+    public ?string $link = null;
+
+    public int $date = 0;
+
+    public ?int $last_count = 0;
+
     public ?int $last_duration = 0;
-    public ?int $last_update   = 0;
-    public ?string $f_date;
-    public ?string $f_last_update;
-    public ?string $f_link;
-    public ?string $f_type;
-    public ?string $f_name;
+
+    public ?int $last_update = 0;
+
+    public ?string $f_date = null;
+
+    public ?string $f_last_update = null;
+
+    public ?string $f_link = null;
+
+    public ?string $f_type = null;
+
+    public ?string $f_name = null;
 
     private ?bool $has_art = null;
 
@@ -72,12 +85,12 @@ abstract class playlist_object extends database_object implements library_item
     public function format($details = true): void
     {
         // format shared lists using the username
-        $this->f_name = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id))
+        $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))
             ? scrub_out($this->name)
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
         $this->get_f_link();
-        $this->f_date        = $this->date ? get_datetime((int)$this->date) : T_('Unknown');
+        $this->f_date        = $this->date !== 0 ? get_datetime((int)$this->date) : T_('Unknown');
         $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
     }
 
@@ -96,25 +109,67 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * has_access
+     * has_collaborate
      * This function returns true or false if the current user
-     * has access to this playlist
-     * @param int $user_id
+     * has access to collaborate (Add/remove items) for this playlist
+     * @param User|null $user
      */
-    public function has_access($user_id = null): bool
+    public function has_collaborate($user = null): bool
     {
-        if (Access::check('interface', 100)) {
+        if ($this->has_access($user)) {
             return true;
         }
-        if (!Access::check('interface', 25)) {
+
+        // only playlists have collaborative users
+        if ($this instanceof Search) {
             return false;
         }
-        // allow the owner
-        if ((!empty(Core::get_global('user')) && $this->user == Core::get_global('user')->id) || ($this->user == $user_id)) {
+
+        $user = ($user instanceof User)
+            ? $user
+            : Core::get_global('user');
+
+        if (
+            $user instanceof User &&
+            !empty($this->collaborate) &&
+            in_array($user->getId(), explode(',', $this->collaborate))
+        ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * has_access
+     * This function returns true or false if the current user
+     * has access to this playlist
+     * @param User|null $user
+     */
+    public function has_access($user = null): bool
+    {
+        if (
+            $user instanceof User &&
+            (
+                $user->access === 100 ||
+                $this->user === $user->getId()
+            )
+        ) {
+            return true;
+        }
+
+        if (Access::check('interface', 100)) {
+            return true;
+        }
+
+        if (!Access::check('interface', 25)) {
+            return false;
+        }
+
+        return (
+            Core::get_global('user') instanceof User &&
+            $this->user == Core::get_global('user')->id
+        );
     }
 
     /**
@@ -136,11 +191,10 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -149,12 +203,17 @@ abstract class playlist_object extends database_object implements library_item
     public function get_fullname(): ?string
     {
         $show_fullname = AmpConfig::get('show_playlist_username');
-        $my_playlist   = (!empty(Core::get_global('user')) && ($this->user == Core::get_global('user')->id));
+        $my_playlist   = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id));
         $this->f_name  = ($my_playlist || !$show_fullname)
             ? $this->name
             : $this->name . " (" . $this->username . ")";
 
         return $this->f_name;
+    }
+
+    public function getFullname(): string
+    {
+        return scrub_out($this->get_fullname());
     }
 
     /**
@@ -179,8 +238,8 @@ abstract class playlist_object extends database_object implements library_item
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
-            $link_text    = scrub_out($this->get_fullname());
+        if ($this->f_link === null) {
+            $link_text    = $this->getFullname();
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
         }
 
@@ -193,7 +252,7 @@ abstract class playlist_object extends database_object implements library_item
     public function get_f_type(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_type)) {
+        if ($this->f_type === null) {
             $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
         }
 
@@ -209,9 +268,6 @@ abstract class playlist_object extends database_object implements library_item
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
         return $this->get_items();
@@ -220,18 +276,14 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event('playlist_object.abstract', 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return $this->user;
@@ -274,7 +326,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         $medias   = $this->get_medias();
         $count    = 0;
-        $images   = array();
+        $images   = [];
         $title    = T_('Playlist Items');
         $web_path = AmpConfig::get('web_path');
         shuffle($medias);
@@ -297,7 +349,8 @@ abstract class playlist_object extends database_object implements library_item
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
                 }
             }
-            $count++;
+
+            ++$count;
         }
 
         return $images;

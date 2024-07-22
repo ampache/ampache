@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,12 +58,12 @@ final class AddSongAction implements ApplicationActionInterface
     {
         $playlist_id = (int)$this->requestParser->getFromRequest('playlist_id');
         $playlist    = $this->modelFactory->createPlaylist($playlist_id);
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_collaborate()) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();
 
-        $playlist->add_songs(array($_REQUEST['song_id']));
+        $playlist->add_songs([$_REQUEST['song_id']]);
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

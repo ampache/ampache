@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -59,36 +59,28 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        int $limit = 1,
-        bool $distinct = false
+        ?bool $limited = true
     ): Generator {
-        $group_sql = '';
-        $limit_sql = '';
-
-        if ($limit > 0) {
-            $limit_sql = sprintf('LIMIT %d', $limit);
+        $where_sql = '';
+        $params    = [$user->getId()];
+        if ($limited) {
+            $where_sql = 'AND `date` >= ?';
+            $params[]  = (time() - (86400 * ($this->configContainer->get('user_ip_cardinality') ?? 42)));
         }
-
-        if ($distinct === true) {
-            $group_sql = 'GROUP BY `ip`, `date`';
-        }
-
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? %s ORDER BY `date` DESC %s',
-                $group_sql,
-                $limit_sql,
+                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
+                $where_sql,
             ),
-            [
-                $user->getId(),
-            ]
+            $params
         );
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield [
                 'ip' => (string) inet_ntop($row['ip']),
-                'date' => new DateTimeImmutable(sprintf('@%d', $row['date']))
+                'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
+                'agent' => $row['agent'],
             ];
         }
     }

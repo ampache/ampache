@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -78,7 +78,7 @@ $_SESSION['login'] = true; ?>
                 </div>
                 <div class="loginfield" id="passwordfield">
                     <label for="password"><?php echo T_('Password'); ?>:</label>
-                    <input type="password" id="password" name="password" value="" />
+                    <input id="password" type="password" name="password" maxlength="64" value="" />
                 </div>
                 <?php echo AmpError::display('general'); ?>
                 <div class="loginfield">

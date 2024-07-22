@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1548,9 +1548,21 @@ abstract class Catalog extends database_object
                 return array();
         }
 
-        $sql .= (!empty($sort))
-            ? " ORDER BY " . $sort . " " . $order . ";"
-            : ';';
+        $sort_sql = ';';
+        if (!empty($sort)) {
+            switch ($sort) {
+                case 'name_year':
+                    $sort_sql = " ORDER BY `name` " . $order . ", `year` " . $order . ";";
+                    break;
+                case 'name_original_year':
+                    $sort_sql = " ORDER BY `name` " . $order . ", `original_year` " . $order . ";";
+                    break;
+                default:
+                    $sort_sql = " ORDER BY " . $sort . " " . $order . ";";
+            }
+        }
+
+        $sql .= $sort_sql;
 
         $db_results = Dba::read($sql);
         $results    = array();
@@ -3195,20 +3207,7 @@ abstract class Catalog extends database_object
         self::set_update_info('time', $time);
         self::set_update_info('size', $size);
 
-        $song_tables = array('artist', 'album');
-        foreach ($song_tables as $table) {
-            $sql        = "SELECT COUNT(DISTINCT(`$table`)) FROM `song`";
-            $db_results = Dba::read($sql);
-            $row        = Dba::fetch_row($db_results);
-            self::set_update_info($table, (int)($row[0] ?? 0));
-        }
-        // album_disk counts
-        $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1';";
-        $db_results = Dba::read($sql);
-        $row        = Dba::fetch_row($db_results);
-        self::set_update_info('album_disk', (int)($row[0] ?? 0));
-
-        $list_tables = array('search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        $list_tables = array('artist', 'album', 'album_disk', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
         foreach ($list_tables as $table) {
             $sql        = "SELECT COUNT(`id`) FROM `$table`";
             $db_results = Dba::read($sql);

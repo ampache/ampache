@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -74,7 +74,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
 
         // Make sure we have a unique name
         $playlist_name = (isset($_POST['playlist_name']))
-            ? $this->requestParser->getFromPost('playlist_name')
+            ? htmlspecialchars_decode($this->requestParser->getFromPost('playlist_name'))
             : Core::get_global('user')->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
         $playlist_type = (isset($_POST['playlist_type']))

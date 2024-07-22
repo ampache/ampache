@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -62,7 +62,7 @@ $user_id = (Core::get_global('user') instanceof User) ? Core::get_global('user')
     );
     foreach ($playlists as $playlist) { ?>
                 <li>
-                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, $playlist->get_fullname(), 'rb_append_playlist_' . $playlist->id); ?>
+                    <?php echo Ajax::text('?page=playlist&action=append_item&playlist_id=' . $playlist->id, scrub_out($playlist->get_fullname()), 'rb_append_playlist_' . $playlist->id); ?>
                 </li>
             <?php } ?>
             </ul>

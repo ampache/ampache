@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,38 +55,40 @@ final class PlaylistRemoveSongMethod
      */
     public static function playlist_remove_song(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && $user->access !== 100) {
+        if (!$playlist->has_collaborate($user)) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
-        } else {
-            if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
-                $playlist->delete_all();
-                Api::message('all songs removed from playlist', $input['api_format']);
-            } elseif (array_key_exists('song', $input)) {
-                $track = (int) scrub_in((string) $input['song']);
-                if (!$playlist->has_item($track)) {
-                    Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
 
-                    return false;
-                }
-                $playlist->delete_song($track);
-                $playlist->regenerate_track_numbers();
-                Api::message('song removed from playlist', $input['api_format']);
-            } elseif (array_key_exists('track', $input)) {
-                $track = (int) scrub_in((string) $input['track']);
-                if (!$playlist->has_item(null, $track)) {
-                    Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
+            return false;
+        }
 
-                    return false;
-                }
-                $playlist->delete_track_number($track);
-                $playlist->regenerate_track_numbers();
-                Api::message('song removed from playlist', $input['api_format']);
+        if (array_key_exists('clear', $input) && (int)$input['clear'] === 1) {
+            $playlist->delete_all();
+            Api::message('all songs removed from playlist', $input['api_format']);
+        } elseif (array_key_exists('song', $input)) {
+            $track = (int) scrub_in((string) $input['song']);
+            if (!$playlist->has_item($track)) {
+                Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'song', $input['api_format']);
+
+                return false;
             }
+            $playlist->delete_song($track);
+            $playlist->regenerate_track_numbers();
+            Api::message('song removed from playlist', $input['api_format']);
+        } elseif (array_key_exists('track', $input)) {
+            $track = (int) scrub_in((string) $input['track']);
+            if (!$playlist->has_item(null, $track)) {
+                Api::error('Not Found', ErrorCodeEnum::NOT_FOUND, self::ACTION, 'track', $input['api_format']);
+
+                return false;
+            }
+            $playlist->delete_track_number($track);
+            $playlist->regenerate_track_numbers();
+            Api::message('song removed from playlist', $input['api_format']);
         }
 
         return true;

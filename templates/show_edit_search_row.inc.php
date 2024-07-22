@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -53,7 +53,7 @@ use Ampache\Repository\Model\Search;
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Item Limit (0 = unlimited)'); ?></td>
-                <td><input type="text" name="limit" value="<?php echo scrub_out((string)$libitem->limit); ?>" /></td>
+                <td><input type="number" name="limit" value="<?php echo scrub_out((string)$libitem->limit); ?>" /></td>
             </tr>
             <tr>
                 <td>
@@ -64,7 +64,7 @@ use Ampache\Repository\Model\Search;
 if (!empty($users)) {
     foreach ($users as $user_id => $username) {
         $selected  = ($user_id == $libitem->user) ? ' selected="selected"' : '';
-        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . $username . '</option>';
+        $options[] = '<option value="' . $user_id . '"' . $selected . '>' . scrub_out($username) . '</option>';
     }
     echo '<select name="pl_user">' . implode("\n", $options) . '</select>';
 } ?>

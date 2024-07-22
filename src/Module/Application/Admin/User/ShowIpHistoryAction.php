@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -64,19 +64,18 @@ final class ShowIpHistoryAction extends AbstractUserAction
     protected function handle(ServerRequestInterface $request): ?ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $userId      = (int) ($queryParams['user_id'] ?? 0);
-        $showAll     = isset($queryParams['all']);
+        $userId      = (int)($queryParams['user_id'] ?? 0);
+        $showAll     = (bool)($queryParams['all'] ?? 0);
 
         $user = $this->modelFactory->createUser($userId);
         if ($user->isNew()) {
             throw new ObjectNotFoundException($userId);
         }
 
-        if ($showAll === false) {
+        if ($showAll === true) {
             $history = $this->ipHistoryRepository->getHistory(
                 $user,
-                (int) $this->configContainer->get('user_ip_cardinality'),
-                true,
+                false,
             );
         } else {
             $history = $this->ipHistoryRepository->getHistory(

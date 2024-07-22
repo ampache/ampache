@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -274,6 +274,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
     public function getAddToPlaylistIcon(): string
     {
         return Ui::get_icon('playlist_add', T_('Add to playlist'));
+    }
+
+    public function getFullname(): string
+    {
+        return scrub_out($this->playlist->get_fullname());
     }
 
     public function getPlaylistUrl(): string

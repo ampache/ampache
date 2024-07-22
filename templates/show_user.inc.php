@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,7 +55,7 @@ $create_date  = $client->create_date ? get_datetime((int) $client->create_date) 
 $web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
-Ui::show_box_top((string)$client->get_fullname()); ?>
+Ui::show_box_top(scrub_out($client->get_fullname())); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
@@ -83,9 +83,9 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 <dl class="media_details">
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
-        <?php echo $client->get_fullname(); ?>
+        <?php echo scrub_out($client->get_fullname()); ?>
         <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode($client->username); ?>">
                 <?php echo Ui::get_icon('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

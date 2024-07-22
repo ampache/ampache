@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,6 +72,16 @@ final class FlagMethod
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
+        }
+
+        // searches are playlists but not in the database
+        if (
+            $type === 'playlist' &&
+            $object_id === 0
+        ) {
+            $type      = 'search';
+            $object_id = (int) str_replace('smart_', '', (string)$input['id']);
+
         }
 
         $className = ObjectTypeToClassNameMapper::map($type);

@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -61,7 +61,17 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
-<td class="cel_owner"><?php echo $libitem->username; ?></td>
+<?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
+    <td class="cel_ratings">
+        <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">
+            <?php echo Rating::show($libitem->getId(), 'search'); ?>
+        </span>
+        <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_search">
+            <?php echo Userflag::show($libitem->getId(), 'search'); ?>
+        </span>
+    </td>
+<?php } ?>
+<td class="cel_owner"><?php echo scrub_out($libitem->username); ?></td>
 <td class="cel_action">
 <?php global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);

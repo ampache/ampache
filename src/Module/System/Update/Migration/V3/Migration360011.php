@@ -6,7 +6,7 @@ declare(strict_types=1);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,6 +39,7 @@ final class Migration360011 extends AbstractMigration
     {
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `stream_playlist` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `sid` varchar(64) NOT NULL, `url` text NOT NULL, `info_url` text DEFAULT NULL, `image_url` text DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `author` varchar(255) DEFAULT NULL, `album` varchar(255) DEFAULT NULL, `type` varchar(255) DEFAULT NULL, `time` smallint(5) DEFAULT NULL, PRIMARY KEY (`id`), KEY `sid` (`sid`));");
     }
+
     public function getTableMigrations(
         string $collation,
         string $charset,

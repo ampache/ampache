@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1163,7 +1163,7 @@ class Ui implements UiInterface
                 $options         = array();
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
-                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
+                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;

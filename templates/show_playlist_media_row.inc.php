@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check('interface',
             echo Share::display_ui($object_type, $libitem->getId(), false);
         }
     }
-    if (isset($playlist) && $playlist->has_access()) {
+    if (isset($playlist) && $playlist->has_collaborate()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'delete', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">

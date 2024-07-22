@@ -6,7 +6,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright Ampache.org, 2001-2023
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -775,11 +775,6 @@ final class PlayAction implements ApplicationActionInterface
 
         // Prevent the script from timing out
         set_time_limit(0);
-
-        // We're about to start. Record this user's IP.
-        if (AmpConfig::get('track_user_ip') && !empty(Core::get_global('user'))) {
-            $this->userTracker->trackIpAddress(Core::get_global('user'));
-        }
 
         $this->logger->debug(
             $action . ' file (' . $stream_file . '}...',
