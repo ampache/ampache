@@ -28,6 +28,7 @@ use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var array $object_ids */ ?>
@@ -89,6 +90,7 @@ use Ampache\Module\Util\Ui;
             <th class="cel_type"></th>
             <th class="cel_random"></th>
             <th class="cel_limit"></th>
+            <th class="cel_ratings"></th>
             <th class="cel_owner"></th>
             <th class="cel_action"></th>
         </tr>

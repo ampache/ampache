@@ -24,12 +24,15 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Userflag;
 
 /** @var Search $libitem */
 ?>
@@ -61,6 +64,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
 <td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
+
 <?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
     <td class="cel_ratings">
         <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">

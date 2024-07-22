@@ -1193,7 +1193,7 @@ function get_themes(): array
 {
     $results = array();
 
-    $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
+    $lst_files = glob(__DIR__ . '/../../themes/*/theme.cfg.php');
     if (!$lst_files) {
         debug_event('themes', 'Failed to open /themes directory', 2);
 
