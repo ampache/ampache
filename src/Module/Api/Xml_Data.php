@@ -1543,7 +1543,7 @@ class Xml_Data
 
         foreach ($shouts as $shout) {
             $user  = new User($shout->getUserId());
-            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
+            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n\t\t<object_type><![CDATA[" . $shout->getObjectType() . "]]></object_type>\n\t\t<object_id><![CDATA[" . $shout->getObjectId() . "]]></object_id>\n";
             if ($user->isNew() === false) {
                 $string .= "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n";
             }
