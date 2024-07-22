@@ -6,22 +6,29 @@ Like with `total_count`, we've added an md5sum of the results (called `md5`) in 
 
 This is useful for recording whether you need to update or change results.
 
+Inconsistency with the return of object arrays and single items have been fixed and docs updated.
+
 ### Added
 
 * ALL
   * Track user IP on handshake and ping calls
   * playlist_edit: separate error when the playlist doesn't exist
 * API6
+  * New Method: playlist_hash (Get the MD5 hash of the playlist without getting the whole object)
   * Add `md5` to responses. (Hash objects in the response before slicing and limiting)
   * Add `md5` property to playlist objects. (Hash of song objects in the response)
   * Add `username` property to handshake and ping (with auth) responses to workaround missing usernames in token auth
-  * Add `has_access` property to playlist responses. (Can edit the playlist if true)
-  * Add `has_collaborate` property to playlist responses. (Can add and remove songs to the playlist if true)
+  * Add `has_access` property to playlist objects. (Can edit the playlist if true)
+  * Add `has_collaborate` property to playlist objects. (Can add and remove songs to the playlist if true)
+  * Add `last_update` property to playlist objects. (Time a playlist changed. Smartplaylists do not change based on returned songs)
+  * Add `object_type` and `object_id` property to shout objects
 
 ### Changed
 
 * API6
   * playlist_edit: Add songs if you're a collaborator and ignore edit parameters if you fail has_access check
+  * catalog_add: Do not return an object. (We return a single item)
+  * bookmark_create: Do not return an object. (We return a single item)
 
 ### Fixed
 
@@ -29,6 +36,7 @@ This is useful for recording whether you need to update or change results.
   * User preferences were not initiated and the server preferences would overwrite differences
   * Api::set_user_id function sending an int instead of a user
 * API6
+  * JSON: Send empty array for missing single item methods
   * lost_password: function name incorrect
   * flag: id smartplaylists correctly
   * rate: id smartplaylists correctly

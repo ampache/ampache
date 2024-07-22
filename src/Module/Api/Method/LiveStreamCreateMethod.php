@@ -92,7 +92,7 @@ final class LiveStreamCreateMethod
 
         $results = Live_Stream::create($data);
         if (empty($results)) {
-            Api::empty('live_stream', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
@@ -100,7 +100,7 @@ final class LiveStreamCreateMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams([(int)$results]);
+                echo Json_Data::live_streams([(int)$results], false);
                 break;
             default:
                 echo Xml_Data::live_streams([(int)$results], $user);

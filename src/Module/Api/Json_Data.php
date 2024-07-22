@@ -151,10 +151,14 @@ class Json_Data
      * This generates a JSON empty object
      * nothing fancy here...
      *
-     * @param string $type object type
+     * @param string|null $type object type
      */
-    public static function empty($type): string
+    public static function empty($type = null): string
     {
+        if (empty($type)) {
+            return json_encode([], JSON_PRETTY_PRINT) ?: '';
+        }
+
         return json_encode(
             [
                 "total_count" => 0,
@@ -1770,6 +1774,8 @@ class Json_Data
                 'id' => (string) $shout->getId(),
                 'date' => $shout->getDate()->getTimestamp(),
                 'text' => $shout->getText(),
+                'object_type' => $shout->getObjectType(),
+                'object_id' => $shout->getObjectId(),
                 'user' => [
                     'id' => (string) ($user?->getId() ?? 0),
                     'username' => $user?->getUsername() ?? '',

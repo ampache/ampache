@@ -249,10 +249,10 @@ class Api
     /**
      * empty
      * call the correct empty message depending on format
-     * @param string $empty_type
+     * @param string|null $empty_type
      * @param string $format
      */
-    public static function empty($empty_type, $format = 'xml'): void
+    public static function empty(?string $empty_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
