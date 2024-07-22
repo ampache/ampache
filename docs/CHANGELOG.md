@@ -47,6 +47,7 @@ You can downgrade from Ampache7 if you try it out and have issues using the cli
 * Missing table check for database update 500006
 * Over-escaped playlist name when saving from smartplaylist
 * Skip caching missing files
+* Browse albums by `name_year` not splitting columns for sorting
 
 ## Ampache 6.5.0
 
