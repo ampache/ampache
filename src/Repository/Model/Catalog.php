@@ -1548,9 +1548,21 @@ abstract class Catalog extends database_object
                 return array();
         }
 
-        $sql .= (!empty($sort))
-            ? " ORDER BY " . $sort . " " . $order . ";"
-            : ';';
+        $sort_sql = ';';
+        if (!empty($sort)) {
+            switch ($sort) {
+                case 'name_year':
+                    $sort_sql = " ORDER BY `name` " . $order . " `year` " . $order . ";";
+                    break;
+                case 'name_original_year':
+                    $sort_sql = " ORDER BY `name` " . $order . " `original_year` " . $order . ";";
+                    break;
+                default:
+                    $sort_sql = " ORDER BY " . $sort . " " . $order . ";";
+            }
+        }
+
+        $sql .= $sort_sql;
 
         $db_results = Dba::read($sql);
         $results    = array();
