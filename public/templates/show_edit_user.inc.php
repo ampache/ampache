@@ -44,13 +44,13 @@ $access100 = Access::check('interface', 100); ?>
         </tr>
         <tr>
             <td><?php echo T_('Username'); ?>:</td>
-            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autofocus />
+            <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autocomplete="off" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Full Name'); ?>:</td>
-            <td><input type="text" name="fullname" value="<?php echo $client->fullname; ?>" />
+            <td><input type="text" name="fullname" maxlength="255" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
                     echo "checked";
                 } ?> /> <?php echo T_('Public'); ?>
@@ -59,37 +59,37 @@ $access100 = Access::check('interface', 100); ?>
         </tr>
         <tr>
             <td><?php echo T_('E-mail'); ?>:</td>
-            <td><input type="text" name="email" value="<?php echo scrub_out($client->email); ?>" />
+            <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out($client->email); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Website'); ?>:</td>
-            <td><input type="text" name="website" value="<?php echo scrub_out($client->website); ?>" />
+            <td><input type="text" name="website" maxlength="255" value="<?php echo scrub_out($client->website); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('State'); ?>:</td>
-            <td><input type="text" name="state" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
+            <td><input type="text" name="state" maxlength="64" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php echo AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('City'); ?>:</td>
-            <td><input type="text" name="city" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
+            <td><input type="text" name="city" maxlength="64" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php echo AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Password'); ?>:</td>
-            <td><input type="password" name="password_1" value="" autocomplete="off" />
+            <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="new-password" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Confirm Password'); ?>:</td>
-            <td><input type="password" name="password_2" value="" autocomplete="off" /></td>
+            <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
         </tr>
         <tr>
             <td><?php echo T_('User Access Level'); ?>:</td>
@@ -139,7 +139,7 @@ switch ($var_name) {
         if ($filter['id'] == $client->catalog_filter_group) {
             $selected = ' selected = "selected" ';
         }
-        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . $filter['name'] . '</option>';
+        $options[] = '<option value="' . $filter['id'] . '" ' . $selected . '>' . scrub_out($filter['name']) . '</option>';
     }
     echo '<select name="catalog_filter_group">' . implode("\n", $options) . '</select>';
 } ?>

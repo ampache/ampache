@@ -806,11 +806,6 @@ final class Play2Action implements ApplicationActionInterface
         // Prevent the script from timing out
         set_time_limit(0);
 
-        // We're about to start. Record this user's IP.
-        if (AmpConfig::get('track_user_ip') && !empty(Core::get_global('user'))) {
-            $this->userTracker->trackIpAddress(Core::get_global('user'));
-        }
-
         $this->logger->debug(
             $action . ' file (' . $stream_file . '}...',
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]

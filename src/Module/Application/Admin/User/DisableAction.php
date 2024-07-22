@@ -73,7 +73,7 @@ final class DisableAction extends AbstractUserAction
         $this->ui->showConfirmation(
             T_('Are You Sure?'),
             /* HINT: User Fullname */
-            sprintf(T_('This will disable the user "%s"'), $user->getFullDisplayName()),
+            sprintf(T_('This will disable the user "%s"'), scrub_out($user->getFullDisplayName())),
             sprintf(
                 'admin/users.php?action=confirm_disable&user_id=%s',
                 $userId

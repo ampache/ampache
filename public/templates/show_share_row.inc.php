@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Share;
 
 <td class="cel_object"><?php echo $libitem->getObjectUrl(); ?></td>
 <td class="cel_object_type"><?php echo $libitem->object_type; ?></td>
-<td class="cel_user"><?php echo $libitem->getUserName(); ?></td>
+<td class="cel_user"><?php echo scrub_out($libitem->getUserName()); ?></td>
 <td class="cel_creation_date"><?php echo $libitem->getCreationDateFormatted(); ?></td>
 <td class="cel_lastvisit_date"><?php echo $libitem->getLastVisitDateFormatted(); ?></td>
 <td class="cel_counter"><?php echo $libitem->counter; ?></td>

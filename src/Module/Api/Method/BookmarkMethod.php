@@ -59,7 +59,7 @@ final class BookmarkMethod
             $bookmark === null ||
             !$bookmark->ownedByUser($user)
         ) {
-            Api::empty('bookmark', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }

@@ -1337,6 +1337,17 @@ class Catalog_local extends Catalog
             }
             $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
+
+            if (
+                $media->isNew() ||
+                !$media->file ||
+                !is_file($media->file)
+            ) {
+                debug_event('local.catalog', sprintf('Not Found: %s', $media->file), 3);
+
+                return false;
+            }
+
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare

@@ -1163,7 +1163,7 @@ class Ui implements UiInterface
                 $options         = array();
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
-                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
+                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;

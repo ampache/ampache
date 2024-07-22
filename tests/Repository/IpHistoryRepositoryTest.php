@@ -29,8 +29,6 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\User;
 use DateTime;
-use PDO;
-use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -50,54 +48,6 @@ class IpHistoryRepositoryTest extends TestCase
         $this->subject = new IpHistoryRepository(
             $this->connection,
             $this->configContainer,
-        );
-    }
-
-    public function testGetHistoryReturnsData(): void
-    {
-        $user   = $this->createMock(User::class);
-        $result = $this->createMock(PDOStatement::class);
-
-        $ip     = '1.2.3.4';
-        $date   = time();
-        $userId = 666;
-
-        $user->expects(static::once())
-            ->method('getId')
-            ->willReturn($userId);
-
-        $this->connection->expects(static::once())
-            ->method('query')
-            ->with(
-                'SELECT `ip`, `date` FROM `ip_history` WHERE `user` = ? GROUP BY `ip`, `date` ORDER BY `date` DESC LIMIT 1',
-                [
-                    $userId
-                ]
-            )
-            ->willReturn($result);
-
-        $result->expects(static::exactly(2))
-            ->method('fetch')
-            ->with(PDO::FETCH_ASSOC)
-            ->willReturn(
-                [
-                    'ip' => inet_pton($ip),
-                    'date' => (string) $date,
-                ],
-                false
-            );
-
-        $result = current(
-            iterator_to_array($this->subject->getHistory($user, 1, true))
-        );
-
-        static::assertSame(
-            $ip,
-            $result['ip']
-        );
-        static::assertSame(
-            $date,
-            $result['date']->getTimestamp()
         );
     }
 

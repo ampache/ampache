@@ -103,8 +103,11 @@ final class GetBookmarkMethod
             'comment' => null
         );
         $results = Bookmark::getBookmarks($object);
-        if (empty($results)) {
-            Api::empty('bookmark', $input['api_format']);
+        if (
+            empty($results) &&
+            !$all
+        ) {
+            Api::empty(null, $input['api_format']);
 
             return false;
         }

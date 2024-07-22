@@ -47,7 +47,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -59,7 +59,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
                 $playlist->format();
-                if ($playlist->has_access()) {
+                if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
                     // This could have performance issues
                     $playlist->regenerate_track_numbers();
@@ -98,12 +98,12 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist = new Playlist($_REQUEST['playlist_id']);
                 }
 
-                if (!$playlist->has_access()) {
+                if (!$playlist->has_collaborate()) {
                     break;
                 }
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
-                $medias    = array();
+                $medias    = [];
                 $item_id   = $_REQUEST['item_id'] ?? '';
                 $item_type = $_REQUEST['item_type'] ?? '';
 
@@ -123,9 +123,11 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $medias = Core::get_global('user')->playlist->get_items();
                 }
 
-                if (count($medias) > 0) {
+                if (
+                    count($medias) > 0 &&
+                    $playlist->add_medias($medias)
+                ) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();

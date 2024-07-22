@@ -39,6 +39,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
     ) {
         $this->configContainer = $configContainer;
     }
+
     public function add(
         Interactor $interactor,
         string $catalogName,

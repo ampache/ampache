@@ -20,39 +20,24 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\Wanted;
+namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\Wanted;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Playlist;
 
-interface WantedManagerInterface
+/**
+ * Add `collaborate` to the playlist table to allow other users to add songs to the list
+ */
+final class Migration600074 extends AbstractMigration
 {
-    /**
-     * Delete a wanted release by mbid.
-     * @throws \MusicBrainz\Exception
-     */
-    public function delete(string $mbid, ?User $user = null): void;
+    protected array $changelog = ['Add `collaborate` to the playlist table to allow other users to add songs to the list'];
 
-    /**
-     * Accept a wanted request.
-     */
-    public function accept(
-        Wanted $wanted,
-        User $user
-    ): void;
-
-    /**
-     * Add a new wanted release.
-     */
-    public function add(
-        User $user,
-        string $mbid,
-        ?int $artist,
-        string $artist_mbid,
-        string $name,
-        int $year
-    ): void;
+    public function migrate(): void
+    {
+        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
+        $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
+    }
 }

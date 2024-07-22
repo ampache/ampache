@@ -888,7 +888,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $updated    = false;
         $ndata      = array();
         $changed    = array();
-        $songs      = $this->getSongRepository()->getByAlbum($this->getId());
+        $songs      = $this->getSongRepository()->getByAlbum($this->id);
         // run an album check on the current object READONLY means that it won't insert a new album
         $album_id   = self::check(
             $this->catalog,

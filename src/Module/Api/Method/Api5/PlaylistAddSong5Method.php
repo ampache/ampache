@@ -50,13 +50,13 @@ final class PlaylistAddSong5Method
      */
     public static function playlist_add_song(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter', 'song'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter', 'song'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $song     = $input['song'];
-        if (!$playlist->has_access($user->id) && $user->access !== 100) {
+        if (!$playlist->has_collaborate($user)) {
             Api5::error(T_('Require: 100'), ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
 
             return false;
@@ -67,7 +67,7 @@ final class PlaylistAddSong5Method
 
             return false;
         }
-        $playlist->add_songs(array($song));
+        $playlist->add_songs([$song]);
         Api5::message('song added to playlist', $input['api_format']);
 
         return true;

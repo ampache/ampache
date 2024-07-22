@@ -39,12 +39,12 @@ use Ampache\Repository\SongRepositoryInterface;
  */
 class Random
 {
-    public const VALID_TYPES = array(
+    public const VALID_TYPES = [
         'song',
         'album',
         'artist',
         'video',
-    );
+    ];
 
     /**
      * artist
@@ -122,7 +122,7 @@ class Random
      */
     public static function get_default($limit, $user = null): array
     {
-        $results = array();
+        $results = [];
 
         if (empty($user)) {
             $user = Core::get_global('user');
@@ -157,7 +157,7 @@ class Random
      */
     public static function get_artist($limit, $user = null): array
     {
-        $results = array();
+        $results = [];
 
         if (empty($user)) {
             $user = Core::get_global('user');
@@ -200,11 +200,17 @@ class Random
      */
     public static function get_playlist($user, $playlist_id = 0): array
     {
-        $results  = array();
+        $results  = [];
         $playlist = new Playlist($playlist_id);
-        if ($playlist->has_access($user->id)) {
+        if (
+            $playlist->isNew() === false &&
+            (
+                $playlist->type === 'public' ||
+                $playlist->has_collaborate($user)
+            )
+        ) {
             foreach ($playlist->get_random_items('1') as $songs) {
-                $results[] = (int)$songs['object_id'];
+                $results[] = $songs['object_id'];
             }
         }
 
@@ -214,23 +220,24 @@ class Random
     /**
      * get_search
      * Get a random song from a search (that you own)
-     * @param User $user
      * @param int $search_id
      * @return int[]
      */
     public static function get_search(User $user, $search_id = 0): array
     {
-        $results = array();
+        $results = [];
         $search  = new Search($search_id, 'song', $user);
-        if ($search->has_access($user->id) || $search->type == 'public') {
+        if (
+            $search->isNew() === false &&
+            (
+                $search->type === 'public' ||
+                $search->has_access($user)
+            )
+        ) {
             foreach ($search->get_random_items('1') as $songs) {
                 $results[] = (int)$songs['object_id'];
             }
-
-            return $results;
         }
-
-        debug_event(self::class, $user->id . " doesn't have access to search:" . $search_id, 5);
 
         return $results;
     }
@@ -302,7 +309,6 @@ class Random
      * @param string $sql_query
      * @param array $sql_params
      * @param array $data
-     * @return array
      */
     private static function advanced_results($sql_query, $sql_params, $data): array
     {
