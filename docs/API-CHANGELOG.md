@@ -35,6 +35,7 @@ Inconsistency with the return of object arrays and single items have been fixed 
 * ALL
   * User preferences were not initiated and the server preferences would overwrite differences
   * Api::set_user_id function sending an int instead of a user
+  * Some responses that include users not checking the user is valid
 * API6
   * JSON: Send empty array for missing single item methods
   * lost_password: function name incorrect
