@@ -78,9 +78,7 @@ final class ValidateAction implements ApplicationActionInterface
 
         $this->ui->show(
             'show_user_activate.inc.php',
-            [
-                'validationResult' => $validationResult
-            ]
+            ['validationResult' => $validationResult]
         );
 
         return null;

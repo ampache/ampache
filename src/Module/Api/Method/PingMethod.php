@@ -30,6 +30,9 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
+use Ampache\Module\User\Tracking\UserTrackerInterface;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * Class PingMethod
@@ -62,7 +65,10 @@ final class PingMethod
         ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)
-        if (array_key_exists('auth', $input) && Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
+        if (
+            array_key_exists('auth', $input) &&
+            Session::exists(AccessTypeEnum::API->value, $input['auth'])
+        ) {
             Session::extend($input['auth'], AccessTypeEnum::API->value);
             // perpetual sessions do not expire
             $perpetual      = (bool)AmpConfig::get('perpetual_api_session', false);
@@ -77,6 +83,13 @@ final class PingMethod
                 $results,
                 Api::server_details($input['auth'])
             );
+
+            $user = static::getUserRepository()->findByApiKey($input['auth']);
+
+            // We're about to start. Record this user's IP.
+            if (AmpConfig::get('track_user_ip') && $user instanceof User) {
+                static::getUserTracker()->trackIpAddress($user);
+            }
         }
 
         debug_event(self::class, "Ping$data_version Received from: " . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP), 5);
@@ -89,5 +102,25 @@ final class PingMethod
             default:
                 echo Xml_Data::keyed_array($results);
         }
+    }
+
+    /**
+     * @todo replace by constructor injection
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private static function getUserTracker(): UserTrackerInterface
+    {
+        global $dic;
+
+        return $dic->get(UserTrackerInterface::class);
     }
 }

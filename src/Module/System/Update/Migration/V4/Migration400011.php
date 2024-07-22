@@ -33,7 +33,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration400011 extends AbstractMigration
 {
     protected array $changelog = [
-        'IMPORTANT UPDATE NOTES: To allow negatives the maximum value of `song`.`track` has been reduced. This shouldn\'t affect anyone due to the large size allowed',
+        '**IMPORTANT UPDATE NOTES** To allow negatives the maximum value of `song`.`track` has been reduced. This shouldn\'t affect anyone due to the large size allowed',
         'Allow negative track numbers for albums. (-32,767 -> 32,767)',
         'Truncate database tracks to 0 when greater than 32,767',
     ];

@@ -299,7 +299,15 @@ class Preference extends database_object
             $name    = self::name_from_id($preference);
         }
 
-        if ($pref_id === null || $pref_id === 0 || ($name === null || $name === '' || $name === '0')) {
+        if (
+            $pref_id === null ||
+            $pref_id === 0 ||
+            (
+                $name === null ||
+                $name === '' ||
+                $name === '0'
+            )
+        ) {
             return false;
         }
 
@@ -356,22 +364,24 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param int $preference_id
+     * @param string|int $preference
      * @param string $value
      */
-    public static function update_all($preference_id, $value): bool
+    public static function update_all($preference, $value): bool
     {
-        if ((int)$preference_id == 0) {
+        $preference_id = (is_string($preference))
+            ? (int)Preference::id_from_name($preference)
+            : (int)$preference;
+
+        if ($preference_id == 0) {
             return false;
         }
-
-        $preference_id = Dba::escape($preference_id);
-        $value         = Dba::escape($value);
 
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
         Dba::write($sql, [$value, $preference_id]);
 
         parent::clear_cache();
+        self::clear_from_session();
 
         return true;
     }
@@ -679,7 +689,7 @@ class Preference extends database_object
             "(29, 'play_type', 'web_player', 'Playback Type', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', null), " .
             "(31, 'lang', 'en_US', 'Language', " . AccessLevelEnum::ADMIN->value . ", 'special', 'interface', null), " .
             "(32, 'playlist_type', 'm3u', 'Playlist Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'playlist', null), " .
-            "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
+            "(33, 'theme_name', 'reborn', 'Theme', " . AccessLevelEnum::DEFAULT->value . ", 'special', 'interface', 'theme'), " .
             "(40, 'localplay_level', '0', 'Localplay Access', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
             "(41, 'localplay_controller', '0', 'Localplay Type', " . AccessLevelEnum::ADMIN->value . ", 'special', 'options', 'localplay'), " .
             "(44, 'allow_stream_playback', '1', 'Allow Streaming', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature'), " .
@@ -690,7 +700,7 @@ class Preference extends database_object
             "(52, 'rate_limit', '8192', 'Rate Limit', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'streaming', 'transcoding'), " .
             "(53, 'playlist_method', 'default', 'Playlist Method', " . AccessLevelEnum::GUEST->value . ", 'string', 'playlist', null), " .
             "(55, 'transcode', 'default', 'Allow Transcoding', " . AccessLevelEnum::USER->value . ", 'string', 'streaming', 'transcoding'), " .
-            "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
+            "(69, 'show_lyrics', '0', 'Show lyrics', " . AccessLevelEnum::DEFAULT->value . ", 'boolean', 'interface', 'player'), " .
             "(70, 'mpd_active', '0', 'MPD Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'mpd'), " .
             "(71, 'httpq_active', '0', 'httpQ Active Instance', " . AccessLevelEnum::USER->value . ", 'integer', 'internal', 'httpq'), " .
             "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', " . AccessLevelEnum::USER->value . ", 'string', 'internal', 'lastfm'), " .
@@ -751,12 +761,12 @@ class Preference extends database_object
             "(138, 'custom_text_footer', '', 'Custom text footer', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
             "(139, 'webdav_backend', '0', 'Use WebDAV backend', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
             "(140, 'notify_email', '0', 'Allow E-mail notifications', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', null), " .
-            "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
+            "(141, 'theme_color', 'dark', 'Theme color', " . AccessLevelEnum::DEFAULT->value . ", 'special', 'interface', 'theme'), " .
             "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
             "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', " . AccessLevelEnum::ADMIN->value . ", 'string', 'system', 'metadata'), " .
             "(144, 'podcast_keep', '0', '# latest episodes to keep', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
             "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'podcast'), " .
-            "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
+            "(146, 'libitem_contextmenu', '1', 'Library item context menu', " . AccessLevelEnum::DEFAULT->value . ", 'boolean', 'interface', 'library'), " .
             "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
             "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'catalog'), " .
             "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
@@ -784,7 +794,26 @@ class Preference extends database_object
             "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
             "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
             "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
-            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', NULL);";
+            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', NULL), " .
+            "(176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
+            "(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
+            "(178, 'upload_access_level', '25', 'Upload Access Level', " . AccessLevelEnum::ADMIN->value . ", 'special', 'system', 'upload'), " .
+            "(179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(180, 'show_original_year', '1', 'Show Album original year on links (if available)', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
+            "(181, 'show_header_login', '1', 'Show the login / registration links in the site header', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'interface'), " .
+            "(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', " . AccessLevelEnum::USER->value . ", 'boolean', 'streaming', 'player'), " .
+            "(183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
+            "(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
+            "(185, 'jp_volume', '0.8', 'Default webplayer volume', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
+            "(186, 'perpetual_api_session', '0', 'API sessions do not expire', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
+            "(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(192, 'sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(193, 'sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(194, 'sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
+            "(195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home');";
         Dba::write($sql);
     }
 
@@ -1004,7 +1033,12 @@ class Preference extends database_object
             return false;
         }
 
-        if (array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata']) && is_array($_SESSION['userdata']['preferences']) && $_SESSION['userdata']['uid'] == $uid) {
+        if (
+            array_key_exists('userdata', $_SESSION) &&
+            array_key_exists('preferences', $_SESSION['userdata']) &&
+            is_array($_SESSION['userdata']['preferences']) &&
+            $_SESSION['userdata']['uid'] == $uid
+        ) {
             AmpConfig::set_by_array($_SESSION['userdata']['preferences'], true);
 
             return true;
@@ -1198,7 +1232,6 @@ class Preference extends database_object
             'upload',
             'upload_allow_edit',
             'upload_allow_remove',
-            'upload_catalog',
             'upload_catalog_pattern',
             'upload_script',
             'upload_subdir',
@@ -1278,6 +1311,11 @@ class Preference extends database_object
         // Load theme settings
         $theme_cfg                 = get_theme($results['theme_name']);
         $results['theme_css_base'] = $theme_cfg['base'];
+
+        // Default theme color fallback
+        if (!isset($results['theme_color'])) {
+            $results['theme_color'] = 'dark';
+        }
 
         if (array_key_exists('theme_color', $results) && strlen((string)$results['theme_color']) > 0) {
             // In case the color was removed

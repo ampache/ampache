@@ -710,11 +710,11 @@ class Query
 
     /**
      * set_user_id
-     * @param int $user_id
+     * @param User $user
      */
-    public function set_user_id($user_id): void
+    public function set_user_id($user): void
     {
-        $this->user_id = $user_id;
+        $this->user_id = $user->getId();
     }
 
     /**
@@ -1312,7 +1312,11 @@ class Query
                 break;
         }
 
-        if (!($sql === '' || $sql === '0') && $table != 'video') {
+        if (
+            $sql !== '' &&
+            $sql !== '0' &&
+            $table != 'video'
+        ) {
             $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
 

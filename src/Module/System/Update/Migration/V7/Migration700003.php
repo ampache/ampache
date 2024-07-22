@@ -35,7 +35,7 @@ final class Migration700003 extends AbstractMigration
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = 'InnoDB';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $this->updateDatabase(sprintf('ALTER TABLE `album_disk` ENGINE=%s;', $engine));
         $this->updateDatabase(sprintf('ALTER TABLE `album_map` ENGINE=%s;', $engine));

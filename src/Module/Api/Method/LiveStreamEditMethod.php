@@ -112,7 +112,7 @@ final class LiveStreamEditMethod
         // check for the live_stream first
         $results = $item->update($data);
         if ($results === false) {
-            Api::empty('live_stream', $input['api_format']);
+            Api::empty(null, $input['api_format']);
 
             return false;
         }
@@ -120,7 +120,7 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams([$results]);
+                echo Json_Data::live_streams([$results], false);
                 break;
             default:
                 echo Xml_Data::live_streams([$results], $user);

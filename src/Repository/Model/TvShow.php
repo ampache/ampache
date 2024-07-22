@@ -503,8 +503,8 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
                 $this->getArtCleanup()->collectGarbageForObject('tvshow', $this->id);
                 Userflag::garbage_collection('tvshow', $this->id);
                 Rating::garbage_collection('tvshow', $this->id);
-                $this->getShoutRepository()->collectGarbage('tvshow', $this->getId());
-                $this->getUseractivityRepository()->collectGarbage('tvshow', $this->getId());
+                $this->getShoutRepository()->collectGarbage('tvshow', $this->id);
+                $this->getUseractivityRepository()->collectGarbage('tvshow', $this->id);
             }
         }
 

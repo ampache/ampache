@@ -177,7 +177,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
     /**
      * Takes an array of media ids and returns an array of the actual filenames
      *
-     * @param iterable<int|array{object_type: LibraryItemEnum, object_id: int}> $medias Media IDs.
+     * @param iterable<int|array{object_type: LibraryItemEnum|string, object_id: int}> $medias Media IDs.
      * @return array{
      *     files: array<string, list<string>>,
      *     total_size: int
@@ -188,18 +188,30 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $media_files = [];
         $total_size  = 0;
         foreach ($medias as $element) {
-            if (is_array($element)) {
-                $media = $this->libraryItemLoader->load(
-                    $element['object_type'],
-                    $element['object_id']
-                );
-            } else {
+            $media = null;
+            if (!is_array($element)) {
                 $media = $this->modelFactory->createSong((int) $element);
+            } else {
+                $object_type = (is_string($element['object_type']))
+                    ? LibraryItemEnum::tryFrom($element['object_type'])
+                    : $element['object_type'];
+                if ($object_type instanceof LibraryItemEnum) {
+                    $media = $this->libraryItemLoader->load(
+                        $object_type,
+                        $element['object_id']
+                    );
+                }
             }
+
             if ($media === null || $media->isNew()) {
                 continue;
             }
-            if ($media->enabled) {
+
+            if (
+                isset($media->enabled) &&
+                $media->enabled &&
+                !empty($media->file)
+            ) {
                 $total_size += $media->size ?? 0;
                 $dirname    = '';
                 $parent     = $media->get_parent();

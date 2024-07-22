@@ -96,7 +96,7 @@ class easy_captcha
     /**
      * easy_captcha constructor.
      * @param $captcha_id
-     * @param integer $ignore_expiration
+     * @param int $ignore_expiration
      */
     public function __construct(
         $captcha_id = null,
@@ -165,7 +165,7 @@ class easy_captcha
     #-- examine if captcha data is fresh
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function is_valid()
     {
@@ -188,7 +188,7 @@ class easy_captcha
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
@@ -295,7 +295,7 @@ class easy_captcha
      * @param $error
      * @param $category
      * @param $message
-     * @return boolean
+     * @return bool
      */
     public function log($error, $category, $message)
     {
@@ -340,7 +340,7 @@ class easy_captcha
     #-- remove $this data file
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function delete()
     {
@@ -381,7 +381,7 @@ class easy_captcha
     #-- where's the storage?
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      */
     public function data_file($object_id = null)
@@ -398,8 +398,8 @@ class easy_captcha
 
     /**
      * @param $text
-     * @param integer $dtime
-     * @param integer $length
+     * @param int $dtime
+     * @param int $length
      * @return string
      */
     public function hash($text, $dtime = 0, $length = 1)

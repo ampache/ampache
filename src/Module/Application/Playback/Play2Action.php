@@ -40,7 +40,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
-use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
@@ -74,16 +73,13 @@ final class Play2Action implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
-    private UserTrackerInterface $userTracker;
-
     public function __construct(
         RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger,
-        UserTrackerInterface $userTracker
+        LoggerInterface $logger
     ) {
         $this->requestParser         = $requestParser;
         $this->browser               = $browser;
@@ -91,7 +87,6 @@ final class Play2Action implements ApplicationActionInterface
         $this->networkChecker        = $networkChecker;
         $this->userRepository        = $userRepository;
         $this->logger                = $logger;
-        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -155,7 +150,7 @@ final class Play2Action implements ApplicationActionInterface
 
             // Share id and secret if used
             $share_id = (int)scrub_in((string) ($new_request['share_id'] ?? 0));
-            $secret   = scrub_in((string) ($new_request['share_secret'] ?? ''));
+            $secret   = (string)scrub_in((string) ($new_request['share_secret'] ?? ''));
 
             // This is specifically for tmp playlist requests
             $demo_id = (int)scrub_in((string) ($new_request['demo_id'] ?? 0));
@@ -297,7 +292,15 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         // First things first, if we don't have a uid/oid stop here
-        if (empty($object_id) && (!$demo_id && !$share_id && !$secret && !$random)) {
+        if (
+            empty($object_id) &&
+            (
+                !$demo_id &&
+                !$share_id &&
+                !$secret &&
+                !$random
+            )
+        ) {
             $this->logger->error(
                 'No object OID specified, nothing to play',
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -724,7 +727,7 @@ final class Play2Action implements ApplicationActionInterface
         /* If we don't have a file, or the file is not readable */
         if (!$stream_file || !Core::is_readable(Core::conv_lc_file((string)$stream_file))) {
             $this->logger->error(
-                "Media " . $stream_file . " ($media->title) does not have a valid filename specified",
+                "Media " . $stream_file . " ($media->title). Invalid media, file not found or file unreadable",
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
             );
             header('HTTP/1.1 404 Invalid media, file not found or file unreadable');
@@ -790,7 +793,7 @@ final class Play2Action implements ApplicationActionInterface
             // Check to see if we should be throttling because we can get away with it
             if (AmpConfig::get('rate_limit') > 0) {
                 while (!feof($filepointer)) {
-                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit') * 1024)));
+                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit', 8192) * 1024)));
                     flush();
                     sleep(1);
                 }
@@ -805,11 +808,6 @@ final class Play2Action implements ApplicationActionInterface
 
         // Prevent the script from timing out
         set_time_limit(0);
-
-        // We're about to start. Record this user's IP.
-        if (AmpConfig::get('track_user_ip') && !empty(Core::get_global('user'))) {
-            $this->userTracker->trackIpAddress(Core::get_global('user'));
-        }
 
         $this->logger->debug(
             $action . ' file (' . $stream_file . '}...',
@@ -878,18 +876,16 @@ final class Play2Action implements ApplicationActionInterface
                         );
                     }
                 }
+            } elseif ($transcode_cfg != 'never') {
+                $this->logger->notice(
+                    'Transcoding is not enforced for ' . $streamConfiguration['file_type'],
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             } else {
-                if ($transcode_cfg != 'never') {
-                    $this->logger->notice(
-                        'Transcoding is not enforced for ' . $streamConfiguration['file_type'],
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                } else {
-                    $this->logger->debug(
-                        'Transcode disabled in user settings.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
-                    );
-                }
+                $this->logger->debug(
+                    'Transcode disabled in user settings.',
+                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                );
             }
         }
 
@@ -936,15 +932,14 @@ final class Play2Action implements ApplicationActionInterface
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
             $filepointer = $transcoder['handle'] ?? null;
             $media_name  = $media->get_artist_fullname() . " - " . $media->title . "." . ($transcoder['format'] ?? '');
+        } elseif ($cpaction && $media instanceof Song) {
+            $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
+            $filepointer = $transcoder['handle'] ?? null;
+            $transcode   = true;
         } else {
-            if ($cpaction && $media instanceof Song) {
-                $transcoder  = $media->run_custom_play_action($cpaction, $transcode_to ?? '');
-                $filepointer = $transcoder['handle'] ?? null;
-                $transcode   = true;
-            } else {
-                $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
-            }
+            $filepointer = fopen(Core::conv_lc_file($stream_file), 'rb');
         }
+
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
             if (isset($troptions['bitrate'])) {
@@ -1062,7 +1057,7 @@ final class Play2Action implements ApplicationActionInterface
             header('Accept-Ranges: bytes');
         }
 
-        if ($transcode && isset($transcoder)) {
+        if ($transcode && !empty($transcoder)) {
             $mime = ($type === 'video')
                 ? Video::type_to_mime($transcoder['format'] ?? '')
                 : Song::type_to_mime($transcoder['format'] ?? '');
@@ -1113,7 +1108,7 @@ final class Play2Action implements ApplicationActionInterface
             );
             // close any leftover handle and processes
             fclose($filepointer);
-            if ($transcode && isset($transcoder)) {
+            if ($transcode && !empty($transcoder)) {
                 Stream::kill_process($transcoder);
             }
 
@@ -1138,7 +1133,16 @@ final class Play2Action implements ApplicationActionInterface
 
                     $bytes_streamed += strlen($buf);
                 }
-            } while (!feof($filepointer) && (connection_status() == 0 && ($transcode || $bytes_streamed < $stream_size)));
+            } while (
+                !feof($filepointer) &&
+                (
+                    connection_status() == 0 &&
+                    (
+                        $transcode ||
+                        $bytes_streamed < $stream_size
+                    )
+                )
+            );
         }
 
         if ($transcode && connection_status() == 0) {
@@ -1162,7 +1166,7 @@ final class Play2Action implements ApplicationActionInterface
 
         // close any leftover handle and processes
         fclose($filepointer);
-        if ($transcode && isset($transcoder)) {
+        if ($transcode && !empty($transcoder)) {
             Stream::kill_process($transcoder);
         }
 

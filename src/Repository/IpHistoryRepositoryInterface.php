@@ -36,8 +36,7 @@ interface IpHistoryRepositoryInterface
      */
     public function getHistory(
         User $user,
-        int $limit = 1,
-        bool $distinct = false
+        ?bool $limited = true
     ): Traversable;
 
     /**

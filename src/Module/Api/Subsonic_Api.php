@@ -499,9 +499,7 @@ class Subsonic_Api
         }
 
         // return node as array
-        return [
-            $xml->getName() => $propertiesArray
-        ];
+        return [$xml->getName() => $propertiesArray];
     }
 
     /**
@@ -1091,18 +1089,17 @@ class Subsonic_Api
                 $finput   = $artist->get_fullname();
                 $operator = 4;
                 $ftype    = "artist";
+            } elseif (Subsonic_Xml_Data::_isAlbum($musicFolderId)) {
+                $album    = new Album(Subsonic_Xml_Data::_getAmpacheId($musicFolderId));
+                $finput   = $album->get_fullname(true);
+                $operator = 4;
+                $ftype    = "artist";
             } else {
-                if (Subsonic_Xml_Data::_isAlbum($musicFolderId)) {
-                    $album    = new Album(Subsonic_Xml_Data::_getAmpacheId($musicFolderId));
-                    $finput   = $album->get_fullname(true);
-                    $operator = 4;
-                    $ftype    = "artist";
-                } else {
-                    $finput   = (int)($musicFolderId);
-                    $operator = 0;
-                    $ftype    = "catalog";
-                }
+                $finput   = (int)($musicFolderId);
+                $operator = 0;
+                $ftype    = "catalog";
             }
+
             $data['rule_' . $count . '_input']    = $finput;
             $data['rule_' . $count . '_operator'] = $operator;
             $data['rule_' . $count]               = $ftype;
@@ -1789,7 +1786,7 @@ class Subsonic_Api
             if ($update_user instanceof User) {
                 // Get Session key
                 $avatar = $update_user->get_avatar(true);
-                if (isset($avatar['url']) && !empty($avatar['url'])) {
+                if (!empty($avatar['url'])) {
                     $request = Requests::get($avatar['url'], [], Core::requests_options());
                     header("Content-Type: " . $request->headers['Content-Type']);
                     echo $request->body;
@@ -2249,13 +2246,11 @@ class Subsonic_Api
             $episode = new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($episode_id));
             if ($episode->isNew()) {
                 $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'deletepodcastepisode');
+            } elseif ($episode->remove()) {
+                $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastepisode');
+                Catalog::count_table('podcast_episode');
             } else {
-                if ($episode->remove()) {
-                    $response = Subsonic_Xml_Data::addSubsonicResponse('deletepodcastepisode');
-                    Catalog::count_table('podcast_episode');
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'deletepodcastepisode');
-                }
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'deletepodcastepisode');
             }
         } else {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'deletepodcastepisode');
@@ -2352,7 +2347,7 @@ class Subsonic_Api
 
                         if (Subsonic_Xml_Data::_isSong($song_id)) {
                             $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
-                            $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
+                            $url   = $media->play_url('&client=' . $localplay->type, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
                         }
 
                         if ($url !== null) {
@@ -3113,41 +3108,37 @@ class Subsonic_Api
                 $aid = Subsonic_Xml_Data::_getAmpacheId($item);
                 if (Subsonic_Xml_Data::_isArtist($item)) {
                     $type = 'artist';
+                } elseif (Subsonic_Xml_Data::_isAlbum($item)) {
+                    $type = 'album';
+                } elseif (Subsonic_Xml_Data::_isSong($item)) {
+                    $type = 'song';
                 } else {
-                    if (Subsonic_Xml_Data::_isAlbum($item)) {
-                        $type = 'album';
-                    } else {
-                        if (Subsonic_Xml_Data::_isSong($item)) {
-                            $type = 'song';
-                        } else {
-                            $type = "";
-                        }
-                    }
+                    $type = "";
                 }
-                $ids[] = ['id' => $aid, 'type' => $type];
+
+                $ids[] = [
+                    'id' => $aid,
+                    'type' => $type
+                ];
+            }
+        } elseif ($albumId) {
+            if (!is_array($albumId)) {
+                $albumId = [$albumId];
+            }
+            foreach ($albumId as $album) {
+                $aid   = Subsonic_Xml_Data::_getAmpacheId($album);
+                $ids[] = ['id' => $aid, 'type' => 'album'];
+            }
+        } elseif ($artistId) {
+            if (!is_array($artistId)) {
+                $artistId = [$artistId];
+            }
+            foreach ($artistId as $artist) {
+                $aid   = Subsonic_Xml_Data::_getAmpacheId($artist);
+                $ids[] = ['id' => $aid, 'type' => 'artist'];
             }
         } else {
-            if ($albumId) {
-                if (!is_array($albumId)) {
-                    $albumId = [$albumId];
-                }
-                foreach ($albumId as $album) {
-                    $aid   = Subsonic_Xml_Data::_getAmpacheId($album);
-                    $ids[] = ['id' => $aid, 'type' => 'album'];
-                }
-            } else {
-                if ($artistId) {
-                    if (!is_array($artistId)) {
-                        $artistId = [$artistId];
-                    }
-                    foreach ($artistId as $artist) {
-                        $aid   = Subsonic_Xml_Data::_getAmpacheId($artist);
-                        $ids[] = ['id' => $aid, 'type' => 'artist'];
-                    }
-                } else {
-                    $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '_setStar');
-                }
-            }
+            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, '_setStar');
         }
 
         foreach ($ids as $object_id) {

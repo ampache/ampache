@@ -41,7 +41,7 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
         $buffer    = [];
         $ret       = [];
         $in_string = false;
@@ -53,7 +53,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
                 $in_string = false;
-            } elseif (!$in_string && ($sql[$count] == '"' || $sql[$count] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            } elseif (
+                !$in_string &&
+                (
+                    $sql[$count] == '"' ||
+                    $sql[$count] == "'"
+                ) &&
+                (
+                    !isset($buffer[0]) ||
+                    $buffer[0] != "\\"
+                )
+            ) {
                 $in_string = $sql[$count];
             }
             if (isset($buffer[1])) {
@@ -136,7 +146,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $file .= '.dist';
         }
         $valid     = true;
-        $htaccess  = file_get_contents($file);
+        $htaccess  = (string)file_get_contents($file);
         $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {
@@ -379,13 +389,11 @@ final class InstallationHelper implements InstallationHelperInterface
                 AmpError::add('general', T_('Config file is not writable'));
 
                 return false;
-            } else {
+            } elseif (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
-                if (!file_put_contents($config_file, $final)) {
-                    AmpError::add('general', T_('Failed writing config file'));
+                AmpError::add('general', T_('Failed writing config file'));
 
-                    return false;
-                }
+                return false;
             }
         } else {
             $browser = new Horde_Browser();

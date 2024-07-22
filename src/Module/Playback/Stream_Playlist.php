@@ -314,15 +314,13 @@ class Stream_Playlist
                         $url['url'] = substr($url['url'], 1);
                     }
                 }
+            } elseif (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
+                /** @var Song|Podcast_Episode|Video $object */
+                $url['url'] = (!empty($user))
+                    ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
+                    : $object->play_url($additional_params);
             } else {
-                if (in_array($type, [LibraryItemEnum::SONG, LibraryItemEnum::PODCAST_EPISODE, LibraryItemEnum::VIDEO])) {
-                    /** @var Song|Podcast_Episode|Video $object */
-                    $url['url'] = (!empty($user))
-                        ? $object->play_url($additional_params, '', false, $user->id, $user->streamtoken)
-                        : $object->play_url($additional_params);
-                } else {
-                    $url['url'] = $object->play_url($additional_params);
-                }
+                $url['url'] = $object->play_url($additional_params);
             }
 
             $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
@@ -551,12 +549,16 @@ class Stream_Playlist
     public function add_urls(array $urls = []): bool
     {
         foreach ($urls as $url) {
-            $this->_add_url(new Stream_Url([
-                'url' => $url,
-                'title' => Stream_Url::get_title($url),
-                'author' => T_('Ampache'),
-                'time' => '-1'
-            ]));
+            $this->_add_url(
+                new Stream_Url(
+                    [
+                        'url' => $url,
+                        'title' => Stream_Url::get_title($url),
+                        'author' => T_('Ampache'),
+                        'time' => '-1'
+                    ]
+                )
+            );
         }
 
         return true;
@@ -788,7 +790,10 @@ class Stream_Playlist
 
         foreach ($this->urls as $url) {
             $url_data = Stream_Url::parse($url->url);
-            $items[]  = [$url_data['type'], $url_data['id']];
+            $items[]  = [
+                $url_data['type'],
+                $url_data['id']
+            ];
         }
         if (!empty($items)) {
             $democratic->add_vote($items);

@@ -113,13 +113,55 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * has_collaborate
+     * This function returns true or false if the current user
+     * has access to collaborate (Add/remove items) for this playlist
+     * @param User|null $user
+     */
+    public function has_collaborate($user = null): bool
+    {
+        if ($this->has_access($user)) {
+            return true;
+        }
+
+        // only playlists have collaborative users
+        if ($this instanceof Search) {
+            return false;
+        }
+
+        $user = ($user instanceof User)
+            ? $user
+            : Core::get_global('user');
+
+        if (
+            $user instanceof User &&
+            !empty($this->collaborate) &&
+            in_array($user->getId(), explode(',', (string)$this->collaborate))
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * has_access
      * This function returns true or false if the current user
      * has access to this playlist
-     * @param int $user_id
+     * @param User|null $user
      */
-    public function has_access($user_id = null): bool
+    public function has_access($user = null): bool
     {
+        if (
+            $user instanceof User &&
+            (
+                $user->access === AccessLevelEnum::ADMIN->value ||
+                $this->user === $user->getId()
+            )
+        ) {
+            return true;
+        }
+
         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             return true;
         }
@@ -128,7 +170,10 @@ abstract class playlist_object extends database_object implements library_item
             return false;
         }
 
-        return (Core::get_global('user') instanceof User && $this->user == Core::get_global('user')->id) || ($this->user == $user_id);
+        return (
+            Core::get_global('user') instanceof User &&
+            $this->user == Core::get_global('user')->id
+        );
     }
 
     /**
@@ -168,6 +213,11 @@ abstract class playlist_object extends database_object implements library_item
         return $this->f_name;
     }
 
+    public function getFullname(): string
+    {
+        return scrub_out($this->get_fullname());
+    }
+
     /**
      * Get item link.
      */
@@ -191,7 +241,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {
-            $link_text    = scrub_out($this->get_fullname());
+            $link_text    = $this->getFullname();
             $this->f_link = '<a href="' . $this->get_link() . '" title="' . $link_text . '">' . $link_text . '</a>';
         }
 

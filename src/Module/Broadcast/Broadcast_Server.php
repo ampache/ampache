@@ -282,7 +282,7 @@ class Broadcast_Server implements MessageComponentInterface
     /**
      * getRunningBroadcast
      * @param int $broadcast_id
-     * @return Broadcast
+     * @return Broadcast|null
      */
     protected function getRunningBroadcast($broadcast_id): ?Broadcast
     {

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseCharsetUpdaterInterface;
 use Ampache\Module\System\Dba;
@@ -52,13 +53,17 @@ final class UpdateDbCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
         $dryRun     = $this->values()['execute'] === false;
 
         $translated_charset = Dba::translate_to_mysqlcharset($this->configContainer->get('site_charset'));
         $target_charset     = $translated_charset['charset'];
         $target_collation   = $translated_charset['collation'];
-        $table_engine       = 'InnoDB';
+        $table_engine       = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         $interactor->info(
             T_('This script makes changes to your database based on your config settings'),
@@ -88,7 +93,7 @@ final class UpdateDbCommand extends Command
             );
         } else {
             $interactor->warn(
-                T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
+                "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
                 true
             );
 

@@ -342,7 +342,15 @@ class Song extends database_object implements
         $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
-            if ($artist !== '' && $artist !== '0' && ($albumartist !== '' && $albumartist !== '0') && $artist === $albumartist) {
+            if (
+                $artist !== '' &&
+                $artist !== '0' &&
+                (
+                    $albumartist !== '' &&
+                    $albumartist !== '0'
+                ) &&
+                $artist === $albumartist
+            ) {
                 $albumartist = (string)$artists_array[0];
             }
 
@@ -943,7 +951,7 @@ class Song extends database_object implements
     /**
      * get_album_disk
      * gets album_disk of the object
-     * @return int
+     * @return int|null
      */
     public function get_album_disk(): ?int
     {
@@ -1075,7 +1083,11 @@ class Song extends database_object implements
         // Foreach them
         foreach (array_keys($fields) as $key) {
             $key = trim((string)$key);
-            if ($key === '' || $key === '0' || in_array($key, $skip_array)) {
+            if (
+                $key === '' ||
+                $key === '0' ||
+                in_array($key, $skip_array)
+            ) {
                 continue;
             }
 
@@ -2195,7 +2207,12 @@ class Song extends database_object implements
         $actions = [];
         $count   = 0;
         while (AmpConfig::get('custom_play_action_title_' . $count)) {
-            $actions[] = ['index' => ($count + 1), 'title' => AmpConfig::get('custom_play_action_title_' . $count), 'icon' => AmpConfig::get('custom_play_action_icon_' . $count), 'run' => AmpConfig::get('custom_play_action_run_' . $count)];
+            $actions[] = [
+                'index' => ($count + 1),
+                'title' => AmpConfig::get('custom_play_action_title_' . $count),
+                'icon' => AmpConfig::get('custom_play_action_icon_' . $count),
+                'run' => AmpConfig::get('custom_play_action_run_' . $count)
+            ];
             ++$count;
         }
 

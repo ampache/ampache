@@ -115,7 +115,7 @@ class Catalog_subsonic extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = 'InnoDB';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_subsonic` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -288,10 +288,8 @@ class Catalog_subsonic extends Catalog
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
                                         /* HINT: filename (file path) */
                                         AmpError::add('general', T_('Unable to insert song - %s'), $song['path']);
-                                    } else {
-                                        if ($song['coverArt']) {
-                                            $this->insertArt($song, $song_Id);
-                                        }
+                                    } elseif ($song['coverArt']) {
+                                        $this->insertArt($song, $song_Id);
                                     }
                                     $songsadded++;
                                 }

@@ -412,12 +412,23 @@ class Art extends database_object
                 $ndata      = [];
                 $data       = $vainfo->read_id3();
                 $fileformat = $data['fileformat'];
-                $apics      = $fileformat == 'flac' || $fileformat == 'ogg' ? $data['flac']['PICTURE'] : $data['id3v2']['APIC'];
+                $apics      = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? $data['flac']['PICTURE']
+                    : $data['id3v2']['APIC'];
 
                 /* is the file flac or mp3? */
-                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
-                $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = ['data' => $source, 'mime' => $mime, 'picturetypeid' => $picturetypeid, 'description' => $description];
+                $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? 'typeid'
+                    : 'picturetypeid';
+                $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
+                    ? 'image_mime'
+                    : 'mime';
+                $new_pic       = [
+                    'data' => $source,
+                    'mime' => $mime,
+                    'picturetypeid' => $picturetypeid,
+                    'description' => $description
+                ];
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][] = $new_pic;
@@ -427,7 +438,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = ['data' => $apics[0]['data'], 'description' => $apics[0]['description'], 'mime' => $apics[0]['mime'], 'picturetypeid' => $apics[0]['picturetypeid']];
+                                $ndata['attached_picture'][] = [
+                                    'data' => $apics[0]['data'],
+                                    'description' => $apics[0]['description'],
+                                    'mime' => $apics[0]['mime'],
+                                    'picturetypeid' => $apics[0]['picturetypeid']
+                                ];
                             }
                             break;
                         case 2:
@@ -440,7 +456,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                             = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId] = ['data' => $apics[$apicsId]['data'], 'mime' => $apics[$apicsId][$apic_mimetype], 'picturetypeid' => $apics[$apicsId][$apic_typeid], 'description' => $apics[$apicsId]['description']];
+                                $ndata['attached_picture'][$apicsId] = [
+                                    'data' => $apics[$apicsId]['data'],
+                                    'mime' => $apics[$apicsId][$apic_mimetype],
+                                    'picturetypeid' => $apics[$apicsId][$apic_typeid],
+                                    'description' => $apics[$apicsId]['description']
+                                ];
                             }
                             break;
                     }
@@ -1024,9 +1045,13 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle     = fopen($data['file'], 'rb');
-            if ($handle) {
-                $image_data = (string)fread($handle, Core::get_filesize($data['file']));
+            $handle = fopen($data['file'], 'rb');
+            $size   = Core::get_filesize($data['file']);
+            if (
+                $handle &&
+                $size > 0
+            ) {
+                $image_data = (string)fread($handle, $size);
                 fclose($handle);
 
                 return $image_data;
@@ -1053,7 +1078,7 @@ class Art extends database_object
      * @param string $type
      * @param string $sid
      * @param int|null $thumb
-     * @return string
+     * @return string|null
      */
     public static function url($uid, $type, $sid = null, $thumb = null): ?string
     {
@@ -1100,7 +1125,10 @@ class Art extends database_object
         $extension = self::extension($mime);
 
         if (AmpConfig::get('stream_beautiful_url')) {
-            if ($extension === '' || $extension === '0') {
+            if (
+                $extension === '' ||
+                $extension === '0'
+            ) {
                 $extension = 'jpg';
             }
 

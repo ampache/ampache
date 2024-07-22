@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 72
+config_version = 74
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -29,6 +29,11 @@ config_version = 72
 ; Either a binary name in $PATH as well as a fully qualified path is possible
 ; DEFAULT: composer
 ;composer_binary_path = "composer"
+
+; By defualt Ampache doesn't install dev packages using the --no-dev parameter
+; disable this setting to install dev packages (e.g. composer install --prefer-source --no-interaction)
+; DEFAULT: "true"
+composer_no_dev = "true"
 
 ; This value allows to override the npm binary path to distinguish between multiple npm versions
 ; Either a binary name in $PATH as well as a fully qualified path is possible
@@ -112,7 +117,6 @@ database_password = "password"
 
 ; Set a default charset for your database
 ; Don't change this unless you understand how to BACKUP and RESTORE a database!
-;
 ; DEFAULT: "utf8mb4"
 ;database_charset = "utf8mb4"
 
@@ -126,6 +130,11 @@ database_password = "password"
 ;   http://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
 ; DEFAULT: "utf8mb4_unicode_ci"
 ;database_collation = "utf8mb4_unicode_ci"
+
+; Set a default table engine for your database
+; Don't change this unless you understand how to BACKUP and RESTORE a database!
+; DEFAULT: "InnoDB"
+;database_engine = "InnoDB"
 
 ;#########################################################
 ; Session and Security                                   #

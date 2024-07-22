@@ -113,7 +113,6 @@ class Subsonic_Xml_Data
     public static function addError($code, $function): SimpleXMLElement
     {
         $xml  = self::_createFailedResponse($function);
-        /** @var SimpleXMLElement $xerr */
         $xerr = self::addChildToResultXml($xml, 'error');
         $xerr->addAttribute('code', (string)$code);
 
@@ -221,11 +220,9 @@ class Subsonic_Xml_Data
                 $letter = strtoupper((string)$artist['name'][0]);
                 if ($letter == "X" || $letter == "Y" || $letter == "Z") {
                     $letter = "X-Z";
-                } else {
-                    if (!preg_match("/^[A-W]$/", $letter)) {
-                        $sharpartists[] = $artist;
-                        continue;
-                    }
+                } elseif (!preg_match("/^[A-W]$/", $letter)) {
+                    $sharpartists[] = $artist;
+                    continue;
                 }
 
                 if ($letter != $xlastletter) {
@@ -583,7 +580,6 @@ class Subsonic_Xml_Data
     {
         $album = new Album(self::_getAmpacheId($album_id));
         $album->format();
-        /** @var SimpleXMLElement $xdir */
         $xdir = self::addChildToResultXml($xml, 'directory');
         $xdir->addAttribute('id', (string)$album_id);
         if ($album->album_artist) {

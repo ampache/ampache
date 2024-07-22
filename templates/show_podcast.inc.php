@@ -102,7 +102,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
                 T_('RSS Feed'),
                 ['object_type' => 'podcast', 'object_id' => (string)$podcast->getId()]
             ); ?>
-        /li>
+        </li>
         <?php } ?>
         <li>
             <a href="<?php echo $podcast->getWebsite(); ?>" target="_blank">

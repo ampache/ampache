@@ -77,9 +77,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             [LegacyLogger::CONTEXT_TYPE => __CLASS__]
         );
 
-        $includes = [
-            'url-rels'
-        ];
+        $includes = ['url-rels'];
         try {
             $release = $this->musicBrainz->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {

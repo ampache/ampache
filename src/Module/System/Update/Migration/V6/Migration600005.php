@@ -120,18 +120,14 @@ final class Migration600005 extends AbstractMigration
 
         $this->logger->notice(
             'update_600005: migrate {' . count($migrate) . '} albums',
-            [
-                LegacyLogger::CONTEXT_TYPE => self::class
-            ]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // get the songs for these id's and migrate to the base id
         foreach ($migrate as $albums) {
             $this->logger->notice(
                 'update_600005: migrate album: ' . $albums['old'] . ' => ' . $albums['new'],
-                [
-                    LegacyLogger::CONTEXT_TYPE => self::class
-                ]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $sql = "UPDATE `song` SET `album` = ? WHERE `album` = ?;";
@@ -146,9 +142,7 @@ final class Migration600005 extends AbstractMigration
         if (Dba::fetch_assoc($db_results)) {
             $this->logger->emergency(
                 'update_600005: FAIL',
-                [
-                    LegacyLogger::CONTEXT_TYPE => self::class
-                ]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return;
@@ -161,9 +155,7 @@ final class Migration600005 extends AbstractMigration
 
         $this->logger->debug(
             'update_600005: SUCCESS',
-            [
-                LegacyLogger::CONTEXT_TYPE => self::class
-            ]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
     }
 }

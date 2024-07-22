@@ -117,7 +117,13 @@ class AmpacheAmazon implements AmpachePluginInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['amazon_base_url'])) || !strlen(trim($data['amazon_developer_public_key'])) || !strlen(trim($data['amazon_developer_private_api_key'])) || !strlen(trim($data['amazon_max_results_pages'])) || !strlen(trim($data['amazon_developer_associate_tag']))) {
+        if (
+            !strlen(trim($data['amazon_base_url'])) ||
+            !strlen(trim($data['amazon_developer_public_key'])) ||
+            !strlen(trim($data['amazon_developer_private_api_key'])) ||
+            !strlen(trim($data['amazon_max_results_pages'])) ||
+            !strlen(trim($data['amazon_developer_associate_tag']))
+        ) {
             $data                                     = [];
             $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
             $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');

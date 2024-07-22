@@ -292,7 +292,12 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())) {
+                    if (
+                        $this->overwrite_name &&
+                        $object->mbid !== null &&
+                        VaInfo::is_mbid($object->mbid) &&
+                        strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
+                    ) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];

@@ -3,7 +3,8 @@ build:
         php:
             version: "8.2"
             ini:
-                memory_limit: "-1"            
+                memory_limit: "-1"
+        node: v18.19.0
     nodes:
         coverage:
             tests:

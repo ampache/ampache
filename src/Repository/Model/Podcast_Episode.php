@@ -143,11 +143,8 @@ class Podcast_Episode extends database_object implements
         $this->id = $episode_id;
         if (
             $this->file !== null &&
-            (
-                $this->file !== null &&
-                $this->file !== '' &&
-                $this->file !== '0'
-            )
+            $this->file !== '' &&
+            $this->file !== '0'
         ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
@@ -188,11 +185,8 @@ class Podcast_Episode extends database_object implements
         // format the file
         if (
             $this->file !== null &&
-            (
-                $this->file !== null &&
-                $this->file !== '' &&
-                $this->file !== '0'
-            )
+            $this->file !== '' &&
+            $this->file !== '0'
         ) {
             $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
@@ -206,9 +200,6 @@ class Podcast_Episode extends database_object implements
         $hour           = sprintf("%02d", floor($min / 60));
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
-        if (AmpConfig::get('show_played_times')) {
-        }
     }
 
     public function getCategory(): string

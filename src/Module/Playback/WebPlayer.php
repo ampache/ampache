@@ -99,17 +99,15 @@ class WebPlayer
         } elseif ($media = self::get_media_object($urlinfo)) {
             $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
+        } elseif ($item->type == 'live_stream') {
+            $types['real'] = $item->codec;
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
+            }
         } else {
-            if ($item->type == 'live_stream') {
-                $types['real'] = $item->codec;
-                if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                    $types['player'] = "oga";
-                }
-            } else {
-                $ext = pathinfo($item->url, PATHINFO_EXTENSION);
-                if (!empty($ext)) {
-                    $types['real'] = $ext;
-                }
+            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+            if (!empty($ext)) {
+                $types['real'] = $ext;
             }
         }
 
@@ -156,23 +154,17 @@ class WebPlayer
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
             if ($types['real'] == "ogg" || $types['real'] == "opus") {
                 $types['player'] = "oga";
-            } else {
-                if ($types['real'] == "mp4") {
-                    $types['player'] = "m4a";
-                }
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4a";
             }
         }
         if ($urlinfo['type'] == 'video') {
             if ($types['real'] == "ogg") {
                 $types['player'] = "ogv";
-            } else {
-                if ($types['real'] == "webm") {
-                    $types['player'] = "webmv";
-                } else {
-                    if ($types['real'] == "mp4") {
-                        $types['player'] = "m4v";
-                    }
-                }
+            } elseif ($types['real'] == "webm") {
+                $types['player'] = "webmv";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4v";
             }
         }
 
@@ -200,7 +192,18 @@ class WebPlayer
 
         // Check transcode is required
         $valid_types = Stream::get_stream_types_for_type($file_type);
-        if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
+        if (
+            $transcode_cfg == 'always' ||
+            !empty($force_type) ||
+            !in_array('native', $valid_types) ||
+            (
+                $types['real'] != $file_type &&
+                (
+                    !AmpConfig::get('webplayer_flash') ||
+                    $urlinfo['type'] != 'song'
+                )
+            )
+        ) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {

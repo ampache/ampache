@@ -358,12 +358,10 @@ class AmazonSearch
         // If it's in the tag list, don't grab our search results
         if (strlen($this->_sourceTag)) {
             $this->_currentTag = $tag;
+        } elseif ($tag != "TotalPages") {
+            $this->_currentTag = '';
         } else {
-            if ($tag != "TotalPages") {
-                $this->_currentTag = '';
-            } else {
-                $this->_currentTag = $tag;
-            }
+            $this->_currentTag = $tag;
         }
     }
 

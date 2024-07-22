@@ -46,7 +46,7 @@ final class PlaylistRemoveSong3Method
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
         $track    = (int) scrub_in((string) $input['track']);
-        if (!$playlist->has_access()) {
+        if (!$playlist->has_collaborate()) {
             echo Xml3_Data::error(401, T_('Access denied to this playlist.'));
         } else {
             $playlist->delete_track_number($track);

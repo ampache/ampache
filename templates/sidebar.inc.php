@@ -93,15 +93,35 @@ $t_logout          = T_('Log out'); ?>
     $className = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = ['id' => 'home', 'title' => $t_home, 'icon' => 'headphones', 'access' => AccessLevelEnum::GUEST];
+    $sidebar_items[] = [
+        'id' => 'home',
+        'title' => $t_home,
+        'icon' => 'headphones',
+        'access' => AccessLevelEnum::GUEST
+    ];
     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) {
-        $sidebar_items[] = ['id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volume_up', 'access' => AccessLevelEnum::GUEST];
+        $sidebar_items[] = [
+            'id' => 'localplay',
+            'title' => $t_localplay,
+            'icon' => 'volume_up',
+            'access' => AccessLevelEnum::GUEST
+        ];
     }
     if ($is_session) {
-        $sidebar_items[] = ['id' => 'preferences', 'title' => $t_preferences, 'icon' => 'page_info', 'access' => AccessLevelEnum::GUEST];
+        $sidebar_items[] = [
+            'id' => 'preferences',
+            'title' => $t_preferences,
+            'icon' => 'page_info',
+            'access' => AccessLevelEnum::GUEST
+        ];
     }
-    $sidebar_items[] = ['id' => 'admin', 'title' => T_('Admin'), 'icon' => 'dns', 'access' => AccessLevelEnum::MANAGER]; ?>
-    <?php foreach ($sidebar_items as $item) {
+    $sidebar_items[] = [
+        'id' => 'admin',
+        'title' => T_('Admin'),
+        'icon' => 'dns',
+        'access' => AccessLevelEnum::MANAGER
+    ];
+    foreach ($sidebar_items as $item) {
         if (Access::check(AccessTypeEnum::INTERFACE, $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $className) ? ' active' : '';
             $li_params = "id='sb_tab_" . $item['id'] . "' class='sb1" . $active . "'"; ?>

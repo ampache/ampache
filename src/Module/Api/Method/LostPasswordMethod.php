@@ -60,7 +60,7 @@ final class LostPasswordMethod
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public static function handshake(array $input): bool
+    public static function lost_password(array $input): bool
     {
         if (!Mailer::is_mail_enabled()) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);

@@ -94,11 +94,13 @@ class UPnPDevice
 
         $this->_settings['descriptionURL'] = $descriptionUrl;
 
-        Session::create([
-            'type' => 'stream',
-            'sid' => 'upnp_dev_' . $descriptionUrl,
-            'value' => json_encode($this->_settings)
-        ]);
+        Session::create(
+            [
+                'type' => 'stream',
+                'sid' => 'upnp_dev_' . $descriptionUrl,
+                'value' => json_encode($this->_settings)
+            ]
+        );
     }
 
     /**

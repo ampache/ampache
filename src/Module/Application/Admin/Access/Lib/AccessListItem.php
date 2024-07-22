@@ -78,7 +78,7 @@ final class AccessListItem implements AccessListItemInterface
 
         $user = $this->modelFactory->createUser($userId);
 
-        return sprintf('%s (%s)', $user->fullname, $user->username);
+        return scrub_out($user->getFullDisplayName());
     }
 
     /**

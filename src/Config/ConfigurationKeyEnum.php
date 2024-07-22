@@ -82,6 +82,7 @@ final class ConfigurationKeyEnum
     public const CATALOG_FILTER                        = 'catalog_filter';
     public const COMMON_ABBR                           = 'common_abbr';
     public const COMPOSER_BINARY_PATH                  = 'composer_binary_path';
+    public const COMPOSER_NO_DEV                       = 'composer_no_dev';
     public const CRON_CACHE                            = 'cron_cache';
     public const CUSTOM_BLANKALBUM                     = 'custom_blankalbum';
     public const CUSTOM_BLANKMOVIE                     = 'custom_blankmovie';

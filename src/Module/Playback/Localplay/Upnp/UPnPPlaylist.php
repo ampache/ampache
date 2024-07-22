@@ -167,10 +167,12 @@ class UPnPPlaylist
     private function PlayListSave()
     {
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
-        $pls_data = json_encode([
-            'upnp_playlist' => $this->_songs,
-            'upnp_current' => $this->_current
-        ]);
+        $pls_data = json_encode(
+            [
+                'upnp_playlist' => $this->_songs,
+                'upnp_current' => $this->_current
+            ]
+        );
         if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $pls_data]);
         } else {

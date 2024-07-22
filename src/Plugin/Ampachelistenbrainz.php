@@ -146,15 +146,17 @@ class Ampachelistenbrainz implements AmpachePluginInterface
         if (empty($additional_info)) {
             $track_metadata = array_splice($track_metadata, 1);
         }
-        $json = json_encode([
-            'listen_type' => 'single',
-            'payload' => [
-                [
-                    'listened_at' => time(),
-                    'track_metadata' => $track_metadata
+        $json = json_encode(
+            [
+                'listen_type' => 'single',
+                'payload' => [
+                    [
+                        'listened_at' => time(),
+                        'track_metadata' => $track_metadata
+                    ]
                 ]
             ]
-        ]);
+        );
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
         $response = $this->post_json_url('/1/submit-listens', $json);
 

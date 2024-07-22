@@ -53,3 +53,5 @@ web.config
 *.swp
 *.v11.suo
 *~
+.php-cs-fixer.cache
+.phpunit.result.cache

@@ -371,14 +371,10 @@ if (!function_exists('apache_request_headers')) {
             if (substr($name, 0, 5) == 'HTTP_') {
                 $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
-            } else {
-                if ($name == "CONTENT_TYPE") {
-                    $headers["Content-Type"] = $value;
-                } else {
-                    if ($name == "CONTENT_LENGTH") {
-                        $headers["Content-Length"] = $value;
-                    }
-                }
+            } elseif ($name == "CONTENT_TYPE") {
+                $headers["Content-Type"] = $value;
+            } elseif ($name == "CONTENT_LENGTH") {
+                $headers["Content-Length"] = $value;
             }
         }
 
@@ -943,17 +939,25 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * @param int $catalog_id
  * @param string $style
  * @param bool $allow_none
- * @param string $filter_type
+ * @param string $gather_types
+ * @param string $catalog_type
  */
-function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = ''): void
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $gather_types = '', $catalog_type = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
     $params = [];
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
-    if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ? ";
-        $params[] = $filter_type;
+    $where  = "WHERE";
+    if (!empty($gather_types)) {
+        $sql .= $where . " `gather_types` = ? ";
+        $params[] = $gather_types;
+        $where    = "AND";
+    }
+
+    if (!empty($catalog_type)) {
+        $sql .= $where . " `catalog_type` = ? ";
+        $params[] = $catalog_type;
     }
     $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
@@ -965,9 +969,13 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     if ($allow_none) {
         echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
-    if (empty($results) && !empty($filter_type)) {
+
+    if (
+        empty($results) &&
+        !empty($gather_types)
+    ) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
+        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $gather_types) . "</option>\n";
     }
 
     foreach ($results as $row) {
@@ -1020,7 +1028,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
         if (!empty($row['external_link'])) {
             echo " data-link=\"" . $row['external_link'] . "\"";
         }
-        echo ">" . $row['name'] . "</option>\n";
+        echo ">" . scrub_out($row['name']) . "</option>\n";
     } // end while
 
     echo "</select>\n";
@@ -1133,7 +1141,11 @@ function show_table_render($render = false, $force = false): void
             define('TABLE_RENDERED', 1);
         } ?>
         <?php if ($render) { ?>
-            <script>sortPlaylistRender();</script>
+            <script>
+                $(document).ready(function () {
+                    sortPlaylistRender();
+                });
+            </script>
             <?php
         }
     }

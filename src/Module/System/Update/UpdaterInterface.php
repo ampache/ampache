@@ -50,6 +50,20 @@ interface UpdaterInterface
     public function hasPendingUpdates(): bool;
 
     /**
+     * Checks to see if the database db_version is higher than the code db_version
+     */
+    public function hasOverUpdated(): bool;
+
+    /**
+     * Rollback the database to the required version
+     *
+     * @throws UpdateFailedException
+     */
+    public function rollback(
+        ?Interactor $interactor = null
+    ): void;
+
+    /**
      * Performs update migrations
      *
      * @throws UpdateException

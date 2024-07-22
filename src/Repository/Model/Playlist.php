@@ -40,6 +40,8 @@ class Playlist extends playlist_object
 {
     protected const DB_TABLENAME = 'playlist';
 
+    public ?string $collaborate = '';
+
     /* Generated Elements */
     public $genre;
 
@@ -141,7 +143,13 @@ class Playlist extends playlist_object
             return parent::get_from_cache($key, $user_id);
         }
 
-        $is_admin = ($userOnly === false || (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) || $user_id == -1));
+        $is_admin = (
+            $userOnly === false ||
+            (
+                Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user_id) ||
+                $user_id == -1
+            )
+        );
         $sql      = "SELECT `id` FROM `playlist` ";
         $params   = [];
         $join     = 'WHERE';
@@ -176,7 +184,10 @@ class Playlist extends playlist_object
             $results[] = (int)$row['id'];
         }
 
-        if ($playlist_name === '' || $playlist_name === '0') {
+        if (
+            $playlist_name === '' ||
+            $playlist_name === '0'
+        ) {
             parent::add_to_cache($key, $user_id, $results);
         }
 
@@ -355,7 +366,12 @@ class Playlist extends playlist_object
             //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
             $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = ['object_type' => LibraryItemEnum::from($row['object_type']), 'object_id' => (int)$row['object_id'], 'track' => (int)$row['track'], 'track_id' => $row['id']];
+                $results[] = [
+                    'object_type' => LibraryItemEnum::from($row['object_type']),
+                    'object_id' => (int)$row['object_id'],
+                    'track' => (int)$row['track'],
+                    'track_id' => $row['id']
+                ];
             }
         }
 
@@ -490,9 +506,15 @@ class Playlist extends playlist_object
         if (isset($data['pl_user']) && $data['pl_user'] != $this->user) {
             $this->_update_user($data['pl_user']);
         }
+
+        if (isset($data['collaborate']) && $data['collaborate'] != $this->collaborate) {
+            $this->_update_collaborate($data['collaborate']);
+        }
+
         if (isset($data['last_count']) && $data['last_count'] != $this->last_count) {
             $this->_set_last($data['last_count'], 'last_count');
         }
+
         if (isset($data['last_duration']) && $data['last_duration'] != $this->last_duration) {
             $this->_set_last($data['last_duration'], 'last_duration');
         }
@@ -539,6 +561,27 @@ class Playlist extends playlist_object
     {
         if ($this->_update_item('name', $new_name)) {
             $this->name = $new_name;
+        }
+    }
+
+    /**
+     * _update_collaborate
+     * This updates playlist collaborators, it calls the generic update_item function
+     * @param string[] $new_list
+     */
+    private function _update_collaborate(array $new_list): void
+    {
+        $collaborate = implode(',', $new_list);
+        if ($this->_update_item('collaborate', $collaborate)) {
+            $this->collaborate = $collaborate;
+        }
+
+        $sql = "DELETE FROM `user_playlist_map` WHERE `playlist_id` = ? AND `user_id` NOT IN (" . $collaborate . ");";
+        Dba::write($sql, [$this->id]);
+
+        foreach ($new_list as $user_id) {
+            $sql = "INSERT IGNORE INTO `user_playlist_map` (`playlist_id`, `user_id`) VALUES (?, ?);";
+            Dba::write($sql, [$this->id, $user_id]);
         }
     }
 
@@ -629,7 +672,7 @@ class Playlist extends playlist_object
 
     /**
      * add_medias
-     * @param array<array{object_type: LibraryItemEnum, object_id: int}> $medias
+     * @param array<array{object_type: LibraryItemEnum|string, object_id: int}> $medias
      */
     public function add_medias(array $medias): bool
     {
@@ -639,8 +682,8 @@ class Playlist extends playlist_object
 
         debug_event(self::class, "add_medias to: " . $this->id, 5);
         $unique     = (bool) AmpConfig::get('unique_playlist', false);
-        $track_data = ($unique) ?
-            $this->get_songs()
+        $track_data = ($unique)
+            ? $this->get_songs()
             : [];
         $sql        = "SELECT MAX(`track`) AS `track` FROM `playlist_data` WHERE `playlist` = ? ";
         $db_results = Dba::read($sql, [$this->id]);
@@ -650,15 +693,18 @@ class Playlist extends playlist_object
         $sql        = "REPLACE INTO `playlist_data` (`playlist`, `object_id`, `object_type`, `track`) VALUES ";
         $values     = [];
         foreach ($medias as $data) {
+            $object_type = (is_string($data['object_type']))
+                ? LibraryItemEnum::tryFrom((string)$data['object_type'])
+                : $data['object_type'];
             if ($unique && in_array($data['object_id'], $track_data)) {
-                debug_event(self::class, "Can't add a duplicate " . $data['object_type']->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
+                debug_event(self::class, "Can't add a duplicate " . $object_type?->value . " (" . $data['object_id'] . ") when unique_playlist is enabled", 3);
             } else {
                 ++$count;
                 $track = $base_track + $count;
                 $sql .= "(?, ?, ?, ?), ";
                 $values[] = $this->id;
                 $values[] = $data['object_id'];
-                $values[] = $data['object_type']->value;
+                $values[] = $object_type?->value;
                 $values[] = $track;
             } // if valid id
         }
@@ -959,7 +1005,10 @@ class Playlist extends playlist_object
         $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = ['id' => $row['id'], 'track' => $count];
+            $results[] = [
+                'id' => $row['id'],
+                'track' => $count
+            ];
             ++$count;
         }
 

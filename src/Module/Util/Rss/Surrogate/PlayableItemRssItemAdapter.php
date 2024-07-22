@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -154,7 +155,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;
                 if ($this->user !== null) {
-                    $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                    $data['url']  = $media->play_url('', AccessTypeEnum::API->value, false, $this->user->getId(), $this->user->streamtoken);
                 }
             }
 

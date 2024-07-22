@@ -116,6 +116,7 @@ class Api
         Method\PlaylistDeleteMethod::ACTION => Method\PlaylistDeleteMethod::class,
         Method\PlaylistEditMethod::ACTION => Method\PlaylistEditMethod::class,
         Method\PlaylistGenerateMethod::ACTION => Method\PlaylistGenerateMethod::class,
+        Method\PlaylistHashMethod::ACTION => Method\PlaylistHashMethod::class,
         Method\PlaylistMethod::ACTION => Method\PlaylistMethod::class,
         Method\PlaylistRemoveSongMethod::ACTION => Method\PlaylistRemoveSongMethod::class,
         Method\PlaylistsMethod::ACTION => Method\PlaylistsMethod::class,
@@ -183,8 +184,8 @@ class Api
     public const DEFAULT_VERSION = 6; // AMPACHE_VERSION
 
     public static string $auth_version    = '350001';
-    public static string $version         = '6.5.0'; // AMPACHE_VERSION
-    public static string $version_numeric = '650000'; // AMPACHE_VERSION
+    public static string $version         = '6.5.1'; // AMPACHE_VERSION
+    public static string $version_numeric = '651000'; // AMPACHE_VERSION
 
     /** @var Browse $browse */
     public static $browse = null;
@@ -202,7 +203,7 @@ class Api
         }
 
         // ensure user_id is set
-        self::$browse->set_user_id($user->getId());
+        self::$browse->set_user_id($user);
 
         return self::$browse;
     }
@@ -248,10 +249,10 @@ class Api
     /**
      * empty
      * call the correct empty message depending on format
-     * @param string $empty_type
+     * @param string|null $empty_type
      * @param string $format
      */
-    public static function empty($empty_type, $format = 'xml'): void
+    public static function empty(?string $empty_type, $format = 'xml'): void
     {
         switch ($format) {
             case 'json':
@@ -364,7 +365,8 @@ class Api
             'shares' => $counts['share'],
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label']
+            'labels' => $counts['label'],
+            'username' => $client?->getUsername(),
         ];
 
         return array_merge($autharray, $outarray);

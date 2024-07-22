@@ -29,14 +29,14 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Catalog $catalog */
 
 /* HINT: Catalog Name */
-Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
+Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->name) . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
-            <td><?php echo T_('Name'); ?>:</td>
+            <td><?php echo T_('Name'); ?></td>
             <td><input type="text" name="name" value="<?php echo scrub_out($catalog->name); ?>" autofocus></input></td>
             <td style="vertical-align:top; font-family: monospace;" rowspan="5">
-                <strong><?php echo T_('Auto-inserted Fields'); ?>:</strong><br />
+                <strong><?php echo T_('Auto-inserted Fields'); ?></strong><br />
                 <span class="format-specifier">%A</span> = <?php echo T_('Album'); ?><br />
                 <span class="format-specifier">%a</span> = <?php echo T_('Album Artist'); ?><br />
                 <span class="format-specifier">%c</span> = <?php echo T_('Comment'); ?><br />
@@ -52,7 +52,7 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
                 <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
                 <?php if (AmpConfig::get('allow_video')) { ?>
-                    <strong><?php echo T_('TV Shows'); ?>:</strong><br />
+                    <strong><?php echo T_('TV Shows'); ?></strong><br />
                     <span class="format-specifier">%S</span> = <?php echo T_('TV Show'); ?><br />
                     <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
                     <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
@@ -66,11 +66,11 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), $catalog->name . ' (' .
             <td><?php echo scrub_out(ucfirst((string)$catalog->catalog_type)); ?></td>
         </tr>
         <tr>
-            <td><?php echo T_('Catalog Media Type'); ?>:</td>
+            <td><?php echo T_('Catalog Media Type'); ?></td>
             <td><?php echo scrub_out(ucfirst((string) $catalog->gather_types)); ?></td>
         </tr>
         <tr>
-            <td><?php echo T_('Filename Pattern'); ?>:</td>
+            <td><?php echo T_('Filename Pattern'); ?></td>
             <td><input type="text" name="rename_pattern" value="<?php echo scrub_out($catalog->rename_pattern); ?>" /></td>
         </tr>
         <tr>

@@ -133,17 +133,15 @@ final class Session implements SessionInterface
                 }
                 $this->userRepository->updateLastSeen((int) Core::get_global('user')?->getId());
             }
-        } else {
+        } elseif (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
             // If Auth, but no session is set
-            if (array_key_exists('sid', $_REQUEST) && array_key_exists('userdata', $_SESSION) && array_key_exists('username', $_SESSION['userdata'])) {
-                session_name($sessionName);
-                session_id(scrub_in((string) $_REQUEST['sid']));
-                session_start();
-                self::createGlobalUser(new User($_SESSION['userdata']['uid']));
-            } else {
-                $GLOBALS['user'] = null;
-            }
-        } // If NO_SESSION passed
+            session_name($sessionName);
+            session_id(scrub_in((string) $_REQUEST['sid']));
+            session_start();
+            self::createGlobalUser(new User($_SESSION['userdata']['uid']));
+        } else {
+            $GLOBALS['user'] = null;
+        }
 
         return true;
     }
@@ -330,7 +328,7 @@ final class Session implements SessionInterface
                 break;
         } // end switch on data type
 
-        if (Session::exists($type, $key)) {
+        if (self::exists($type, $key)) {
             debug_event(self::class, $type . ' session already exists.', 3);
 
             return $key;
@@ -801,11 +799,13 @@ final class Session implements SessionInterface
                 $sql        = "SELECT * FROM `session_remember` WHERE `username` = ? AND `token` = ? AND `expire` >= ?";
                 $db_results = Dba::read($sql, [$username, $token, time()]);
                 if (Dba::num_rows($db_results) > 0) {
-                    Session::create_cookie();
-                    self::create([
-                        'type' => 'mysql',
-                        'username' => $username
-                    ]);
+                    self::create_cookie();
+                    self::create(
+                        [
+                            'type' => 'mysql',
+                            'username' => $username
+                        ]
+                    );
                     $_SESSION['userdata']['username'] = $username;
                     $auth                             = true;
                 }

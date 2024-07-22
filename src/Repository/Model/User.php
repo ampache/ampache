@@ -65,11 +65,11 @@ class User extends database_object
 
     public ?string $apikey = null;
 
-    public int $access;
+    public int $access = 0;
 
-    public bool $disabled;
+    public bool $disabled = true;
 
-    public int $last_seen;
+    public int $last_seen = 0;
 
     public ?int $create_date = null;
 
@@ -79,13 +79,13 @@ class User extends database_object
 
     public ?string $city = null;
 
-    public bool $fullname_public;
+    public bool $fullname_public = false;
 
     public ?string $rsstoken = null;
 
     public ?string $streamtoken = null;
 
-    public int $catalog_filter_group;
+    public int $catalog_filter_group = 0;
 
     // Constructed variables
     public string $ip_history = '';
@@ -1275,6 +1275,15 @@ class User extends database_object
     }
 
     /**
+     * Get item name based on whether they allow public fullname access.
+     * @return string[]
+     */
+    public static function getValidArray(): array
+    {
+        return static::getUserRepository()->getValidArray();
+    }
+
+    /**
      * get_avatar
      * Get the user avatar
      * @param bool $local
@@ -1463,7 +1472,7 @@ class User extends database_object
      */
     public function getPreferenceValue(string $preferenceName)
     {
-        return Preference::get_by_user($this->getId(), $preferenceName);
+        return Preference::get_by_user($this->id, $preferenceName);
     }
 
     public function getRssToken(): string

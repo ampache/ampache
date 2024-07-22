@@ -129,7 +129,7 @@ class AmpacheOmdb implements AmpachePluginInterface
      * @param array $gather_types
      * @param array $media_info
      */
-    public function get_metadata($gather_types, $media_info): ?array
+    public function get_metadata($gather_types, $media_info): array
     {
         debug_event('omdb.plugin', 'Getting metadata from OMDb...', 5);
 
@@ -137,7 +137,7 @@ class AmpacheOmdb implements AmpachePluginInterface
         if (!in_array('tvshow', $gather_types) && !in_array('movie', $gather_types)) {
             debug_event('omdb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return null;
+            return [];
         }
 
         $title = $media_info['original_name'] ?? $media_info['title'];

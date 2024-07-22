@@ -54,7 +54,7 @@ final class PlaylistDeleteMethod
         }
         ob_end_clean();
         $playlist = new Playlist($input['filter']);
-        if (!$playlist->has_access($user->id) && $user->access !== 100) {
+        if (!$playlist->has_access($user)) {
             Api::error('Require: 100', ErrorCodeEnum::FAILED_ACCESS_CHECK, self::ACTION, 'account', $input['api_format']);
         } else {
             $playlist->delete();

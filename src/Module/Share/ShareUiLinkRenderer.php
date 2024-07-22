@@ -72,19 +72,18 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                     $object_type->value,
                     $object_id
                 );
-            } else {
-                if (
-                    $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
-                    $this->zipHandler->isZipable($object_type->value)
-                ) {
-                    $dllink = sprintf(
-                        '%s/batch.php?action=%s&id=%d',
-                        $webPath,
-                        $object_type->value,
-                        $object_id
-                    );
-                }
+            } elseif (
+                $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
+                $this->zipHandler->isZipable($object_type->value)
+            ) {
+                $dllink = sprintf(
+                    '%s/batch.php?action=%s&id=%d',
+                    $webPath,
+                    $object_type->value,
+                    $object_id
+                );
             }
+
             if (!empty($dllink)) {
                 if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::REQUIRE_SESSION)) {
                     // Add session information to the link to avoid authentication

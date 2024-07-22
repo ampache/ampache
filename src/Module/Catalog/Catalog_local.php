@@ -128,7 +128,7 @@ class Catalog_local extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = 'InnoDB';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -451,15 +451,13 @@ class Catalog_local extends Catalog
 
                         return false;
                     }
-                } else {
-                    if (count($this->get_gather_types('video')) > 0) {
-                        if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
-                            debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
-                        } else {
-                            debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
+                } elseif (count($this->get_gather_types('video')) > 0) {
+                    if ($is_video_file && $this->_insert_local_video($full_file, $options)) {
+                        debug_event('local.catalog', 'Imported video file: ' . $full_file, 5);
+                    } else {
+                        debug_event('local.catalog', 'Skipped video file: ' . $full_file, 5);
 
-                            return false;
-                        }
+                        return false;
                     }
                 }
 
@@ -1331,6 +1329,17 @@ class Catalog_local extends Catalog
             }
             $file_exists = ($target_file !== null && is_file($target_file));
             $media       = new Song($song_id);
+
+            if (
+                $media->isNew() ||
+                !$media->file ||
+                !is_file($media->file)
+            ) {
+                debug_event('local.catalog', sprintf('Not Found: %s', $media->file), 3);
+
+                return false;
+            }
+
             // check the old path too
             if ($file_exists) {
                 // get the time for the cached file and compare
@@ -1348,6 +1357,7 @@ class Catalog_local extends Catalog
                     $file_exists = false;
                 }
             }
+
             if (!$file_exists) {
                 // transcode to the new path
                 $transcode_settings = $media->get_transcode_settings($target);

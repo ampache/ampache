@@ -61,6 +61,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 
         // Switch on the actions
         switch ($action) {
+            case 'basket_refresh':
             case 'refresh_rightbar':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
@@ -72,9 +73,6 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     }
                 } // end switch
 
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
-                break;
-            case 'basket_refresh':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'basket':

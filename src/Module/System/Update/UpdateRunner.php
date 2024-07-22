@@ -66,6 +66,54 @@ final class UpdateRunner implements UpdateRunnerInterface
     }
 
     /**
+     * Run the rollback queries on the database
+     *
+     * @throws UpdateFailedException
+     */
+    public function runRollback(
+        int $currentVersion,
+        ?Interactor $interactor = null
+    ): void {
+        $this->logger->notice(
+            'Downgrade starting',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        /* Nuke All Active session before we start the mojo */
+        $this->connection->query('TRUNCATE session');
+
+        // Prevent the script from timing out, which could be bad
+        set_time_limit(0);
+
+        $this->logger->notice(
+            sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        // set the new version
+        $this->updateInfoRepository->setValue(
+            UpdateInfoEnum::DB_VERSION,
+            (string)Versions::MAXIMUM_UPDATABLE_VERSION
+        );
+
+        // Let's also clean up the preferences unconditionally
+        $this->logger->notice(
+            'Rebuild preferences',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        User::rebuild_all_preferences();
+
+        // translate preferences on DB update
+        Preference::translate_db();
+
+        $this->logger->notice(
+            'Migration complete',
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+    }
+
+    /**
      * Runs the migrations with are determined by the given updates
      *
      * @param Traversable<array{
@@ -156,7 +204,7 @@ final class UpdateRunner implements UpdateRunnerInterface
     ): Generator {
         $collation = $this->configContainer->get('database_collation') ?? 'utf8mb4_unicode_ci';
         $charset   = $this->configContainer->get('database_charset') ?? 'utf8mb4';
-        $engine    = 'InnoDB';
+        $engine    = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         foreach ($updates as $update) {
             $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine);
@@ -169,9 +217,7 @@ final class UpdateRunner implements UpdateRunnerInterface
                 } catch (DatabaseException $e) {
                     $this->logger->warning(
                         'Missing table: ' . $tableName,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     if (!$migrate) {
@@ -188,9 +234,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                     $this->logger->critical(
                         $error,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     throw new UpdateFailedException($error);
@@ -198,9 +242,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 $this->logger->critical(
                     sprintf('Created missing table: %s', $tableName),
-                    [
-                        LegacyLogger::CONTEXT_TYPE => self::class
-                    ]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 yield $tableName;

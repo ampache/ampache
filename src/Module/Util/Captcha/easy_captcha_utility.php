@@ -60,7 +60,7 @@ class easy_captcha_utility
     #-- script was called directly
 
     /**
-     * @return boolean
+     * @return bool
      */
     public static function API()
     {

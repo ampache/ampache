@@ -1861,31 +1861,25 @@ final class VaInfo implements VaInfoInterface
                 $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
                 preg_match("~(?<=[Ss])\d+~", $file, $season);
                 preg_match("~(?<=[Ee])\d+~", $file, $episode);
-            } else {
-                if (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
-                    $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~", $file);
-                    preg_match("~\d+(?=[Xx])~", $file, $season);
-                    preg_match("~(?<=[Xx])\d+~", $file, $episode);
-                } else {
-                    if (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                        $temp = preg_split(
-                            "~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
-                            $file,
-                            3
-                        );
-                        preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
-                        preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
-                    } else {
-                        if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
-                            $temp      = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
-                            $season[0] = $seasonEpisode[1];
-                            if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                                $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
-                                $season[0]  = $seasonEpisode[1];
-                                $episode[0] = $seasonEpisode[2];
-                            }
-                        }
-                    }
+            } elseif (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
+                $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~", $file);
+                preg_match("~\d+(?=[Xx])~", $file, $season);
+                preg_match("~(?<=[Xx])\d+~", $file, $episode);
+            } elseif (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
+                $temp = preg_split(
+                    "~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
+                    $file,
+                    3
+                );
+                preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
+                preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
+            } elseif (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
+                $temp      = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
+                $season[0] = $seasonEpisode[1];
+                if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
+                    $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
+                    $season[0]  = $seasonEpisode[1];
+                    $episode[0] = $seasonEpisode[2];
                 }
             }
 
@@ -1901,25 +1895,21 @@ final class VaInfo implements VaInfoInterface
                     // We have season and episode, we assume parent folder is the tvshow name
                     $filetitle         = end($folders);
                     $results['tvshow'] = $this->formatVideoName($filetitle);
-                } else {
+                } elseif (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
                     // Or we assume each parent folder contains one missing information
-                    if (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
-                        if ($matches != null) {
-                            $results['tvshow']        = $this->formatVideoName($matches[1]);
-                            $results['tvshow_season'] = $matches[2];
-                            if (isset($matches[5])) {
-                                $results['tvshow_episode'] = $matches[5];
-                            } else {
-                                // match pattern like 10.episode name.mp4
-                                if (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
-                                    $results['tvshow_episode'] = $matches[1];
-                                    $results['original_name']  = $this->formatVideoName($matches[2]);
-                                } else {
-                                    // Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
-                                    preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
-                                    $results['tvshow_episode'] = $matches[2];
-                                }
-                            }
+                    if ($matches != null) {
+                        $results['tvshow']        = $this->formatVideoName($matches[1]);
+                        $results['tvshow_season'] = $matches[2];
+                        if (isset($matches[5])) {
+                            $results['tvshow_episode'] = $matches[5];
+                        } elseif (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
+                            // match pattern like 10.episode name.mp4
+                            $results['tvshow_episode'] = $matches[1];
+                            $results['original_name']  = $this->formatVideoName($matches[2]);
+                        } else {
+                            // Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
+                            preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
+                            $results['tvshow_episode'] = $matches[2];
                         }
                     }
                 }

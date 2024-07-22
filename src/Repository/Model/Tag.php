@@ -720,7 +720,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = ['id' => $row['id'], 'name' => $row['name'], 'is_hidden' => $row['is_hidden'], 'count' => $row['count'] ?? 0];
+            $results[$row['id']] = [
+                'id' => $row['id'],
+                'name' => $row['name'],
+                'is_hidden' => $row['is_hidden'],
+                'count' => $row['count'] ?? 0
+            ];
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);

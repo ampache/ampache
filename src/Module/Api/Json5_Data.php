@@ -37,7 +37,6 @@ use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
-use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\Live_Stream;
@@ -114,7 +113,14 @@ class Json5_Data
      */
     public static function error($code, $string, $action, $type): string
     {
-        $message = ["error" => ["errorCode" => (string) $code, "errorAction" => $action, "errorType" => $type, "errorMessage" => $string]];
+        $message = [
+            "error" => [
+                "errorCode" => (string) $code,
+                "errorAction" => $action,
+                "errorType" => $type,
+                "errorMessage" => $string
+            ]
+        ];
 
         return json_encode($message, JSON_PRETTY_PRINT);
     }
@@ -880,7 +886,7 @@ class Json5_Data
                 "time" => (int)$episode->time,
                 "size" => (int)$episode->size,
                 "public_url" => $episode->get_link(),
-                "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $episode->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
@@ -1059,7 +1065,7 @@ class Json5_Data
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->tags),
                 "time" => (int)$video->time,
-                "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $video->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "flag" => (!$flag->get_flag($user->getId()) ? 0 : 1),
                 "preciserating" => $user_rating,

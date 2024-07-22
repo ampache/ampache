@@ -59,6 +59,7 @@ final class ExportPlaylistCommand extends Command
         if (!in_array($extension, PlaylistExporter::VALID_FILE_EXTENSIONS)) {
             $extension = current(PlaylistExporter::VALID_FILE_EXTENSIONS);
         }
+
         $values  = $this->values();
         $userId  = $values['user'];
         $urltype = ($values['web'])

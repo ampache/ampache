@@ -192,7 +192,9 @@ class Core
      */
     public static function gen_secure_token($length)
     {
-        if (function_exists('random_bytes')) {
+        if ($length < 1) {
+            return false;
+        } elseif (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
@@ -202,7 +204,7 @@ class Core
             return false;
         }
 
-        return bin2hex($buffer);
+        return bin2hex((string)$buffer);
     }
 
     /**
@@ -237,14 +239,17 @@ class Core
 
         $width  = imagesx($image);
         $height = imagesy($image);
-        if (!$width || !$height) {
-            return $empty;
+        if (
+            $width > 1 &&
+            $height > 1
+        ) {
+            return [
+                'width' => $width,
+                'height' => $height
+            ];
         }
 
-        return [
-            'width' => $width,
-            'height' => $height
-        ];
+        return $empty;
     }
 
     /**
@@ -309,7 +314,7 @@ class Core
             }
             $chunksize = 8192;
             while (!feof($filepointer)) {
-                $size += strlen(fread($filepointer, $chunksize));
+                $size += strlen((string)fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...
@@ -400,17 +405,15 @@ class Core
         }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
+        } elseif (strpos(PHP_OS, 'WIN') === 0) {
+            $tmp_dir = $_ENV['TMP'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = 'C:\Windows\Temp';
+            }
         } else {
-            if (strpos(PHP_OS, 'WIN') === 0) {
-                $tmp_dir = $_ENV['TMP'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = 'C:\Windows\Temp';
-                }
-            } else {
-                $tmp_dir = @$_ENV['TMPDIR'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = '/tmp';
-                }
+            $tmp_dir = @$_ENV['TMPDIR'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = '/tmp';
             }
         }
 

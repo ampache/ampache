@@ -95,9 +95,7 @@ final readonly class ImageRepository implements ImageRepositoryInterface
     {
         $this->connection->query(
             'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
-            [
-                $imageId
-            ]
+            [$imageId]
         );
     }
 }

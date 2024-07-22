@@ -278,6 +278,11 @@ final class PlaylistViewAdapter implements PlaylistViewAdapterInterface
         return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
+    public function getFullname(): string
+    {
+        return scrub_out($this->playlist->get_fullname());
+    }
+
     public function getPlaylistUrl(): string
     {
         return (string)$this->playlist->get_link();

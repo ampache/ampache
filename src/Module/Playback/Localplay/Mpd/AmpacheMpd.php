@@ -93,7 +93,7 @@ class AmpacheMpd extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = 'InnoDB';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
         /* We need to create the MPD table */
         $sql = "CREATE TABLE `localplay_mpd` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL DEFAULT '6600', `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -562,16 +562,16 @@ class AmpacheMpd extends localplay_controller
         } elseif (!empty($playlist_item)) {
             if (!empty($playlist_item['Title'])) {
                 $array['track_title'] = $playlist_item['Title'];
+            } elseif (!empty($playlist_item['Name'])) {
+                $array['track_title'] = $playlist_item['Name'];
             } else {
-                if (!empty($playlist_item['Name'])) {
-                    $array['track_title'] = $playlist_item['Name'];
-                } else {
-                    $array['track_title'] = $playlist_item['file'] ?? '';
-                }
+                $array['track_title'] = $playlist_item['file'] ?? '';
             }
+
             if (!empty($playlist_item['Artist'])) {
                 $array['track_artist'] = $playlist_item['Artist'];
             }
+
             if (!empty($playlist_item['Album'])) {
                 $array['track_album'] = $playlist_item['Album'];
             }

@@ -59,7 +59,7 @@ $create_date  = $client->create_date ? get_datetime((int) $client->create_date) 
 $web_path     = (string)AmpConfig::get('web_path', '');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
-Ui::show_box_top((string)$client->get_fullname()); ?>
+Ui::show_box_top(scrub_out($client->get_fullname())); ?>
 <?php if ($client->id > 0) { ?>
 <div class="user_avatar">
 <?php if ($client->f_avatar) {
@@ -87,9 +87,9 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
 <dl class="media_details">
     <dt><?php echo T_('Display Name'); ?></dt>
     <dd>
-        <?php echo $client->get_fullname(); ?>
+        <?php echo scrub_out($client->get_fullname()); ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo $client->username; ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $client->id; ?>" href="<?php echo $web_path; ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$client->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>
@@ -104,7 +104,7 @@ Ui::show_box_top((string)$client->get_fullname()); ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>
 <?php } ?>
 <?php if (AmpConfig::get('show_wrapped')) { ?>
-        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('info', T_('Wrapped')); ?></a>
+        <a href="<?php echo $web_path; ?>/mashup.php?action=wrapped&user_id=<?php echo $client->id; ?>&year=<?php echo date('Y') ?: '' ?>" target="_blank"><?php echo Ui::get_material_symbol('featured_seasonal_and_gifts', T_('Wrapped')); ?></a>
 <?php } ?>
     </dd>
     <dt><?php echo T_('Member Since'); ?></dt>

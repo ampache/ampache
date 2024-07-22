@@ -39,6 +39,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
     ) {
         $this->configContainer = $configContainer;
     }
+
     public function add(
         Interactor $interactor,
         string $catalogName,
@@ -69,7 +70,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
             ob_end_clean();
 
             $interactor->info(
-                $this->cleanBuffer($buffer),
+                $this->cleanBuffer((string)$buffer),
                 true
             );
             $interactor->error(
@@ -88,7 +89,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer($buffer),
+            $this->cleanBuffer((string)$buffer),
             true
         );
         $interactor->info(

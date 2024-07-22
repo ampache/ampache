@@ -192,7 +192,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         // If we need to also pull the extra information, this is normally only used when we are doing the human display
         if (
             $extra &&
-            (AmpConfig::get('show_played_times'))
+            AmpConfig::get('show_played_times')
         ) {
             $sql = sprintf('SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN %s GROUP BY `song`.`artist`', $idlist);
 
@@ -683,7 +683,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         // if all else fails, insert a new artist, cache it and return the id
         $sql  = 'INSERT INTO `artist` (`name`, `prefix`, `mbid`) VALUES(?, ?, ?)';
-        $mbid = $mbid === null || $mbid === '' || $mbid === '0' ? null : $mbid;
+        $mbid = ($mbid === null || $mbid === '' || $mbid === '0')
+            ? null
+            : $mbid;
 
         $db_results = Dba::write($sql, [$name, $prefix, $mbid]);
         if (!$db_results) {

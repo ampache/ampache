@@ -276,7 +276,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                          * } $results
                          */
                         $results = $mbrainz->search(new LabelFilter($args), 1);
-                        if (isset($results->{'labels'}) && !empty($results->{'labels'})) {
+                        if (!empty($results->{'labels'})) {
                             $results = $results->{'labels'}[0];
                         }
                         break;
@@ -291,7 +291,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                          * } $results
                          */
                         $results = $mbrainz->search(new ArtistFilter($args), 1);
-                        if (isset($results->{'artists'}) && !empty($results->{'artists'})) {
+                        if (!empty($results->{'artists'})) {
                             $results = $results->{'artists'}[0];
                         }
                         break;

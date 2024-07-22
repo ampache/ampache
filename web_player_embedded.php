@@ -33,8 +33,6 @@ $dic = require __DIR__ . '/src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        ShowEmbeddedAction::REQUEST_KEY => ShowEmbeddedAction::class,
-    ],
+    [ShowEmbeddedAction::REQUEST_KEY => ShowEmbeddedAction::class],
     ShowEmbeddedAction::REQUEST_KEY
 );

@@ -58,7 +58,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     break;
                 }
                 $playlist->format();
-                if ($playlist->has_access()) {
+                if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
                     // This could have performance issues
                     $playlist->regenerate_track_numbers();
@@ -78,7 +78,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'append_item':
                 // Only song item are supported with playlists
-                if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
+                if (empty($_REQUEST['playlist_id'])) {
                     if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
                         debug_event('playlist.ajax', 'Error:' . $user->username . ' does not have user access, unable to create playlist', 1);
                         break;
@@ -97,7 +97,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $playlist = new Playlist($_REQUEST['playlist_id']);
                 }
 
-                if (!$playlist->has_access()) {
+                if (!$playlist->has_collaborate()) {
                     break;
                 }
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
@@ -122,9 +122,11 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     $medias = $user->playlist?->get_items() ?? [];
                 }
 
-                if (count($medias) > 0) {
+                if (
+                    count($medias) > 0 &&
+                    $playlist->add_medias($medias)
+                ) {
                     Ajax::set_include_override(true);
-                    $playlist->add_medias($medias);
 
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();

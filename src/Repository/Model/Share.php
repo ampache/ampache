@@ -135,7 +135,16 @@ class Share extends database_object
 
     public function show_action_buttons(): void
     {
-        if ($this->isNew() === false && (Core::get_global('user') instanceof User && (Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) || $this->user === Core::get_global('user')->id))) {
+        if (
+            $this->isNew() === false &&
+            (
+                Core::get_global('user') instanceof User &&
+                (
+                    Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) ||
+                    $this->user === Core::get_global('user')->id
+                )
+            )
+        ) {
             if ($this->allow_download) {
                 echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }
@@ -257,7 +266,12 @@ class Share extends database_object
             return false;
         }
 
-        if (isset($this->secret) && ($this->secret !== null && $this->secret !== '' && $this->secret !== '0') && $secret != $this->secret) {
+        if (
+            $this->secret !== null &&
+            $this->secret !== '' &&
+            $this->secret !== '0' &&
+            $secret != $this->secret
+        ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;

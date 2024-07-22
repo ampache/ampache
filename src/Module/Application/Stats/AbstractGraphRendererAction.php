@@ -75,18 +75,29 @@ abstract readonly class AbstractGraphRendererAction implements ApplicationAction
             throw new AccessDeniedException();
         }
 
-        $user_id      = (int)Core::get_request('user_id');
-        $end_date     = (isset($_REQUEST['end_date'])) ? (int)strtotime((string)$_REQUEST['end_date']) : time();
+        $user_id = (int)Core::get_request('user_id');
+        $zoom    = (string)($_REQUEST['zoom'] ?? 'day');
+
+        $end_date = (isset($_REQUEST['end_date']))
+            ? (int)strtotime((string)$_REQUEST['end_date'])
+            : time();
+        $start_date = (isset($_REQUEST['start_date']))
+            ? (int)strtotime((string)$_REQUEST['start_date'])
+            : ($end_date - 864000);
+
         $f_end_date   = get_datetime((int)$end_date);
-        $start_date   = (isset($_REQUEST['start_date'])) ? (int)strtotime((string)$_REQUEST['start_date']) : ($end_date - 864000);
         $f_start_date = get_datetime((int)$start_date);
-        $zoom         = (string)($_REQUEST['zoom'] ?? 'day');
 
         $gtypes   = [];
         $gtypes[] = 'user_hits';
-        if ($object_type == null || $object_type == 'song' || $object_type == 'video') {
+        if (
+            $object_type == null ||
+            $object_type == 'song' ||
+            $object_type == 'video'
+        ) {
             $gtypes[] = 'user_bandwidth';
         }
+
         if (!$user_id && !$object_id) {
             $gtypes[] = 'catalog_files';
             $gtypes[] = 'catalog_size';

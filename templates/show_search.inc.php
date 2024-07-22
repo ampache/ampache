@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var list<int> $object_ids */
 
 ob_start();
-echo $playlist->get_fullname();
+echo $playlist->getFullname();
 $title    = ob_get_contents();
 $web_path = (string)AmpConfig::get('web_path', '');
 $browse   = new Browse();

@@ -215,14 +215,12 @@ class AmpacheDiscogs implements AmpachePluginInterface
                         $results['art'] = $artist['images'][0]['uri'];
                     }
                 }
-            } else {
-                if (in_array('album', $gather_types)) {
-                    $albums = $this->search_album($media_info['artist'], $media_info['title']);
-                    if (!empty($albums['results'])) {
-                        $album = $this->get_album($albums['results'][0]['id']);
-                        if (count($album['images']) > 0) {
-                            $results['art'] = $album['images'][0]['uri'];
-                        }
+            } elseif (in_array('album', $gather_types)) {
+                $albums = $this->search_album($media_info['artist'], $media_info['title']);
+                if (!empty($albums['results'])) {
+                    $album = $this->get_album($albums['results'][0]['id']);
+                    if (count($album['images']) > 0) {
+                        $results['art'] = $album['images'][0]['uri'];
                     }
                 }
             }

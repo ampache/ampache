@@ -35,8 +35,6 @@ $dic = require __DIR__ . '/src/Config/Init.php';
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-    ],
+    [DefaultAction::REQUEST_KEY => DefaultAction::class],
     DefaultAction::REQUEST_KEY
 );

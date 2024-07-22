@@ -40,8 +40,8 @@ class easy_captcha_persistent_grant extends easy_captcha
     }
 
     /**
-     * @param integer $input
-     * @return boolean
+     * @param int $input
+     * @return bool
      */
     public function solved($input = 0)
     {
@@ -70,7 +70,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     #-- pseudo password (time-bombed)
 
     /**
-     * @param integer $deviation
+     * @param int $deviation
      * @return string
      */
     public function validity_token($deviation = 0)

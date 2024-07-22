@@ -655,7 +655,8 @@ class Video extends database_object implements
 
         if (
             $data['art'] &&
-            ($options !== null && $options !== []) &&
+            $options !== null &&
+            $options !== [] &&
             $options['gather_art']
         ) {
             $art = new Art($video_id, 'video');
@@ -1101,8 +1102,8 @@ class Video extends database_object implements
                 $this->getArtCleanup()->collectGarbageForObject('video', $this->id);
                 Userflag::garbage_collection('video', $this->id);
                 Rating::garbage_collection('video', $this->id);
-                $this->getShoutRepository()->collectGarbage('video', $this->getId());
-                $this->getUseractivityRepository()->collectGarbage('video', $this->getId());
+                $this->getShoutRepository()->collectGarbage('video', $this->id);
+                $this->getUseractivityRepository()->collectGarbage('video', $this->id);
             }
         } else {
             debug_event(self::class, 'Cannot delete ' . $this->file . ' file. Please check permissions.', 1);

@@ -672,12 +672,10 @@ class Ui implements UiInterface
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $update_id . "\n";
             echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } elseif (!empty($field)) {
+            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
-            if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
-            } else {
-                echo "<br />" . $value . "<br /><br />\n";
-            }
+            echo "<br />" . $value . "<br /><br />\n";
         }
 
         ob_flush();
@@ -806,12 +804,10 @@ class Ui implements UiInterface
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
+            } elseif (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
+                echo "******";
             } else {
-                if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
-                    echo "******";
-                } else {
-                    echo $value;
-                }
+                echo $value;
             }
 
             return;
@@ -935,7 +931,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true, 'music');
+                show_catalog_select('upload_catalog', $value, '', true, 'music', 'local');
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -1283,7 +1279,7 @@ class Ui implements UiInterface
                 $options         = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
                     $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
-                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . $propertyName . '</option>';
+                    $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
                 break;

@@ -35,7 +35,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration400002 extends AbstractMigration
 {
     protected array $changelog = [
-        'IMPORTANT UPDATE NOTES: This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates',
+        '**IMPORTANT UPDATE NOTES** This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates',
         'Update album disk support to allow 1 instead of 0 by default',
         'Add barcode catalog_number and original_year to albums',
         'Drop catalog_number from song_data and use album instead',

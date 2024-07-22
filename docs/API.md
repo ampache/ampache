@@ -297,6 +297,7 @@ All Data methods return HTTP 200 responses
 * playlist_delete
 * playlist_edit
 * playlist_generate
+* playlist_hash **Ampache 6.6.0+**
 * playlist_remove_song
 * playlist_songs
 * podcasts

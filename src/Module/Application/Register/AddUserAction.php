@@ -48,6 +48,8 @@ final class AddUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_user';
 
+    public UiInterface $ui;
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -55,8 +57,6 @@ final class AddUserAction implements ApplicationActionInterface
     private UserRepositoryInterface $userRepository;
 
     private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
-    private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
@@ -167,9 +167,7 @@ final class AddUserAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_user_registration.inc.php',
-                [
-                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
-                ]
+                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
             );
 
             return null;
@@ -207,9 +205,7 @@ final class AddUserAction implements ApplicationActionInterface
 
             $this->ui->show(
                 'show_user_registration.inc.php',
-                [
-                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
-                ]
+                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
             );
 
             return null;

@@ -5,7 +5,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPL-3.0-or-later)
- * Copyright 2001 - 2016 Ampache.org
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -160,9 +160,7 @@ class Json4_Data
 
             foreach ($atags as $tag_id => $data) {
                 if ($simple) {
-                    $JSON[] = [
-                        "name" => $data['name']
-                    ];
+                    $JSON[] = ["name" => $data['name']];
                 } else {
                     $JSON[] = [
                         "id" => (string)$tag_id,
@@ -277,9 +275,7 @@ class Json4_Data
         } // end foreach
 
         // return a tag object
-        $JSON[] = [
-            "tag" => $TAGS
-        ];
+        $JSON[] = ["tag" => $TAGS];
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     }
@@ -1031,9 +1027,7 @@ class Json4_Data
         } // end foreach
 
         // return a user object
-        $JSON[] = [
-            "user" => $user_array
-        ];
+        $JSON[] = ["user" => $user_array];
 
         return json_encode($JSON, JSON_PRETTY_PRINT);
     }

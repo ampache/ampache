@@ -45,9 +45,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 
         $result = $this->connection->query(
             'SELECT `id` FROM `bookmark` WHERE `user` = ?',
-            [
-                $user->getId()
-            ]
+            [$user->getId()]
         );
 
         while ($rowId = $result->fetchColumn()) {
@@ -83,9 +81,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `bookmark` WHERE `id` = ?',
-            [
-                $bookmarkId
-            ]
+            [$bookmarkId]
         );
     }
 
