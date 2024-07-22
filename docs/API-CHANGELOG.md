@@ -21,6 +21,7 @@ Inconsistency with the return of object arrays and single items have been fixed 
   * Add `has_access` property to playlist objects. (Can edit the playlist if true)
   * Add `has_collaborate` property to playlist objects. (Can add and remove songs to the playlist if true)
   * Add `last_update` property to playlist objects. (Time a playlist changed. Smartplaylists do not change based on returned songs)
+  * Add `object_type` and `object_id` property to shout objects
 
 ### Changed
 
