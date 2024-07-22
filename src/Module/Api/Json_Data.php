@@ -1774,6 +1774,8 @@ class Json_Data
                 'id' => (string) $shout->getId(),
                 'date' => $shout->getDate()->getTimestamp(),
                 'text' => $shout->getText(),
+                'object_type' => $shout->getObjectType(),
+                'object_id' => $shout->getObjectId(),
                 'user' => [
                     'id' => (string) ($user?->getId() ?? 0),
                     'username' => $user?->getUsername() ?? '',
