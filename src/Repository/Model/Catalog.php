@@ -1555,8 +1555,8 @@ abstract class Catalog extends database_object
         $sort_sql = ';';
         if (!empty($sort)) {
             $sort_sql = match ($sort) {
-                'name_year' => " ORDER BY `name` " . $order . " `year` " . $order . ";",
-                'name_original_year' => " ORDER BY `name` " . $order . " `original_year` " . $order . ";",
+                'name_year' => " ORDER BY `name` " . $order . ", `year` " . $order . ";",
+                'name_original_year' => " ORDER BY `name` " . $order . ", `original_year` " . $order . ";",
                 default => " ORDER BY " . $sort . " " . $order . ";",
             };
         }
