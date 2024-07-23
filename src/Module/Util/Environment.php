@@ -307,7 +307,10 @@ final class Environment implements EnvironmentInterface
 
         // Check their PHP Vars to make sure we're cool here
         $post_size = @ini_get('post_max_size');
-        if (substr($post_size, strlen((string) $post_size) - 1, strlen((string) $post_size)) != 'M') {
+        if (
+            $post_size &&
+            substr($post_size, strlen($post_size) - 1, strlen($post_size)) != 'M'
+        ) {
             // Sane value time
             ini_set('post_max_size', '8M');
         }

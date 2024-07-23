@@ -226,12 +226,9 @@ class Xml3_Data
     /**
      * keyed_array
      *
-     * This will build an xml document from a key'd array,
-     *
-     * @param array $array
-     * @param bool $callback
+     * This will build an xml document from a key'd array
      */
-    public static function keyed_array($array, $callback = ''): string
+    public static function keyed_array(array $array, ?bool $callback = false): string
     {
         $string = '';
 
@@ -246,7 +243,7 @@ class Xml3_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, 1);
+                $value = self::keyed_array($value, true);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";

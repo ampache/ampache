@@ -74,7 +74,7 @@ final class LogoutAction implements ApplicationActionInterface
             // To end a legitimate session, just call logout.
             setcookie($sessionName . '_remember', '', $cookie_options);
 
-            $this->authenticationManager->logout($input['session'], false);
+            $this->authenticationManager->logout((string)$input['session'], false);
         } else {
             header('Location: ' . $this->configContainer->get('web_path'));
         }

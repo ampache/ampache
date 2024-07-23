@@ -696,7 +696,7 @@ final class VaInfo implements VaInfoInterface
         }
 
         // Determine the correct file size, do not get fooled by the size which may be returned by id3v2!
-        $size         = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file($filename));
+        $size         = $results['general']['size'] ?? Core::get_filesize(Core::conv_lc_file((string)$filename));
         $info['size'] = $info['size'] ?? $size;
 
         return $info;
@@ -1016,7 +1016,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function trimAscii($string): string
     {
-        return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim((string)$string));
+        return (string)preg_replace('/[\x00-\x1F\x80-\xFF]/', '', trim((string)$string));
     }
 
     /**
@@ -1251,7 +1251,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['originaldate']);
+                        $data[0] = date('Y', (int)$parsed['originaldate']);
                     }
                     $parsed['original_year'] = $parsed['original_year'] ?? $data[0];
                     break;
@@ -1400,7 +1400,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['originaldate']);
+                        $data[0] = date('Y', (int)$parsed['originaldate']);
                     }
                     $parsed['original_year'] = (array_key_exists('original_year', $parsed)) ? ($parsed['original_year']) : $data[0];
                     break;
@@ -1602,7 +1602,7 @@ final class VaInfo implements VaInfoInterface
                 case 'creation_date':
                     $parsed['creation_date'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['creation_date']);
+                        $data[0] = date('Y', (int)$parsed['creation_date']);
                     }
                     $parsed['year'] = $data[0];
                     break;
@@ -1656,7 +1656,7 @@ final class VaInfo implements VaInfoInterface
                 case 'originaldate':
                     $parsed['originaldate'] = strtotime(str_replace(" ", "", $data[0]));
                     if (strlen($data['0']) > 4) {
-                        $data[0] = date('Y', $parsed['originaldate']);
+                        $data[0] = date('Y', (int)$parsed['originaldate']);
                     }
                     $parsed['original_year'] = $parsed['original_year'] ?? $data[0];
                     break;

@@ -412,9 +412,8 @@ class Stats
      * get_cached_place_name
      * @param float $latitude
      * @param float $longitude
-     * @return mixed|null
      */
-    public static function get_cached_place_name($latitude, $longitude)
+    public static function get_cached_place_name($latitude, $longitude): ?string
     {
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
@@ -522,9 +521,8 @@ class Stats
      * @param int $user_id
      * @param int $object_id
      * @param string $object_type
-     * @return PDOStatement|bool
      */
-    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type)
+    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type): void
     {
         // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
@@ -554,7 +552,7 @@ class Stats
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, [$date, $agent, $user_id]);
+        Dba::write($sql, [$date, $agent, $user_id]);
     }
 
     /**

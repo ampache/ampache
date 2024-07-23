@@ -261,16 +261,6 @@ parameters:
 			path: src/Module/Api/Api4.php
 
 		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:error\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Api4.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of static method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:error\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Api4.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api5.php
@@ -2886,11 +2876,6 @@ parameters:
 			path: src/Module/Api/Method/LiveStreamCreateMethod.php
 
 		-
-			message: "#^Parameter \\#1 \\$catalog_id of static method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:create_from_id\\(\\) expects int, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Method/LiveStreamCreateMethod.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LiveStreamDeleteMethod\\:\\:live_stream_delete\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LiveStreamDeleteMethod.php
@@ -4371,16 +4356,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Parameter \\#3 \\$sid of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:url\\(\\) expects string\\|null, string\\|false given\\.$#"
-			count: 5
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -4394,11 +4369,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Default value of the parameter \\#2 \\$callback \\(string\\) of method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) is incompatible with type bool\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:_header\\(\\) has parameter \\$title with no type specified\\.$#"
@@ -4487,11 +4457,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
 
@@ -4751,11 +4716,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/Catalog/AddCatalogAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/System/GenerateConfigAction.php
@@ -4771,29 +4731,9 @@ parameters:
 			path: src/Module/Application/Album/SetTrackNumbersAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/AbstractArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createArt\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/ClearArtAction.php
-
-		-
 			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 2
 			path: src/Module/Application/Art/FindArtAction.php
-
-		-
-			message: "#^Parameter \\#2 \\$type of method Ampache\\\\Repository\\\\Model\\\\ModelFactoryInterface\\:\\:createArt\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Art/SelectArtAction.php
 
 		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
@@ -4856,11 +4796,6 @@ parameters:
 			path: src/Module/Application/SearchData/ShowAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:render_user_hits\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/StatisticGraph/ShowAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Stream\\\\AbstractStreamAction\\:\\:stream\\(\\) has parameter \\$urls with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/AbstractStreamAction.php
@@ -4869,16 +4804,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Test/ConfigAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Video/ConfirmDeleteAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$video_id of static method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:create_from_id\\(\\) expects int, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Application/Video/ShowVideoAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -5116,11 +5041,6 @@ parameters:
 			path: src/Module/Authentication/AuthenticationManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:destroy\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authentication/AuthenticationManager.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:login\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/AuthenticationManagerInterface.php
@@ -5279,46 +5199,6 @@ parameters:
 			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Parameter \\#1 \\$inAddrStart of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:exists\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$startIp of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:create\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function bin2hex expects string, bool\\|string given\\.$#"
-			count: 1
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function bin2hex expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$endIp of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:create\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$inAddrEnd of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:exists\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$startIp of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:update\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authorization/AccessListManager.php
-
-		-
-			message: "#^Parameter \\#3 \\$endIp of method Ampache\\\\Repository\\\\AccessRepositoryInterface\\:\\:update\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authorization/AccessListManager.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
@@ -5921,27 +5801,12 @@ parameters:
 			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:url_to_songid\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:url_to_songid\\(\\) should return int but returns int\\|string\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
 			message: "#^Offset 'path' does not exist on array\\{artist\\: string, album\\: string, title\\: string, comment\\?\\: string, year\\: mixed, bitrate\\: \\(float\\|int\\), size\\: mixed, time\\: mixed, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
 			message: "#^Parameter \\#1 \\$source of method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:insert\\(\\) expects string, array\\|bool\\|object\\|string given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -6156,11 +6021,6 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/AbstractCatalogUpdater.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
@@ -6169,11 +6029,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
-			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/Cli/AdminAddUserCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
@@ -7307,16 +7162,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:sendRequestToDevice\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, bool\\|string given\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Parameter \\#2 \\$string of function explode expects string, bool\\|string given\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
@@ -8531,47 +8376,7 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of static method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$sql of method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:split_sql\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#4 \\$cLength of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:getDownloadHeaders\\(\\) expects string\\|null, int\\<0, max\\> given\\.$#"
 			count: 2
 			path: src/Module/System/InstallationHelper.php
 
@@ -8666,29 +8471,9 @@ parameters:
 			path: src/Module/System/Session.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of method Ampache\\\\Module\\\\Authentication\\\\AuthenticationManagerInterface\\:\\:logout\\(\\) expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of function setcookie expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of function setcookie expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/Session.php
-
-		-
 			message: "#^Parameter \\#6 \\$gc of function session_set_save_handler expects callable\\(string\\)\\: bool, Closure\\(\\)\\: void given\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/User/PasswordGenerator.php
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
@@ -9201,11 +8986,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic.php
-
-		-
 			message: "#^Parameter \\#2 \\$max of function rand expects int, float given\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic.php
@@ -9521,11 +9301,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_utility.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Environment.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:__construct\\(\\) has parameter \\$base with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/FileSystem.php
@@ -9648,21 +9423,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$from_encoding of function iconv expects string, array\\|string\\|false given\\.$#"
 			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#2 \\$string2 of function strcmp expects string, string\\|false given\\.$#"
-			count: 1
 			path: src/Module/Util/FileSystem/FileNameConverter.php
 
 		-
@@ -9807,11 +9567,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Horde_Browser.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:setQuirk\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Module/Util/Horde_Browser.php
 
@@ -10831,11 +10586,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:trimAscii\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:write_id3\\(\\) has parameter \\$tagData with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -10861,11 +10611,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of static method Ampache\\\\Module\\\\System\\\\Core\\:\\:conv_lc_file\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Parameter \\#2 \\$array of function array_map expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 2
 			path: src/Module/Util/VaInfo.php
@@ -10873,11 +10618,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int, string\\>\\|true given\\.$#"
 			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$timestamp of function date expects int\\|null, int\\|false given\\.$#"
-			count: 4
 			path: src/Module/Util/VaInfo.php
 
 		-
@@ -11337,11 +11077,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function rtrim expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLyristLyrics.php
 

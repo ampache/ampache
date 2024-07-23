@@ -396,7 +396,7 @@ class Horde_Browser
                 $this->setFeature('iframes');
                 $this->setFeature('accesskey');
                 $this->setFeature('xmlhttpreq');
-                $this->setQuirk('empty_file_input_value', 0);
+                $this->setQuirk('empty_file_input_value', False);
 
                 if (preg_match('|Chrome/([0-9.]+)|i', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);

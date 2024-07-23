@@ -165,9 +165,8 @@ class HttpQPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool|null
      */
-    public function skip($pos): ?bool
+    public function skip($pos): bool
     {
         $args    = ['index' => $pos];
         $results = $this->sendCommand('setplaylistpos', $args);

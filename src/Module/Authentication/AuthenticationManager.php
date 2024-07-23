@@ -119,7 +119,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         $key = empty($key) ? session_id() : $key;
 
         // Nuke the cookie before all else
-        Session::destroy($key);
+        Session::destroy((string)$key);
         if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
             $target = $this->configContainer->get('logout_redirect');
         } else {

@@ -225,7 +225,7 @@ class Upnp_Api
         $values = [];
         foreach ($lines as $line) {
             //$line = str_replace( ' ', '', $line );
-            $line   = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
+            $line   = (string)preg_replace('/[\x00-\x1F\x7F]/', '', $line);
             $tokens = explode(' ', $line);
             //echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
             if (count($tokens) > 1) {
@@ -1661,7 +1661,7 @@ class Upnp_Api
      */
     private static function _itemAlbum($album, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($album->id, 'album', $api_session);
 
         return [
@@ -1718,7 +1718,7 @@ class Upnp_Api
      */
     public static function _itemSong($song, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1768,7 +1768,7 @@ class Upnp_Api
      */
     public static function _itemLiveStream($radio, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($radio->id, 'live_stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1828,7 +1828,7 @@ class Upnp_Api
      */
     private static function _itemVideo($video, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1874,7 +1874,7 @@ class Upnp_Api
      */
     private static function _itemPodcastEpisode($episode, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();

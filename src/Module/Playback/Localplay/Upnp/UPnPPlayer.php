@@ -229,7 +229,7 @@ class UPnPPlayer
         }
 
         $songUrl = $song['link'];
-        $songId  = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
+        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
         $song = new Song($songId);
         $song->format();

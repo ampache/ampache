@@ -74,7 +74,7 @@ final class Session implements SessionInterface
             // Verify their session
             if (!self::exists('interface', $sessionData)) {
                 if (!self::auth_remember()) {
-                    $this->authenticationManager->logout($sessionData);
+                    $this->authenticationManager->logout((string)$sessionData);
 
                     return false;
                 }
@@ -91,7 +91,7 @@ final class Session implements SessionInterface
             // If the user ID doesn't exist deny them
             $user_id = Core::get_global('user')?->getId();
             if (!$user_id && !$isDemoMode) {
-                $this->authenticationManager->logout(session_id());
+                $this->authenticationManager->logout((string)session_id());
 
                 return false;
             }
@@ -126,7 +126,7 @@ final class Session implements SessionInterface
                 }
                 $user_id = Core::get_global('user')?->getId();
                 if (!$user_id && !$isDemoMode) {
-                    $this->authenticationManager->logout(session_id());
+                    $this->authenticationManager->logout((string)session_id());
 
                     return false;
                 }
@@ -672,7 +672,7 @@ final class Session implements SessionInterface
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Lax'
             ];
-            setcookie(session_name(), session_id(), $cookie_options);
+            setcookie((string)session_name(), (string)session_id(), $cookie_options);
         } else {
             session_set_cookie_params($cookie_params);
         }

@@ -100,6 +100,12 @@ final class InstallationHelper implements InstallationHelperInterface
          * if they don't then they're cool
          */
         $results = parse_ini_file($configfile);
+        if (!$results) {
+            AmpError::add('general', T_("Invalid configuration settings"));
+
+            return false;
+        }
+
         AmpConfig::set_by_array($results, true);
 
         if (!Dba::check_database()) {
@@ -189,6 +195,12 @@ final class InstallationHelper implements InstallationHelperInterface
     public function install_rewrite_rules($file, $web_path, $download): bool
     {
         $final = $this->install_check_rewrite_rules($file, $web_path, true);
+        if (empty($final)) {
+            AmpError::add('general', T_('Config file is not writable'));
+
+            return false;
+        }
+
         if (!$download) {
             if (!file_put_contents($file, $final)) {
                 AmpError::add('general', T_('Failed to write config file'));
@@ -197,7 +209,7 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string)strlen((string) $final));
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -316,11 +328,24 @@ final class InstallationHelper implements InstallationHelperInterface
         } // end if we are creating a user
 
         if ($create_tables) {
-            $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
-            $pieces   = $this->split_sql($query);
-            $p_count  = count($pieces);
-            $errors   = [];
+            $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
+            $sql_handle = fopen($sql_file, 'r');
+            if (!$sql_handle) {
+                AmpError::add('general', T_('Unable to open ampache.sql'));
+
+                return false;
+            }
+
+            $query = fread($sql_handle, Core::get_filesize($sql_file));
+            if (!$query) {
+                AmpError::add('general', T_('Unable to open ampache.sql'));
+
+                return false;
+            }
+
+            $pieces  = $this->split_sql($query);
+            $p_count = count($pieces);
+            $errors  = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
                 if (!empty($pieces[$count]) && $pieces[$count] != '#') {
@@ -382,6 +407,11 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         $final = $this->generate_config($params);
+        if (empty($final)) {
+            AmpError::add('general', T_('Config file is not writable'));
+
+            return false;
+        }
 
         // Make sure the directory is writable OR the empty config file is
         if (!$download) {
@@ -397,10 +427,11 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string)strlen($final));
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
+
             echo $final;
 
             return false;
@@ -452,7 +483,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         // Fix the system user preferences
-        User::fix_preferences('-1');
+        User::fix_preferences(-1);
 
         return true;
     }
@@ -644,13 +675,24 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function write_config(string $current_file_path): bool
     {
-        if (!is_writeable($current_file_path)) {
+        if (
+            !is_writeable($current_file_path) ||
+            !parse_ini_file($current_file_path)
+        ) {
             return false;
         }
+
         $new_data = $this->generate_config(parse_ini_file($current_file_path));
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
+        if (
+            empty($new_data) ||
+            !$handle
+        ) {
+            return false;
+        }
+
         fwrite($handle, $new_data, strlen((string) $new_data));
         fclose($handle);
 
@@ -669,7 +711,11 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, Core::get_filesize($distfile));
+        if (!$handle) {
+            return '';
+        }
+
+        $dist = fread($handle, Core::get_filesize($distfile));
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);

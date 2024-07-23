@@ -60,8 +60,8 @@ final class AccessListManager implements AccessListManagerInterface
         AccessLevelEnum $level,
         AccessTypeEnum $type
     ): void {
-        $startIp = @inet_pton($startIp);
-        $endIp   = @inet_pton($endIp);
+        $startIp = (string)@inet_pton($startIp);
+        $endIp   = (string)@inet_pton($endIp);
 
         $this->verifyRange($startIp, $endIp);
 
@@ -94,8 +94,8 @@ final class AccessListManager implements AccessListManagerInterface
         AccessTypeEnum $type,
         AccessTypeEnum $additionalType
     ): void {
-        $startIp = @inet_pton($startIp);
-        $endIp   = @inet_pton($endIp);
+        $startIp = (string)@inet_pton($startIp);
+        $endIp   = (string)@inet_pton($endIp);
         $type    = in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessTypeEnum::STREAM;
 
         $this->verifyRange($startIp, $endIp);
@@ -160,7 +160,7 @@ final class AccessListManager implements AccessListManagerInterface
             throw new InvalidEndIpException();
         }
 
-        if (strlen(bin2hex($startIp)) != strlen(bin2hex($endIp))) {
+        if (strlen(bin2hex((string)$startIp)) != strlen(bin2hex((string)$endIp))) {
             throw new InvalidIpRangeException();
         }
     }

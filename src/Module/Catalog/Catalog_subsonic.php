@@ -452,7 +452,12 @@ class Catalog_subsonic extends Catalog
                 } else {
                     try {
                         $filehandle = fopen($target_file, 'w');
-                        $curl       = curl_init();
+                        if (!is_resource($filehandle)) {
+                            debug_event('subsonic.catalog', 'Could not open file: ' . $target_file, 5);
+                            continue;
+                        }
+
+                        $curl = curl_init();
                         curl_setopt_array(
                             $curl,
                             [
@@ -509,7 +514,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param $url
+     * @param string $url
      */
     public function url_to_songid($url): int
     {
@@ -519,7 +524,7 @@ class Catalog_subsonic extends Catalog
             $song_id = $matches[1];
         }
 
-        return $song_id;
+        return (int)$song_id;
     }
 
     /**

@@ -231,7 +231,7 @@ class Graph
      * @param string $fct
      * @param Data $MyData
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -631,7 +631,7 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
