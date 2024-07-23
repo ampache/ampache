@@ -61,7 +61,7 @@ final class ListMethod
      */
     public static function list(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
 
@@ -87,7 +87,7 @@ final class ListMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'))) {
+        if (!in_array(strtolower($type), ['album_artist', 'album', 'artist', 'catalog', 'live_stream', 'playlist', 'podcast_episode', 'podcast', 'share', 'song_artist', 'song', 'video'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

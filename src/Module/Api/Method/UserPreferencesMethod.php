@@ -48,9 +48,7 @@ final class UserPreferencesMethod
         // fix preferences that are missing for user
         User::fix_preferences($user->id);
 
-        $results = [
-            'preference' => self::getPreferenceRepository()->getAll($user)
-        ];
+        $results = ['preference' => self::getPreferenceRepository()->getAll($user)];
 
         switch ($input['api_format']) {
             case 'json':

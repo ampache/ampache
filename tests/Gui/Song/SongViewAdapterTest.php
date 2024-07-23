@@ -28,6 +28,7 @@ namespace Ampache\Gui\Song;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\License;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
@@ -458,7 +459,7 @@ class SongViewAdapterTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -479,7 +480,7 @@ class SongViewAdapterTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -491,7 +492,7 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsFalseIfNotAccessible(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -503,7 +504,7 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -520,7 +521,7 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsTrueIfConditionsAreMet(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -549,7 +550,7 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testCanEditPlaylistReturnsValue(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -561,7 +562,7 @@ class SongViewAdapterTest extends MockeryTestCase
     public function testCanBeReorderedReturnsValues(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->once()
             ->andReturnTrue();
 

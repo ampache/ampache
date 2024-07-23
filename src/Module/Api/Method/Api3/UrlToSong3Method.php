@@ -48,6 +48,6 @@ final class UrlToSong3Method
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
         $url_data = Stream_URL::parse($song_url);
         ob_end_clean();
-        echo Xml3_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
+        echo Xml3_Data::songs([(int)($url_data['id'] ?? 0)], $user);
     }
 }

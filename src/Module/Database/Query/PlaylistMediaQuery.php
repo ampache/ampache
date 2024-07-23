@@ -29,12 +29,12 @@ use Ampache\Repository\Model\Query;
 
 final class PlaylistMediaQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
-    );
+    protected array $sorts = [
+    ];
 
     /** @var string */
     protected $select = "";

@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class CatalogQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -45,10 +45,10 @@ final class CatalogQuery implements QueryInterface
         'gather_type',
         'gather_types',
         'user',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -64,7 +64,7 @@ final class CatalogQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`catalog`.`id`";

@@ -27,33 +27,32 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Core;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-final class LocalPlayAjaxHandler implements AjaxHandlerInterface
+final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {
             case 'set_instance':
                 // Make sure they are allowed to do this
-                if (!Access::check('localplay', 5)) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)) {
                     debug_event('localplay.ajax', 'Error attempted to set instance without required level', 1);
 
                     return;
@@ -63,7 +62,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
                 $localplay->set_active_instance($_REQUEST['instance']);
-                Preference::update('play_type', Core::get_global('user')->id, $type);
+                Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar
                 ob_start();
@@ -73,7 +72,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'command':
                 // Make sure they are allowed to do this
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to control Localplay without sufficient access', 1);
 
                     return;
@@ -118,7 +117,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         $browse = new Browse();
                         $browse->set_type('playlist_localplay');
                         $browse->set_static_content(true);
-                        $browse->save_objects(array());
+                        $browse->save_objects([]);
                         $browse->show_objects();
                         $browse->store();
                         $results[$browse->get_content_div()] = ob_get_contents();
@@ -141,7 +140,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_track':
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to delete track without access', 1);
 
                     return;
@@ -172,7 +171,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_instance':
                 // Make sure that you have access to do this...
-                if (!Access::check('localplay', 75)) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER)) {
                     debug_event('localplay.ajax', 'Attempted to delete instance without access', 1);
 
                     return;
@@ -187,7 +186,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'repeat':
                 // Make sure that they have access to do this again no clue
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to set repeat without access', 1);
 
                     return;
@@ -207,7 +206,7 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'random':
                 // Make sure that they have access to do this
-                if (!Access::check('localplay', AmpConfig::get('localplay_level', 100))) {
+                if (!Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value)))) {
                     debug_event('localplay.ajax', 'Attempted to set random without access', 1);
 
                     return;
@@ -226,7 +225,6 @@ final class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 

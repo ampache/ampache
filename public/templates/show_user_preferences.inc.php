@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 /** @var UiInterface $ui */
 
 /* HINT: Username FullName */
-Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box box_preferences'); ?>
+Ui::show_box_top(sprintf(T_('Editing %s Preferences'), scrub_out($client->fullname)), 'box box_preferences'); ?>
 <form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata striped-rows">
 <colgroup>
@@ -54,7 +54,7 @@ Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $client->fullname), 'box 
         <tr>
                 <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
                 <td class="cel_value">
-                        <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
+                        <?php $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
                 </td>
         </tr>
 <?php } ?>

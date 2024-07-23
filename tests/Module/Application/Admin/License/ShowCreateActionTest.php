@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -68,7 +69,7 @@ class ShowCreateActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -84,7 +85,7 @@ class ShowCreateActionTest extends MockeryTestCase
         $webPath = 'some-web-path';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 

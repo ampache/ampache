@@ -135,8 +135,8 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
 
         #-- init
-        $single_pixel = (self::CAPTCHA_PIXEL <= 1);   // very fast
-        $greyscale2x2 = (self::CAPTCHA_PIXEL <= 2);   // quicker than exact smooth 2x2 copy
+        $single_pixel = (self::CAPTCHA_PIXEL <= 1); // very fast
+        $greyscale2x2 = (self::CAPTCHA_PIXEL <= 2); // quicker than exact smooth 2x2 copy
         $width        = $this->width;
         $height       = $this->height;
         $image        = &$this->img;
@@ -155,7 +155,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 #-- pixel movement
-                list($distortx, $distorty) = $wave->dxy($x, $y);   // x- and y- sinus wave
+                list($distortx, $distorty) = $wave->dxy($x, $y); // x- and y- sinus wave
                 // list($qx, $qy) = $spike->dxy($x, $y);
 
                 #-- if not out of bounds
@@ -188,7 +188,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
      * @param $image
      * @param $xaxis
      * @param $yaxis
-     * @return integer
+     * @return int
      */
     public function get_2x2_greyscale(&$image, $xaxis, $yaxis)
     {
@@ -214,26 +214,26 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     public function get_2x2_smooth(&$i, $x, $y)
     {
         // get R,G,B values from 2x2 source area
-        $c00 = $this->get_RGB($i, $x, $y);      //  +------+------+
-        $c01 = $this->get_RGB($i, $x, $y + 1);    //  |dx,dy | x1,y0|
-        $c10 = $this->get_RGB($i, $x + 1, $y);    //  | rx-> |      |
-        $c11 = $this->get_RGB($i, $x + 1, $y + 1);  //  +----##+------+
+        $c00 = $this->get_RGB($i, $x, $y); //  +------+------+
+        $c01 = $this->get_RGB($i, $x, $y + 1); //  |dx,dy | x1,y0|
+        $c10 = $this->get_RGB($i, $x + 1, $y); //  | rx-> |      |
+        $c11 = $this->get_RGB($i, $x + 1, $y + 1); //  +----##+------+
         // weighting by $distortx/$distorty fraction part   //  |    ##|<-ry  |
         $rx  = $x - floor($x);
-        $rx_ = 1 - $rx;  //  |x0,y1 | x1,y1|
+        $rx_ = 1 - $rx; //  |x0,y1 | x1,y1|
         $ry  = $y - floor($y);
-        $ry_ = 1 - $ry;  //  +------+------+
+        $ry_ = 1 - $ry; //  +------+------+
         // this is extremely slow, but necessary for correct color merging,
         // the source pixel lies somewhere in the 2x2 quadrant, that's why
         // RGB values are added proportionately (rx/ry/_)
         // we use no for-loop because that would slow it even further
         $cXY_R = (int)(($c00[0]) * $rx_ * $ry_) + (int)(($c01[0]) * $rx_ * $ry)      // division by 4 not necessary,
             + (int)(($c10[0]) * $rx * $ry_)      // because rx/ry/rx_/ry_ add up
-            + (int)(($c11[0]) * $rx * $ry);      // to 255 (=1.0) at most
+            + (int)(($c11[0]) * $rx * $ry); // to 255 (=1.0) at most
         $cXY_G = (int)(($c00[1]) * $rx_ * $ry_) + (int)(($c01[1]) * $rx_ * $ry) + (int)(($c10[1]) * $rx * $ry_) + (int)(($c11[1]) * $rx * $ry);
         $cXY_B = (int)(($c00[2]) * $rx_ * $ry_) + (int)(($c01[2]) * $rx_ * $ry) + (int)(($c10[2]) * $rx * $ry_) + (int)(($c11[2]) * $rx * $ry);
 
-        return array($cXY_R, $cXY_G, $cXY_B);
+        return [$cXY_R, $cXY_G, $cXY_B];
     }
 
     #-- imagegetcolor from current ->$img split up into RGB array
@@ -248,6 +248,6 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
     {
         $rgb = imagecolorat($img, $x, $y);
 
-        return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF);
+        return [($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, ($rgb) & 0xFF];
     }
 }

@@ -24,29 +24,29 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var Browse $browse */
-/** @var list<int> $object_ids */
-
 global $dic;
 $labelRepository = $dic->get(LabelRepositoryInterface::class);
 
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
 $thcount  = 7;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
-<?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
         <li>
             <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label">
-                <?php echo Ui::get_icon('add', T_('Add')); ?>
+                <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
                 <?php echo T_('Create Label'); ?>
             </a>
         </li>

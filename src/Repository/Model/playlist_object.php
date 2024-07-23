@@ -24,6 +24,8 @@
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -71,8 +73,10 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return list<array{
-     *  object_type: string,
-     *  object_id: int
+     *  object_type: LibraryItemEnum,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int
      * }>
      */
     abstract public function get_items(): array;
@@ -80,9 +84,8 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         // format shared lists using the username
         $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))
@@ -132,7 +135,7 @@ abstract class playlist_object extends database_object implements library_item
         if (
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), explode(',', $this->collaborate))
+            in_array($user->getId(), explode(',', (string)$this->collaborate))
         ) {
             return true;
         }
@@ -151,18 +154,18 @@ abstract class playlist_object extends database_object implements library_item
         if (
             $user instanceof User &&
             (
-                $user->access === 100 ||
+                $user->access === AccessLevelEnum::ADMIN->value ||
                 $this->user === $user->getId()
             )
         ) {
             return true;
         }
 
-        if (Access::check('interface', 100)) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             return true;
         }
 
-        if (!Access::check('interface', 25)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return false;
         }
 
@@ -173,16 +176,14 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
         if ($filter_type) {
             return array_filter(
                 $this->get_items(),
-                function (array $item) use ($filter_type): bool {
-                    return $item['object_type'] == $filter_type;
-                }
+                static fn (array $item): bool => $item['object_type']->value === $filter_type
             );
         } else {
             return $this->get_items();
@@ -253,7 +254,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->f_type === null) {
-            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+            $this->f_type = ($this->type == 'private') ? Ui::get_material_symbol('lock', T_('Private')) : '';
         }
 
         return $this->f_type;
@@ -334,18 +335,20 @@ abstract class playlist_object extends database_object implements library_item
             if ($count >= $limit) {
                 return $images;
             }
-            if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
-                if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                    $className = ObjectTypeToClassNameMapper::map($media['object_type']);
+
+            if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
+                if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
+                    $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
                     $libitem   = new $className($media['object_id']);
                     $parent    = $libitem->get_parent();
                     if ($parent !== null) {
                         $media = $parent;
                     }
                 }
-                $art = new Art($media['object_id'], $media['object_type']);
+
+                $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type'];
+                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
                 }
             }

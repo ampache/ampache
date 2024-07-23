@@ -25,6 +25,10 @@ declare(strict_types=0);
 
 use Ampache\Module\System\AmpError;
 
+/** @var string $web_path */
+/** @var string $htmllang */
+/** @var string $charset */
+
 require __DIR__ . '/install_header.inc.php'; ?>
 <div class="jumbotron" style="margin-top: 70px">
     <h1><?php echo T_('Install Progress'); ?></h1>

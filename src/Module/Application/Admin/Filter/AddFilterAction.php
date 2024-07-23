@@ -83,9 +83,7 @@ final class AddFilterAction extends AbstractFilterAction
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_add_filter.inc.php',
-                [
-                    'filter_name' => $filter_name
-                ]
+                ['filter_name' => $filter_name]
             );
 
             $this->ui->showQueryStats();

@@ -60,7 +60,7 @@ final class EnableDisabledAction extends AbstractCatalogAction
             return null;
         }
 
-        $songs = $_REQUEST['song'] ?? array();
+        $songs = $_REQUEST['song'] ?? [];
         if (count($songs)) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);

@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class LicenseQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -40,15 +40,15 @@ final class LicenseQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
         'external_link',
-    );
+    ];
 
     /** @var string */
     protected $select = "`license`.`id`";

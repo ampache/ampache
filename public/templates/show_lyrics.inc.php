@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 
 /** @var Song $song */
-/** @var array $lyrics */
+/** @var array{text?: null|string, url?: null|string} $lyrics */
 
 $web_path = (string)AmpConfig::get('web_path', '');
 Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');

@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\TvShowSeason;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -34,7 +35,6 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 final class ConfirmDeleteAction implements ApplicationActionInterface
 {

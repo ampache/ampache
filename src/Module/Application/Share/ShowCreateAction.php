@@ -27,18 +27,19 @@ namespace Ampache\Module\Application\Share;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\AlbumDisk;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Share;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Module\Util\ZipHandlerInterface;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
 use Psr\Http\Message\ResponseInterface;
@@ -48,28 +49,14 @@ final class ShowCreateAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show_create';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private UiInterface $ui;
-
-    private PasswordGeneratorInterface $passwordGenerator;
-
-    private ZipHandlerInterface $zipHandler;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        UiInterface $ui,
-        PasswordGeneratorInterface $passwordGenerator,
-        ZipHandlerInterface $zipHandler
+        private readonly RequestParserInterface $requestParser,
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly UiInterface $ui,
+        private readonly PasswordGeneratorInterface $passwordGenerator,
+        private readonly ZipHandlerInterface $zipHandler,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->requestParser     = $requestParser;
-        $this->configContainer   = $configContainer;
-        $this->ui                = $ui;
-        $this->passwordGenerator = $passwordGenerator;
-        $this->zipHandler        = $zipHandler;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -78,22 +65,24 @@ final class ShowCreateAction implements ApplicationActionInterface
             throw new AccessDeniedException('Access Denied: sharing features are not enabled.');
         }
 
-        $object_type = $this->requestParser->getFromRequest('type');
+        $object_type = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
         $object_id   = (int) $this->requestParser->getFromRequest('id');
 
         $this->ui->showHeader();
 
         if (
-            Share::is_valid_type($object_type)
+            in_array($object_type, Share::VALID_TYPES, true)
             && !empty($object_id)
         ) {
-            $className = ObjectTypeToClassNameMapper::map($object_type);
-            /** @var Song|Album|AlbumDisk|Playlist|Video $object */
-            $object = new $className($object_id);
-            if ($object->isNew() === false) {
-                $token     = $this->passwordGenerator->generate_token();
-                $isZipable = $this->zipHandler->isZipable($object_type);
+            $object = $this->libraryItemLoader->load(
+                $object_type,
+                $object_id,
+                [Song::class, Album::class, AlbumDisk::class, Playlist::class, Video::class]
+            );
+
+            if ($object !== null) {
                 $object->format();
+
                 $this->ui->show(
                     'show_add_share.inc.php',
                     [
@@ -101,8 +90,8 @@ final class ShowCreateAction implements ApplicationActionInterface
                         'message' => '',
                         'object' => $object,
                         'object_type' => $object_type,
-                        'token' => $token,
-                        'isZipable' => $isZipable
+                        'token' => $this->passwordGenerator->generate_token(),
+                        'isZipable' => $this->zipHandler->isZipable($object_type->value)
                     ]
                 );
             }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -40,8 +41,8 @@ final class Migration370007 extends AbstractMigration
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updatePreferences('daap_backend', 'Use DAAP backend', '0', 100, 'boolean', 'system');
-        $this->updatePreferences('daap_pass', 'DAAP backend password', '', 100, 'string', 'system');
+        $this->updatePreferences('daap_backend', 'Use DAAP backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('daap_pass', 'DAAP backend password', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine");
     }

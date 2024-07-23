@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -42,8 +43,8 @@ final class Migration360037 extends AbstractMigration
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `share` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `user` int(11) unsigned NOT NULL, `object_type` varchar(32) NOT NULL, `object_id` int(11) unsigned NOT NULL, `allow_stream` tinyint(1) unsigned NOT NULL DEFAULT '0', `allow_download` tinyint(1) unsigned NOT NULL DEFAULT '0', `expire_days` int(4) unsigned NOT NULL DEFAULT '0', `max_counter` int(4) unsigned NOT NULL DEFAULT '0', `secret` varchar(20) CHARACTER SET $charset NULL, `counter` int(4) unsigned NOT NULL DEFAULT '0', `creation_date` int(11) unsigned NOT NULL DEFAULT '0', `lastvisit_date` int(11) unsigned NOT NULL DEFAULT '0', `public_url` varchar(255) CHARACTER SET $charset NULL, `description` varchar(255) CHARACTER SET $charset NULL, PRIMARY KEY (`id`)) ENGINE=$engine");
 
-        $this->updatePreferences('share', 'Allow Share', '0', 100, 'boolean', 'options');
-        $this->updatePreferences('share_expire', 'Share links default expiration days (0=never)', '7', 100, 'integer', 'system');
+        $this->updatePreferences('share', 'Allow Share', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'options');
+        $this->updatePreferences('share_expire', 'Share links default expiration days (0=never)', '7', AccessLevelEnum::ADMIN->value, 'integer', 'system');
     }
 
     public function getTableMigrations(

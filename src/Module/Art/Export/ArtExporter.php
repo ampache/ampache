@@ -68,7 +68,7 @@ final class ArtExporter implements ArtExporterInterface
             );
             $this->logger->critical(
                 'Not Clearing images from database, set album_art_store_disk to remove art from the database',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
         // Get all of the art items with an image
@@ -127,7 +127,7 @@ final class ArtExporter implements ArtExporterInterface
                 //The file is out so clear the table as well
                 $this->logger->critical(
                     'Clearing database image for ' . $artRow['id'],
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 $this->imageRepository->deleteImage($artRow['id']);

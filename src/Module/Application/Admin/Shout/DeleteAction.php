@@ -30,35 +30,27 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class DeleteAction implements ApplicationActionInterface
+final readonly class DeleteAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'delete';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        ShoutRepositoryInterface $shoutRepository
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 

@@ -52,7 +52,7 @@ final class ArtistAlbumsMethod
      */
     public static function artist_albums(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
@@ -111,12 +111,12 @@ final class ArtistAlbumsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::albums($results, array(), $user);
+                echo Json_Data::albums($results, [], $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::albums($results, array(), $user);
+                echo Xml_Data::albums($results, [], $user);
         }
 
         return true;

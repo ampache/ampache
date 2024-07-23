@@ -25,11 +25,10 @@ declare(strict_types=0);
 
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */
-$video_type = ObjectTypeToClassNameMapper::reverseMap(get_class($libitem)); ?>
+$video_type = $libitem->getMediaType()->value; ?>
 <div>
     <form method="post" id="edit_video_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">

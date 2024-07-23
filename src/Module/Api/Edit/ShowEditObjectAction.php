@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Share;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -63,7 +64,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id
     ): ?ResponseInterface {
         ob_start();

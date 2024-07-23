@@ -56,7 +56,7 @@ final class Following4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -64,7 +64,7 @@ final class Following4Method
         if (!empty($username)) {
             $user = User::get_from_username($username);
             if ($user instanceof User) {
-                $results = static::getUserFollowerRepository()->getFollowing($user->id);
+                $results = static::getUserFollowerRepository()->getFollowing($user);
                 if (!count($results)) {
                     Api4::message('error', 'User `' . $username . '` does not follow anyone.', '400', $input['api_format']);
                 } else {

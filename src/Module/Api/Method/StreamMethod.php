@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -57,7 +58,7 @@ final class StreamMethod
      */
     public static function stream(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -68,7 +69,10 @@ final class StreamMethod
 
         if (
             $object_id === 0 &&
-            ($type == 'playlist' || $type == 'search')
+            (
+                $type == 'playlist' ||
+                $type == 'search'
+            )
         ) {
             // The API can use searches as playlists so check for those too
             $object_id = (int)str_replace('smart_', '', $input['id']);
@@ -85,10 +89,10 @@ final class StreamMethod
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
-        if ($transcode_to && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($transcode_to && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
-        if ($maxBitRate > 0 && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
         if ($timeOffset) {
@@ -98,19 +102,19 @@ final class StreamMethod
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
             $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url     = $media->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

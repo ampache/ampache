@@ -32,9 +32,7 @@ use Ampache\Module\System\Session;
 
 final class AuthenticationManager implements AuthenticationManagerInterface
 {
-    /**
-     * @var AuthenticatorInterface[] $authenticatorList
-     */
+    /** @var AuthenticatorInterface[] $authenticatorList */
     private array $authenticatorList;
 
     private ConfigContainerInterface $configContainer;
@@ -121,7 +119,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         $key = empty($key) ? session_id() : $key;
 
         // Nuke the cookie before all else
-        Session::destroy($key);
+        Session::destroy((string)$key);
         if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
             $target = $this->configContainer->get('logout_redirect');
         } else {
@@ -136,8 +134,8 @@ final class AuthenticationManager implements AuthenticationManagerInterface
 
             xoutput_headers();
 
-            $results            = array();
-            $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
+            $results             = [];
+            $results['reloader'] = '<script>reloadRedirect("' . $target . '")</script>';
             echo (string)xoutput_from_array($results);
         } else {
             /* Redirect them to the login page */

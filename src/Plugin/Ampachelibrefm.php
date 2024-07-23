@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -66,10 +67,10 @@ class Ampachelibrefm implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', 25, 'string', 'internal', $this->name)) {
+        if (!Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', AccessLevelEnum::USER->value, 'string', 'internal', $this->name)) {
             return false;
         }
-        if (!Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -113,7 +114,7 @@ class Ampachelibrefm implements AmpachePluginInterface
             Preference::delete('librefm_url');
             Preference::delete('librefm_host');
             Preference::delete('librefm_port');
-            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', 25, 'string', 'plugins', $this->name);
+            Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
 
         return true;

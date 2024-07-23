@@ -44,7 +44,7 @@ class AlbumSongs3Method
     public static function album_songs(array $input, User $user): void
     {
         $album   = new Album($input['filter']);
-        $results = array();
+        $results = [];
         if (isset($album->id)) {
             $results = static::getAlbumRepository()->getSongs($album->id);
         }

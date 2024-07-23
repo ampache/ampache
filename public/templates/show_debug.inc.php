@@ -29,11 +29,12 @@ use Ampache\Module\System\AutoUpdate;
 use Ampache\Module\Util\EnvironmentInterface;
 use Ampache\Module\Util\Ui;
 
+global $dic;
+$environment = $dic->get(EnvironmentInterface::class);
+
 /** @var array $configuration */
 /** @var int $lastCronDate */
 
-global $dic;
-$environment = $dic->get(EnvironmentInterface::class);
 $web_path    = (string)AmpConfig::get('web_path', '');
 // don't share the database password
 $configuration['database_password'] = '******';
@@ -44,26 +45,26 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo Ui::get_icon('cog', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
+                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo Ui::get_material_symbol('settings', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo Ui::get_icon('cog', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo Ui::get_material_symbol('settings', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_icon('server_lightning', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_material_symbol('dns', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_icon('cog', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_material_symbol('settings', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_icon('cog', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_material_symbol('settings', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_icon('cog', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_material_symbol('settings', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
     <?php if (AmpConfig::get('perpetual_api_session')) { ?>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_icon('cog', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
+                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
             </li>
     <?php  } ?>
         </ul>

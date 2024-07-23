@@ -25,8 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Plugin;
-use Ampache\Repository\Model\Song;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
@@ -39,7 +39,7 @@ use Ampache\Repository\Model\User;
 
 <?php $user = Core::get_global('user');
 if ($user instanceof User) {
-    foreach (Plugin::get_plugins('display_home') as $plugin_name) {
+    foreach (Plugin::get_plugins(PluginTypeEnum::HOMEPAGE_WIDGET) as $plugin_name) {
         $plugin = new Plugin($plugin_name);
         if ($plugin->_plugin !== null && $plugin->load($user)) {
             $plugin->_plugin->display_home();
@@ -79,15 +79,11 @@ if (AmpConfig::get('home_moment_videos') && AmpConfig::get('allow_video')) {
 <?php if (AmpConfig::get('home_recently_played')) { ?>
 <!-- Recently Played -->
 <div id="recently_played">
-<?php $user_id = Core::get_global('user')->id ?? -1;
+<?php
+    $user      = Core::get_global('user');
+    $user_id   = $user->id ?? -1;
     $ajax_page = 'index';
-    if (AmpConfig::get('home_recently_played_all')) {
-        $data = Stats::get_recently_played($user_id);
-        require_once Ui::find_template('show_recently_played_all.inc.php');
-    } else {
-        $data = Stats::get_recently_played($user_id, 'stream', 'song');
-        Song::build_cache(array_keys($data));
-        require_once Ui::find_template('show_recently_played.inc.php');
-    } ?>
+    $data      = Stats::get_recently_played($user_id);
+    require_once Ui::find_template('show_recently_played_all.inc.php'); ?>
 </div>
 <?php } ?>

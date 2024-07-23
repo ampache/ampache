@@ -29,17 +29,17 @@ use Ampache\Repository\Model\Query;
 
 final class BroadcastQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'title',
         'name',
         'user',
         'started',
         'listeners',
-    );
+    ];
 
     /** @var string */
     protected $select = "`broadcast`.`id`";

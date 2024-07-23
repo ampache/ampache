@@ -25,61 +25,57 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\User\Following\UserFollowTogglerInterface;
 
-final class UserAjaxHandler implements AjaxHandlerInterface
+final readonly class UserAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private UserFollowTogglerInterface $followToggler;
-
-    private UserFollowStateRendererInterface $userFollowStateRenderer;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        UserFollowTogglerInterface $followToggler,
-        UserFollowStateRendererInterface $userFollowStateRenderer
+        private RequestParserInterface $requestParser,
+        private UserFollowTogglerInterface $followToggler,
+        private UserFollowStateRendererInterface $userFollowStateRenderer,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private ConfigContainerInterface $configContainer,
     ) {
-        $this->requestParser           = $requestParser;
-        $this->followToggler           = $followToggler;
-        $this->userFollowStateRenderer = $userFollowStateRenderer;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
         $user_id = (int)$this->requestParser->getFromRequest('user_id');
 
         // Switch on the actions
         switch ($action) {
             case 'flip_follow':
-                if (Access::check('interface', 25) && AmpConfig::get('sociable')) {
+                if (
+                    $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
+                    $this->configContainer->isFeatureEnabled('sociable')
+                ) {
                     $fuser = new User($user_id);
-                    if ($fuser->id > 0 && $user_id !== (int) Core::get_global('user')->id) {
+                    if ($fuser->id > 0 && $user_id !== $user->getId()) {
                         $this->followToggler->toggle(
-                            $user_id,
-                            Core::get_global('user')->getId()
+                            $fuser,
+                            $user
                         );
                         $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
-                            $user_id,
-                            Core::get_global('user')->getId()
+                            $fuser,
+                            $user
                         );
                     }
                 }
                 break;
             default:
-                $results['rfc3514'] = '0x1';
                 break;
         } // switch on action;
 
         // We always do this
-        echo (string) xoutput_from_array($results);
+        echo xoutput_from_array($results);
     }
 }

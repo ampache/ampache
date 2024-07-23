@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class PodcastQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -45,10 +45,10 @@ final class PodcastQuery implements QueryInterface
         'catalog_enabled',
         'unplayed',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -60,7 +60,7 @@ final class PodcastQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`podcast`.`id`";

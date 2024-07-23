@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-/** @var array $fields */
+/** @var array<string, array{description: string, type: string}> $fields */
 
 Ui::show_box_top(T_('Add Localplay Instance'), 'box box_localplay_add_instance'); ?>
 <form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/localplay.php?action=add_instance">

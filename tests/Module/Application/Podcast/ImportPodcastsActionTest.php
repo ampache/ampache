@@ -28,6 +28,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Podcast\Exchange\PodcastOpmlImporterInterface;
@@ -99,7 +100,7 @@ class ImportPodcastsActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(false);
 
         static::expectException(AccessDeniedException::class);
@@ -119,7 +120,7 @@ class ImportPodcastsActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         static::expectException(AccessDeniedException::class);
@@ -139,7 +140,7 @@ class ImportPodcastsActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->requestParser->expects(static::once())

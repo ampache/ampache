@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -41,7 +43,7 @@ use Ampache\Module\Util\Ui;
 /** @var bool $group_release */
 
 $web_path          = (string)AmpConfig::get('web_path', '');
-$access25          = Access::check('interface', 25);
+$access25          = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_playlist_add = $access25;
 $show_direct_play  = AmpConfig::get('directplay');
 $directplay_limit  = AmpConfig::get('direct_play_limit', 0);

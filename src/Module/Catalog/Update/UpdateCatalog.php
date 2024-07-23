@@ -87,7 +87,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         $db_results   = $this->lookupCatalogs($catalogType, $catalogName);
         $external     = false;
         $changed      = 0;
-        $gather_types = array();
+        $gather_types = [];
 
         ob_end_clean();
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -129,7 +129,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer($buffer),
+                    $this->cleanBuffer((string)$buffer),
                     true
                 );
                 $interactor->info(
@@ -151,7 +151,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer($buffer),
+                        $this->cleanBuffer((string)$buffer),
                         true
                     );
                     $interactor->info(
@@ -174,7 +174,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer($buffer),
+                        $this->cleanBuffer((string)$buffer),
                         true
                     );
                     $interactor->info(
@@ -197,7 +197,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer($buffer),
+                        $this->cleanBuffer((string)$buffer),
                         true
                     );
                     $interactor->info(
@@ -221,7 +221,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer($buffer),
+                    $this->cleanBuffer((string)$buffer),
                     true
                 );
                 $interactor->info(
@@ -255,7 +255,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 ob_end_clean();
 
                 $interactor->info(
-                    $this->cleanBuffer($buffer),
+                    $this->cleanBuffer((string)$buffer),
                     true
                 );
                 if (AmpConfig::get('label')) {
@@ -271,7 +271,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                     ob_end_clean();
 
                     $interactor->info(
-                        $this->cleanBuffer($buffer),
+                        $this->cleanBuffer((string)$buffer),
                         true
                     );
                 }
@@ -329,7 +329,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
             ob_end_clean();
 
             $interactor->info(
-                $this->cleanBuffer($buffer),
+                $this->cleanBuffer((string)$buffer),
                 true
             );
 

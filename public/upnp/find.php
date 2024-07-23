@@ -24,7 +24,7 @@ class UPnPFind
         return($discover); //!!
 
         /*
-        $devices = array();
+        $devices = [];
         flush();
         foreach ($discover as $response) {
 
@@ -40,7 +40,7 @@ class UPnPFind
                     $sink = $protocolInfo['Sink'];
                     $tmp = explode(',', $sink);
 
-                    $protocols = array();
+                    $protocols = [];
 
                     foreach ($tmp as $protocol) {
                         $t = explode(':', $protocol);
@@ -49,7 +49,7 @@ class UPnPFind
                         }
                     }
                 } catch (UPnPException $upnpe) {
-                    $protocols = array();
+                    $protocols = [];
                 }
 
                 $device->protocolInfo = $protocols;
@@ -85,7 +85,7 @@ class UPnPFind
         $msg .= "ST: upnp:rootdevice\r\n";
         $msg .= "\r\n";
 
-        $response = array();
+        $response = [];
         $socket   = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         if ($socket === false) {
             return $response;
@@ -93,7 +93,7 @@ class UPnPFind
         socket_set_option($socket, SOL_SOCKET, SO_BROADCAST, 1);
         socket_sendto($socket, $msg, strlen($msg), 0, '239.255.255.250', 1900);
 
-        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $timeout, 'usec' => 0]);
 
         do {
             $buf  = null;
@@ -118,7 +118,7 @@ class UPnPFind
      */
     private static function discoveryReponse2Array($res)
     {
-        $result = array();
+        $result = [];
         $lines  = explode("\n", trim($res));
 
         if (trim($lines[0]) == 'HTTP/1.1 200 OK') {

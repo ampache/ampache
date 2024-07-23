@@ -30,14 +30,14 @@ use Ampache\Repository\Model\Query;
 
 final class TvshowSeasonQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'season_eq',
         'season_gt',
         'season_lt',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'season',
         'tvshow',
@@ -48,7 +48,7 @@ final class TvshowSeasonQuery implements QueryInterface
         'codec',
         'rating',
         'user_flag',
-    );
+    ];
 
     /** @var string */
     protected $select = "`tvshow_season`.`id`";

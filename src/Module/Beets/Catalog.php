@@ -57,7 +57,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      * Array of all songs
      * @var array
      */
-    protected $songs = array();
+    protected $songs = [];
 
     /**
      * command which provides the list of all songs
@@ -191,22 +191,23 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return int|false
      */
-    protected function insertSong($song)
+    protected function insertSong($song): ?int
     {
         $inserted = Song::insert($song);
         if ($inserted) {
             debug_event(self::class, 'Adding song ' . $song['file'], 5);
-        } else {
-            debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-            /* HINT: filename (file path) */
-            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-            echo AmpError::display('general');
-        }
-        flush();
+            flush();
 
-        return $inserted;
+            return $inserted;
+        }
+
+        debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
+        /* HINT: filename (file path) */
+        AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+        echo AmpError::display('general');
+
+        return null;
     }
 
     /**
@@ -278,7 +279,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -331,7 +332,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected function getIdFromPath($path): int
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($path));
+        $db_results = Dba::read($sql, [$path]);
         $row        = Dba::fetch_row($db_results);
         if (empty($row)) {
             return 0;
@@ -347,9 +348,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function getAllSongfiles(): array
     {
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
-        $files = array();
+        $files = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $files[$row['id']] = $row['file'];
         }
@@ -363,11 +364,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function getVirtualSongPath($song): string
     {
-        return implode('/', array(
+        return implode('/', [
             $song['artist'],
             $song['album'],
             $song['title'],
-        ));
+        ]);
     }
 
     /**

@@ -56,7 +56,7 @@ final class Rate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'id', 'rating'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'id', 'rating'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -64,12 +64,12 @@ final class Rate4Method
         $object_id = (int) $input['id'];
         $rating    = (string) $input['rating'];
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
         }
-        if (!in_array($rating, array('0', '1', '2', '3', '4', '5'))) {
+        if (!in_array($rating, ['0', '1', '2', '3', '4', '5'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api4::message('error', T_('Ratings must be between [0-5]. ' . $rating . ' is invalid'), '401', $input['api_format']);
 

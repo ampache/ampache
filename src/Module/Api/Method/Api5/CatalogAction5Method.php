@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -51,15 +53,15 @@ final class CatalogAction5Method
      */
     public static function catalog_action(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('catalog', 'task'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['catalog', 'task'], self::ACTION)) {
             return false;
         }
-        if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $task = (string) $input['task'];
         // confirm the correct data
-        if (!in_array($task, array('add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'))) {
+        if (!in_array($task, ['add_to_catalog', 'clean_catalog', 'verify_catalog', 'gather_art'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $task), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'task', $input['api_format']);
 
@@ -82,10 +84,10 @@ final class CatalogAction5Method
                     $catalog->gather_art();
                     break;
                 case 'add_to_catalog':
-                    $options = array(
+                    $options = [
                         'gather_art' => true,
                         'parse_playlist' => false
-                    );
+                    ];
                     $catalog->add_to_catalog($options);
                     break;
             }

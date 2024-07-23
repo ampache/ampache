@@ -54,18 +54,20 @@ final class Democratic3Method
                     echo Xml3_Data::error(400, T_('Media Object Invalid or Not Specified'));
                     break;
                 }
-                $democratic->add_vote(array(
-                    array(
-                        'object_type' => 'song',
-                        'object_id' => $media->id
-                    )
-                ));
+                $democratic->add_vote(
+                    [
+                        [
+                            'object_type' => 'song',
+                            'object_id' => $media->id
+                        ]
+                    ]
+                );
 
                 // If everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
                 break;
             case 'devote':
@@ -78,10 +80,10 @@ final class Democratic3Method
                 $democratic->remove_vote($uid);
 
                 // Everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 echo Xml3_Data::keyed_array($results);
                 break;
             case 'playlist':
@@ -92,9 +94,7 @@ final class Democratic3Method
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = array(
-                    'url' => $url
-                );
+                $results = ['url' => $url];
                 echo Xml3_Data::keyed_array($results);
                 break;
             default:

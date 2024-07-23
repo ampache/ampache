@@ -105,6 +105,10 @@ class AccessListItemTest extends MockeryTestCase
             ->once()
             ->andReturn($user);
 
+        $user->shouldReceive('getFullDisplayName')
+            ->once()
+            ->andReturn(sprintf('%s (%s)', $userFullName, $userName));
+
         $this->assertSame(
             sprintf('%s (%s)', $userFullName, $userName),
             $this->subject->getUserName()

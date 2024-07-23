@@ -2,6 +2,8 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
@@ -21,7 +23,7 @@ $albumString     = (AmpConfig::get('album_group'))
     <a class="category <?php echo ($filter_str == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/mashup.php?action=artist">
         <?php echo T_('Artists'); ?>
     </a>
-    <?php if (Access::check('interface', 25)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <a class="category <?php echo ($filter_str == 'playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/mashup.php?action=playlist">
         <?php echo T_('Playlists'); ?>
     </a>

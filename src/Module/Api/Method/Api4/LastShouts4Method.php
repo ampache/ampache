@@ -55,7 +55,7 @@ final class LastShouts4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['username'], self::ACTION)) {
             return false;
         }
         unset($user);

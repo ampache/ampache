@@ -50,7 +50,7 @@ final class Artist5Method
      */
     public static function artist(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -68,10 +68,10 @@ final class Artist5Method
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::artists(array($object_id), $include, $user, true, false);
+                echo Json5_Data::artists([$object_id], $include, $user, true, false);
                 break;
             default:
-                echo Xml5_Data::artists(array($object_id), $include, $user);
+                echo Xml5_Data::artists([$object_id], $include, $user);
         }
 
         return true;

@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
@@ -41,7 +43,7 @@ use Ampache\Module\Authorization\Access;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) { ?>
+                    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php } else {
                         echo $libitem->mbid;

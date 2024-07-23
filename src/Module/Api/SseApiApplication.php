@@ -27,6 +27,8 @@ namespace Ampache\Module\Api;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
@@ -44,7 +46,7 @@ final class SseApiApplication implements ApiApplicationInterface
 
     public function run(): void
     {
-        if (!Access::check('interface', 75)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
             $this->ui->accessDenied();
 
             return;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,8 +36,8 @@ final class Migration360034 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('webplayer_confirmclose', 'Confirmation when closing current playing window', '0', 25, 'boolean', 'interface');
+        $this->updatePreferences('webplayer_confirmclose', 'Confirmation when closing current playing window', '0', AccessLevelEnum::USER->value, 'boolean', 'interface');
 
-        $this->updatePreferences('webplayer_pausetabs', 'Auto-pause betweens tabs', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('webplayer_pausetabs', 'Auto-pause betweens tabs', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

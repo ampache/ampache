@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class ShareQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'object',
         'object_type',
         'user',
@@ -44,7 +44,7 @@ final class ShareQuery implements QueryInterface
         'allow_stream',
         'allow_download',
         'expire',
-    );
+    ];
 
     /** @var string */
     protected $select = "`share`.`id`";

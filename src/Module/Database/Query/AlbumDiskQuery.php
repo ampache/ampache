@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Query;
 
 final class AlbumDiskQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -54,10 +54,10 @@ final class AlbumDiskQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'album_id',
         'disk',
@@ -87,7 +87,7 @@ final class AlbumDiskQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`album_disk`.`id`";

@@ -30,6 +30,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
@@ -51,7 +53,7 @@ if (!empty($tab)) {
     <?php echo Core::form_register('update_preference'); ?>
     <input type="hidden" name="tab" value="<?php echo scrub_out($tab); ?>" />
     <input type="hidden" name="method" value="<?php echo scrub_out(Core::get_request('action')); ?>" />
-    <?php if (Access::check('interface', 100)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
         <input type="hidden" name="user_id" value="<?php echo scrub_out(Core::get_request('user_id')); ?>" />
     <?php } ?>
 </div>
@@ -59,7 +61,7 @@ if (!empty($tab)) {
     }  // end if not account
     if ($tab === 'account') {
         $client   = Core::get_global('user');
-        $template = (AmpConfig::get('simple_user_mode') && !Access::check('interface', 100)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
+        $template = (AmpConfig::get('simple_user_mode') && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
         require Ui::find_template($template);
     }
 }?>

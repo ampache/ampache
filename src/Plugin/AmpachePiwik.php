@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -58,10 +59,10 @@ class AmpachePiwik implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', 100, 'string', 'plugins', 'piwik')) {
+        if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -105,7 +106,7 @@ class AmpachePiwik implements AmpachePluginInterface
         echo "var u='" . scrub_out($this->piwik_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'piwik.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if (Core::get_global('user')->id > 0) {
+        if (Core::get_global('user')?->getId() > 0) {
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
@@ -127,7 +128,7 @@ class AmpachePiwik implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['piwik_site_id'])) || !strlen(trim($data['piwik_url']))) {
-            $data                  = array();
+            $data                  = [];
             $data['piwik_site_id'] = Preference::get_by_user(-1, 'piwik_site_id');
             $data['piwik_url']     = Preference::get_by_user(-1, 'piwik_url');
         }

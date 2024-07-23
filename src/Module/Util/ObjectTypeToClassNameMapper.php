@@ -27,12 +27,16 @@ namespace Ampache\Module\Util;
 
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
+use Ampache\Repository\Model\LibraryItemLoader;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Movie;
+use Ampache\Repository\Model\ObjectTypeEnum;
 use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
@@ -40,7 +44,6 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
-use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\TvShow;
@@ -54,57 +57,59 @@ use Ampache\Repository\Model\Wanted;
  * This class maps object types like `album` to their corresponding php class name (if known)
  *
  * @deprecated Remove after every usage has been removed
+ *
+ * @see LibraryItemLoader
  */
 final class ObjectTypeToClassNameMapper
 {
+    /** @var array<string, class-string<database_object>> */
     private const OBJECT_TYPE_MAPPING = [
-        'album' => Album::class,
-        'album_disk' => AlbumDisk::class,
-        'art' => Art::class,
-        'album_artist' => Artist::class,
-        'artist' => Artist::class,
-        'bookmark' => Bookmark::class,
-        'clip' => Clip::class,
-        'genre' => Tag::class,
-        'label' => Label::class,
-        'live_stream' => Live_Stream::class,
-        'movie' => Movie::class,
-        'personal_video' => Personal_Video::class,
-        'playlist' => Playlist::class,
-        'podcast' => Podcast::class,
-        'podcast_episode' => Podcast_Episode::class,
-        'search' => Search::class,
-        'share' => Share::class,
-        'song' => Song::class,
-        'song_artist' => Artist::class,
-        'song_preview' => Song_Preview::class,
-        'tag_hidden' => Tag::class,
-        'tag' => Tag::class,
-        'tvshow' => TvShow::class,
-        'tvshow_episode' => TVShow_Episode::class,
-        'tvshow_season' => TVShow_Season::class,
-        'user' => User::class,
-        'video' => Video::class,
-        'wanted' => Wanted::class,
+        ObjectTypeEnum::ALBUM->value => Album::class,
+        ObjectTypeEnum::ALBUM_ARTIST->value => Artist::class,
+        ObjectTypeEnum::ALBUM_DISK->value => AlbumDisk::class,
+        ObjectTypeEnum::ART->value => Art::class,
+        ObjectTypeEnum::ARTIST->value => Artist::class,
+        ObjectTypeEnum::BOOKMARK->value => Bookmark::class,
+        ObjectTypeEnum::CLIP->value => Clip::class,
+        ObjectTypeEnum::GENRE->value => Tag::class,
+        ObjectTypeEnum::LABEL->value => Label::class,
+        ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,
+        ObjectTypeEnum::MOVIE->value => Movie::class,
+        ObjectTypeEnum::PERSONAL_VIDEO->value => Personal_Video::class,
+        ObjectTypeEnum::PLAYLIST->value => Playlist::class,
+        ObjectTypeEnum::PODCAST->value => Podcast::class,
+        ObjectTypeEnum::PODCAST_EPISODE->value => Podcast_Episode::class,
+        ObjectTypeEnum::SEARCH->value => Search::class,
+        ObjectTypeEnum::SHARE->value => Share::class,
+        ObjectTypeEnum::SONG->value => Song::class,
+        ObjectTypeEnum::SONG_ARTIST->value => Artist::class,
+        ObjectTypeEnum::SONG_PREVIEW->value => Song_Preview::class,
+        ObjectTypeEnum::TAG_HIDDEN->value => Tag::class,
+        ObjectTypeEnum::TAG->value => Tag::class,
+        ObjectTypeEnum::TV_SHOW->value => TVShow::class,
+        ObjectTypeEnum::TV_SHOW_EPISODE->value => TVShow_Episode::class,
+        ObjectTypeEnum::TV_SHOW_SEASON->value => TVShow_Season::class,
+        ObjectTypeEnum::USER->value => User::class,
+        ObjectTypeEnum::VIDEO->value => Video::class,
+        ObjectTypeEnum::WANTED->value => Wanted::class,
     ];
 
+    /** @var array<class-string, ObjectTypeEnum> */
     public const VIDEO_TYPES = [
-        Clip::class => 'clip',
-        Movie::class => 'movie',
-        Personal_Video::class => 'personal_video',
-        TvShow::class => 'tvshow',
-        TVShow_Episode::class => 'tvshow_episode',
-        TVShow_Season::class => 'tvshow_season',
-        Video::class => 'video',
+        Clip::class => ObjectTypeEnum::CLIP,
+        Movie::class => ObjectTypeEnum::MOVIE,
+        Personal_Video::class => ObjectTypeEnum::PERSONAL_VIDEO,
+        TVShow::class => ObjectTypeEnum::TV_SHOW,
+        TVShow_Episode::class => ObjectTypeEnum::TV_SHOW_EPISODE,
+        TVShow_Season::class => ObjectTypeEnum::TV_SHOW_SEASON,
+        Video::class => ObjectTypeEnum::VIDEO,
     ];
 
+    /**
+     * @return class-string<database_object>|string
+     */
     public static function map(string $object_type): string
     {
         return self::OBJECT_TYPE_MAPPING[strtolower($object_type)] ?? $object_type;
-    }
-
-    public static function reverseMap(string $className): string
-    {
-        return array_flip(self::OBJECT_TYPE_MAPPING)[$className] ?? $className;
     }
 }

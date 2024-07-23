@@ -24,6 +24,7 @@ declare(strict_types=0);
  */
 
 // Try to guess the web path
+use Ampache\Module\Application\Installation\DefaultAction;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
@@ -31,6 +32,10 @@ use Ampache\Module\System\Core;
 /** @var string $configfile */
 /** @var string $htaccess_play_file */
 /** @var string $htaccess_rest_file */
+/** @var string $web_path_guess */
+/** @var string $htmllang */
+/** @var string $charset */
+/** @var DefaultAction $this */
 
 $web_path_guess = $_REQUEST['web_path'] ?? '';
 if (empty($web_path_guess)) {
@@ -259,7 +264,7 @@ foreach ($modes as $mode) { ?>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php exists?'); ?></div>
                 <div class="col-sm-8"><?php echo debug_result(is_readable($configfile)); ?></div>
                 <div class="col-sm-4 control-label"><?php echo T_('config/ampache.cfg.php configured?'); ?></div>
-                <div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : array();
+                <div class="col-sm-8"><?php $results = (is_readable($configfile) && parse_ini_file($configfile)) ? parse_ini_file($configfile) : [];
 echo debug_result(check_config_values($results)); ?></div>
                 &nbsp;
 

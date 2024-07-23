@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -139,7 +141,7 @@ foreach ($object_ids as $song_id) {
     }
     $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
-                <?php if ($libitem->enabled || Access::check('interface', 50)) {
+                <?php if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
                     $content = $talFactory->createTalView()
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))

@@ -55,7 +55,7 @@ final class PodcastEpisode5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -66,7 +66,7 @@ final class PodcastEpisode5Method
 
             return false;
         }
-        $results = array($episode->id);
+        $results = [$episode->id];
 
         ob_end_clean();
         switch ($input['api_format']) {

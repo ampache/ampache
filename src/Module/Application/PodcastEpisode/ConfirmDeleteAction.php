@@ -83,7 +83,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         if (!Catalog::can_remove($episode)) {
             $this->logger->warning(
                 sprintf('Unauthorized to remove the episode `%s`', $episode->id),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();
         }

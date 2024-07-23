@@ -78,7 +78,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($radio->isNew()) {
             $this->logger->warning(
                 'Requested a live_stream that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

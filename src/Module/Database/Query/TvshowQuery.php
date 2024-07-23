@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Query;
 
 final class TvshowQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
         'alpha_match',
         'equal',
         'like',
@@ -43,10 +43,10 @@ final class TvshowQuery implements QueryInterface
         'year_eq',
         'year_gt',
         'year_lt',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'title',
         'name',
@@ -56,7 +56,7 @@ final class TvshowQuery implements QueryInterface
         'codec',
         'rating',
         'user_flag',
-    );
+    ];
 
     /** @var string */
     protected $select = "`tvshow`.`id`";

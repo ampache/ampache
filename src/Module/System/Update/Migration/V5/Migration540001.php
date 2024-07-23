@@ -34,7 +34,7 @@ final class Migration540001 extends AbstractMigration
 {
     protected array $changelog = [
         'Index `album` table columns',
-        '`catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`'
+        '`catalog`, `album_artist`, `original_year`, `release_type`, `release_status`, `mbid`, `mbid_group`',
     ];
 
     public function migrate(): void

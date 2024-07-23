@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api3;
 
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Api\Xml3_Data;
 use Ampache\Repository\Model\User;
@@ -45,9 +46,9 @@ final class PlaylistSongs3Method
         $playlist = new Playlist($input['filter']);
         $items    = $playlist->get_items();
 
-        $results = array();
+        $results = [];
         foreach ($items as $object) {
-            if ($object['object_type'] == 'song') {
+            if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
         } // end foreach

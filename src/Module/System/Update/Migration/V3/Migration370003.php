@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370003 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_donate', 'Show donate button in footer', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('show_donate', 'Show donate button in footer', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

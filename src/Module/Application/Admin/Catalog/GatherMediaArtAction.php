@@ -54,10 +54,10 @@ final class GatherMediaArtAction extends AbstractCatalogAction
         ServerRequestInterface $request,
         array $catalogIds
     ): ?ResponseInterface {
-        $options = array(
+        $options = [
             'gather_art' => true,
             'parse_playlist' => false
-        );
+        ];
         catalog_worker('gather_media_art', $catalogIds, $options);
 
         $this->ui->showConfirmation(

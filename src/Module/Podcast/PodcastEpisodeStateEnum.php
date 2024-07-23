@@ -27,14 +27,21 @@ namespace Ampache\Module\Podcast;
 
 /**
  * Defines all available podcast-episode states
- *
- * @todo transform into php8 enum when available
  */
-final class PodcastEpisodeStateEnum
+enum PodcastEpisodeStateEnum: string
 {
-    public const PENDING = 'pending';
+    case PENDING = 'pending';
 
-    public const COMPLETED = 'completed';
+    case COMPLETED = 'completed';
 
-    public const SKIPPED = 'skipped';
+    case SKIPPED = 'skipped';
+
+    public function toDescription(): string
+    {
+        return match ($this) {
+            PodcastEpisodeStateEnum::SKIPPED => T_('skipped'),
+            PodcastEpisodeStateEnum::PENDING => T_('pending'),
+            PodcastEpisodeStateEnum::COMPLETED => T_('completed'),
+        };
+    }
 }

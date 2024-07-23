@@ -39,7 +39,7 @@ final class ObjectNotFoundException extends ApplicationException
     /**
      * @param int|string $objectId The requested objectId
      */
-    public function __construct($objectId)
+    public function __construct($objectId = 0)
     {
         $this->objectId = $objectId;
     }

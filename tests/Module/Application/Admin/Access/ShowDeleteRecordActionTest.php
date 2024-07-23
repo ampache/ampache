@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\Access;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
@@ -71,7 +72,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -84,7 +85,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -118,7 +119,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $accessName = 'some-name';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\Access;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
@@ -57,7 +58,7 @@ class ShowAddActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -72,7 +73,7 @@ class ShowAddActionTest extends MockeryTestCase
         $addType = 'add-type';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
@@ -52,7 +53,7 @@ final class GetArt4Method
      */
     public static function get_art(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -62,7 +63,7 @@ final class GetArt4Method
         $size      = $input['size'] ?? false;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -80,7 +81,7 @@ final class GetArt4Method
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']->value);
             if (!Art::has_db($item['object_id'], 'song')) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
@@ -96,7 +97,7 @@ final class GetArt4Method
         if ($art->has_db_info()) {
             header('Access-Control-Allow-Origin: *');
             if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
+                $dim           = [];
                 $dim['width']  = $size;
                 $dim['height'] = $size;
                 $thumb         = $art->get_thumb($dim);
@@ -112,7 +113,7 @@ final class GetArt4Method
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
 
             return true;
         }

@@ -35,12 +35,12 @@ final class SongPreviewQuery implements QueryInterface
     /** @var string */
     protected $base = "";
 
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
-    );
+    protected array $sorts = [
+    ];
 
     /**
      * get_select

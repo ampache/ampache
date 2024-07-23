@@ -49,8 +49,8 @@ final class ToggleFollow3Method
                 $leader = User::get_from_username($username);
                 if ($leader instanceof User) {
                     static::getUserFollowToggler()->toggle(
-                        $leader->id,
-                        $user->id
+                        $leader,
+                        $user
                     );
                     ob_end_clean();
                     echo Xml3_Data::single_string('success');

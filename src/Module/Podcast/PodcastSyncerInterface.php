@@ -25,6 +25,7 @@ namespace Ampache\Module\Podcast;
 
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\Model\Podcast_Episode;
 use DateTimeInterface;
 use SimpleXMLElement;
 
@@ -36,7 +37,12 @@ interface PodcastSyncerInterface
     public function sync(Podcast $podcast, bool $gather = false): bool;
 
     /**
-     * Sync all podcast-item within the given catalogs
+     * Syncs a single episode
+     */
+    public function syncEpisode(Podcast_Episode $episode): void;
+
+    /**
+     * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
      *

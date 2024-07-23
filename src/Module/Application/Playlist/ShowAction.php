@@ -63,7 +63,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($playlist->isNew() || (!$playlist->has_collaborate() and $playlist->type === 'private')) {
             $this->logger->warning(
                 'Requested a playlist that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

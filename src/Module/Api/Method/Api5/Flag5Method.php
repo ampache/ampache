@@ -59,7 +59,7 @@ final class Flag5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('type', 'id', 'flag'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type', 'id', 'flag'], self::ACTION)) {
             return false;
         }
         ob_end_clean();
@@ -67,7 +67,7 @@ final class Flag5Method
         $object_id = (int) $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

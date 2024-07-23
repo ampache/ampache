@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
@@ -60,13 +61,13 @@ class AmpacheYourls implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', 75, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', AccessLevelEnum::MANAGER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -96,15 +97,14 @@ class AmpacheYourls implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @return string|false
+     * shortener
      */
-    public function shortener($url)
+    public function shortener(string $url): ?string
     {
         if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
             debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
 
-            return false;
+            return null;
         }
 
         $shorturl = '';
@@ -112,7 +112,7 @@ class AmpacheYourls implements AmpachePluginInterface
         $apiurl = 'http://' . $this->yourls_domain . '/yourls-api.php?signature=' . $this->yourls_api_key . '&action=shorturl&format=simple&url=' . urlencode($url);
         try {
             debug_event('yourls.plugin', 'YOURLS api call: ' . $apiurl, 5);
-            $request  = Requests::get($apiurl, array(), Core::requests_options());
+            $request  = Requests::get($apiurl, [], Core::requests_options());
             $shorturl = $request->body;
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
@@ -124,7 +124,11 @@ class AmpacheYourls implements AmpachePluginInterface
         } catch (Exception $error) {
             debug_event('yourls.plugin', 'YOURLS api http exception: ' . $error->getMessage(), 1);
 
-            return false;
+            return null;
+        }
+
+        if (!$shorturl) {
+            return null;
         }
 
         return $shorturl;
@@ -141,7 +145,7 @@ class AmpacheYourls implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['yourls_domain'])) || !strlen(trim($data['yourls_api_key']))) {
-            $data                   = array();
+            $data                   = [];
             $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
             $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
         }

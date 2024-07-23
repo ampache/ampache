@@ -29,6 +29,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ApplicationException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\Ui;
 use Psr\Http\Message\ResponseInterface;
@@ -48,7 +49,7 @@ abstract class AbstractLocalPlayAction implements ApplicationActionInterface
     {
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_LOCALPLAY_PLAYBACK) === false ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
         ) {
             throw new AccessDeniedException();
         }

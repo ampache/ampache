@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Modules;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\User;
@@ -65,7 +66,7 @@ final class InstallPluginAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 
@@ -78,7 +79,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
                 sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $this->ui->showQueryStats();
@@ -90,7 +91,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         if ($plugin->_plugin === null || !$plugin->install()) {
             $this->logger->error(
                 sprintf('Error: Plugin Install Failed, %s', $plugin_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());

@@ -44,7 +44,7 @@ if (!AmpConfig::get('catalog_filter')) {
   <form name="edit_filter" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/filter.php?action=update_filter"; ?>">
     <table class="tabledata">
         <tr>
-            <td><?php echo T_('Filter Name'); ?>:</td>
+            <td><?php echo T_('Filter Name'); ?></td>
             <?php if ($filter_name == 'DEFAULT') { ?>
                 <td><?php echo $filter_name; ?></td>
                 <input type="hidden" name="name" value="<?php echo $filter_name; ?>" />

@@ -40,10 +40,7 @@ if ($iframed || $isShare) { ?>
     <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
     <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js-cookie-built.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/tools.js"></script>
+    <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
     <script>
         var jsAjaxServer = "<?php echo $ajaxUriRetriever->getAjaxServerUri(); ?>";
         var jsAjaxUrl = "<?php echo $ajaxUriRetriever->getAjaxUri(); ?>";

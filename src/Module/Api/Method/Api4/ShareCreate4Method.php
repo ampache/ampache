@@ -26,15 +26,16 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Json4_Data;
 use Ampache\Module\Api\Xml4_Data;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Repository\Model\User;
@@ -71,7 +72,7 @@ final class ShareCreate4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
 
@@ -80,12 +81,12 @@ final class ShareCreate4Method
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array($object_type, array('song', 'album', 'artist'))) {
+        if (!in_array($object_type, ['song', 'album', 'artist'])) {
             Api4::message('error', T_('Wrong object type ' . $object_type), '401', $input['api_format']);
 
             return false;
         }
-        $results = array();
+        $results = [];
         if (!InterfaceImplementationChecker::is_library_item($object_type) || !$object_id) {
             Api4::message('error', T_('Wrong library item type'), '401', $input['api_format']);
         } else {
@@ -105,10 +106,10 @@ final class ShareCreate4Method
 
             $results[] = $shareCreator->create(
                 $user,
-                $object_type,
+                LibraryItemEnum::from($object_type),
                 $object_id,
                 true,
-                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
                 $passwordGenerator->generate_token(),
                 0,

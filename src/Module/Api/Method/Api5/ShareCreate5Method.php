@@ -27,14 +27,15 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Share\ShareCreatorInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Module\Api\Api5;
 use Ampache\Module\Api\Json5_Data;
 use Ampache\Module\Api\Xml5_Data;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\FunctionCheckerInterface;
 use Ampache\Module\User\PasswordGeneratorInterface;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
@@ -73,7 +74,7 @@ final class ShareCreate5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
 
@@ -82,7 +83,7 @@ final class ShareCreate5Method
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
+        if (!in_array(strtolower($object_type), ['song', 'album', 'artist'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -91,7 +92,7 @@ final class ShareCreate5Method
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
 
-        $results = array();
+        $results = [];
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
@@ -112,10 +113,10 @@ final class ShareCreate5Method
 
             $share = $shareCreator->create(
                 $user,
-                $object_type,
+                LibraryItemEnum::from($object_type),
                 $object_id,
                 true,
-                $functionChecker->check(AccessLevelEnum::FUNCTION_DOWNLOAD),
+                $functionChecker->check(AccessFunctionEnum::FUNCTION_DOWNLOAD),
                 $expire_days,
                 $passwordGenerator->generate_token(),
                 0,

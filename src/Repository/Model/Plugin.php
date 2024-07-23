@@ -27,12 +27,14 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
     /** @var null|string $name */
     public $name;
+
     public $_plugin;
 
     /**
@@ -49,6 +51,7 @@ class Plugin
 
             return;
         }
+
         $this->has_info($name);
     }
 
@@ -60,12 +63,13 @@ class Plugin
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {
-            debug_event(__CLASS__, 'Cannot find plugin `' . $cname . '`.', 1);
+            debug_event(self::class, 'Cannot find plugin `' . $cname . '`.', 1);
             $this->_plugin = null;
             $this->name    = null;
 
             return false;
         }
+
         $this->_plugin = new $controller();
         $this->name    = $cname;
 
@@ -75,36 +79,41 @@ class Plugin
     /**
      * get_plugins
      * This returns an array of plugin names
-     * @param string $type
-     * @return array
+     * @return array<string, string>
      */
-    public static function get_plugins($type = ''): array
+    public static function get_plugins(?PluginTypeEnum $type = null): array
     {
+        $type = $type === null ? '' : $type->value;
+
         // make static cache for optimization when multiple call
-        static $plugins_list = array();
+        static $plugins_list = [];
         if (isset($plugins_list[$type])) {
             return $plugins_list[$type];
         }
 
-        $plugins_list[$type] = array();
+        $plugins_list[$type] = [];
 
-        foreach (PluginEnum::LIST as $name => $className) {
-            if ($type != '') {
+        foreach (array_keys(PluginEnum::LIST) as $name) {
+            if ($type !== '') {
                 $plugin = new Plugin($name);
                 if ($plugin->_plugin === null) {
                     continue;
                 }
-                if (!Plugin::is_installed($plugin->_plugin->name)) {
+
+                if (Plugin::is_installed($plugin->_plugin->name) === 0) {
                     continue;
                 }
+
                 if (!$plugin->is_valid()) {
-                    debug_event(__CLASS__, 'Plugin ' . $name . ' is not valid, skipping', 6);
+                    debug_event(self::class, 'Plugin ' . $name . ' is not valid, skipping', 6);
                     continue;
                 }
+
                 if (!method_exists($plugin->_plugin, $type)) {
                     continue;
                 }
             }
+
             // It's a plugin record it
             $plugins_list[$type][$name] = $name;
         }
@@ -128,14 +137,17 @@ class Plugin
         if ($this->_plugin === null) {
             return false;
         }
+
         /* Check the plugin to make sure it's got the needed vars */
-        if (!strlen((string)$this->_plugin->name)) {
+        if ((string)$this->_plugin->name === '') {
             return false;
         }
-        if (!strlen((string)$this->_plugin->description)) {
+
+        if ((string)$this->_plugin->description === '') {
             return false;
         }
-        if (!strlen((string)$this->_plugin->version)) {
+
+        if ((string)$this->_plugin->version === '') {
             return false;
         }
 
@@ -143,15 +155,18 @@ class Plugin
         if (!method_exists($this->_plugin, 'install')) {
             return false;
         }
+
         if (!method_exists($this->_plugin, 'uninstall')) {
             return false;
         }
+
         if (!method_exists($this->_plugin, 'load')) {
             return false;
         }
+
         if (!method_exists($this->_plugin, 'upgrade')) {
             // TODO mark upgrade as required for Ampache 7+
-            debug_event(__CLASS__, 'WARNING: Plugin missing upgrade method. ' . $this->_plugin->name . '`.', 1);
+            debug_event(self::class, 'WARNING: Plugin missing upgrade method. ' . $this->_plugin->name . '`.', 1);
         }
 
         /* Make sure it's within the version confines */
@@ -161,11 +176,7 @@ class Plugin
             return false;
         }
 
-        if ($db_version > $this->_plugin->max_ampache) {
-            return false;
-        }
-
-        return true;
+        return $db_version <= $this->_plugin->max_ampache;
     }
 
     /**
@@ -203,12 +214,10 @@ class Plugin
      */
     public function uninstall(): bool
     {
-        if ($this->_plugin !== null && method_exists($this->_plugin, 'uninstall')) {
-            if ($this->_plugin->uninstall()) {
-                $this->remove_plugin_version();
+        if ($this->_plugin !== null && method_exists($this->_plugin, 'uninstall') && $this->_plugin->uninstall()) {
+            $this->remove_plugin_version();
 
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -221,12 +230,10 @@ class Plugin
      */
     public function upgrade(): bool
     {
-        if ($this->_plugin !== null && method_exists($this->_plugin, 'upgrade')) {
-            if ($this->_plugin->upgrade()) {
-                $this->set_plugin_version($this->_plugin->version);
+        if ($this->_plugin !== null && method_exists($this->_plugin, 'upgrade') && $this->_plugin->upgrade()) {
+            $this->set_plugin_version($this->_plugin->version);
 
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -242,6 +249,7 @@ class Plugin
         if ($this->_plugin === null) {
             return false;
         }
+
         $user->set_preferences();
 
         return $this->_plugin->load($user);
@@ -256,7 +264,7 @@ class Plugin
     {
         $name       = Dba::escape('Plugin_' . $plugin_name);
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($name));
+        $db_results = Dba::read($sql, [$name]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['value'];
@@ -270,12 +278,15 @@ class Plugin
      */
     public static function is_update_available(): bool
     {
-        foreach (PluginEnum::LIST as $name => $className) {
+        foreach (array_keys(PluginEnum::LIST) as $name) {
             $plugin = new Plugin($name);
             if ($plugin->_plugin !== null) {
                 $installed_version = self::get_plugin_version($plugin->_plugin->name);
                 // if any plugin needs an update then you need to update
-                if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
+                if (
+                    $installed_version > 0 &&
+                    $installed_version < $plugin->_plugin->version
+                ) {
                     return true;
                 }
             }
@@ -289,15 +300,19 @@ class Plugin
      */
     public static function update_all(): void
     {
-        foreach (PluginEnum::LIST as $name => $className) {
+        foreach (array_keys(PluginEnum::LIST) as $name) {
             $plugin            = new Plugin($name);
             $installed_version = self::get_plugin_version($plugin->_plugin->name);
-            if ($installed_version > 0 && $installed_version < $plugin->_plugin->version) {
-                if ($plugin->_plugin !== null && method_exists($plugin->_plugin, 'upgrade')) {
-                    if ($plugin->_plugin->upgrade()) {
-                        $plugin->set_plugin_version($plugin->_plugin->version);
-                    }
-                }
+            if (
+                $installed_version > 0 &&
+                $installed_version < $plugin->_plugin->version &&
+                (
+                    $plugin->_plugin !== null &&
+                    method_exists($plugin->_plugin, 'upgrade')
+                ) &&
+                $plugin->_plugin->upgrade()
+            ) {
+                $plugin->set_plugin_version($plugin->_plugin->version);
             }
         }
     }
@@ -325,11 +340,12 @@ class Plugin
         if ($this->_plugin === null) {
             return;
         }
+
         $name    = Dba::escape('Plugin_' . $this->_plugin->name);
         $version = (int)Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
-        Dba::write($sql, array($name, $version));
+        Dba::write($sql, [$name, $version]);
     }
 
     /**
@@ -341,8 +357,9 @@ class Plugin
         if ($this->_plugin === null) {
             return;
         }
+
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
-        $sql  = "DELETE FROM `update_info` WHERE `key`='$name'";
+        $sql  = sprintf('DELETE FROM `update_info` WHERE `key`=\'%s\'', $name);
         Dba::write($sql);
     }
 

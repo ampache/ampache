@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\User\Registration;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
@@ -61,7 +62,7 @@ final class RegisterMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('username', 'password', 'email'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
             return false;
         }
         $username             = $input['username'];
@@ -69,7 +70,7 @@ final class RegisterMethod
         $email                = urldecode($input['email']);
         $password             = $input['password'];
         $disable              = (bool)AmpConfig::get('admin_enable_required');
-        $access               = User::access_name_to_level(AmpConfig::get('auto_user') ?? 'guest');
+        $access               = AccessLevelEnum::fromTextual(AmpConfig::get('auto_user') ?? 'guest');
         $catalog_filter_group = 0;
         $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
 

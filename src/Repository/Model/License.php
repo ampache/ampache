@@ -44,12 +44,8 @@ class License extends BaseModel
     /** @var string|null Lint to the license page */
     private ?string $external_link = null;
 
-    private LicenseRepositoryInterface $licenseRepository;
-
-    public function __construct(
-        LicenseRepositoryInterface $licenseRepository
-    ) {
-        $this->licenseRepository = $licenseRepository;
+    public function __construct(private readonly LicenseRepositoryInterface $licenseRepository)
+    {
     }
 
     /**

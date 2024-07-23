@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
 session_start();
 

@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -1299,7 +1300,7 @@ class Json_Data
                 "author_full" => $episode->getAuthor(),
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
-                "state" => $episode->getStateDescription(),
+                "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
@@ -1312,7 +1313,7 @@ class Json_Data
                 "mode" => $episode->mode,
                 "channels" => $episode->channels,
                 "public_url" => $episode->get_link(),
-                "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $episode->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "has_art" => $episode->has_art(),
@@ -1375,7 +1376,7 @@ class Json_Data
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
-            $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url     = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = [];
@@ -1530,7 +1531,7 @@ class Json_Data
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->tags),
                 "time" => (int)$video->time,
-                "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $video->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "has_art" => $video->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
@@ -1586,7 +1587,7 @@ class Json_Data
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url    = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
             $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
@@ -1740,7 +1741,7 @@ class Json_Data
 
             $JSON[] = [
                 'id' => (string) $media->getId(),
-                'type' => (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)),
+                'type' => $media->getMediaType()->value,
                 'client' => $now_playing['agent'],
                 'expire' => (int) $now_playing['expire'],
                 'user' => [
@@ -1767,7 +1768,7 @@ class Json_Data
         $JSON = [];
 
         foreach ($shouts as $shout) {
-            $user = new User($shout->getUserId());
+            $user = $shout->getUser();
 
             $JSON[] = [
                 'id' => (string) $shout->getId(),
@@ -1776,8 +1777,8 @@ class Json_Data
                 'object_type' => $shout->getObjectType(),
                 'object_id' => $shout->getObjectId(),
                 'user' => [
-                    'id' => (string) $user->getId(),
-                    'username' => $user->getUsername()
+                    'id' => (string) ($user?->getId() ?? 0),
+                    'username' => $user?->getUsername() ?? '',
                 ]
             ];
         }

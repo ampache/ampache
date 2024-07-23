@@ -25,19 +25,22 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 
 /** @var string $data */
 /** @var Ampache\Repository\Model\library_item $object */
-/** @var string $object_type */
+/** @var LibraryItemEnum $object_type */
 /** @var Traversable<Shoutbox> $shouts */
 /** @var ShoutRendererInterface $shoutRenderer */
 ?>
 <div>
-<?php if (Access::check('interface', 25)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <div style="float: right">
 <?php
 $boxtitle = T_('Post to Shoutbox');
@@ -53,7 +56,7 @@ $boxtitle = T_('Post to Shoutbox');
 <tr>
     <td><textarea rows="5" cols="35" maxlength="2000" name="comment"></textarea></td>
 </tr>
-<?php if (Access::check('interface', 50)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
 <tr>
     <td><input type="checkbox" name="sticky" /> <strong><?php echo T_('Stick this comment'); ?></strong></td>
 </tr>
@@ -62,7 +65,7 @@ $boxtitle = T_('Post to Shoutbox');
     <td>
         <?php echo Core::form_register('add_shout'); ?>
         <input type="hidden" name="object_id" value="<?php echo $object->getId(); ?>" />
-        <input type="hidden" name="object_type" value="<?php echo $object_type; ?>" />
+        <input type="hidden" name="object_type" value="<?php echo $object_type->value; ?>" />
         <input type="hidden" name="data" value="<?php echo $data; ?>" />
         <input type="submit" value="<?php echo T_('Create'); ?>" /></td>
 </tr>

@@ -39,15 +39,15 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_icon('add_user', $addcurrent) . ' ' . $addcurrent; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_material_symbol('person', $addcurrent) . ' ' . $addcurrent; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_material_symbol('settings', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_material_symbol('lan', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
+        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_material_symbol('manufacturing', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>
 </ul>
 </div>

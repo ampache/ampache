@@ -70,8 +70,8 @@ final class FeedLoader implements FeedLoaderInterface
 
         try {
             $xmlstr = $this->webFetcher->fetch($feedUrl);
-        } catch (FetchFailedException $e) {
-            throw new FeedLoadingException($e->getMessage());
+        } catch (FetchFailedException $error) {
+            throw new FeedLoadingException($error->getMessage());
         }
 
         $xml = simplexml_load_string($xmlstr);

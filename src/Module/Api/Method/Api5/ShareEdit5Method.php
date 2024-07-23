@@ -57,7 +57,7 @@ final class ShareEdit5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $share_id = $input['filter'];
@@ -79,13 +79,13 @@ final class ShareEdit5Method
         $download    = (isset($input['download'])) ? filter_var($input['download'], FILTER_SANITIZE_NUMBER_INT) : $share->allow_download;
         $expires     = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : $share->expire_days;
 
-        $data = array(
+        $data = [
             'max_counter' => $share->max_counter,
             'expire' => $expires,
             'allow_stream' => $stream,
             'allow_download' => $download,
             'description' => $description
-        );
+        ];
         if ($share->update($data, $user)) {
             Api5::message('share ' . $share_id . ' updated', $input['api_format']);
         } else {

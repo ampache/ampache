@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -71,7 +72,7 @@ class DeleteRecordActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -83,7 +84,7 @@ class DeleteRecordActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->requestParser->expects(static::once())
@@ -98,7 +99,7 @@ class DeleteRecordActionTest extends TestCase
     {
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->requestParser->expects(static::once())

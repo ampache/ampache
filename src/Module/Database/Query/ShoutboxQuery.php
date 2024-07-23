@@ -29,16 +29,16 @@ use Ampache\Repository\Model\Query;
 
 final class ShoutboxQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'date',
         'user',
         'sticky',
         'object_type',
-    );
+    ];
 
     /** @var string */
     protected $select = "`user_shout`.`id`";

@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\User;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -78,7 +79,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -107,7 +108,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -120,14 +121,13 @@ class ShowIpHistoryActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
         $user       = $this->createMock(User::class);
 
-        $userId                   = 666;
-        $history                  = new ArrayIterator(['some-history']);
-        $userIpCardinalitySetting = 42;
-        $userFullName             = 'some-name';
-        $webPath                  = 'some-path';
+        $userId       = 666;
+        $history      = new ArrayIterator(['some-history']);
+        $userFullName = 'some-name';
+        $webPath      = 'some-path';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -149,15 +149,11 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->willReturn(false);
 
         $this->configContainer->expects(static::once())
-            ->method('get')
-            ->with('user_ip_cardinality')
-            ->willReturn((string) $userIpCardinalitySetting);
-        $this->configContainer->expects(static::once())
             ->method('getWebPath')
             ->willReturn($webPath);
 
         $this->ipHistoryRepository->shouldReceive('getHistory')
-            ->with($user, $userIpCardinalitySetting, true)
+            ->with($user)
             ->once()
             ->andReturn($history);
 
@@ -209,7 +205,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->willReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -228,7 +224,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
             ->willReturn($userFullName);
 
         $this->ipHistoryRepository->shouldReceive('getHistory')
-            ->with($user)
+            ->with($user, 0)
             ->once()
             ->andReturn($history);
 

@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Tag;
@@ -42,7 +44,7 @@ use Ampache\Module\Api\Ajax;
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist'); ?></td>
                 <td>
                     <?php
-                        if (Access::check('interface', 50)) {
+                        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
                             show_artist_select('album_artist', (int)$libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
@@ -56,7 +58,7 @@ use Ampache\Module\Api\Ajax;
             <?php if (!empty($libitem->album_artists) && count($libitem->album_artists) > 1) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, [$libitem->album_artist])); ?></td>
             </tr>
             <?php } ?>
             <tr>
@@ -66,7 +68,7 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) { ?>
+                    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
                     } else {
@@ -77,7 +79,7 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID'); ?></td>
                 <td>
-                <?php if (Access::check('interface', 50)) { ?>
+                <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
                 } else {

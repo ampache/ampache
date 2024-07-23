@@ -43,19 +43,24 @@ class SubsonicClient
      * @param string $port
      * @param string $client
      */
-    public function __construct($username, $password, $serverUrl, $port = "4040", $client = "Ampache")
-    {
+    public function __construct(
+        $username,
+        $password,
+        $serverUrl,
+        $port = "4040",
+        $client = "Ampache"
+    ) {
         $this->setServer($serverUrl, $port);
 
-        $this->_creds = array(
+        $this->_creds = [
             'u' => $username,
             'p' => $password,
             'v' => '1.8.0',
             'c' => $client,
             'f' => 'json'
-        );
+        ];
 
-        $this->_commands = array(
+        $this->_commands = [
             'ping',
             'getLicense',
             'getMusicFolders',
@@ -89,7 +94,7 @@ class SubsonicClient
             'updateShare',
             'deleteShare',
             'setRating',
-        );
+        ];
     }
 
     /**
@@ -98,7 +103,7 @@ class SubsonicClient
      * @param bool $rawAnswer
      * @return array|bool|object|string
      */
-    public function querySubsonic($action, $object = array(), $rawAnswer = false)
+    public function querySubsonic($action, $object = [], $rawAnswer = false)
     {
         return $this->_querySubsonic($action, $object, $rawAnswer);
     }
@@ -107,7 +112,7 @@ class SubsonicClient
      * @param $url
      * @param array $object
      */
-    public function parameterize($url, $object = array()): string
+    public function parameterize($url, $object = []): string
     {
         $params = array_merge($this->_creds, $object);
 
@@ -120,7 +125,7 @@ class SubsonicClient
      * @param bool $rawAnswer
      * @return array|bool|object|string
      */
-    protected function _querySubsonic($action, $object = array(), $rawAnswer = false)
+    protected function _querySubsonic($action, $object = [], $rawAnswer = false)
     {
         // Make sure the command is in the list of commands
         if ($this->isCommand($action)) {
@@ -129,14 +134,14 @@ class SubsonicClient
             if ($curl) {
                 curl_setopt_array(
                     $curl,
-                    array(
+                    [
                         CURLOPT_HEADER => 0,
                         CURLOPT_RETURNTRANSFER => 1,
                         CURLOPT_CONNECTTIMEOUT => 8,
                         CURLOPT_SSL_VERIFYPEER => 0,
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_PORT => (int)($this->_serverPort)
-                    )
+                    ]
                 );
                 $answer = curl_exec($curl);
                 curl_close($curl);
@@ -202,7 +207,7 @@ class SubsonicClient
     {
         error_log($error . "\n" . print_r($data, true));
 
-        return (object)array("success" => false, "error" => $error, "data" => $data);
+        return (object)["success" => false, "error" => $error, "data" => $data];
     }
 
     /**
@@ -216,10 +221,10 @@ class SubsonicClient
             $response = (array)$arr['subsonic-response'];
             $data     = $response;
 
-            return array(
+            return [
                 "success" => ($response['status'] == "ok"),
                 "data" => $data
-            );
+            ];
         } else {
             debug_event(self::class, 'parseResponse ERROR: ' . print_r($arr, true), 1);
 
@@ -242,7 +247,7 @@ class SubsonicClient
      */
     public function __call($action, $arguments)
     {
-        $object = count($arguments) ? (array)$arguments[0] : array();
+        $object = count($arguments) ? (array)$arguments[0] : [];
 
         return $this->_querySubsonic($action, $object);
     }

@@ -5,7 +5,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Shoutbox;
@@ -106,7 +107,7 @@ class Xml3_Data
      */
     public static function set_type($type): void
     {
-        if (in_array($type, array('rss', 'xspf', 'itunes'))) {
+        if (in_array($type, ['rss', 'xspf', 'itunes'])) {
             self::$type = $type;
         }
     }
@@ -182,15 +183,15 @@ class Xml3_Data
         $string = '';
 
         if (!empty($tags)) {
-            $atags = array();
+            $atags = [];
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {
                     $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$tag['id']] = array(
+                    $atags[$tag['id']] = [
                         'name' => $tag['name'],
                         'count' => 1
-                    );
+                    ];
                 }
             }
 
@@ -225,12 +226,9 @@ class Xml3_Data
     /**
      * keyed_array
      *
-     * This will build an xml document from a key'd array,
-     *
-     * @param array $array
-     * @param bool $callback
+     * This will build an xml document from a key'd array
      */
-    public static function keyed_array($array, $callback = ''): string
+    public static function keyed_array(array $array, ?bool $callback = false): string
     {
         $string = '';
 
@@ -245,7 +243,7 @@ class Xml3_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, 1);
+                $value = self::keyed_array($value, true);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
@@ -301,7 +299,7 @@ class Xml3_Data
     public static function artists($artists, $include, $user, $full_xml = true): string
     {
         if (null == $include) {
-            $include = array();
+            $include = [];
         }
         $string = "<total_count>" . count($artists) . "</total_count>\n";
 
@@ -477,7 +475,7 @@ class Xml3_Data
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime              = $song->mime;
             $songBitrate           = $song->bitrate;
-            $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url              = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
@@ -524,7 +522,7 @@ class Xml3_Data
             }
             $video->format();
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url('', AccessTypeEnum::API->value) . "]]></url>\n</video>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -542,7 +540,7 @@ class Xml3_Data
     public static function democratic($object_ids, $user): string
     {
         if (!is_array($object_ids)) {
-            $object_ids = array();
+            $object_ids = [];
         }
         $democratic = Democratic::get_current_playlist($user);
         $string     = '';
@@ -563,7 +561,7 @@ class Xml3_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url    = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
@@ -607,6 +605,7 @@ class Xml3_Data
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
+            $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         }
         $string .= "</users>\n";
 
@@ -626,9 +625,9 @@ class Xml3_Data
 
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user  = new User($shout->getUserId());
+            $user = $shout->getUser();
             $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
-            if ($user->isNew() === false) {
+            if ($user !== null) {
                 $string .= "\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>";
             }
             $string .= "\t</shout>n";

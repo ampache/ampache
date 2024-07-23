@@ -18,7 +18,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.20
--- Generation Time: Jul 17, 2024 at 09:35 AM
+-- Generation Time: Jul 10, 2024 at 09:15 AM
 -- Server version: 10.11.6-MariaDB-0+deb12u1-log
 -- PHP Version: 8.2.21
 
@@ -33,7 +33,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ampache6`
+-- Database: `ampache7`
 --
 
 -- --------------------------------------------------------
@@ -900,7 +900,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1033,8 +1033,14 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL),
 (185, 'jp_volume', '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player'),
 (186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend'),
-(187, 'home_recently_played_all', '0', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home'),
-(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy');
+(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy'),
+(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', 25, 'boolean', 'interface', 'home'),
+(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', 25, 'boolean', 'interface', 'home'),
+(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', 25, 'boolean', 'interface', 'home'),
+(192, 'sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', 25, 'boolean', 'interface', 'home'),
+(193, 'sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', 25, 'boolean', 'interface', 'home'),
+(194, 'sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', 25, 'boolean', 'interface', 'home'),
+(195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', 25, 'boolean', 'interface', 'home');
 
 -- --------------------------------------------------------
 
@@ -1484,7 +1490,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600075'),
+('db_version', '700008'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1753,7 +1759,6 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 171, ''),
 (-1, 172, '0'),
 (-1, 173, '1'),
-(-1, 174, '0'),
 (-1, 175, '0'),
 (-1, 176, '0'),
 (-1, 177, '1'),
@@ -1766,8 +1771,14 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 184, '0'),
 (-1, 185, '0.8'),
 (-1, 186, '0'),
-(-1, 187, '0'),
-(-1, 188, '0');
+(-1, 188, '0'),
+(-1, 189, '0'),
+(-1, 190, '0'),
+(-1, 191, '0'),
+(-1, 192, '0'),
+(-1, 193, '0'),
+(-1, 194, '0'),
+(-1, 195, '0');
 
 -- --------------------------------------------------------
 

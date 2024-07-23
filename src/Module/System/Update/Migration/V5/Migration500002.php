@@ -35,13 +35,19 @@ final class Migration500002 extends AbstractMigration
 {
     protected array $changelog = [
         'Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables',
-        'Fill counts into the columns'
+        'Fill counts into the columns',
     ];
 
     public function migrate(): void
     {
         // tables which usually calculate a count
-        $tables = ['album', 'artist', 'song', 'video', 'podcast_episode'];
+        $tables = [
+            'album',
+            'artist',
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($tables as $type) {
             Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;");
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';");
@@ -50,7 +56,11 @@ final class Migration500002 extends AbstractMigration
         }
 
         // tables that also have a skip count
-        $tables = ['song', 'video', 'podcast_episode'];
+        $tables = [
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($tables as $type) {
             Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;");
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';");

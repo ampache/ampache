@@ -30,6 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -68,7 +69,7 @@ class EditActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -116,7 +117,7 @@ class EditActionTest extends MockeryTestCase
             ->andReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -170,7 +171,7 @@ class EditActionTest extends MockeryTestCase
             ->andReturnNull();
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -203,7 +204,7 @@ class EditActionTest extends MockeryTestCase
             ->andReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 

@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -70,23 +72,23 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
     <ul>
         <?php if (AmpConfig::get('directplay')) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play', T_('Play All'), 'directplay_full_' . $tvshow->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id, 'play_circle', T_('Play All'), 'directplay_full_' . $tvshow->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_tvshow_' . $tvshow->id); ?>
         </li>
         <?php } ?>
         <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=tvshow&object_id=' . $tvshow->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_tvshow_' . $tvshow->id); ?>
         </li>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a id="<?php echo 'edit_tvshow_' . $tvshow->id; ?>" onclick="showEditDialog('tvshow_row', '<?php echo $tvshow->id; ?>', '<?php echo 'edit_tvshow_' . $tvshow->id; ?>', '<?php echo addslashes(T_('TV Show Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                 <?php echo T_('Edit TV Show'); ?>
             </a>
         </li>
@@ -94,7 +96,7 @@ Ui::show_box_top($tvshow->f_name, 'info-box'); ?>
         <?php if (Catalog::can_remove($tvshow)) { ?>
         <li>
             <a id="<?php echo 'delete_tvshow_' . $tvshow->id; ?>" href="<?php echo $web_path; ?>/tvshows.php?action=delete&tvshow_id=<?php echo $tvshow->id; ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
                 <?php echo T_('Delete'); ?>
             </a>
         </li>

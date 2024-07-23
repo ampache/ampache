@@ -51,7 +51,7 @@ final class UpdateFromTags4Method
      */
     public static function update_from_tags(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('type', 'id'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -59,7 +59,7 @@ final class UpdateFromTags4Method
         $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('artist', 'album', 'song'))) {
+        if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

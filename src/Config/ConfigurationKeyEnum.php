@@ -82,6 +82,7 @@ final class ConfigurationKeyEnum
     public const CATALOG_FILTER                        = 'catalog_filter';
     public const COMMON_ABBR                           = 'common_abbr';
     public const COMPOSER_BINARY_PATH                  = 'composer_binary_path';
+    public const COMPOSER_NO_DEV                       = 'composer_no_dev';
     public const CRON_CACHE                            = 'cron_cache';
     public const CUSTOM_BLANKALBUM                     = 'custom_blankalbum';
     public const CUSTOM_BLANKMOVIE                     = 'custom_blankmovie';
@@ -135,6 +136,7 @@ final class ConfigurationKeyEnum
     public const NOW_PLAYING_CSS_FILE                  = 'now_playing_css_file';
     public const NOW_PLAYING_PER_USER                  = 'now_playing_per_user';
     public const NOW_PLAYING_REFRESH_LIMIT             = 'now_playing_refresh_limit';
+    public const NPM_BINARY_PATH                       = 'npm_binary_path';
     public const OFFSET_LIMIT                          = 'offset_limit';
     public const OF_THE_MOMENT                         = 'of_the_moment';
     public const PERPETUAL_API_SESSION                 = 'perpetual_api_session';
@@ -208,4 +210,5 @@ final class ConfigurationKeyEnum
     public const WEB_PATH                              = 'web_path';
     public const WRITE_TAGS                            = 'write_tags';
     public const ALBUM_ART_STORE_DISK                  = 'album_art_store_disk';
+    public const SHOW_SONG_ART                         = 'show_song_art';
 }

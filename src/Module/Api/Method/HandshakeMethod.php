@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -107,7 +108,7 @@ final class HandshakeMethod
         $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
 
         if (
-            $user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)
+            $user_id > 0 && $networkAccessChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)
         ) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
@@ -143,7 +144,7 @@ final class HandshakeMethod
 
             if ($client instanceof User) {
                 // Create the session
-                $data             = array();
+                $data             = [];
                 $data['username'] = (string)$client->username;
                 $data['type']     = 'api';
                 $data['apikey']   = (string)$client->apikey;
@@ -165,7 +166,7 @@ final class HandshakeMethod
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey'], 'api');
+                    Session::extend($data['apikey'], AccessTypeEnum::API->value);
                     $token = $data['apikey'];
                 }
 

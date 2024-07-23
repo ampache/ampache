@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370019 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('album_release_type_sort', 'Album - Group per release type Sort', 'album,ep,live,single', 25, 'string', 'interface');
+        $this->updatePreferences('album_release_type_sort', 'Album - Group per release type Sort', 'album,ep,live,single', AccessLevelEnum::USER->value, 'string', 'interface');
     }
 }

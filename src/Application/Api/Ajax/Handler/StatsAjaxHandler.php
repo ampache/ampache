@@ -26,33 +26,27 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-final class StatsAjaxHandler implements AjaxHandlerInterface
+final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
+        private PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
-        /** @var User $user */
-        $user = (!empty(Core::get_global('user')))
-            ? Core::get_global('user')
-            : new User(-1);
 
         // Switch on the actions
         switch ($action) {
@@ -66,13 +60,10 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
                             if (empty($name)) {
-                                foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
-                                    $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
-                                        $name = $plugin->_plugin->get_location_name($latitude, $longitude);
-                                        if (!empty($name)) {
-                                            break;
-                                        }
+                                foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
+                                    $name = $plugin->_plugin->get_location_name($latitude, $longitude);
+                                    if (!empty($name)) {
+                                        break;
                                     }
                                 }
                             }
@@ -95,14 +86,8 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id   = $user->id;
                 $ajax_page = 'stats';
-                if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
-                    require_once Ui::find_template('show_recently_played_all.inc.php');
-                } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
-                    Song::build_cache(array_keys($data));
-                    require Ui::find_template('show_recently_played.inc.php');
-                }
+                $data      = Stats::get_recently_played($user_id);
+                require_once Ui::find_template('show_recently_played_all.inc.php');
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':

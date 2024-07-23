@@ -27,7 +27,7 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Rating;
@@ -66,7 +66,7 @@ final class Stats5Method
      */
     public static function stats(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];
@@ -87,7 +87,7 @@ final class Stats5Method
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -107,11 +107,11 @@ final class Stats5Method
             }
         }
 
-        $results = array();
+        $results = [];
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
             case 'newest':
-                $results = Stats::get_newest($type, $limit, $offset, 0, $user_id);
+                $results = Stats::get_newest($type, $limit, $offset, 0, $user);
                 $offset  = 0;
                 $limit   = 0;
                 break;
@@ -131,12 +131,12 @@ final class Stats5Method
                 $newest  = $filter == 'recent';
                 $results = ($user->id)
                     ? $user->get_recently_played($type, $limit, $offset, $newest)
-                    : Stats::get_recent($type, $limit, $offset, $newest);
+                    : Stats::get_recent($type, $limit, $offset, null, $newest);
                 $offset = 0;
                 $limit  = 0;
                 break;
             case 'flagged':
-                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
+                $results = Userflag::get_latest($type, $user, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
                 break;
@@ -206,12 +206,12 @@ final class Stats5Method
                     case 'json':
                         Json5_Data::set_offset($offset);
                         Json5_Data::set_limit($limit);
-                        echo Json5_Data::artists($results, array(), $user);
+                        echo Json5_Data::artists($results, [], $user);
                         break;
                     default:
                         Xml5_Data::set_offset($offset);
                         Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::artists($results, array(), $user);
+                        echo Xml5_Data::artists($results, [], $user);
                 }
                 break;
             case 'album':
@@ -219,12 +219,12 @@ final class Stats5Method
                     case 'json':
                         Json5_Data::set_offset($offset);
                         Json5_Data::set_limit($limit);
-                        echo Json5_Data::albums($results, array(), $user);
+                        echo Json5_Data::albums($results, [], $user);
                         break;
                     default:
                         Xml5_Data::set_offset($offset);
                         Xml5_Data::set_limit($limit);
-                        echo Xml5_Data::albums($results, array(), $user);
+                        echo Xml5_Data::albums($results, [], $user);
                 }
                 break;
             case 'playlist':
@@ -252,7 +252,7 @@ final class Stats5Method
                         Xml5_Data::set_limit($limit);
                         echo Xml5_Data::videos($results, $user);
                 }
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
                 break;
             case 'podcast':
                 switch ($input['api_format']) {

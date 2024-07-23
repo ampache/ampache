@@ -33,7 +33,7 @@ use Ampache\Config\AmpConfig;
 ?>
 <ul class="subnavside">
 <?php
-/** @var array $items */
+/** @var list<array{url: string, active: string, cssclass: string, title: string}> $items */
 if (!(empty($items))) {
     foreach ($items as $item) {
         $li_class = '';

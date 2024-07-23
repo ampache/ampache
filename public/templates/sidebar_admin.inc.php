@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -42,7 +44,7 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Catalogs'); ?></span>
-        <?php echo Ui::get_icon('all', $t_expander, 'admin_catalogs', 'header-img ' . ((isset($_COOKIE['sb_admin_catalogs'])) ? $_COOKIE['sb_admin_catalogs'] : 'expanded')); ?>
+        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_catalogs', 'header-img ' . ((isset($_COOKIE['sb_admin_catalogs'])) ? $_COOKIE['sb_admin_catalogs'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_admin_catalogs">
       <li id="sb_admin_catalogs_Add"><a href="<?php echo $web_path; ?>/admin/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
@@ -57,11 +59,11 @@ use Ampache\Module\Util\Ui;
       <?php } ?>
     </ul>
   </li>
-  <?php if (Access::check('interface', 100)) { ?>
+  <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span>
-          <?php echo Ui::get_icon('all', $t_expander, 'admin_users', 'header-img ' . ((isset($_COOKIE['sb_admin_users'])) ? $_COOKIE['sb_admin_users'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_users', 'header-img ' . ((isset($_COOKIE['sb_admin_users'])) ? $_COOKIE['sb_admin_users'] : 'expanded')); ?>
       </h4>
       <ul class="sb3" id="sb_admin_users">
         <li id="sb_admin_users_AddUser"><a href="<?php echo $web_path; ?>/admin/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
@@ -83,7 +85,7 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
       <span class="sidebar-header-title"><?php echo T_('Access Control'); ?></span>
-      <?php echo Ui::get_icon('all', $t_expander, 'admin_access', 'header-img ' . ((isset($_COOKIE['sb_admin_access'])) ? $_COOKIE['sb_admin_access'] : 'expanded')); ?>
+      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_access', 'header-img ' . ((isset($_COOKIE['sb_admin_access'])) ? $_COOKIE['sb_admin_access'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_admin_access">
       <li id="sb_admin_access_AddAccess"><a href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
@@ -93,7 +95,7 @@ use Ampache\Module\Util\Ui;
     <li>
       <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Modules'); ?></span>
-        <?php echo Ui::get_icon('all', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
+        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
       </h4>
       <ul class="sb3" id="sb_admin_modules">
         <li id="sb_admin_modules_localplay"><a href="<?php echo $web_path; ?>/admin/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
@@ -104,7 +106,7 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
       <span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span>
-      <?php echo Ui::get_icon('all', $t_expander, 'admin_server', 'header-img ' . ((isset($_COOKIE['sb_admin_server'])) ? $_COOKIE['sb_admin_server'] : 'expanded')); ?>
+      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_server', 'header-img ' . ((isset($_COOKIE['sb_admin_server'])) ? $_COOKIE['sb_admin_server'] : 'expanded')); ?>
     </h4>
     <ul class="sb3" id="sb_admin_server">
       <li id="sb_admin_ot_Debug"><a href="<?php echo $web_path; ?>/admin/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>

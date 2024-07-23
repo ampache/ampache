@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
+use Ampache\Repository\Model\User;
+
 interface AjaxHandlerInterface
 {
-    public function handle(): void;
+    public function handle(User $user): void;
 }

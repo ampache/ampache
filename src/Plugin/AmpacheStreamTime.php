@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
@@ -60,10 +61,10 @@ class AmpacheStreamTime implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 

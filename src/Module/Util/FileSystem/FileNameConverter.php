@@ -78,6 +78,7 @@ final class FileNameConverter implements FileNameConverterInterface
         string $path,
         bool $force
     ): bool {
+        /* @var string $source_encoding */
         $source_encoding = iconv_get_encoding('output_encoding');
 
         // Correctly detect the slash we need to use here
@@ -123,9 +124,15 @@ final class FileNameConverter implements FileNameConverterInterface
             }
 
             $verify_filename = iconv($siteCharset, $siteCharset . '//IGNORE', $full_file);
+            if (!$verify_filename) {
+                continue;
+            }
 
             if (strcmp($full_file, $verify_filename) != 0) {
                 $translated_filename = iconv($source_encoding, $siteCharset . '//TRANSLIT', $full_file);
+                if (!$translated_filename) {
+                    continue;
+                }
 
                 // Make sure the extension stayed the same
                 if (substr($translated_filename, strlen($translated_filename) - 3, 3) != substr($full_file, strlen($full_file) - 3, 3)) {

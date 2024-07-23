@@ -60,7 +60,7 @@ abstract class Handler
      */
     protected function dispatch($data)
     {
-        return call_user_func(array($this->handler, $this->handlerCommand), $data);
+        return call_user_func([$this->handler, $this->handlerCommand], $data);
     }
 
     /**
@@ -88,9 +88,7 @@ abstract class Handler
      */
     public function getTimedCommand($command, $tag, $time): string
     {
-        $commandParts = array(
-            $command
-        );
+        $commandParts = [$command];
         if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {

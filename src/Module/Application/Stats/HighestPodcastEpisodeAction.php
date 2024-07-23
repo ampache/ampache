@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -69,7 +70,7 @@ final class HighestPodcastEpisodeAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER))
+        $user_id = ($this->configContainer->get(ConfigurationKeyEnum::CATALOG_FILTER) && Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : null;
 

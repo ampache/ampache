@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
@@ -62,19 +63,19 @@ class AmpacheAmazon implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_base_url', T_('Amazon base url'), 'http://webservices.amazon.com', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, 75, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_max_results_pages', T_('Amazon max results pages'), 1, AccessLevelEnum::MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_public_key', T_('Amazon Access Key ID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_private_api_key', T_('Amazon Secret Access Key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('amazon_developer_associate_tag', T_('Amazon associate tag'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -116,8 +117,14 @@ class AmpacheAmazon implements AmpachePluginInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['amazon_base_url'])) || !strlen(trim($data['amazon_developer_public_key'])) || !strlen(trim($data['amazon_developer_private_api_key'])) || !strlen(trim($data['amazon_max_results_pages'])) || !strlen(trim($data['amazon_developer_associate_tag']))) {
-            $data                                     = array();
+        if (
+            !strlen(trim($data['amazon_base_url'])) ||
+            !strlen(trim($data['amazon_developer_public_key'])) ||
+            !strlen(trim($data['amazon_developer_private_api_key'])) ||
+            !strlen(trim($data['amazon_max_results_pages'])) ||
+            !strlen(trim($data['amazon_developer_associate_tag']))
+        ) {
+            $data                                     = [];
             $data['amazon_base_url']                  = Preference::get_by_user(-1, 'amazon_base_url');
             $data['amazon_developer_public_key']      = Preference::get_by_user(-1, 'amazon_developer_public_key');
             $data['amazon_developer_private_api_key'] = Preference::get_by_user(-1, 'amazon_developer_private_api_key');
@@ -172,15 +179,15 @@ class AmpacheAmazon implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
-        $images        = array();
-        $final_results = array();
-        $possible_keys = array(
+        $images        = [];
+        $final_results = [];
+        $possible_keys = [
             'LargeImage',
             'MediumImage',
             'SmallImage'
-        );
+        ];
 
         $mediaType = ($type == 'album' || $type == 'artist') ? 'Music' : 'Video';
 
@@ -203,14 +210,14 @@ class AmpacheAmazon implements AmpachePluginInterface
             $amazon->setProxy($proxyhost, $proxyport, $proxyuser, $proxypass);
         }
 
-        $search_results = array();
+        $search_results = [];
 
         /* Set up the needed variables */
         $max_pages_to_search = max($this->amazon_max_results_pages, $amazon->_default_results_pages);
         // while we have pages to search
         do {
             $raw_results = $amazon->search(
-                array('artist' => '', 'album' => '', 'keywords' => $options['keyword']),
+                ['artist' => '', 'album' => '', 'keywords' => $options['keyword']],
                 $mediaType
             );
             $total = count($raw_results) + count($search_results);
@@ -271,7 +278,7 @@ class AmpacheAmazon implements AmpachePluginInterface
                     continue;
                 }
 
-                $data          = array();
+                $data          = [];
                 $data['url']   = $result[$key];
                 $data['mime']  = $mime;
                 $data['title'] = $this->name;

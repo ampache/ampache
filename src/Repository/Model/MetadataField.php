@@ -47,12 +47,8 @@ class MetadataField
      */
     private bool $public = true;
 
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
-    public function __construct(
-        MetadataFieldRepositoryInterface $metadataFieldRepository
-    ) {
-        $this->metadataFieldRepository = $metadataFieldRepository;
+    public function __construct(private readonly MetadataFieldRepositoryInterface $metadataFieldRepository)
+    {
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,68 +25,73 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Authorization\Access;
-use Ampache\Module\Podcast\PodcastEpisodeDownloaderInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
-use Ampache\Module\System\Core;
+use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\User;
+use Ampache\Repository\PodcastEpisodeRepositoryInterface;
 use Ampache\Repository\PodcastRepositoryInterface;
+use Psr\Log\LoggerInterface;
 
-final class PodcastAjaxHandler implements AjaxHandlerInterface
+/**
+ * Ajax actions related to podcast syncing
+ */
+final readonly class PodcastAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private PodcastSyncerInterface $podcastSyncer;
-
-    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
-    private PodcastRepositoryInterface $podcastRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        PodcastSyncerInterface $podcastSyncer,
-        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
-        PodcastRepositoryInterface $podcastRepository
+        private RequestParserInterface $requestParser,
+        private PodcastSyncerInterface $podcastSyncer,
+        private PodcastRepositoryInterface $podcastRepository,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private LoggerInterface $logger,
     ) {
-        $this->requestParser            = $requestParser;
-        $this->podcastSyncer            = $podcastSyncer;
-        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
-        $this->podcastRepository        = $podcastRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        $results = array();
+        if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+            $this->logger->warning(
+                sprintf('User `%s` attempted to sync podcast', $user->getUsername()),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return;
+        }
+
         $action  = $this->requestParser->getFromRequest('action');
 
-        // Switch on the actions
         switch ($action) {
-            case 'sync':
-                if (!Access::check('interface', 75)) {
-                    debug_event('podcast.ajax', (Core::get_global('user')->username ?? T_('Unknown')) . ' attempted to sync podcast', 1);
+            case 'syncPodcastEpisode':
+                $episodeId = (int) $this->requestParser->getFromRequest('podcast_episode_id');
 
-                    return;
+                $episode = $this->podcastEpisodeRepository->findById($episodeId);
+                if ($episode === null) {
+                    $this->logger->warning(
+                        sprintf('Cannot find podcast episode `%d`', $episodeId),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                } else {
+                    $this->podcastSyncer->syncEpisode($episode);
                 }
 
-                if (array_key_exists('podcast_id', $_REQUEST)) {
-                    $podcast = $this->podcastRepository->findById((int) $_REQUEST['podcast_id']);
-                    if ($podcast === null) {
-                        debug_event('podcast.ajax', 'Cannot find podcast', 1);
-                    } else {
-                        $this->podcastSyncer->sync($podcast, true);
-                    }
-                } elseif (array_key_exists('podcast_episode_id', $_REQUEST)) {
-                    $episode = new Podcast_Episode($_REQUEST['podcast_episode_id']);
-                    if ($episode->isNew()) {
-                        debug_event('podcast.ajax', 'Cannot find podcast episode', 1);
-                    } else {
-                        $this->podcastEpisodeDownloader->fetch($episode);
-                    }
+                break;
+            case 'syncPodcast':
+                $podcastId = (int) $this->requestParser->getFromRequest('podcast_id');
+
+                $podcast = $this->podcastRepository->findById($podcastId);
+                if ($podcast === null) {
+                    $this->logger->warning(
+                        sprintf('Cannot find podcast `%d`', $podcast),
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
+                    );
+                } else {
+                    $this->podcastSyncer->sync($podcast, true);
                 }
+                break;
         }
-        $results['rfc3514'] = '0x1';
-
-        // We always do this
-        echo (string) xoutput_from_array($results);
     }
 }

@@ -43,7 +43,7 @@ Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', $catalog_id, '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', $catalog_id, '', false, 'podcast', 'local'); ?>
         <?php echo AmpError::display('catalog'); ?>
     </td>
 </tr>

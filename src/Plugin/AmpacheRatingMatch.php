@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Plugin;
@@ -71,31 +72,31 @@ class AmpacheRatingMatch implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_star1_rule') && !Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('ratingmatch_star1_rule') && !Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_star2_rule') && !Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('ratingmatch_star2_rule') && !Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_star3_rule') && !Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('ratingmatch_star3_rule') && !Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_star4_rule') && !Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('ratingmatch_star4_rule') && !Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::exists('ratingmatch_star5_rule') && !Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::exists('ratingmatch_star5_rule') && !Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
@@ -132,18 +133,18 @@ class AmpacheRatingMatch implements AmpachePluginInterface
             return false;
         }
         if ($from_version < 2) {
-            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
         if ($from_version < 3) {
-            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', 25, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', 25, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', 25, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', 25, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', 25, 'string', 'plugins', $this->name);
-            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', 25, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
+            Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
         if ($from_version < 4) {
-            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         return true;
@@ -251,12 +252,12 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         $sql = "SELECT COUNT(*) AS `counting` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = ? AND `object_id` = ? AND `user` = ?;";
 
         // get the plays for your user
-        $db_results  = Dba::read($sql, array('stream', $song->id, $this->user->id));
+        $db_results  = Dba::read($sql, ['stream', $song->id, $this->user->id]);
         $play_result = Dba::fetch_assoc($db_results);
         $play_count  = (int) $play_result['counting'];
 
         // get the skips for your user
-        $db_results  = Dba::read($sql, array('skip', $song->id, $this->user->id));
+        $db_results  = Dba::read($sql, ['skip', $song->id, $this->user->id]);
         $skip_result = Dba::fetch_assoc($db_results);
         $skip_count  = (int) $skip_result['counting'];
 
@@ -350,12 +351,12 @@ class AmpacheRatingMatch implements AmpachePluginInterface
         $this->user        = $user;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
         $this->match_flags = (int) $data['ratingmatch_flags'];
-        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : array();
-        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : array();
-        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : array();
-        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : array();
-        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : array();
-        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : array();
+        $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
+        $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
+        $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];
+        $this->star4_rule  = (isset($data['ratingmatch_star4_rule'])) ? explode(',', (string) $data['ratingmatch_star4_rule']) : [];
+        $this->star5_rule  = (isset($data['ratingmatch_star5_rule'])) ? explode(',', (string) $data['ratingmatch_star5_rule']) : [];
+        $this->flag_rule   = (isset($data['ratingmatch_flag_rule'])) ? explode(',', (string) $data['ratingmatch_flag_rule']) : [];
         $this->write_tags  = ($data['ratingmatch_write_tags'] == '1');
 
         return true;

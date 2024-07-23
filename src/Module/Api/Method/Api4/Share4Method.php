@@ -53,11 +53,11 @@ final class Share4Method
 
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         unset($user);
-        $results = array((int) $input['filter']);
+        $results = [(int) $input['filter']];
 
         ob_end_clean();
         switch ($input['api_format']) {

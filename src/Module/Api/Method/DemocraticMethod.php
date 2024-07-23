@@ -52,7 +52,7 @@ final class DemocraticMethod
      */
     public static function democratic(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('method'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['method'], self::ACTION)) {
             return false;
         }
         // Load up democratic information
@@ -69,18 +69,20 @@ final class DemocraticMethod
                     Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'oid', $input['api_format']);
                     break;
                 }
-                $democratic->add_vote(array(
-                    array(
-                        'object_type' => $type,
-                        'object_id' => $media->id
-                    )
-                ));
+                $democratic->add_vote(
+                    [
+                        [
+                            'object_type' => $type,
+                            'object_id' => $media->id
+                        ]
+                    ]
+                );
 
                 // If everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);
@@ -103,10 +105,10 @@ final class DemocraticMethod
                 $democratic->remove_vote($object_id);
 
                 // Everything was ok
-                $results = array(
+                $results = [
                     'method' => $input['method'],
                     'result' => true
-                );
+                ];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);
@@ -129,9 +131,7 @@ final class DemocraticMethod
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = array(
-                    'url' => $url
-                );
+                $results = ['url' => $url];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);

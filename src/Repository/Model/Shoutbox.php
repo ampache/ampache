@@ -27,6 +27,7 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Repository\ShoutRepository;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTime;
 use DateTimeInterface;
 
@@ -58,12 +59,12 @@ class Shoutbox extends BaseModel
     /** @var string|null Offset position in songs */
     private ?string $data = null;
 
-    private ShoutRepositoryInterface $shoutRepository;
+    private ?User $user_object = null;
 
     public function __construct(
-        ShoutRepositoryInterface $shoutRepository
+        private readonly ShoutRepositoryInterface $shoutRepository,
+        private readonly UserRepositoryInterface $userRepository,
     ) {
-        $this->shoutRepository = $shoutRepository;
     }
 
     /**
@@ -91,9 +92,9 @@ class Shoutbox extends BaseModel
     /**
      * Sets the related object-type
      */
-    public function setObjectType(string $object_type): Shoutbox
+    public function setObjectType(LibraryItemEnum $object_type): Shoutbox
     {
-        $this->object_type = $object_type;
+        $this->object_type = $object_type->value;
 
         return $this;
     }
@@ -101,9 +102,9 @@ class Shoutbox extends BaseModel
     /**
      * Returns the related object-type
      */
-    public function getObjectType(): string
+    public function getObjectType(): LibraryItemEnum
     {
-        return (string) $this->object_type;
+        return LibraryItemEnum::from((string) $this->object_type);
     }
 
     /**
@@ -191,9 +192,22 @@ class Shoutbox extends BaseModel
      */
     public function setUser(User $user): Shoutbox
     {
-        $this->user = $user->getId();
+        $this->user        = $user->getId();
+        $this->user_object = $user;
 
         return $this;
+    }
+
+    /**
+     * Returns the shout-creator user
+     */
+    public function getUser(): ?User
+    {
+        if ($this->user_object === null) {
+            $this->user_object = $this->userRepository->findById($this->user);
+        }
+
+        return $this->user_object;
     }
 
     /**

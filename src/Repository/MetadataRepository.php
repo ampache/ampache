@@ -36,18 +36,12 @@ use PDO;
  *
  * Tables: `metadata`
  */
-final class MetadataRepository implements MetadataRepositoryInterface
+final readonly class MetadataRepository implements MetadataRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private MetadataFieldRepositoryInterface $metadataFieldRepository;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        MetadataFieldRepositoryInterface $metadataFieldRepository
+        private DatabaseConnectionInterface $connection,
+        private MetadataFieldRepositoryInterface $metadataFieldRepository
     ) {
-        $this->connection              = $connection;
-        $this->metadataFieldRepository = $metadataFieldRepository;
     }
 
     /**
@@ -80,9 +74,7 @@ final class MetadataRepository implements MetadataRepositoryInterface
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata` WHERE `id` = ?',
-            [
-                $metadataId
-            ],
+            [$metadataId],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, Metadata::class, [$this, $this->metadataFieldRepository]);
@@ -155,9 +147,7 @@ final class MetadataRepository implements MetadataRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `metadata` where `id` = ?',
-            [
-                $metadata->getId()
-            ]
+            [$metadata->getId()]
         );
     }
 

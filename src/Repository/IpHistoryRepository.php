@@ -38,18 +38,12 @@ use PDO;
  *
  * Table: `ip_history`
  */
-final class IpHistoryRepository implements IpHistoryRepositoryInterface
+final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -92,9 +86,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $result = $this->connection->fetchOne(
             'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-            [
-                $user->getId(),
-            ]
+            [$user->getId()]
         );
 
         if ($result !== false) {
@@ -111,9 +103,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-            [
-                86400 * (int) $this->configContainer->get('user_ip_cardinality')
-            ]
+            [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
         );
     }
 

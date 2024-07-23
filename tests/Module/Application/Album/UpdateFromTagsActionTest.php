@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -67,7 +68,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -85,7 +86,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $webPath   = 'some-web-path';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->once()
             ->andReturnTrue();
 

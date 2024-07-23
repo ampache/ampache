@@ -46,8 +46,10 @@ class easy_captcha_dxy_wave
      * @param $max_x
      * @param $max_y
      */
-    public function __construct($max_x, $max_y)
-    {
+    public function __construct(
+        $max_x,
+        $max_y
+    ) {
         $this->dist_x = $this->real_rand(2.5, 3.5); // max +-x/y delta distance
         $this->dist_y = $this->real_rand(2.5, 3.5);
         $this->slow_x = $this->real_rand(7.5, 20.0); // =wave-width in pixel/3
@@ -71,7 +73,7 @@ class easy_captcha_dxy_wave
         $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
 
         #-- result
-        return array($distortx, $distorty);
+        return [$distortx, $distorty];
     }
 
     #-- array of values with random start/end values
@@ -86,7 +88,7 @@ class easy_captcha_dxy_wave
     {
         $BEG    = $this->real_rand($a, $b);
         $DIFF   = $this->real_rand($a, $b) - $BEG;
-        $result = array();
+        $result = [];
         for ($count = 0; $count <= $max; $count++) {
             $result[$count] = $BEG + $DIFF * $count / $max;
         }

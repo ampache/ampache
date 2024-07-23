@@ -48,7 +48,7 @@ final class Album4Method
      */
     public static function album(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $uid     = (int) scrub_in((string) $input['filter']);
@@ -60,10 +60,10 @@ final class Album4Method
         }
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::albums(array($uid), $include, $user);
+                echo Json4_Data::albums([$uid], $include, $user);
                 break;
             default:
-                echo Xml4_Data::albums(array($uid), $include, $user);
+                echo Xml4_Data::albums([$uid], $include, $user);
         }
 
         return true;

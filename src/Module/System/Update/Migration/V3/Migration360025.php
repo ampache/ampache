@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration360025 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('webplayer_flash', 'Authorize Flash Web Player(s)', '1', 25, 'boolean', 'streaming');
-        $this->updatePreferences('webplayer_html5', 'Authorize HTML5 Web Player(s)', '1', 25, 'boolean', 'streaming');
+        $this->updatePreferences('webplayer_flash', 'Authorize Flash Web Player(s)', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming');
+        $this->updatePreferences('webplayer_html5', 'Authorize HTML5 Web Player(s)', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming');
     }
 }

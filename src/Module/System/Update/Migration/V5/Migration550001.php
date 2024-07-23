@@ -33,7 +33,7 @@ final class Migration550001 extends AbstractMigration
 {
     protected array $changelog = [
         'Add tables `catalog_filter_group` and `catalog_filter_group_map` for catalog filtering by groups',
-        'Add column `catalog_filter_group` to `user` table to assign a filter group'
+        'Add column `catalog_filter_group` to `user` table to assign a filter group',
     ];
 
     /**

@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
@@ -47,15 +49,15 @@ $web_path = AmpConfig::get('web_path'); ?>
     echo "<td class=\"cel_active\">" . T_('Inactive') . "</td>";
 } ?>
 <td class="cel_action">
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) {
+<?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
     if (AmpConfig::get('sociable')) { ?>
     <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=label&id=<?php echo $libitem->id; ?>">
-        <?php echo Ui::get_icon('comment', T_('Post Shout')); ?>
+        <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>
     </a>
     <?php }
     if (Catalog::can_remove($libitem)) { ?>
         <a id="<?php echo 'delete_label_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/labels.php?action=delete&label_id=<?php echo $libitem->id; ?>">
-            <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
     <?php }
     } ?>
