@@ -1298,10 +1298,8 @@ class Search extends playlist_object
     /**
      * format
      * Gussy up the data
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         parent::format($details);
     }

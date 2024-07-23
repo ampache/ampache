@@ -7071,18 +7071,8 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Offset 0 does not exist on array\\{string\\|null\\}\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, null given\\.$#"
 			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Parameter \\#2 \\$string2 of function strncmp expects string, string\\|false given\\.$#"
-			count: 4
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
@@ -8721,27 +8711,12 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:cdata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:cdata\\(\\) has parameter \\$cdata with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:cdata\\(\\) has parameter \\$parser with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:createParser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:endElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
 
@@ -8766,32 +8741,12 @@ parameters:
 			path: src/Module/Util/AmazonSearch.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:runSearch\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:runSearchAsin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:search\\(\\) has parameter \\$terms with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:search\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:setProxy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Util/AmazonSearch.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:startElement\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/AmazonSearch.php
 

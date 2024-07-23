@@ -1582,10 +1582,8 @@ class Song extends database_object implements
      * This takes the current song object
      * and does a ton of formatting on it creating f_??? variables on the current
      * object
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         if ($this->isNew()) {
             return;

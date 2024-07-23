@@ -186,10 +186,8 @@ class TVShow_Episode extends Video
     /**
      * format
      * this function takes the object and formats some values
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         parent::format($details);
 

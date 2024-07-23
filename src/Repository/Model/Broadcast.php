@@ -184,7 +184,7 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
-     * @param bool $details
+     * @param bool|null $details
      */
     public function format($details = true): void
     {

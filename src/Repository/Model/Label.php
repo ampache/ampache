@@ -121,9 +121,9 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param bool $details
+     * format
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details);
         $this->get_f_link();

@@ -242,7 +242,7 @@ class mpd
         }
 
         $version           = sscanf($response, self::RESPONSE_OK . " MPD %s\n");
-        $this->mpd_version = $version[0];
+        $this->mpd_version = $version[0] ?? "(unknown)";
 
         if ($password) {
             if (!$this->SendCommand(self::COMMAND_PASSWORD, $password, false)) {
@@ -287,13 +287,13 @@ class mpd
             if (function_exists('socket_get_status')) {
                 $status = socket_get_status($this->_mpd_sock);
             }
-            if (strncmp(self::RESPONSE_OK, $response, strlen(self::RESPONSE_OK)) == 0) {
+            if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
                 $this->connected = true;
 
                 return $response;
             }
-            if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
-                $this->_error('Connect', "Server responded with: $response");
+            if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
+                $this->_error('Connect', "Server responded with: " . (string)$response);
 
                 return false;
             }
@@ -344,12 +344,12 @@ class mpd
                 $response = fgets($this->_mpd_sock, 1024);
 
                 // An OK signals the end of transmission
-                if (strncmp(self::RESPONSE_OK, $response, strlen(self::RESPONSE_OK)) == 0) {
+                if (strncmp(self::RESPONSE_OK, (string)$response, strlen(self::RESPONSE_OK)) == 0) {
                     break;
                 }
 
                 // An ERR signals an error!
-                if (strncmp(self::RESPONSE_ERR, $response, strlen(self::RESPONSE_ERR)) == 0) {
+                if (strncmp(self::RESPONSE_ERR, (string)$response, strlen(self::RESPONSE_ERR)) == 0) {
                     $this->_error('SendCommand', "MPD Error: $response");
 
                     return false;

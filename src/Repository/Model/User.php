@@ -995,9 +995,8 @@ class User extends database_object
      * This function sets up the extra variables we need when we are displaying a
      * user for an admin, these should not be normally called when creating a
      * user object
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         if ($this->isNew()) {
             return;

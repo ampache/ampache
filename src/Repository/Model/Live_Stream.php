@@ -103,10 +103,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details);
         $this->get_f_link();

@@ -232,10 +232,8 @@ class Video extends database_object implements
     /**
      * format
      * This formats a video object so that it is human readable
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         $this->get_f_link();
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;

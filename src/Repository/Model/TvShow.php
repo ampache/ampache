@@ -175,10 +175,8 @@ class TvShow extends database_object implements library_item, CatalogItemInterfa
     /**
      * format
      * this function takes the object and formats some values
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         $this->get_f_link();
         if ($details) {
