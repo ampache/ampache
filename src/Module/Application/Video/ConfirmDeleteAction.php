@@ -59,7 +59,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $video = Video::create_from_id(
-            filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
+            (int)filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
         );
         if (!Catalog::can_remove($video)) {
             throw new AccessDeniedException(

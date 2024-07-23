@@ -89,11 +89,11 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
 
             try {
                 $path = $this->podcastFolderProvider->getBaseFolder($podcast);
-            } catch (PodcastFolderException $e) {
+            } catch (PodcastFolderException $error) {
                 $this->logger->error(
                     sprintf(
                         'Podcast folder error: %s. Check your catalog directory and permissions',
-                        $e->getMessage()
+                        $error->getMessage()
                     ),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
@@ -128,8 +128,8 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
 
             try {
                 $this->webFetcher->fetchToFile($source, $destinationFilePath);
-            } catch (FetchFailedException $e) {
-                $this->logError($e->getMessage());
+            } catch (FetchFailedException $error) {
+                $this->logError($error->getMessage());
 
                 return;
             }

@@ -33,7 +33,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
-use PDOStatement;
 
 /**
  * This tracks ratings for songs, albums, artists, videos, tvshows, movies ...
@@ -474,13 +473,12 @@ class Rating extends database_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql = "UPDATE IGNORE `rating` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**

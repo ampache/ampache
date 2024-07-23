@@ -179,7 +179,7 @@ final class DefaultAction implements ApplicationActionInterface
                                 scrub_out($username),
                                 Core::get_user_ip()
                             ),
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
                         AmpError::add('general', T_('Incorrect username or password'));
                     }
@@ -198,7 +198,7 @@ final class DefaultAction implements ApplicationActionInterface
             } else {
                 $this->logger->error(
                     'Second step authentication failed',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 AmpError::add('general', $auth['error'] ?? '');
             }
@@ -214,7 +214,7 @@ final class DefaultAction implements ApplicationActionInterface
                 AmpError::add('general', T_('Account is disabled, please contact the administrator'));
                 $this->logger->warning(
                     sprintf('%s is disabled and attempted to login', scrub_out($username)),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             } elseif (AmpConfig::get('prevent_multiple_logins')) {
                 // if logged in multiple times
@@ -231,7 +231,7 @@ final class DefaultAction implements ApplicationActionInterface
                             (string) $session_ip,
                             $current_ip
                         ),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
@@ -253,7 +253,7 @@ final class DefaultAction implements ApplicationActionInterface
                             'Created missing user %s',
                             scrub_out($username)
                         ),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $user = new User($user_id);
 
@@ -264,7 +264,7 @@ final class DefaultAction implements ApplicationActionInterface
                     $auth['success'] = false;
                     $this->logger->error(
                         'Unable to create a local account',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     AmpError::add('general', T_('Unable to create a local account'));
                 }

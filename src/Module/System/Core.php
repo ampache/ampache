@@ -42,9 +42,8 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
-     * @return User|null
      */
-    public static function get_global($variable)
+    public static function get_global($variable): ?User
     {
         return $GLOBALS[$variable] ?? null;
     }
@@ -187,13 +186,12 @@ class Core
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
      * @param int $length
-     * @return string|false
      * @throws Exception
      */
-    public static function gen_secure_token($length)
+    public static function gen_secure_token($length): ?string
     {
         if ($length < 1) {
-            return false;
+            return null;
         } elseif (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
@@ -201,7 +199,7 @@ class Core
         } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
             $buffer = file_get_contents('/dev/random', false, null, -1, $length);
         } else {
-            return false;
+            return null;
         }
 
         return bin2hex((string)$buffer);

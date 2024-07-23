@@ -91,7 +91,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
             $string .= chr(rand(0, 255));
         }
         $string = base64_encode($string); // base64-set, but filter out unwanted chars
-        $string = preg_replace(
+        $string = (string)preg_replace(
             "/[+\/=IG0ODQR]/i",
             "",
             $string

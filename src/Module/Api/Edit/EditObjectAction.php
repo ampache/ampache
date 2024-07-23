@@ -89,7 +89,7 @@ final class EditObjectAction extends AbstractEditAction
         }
         $this->logger->debug(
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         $className = ObjectTypeToClassNameMapper::map((string)$object_type);
         /** @var library_item|Share $libitem */

@@ -100,7 +100,7 @@ class Random
             default => self::get_default(1, $user),
         };
         $song = array_pop($song_ids);
-        //debug_event(__CLASS__, "get_single_song:" . $song, 5);
+        //debug_event(self::class, "get_single_song:" . $song, 5);
 
         return (int)$song;
     }

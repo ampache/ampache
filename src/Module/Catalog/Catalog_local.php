@@ -551,7 +551,7 @@ class Catalog_local extends Catalog
             }
             // only gather art if you've added new stuff
             if (($this->count) > 0 && $options['gather_art']) {
-                debug_event(__CLASS__, 'gather_art after adding', 4);
+                debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
                 if (!defined('SSE_OUTPUT') && !defined('API')) {
                     require Ui::find_template('show_gather_art.inc.php');
@@ -888,11 +888,10 @@ class Catalog_local extends Catalog
      *
      * Insert a song that isn't already in the database.
      * @param array<string, mixed> $options
-     * @return bool|int
      * @throws Exception
      * @throws Exception
      */
-    private function _insert_local_song(string $file, $options = [])
+    private function _insert_local_song(string $file, $options = []): ?int
     {
         $vainfo = $this->getUtilityFactory()->createVaInfo(
             $file,
@@ -935,65 +934,69 @@ class Catalog_local extends Catalog
         }
 
         $song_id = Song::insert($results);
-        if ($song_id) {
-            $is_duplicate = false;
-            if (count($this->get_gather_types('music')) > 0) {
-                if (AmpConfig::get('catalog_check_duplicate')) {
-                    if (Song::find($results)) {
-                        debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
-                        $is_duplicate = true;
+        if (!$song_id) {
+            debug_event('local.catalog', 'Failed to insert song ' . $file, 5);
+
+            return null;
+        }
+
+        $is_duplicate = false;
+        if (count($this->get_gather_types('music')) > 0) {
+            if (AmpConfig::get('catalog_check_duplicate')) {
+                if (Song::find($results)) {
+                    debug_event('local.catalog', 'disable_duplicate ' . $file, 5);
+                    $is_duplicate = true;
+                }
+            }
+
+            if (array_key_exists('move_match_pattern', $options)) {
+                debug_event(self::class, 'Move uploaded file ' . $song_id . ' according to pattern', 5);
+                $song = new Song($song_id);
+                $root = $this->path;
+                debug_event(self::class, 'Source: ' . $song->file, 5);
+                if (AmpConfig::get('upload_subdir') && $song->user_upload) {
+                    $root .= DIRECTORY_SEPARATOR . User::get_username($song->user_upload);
+                    if (!Core::is_readable($root)) {
+                        debug_event(self::class, 'Target user directory `' . $root . "` doesn't exist. Creating it...", 5);
+                        mkdir($root);
                     }
                 }
+                // sort_find_home will replace the % with the correct values.
+                $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
+                $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
+                if ($directory === null || $filename === null) {
+                    $fullpath = (string)$song->file;
+                } else {
+                    $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
+                }
 
-                if (array_key_exists('move_match_pattern', $options)) {
-                    debug_event(self::class, 'Move uploaded file ' . $song_id . ' according to pattern', 5);
-                    $song = new Song($song_id);
-                    $root = $this->path;
-                    debug_event(self::class, 'Source: ' . $song->file, 5);
-                    if (AmpConfig::get('upload_subdir') && $song->user_upload) {
-                        $root .= DIRECTORY_SEPARATOR . User::get_username($song->user_upload);
-                        if (!Core::is_readable($root)) {
-                            debug_event(self::class, 'Target user directory `' . $root . "` doesn't exist. Creating it...", 5);
-                            mkdir($root);
-                        }
+                // don't move over existing files
+                if (!empty($song->file) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
+                    debug_event(self::class, 'Destin: ' . $fullpath, 5);
+                    $info      = pathinfo($fullpath);
+                    $directory = $info['dirname'] ?? '';
+                    $file      = $info['basename'];
+
+                    if (!Core::is_readable($directory)) {
+                        debug_event(self::class, 'mkdir: ' . $directory, 5);
+                        mkdir($directory, 0755, true);
                     }
-                    // sort_find_home will replace the % with the correct values.
-                    $directory = $this->sort_find_home($song, (string) $this->sort_pattern, $root);
-                    $filename  = $this->sort_find_home($song, (string) $this->rename_pattern);
-                    if ($directory === null || $filename === null) {
-                        $fullpath = (string)$song->file;
+
+                    // Now that we've got the correct directory structure let's try to copy it
+                    copy($song->file, $fullpath);
+
+                    // Check the filesize
+                    $new_sum = Core::get_filesize($fullpath);
+                    $old_sum = Core::get_filesize($song->file);
+
+                    if ($new_sum != $old_sum || $new_sum == 0) {
+                        unlink($fullpath); // delete the copied file on failure
                     } else {
-                        $fullpath = rtrim($directory, "\/") . '/' . ltrim($filename, "\/") . "." . (pathinfo((string)$song->file, PATHINFO_EXTENSION));
-                    }
-
-                    // don't move over existing files
-                    if (!empty($song->file) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
-                        debug_event(self::class, 'Destin: ' . $fullpath, 5);
-                        $info      = pathinfo($fullpath);
-                        $directory = $info['dirname'] ?? '';
-                        $file      = $info['basename'];
-
-                        if (!Core::is_readable($directory)) {
-                            debug_event(self::class, 'mkdir: ' . $directory, 5);
-                            mkdir($directory, 0755, true);
-                        }
-
-                        // Now that we've got the correct directory structure let's try to copy it
-                        copy($song->file, $fullpath);
-
-                        // Check the filesize
-                        $new_sum = Core::get_filesize($fullpath);
-                        $old_sum = Core::get_filesize($song->file);
-
-                        if ($new_sum != $old_sum || $new_sum == 0) {
-                            unlink($fullpath); // delete the copied file on failure
-                        } else {
-                            debug_event(self::class, 'song path updated: ' . $fullpath, 5);
-                            unlink($song->file); // delete the original on success
-                            // Update the catalog
-                            $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
-                            Dba::write($sql, [$fullpath, $song->id]);
-                        }
+                        debug_event(self::class, 'song path updated: ' . $fullpath, 5);
+                        unlink($song->file); // delete the original on success
+                        // Update the catalog
+                        $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
+                        Dba::write($sql, [$fullpath, $song->id]);
                     }
                 }
             }

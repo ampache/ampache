@@ -76,7 +76,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($podcast === null) {
             $this->logger->warning(
                 'Requested a podcast that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

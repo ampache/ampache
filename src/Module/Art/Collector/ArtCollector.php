@@ -79,7 +79,7 @@ final class ArtCollector implements ArtCollectorInterface
         if ($options === []) {
             $this->logger->warning(
                 'No options for art search, skipped.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return [];
@@ -91,7 +91,7 @@ final class ArtCollector implements ArtCollectorInterface
             // They don't want art!
             $this->logger->warning(
                 'art_order is empty, skipping art gathering',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return [];
@@ -101,7 +101,7 @@ final class ArtCollector implements ArtCollectorInterface
 
         $this->logger->notice(
             'Searching using:' . json_encode($artOrder),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         if ($limit == 0) {
@@ -112,7 +112,7 @@ final class ArtCollector implements ArtCollectorInterface
         if ($type == 'playlist') {
             $this->logger->notice(
                 "Method used: playlist",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             $playlist = new Playlist($art->uid);
 
@@ -139,7 +139,7 @@ final class ArtCollector implements ArtCollectorInterface
                 if ($handlerClassName !== null) {
                     $this->logger->notice(
                         "Method used: $method",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     /** @var CollectorModuleInterface $handler */
                     $handler = $this->dic->get($handlerClassName);
@@ -152,7 +152,7 @@ final class ArtCollector implements ArtCollectorInterface
                 } else {
                     $this->logger->error(
                         $method . ' not defined',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -162,7 +162,7 @@ final class ArtCollector implements ArtCollectorInterface
         }
         $this->logger->notice(
             'found ' . count($results) . ' results',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         return $results;

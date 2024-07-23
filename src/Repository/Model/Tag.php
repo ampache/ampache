@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\InterfaceImplementationChecker;
-use PDOStatement;
 
 /**
  * Tag Class
@@ -242,12 +241,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     /**
      * update
      * Update the name of the tag
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if ((string)$data['name'] === '') {
-            return false;
+            return null;
         }
 
         $name      = $data['name'] ?? $this->name;
@@ -943,9 +941,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * @param bool $details
+     * format
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details); //dead code but called from other format calls
     }
@@ -1070,13 +1068,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql = "UPDATE IGNORE `tag_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     public function getMediaType(): LibraryItemEnum

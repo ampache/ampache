@@ -51,7 +51,7 @@ final class ClearArtAction extends AbstractArtAction
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $burl = '';
         if (isset($_GET['burl'])) {

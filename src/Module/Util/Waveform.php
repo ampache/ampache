@@ -271,7 +271,7 @@ class Waveform
         global $dic;
 
         if (!$dic->get(EnvironmentInterface::class)->check_php_gd()) {
-            debug_event(__CLASS__, 'GD extension must be loaded', 1);
+            debug_event(self::class, 'GD extension must be loaded', 1);
 
             return null;
         }

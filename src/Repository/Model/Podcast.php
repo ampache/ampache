@@ -110,11 +110,9 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      * format
      * this function takes the object and formats some values
      *
-     * @param bool $details
-     *
      * @deprecated
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
     }
 

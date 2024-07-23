@@ -26,7 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Playlist;
 
 /**
  * Add `collaborate` to the playlist table to allow other users to add songs to the list

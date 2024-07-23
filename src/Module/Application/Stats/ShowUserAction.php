@@ -69,7 +69,7 @@ final readonly class ShowUserAction implements ApplicationActionInterface
         if ($client->isNew()) {
             $this->logger->warning(
                 'Requested a user that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

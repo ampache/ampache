@@ -84,7 +84,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (!$this->zipHandler->isZipable($object_type)) {
             $this->logger->error(
                 'Object type `' . $object_type . '` is not allowed to be zipped.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();
         }
@@ -93,7 +93,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         $object_id = (int)$this->requestParser->getFromRequest('id');
         $this->logger->debug(
             'Requested item ' . $object_id,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         $libItem = $this->libraryItemLoader->load(
@@ -161,7 +161,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
         if (!defined('NO_SESSION') && !User::stream_control($media_ids)) {
             $this->logger->notice(
                 'Access denied: Stream control failed for user ' . Core::get_global('user')?->username,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             throw new AccessDeniedException();
         }

@@ -97,15 +97,14 @@ class AmpacheYourls implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @return string|false
+     * shortener
      */
-    public function shortener($url)
+    public function shortener(string $url): ?string
     {
         if (empty($this->yourls_domain) || empty($this->yourls_api_key)) {
             debug_event('yourls.plugin', 'YOURLS domain or api key missing', 3);
 
-            return false;
+            return null;
         }
 
         $shorturl = '';
@@ -125,7 +124,11 @@ class AmpacheYourls implements AmpachePluginInterface
         } catch (Exception $error) {
             debug_event('yourls.plugin', 'YOURLS api http exception: ' . $error->getMessage(), 1);
 
-            return false;
+            return null;
+        }
+
+        if (!$shorturl) {
+            return null;
         }
 
         return $shorturl;

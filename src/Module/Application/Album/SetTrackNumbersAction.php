@@ -60,7 +60,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         $this->logger->debug(
             'Set track numbers called.',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
@@ -73,7 +73,7 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
             $this->logger->debug(
                 sprintf('%d=%s', $key, Core::get_get($key)),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

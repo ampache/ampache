@@ -2217,7 +2217,7 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs($offset = 0, $limit = 0): array
+    public function get_songs(?int $offset = 0, ?int $limit = 0): array
     {
         $songs   = [];
         $results = [];
@@ -2527,7 +2527,7 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags(array $results, Song $song): array
     {
-        //debug_event(__CLASS__, "update_song_from_tags results: " . print_r($results, true), 4);
+        //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
         $new_song       = new Song();
         $new_song->file = $results['file'];
@@ -2863,7 +2863,7 @@ abstract class Catalog extends database_object
 
         if ($metadataManager->isCustomMetadataEnabled()) {
             $ctags = self::filterMetadata($song, $results);
-            //debug_event(__CLASS__, "get_clean_metadata " . print_r($ctags, true), 4);
+            //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
                 $metadataManager->updateOrAddMetadata($song, $tag, (string) $value);
             }
@@ -3162,7 +3162,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
         Dba::write($sql);
         if (AmpConfig::get('podcast')) {
-            //debug_event(__CLASS__, 'update_counts podcast_episode table', 5);
+            //debug_event(self::class, 'update_counts podcast_episode table', 5);
             // fix object_count table missing podcast row
             $sql        = "SELECT `podcast_episode`.`podcast`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `podcast_episode` ON `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `podcast_episode`.`id` LEFT JOIN `object_count` AS `podcast_count` ON `podcast_count`.`object_type` = 'podcast' AND `object_count`.`date` = `podcast_count`.`date` AND `object_count`.`user` = `podcast_count`.`user` AND `object_count`.`agent` = `podcast_count`.`agent` AND `object_count`.`count_type` = `podcast_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `podcast_count`.`id` IS NULL LIMIT 100;";
             $db_results = Dba::read($sql);
@@ -3203,7 +3203,7 @@ abstract class Catalog extends database_object
         }
 
         if (AmpConfig::get('allow_video')) {
-            //debug_event(__CLASS__, 'update_counts video table', 5);
+            //debug_event(self::class, 'update_counts video table', 5);
             $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
             Dba::write($sql);
             $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
@@ -3420,22 +3420,24 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(self::class, "clean_duplicate_artists " . $row['maxid'] . "=>" . $row['minid'], 5);
+            $maxId = (int)$row['maxid'];
+            $minId = (int)$row['minid'];
             // migrate linked tables first
-            //Stats::migrate('artist', $row['maxid'], $row['minid']);
-            Useractivity::migrate('artist', $row['maxid'], $row['minid']);
-            Recommendation::migrate('artist', $row['maxid']);
-            self::getShareRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            self::getShoutRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            Tag::migrate('artist', $row['maxid'], $row['minid']);
-            Userflag::migrate('artist', $row['maxid'], $row['minid']);
-            Label::migrate('artist', $row['maxid'], $row['minid']);
-            Rating::migrate('artist', $row['maxid'], $row['minid']);
-            self::getWantedRepository()->migrateArtist($row['maxid'], $row['minid']);
-            Clip::migrate('artist', $row['maxid'], $row['minid']);
-            self::migrate_map('artist', $row['maxid'], $row['minid']);
+            //Stats::migrate('artist', $maxId, $minId);
+            Useractivity::migrate('artist', $maxId, $minId);
+            Recommendation::migrate('artist', $maxId);
+            self::getShareRepository()->migrate('artist', $maxId, $minId);
+            self::getShoutRepository()->migrate('artist', $maxId, $minId);
+            Tag::migrate('artist', $maxId, $minId);
+            Userflag::migrate('artist', $maxId, $minId);
+            Label::migrate('artist', $maxId, $minId);
+            Rating::migrate('artist', $maxId, $minId);
+            self::getWantedRepository()->migrateArtist($maxId, $minId);
+            Clip::migrate('artist', $maxId, $minId);
+            self::migrate_map('artist', $maxId, $minId);
 
             // replace all songs and albums with the original artist
-            Artist::migrate($row['maxid'], $row['minid']);
+            Artist::migrate($maxId, $minId);
         }
 
         // remove the duplicates after moving everything

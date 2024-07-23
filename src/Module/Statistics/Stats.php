@@ -38,7 +38,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 /**
  * Stats Class
@@ -102,12 +101,11 @@ class Stats
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $child_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id): void
     {
         if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'])) {
-            return false;
+            return;
         }
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
@@ -116,7 +114,7 @@ class Stats
             $params[] = $child_id;
         }
 
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
     }
 
     /**
@@ -125,7 +123,7 @@ class Stats
     public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -141,7 +139,7 @@ class Stats
     public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -413,9 +411,8 @@ class Stats
      * get_cached_place_name
      * @param float $latitude
      * @param float $longitude
-     * @return mixed|null
      */
-    public static function get_cached_place_name($latitude, $longitude)
+    public static function get_cached_place_name($latitude, $longitude): ?string
     {
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
@@ -523,9 +520,8 @@ class Stats
      * @param int $user_id
      * @param int $object_id
      * @param string $object_type
-     * @return PDOStatement|bool
      */
-    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type)
+    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type): void
     {
         // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
@@ -555,7 +551,7 @@ class Stats
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, [$date, $agent, $user_id]);
+        Dba::write($sql, [$date, $agent, $user_id]);
     }
 
     /**

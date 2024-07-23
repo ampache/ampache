@@ -93,12 +93,12 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 AccessLevelEnum::from((int)($data['level'] ?? 0)),
                 AccessTypeEnum::from($data['type'] ?? 'stream')
             );
-        } catch (InvalidIpRangeException $e) {
+        } catch (InvalidIpRangeException) {
             AmpError::add('start', T_('IP Address version mismatch'));
             AmpError::add('end', T_('IP Address version mismatch'));
-        } catch (InvalidStartIpException $e) {
+        } catch (InvalidStartIpException) {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (InvalidEndIpException $e) {
+        } catch (InvalidEndIpException) {
             AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
         }
 

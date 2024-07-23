@@ -37,7 +37,6 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\UserRepositoryInterface;
-use PDOStatement;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tmp_Playlist;
 
@@ -75,7 +74,7 @@ final class Session implements SessionInterface
             // Verify their session
             if (!self::exists('interface', $sessionData)) {
                 if (!self::auth_remember()) {
-                    $this->authenticationManager->logout($sessionData);
+                    $this->authenticationManager->logout((string)$sessionData);
 
                     return false;
                 }
@@ -92,7 +91,7 @@ final class Session implements SessionInterface
             // If the user ID doesn't exist deny them
             $user_id = Core::get_global('user')?->getId();
             if (!$user_id && !$isDemoMode) {
-                $this->authenticationManager->logout(session_id());
+                $this->authenticationManager->logout((string)session_id());
 
                 return false;
             }
@@ -127,7 +126,7 @@ final class Session implements SessionInterface
                 }
                 $user_id = Core::get_global('user')?->getId();
                 if (!$user_id && !$isDemoMode) {
-                    $this->authenticationManager->logout(session_id());
+                    $this->authenticationManager->logout((string)session_id());
 
                     return false;
                 }
@@ -492,11 +491,8 @@ final class Session implements SessionInterface
      * extend
      *
      * This takes a SID and extends its expiration.
-     * @param string $sid
-     * @param string $type
-     * @return PDOStatement|bool
      */
-    public static function extend($sid, $type = null)
+    public static function extend(string $sid, ?string $type = null): void
     {
         $time = time();
         // this is risky but allow it
@@ -518,8 +514,6 @@ final class Session implements SessionInterface
                 self::createGlobalUser(User::get_from_username($results['username']));
             }
         }
-
-        return $db_results;
     }
 
     /**
@@ -542,30 +536,24 @@ final class Session implements SessionInterface
      * update_username
      *
      * This takes a SID and update associated username.
-     * @param string $sid
-     * @param string $username
-     * @return PDOStatement|bool
      */
-    public static function update_username($sid, $username)
+    public static function update_username(string $sid, string $username): void
     {
         $sql = 'UPDATE `session` SET `username` = ? WHERE `id` = ?';
 
-        return Dba::write($sql, [$username, $sid]);
+        Dba::write($sql, [$username, $sid]);
     }
 
     /**
      * update_agent
      *
      * This takes a SID and update associated agent.
-     * @param string $sid
-     * @param string $agent
-     * @return PDOStatement|bool
      */
-    public static function update_agent($sid, $agent)
+    public static function update_agent(string $sid, string $agent): void
     {
         $sql = 'UPDATE `session` SET `agent` = ? WHERE `id` = ?';
 
-        return Dba::write($sql, [$agent, $sid]);
+        Dba::write($sql, [$agent, $sid]);
     }
 
     /**
@@ -684,7 +672,7 @@ final class Session implements SessionInterface
                 'secure' => make_bool(AmpConfig::get('cookie_secure')),
                 'samesite' => 'Lax'
             ];
-            setcookie(session_name(), session_id(), $cookie_options);
+            setcookie((string)session_name(), (string)session_id(), $cookie_options);
         } else {
             session_set_cookie_params($cookie_params);
         }
@@ -774,16 +762,12 @@ final class Session implements SessionInterface
 
     /**
      * storeTokenForUser
-     * @param string $username
-     * @param string $token
-     * @param int $remember_length
-     * @return PDOStatement|bool
      */
-    public static function storeTokenForUser($username, $token, $remember_length)
+    public static function storeTokenForUser(string $username, string $token, int $remember_length): void
     {
         $sql = "INSERT INTO session_remember (`username`, `token`, `expire`) VALUES (?, ?, ?)";
 
-        return Dba::write($sql, [$username, $token, $remember_length]);
+        Dba::write($sql, [$username, $token, $remember_length]);
     }
 
     /**

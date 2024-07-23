@@ -152,7 +152,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
             try {
                 $migration->migrate();
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 throw new UpdateFailedException();
             }
 
@@ -214,7 +214,7 @@ final class UpdateRunner implements UpdateRunnerInterface
                     $this->connection->query(sprintf('DESCRIBE `%s`', $tableName));
 
                     continue;
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $this->logger->warning(
                         'Missing table: ' . $tableName,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -229,7 +229,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 try {
                     $this->connection->query($migrationSql);
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $error = sprintf('Failed creating missing table: %s', $tableName);
 
                     $this->logger->critical(

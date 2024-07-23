@@ -55,7 +55,7 @@ final class UserActivityPoster implements UserActivityPosterInterface
     ): void {
         $this->logger->debug(
             sprintf('post_activity: %s %s by user: %d: {%d}', $action, $objectType, $userId, $objectId),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         $handler = $this->activityTypeHandlerMapper->map($objectType);

@@ -79,7 +79,7 @@ final class SystemUpdateMethod
                 $updater->update();
 
                 $updated = true;
-            } catch (Update\Exception\UpdateException $e) {
+            } catch (Update\Exception\UpdateException) {
             }
         }
         if ($updated) {

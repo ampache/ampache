@@ -79,7 +79,7 @@ final class UpgradePluginAction implements ApplicationActionInterface
         if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
                 sprintf("Error: Invalid Plugin: %s selected", $this->requestParser->getFromRequest('plugin')),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $this->ui->showQueryStats();

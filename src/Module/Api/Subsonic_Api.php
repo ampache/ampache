@@ -2188,7 +2188,7 @@ class Subsonic_Api
                     self::getPodcastCreator()->create($url, $catalog);
 
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
-                } catch (PodcastCreationException $e) {
+                } catch (PodcastCreationException) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createpodcastchannel');
                 }
             } else {
@@ -2302,13 +2302,13 @@ class Subsonic_Api
         $response  = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'jukeboxcontrol');
         $return    = false;
         if (empty($localplay->type) || !$localplay->connect()) {
-            debug_event(__CLASS__, 'Error Localplay controller: ' . AmpConfig::get('localplay_controller', 'Is not set'), 3);
+            debug_event(self::class, 'Error Localplay controller: ' . AmpConfig::get('localplay_controller', 'Is not set'), 3);
             self::_apiOutput($input, $response);
 
             return;
         }
 
-        debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        debug_event(self::class, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         switch ($action) {
             case 'get':
             case 'status':

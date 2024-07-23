@@ -239,10 +239,8 @@ class Playlist extends playlist_object
      * format
      * This takes the current playlist object and gussies it up a little
      * bit so it is presentable to the users
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         parent::format($details);
     }
@@ -301,7 +299,7 @@ class Playlist extends playlist_object
                     debug_event(self::class, sprintf('get_items(): %s not handled', $object_type->value), 5);
             }
 
-            // debug_event(__CLASS__, "get_items(): Results:\n" . print_r($results,true) , 5);
+            // debug_event(self::class, "get_items(): Results:\n" . print_r($results,true) , 5);
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -363,7 +361,7 @@ class Playlist extends playlist_object
                 ? ''
                 : ' LIMIT ' . $limit;
 
-            //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
+            //debug_event(self::class, "get_random_items(): " . $sql . $limit_sql, 5);
             $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $results[] = [
@@ -401,7 +399,7 @@ class Playlist extends playlist_object
 
         $sql .= "ORDER BY `playlist_data`.`track`";
         $db_results = Dba::read($sql, $params);
-        // debug_event(__CLASS__, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
+        // debug_event(self::class, "get_songs(): " . $sql . ' ' . print_r($params, true), 5);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
@@ -454,7 +452,7 @@ class Playlist extends playlist_object
 
         $sql .= "GROUP BY `playlist_data`.`playlist`;";
 
-        //debug_event(__CLASS__, "get_media_count(): " . $sql . ' ' . print_r($params, true), 5);
+        //debug_event(self::class, "get_media_count(): " . $sql . ' ' . print_r($params, true), 5);
 
         $db_results = Dba::read($sql, $params);
         $row        = Dba::fetch_assoc($db_results);
@@ -484,7 +482,7 @@ class Playlist extends playlist_object
             return 0;
         }
 
-        // debug_event(__CLASS__, "get_total_duration(): " . $sql, 5);
+        // debug_event(self::class, "get_total_duration(): " . $sql, 5);
 
         return (int) $row[0];
     }
@@ -1036,14 +1034,13 @@ class Playlist extends playlist_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
         $params = [$new_object_id, $old_object_id, $object_type];
 
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
     }
 
     public function getMediaType(): LibraryItemEnum

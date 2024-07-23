@@ -84,9 +84,8 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         // format shared lists using the username
         $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))

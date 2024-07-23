@@ -484,9 +484,8 @@ class User extends database_object
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
      * good stuff
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if (empty($data['username'])) {
             AmpError::add('username', T_('Username is required'));
@@ -497,7 +496,7 @@ class User extends database_object
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         if (!isset($data['fullname_public'])) {
@@ -996,9 +995,8 @@ class User extends database_object
      * This function sets up the extra variables we need when we are displaying a
      * user for an admin, these should not be normally called when creating a
      * user object
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         if ($this->isNew()) {
             return;
@@ -1066,9 +1064,8 @@ class User extends database_object
      * Remove Duplicates from user, add in missing
      * If -1 is passed it also removes duplicates from the `preferences`
      * table.
-     * @param int $user_id
      */
-    public static function fix_preferences($user_id): void
+    public static function fix_preferences(int $user_id): void
     {
         // Check default group (autoincrement starts at 1 so force it to be 0)
         $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
@@ -1414,7 +1411,7 @@ class User extends database_object
         $sql        = 'SELECT `user` FROM `user_preference` GROUP BY `user` HAVING COUNT(*) < ' . $pref_count;
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            self::fix_preferences($row['user']);
+            self::fix_preferences((int)$row['user']);
         }
 
         // Fix the system user preferences

@@ -96,9 +96,9 @@ final class UpdateAction implements ApplicationActionInterface
         } elseif ($this->updater->hasPendingUpdates()) {
             try {
                 $this->updater->update();
-            } catch (Update\Exception\UpdateFailedException $e) {
+            } catch (Update\Exception\UpdateFailedException) {
                 AmpError::add('general', T_('Update failed. Please check the logs for further information.'));
-            } catch (Update\Exception\VersionNotUpdatableException $e) {
+            } catch (Update\Exception\VersionNotUpdatableException) {
                 echo '<p class="database-update">Database version too old, please upgrade to <a href="https://github.com/ampache/ampache/releases/download/3.8.2/ampache-3.8.2_all.zip">Ampache-3.8.2</a> first</p>';
             }
         }

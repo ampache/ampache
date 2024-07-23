@@ -65,7 +65,7 @@ final class DeleteAction implements ApplicationActionInterface
         if ($tvshow_season_id < 1) {
             $this->logger->warning(
                 'Requested a tvshow_season that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

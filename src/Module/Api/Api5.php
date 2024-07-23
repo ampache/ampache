@@ -233,7 +233,7 @@ class Api5
                 continue;
             }
             if (!array_key_exists($parameter, $input)) {
-                debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
+                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);

@@ -146,7 +146,7 @@ class Api4
      * call the correct error / success message depending on format
      * @param string $type
      * @param string $message
-     * @param string $error_code
+     * @param string|null $error_code
      * @param string $format
      */
     public static function message($type, $message, $error_code = null, $format = 'xml'): void
@@ -154,10 +154,10 @@ class Api4
         if ($type === 'error') {
             switch ($format) {
                 case 'json':
-                    echo Json4_Data::error($error_code, $message);
+                    echo Json4_Data::error($error_code ?? '400', $message);
                     break;
                 default:
-                    echo Xml4_Data::error($error_code, $message);
+                    echo Xml4_Data::error($error_code ?? '400', $message);
             }
         }
         if ($type === 'success') {

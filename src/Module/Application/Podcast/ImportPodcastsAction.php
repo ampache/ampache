@@ -103,7 +103,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
             $catalog = $this->catalogLoader->getById($catalogId);
 
             $importedCount = $this->importPodcasts($request, $catalog);
-        } catch (CatalogLoadingException $e) {
+        } catch (CatalogLoadingException) {
             AmpError::add('catalog', T_('Catalog not found'));
 
             $importedCount = 0;
@@ -155,7 +155,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
 
         try {
             return $this->podcastOpmlImporter->import($catalog, $file->getStream()->getContents());
-        } catch (InvalidCatalogException $e) {
+        } catch (InvalidCatalogException) {
             AmpError::add('catalog', T_('Invalid catalog type'));
 
             return 0;

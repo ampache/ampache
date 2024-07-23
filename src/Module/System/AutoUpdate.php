@@ -101,10 +101,9 @@ class AutoUpdate
 
     /**
      * Perform a GitHub request.
-     * @param string $action
      * @return Object|null
      */
-    public static function github_request($action)
+    public static function github_request(string $action)
     {
         try {
             // https is mandatory
@@ -150,9 +149,8 @@ class AutoUpdate
 
     /**
      * Get latest available version from GitHub.
-     * @param bool $force
      */
-    public static function get_latest_version($force = false): string
+    public static function get_latest_version(?bool $force = false): string
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
 
@@ -188,7 +186,7 @@ class AutoUpdate
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', $available);
+                Preference::update_all('autoupdate_lastversion_new', (int)$available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -206,7 +204,7 @@ class AutoUpdate
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', $available);
+                Preference::update_all('autoupdate_lastversion_new', (int)$available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -266,9 +264,8 @@ class AutoUpdate
 
     /**
      * Check if an update is available.
-     * @param bool $force
      */
-    public static function is_update_available($force = false): bool
+    public static function is_update_available(?bool $force = false): bool
     {
         if (
             $force === false ||
@@ -387,9 +384,8 @@ class AutoUpdate
 
     /**
      * Update local git repository.
-     * @param bool $api
      */
-    public static function update_files($api = false): void
+    public static function update_files(?bool $api = false): void
     {
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
@@ -414,7 +410,7 @@ class AutoUpdate
             // reset the update status
             Preference::update_all('autoupdate_lastversion', $commit);
             AmpConfig::set('autoupdate_lastversion', $commit, true);
-            Preference::update_all('autoupdate_lastversion_new', false);
+            Preference::update_all('autoupdate_lastversion_new', 0);
             AmpConfig::set('autoupdate_lastversion_new', false, true);
         }
     }

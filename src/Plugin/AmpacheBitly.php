@@ -101,10 +101,9 @@ class AmpacheBitly implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @return string|false
+     *shortener
      */
-    public function shortener($url)
+    public function shortener(string $url): ?string
     {
         if (empty($this->bitly_token) || empty($this->bitly_group_guid)) {
             debug_event('bitly.plugin', 'Bit.ly Token or Group GUID missing', 3);
@@ -142,11 +141,11 @@ class AmpacheBitly implements AmpachePluginInterface
                 return $result->link;
             }
 
-            return false;
+            return null;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
-            return false;
+            return null;
         }
     }
 

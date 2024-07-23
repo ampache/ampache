@@ -232,10 +232,8 @@ class Video extends database_object implements
     /**
      * format
      * This formats a video object so that it is human readable
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         $this->get_f_link();
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
@@ -522,10 +520,10 @@ class Video extends database_object implements
         }
 
         $media_name = $this->get_stream_name() . "." . $this->type;
-        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = (string)preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode((string) $media_name)
-            : rawurlencode((string) $media_name);
+            ? urlencode($media_name)
+            : rawurlencode($media_name);
 
         $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . $uid . $additional_params;
         if ($player !== '') {

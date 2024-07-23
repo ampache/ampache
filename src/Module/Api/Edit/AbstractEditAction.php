@@ -62,7 +62,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->logger->debug(
             'Called for action: {' . Core::get_request('action') . '}',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // Post first
@@ -82,7 +82,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden'])) {
             $this->logger->warning(
                 sprintf('Type `%d` is not based on an item library.', $object_type),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
@@ -91,11 +91,11 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $className = ObjectTypeToClassNameMapper::map($object_type);
         $this->logger->warning(
             $className,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         $this->logger->warning(
             (string) $object_id,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         /** @var library_item $libitem */
         $libitem = new $className($object_id);

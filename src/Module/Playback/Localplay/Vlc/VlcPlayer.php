@@ -140,14 +140,13 @@ class VlcPlayer
      * skip
      * This skips to POS in the playlist
      * @param $pos
-     * @return bool|null
      */
-    public function skip($pos): ?bool
+    public function skip($pos): bool
     {
         $args    = ['command' => 'pl_play', '&id' => $pos];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         // Works but if user clicks next afterwards player goes to first song our last song played before
@@ -204,14 +203,13 @@ class VlcPlayer
      * repeat
      * This toggles the repeat state of VLC
      * @param $value
-     * @return bool|null
      */
     public function repeat($value): ?bool
     {
         $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;

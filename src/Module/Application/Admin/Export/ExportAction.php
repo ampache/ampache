@@ -79,7 +79,7 @@ final class ExportAction implements ApplicationActionInterface
 
         try {
             $catalog = $this->catalogLoader->getById($catalogId);
-        } catch (CatalogLoadingException $e) {
+        } catch (CatalogLoadingException) {
             $catalog = null;
         }
 
