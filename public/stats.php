@@ -53,7 +53,6 @@ use Ampache\Module\Application\Stats\RecentAlbumAction;
 use Ampache\Module\Application\Stats\RecentAlbumArtistAction;
 use Ampache\Module\Application\Stats\RecentAlbumDiskAction;
 use Ampache\Module\Application\Stats\RecentArtistAction;
-use Ampache\Module\Application\Stats\RecentMediaAction;
 use Ampache\Module\Application\Stats\RecentPlaylistAction;
 use Ampache\Module\Application\Stats\RecentPodcastEpisodeAction;
 use Ampache\Module\Application\Stats\RecentSongAction;
@@ -117,7 +116,6 @@ $dic->get(ApplicationRunner::class)->run(
         RecentAlbumArtistAction::REQUEST_KEY => RecentAlbumArtistAction::class,
         RecentAlbumDiskAction::REQUEST_KEY => RecentAlbumDiskAction::class,
         RecentArtistAction::REQUEST_KEY => RecentArtistAction::class,
-        RecentMediaAction::REQUEST_KEY => RecentMediaAction::class,
         RecentPlaylistAction::REQUEST_KEY => RecentPlaylistAction::class,
         RecentPodcastEpisodeAction::REQUEST_KEY => RecentPodcastEpisodeAction::class,
         RecentSongAction::REQUEST_KEY => RecentSongAction::class,
