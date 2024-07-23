@@ -64,14 +64,14 @@ final class PlaylistGenerate5Method
     public static function playlist_generate(array $input, User $user): bool
     {
         // parameter defaults
-        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], array('forgotten', 'recent', 'unplayed', 'random'), true))
+        $mode = (array_key_exists('mode', $input) && in_array($input['mode'], ['forgotten', 'recent', 'unplayed', 'random'], true))
             ? $input['mode']
             : 'random';
-        $format = (array_key_exists('format', $input) && in_array($input['format'], array('song', 'index', 'id'), true))
+        $format = (array_key_exists('format', $input) && in_array($input['format'], ['song', 'index', 'id'], true))
             ? $input['format']
             : 'song';
         // confirm the correct data
-        if (!in_array($format, array('song', 'index', 'id'))) {
+        if (!in_array($format, ['song', 'index', 'id'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $format), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
@@ -79,11 +79,11 @@ final class PlaylistGenerate5Method
         $offset     = (int)($input['offset'] ?? 0);
         $limit      = (int)($input['limit'] ?? 0);
         $rule_count = 1;
-        $data       = array(
+        $data       = [
             'type' => 'song'
-        );
+        ];
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
-        if (in_array($mode, array('forgotten', 'recent'), true)) {
+        if (in_array($mode, ['forgotten', 'recent'], true)) {
             // played songs
             $data['rule_' . $rule_count]               = 'myplayed';
             $data['rule_' . $rule_count . '_operator'] = 0;

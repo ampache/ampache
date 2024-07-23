@@ -55,7 +55,7 @@ final class Label5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 
@@ -73,10 +73,10 @@ final class Label5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::labels(array($object_id), false);
+                echo Json5_Data::labels([$object_id], false);
                 break;
             default:
-                echo Xml5_Data::labels(array($object_id), $user);
+                echo Xml5_Data::labels([$object_id], $user);
         }
 
         return true;

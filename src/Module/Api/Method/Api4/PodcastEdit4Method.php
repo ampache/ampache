@@ -61,7 +61,7 @@ final class PodcastEdit4Method
         if (!Api4::check_access('interface', 50, $user->id, 'edit_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $podcast_id = $input['filter'];

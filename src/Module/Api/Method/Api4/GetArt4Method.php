@@ -52,7 +52,7 @@ final class GetArt4Method
      */
     public static function get_art(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -62,7 +62,7 @@ final class GetArt4Method
         $size      = $input['size'] ?? false;
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'playlist', 'search', 'podcast'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'search', 'podcast'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;
@@ -96,7 +96,7 @@ final class GetArt4Method
         if ($art->has_db_info()) {
             header('Access-Control-Allow-Origin: *');
             if ($size && AmpConfig::get('resize_images')) {
-                $dim           = array();
+                $dim           = [];
                 $dim['width']  = $size;
                 $dim['height'] = $size;
                 $thumb         = $art->get_thumb($dim);

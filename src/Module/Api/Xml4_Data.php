@@ -115,7 +115,7 @@ class Xml4_Data
      */
     public static function set_type($type): bool
     {
-        if (!in_array(strtolower($type), array('rss', 'xspf', 'itunes'))) {
+        if (!in_array(strtolower($type), ['rss', 'xspf', 'itunes'])) {
             return false;
         }
 
@@ -189,15 +189,15 @@ class Xml4_Data
         $string = '';
 
         if (!empty($tags)) {
-            $atags = array();
+            $atags = [];
             foreach ($tags as $tag) {
                 if (array_key_exists($tag['id'], $atags)) {
                     $atags[$tag['id']]['count']++;
                 } else {
-                    $atags[$tag['id']] = array(
+                    $atags[$tag['id']] = [
                         'name' => $tag['name'],
                         'count' => 1
-                    );
+                    ];
                 }
             }
 
@@ -270,7 +270,7 @@ class Xml4_Data
             switch ($object_type) {
                 case 'artist':
                     if ($include) {
-                        $string .= self::artists(array($object_id), array('songs', 'albums'), $user, false);
+                        $string .= self::artists([$object_id], ['songs', 'albums'], $user, false);
                     } else {
                         $artist = new Artist($object_id);
                         if ($artist->isNew()) {
@@ -289,7 +289,7 @@ class Xml4_Data
                     break;
                 case 'album':
                     if ($include) {
-                        $string .= self::albums(array($object_id), array('songs'), $user, false);
+                        $string .= self::albums([$object_id], ['songs'], $user, false);
                     } else {
                         $album = new Album($object_id);
                         $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n"
@@ -327,7 +327,7 @@ class Xml4_Data
                         $playitem_total = $playlist->get_media_count('song');
                     }
                     $playlist_name = $playlist->get_fullname();
-                    $songs         = ($include) ? $playlist->get_items() : array();
+                    $songs         = ($include) ? $playlist->get_items() : [];
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     $playlist_track = 0;
                     foreach ($songs as $song_id) {
@@ -348,7 +348,7 @@ class Xml4_Data
                         if ($include) {
                             $episodes = $podcast->getEpisodeIds();
                             foreach ($episodes as $episode_id) {
-                                $string .= self::podcast_episodes(array($episode_id), $user, false);
+                                $string .= self::podcast_episodes([$episode_id], $user, false);
                             }
                         }
                         $string .= "\t</podcast>\n";
@@ -452,7 +452,7 @@ class Xml4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), array(), $user, false);
+                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false);
             } else {
                 $albums = $artist->album_count;
             }
@@ -750,7 +750,7 @@ class Xml4_Data
                 $field = $metadata->getField();
 
                 if ($field !== null) {
-                    $meta_name = str_replace(array(' ', '(', ')', '/', '\\', '#'), '_', $field->getName());
+                    $meta_name = str_replace([' ', '(', ')', '/', '\\', '#'], '_', $field->getName());
                     $string .= "\t<" . $meta_name . "><![CDATA[" . $metadata->getData() . "]]></" . $meta_name . ">\n";
                 }
             }

@@ -51,7 +51,7 @@ final class ArtistSongs4Method
      */
     public static function artist_songs(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $artist  = new Artist($input['filter']);

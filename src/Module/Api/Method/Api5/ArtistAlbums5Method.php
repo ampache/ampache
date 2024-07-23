@@ -49,7 +49,7 @@ final class ArtistAlbums5Method
      */
     public static function artist_albums(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -72,12 +72,12 @@ final class ArtistAlbums5Method
             case 'json':
                 Json5_Data::set_offset($input['offset'] ?? 0);
                 Json5_Data::set_limit($input['limit'] ?? 0);
-                echo Json5_Data::albums($results, array(), $user);
+                echo Json5_Data::albums($results, [], $user);
                 break;
             default:
                 Xml5_Data::set_offset($input['offset'] ?? 0);
                 Xml5_Data::set_limit($input['limit'] ?? 0);
-                echo Xml5_Data::albums($results, array(), $user);
+                echo Xml5_Data::albums($results, [], $user);
         }
 
         return true;
