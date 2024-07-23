@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 class Clip extends Video
 {
@@ -216,18 +215,15 @@ class Clip extends Video
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `clip` SET `artist` = ? WHERE `artist` = ?";
             $params = [$new_object_id, $old_object_id];
 
-            return Dba::write($sql, $params);
+            Dba::write($sql, $params);
         }
-
-        return false;
     }
 
     public function getMediaType(): LibraryItemEnum

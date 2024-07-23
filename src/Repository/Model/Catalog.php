@@ -2217,7 +2217,7 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs($offset = 0, $limit = 0): array
+    public function get_songs(?int $offset = 0, ?int $limit = 0): array
     {
         $songs   = [];
         $results = [];
@@ -3420,22 +3420,24 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(self::class, "clean_duplicate_artists " . $row['maxid'] . "=>" . $row['minid'], 5);
+            $maxId = (int)$row['maxid'];
+            $minId = (int)$row['minid'];
             // migrate linked tables first
-            //Stats::migrate('artist', $row['maxid'], $row['minid']);
-            Useractivity::migrate('artist', $row['maxid'], $row['minid']);
-            Recommendation::migrate('artist', $row['maxid']);
-            self::getShareRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            self::getShoutRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            Tag::migrate('artist', $row['maxid'], $row['minid']);
-            Userflag::migrate('artist', $row['maxid'], $row['minid']);
-            Label::migrate('artist', $row['maxid'], $row['minid']);
-            Rating::migrate('artist', $row['maxid'], $row['minid']);
-            self::getWantedRepository()->migrateArtist($row['maxid'], $row['minid']);
-            Clip::migrate('artist', $row['maxid'], $row['minid']);
-            self::migrate_map('artist', $row['maxid'], $row['minid']);
+            //Stats::migrate('artist', $maxId, $minId);
+            Useractivity::migrate('artist', $maxId, $minId);
+            Recommendation::migrate('artist', $maxId);
+            self::getShareRepository()->migrate('artist', $maxId, $minId);
+            self::getShoutRepository()->migrate('artist', $maxId, $minId);
+            Tag::migrate('artist', $maxId, $minId);
+            Userflag::migrate('artist', $maxId, $minId);
+            Label::migrate('artist', $maxId, $minId);
+            Rating::migrate('artist', $maxId, $minId);
+            self::getWantedRepository()->migrateArtist($maxId, $minId);
+            Clip::migrate('artist', $maxId, $minId);
+            self::migrate_map('artist', $maxId, $minId);
 
             // replace all songs and albums with the original artist
-            Artist::migrate($row['maxid'], $row['minid']);
+            Artist::migrate($maxId, $minId);
         }
 
         // remove the duplicates after moving everything

@@ -483,9 +483,8 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return int|bool
      */
-    public function check_remote_song($song)
+    public function check_remote_song($song): ?int
     {
         $url = $song['file'];
 
@@ -496,7 +495,7 @@ class Catalog_subsonic extends Catalog
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**

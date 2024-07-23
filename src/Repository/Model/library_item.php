@@ -58,9 +58,9 @@ interface library_item extends playable_item
     public function display_art($thumb = 2, $force = false): void;
 
     /**
-     * @return int|false
+     * update
      */
-    public function update(array $data);
+    public function update(array $data): ?int;
 
     /**
      * Returns the media-type of the library-item

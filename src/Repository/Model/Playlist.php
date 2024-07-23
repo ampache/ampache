@@ -1036,14 +1036,13 @@ class Playlist extends playlist_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql    = "UPDATE `playlist_data` SET `object_id` = ? WHERE `object_id` = ? AND `object_type` = ?;";
         $params = [$new_object_id, $old_object_id, $object_type];
 
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
     }
 
     public function getMediaType(): LibraryItemEnum

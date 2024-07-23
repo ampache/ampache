@@ -102,12 +102,11 @@ class Stats
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $child_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id): void
     {
         if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'])) {
-            return false;
+            return;
         }
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
@@ -116,7 +115,7 @@ class Stats
             $params[] = $child_id;
         }
 
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
     }
 
     /**

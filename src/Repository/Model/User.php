@@ -484,9 +484,8 @@ class User extends database_object
      * This function is an all encompassing update function that
      * calls the mini ones does all the error checking and all that
      * good stuff
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if (empty($data['username'])) {
             AmpError::add('username', T_('Username is required'));
@@ -497,7 +496,7 @@ class User extends database_object
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         if (!isset($data['fullname_public'])) {

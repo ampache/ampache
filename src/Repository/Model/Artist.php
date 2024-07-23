@@ -36,7 +36,6 @@ use Ampache\Repository\ArtistRepositoryInterface;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 class Artist extends database_object implements library_item, CatalogItemInterface
 {
@@ -919,17 +918,16 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * @param null|string $placeformed
      * @param null|int $yearformed
      * @param bool $manual
-     * @return PDOStatement|bool
      */
-    public function update_artist_info($summary, $placeformed, $yearformed, $manual = false)
+    public function update_artist_info($summary, $placeformed, $yearformed, $manual = false): void
     {
         // set null values if missing
         $summary     = (empty($summary)) ? null : $summary;
         $placeformed = (empty($placeformed)) ? null : $placeformed;
         $yearformed  = ((int)$yearformed == 0) ? null : Catalog::normalize_year($yearformed);
 
-        $sql    = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
-        $sqlret = Dba::write($sql, [
+        $sql = "UPDATE `artist` SET `summary` = ?, `placeformed` = ?, `yearformed` = ?, `last_update` = ?, `manual_update` = ? WHERE `id` = ?";
+        Dba::write($sql, [
             $summary,
             $placeformed,
             $yearformed,
@@ -941,33 +939,27 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $this->summary     = $summary;
         $this->placeformed = $placeformed;
         $this->yearformed  = $yearformed;
-
-        return $sqlret;
     }
 
     /**
      * Update artist associated user_id.
      * @param int $user_id
-     * @return PDOStatement|bool
      */
-    public function update_artist_user($user_id)
+    public function update_artist_user($user_id): void
     {
         $sql = "UPDATE `artist` SET `user` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, [$user_id, $this->id]);
+        Dba::write($sql, [$user_id, $this->id]);
     }
 
     /**
      * Update artist associated user.
      * @param string $name
      * @param null|string $prefix
-     * @return PDOStatement|bool
      */
-    public function update_artist_name($name, $prefix)
+    public function update_artist_name($name, $prefix): void
     {
         $sql = "UPDATE `artist` SET `prefix` = ?, `name` = ? WHERE `id` = ?";
-
-        return Dba::write($sql, [$prefix, $name, $this->id]);
+        Dba::write($sql, [$prefix, $name, $this->id]);
     }
 
     /**

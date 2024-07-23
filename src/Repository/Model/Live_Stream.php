@@ -271,9 +271,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if (!$data['name']) {
             AmpError::add('general', T_('Name is required'));
@@ -304,7 +303,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";

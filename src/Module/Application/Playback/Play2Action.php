@@ -136,9 +136,9 @@ final class Play2Action implements ApplicationActionInterface
             $stream_name  = (string)($new_request['name'] ?? '');
             $object_id    = (int)scrub_in((string) ($new_request['oid'] ?? 0));
             $user_id      = (int)scrub_in((string) ($new_request['uid'] ?? 0));
-            $session_id   = scrub_in((string) ($new_request['ssid'] ?? ''));
+            $session_id   = (string)scrub_in((string) ($new_request['ssid'] ?? ''));
             $type         = scrub_in((string) ($new_request['type'] ?? ''));
-            $client       = scrub_in((string) ($new_request['client'] ?? ''));
+            $client       = (string)scrub_in((string) ($new_request['client'] ?? ''));
             $cache        = scrub_in((string) ($new_request['cache'] ?? '1'));
             $bitrate      = (int)scrub_in((string) ($new_request['bitrate'] ?? 0));
             $player       = scrub_in((string) ($new_request['player'] ?? ''));
@@ -164,9 +164,9 @@ final class Play2Action implements ApplicationActionInterface
             $stream_name  = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
             $object_id    = (int)filter_input(INPUT_GET, 'oid', FILTER_SANITIZE_NUMBER_INT);
             $user_id      = (int)filter_input(INPUT_GET, 'uid', FILTER_SANITIZE_NUMBER_INT);
-            $session_id   = scrub_in((string) filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
+            $session_id   = (string)scrub_in((string) filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
             $type         = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
-            $client       = scrub_in((string) filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
+            $client       = (string)scrub_in((string) filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
             $cache        = scrub_in((string) filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
             $bitrate      = (int)filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_NUMBER_INT);
             $player       = scrub_in((string) filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));

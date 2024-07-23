@@ -294,9 +294,8 @@ class Song extends database_object implements
      * insert
      *
      * This inserts the song described by the passed array
-     * @return int|false
      */
-    public static function insert(array $results)
+    public static function insert(array $results): ?int
     {
         $check_file = Catalog::get_id_from_file($results['file'], 'song');
         if ($check_file > 0) {
@@ -414,7 +413,7 @@ class Song extends database_object implements
         if (!$db_results) {
             debug_event(self::class, 'Unable to insert ' . $file, 2);
 
-            return false;
+            return null;
         }
 
         $song_id = (int)Dba::insert_id();

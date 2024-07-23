@@ -2991,6 +2991,11 @@ parameters:
 			path: src/Module/Api/Method/PlaylistGenerateMethod.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistHashMethod\\:\\:playlist_hash\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistHashMethod.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistMethod\\:\\:playlist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistMethod.php
@@ -12006,21 +12011,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:is_valid_type\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:has_db\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#3 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:write_to_dir\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Parameter \\#5 \\$src_x of function imagecopyresampled expects int, float\\|int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
@@ -12272,16 +12262,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_name_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_songs\\(\\) has parameter \\$limit with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_songs\\(\\) has parameter \\$offset with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

@@ -689,7 +689,7 @@ final class InstallationHelper implements InstallationHelperInterface
                     $line = $key . ' = ' . $this->escape_ini($value);
                 } elseif ($key == 'secret_key' && !isset($current[$key])) {
                     $secret_key = Core::gen_secure_token(31);
-                    if ($secret_key !== false) {
+                    if ($secret_key !== null) {
                         $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
                     }
                 } elseif (isset($current[$key])) {

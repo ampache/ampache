@@ -334,9 +334,8 @@ class Catalog_Seafile extends Catalog
      *
      * Insert a song that isn't already in the database.
      * @param $file
-     * @return bool|int
      */
-    private function insert_song($file)
+    private function insert_song($file): ?int
     {
         if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
             debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
@@ -372,7 +371,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -614,18 +613,17 @@ class Catalog_Seafile extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return bool|mixed
      */
-    public function check_remote_song($file)
+    public function check_remote_song($file): ?int
     {
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
+            return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**

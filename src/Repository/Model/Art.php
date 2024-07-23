@@ -40,7 +40,6 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
-use PDOStatement;
 use WpOrg\Requests;
 use RuntimeException;
 
@@ -570,15 +569,14 @@ class Art extends database_object
      * @param int $uid
      * @param string $kind
      * @param bool $autocreate
-     * @return string|false
      */
-    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
+    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
             debug_event(self::class, 'local_metadata_dir setting is required to store art on disk.', 1);
 
-            return false;
+            return null;
         }
 
         // Correctly detect the slash we need to use here
@@ -622,7 +620,7 @@ class Art extends database_object
         $mime
     ): bool {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
-        if ($path === false) {
+        if (!$path) {
             return false;
         }
 
@@ -682,7 +680,7 @@ class Art extends database_object
     private static function read_from_dir($sizetext, $type, $uid, $kind, $mime): ?string
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
-        if ($path === false) {
+        if (!$path) {
             return null;
         }
 
@@ -716,7 +714,7 @@ class Art extends database_object
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
-            if ($path !== false) {
+            if ($path !== null) {
                 self::delete_rec_dir(rtrim($path, '/'));
             }
         }
@@ -1158,22 +1156,21 @@ class Art extends database_object
 
     /**
      * Duplicate an object associate images to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @param string $new_object_type
-     * @return PDOStatement|bool
      */
-    public static function duplicate($object_type, $old_object_id, $new_object_id, $new_object_type = null)
+    public static function duplicate(string $object_type, int $old_object_id, int $new_object_id, ?string $new_object_type = null): void
     {
-        $write_type = (self::is_valid_type($new_object_type))
+        $write_type = ($new_object_type !== null && self::is_valid_type($new_object_type))
             ? $new_object_type
             : $object_type;
-        if (Art::has_db($new_object_id, $write_type) || $old_object_id == $new_object_id) {
-            return false;
+
+        if (
+            !$new_object_id ||
+            Art::has_db($new_object_id, $write_type) ||
+            $old_object_id == $new_object_id
+        ) {
+            return;
         }
 
-        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, [$object_type, $old_object_id]);
@@ -1187,7 +1184,9 @@ class Art extends database_object
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id]);
+        if (Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id])) {
+            debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
+        }
     }
 
     /**
