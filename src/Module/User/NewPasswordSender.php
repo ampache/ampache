@@ -62,7 +62,7 @@ final class NewPasswordSender implements NewPasswordSenderInterface
 
         // do not allow administrator password resets
         if ($user->has_access(AccessLevelEnum::ADMIN)) {
-            debug_event(__CLASS__, 'Administrator can\'t reset their password.', 1);
+            debug_event(self::class, 'Administrator can\'t reset their password.', 1);
 
             return false;
         }

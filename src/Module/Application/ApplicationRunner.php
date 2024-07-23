@@ -84,7 +84,7 @@ final class ApplicationRunner
         } catch (ContainerExceptionInterface) {
             $this->logger->critical(
                 sprintf('No handler found for action "%s"', $action_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return;
@@ -92,7 +92,7 @@ final class ApplicationRunner
 
         $this->logger->debug(
             sprintf('Found handler "%s" for action "%s"', $handler_name, $action_name),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         try {
@@ -116,7 +116,7 @@ final class ApplicationRunner
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
-                        __CLASS__,
+                        self::class,
                         get_class($handler)
                     )
                 ]
@@ -131,7 +131,7 @@ final class ApplicationRunner
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
-                        __CLASS__,
+                        self::class,
                         get_class($handler)
                     ),
                     'objectId' => $error->getObjectId()

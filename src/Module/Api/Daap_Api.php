@@ -293,7 +293,7 @@ class Daap_Api
         }
 
         if (!$authenticated) {
-            debug_event(__CLASS__, 'Authentication failed. Wrong DAAP password?', 3);
+            debug_event(self::class, 'Authentication failed. Wrong DAAP password?', 3);
             if (!empty($code)) {
                 self::createApiError($code, 403);
             }

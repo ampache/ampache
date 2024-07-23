@@ -67,7 +67,7 @@ final class DeleteAction implements ApplicationActionInterface
         if ($videoId < 1) {
             $this->logger->warning(
                 'Requested a video that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

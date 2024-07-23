@@ -86,7 +86,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 $auth = ($auth !== '') ? $auth : $token;
                 $this->logger->warning(
                     sprintf('Access denied, checked cookie session:%s and auth:%s', $cookie, $auth),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 return $response;

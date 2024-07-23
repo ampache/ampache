@@ -115,7 +115,7 @@ final class SongSorter implements SongSorterInterface
                     if (empty($song->file) || !file_exists($song->file)) {
                         $this->logger->critical(
                             sprintf('Missing: %s', $song->file),
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
                         /* HINT: filename (File path) OR table name (podcast, clip, etc) */
                         $interactor->info(
@@ -244,7 +244,7 @@ final class SongSorter implements SongSorterInterface
                 } else {
                     $this->logger->notice(
                         sprintf('Creating %s directory', $path),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     if (!mkdir($path)) {
                         /* HINT: Directory (File path) */
@@ -271,7 +271,7 @@ final class SongSorter implements SongSorterInterface
             if (file_exists($fullname)) {
                 $this->logger->critical(
                     sprintf('Error: %s already exists', $fullname),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 /* HINT: filename (File path) */
                 $interactor->info(
@@ -298,7 +298,7 @@ final class SongSorter implements SongSorterInterface
             }
             $this->logger->critical(
                 'Copied ' . $song->file . ' to ' . $fullname,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             // Look for the folder art and copy that as well
@@ -316,7 +316,7 @@ final class SongSorter implements SongSorterInterface
                     }
                     $this->logger->critical(
                         'Copied ' . $old_art . ' to ' . $folder_art,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }

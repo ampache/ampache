@@ -89,7 +89,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 
         $this->logger->debug(
             'Stream Type: ' . $streamType . ' Media IDs: ' . json_encode($mediaIds),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($mediaIds !== [] || $urls !== []) {
             $user = Core::get_global('user');
@@ -97,7 +97,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                 if (!User::stream_control($mediaIds)) {
                     $this->logger->warning(
                         'Stream control failed for user ' . $user?->username,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     throw new AccessDeniedException();
                 }
@@ -113,14 +113,14 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             if ($mediaIds !== []) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Media Count: %d', $streamType, count($mediaIds)),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 $playlist->add($mediaIds);
             }
             if (!empty($urls)) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 $playlist->add_urls($urls);
             }
@@ -130,7 +130,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         } else {
             $this->logger->debug(
                 'No item. Ignoring...',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

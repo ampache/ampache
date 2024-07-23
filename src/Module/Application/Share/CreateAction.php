@@ -112,7 +112,7 @@ final readonly class CreateAction implements ApplicationActionInterface
         } else {
             $this->logger->error(
                 'Share failed: ' . (int)($_REQUEST['id'] ?? 0),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $object = $this->libraryItemLoader->load(

@@ -207,7 +207,7 @@ class WebPlayer
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                    debug_event(__class__, "Forcing type to {{$force_type}}", 5);
+                    debug_event(self::class, "Forcing type to {{$force_type}}", 5);
                     // Transcode only if excepted type available
                     $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                     if (!empty($transcode_settings)) {
@@ -301,7 +301,7 @@ class WebPlayer
             ? $url_data['type']
             : $item->type;
 
-        //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
+        //debug_event(self::class, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
             /** @var Live_Stream|Podcast_Episode|Song|Song_Preview|Video $media */
             if ($url_data['type'] == 'song' && $media instanceof Song) {
@@ -369,7 +369,7 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
-        //debug_event(__class__, "get_media_js_param: " . print_r($json, true), 3);
+        //debug_event(self::class, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json) ?: '';
     }

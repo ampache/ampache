@@ -109,7 +109,7 @@ final class AddHostAction implements ApplicationActionInterface
         } catch (AclItemDuplicationException) {
             $this->logger->critical(
                 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $startIp . ' - ' . $endIp,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             AmpError::add('general', T_('Duplicate ACL entry defined'));

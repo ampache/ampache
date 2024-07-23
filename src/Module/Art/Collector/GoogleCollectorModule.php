@@ -68,7 +68,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
 
         $this->logger->debug(
             'Search url: ' . $url,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         try {
@@ -87,7 +87,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
 
                     $this->logger->debug(
                         'Found image at: ' . $match,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $results = pathinfo($match);
                     $test    = $results['extension'];
@@ -111,7 +111,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
         } catch (Exception $error) {
             $this->logger->error(
                 'Error getting google images: ' . $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

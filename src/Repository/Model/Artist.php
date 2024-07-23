@@ -195,7 +195,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         ) {
             $sql = sprintf('SELECT `song`.`artist`, SUM(`song`.`total_count`) AS `total_count` FROM `song` WHERE `song`.`artist` IN %s GROUP BY `song`.`artist`', $idlist);
 
-            //debug_event(__CLASS__, "build_cache sql: " . $sql, 5);
+            //debug_event(self::class, "build_cache sql: " . $sql, 5);
             $db_results = Dba::read($sql);
 
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -822,7 +822,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public function update(array $data): int
     {
-        //debug_event(__CLASS__, "update: " . print_r($data, true), 5);
+        //debug_event(self::class, "update: " . print_r($data, true), 5);
         // Save our current ID
         $prefix      = Catalog::trim_prefix($data['name'])['prefix'];
         $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;

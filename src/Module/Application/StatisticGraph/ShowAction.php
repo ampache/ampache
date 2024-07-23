@@ -72,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
                     $_COOKIE[$this->configContainer->getSessionName()],
                     $_REQUEST['auth']
                 ),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
@@ -84,7 +84,7 @@ final class ShowAction implements ApplicationActionInterface
         ) {
             $this->logger->warning(
                 'Access denied, statistical graph disabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;

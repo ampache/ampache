@@ -108,7 +108,7 @@ class LocalPlay
 
         $this->_player = new $controller();
         if (!($this->_player instanceof localplay_controller)) {
-            debug_event(__CLASS__, $this->type . ' not an instance of controller abstract, unable to load', 1);
+            debug_event(self::class, $this->type . ' not an instance of controller abstract, unable to load', 1);
             unset($this->_player);
 
             return false;

@@ -551,7 +551,7 @@ class Catalog_local extends Catalog
             }
             // only gather art if you've added new stuff
             if (($this->count) > 0 && $options['gather_art']) {
-                debug_event(__CLASS__, 'gather_art after adding', 4);
+                debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
                 if (!defined('SSE_OUTPUT') && !defined('API')) {
                     require Ui::find_template('show_gather_art.inc.php');

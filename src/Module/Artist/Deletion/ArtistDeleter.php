@@ -99,7 +99,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
                         "Error when deleting the album `%d`.",
                         $albumId
                     ),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 throw new ArtistDeletionException();

@@ -209,14 +209,14 @@ final class VaInfo implements VaInfoInterface
             } catch (Exception $error) {
                 $logger->error(
                     'getID3 Broken file detected: $file: ' . $error->getMessage(),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 $this->_broken = true;
 
                 return false;
             }
-            //$logger->error('RAW TAGS: ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$logger->error('RAW TAGS: ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             if ($configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
                 $mb_order = $configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
@@ -344,7 +344,7 @@ final class VaInfo implements VaInfoInterface
             } catch (Exception $error) {
                 $this->logger->error(
                     'getID3 Unable to catalog file: ' . $error->getMessage(),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -400,7 +400,7 @@ final class VaInfo implements VaInfoInterface
         if (!array_key_exists(strtolower($extension), $extensionMap)) {
             $this->logger->debug(
                 sprintf('Writing Tags: Files with %s extensions are currently ignored.', $extension),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return;
@@ -430,7 +430,7 @@ final class VaInfo implements VaInfoInterface
                 if ($retval !== 0 || $retval1 !== 0) {
                     $this->logger->debug(
                         'Metaflac and vorbiscomments must be installed to write tags to flac and oga files',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     return;
@@ -448,7 +448,7 @@ final class VaInfo implements VaInfoInterface
             foreach ($tagWriter->warnings as $message) {
                 $this->logger->debug(
                     'Warning Writing Tags: ' . $message,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -456,7 +456,7 @@ final class VaInfo implements VaInfoInterface
             foreach ($tagWriter->errors as $message) {
                 $this->logger->error(
                     'Error Writing Tags: ' . $message,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -503,7 +503,7 @@ final class VaInfo implements VaInfoInterface
         } catch (Exception $error) {
             $this->logger->error(
                 'Unable to read file:' . $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 
@@ -532,7 +532,7 @@ final class VaInfo implements VaInfoInterface
 
         $order = [];
         foreach ($tagorderMap[$configKey] ?? [] as $source) {
-            //debug_event(__CLASS__, "source: " . $source, true, 5);
+            //debug_event(self::class, "source: " . $source, true, 5);
             $order[] = strtolower($source);
         }
 
@@ -546,7 +546,7 @@ final class VaInfo implements VaInfoInterface
 
         // return a default list of items (if you get here this is probably a bad file)
         if (empty($returned_keys)) {
-            debug_event(__CLASS__, "get_tag_type: Couln't find tags, this is probably a bad file", 5);
+            debug_event(self::class, "get_tag_type: Couln't find tags, this is probably a bad file", 5);
             $returned_keys = [
                 'getid3',
                 'filename',
@@ -560,7 +560,7 @@ final class VaInfo implements VaInfoInterface
                 $returned_keys[] = 'general';
             }
         }
-        //debug_event(__CLASS__, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
+        //debug_event(self::class, "get_tag_type: " . $configKey . print_r($returned_keys, true), 5);
 
         return $returned_keys;
     }
@@ -809,46 +809,46 @@ final class VaInfo implements VaInfoInterface
     private function _get_tags(): array
     {
         $results = [];
-        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         // The tags can come in many different shapes and colors depending on the encoding.
         if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
             foreach ($this->_raw['tags'] as $key => $tag_array) {
                 switch ($key) {
                     case 'vorbiscomment':
-                        //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning vorbis', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_vorbiscomment($tag_array);
                         break;
                     case 'id3v2':
-                        //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning id3v2', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_id3v2($tag_array);
                         break;
                     case 'quicktime':
-                        //$this->logger->debug('Cleaning quicktime', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning quicktime', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_quicktime($tag_array);
                         break;
                     case 'riff':
-                        //$this->logger->debug('Cleaning riff', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning riff', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_riff($tag_array);
                         break;
                     case 'mpg':
                     case 'mpeg':
                         $key = 'mpeg';
-                        //$this->logger->debug('Cleaning MPEG', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning MPEG', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                     case 'asf':
                     case 'wmv':
                     case 'wma':
                         $key = 'asf';
-                        //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning WMV/WMA/ASF', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_asf($tag_array);
                         break;
                     case 'lyrics3':
-                        //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning lyrics3', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_lyrics($tag_array);
                         break;
                     case 'id3v1':
-                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning id3v1', [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_id3v1($tag_array);
                         break;
                     case 'ape':
@@ -856,7 +856,7 @@ final class VaInfo implements VaInfoInterface
                     case 'flv':
                     case 'matroska':
                     default:
-                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                        //$this->logger->debug('Cleaning tag type ' . $key . ' for file ' . $this->filename, [LegacyLogger::CONTEXT_TYPE => self::class]);
                         $parsed = $this->_cleanup_generic($tag_array);
                         break;
                 }
@@ -935,7 +935,7 @@ final class VaInfo implements VaInfoInterface
             } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
                 $this->logger->debug(
                     '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -951,7 +951,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _parse_general($tags): array
     {
-        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed = [];
         if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
@@ -985,7 +985,7 @@ final class VaInfo implements VaInfoInterface
         } elseif (array_key_exists('playtime_seconds', $tags) && $tags['playtime_seconds'] > 0) {
             $parsed['time'] = $tags['playtime_seconds'];
         } else {
-            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            $this->logger->critical("UNABLE TO READ 'playtime_seconds'. This is probably a bad file " . $parsed['title'], [LegacyLogger::CONTEXT_TYPE => self::class]);
             $parsed['time'] = 0;
         }
 
@@ -1055,7 +1055,7 @@ final class VaInfo implements VaInfoInterface
                 /* Log the fact that we couldn't figure it out */
                 $this->logger->warning(
                     'Unable to determine file type from ' . $type . ' on file ' . $this->filename,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 return $type;
@@ -1074,7 +1074,7 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = [];
         foreach ($tags as $tagname => $data) {
-            //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
             switch (strtolower($tagname)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
@@ -1179,7 +1179,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = [];
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
             switch (strtolower($tag)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
@@ -1352,7 +1352,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = [];
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
             switch (strtolower($tag)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
@@ -1450,7 +1450,7 @@ final class VaInfo implements VaInfoInterface
             // getID3 has copies of text properly converted to utf-8 encoding in comments/text
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($id3v2['TXXX'] as $txxx) {
-                //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                //$this->logger->debug('id3v2 TXXX: ' . strtolower($this->trimAscii($txxx['description'] ?? '')) . ' value: ' . print_r($id3v2['comments']['text'][$txxx['description']] ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
                 switch (strtolower($this->trimAscii($txxx['description']))) {
                     case 'artists':
                         $parsed['artists'] = $this->parseArtists($id3v2['comments']['text'][$txxx['description']]);
@@ -1591,7 +1591,7 @@ final class VaInfo implements VaInfoInterface
         $parsed = [];
 
         foreach ($tags as $tag => $data) {
-            //$this->logger->debug('Quicktime tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('Quicktime tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
             switch (strtolower($tag)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
@@ -1705,7 +1705,7 @@ final class VaInfo implements VaInfoInterface
     {
         $parsed = [];
         foreach ($tags as $tagname => $data) {
-            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+            //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
             switch (strtolower($tagname)) {
                 case 'artists':
                     $parsed['artists'] = $this->parseArtists($data);
@@ -1770,7 +1770,7 @@ final class VaInfo implements VaInfoInterface
             $enable_custom_metadata = $this->configContainer->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA);
             foreach ($this->_raw['asf']['extended_content_description_object']['content_descriptors'] as $wmaTag) {
                 $value = str_replace("\x00", '', $wmaTag['value']);
-                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+                //$this->logger->debug('asf tag: ' . strtolower($wmaTag['name'] ?? '') . ' value: ' . print_r($value ?? '', true), [LegacyLogger::CONTEXT_TYPE => self::class]);
                 switch (strtolower($this->trimAscii($wmaTag['name']))) {
                     case 'wm/artists':
                         $parsed['artists'] = $this->parseArtists($value);
@@ -1971,13 +1971,13 @@ final class VaInfo implements VaInfoInterface
 
         // Pull out our actual matches
         preg_match($pattern, $filepath, $matches);
-        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$logger->debug('Checking ' . $pattern . ' _ ' . print_r($matches, true) . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);
             $logger->debug(
                 $pattern . ' matched ' . $matched . ' on ' . $filepath,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             // Iterate over what we found
@@ -2060,7 +2060,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseGenres($data)
     {
-        //debug_event(__CLASS__, "parseGenres: " . print_r($data, true), 5);
+        //debug_event(self::class, "parseGenres: " . print_r($data, true), 5);
         $result = null;
         if (is_array($data)) {
             $result = [];
@@ -2086,7 +2086,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function parseArtists($data): array
     {
-        //debug_event(__CLASS__, "parseArtists: " . print_r($data, true), 5);
+        //debug_event(self::class, "parseArtists: " . print_r($data, true), 5);
         $result = null;
         if (is_array($data)) {
             $result = [];

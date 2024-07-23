@@ -79,7 +79,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
         if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
                 sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $this->ui->showQueryStats();

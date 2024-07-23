@@ -87,7 +87,7 @@ class UPnPPlayer
         $name = "noname",
         $description_url = "http://localhost"
     ) {
-        debug_event(__CLASS__, 'constructor: ' . $name . ' | ' . $description_url, 5);
+        debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
 
         $this->_description_url = $description_url;
 

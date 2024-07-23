@@ -60,7 +60,7 @@ final class FunctionChecker implements FunctionCheckerInterface
                 if (!function_exists('gzcompress')) {
                     $this->logger->warning(
                         'ZLIB extension not loaded, batch download disabled',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     return false;

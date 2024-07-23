@@ -73,7 +73,7 @@ final class DatabaseCharsetUpdater implements DatabaseCharsetUpdaterInterface
                     $sql             = "ALTER TABLE `" . $row['0'] . "` MODIFY `" . $table['Field'] . "` " . $table['Type'] . " CHARACTER SET " . $target_charset . " COLLATE $target_collation";
                     $charset_results = Dba::write($sql);
                     if (!$charset_results) {
-                        debug_event(__CLASS__, 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset . " COLLATE $target_collation", 3);
+                        debug_event(self::class, 'Unable to update the charset of ' . $table['Field'] . '.' . $table['Type'] . ' to ' . $target_charset . " COLLATE $target_collation", 3);
                     } // if it fails
                 }
             }

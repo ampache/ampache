@@ -81,7 +81,7 @@ final class ExportArtCommand extends Command
         } catch (ArtExportException $error) {
             $this->logger->error(
                 $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $interactor->error(

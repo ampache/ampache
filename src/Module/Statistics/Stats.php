@@ -124,7 +124,7 @@ class Stats
     public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -140,7 +140,7 @@ class Stats
     public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {

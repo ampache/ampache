@@ -94,7 +94,7 @@ final class AlbumDeleter implements AlbumDeleterInterface
             if (!$deleted) {
                 $this->logger->critical(
                     sprintf('Error when deleting the song `%d`.', $songId),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 throw new AlbumDeletionException();

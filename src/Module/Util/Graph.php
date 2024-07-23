@@ -43,7 +43,7 @@ class Graph
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             return true;
         }
-        debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
+        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
         return false;
     }

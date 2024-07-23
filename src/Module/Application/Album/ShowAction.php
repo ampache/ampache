@@ -79,7 +79,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($album->isNew()) {
             $this->logger->warning(
                 'Requested an album that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } elseif ($album->getDiskCount() === 1) {
