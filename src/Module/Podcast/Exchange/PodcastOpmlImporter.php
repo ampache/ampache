@@ -81,12 +81,12 @@ final class PodcastOpmlImporter implements PodcastOpmlImporterInterface
                 );
 
                 $imported++;
-            } catch (InvalidFeedUrlException $e) {
+            } catch (InvalidFeedUrlException) {
                 $this->logger->warning(
                     sprintf('Feed-url invalid: %s', $feedUrl),
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-            } catch (FeedNotLoadableException $e) {
+            } catch (FeedNotLoadableException) {
                 $this->logger->warning(
                     sprintf('Feed-url not readable: %s', $feedUrl),
                     [LegacyLogger::CONTEXT_TYPE => self::class]

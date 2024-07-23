@@ -215,8 +215,8 @@ class Catalog_dropbox extends Catalog
         }
         try {
             $app = new DropboxApp($apikey, $secret, $authtoken);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
 
             return false;
         }
@@ -224,8 +224,8 @@ class Catalog_dropbox extends Catalog
 
         try {
             $listFolderContents = $dropbox->listFolder($path);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "dropbox-path": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "dropbox-path": ' . $error->getMessage()));
             $listFolderContents = null;
 
             return false;
@@ -587,8 +587,8 @@ class Catalog_dropbox extends Catalog
             }
 
             $this->update_last_update($date);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
         }
 
         return $updated;
@@ -612,8 +612,8 @@ class Catalog_dropbox extends Catalog
             $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
-            } catch (DropboxClientException $e) {
-                if ($e->getCode() == 409) {
+            } catch (DropboxClientException $error) {
+                if ($error->getCode() == 409) {
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 } else {
@@ -735,7 +735,7 @@ class Catalog_dropbox extends Catalog
             $this->download($dropbox, $file, null, $outfile);
 
             $file = $outfile;
-        } catch (DropboxClientException $e) {
+        } catch (DropboxClientException) {
             debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
         }
 

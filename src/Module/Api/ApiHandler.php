@@ -534,14 +534,14 @@ final class ApiHandler implements ApiHandlerInterface
 
                 return null;
             }
-        } catch (ApiException $e) {
+        } catch (ApiException $error) {
             switch ($api_version) {
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                $e->getCode(),
-                                $e->getMessage()
+                                $error->getCode(),
+                                $error->getMessage()
                             )
                         )
                     );
@@ -549,8 +549,8 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                $e->getCode(),
-                                $e->getMessage()
+                                $error->getCode(),
+                                $error->getMessage()
                             )
                         )
                     );
@@ -558,10 +558,10 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error5(
-                                $e->getCode(),
-                                $e->getMessage(),
+                                $error->getCode(),
+                                $error->getMessage(),
                                 $action,
-                                $e->getType()
+                                $error->getType()
                             )
                         )
                     );
@@ -570,17 +570,17 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
-                                $e->getCode(),
-                                $e->getMessage(),
+                                $error->getCode(),
+                                $error->getMessage(),
                                 $action,
-                                $e->getType()
+                                $error->getType()
                             )
                         )
                     );
             }
-        } catch (Throwable $e) {
+        } catch (Throwable $error) {
             $this->logger->error(
-                $e->getMessage(),
+                $error->getMessage(),
                 [
                     LegacyLogger::CONTEXT_TYPE => __CLASS__,
                     'method' => $action

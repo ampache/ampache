@@ -80,7 +80,7 @@ final class PodcastCreate5Method
                 urldecode($input['url']),
                 $catalog
             );
-        } catch (PodcastCreationException $e) {
+        } catch (PodcastCreationException) {
             Api5::error(T_('Bad Request'), '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;

@@ -233,7 +233,7 @@ class Recommendation
                     }
                     self::update_recommendation_cache('song', $song_id, $similars);
                 }
-            } catch (LastFmQueryFailedException $e) {
+            } catch (LastFmQueryFailedException) {
                 // Ignore request errors here
             }
         }
@@ -339,7 +339,7 @@ class Recommendation
                         self::update_recommendation_cache('artist', $artist_id, $similars);
                     }
                 }
-            } catch (LastFmQueryFailedException $e) {
+            } catch (LastFmQueryFailedException) {
                 // Ignore request errors here
             }
         }
@@ -377,7 +377,7 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return $results;
         }
 
@@ -423,7 +423,7 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return [];
         }
 
@@ -479,7 +479,7 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('album.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return $results;
         }
 

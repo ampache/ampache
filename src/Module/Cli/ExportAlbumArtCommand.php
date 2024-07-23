@@ -82,14 +82,14 @@ final class ExportAlbumArtCommand extends Command
                     $catalog,
                     $this->dic->get($metadataWriterType)
                 );
-            } catch (AlbumArtExportException $e) {
+            } catch (AlbumArtExportException $error) {
                 $this->logger->error(
-                    $e->getMessage(),
+                    $error->getMessage(),
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
 
                 $interactor->error(
-                    $e->getMessage(),
+                    $error->getMessage(),
                     true
                 );
             }

@@ -108,11 +108,11 @@ final class AdminUpdateDatabaseCommand extends Command
                     );
                 }
             }
-        } catch (Update\Exception\UpdateFailedException $e) {
+        } catch (Update\Exception\UpdateFailedException $error) {
             $interactor->error(
                 sprintf(
                     T_('Update failed! %s'),
-                    $e->getMessage()
+                    $error->getMessage()
                 ),
                 true
             );
@@ -135,11 +135,11 @@ final class AdminUpdateDatabaseCommand extends Command
                         sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                         true
                     );
-                } catch (Update\Exception\UpdateFailedException $e) {
+                } catch (Update\Exception\UpdateFailedException $error) {
                     $interactor->error(
                         sprintf(
                             T_('Update failed! %s'),
-                            $e->getMessage()
+                            $error->getMessage()
                         ),
                         true
                     );
@@ -165,7 +165,7 @@ final class AdminUpdateDatabaseCommand extends Command
                 $updated = true;
                 try {
                     $this->updater->update($interactor);
-                } catch (Update\Exception\UpdateException $e) {
+                } catch (Update\Exception\UpdateException) {
                     $interactor->error(
                         "\n" . T_('Error'),
                         true

@@ -85,7 +85,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                             $lastFmApiKey
                         )
                     );
-                } catch (LastFmQueryFailedException $e) {
+                } catch (LastFmQueryFailedException) {
                     return [];
                 }
                 if (!$xmldata->album->image) {

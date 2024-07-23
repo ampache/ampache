@@ -81,7 +81,7 @@ final class ApplicationRunner
         try {
             /** @var ApplicationActionInterface $handler */
             $handler = $this->dic->get($handler_name);
-        } catch (ContainerExceptionInterface $e) {
+        } catch (ContainerExceptionInterface) {
             $this->logger->critical(
                 sprintf('No handler found for action "%s"', $action_name),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -108,8 +108,8 @@ final class ApplicationRunner
             if ($response !== null) {
                 $this->dic->get(ResponseEmitter::class)->emit($response);
             }
-        } catch (AccessDeniedException $e) {
-            $message = $e->getMessage();
+        } catch (AccessDeniedException $error) {
+            $message = $error->getMessage();
 
             $this->logger->warning(
                 $message,
@@ -125,7 +125,7 @@ final class ApplicationRunner
             $this->ui->accessDenied($message);
 
             return;
-        } catch (ObjectNotFoundException $e) {
+        } catch (ObjectNotFoundException $error) {
             $this->logger->warning(
                 'Requested an object that does not exist',
                 [
@@ -134,19 +134,19 @@ final class ApplicationRunner
                         __CLASS__,
                         get_class($handler)
                     ),
-                    'objectId' => $e->getObjectId()
+                    'objectId' => $error->getObjectId()
                 ]
             );
 
             $this->ui->showObjectNotFound();
-        } catch (Throwable $e) {
+        } catch (Throwable $error) {
             $this->logger->critical(
-                $e->getMessage(),
+                $error->getMessage(),
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '%s:%d',
-                        $e->getFile(),
-                        $e->getLine()
+                        $error->getFile(),
+                        $error->getLine()
                     )
                 ]
             );

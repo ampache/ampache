@@ -2188,7 +2188,7 @@ class Subsonic_Api
                     self::getPodcastCreator()->create($url, $catalog);
 
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
-                } catch (PodcastCreationException $e) {
+                } catch (PodcastCreationException) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createpodcastchannel');
                 }
             } else {

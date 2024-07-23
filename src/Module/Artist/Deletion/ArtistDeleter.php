@@ -93,7 +93,7 @@ final class ArtistDeleter implements ArtistDeleterInterface
 
             try {
                 $this->albumDeleter->delete($album);
-            } catch (AlbumDeletionException $e) {
+            } catch (AlbumDeletionException) {
                 $this->logger->critical(
                     sprintf(
                         "Error when deleting the album `%d`.",

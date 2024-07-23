@@ -79,7 +79,7 @@ final class PodcastCreate4Method
                 $input['url'],
                 $catalog
             );
-        } catch (PodcastCreationException $e) {
+        } catch (PodcastCreationException) {
             Api4::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
 
             return false;

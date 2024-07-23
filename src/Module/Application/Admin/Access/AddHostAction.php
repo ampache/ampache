@@ -99,14 +99,14 @@ final class AddHostAction implements ApplicationActionInterface
                 AccessTypeEnum::from($data['type'] ?? 'stream'),
                 AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );
-        } catch (InvalidIpRangeException $e) {
+        } catch (InvalidIpRangeException) {
             AmpError::add('start', T_('IP Address version mismatch'));
             AmpError::add('end', T_('IP Address version mismatch'));
-        } catch (InvalidStartIpException $e) {
+        } catch (InvalidStartIpException) {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (InvalidEndIpException $e) {
+        } catch (InvalidEndIpException) {
             AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (AclItemDuplicationException $e) {
+        } catch (AclItemDuplicationException) {
             $this->logger->critical(
                 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $startIp . ' - ' . $endIp,
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
