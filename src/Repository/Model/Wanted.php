@@ -221,29 +221,25 @@ class Wanted extends database_object
                             $wanted->f_artist_link = ($artist !== null)
                                 ? $artist->get_f_link()
                                 : $wartist['link'] ?? '';
+
+                            if (
+                                $user instanceof User &&
+                                $wanted->mbid &&
+                                ($wanted->artist || $wanted->artist_mbid) &&
+                                $wanted->name &&
+                                $wanted->year
+                            ) {
+                                static::getWantedManager()->add(
+                                    $user,
+                                    $wanted->mbid,
+                                    $wanted->artist,
+                                    $wanted->artist_mbid,
+                                    $wanted->name,
+                                    $wanted->year
+                                );
+                            }
                         }
 
-                        debug_event(self::class, 'get_missing_albums user_id: ' . $user->id, 3);
-                        debug_event(self::class, 'get_missing_albums mbid: ' . $wanted->mbid, 3);
-                        debug_event(self::class, 'get_missing_albums artist_mbid: ' . $wanted->artist_mbid, 3);
-                        debug_event(self::class, 'get_missing_albums name: ' . $wanted->name, 3);
-                        debug_event(self::class, 'get_missing_albums year: ' . $wanted->year, 3);
-                        if (
-                            $user instanceof User &&
-                            $wanted->mbid &&
-                            ($wanted->artist || $wanted->artist_mbid) &&
-                            $wanted->name &&
-                            $wanted->year
-                        ) {
-                            static::getWantedManager()->add(
-                                $user,
-                                $wanted->mbid,
-                                $wanted->artist,
-                                $wanted->artist_mbid,
-                                $wanted->name,
-                                $wanted->year
-                            );
-                        }
 
                         $results[] = $wanted;
                     }
