@@ -274,7 +274,6 @@ metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
 ; DEFAULT: "filename,getID3"
 metadata_order_video = "filename,getID3"
 

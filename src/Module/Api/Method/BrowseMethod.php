@@ -91,7 +91,7 @@ final class BrowseMethod
                 $gather_types[] = 'podcast';
             }
             if (AmpConfig::get('video')) {
-                $gather_types = array_merge($gather_types, ['clip', 'tvshow', 'movie', 'personal_video']);
+                $gather_types = array_merge($gather_types, ['clip']);
             }
 
             $browse->set_type($output_type);
@@ -112,9 +112,6 @@ final class BrowseMethod
 
             switch ((string)$catalog->gather_types) {
                 case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
                     $output_type = 'video';
                     $gather_type = 'video';
                     $browse->set_type('video');

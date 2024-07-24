@@ -28,7 +28,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -833,102 +832,6 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     if ($count === 0) {
         echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ")</script>\n";
     }
-}
-
-/**
- * show_tvshow_select
- * This is the same as show_album_select except it's *gasp* for tvshows! How
- * inventive!
- * @param string $name
- * @param int $tvshow_id
- * @param bool $allow_add
- * @param int $season_id
- * @param bool $allow_none
- */
-function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false): void
-{
-    static $tvshow_id_cnt = 0;
-    // Generate key to use for HTML element ID
-    if ($season_id) {
-        $key = $name . "_select_" . $season_id;
-    } else {
-        $key = $name . "_select_c" . ++$tvshow_id_cnt;
-    }
-
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
-    $sql        = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
-    $db_results = Dba::read($sql);
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $selected = '';
-        if ($row['id'] == $tvshow_id) {
-            $selected = "selected=\"selected\"";
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
-    } // end while
-
-    if ($allow_add) {
-        // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
-    }
-
-    echo "</select>\n";
-}
-
-/**
- * @param string $name
- * @param int $season_id
- * @param bool $allow_add
- * @param int $video_id
- * @param bool $allow_none
- */
-function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false): bool
-{
-    if (!$season_id) {
-        return false;
-    }
-    $season = new TVShow_Season($season_id);
-
-    static $season_id_cnt = 0;
-    // Generate key to use for HTML element ID
-    if ($video_id) {
-        $key = $name . "_select_" . $video_id;
-    } else {
-        $key = $name . "_select_c" . ++$season_id_cnt;
-    }
-
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
-    $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-    $db_results = Dba::read($sql, [$season->tvshow]);
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $selected = '';
-        if ($row['id'] == $season_id) {
-            $selected = "selected=\"selected\"";
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['season_number']) . "</option>\n";
-    } // end while
-
-    if ($allow_add) {
-        // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
-    }
-
-    echo "</select>\n";
-
-    return true;
 }
 
 /**

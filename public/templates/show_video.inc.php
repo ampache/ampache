@@ -29,7 +29,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -47,14 +46,7 @@ $fullname = $video->get_fullname() ?? '';
 Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-$gart = false;
-// The release type is not the video itself, we probably want preview
-if (get_class($video) != Movie::class) {
-    $gart = Art::display('video', $video->id, $fullname, 8, null, false, 'preview');
-}
-if (!$gart) {
-    $gart = Art::display('video', $video->id, $fullname, 7);
-} ?>
+$gart = Art::display('video', $video->id, $fullname, 7); ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:

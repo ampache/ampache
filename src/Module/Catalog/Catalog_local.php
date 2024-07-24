@@ -614,7 +614,7 @@ class Catalog_local extends Catalog
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif (in_array($catalog_media_type, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+        } elseif ($catalog_media_type == 'clip') {
             Video::clear_cache();
             $media_type = 'video';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
@@ -739,7 +739,7 @@ class Catalog_local extends Catalog
         $media_type         = 'song';
         if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif (in_array($catalog_media_type, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+        } elseif ($catalog_media_type == 'clip') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
@@ -1172,7 +1172,7 @@ class Catalog_local extends Catalog
         $media_type         = 'song';
         if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif (in_array($catalog_media_type, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+        } elseif ($catalog_media_type == 'clip') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);

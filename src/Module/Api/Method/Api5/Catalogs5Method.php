@@ -50,7 +50,7 @@ final class Catalogs5Method
     public static function catalogs(array $input, User $user): bool
     {
         // filter for specific catalog types
-        $filter  = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'])) ? $input['filter'] : '';
+        $filter  = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'podcast'])) ? $input['filter'] : '';
         $results = $user->get_catalogs($filter);
         if (empty($results)) {
             Api5::empty('catalog', $input['api_format']);

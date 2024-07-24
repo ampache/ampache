@@ -116,7 +116,7 @@ $(document).ajaxSuccess(function() {
         document.title = jsSiteTitle + ' | ' + jsPodcastEpisodeTitle;
     } else if (title === 'radio') {
         document.title = jsSiteTitle + ' | ' + jsRadioTitle;
-    } else if (title === 'video' || title === 'tvshow_seasons' || title === 'tvshows') {
+    } else if (title === 'video') {
         document.title = jsSiteTitle + ' | ' + jsVideoTitle;
     } else if (title === 'localplay') {
         document.title = jsSiteTitle + ' | ' + jsLocalplayTitle;

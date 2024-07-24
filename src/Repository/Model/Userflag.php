@@ -35,7 +35,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 
 /**
- * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
+ * This user flag/unflag songs, albums, artists, videos... as favorite.
  */
 class Userflag extends database_object
 {
@@ -134,8 +134,6 @@ class Userflag extends database_object
             'podcast_episode',
             'search',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video',
         ];

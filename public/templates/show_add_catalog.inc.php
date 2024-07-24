@@ -69,7 +69,6 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
                     <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
                     <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
                     <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
-                    <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
                 <?php } ?>
             </td>
         </tr>
@@ -137,9 +136,6 @@ echo "function catalogTypeChanged() {var sel = document.getElementById('catalog_
                     <option value="music"><?php echo T_('Music'); ?></option>
             <?php if ($allow_video) { ?>
                     <option value="clip"><?php echo T_('Music Clip'); ?></option>
-                    <option value="tvshow"><?php echo T_('TV Show'); ?></option>
-                    <option value="movie"><?php echo T_('Movie'); ?></option>
-                    <option value="personal_video"><?php echo T_('Personal Video'); ?></option>
             <?php }
             if (AmpConfig::get('podcast')) { ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>

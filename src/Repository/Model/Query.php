@@ -37,8 +37,6 @@ use Ampache\Module\Database\Query\FollowerQuery;
 use Ampache\Module\Database\Query\LabelQuery;
 use Ampache\Module\Database\Query\LicenseQuery;
 use Ampache\Module\Database\Query\LiveStreamQuery;
-use Ampache\Module\Database\Query\MovieQuery;
-use Ampache\Module\Database\Query\PersonalVideoQuery;
 use Ampache\Module\Database\Query\PlaylistLocalplayQuery;
 use Ampache\Module\Database\Query\PlaylistMediaQuery;
 use Ampache\Module\Database\Query\PlaylistQuery;
@@ -53,9 +51,6 @@ use Ampache\Module\Database\Query\SmartplaylistQuery;
 use Ampache\Module\Database\Query\SongPreviewQuery;
 use Ampache\Module\Database\Query\SongQuery;
 use Ampache\Module\Database\Query\TagQuery;
-use Ampache\Module\Database\Query\TvshowEpisodeQuery;
-use Ampache\Module\Database\Query\TvshowQuery;
-use Ampache\Module\Database\Query\TvshowSeasonQuery;
 use Ampache\Module\Database\Query\UserQuery;
 use Ampache\Module\Database\Query\VideoQuery;
 use Ampache\Module\Database\Query\WantedQuery;
@@ -466,10 +461,6 @@ class Query
                 return LicenseQuery::FILTERS;
             case 'live_stream':
                 return LiveStreamQuery::FILTERS;
-            case 'movie':
-                return MovieQuery::FILTERS;
-            case 'personal_video':
-                return PersonalVideoQuery::FILTERS;
             case 'playlist_localplay':
                 return PlaylistLocalplayQuery::FILTERS;
             case 'playlist_media':
@@ -497,12 +488,6 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 return TagQuery::FILTERS;
-            case 'tvshow_episode':
-                return TvshowEpisodeQuery::FILTERS;
-            case 'tvshow_season':
-                return TvshowSeasonQuery::FILTERS;
-            case 'tvshow':
-                return TvshowQuery::FILTERS;
             case 'user':
                 return UserQuery::FILTERS;
             case 'video':
@@ -558,12 +543,6 @@ class Query
             case 'live_stream':
                 $this->queryType = new LiveStreamQuery();
                 break;
-            case 'movie':
-                $this->queryType = new MovieQuery();
-                break;
-            case 'personal_video':
-                $this->queryType = new PersonalVideoQuery();
-                break;
             case 'playlist_localplay':
                 $this->queryType = new PlaylistLocalplayQuery();
                 break;
@@ -604,15 +583,6 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 $this->queryType = new TagQuery();
-                break;
-            case 'tvshow_episode':
-                $this->queryType = new TvshowEpisodeQuery();
-                break;
-            case 'tvshow_season':
-                $this->queryType = new TvshowSeasonQuery();
-                break;
-            case 'tvshow':
-                $this->queryType = new TvshowQuery();
                 break;
             case 'user':
                 $this->queryType = new UserQuery();
@@ -1025,8 +995,6 @@ class Query
                 case 'clip':
                 case 'label':
                 case 'live_stream':
-                case 'movie':
-                case 'personal_video':
                 case 'playlist':
                 case 'podcast_episode':
                 case 'podcast':
@@ -1035,9 +1003,6 @@ class Query
                 case 'song_artist':
                 case 'song':
                 case 'tag':
-                case 'tvshow_episode':
-                case 'tvshow_season':
-                case 'tvshow':
                 case 'video':
                     $dis = Catalog::get_user_filter($type, $this->user_id);
                     break;

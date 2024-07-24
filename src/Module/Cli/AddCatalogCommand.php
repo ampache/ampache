@@ -42,7 +42,7 @@ final class AddCatalogCommand extends Command
         $this
             ->argument('[catalogName]', T_('Catalog name'))
             ->argument('[catalogPath]', T_('Path'))
-            ->argument('[mediaType]', T_('Catalog Media Type (optional)') . " ('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast')", 'music')
+            ->argument('[mediaType]', T_('Catalog Media Type (optional)') . " ('music', 'clip', 'podcast')", 'music')
             ->argument('[filePattern]', T_('Filename Pattern (optional)'), '%T - %t')
             ->argument('[folderPattern]', T_('Folder Pattern (optional)'), '%a/%A')
             ->usage('<bold>  run:addCatalog some-catalog /mnt/path/to/music</end> <comment> ## ' . T_('Create a local music catalog called `some-catalog`') . '</end><eol/>');

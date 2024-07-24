@@ -4116,21 +4116,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_itemTVShow\\(\\) has parameter \\$tvshow with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_itemTVShow\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_itemTVShowSeason\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_itemTag\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -10331,16 +10316,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Cannot access offset 0 on array\\<int, string\\>\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Cannot access offset 1 on array\\<int, string\\>\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:__construct\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -10571,11 +10546,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:removeCommonAbbreviations\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:set_broken\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -10598,11 +10568,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 9
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function end expects array\\|object, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
@@ -10707,16 +10672,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Regex pattern is invalid\\: No ending delimiter '~' found in pattern\\: ~\\\\~$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Result of && is always true\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -11121,31 +11076,6 @@ parameters:
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheOmdb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheOmdb.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpachePaypal\\:\\:\\$business has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpachePaypal.php
@@ -11374,66 +11304,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$overwrite_name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Argument of an invalid type string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:gather_arts\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:getReleaseByTitle\\(\\) has parameter \\$results with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:getReleaseByTitle\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:getReleaseByTitle\\(\\) has parameter \\$year with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:get_metadata\\(\\) has parameter \\$media_info with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Offset 'tvshow_art' does not exist on array\\{tvdb_tvshow_id\\: mixed, tvshow_imdb_id\\: mixed, tvshow_summary\\: string, tvshow\\: mixed, tvshow_year\\?\\: mixed, tvshow_banner_art\\?\\: non\\-falsy\\-string, genre\\?\\: non\\-empty\\-array\\}\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTvdb\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTvdb.php
 
 		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
@@ -12356,71 +12226,6 @@ parameters:
 			path: src/Repository/Model/Media.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$f_original_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Movie\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Movie.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:\\$f_location has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Personal_Video\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Personal_Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
@@ -13066,141 +12871,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:get_release_item_art\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_season has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_season_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_tvshow has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Episode\\:\\:\\$f_tvshow_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Episode.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:check\\(\\) has parameter \\$season_number with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:check\\(\\) has parameter \\$tvshow with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:update_tvshow\\(\\) has parameter \\$season_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:update_tvshow\\(\\) has parameter \\$tvshow_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$_mapcache has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$catalog_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$episodes has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$f_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$f_tvshow has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TVShow_Season\\:\\:\\$f_tvshow_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TVShow_Season.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
@@ -13299,81 +12969,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$items has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:_get_extra_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:check\\(\\) has parameter \\$tvshow_summary with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:check\\(\\) has parameter \\$year with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$_mapcache has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$catalog_id has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$episodes has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$f_link has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$f_tags has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$seasons has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\TvShow\\:\\:\\$tags has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/TvShow.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:create\\(\\) has parameter \\$catalog_filter_group with no type specified\\.$#"

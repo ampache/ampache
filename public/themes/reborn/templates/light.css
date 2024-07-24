@@ -572,6 +572,7 @@ div.jp-video div.jp-interface {
 
 div.jp-title,
 div.jp-playlist {
+    color: black;
     background-color: #d4d4d4;
     border-top: 1px solid #f8f8f8;
 }

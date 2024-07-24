@@ -476,11 +476,6 @@ class Video extends database_object implements
         // clean up missing catalogs
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
         // clean up sub-tables of videos
-        Movie::garbage_collection();
-        TVShow_Episode::garbage_collection();
-        TVShow_Season::garbage_collection();
-        TvShow::garbage_collection();
-        Personal_Video::garbage_collection();
         Clip::garbage_collection();
     }
 
@@ -674,14 +669,8 @@ class Video extends database_object implements
         if (is_array($gtypes) && $gtypes !== []) {
             $gtype = $gtypes[0];
             switch ($gtype) {
-                case 'tvshow':
-                    return TVShow_Episode::insert($data, $gtypes, $options);
-                case 'movie':
-                    return Movie::insert($data, $gtypes, $options);
                 case 'clip':
                     return Clip::insert($data, $gtypes, $options);
-                case 'personal_video':
-                    return Personal_Video::insert($data, $gtypes, $options);
             }
         }
 

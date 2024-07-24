@@ -52,7 +52,7 @@ final class CatalogAddMethod
      * name           = (string) catalog_name
      * path           = (string) URL or folder path for your catalog
      * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
-     * media_type     = (string) Default: 'music' ('music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video') //optional
+     * media_type     = (string) Default: 'music' ('music', 'podcast', 'clip') //optional
      * file_pattern   = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional

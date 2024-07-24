@@ -77,7 +77,6 @@ class Preference extends database_object
         'catalog_check_duplicate',
         'cron_cache',
         'custom_blankalbum',
-        'custom_blankmovie',
         'custom_datetime',
         'custom_favicon',
         'custom_login_background',
@@ -101,6 +100,7 @@ class Preference extends database_object
         'home_moment_videos',
         'home_now_playing',
         'home_recently_played',
+        'home_recently_played_all',
         'httpq_active',
         'jp_volume',
         'lang',
@@ -231,7 +231,6 @@ class Preference extends database_object
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
-        'tvdb_api_key',
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
@@ -772,7 +771,6 @@ class Preference extends database_object
             "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(150, 'sidebar_light', '0', 'Light sidebar by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
             "(151, 'custom_blankalbum', '', 'Custom blank album default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
             "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'browse'), " .
             "(154, 'show_skipped_times', '0', 'Show # skipped', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(155, 'custom_datetime', '', 'Custom datetime', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
@@ -806,7 +804,8 @@ class Preference extends database_object
             "(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
             "(185, 'jp_volume', '0.8', 'Default webplayer volume', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
             "(186, 'perpetual_api_session', '0', 'API sessions do not expire', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
-            "(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
+            "(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'home')," .
+            "(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
             "(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
@@ -869,7 +868,6 @@ class Preference extends database_object
             'catalogfav_max_items' => T_('Catalog favorites max items'),
             'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
-            'custom_blankmovie' => T_('Custom blank video default image'),
             'custom_datetime' => T_('Custom datetime'),
             'custom_favicon' => T_('Custom URL - Favicon'),
             'custom_login_background' => T_('Custom URL - Login page background'),
@@ -901,6 +899,7 @@ class Preference extends database_object
             'home_moment_videos' => T_('Show Videos of the Moment'),
             'home_now_playing' => T_('Show Now Playing'),
             'home_recently_played' => T_('Show Recently Played'),
+            'home_recently_played_all' => T_('Show all media types in Recently Played'),
             'httpq_active' => T_('HTTPQ Active Instance'),
             'jp_volume' => T_('Default webplayer volume'),
             'lang' => T_('Language'),
@@ -989,7 +988,6 @@ class Preference extends database_object
             'topmenu' => T_('Top menu'),
             'transcode_bitrate' => T_('Transcode Bitrate'),
             'transcode' => T_('Allow Transcoding'),
-            'tvdb_api_key' => T_('TVDb API key'),
             'ui_fixed' => T_('Fix header position on compatible themes'),
             'unique_playlist' => T_('Only add unique items to playlists'),
             'upload_access_level' => T_('Upload Access Level'),
@@ -1158,6 +1156,7 @@ class Preference extends database_object
             'home_moment_videos',
             'home_now_playing',
             'home_recently_played',
+            'home_recently_played_all',
             'httpq_active',
             'label',
             'ldap_start_tls',

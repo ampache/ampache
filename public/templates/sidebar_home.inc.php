@@ -28,9 +28,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Clip;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
-use Ampache\Repository\Model\TVShow_Episode;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
@@ -56,10 +53,8 @@ global $dic;
 /** @var string $t_information */
 /** @var string $t_labels */
 /** @var string $t_localplay */
-/** @var string $t_movies */
 /** @var string $t_musicClips */
 /** @var string $t_newest */
-/** @var string $t_personalVideos */
 /** @var string $t_playlists */
 /** @var string $t_podcastEpisodes */
 /** @var string $t_podcasts */
@@ -73,7 +68,6 @@ global $dic;
 /** @var string $t_songs */
 /** @var string $t_statistics */
 /** @var string $t_topRated */
-/** @var string $t_tvShows */
 /** @var string $t_uploads */
 /** @var string $t_videos */
 /** @var string $t_wanted */
@@ -199,15 +193,6 @@ if (
             <ul class="sb3" id="sb_home_video">
     <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
                 <li id="sb_home_video_clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo $t_musicClips; ?></a></li>
-    <?php } ?>
-    <?php if ($videoRepository->getItemCount(TVShow_Episode::class)) { ?>
-                <li id="sb_home_video_tvShow"><a href="<?php echo $web_path; ?>/browse.php?action=tvshow"><?php echo $t_tvShows; ?></a></li>
-    <?php } ?>
-    <?php if ($videoRepository->getItemCount(Movie::class)) { ?>
-                <li id="sb_home_video_movie"><a href="<?php echo $web_path; ?>/browse.php?action=movie"><?php echo $t_movies; ?></a></li>
-    <?php } ?>
-    <?php if ($videoRepository->getItemCount(Personal_Video::class)) { ?>
-                <li id="sb_home_video_personal"><a href="<?php echo $web_path; ?>/browse.php?action=personal_video"><?php echo $t_personalVideos; ?></a></li>
     <?php } ?>
                 <li id="sb_home_video_tagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo $t_genres; ?></a></li>
             </ul>

@@ -307,30 +307,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
-            case 'tvshow_row':
-                $hide_genres = AmpConfig::get('hide_genres');
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'show_ratings' => $show_ratings,
-                        'hide_genres' => $hide_genres,
-                        'cel_cover' => 'cel_cover',
-                        'cel_tags' => 'cel_tags',
-                    ]
-                );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
-                break;
             case 'live_stream_row':
-            case 'tvshow_season_row':
                 ob_start();
 
                 $this->ui->show(

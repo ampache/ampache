@@ -35,7 +35,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 
 /**
- * This tracks ratings for songs, albums, artists, videos, tvshows, movies ...
+ * This tracks ratings for songs, albums, artists, videos...
  */
 class Rating extends database_object
 {
@@ -51,8 +51,6 @@ class Rating extends database_object
         'video',
         'playlist',
         'search',
-        'tvshow',
-        'tvshow_season',
         'podcast',
         'podcast_episode',
     ];
@@ -108,8 +106,6 @@ class Rating extends database_object
             'podcast_episode',
             'search',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video',
         ];
@@ -395,6 +391,103 @@ class Rating extends database_object
                 }
             }
         }
+    }
+
+    /**
+     * get_latest_sql
+     * Get the latest sql
+     * @param string $input_type
+     * @param int $since
+     * @param int $before
+     */
+    public static function get_latest_sql(
+        $input_type,
+        ?User $user = null,
+        $since = 0,
+        $before = 0
+    ): string {
+        $type    = Stats::validate_type($input_type);
+        $sql     = "SELECT DISTINCT(`rating`.`object_id`) AS `id`, `rating`.`rating`, `rating`.`object_type` AS `type`, MAX(`rating`.`user`) AS `user`, MAX(`rating`.`date`) AS `date` FROM `rating`";
+        if ($input_type == 'album_artist' || $input_type == 'song_artist') {
+            $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
+        }
+
+        $sql .= ($user !== null)
+            ? " WHERE `rating`.`object_type` = '" . $type . "' AND `rating`.`user` = '" . $user->getId() . "'"
+            : " WHERE `rating`.`object_type` = '" . $type . "'";
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
+            $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
+        }
+
+        if (AmpConfig::get('catalog_filter') && $user !== null) {
+            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user->getId());
+        }
+
+        if ($input_type == 'album_artist') {
+            $sql .= " AND `artist`.`album_count` > 0";
+        }
+
+        if ($input_type == 'song_artist') {
+            $sql .= " AND `artist`.`song_count` > 0";
+        }
+
+        if ($since > 0) {
+            $sql .= " AND `rating`.`date` >= '" . $since . "'";
+            if ($before > 0) {
+                $sql .= " AND `rating`.`date` <= '" . $before . "'";
+            }
+        }
+
+
+        //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
+
+        return $sql . " GROUP BY `rating`.`object_id`, `type` ORDER BY `rating` DESC, `date` DESC ";
+    }
+
+    /**
+     * get_latest
+     * Get the latest user flagged objects
+     * @param string $type
+     * @param int $count
+     * @param int $offset
+     * @param int $since
+     * @param int $before
+     * @return int[]
+     */
+    public static function get_latest(
+        $type,
+        ?User $user = null,
+        $count = 0,
+        $offset = 0,
+        $since = 0,
+        $before = 0
+    ): array {
+        if ($count === 0) {
+            $count = AmpConfig::get('popular_threshold', 10);
+        }
+
+        if ($count === -1) {
+            $count  = 0;
+            $offset = 0;
+        }
+
+        // Select Top objects counting by # of rows
+        $sql   = self::get_latest_sql($type, $user, $since, $before);
+        $limit = ($offset < 1)
+            ? $count
+            : $offset . "," . $count;
+        if ($limit > 0) {
+            $sql .= 'LIMIT ' . $limit;
+        }
+
+        //debug_event(self::class, 'get_latest ' . $sql, 5);
+        $db_results = Dba::read($sql);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
     }
 
     /**

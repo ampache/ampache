@@ -116,8 +116,6 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             'podcast',
             'podcast_episode',
             'song',
-            'tvshow',
-            'tvshow_season',
             'video'
         ];
 

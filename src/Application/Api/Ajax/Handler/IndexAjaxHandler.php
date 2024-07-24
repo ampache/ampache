@@ -39,6 +39,7 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Module\Util\SlideshowInterface;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Wanted;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -317,8 +318,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id   = $user->id ?? -1;
                 $ajax_page = 'index';
-                $data      = Stats::get_recently_played($user_id);
-                require_once Ui::find_template('show_recently_played_all.inc.php');
+                if (AmpConfig::get('home_recently_played_all')) {
+                    $data = Stats::get_recently_played($user_id);
+                    require_once Ui::find_template('show_recently_played_all.inc.php');
+                } else {
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    Song::build_cache(array_keys($data));
+                    require Ui::find_template('show_recently_played.inc.php');
+                }
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'refresh_now_playing':
@@ -333,8 +340,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id   = $user->id ?? -1;
                 $ajax_page = 'index';
-                $data      = Stats::get_recently_played($user_id);
-                require_once Ui::find_template('show_recently_played_all.inc.php');
+                if (AmpConfig::get('home_recently_played_all')) {
+                    $data = Stats::get_recently_played($user_id);
+                    require_once Ui::find_template('show_recently_played_all.inc.php');
+                } else {
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    Song::build_cache(array_keys($data));
+                    require Ui::find_template('show_recently_played.inc.php');
+                }
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'sidebar':
