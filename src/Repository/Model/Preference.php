@@ -805,7 +805,7 @@ class Preference extends database_object
             "(185, 'jp_volume', '0.8', 'Default webplayer volume', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
             "(186, 'perpetual_api_session', '0', 'API sessions do not expire', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
             "(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'home')," .
-            "(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
+            "(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
             "(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
