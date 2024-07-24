@@ -188,6 +188,7 @@ class Wanted extends database_object
                     ) {
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
+                            debug_event(self::class, 'get_missing_albums album: ' . $wanted->mbid, 3);
                             $wanted->format();
                         } else {
                             $wanted       = $wantedRepository->prototype();
@@ -228,7 +229,7 @@ class Wanted extends database_object
                         if (
                             $user instanceof User &&
                             $wanted->mbid &&
-                            $wanted->artist_mbid &&
+                            ($wanted->artist || $wanted->artist_mbid) &&
                             $wanted->name &&
                             $wanted->year
                         ) {
@@ -486,6 +487,7 @@ class Wanted extends database_object
 
         return $dic->get(WantedManagerInterface::class);
     }
+
     /**
      * @deprecated Inject dependency
      */
