@@ -414,8 +414,9 @@ class Wanted extends database_object
                                     }
                                 }
 
-                                if ($song['file'] !== null) {
-                                    $this->songs[] = new Song_Preview(Song_Preview::insert($song));
+                                $insert_id = Song_Preview::insert($song);
+                                if ($insert_id) {
+                                    $this->songs[] = new Song_Preview($insert_id);
                                 }
                             }
                         }
