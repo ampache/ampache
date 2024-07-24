@@ -177,7 +177,7 @@ class Song_Preview extends database_object implements Media, playable_item
         }
 
         // Song data cache
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN ' . $idlist;
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN ' . $idlist . ' ORDER BY `disk`, `track`;';
         $db_results = Dba::read($sql);
 
         $artists = [];
@@ -207,7 +207,7 @@ class Song_Preview extends database_object implements Media, playable_item
             return parent::get_from_cache('song_preview', $preview_id);
         }
 
-        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ?';
+        $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ? ORDER BY `disk`, `track`;';
         $db_results = Dba::read($sql, [$preview_id]);
 
         $results = Dba::fetch_assoc($db_results);
@@ -460,7 +460,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         $songs = [];
 
-        $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ?";
+        $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ? ORDER BY `disk`, `track`;";
         $db_results = Dba::read($sql, [session_id(), $album_mbid]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
