@@ -42,13 +42,13 @@ class Wanted extends database_object
     protected const DB_TABLENAME = 'wanted';
 
     /* Variables from DB */
-    public int $id = 0;
-    public ?int $user;
-    public ?int $artist = null;
-    public ?string $artist_mbid;
-    public ?string $mbid;
-    public ?string $name;
-    public ?int $year;
+    public int $id              = 0;
+    public ?int $user           = null;
+    public ?int $artist         = null;
+    public ?string $artist_mbid = null;
+    public ?string $mbid        = null;
+    public ?string $name        = null;
+    public ?int $year           = null;
     public int $date;
     public int $accepted;
 
