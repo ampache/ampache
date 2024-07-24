@@ -30,6 +30,7 @@ use Ampache\Repository\Model\Plugin;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
 ?>
