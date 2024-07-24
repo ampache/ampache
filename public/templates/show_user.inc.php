@@ -176,8 +176,14 @@ $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
 $user       = $client;
-$data       = Stats::get_recently_played($client->getId(), 'stream', null, true);
-require_once Ui::find_template('show_recently_played_all.inc.php');  ?>
+if (AmpConfig::get('home_recently_played_all')) {
+    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
+    require_once Ui::find_template('show_recently_played_all.inc.php');
+} else {
+    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+    Song::build_cache(array_keys($data));
+    require Ui::find_template('show_recently_played.inc.php');
+} ?>
         </div>
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';

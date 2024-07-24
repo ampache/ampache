@@ -100,6 +100,7 @@ class Preference extends database_object
         'home_moment_videos',
         'home_now_playing',
         'home_recently_played',
+        'home_recently_played_all',
         'httpq_active',
         'jp_volume',
         'lang',
@@ -803,6 +804,7 @@ class Preference extends database_object
             "(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
             "(185, 'jp_volume', '0.8', 'Default webplayer volume', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
             "(186, 'perpetual_api_session', '0', 'API sessions do not expire', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
+            "(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'home')," .
             "(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
             "(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
@@ -897,6 +899,7 @@ class Preference extends database_object
             'home_moment_videos' => T_('Show Videos of the Moment'),
             'home_now_playing' => T_('Show Now Playing'),
             'home_recently_played' => T_('Show Recently Played'),
+            'home_recently_played_all' => T_('Show all media types in Recently Played'),
             'httpq_active' => T_('HTTPQ Active Instance'),
             'jp_volume' => T_('Default webplayer volume'),
             'lang' => T_('Language'),
@@ -1153,6 +1156,7 @@ class Preference extends database_object
             'home_moment_videos',
             'home_now_playing',
             'home_recently_played',
+            'home_recently_played_all',
             'httpq_active',
             'label',
             'ldap_start_tls',
