@@ -27,7 +27,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Upload;
-use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
@@ -53,7 +52,6 @@ global $dic;
 /** @var string $t_information */
 /** @var string $t_labels */
 /** @var string $t_localplay */
-/** @var string $t_musicClips */
 /** @var string $t_newest */
 /** @var string $t_playlists */
 /** @var string $t_podcastEpisodes */
@@ -89,9 +87,6 @@ $albumString     = (AmpConfig::get('album_group'))
     : 'album_disk';
 // expanded by default
 $state_home_browse = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
-    ? 'collapsed'
-    : 'expanded';
-$state_home_video = (isset($_COOKIE['sb_home_video']) && $_COOKIE['sb_home_video'] == 'collapsed')
     ? 'collapsed'
     : 'expanded';
 $state_home_search = (isset($_COOKIE['sb_home_search']) && $_COOKIE['sb_home_search'] == 'collapsed')
@@ -175,28 +170,14 @@ if (
     <?php if ($allowPodcast) { ?>
                 <li id="sb_home_dashboard_podcast_episodes"><a href="<?php echo $web_path; ?>/mashup.php?action=podcast_episode"><?php echo $t_podcastEpisodes; ?></a></li>
     <?php } ?>
-    <?php if ($allowVideo) { ?>
+    <?php if (
+        $allowVideo &&
+        !AmpConfig::get('sidebar_hide_video', false)
+    ) { ?>
                 <li id="sb_home_dashboard_videos"><a href="<?php echo $web_path; ?>/mashup.php?action=video"><?php echo $t_videos; ?></a></li>
     <?php } ?>
         </ul>
     </li>
-<?php } ?>
-<?php if (
-    $allowVideo &&
-    !AmpConfig::get('sidebar_hide_video', false)
-) { ?>
-        <li class="sb2_video">
-            <h4 class="header">
-                <span class="sidebar-header-title"><?php echo $t_videos; ?></span>
-                <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_video', 'header-img ' . $state_home_video); ?>
-            </h4>
-            <ul class="sb3" id="sb_home_video">
-    <?php if ($videoRepository->getItemCount(Clip::class)) { ?>
-                <li id="sb_home_video_clip"><a href="<?php echo $web_path; ?>/browse.php?action=clip"><?php echo $t_musicClips; ?></a></li>
-    <?php } ?>
-                <li id="sb_home_video_tagsVideo"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=video"><?php echo $t_genres; ?></a></li>
-            </ul>
-        </li>
 <?php } ?>
 <?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
     <li class="sb2_search">
