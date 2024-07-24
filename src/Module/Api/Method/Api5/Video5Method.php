@@ -53,7 +53,7 @@ final class Video5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -67,10 +67,10 @@ final class Video5Method
 
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::videos(array($object_id), $user, false);
+                echo Json5_Data::videos([$object_id], $user, false);
                 break;
             default:
-                echo Xml5_Data::videos(array($object_id), $user);
+                echo Xml5_Data::videos([$object_id], $user);
         }
 
         return true;

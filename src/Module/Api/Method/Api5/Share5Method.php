@@ -54,10 +54,10 @@ final class Share5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = array((int) $input['filter']);
+        $results = [(int) $input['filter']];
 
         ob_end_clean();
         switch ($input['api_format']) {

@@ -60,10 +60,10 @@ final class AdvancedSearch3Method
 
         switch ($type) {
             case 'artist':
-                echo Xml3_Data::artists($results, array(), $user);
+                echo Xml3_Data::artists($results, [], $user);
                 break;
             case 'album':
-                echo Xml3_Data::albums($results, array(), $user);
+                echo Xml3_Data::albums($results, [], $user);
                 break;
             default:
                 echo Xml3_Data::songs($results, $user);

@@ -49,7 +49,7 @@ final class UpdatePodcast5Method
      */
     public static function update_podcast(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 

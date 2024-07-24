@@ -52,20 +52,20 @@ final class GetSimilar5Method
      */
     public static function get_similar(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'artist'))) {
+        if (!in_array(strtolower($type), ['song', 'artist'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $results = array();
-        $similar = array();
+        $results = [];
+        $similar = [];
         switch ($type) {
             case 'artist':
                 $similar = Recommendation::get_artists_like($object_id);
