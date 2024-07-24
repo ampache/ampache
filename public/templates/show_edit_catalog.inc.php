@@ -57,7 +57,6 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
                     <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
                     <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
                     <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
-                    <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
                 <?php } ?>
             </td>
         </tr>

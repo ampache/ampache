@@ -46,7 +46,7 @@ use RuntimeException;
 /**
  * This class handles the images / artwork in ampache
  * This was initially in the album class, but was pulled out
- * to be more general and potentially apply to albums, artists, movies etc
+ * to be more general and potentially apply to albums, artists etc
  */
 class Art extends database_object
 {
@@ -1205,14 +1205,6 @@ class Art extends database_object
         $gtypes     = [];
         $media_info = [];
         switch ($type) {
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-                $gtypes[]                     = 'tvshow';
-                $media_info['tvshow']         = $options['tvshow'];
-                $media_info['tvshow_season']  = $options['tvshow_season'];
-                $media_info['tvshow_episode'] = $options['tvshow_episode'];
-                break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];
                 $media_info['title']      = $options['title'];
@@ -1234,10 +1226,6 @@ class Art extends database_object
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'artist';
                 break;
-            case 'movie':
-                $gtypes[]            = 'movie';
-                $media_info['title'] = $options['keyword'];
-                break;
         }
 
         $meta   = $plugin->get_metadata($gtypes, $media_info);
@@ -1245,18 +1233,6 @@ class Art extends database_object
 
         if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
-            $ures     = pathinfo((string) $url);
-            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
-        }
-
-        if (array_key_exists('tvshow_season_art', $meta)) {
-            $url      = $meta['tvshow_season_art'];
-            $ures     = pathinfo((string) $url);
-            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
-        }
-
-        if (array_key_exists('tvshow_art', $meta)) {
-            $url      = $meta['tvshow_art'];
             $ures     = pathinfo((string) $url);
             $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
         }

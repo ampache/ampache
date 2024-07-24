@@ -104,7 +104,7 @@ class Stats
      */
     public static function migrate($object_type, $old_object_id, $new_object_id, $child_id): void
     {
-        if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'])) {
+        if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode'])) {
             return;
         }
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
@@ -968,10 +968,6 @@ class Stats
             case 'tag':
             case 'song':
             case 'video':
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-            case 'movie':
             case 'playlist':
             case 'podcast':
             case 'podcast_episode':

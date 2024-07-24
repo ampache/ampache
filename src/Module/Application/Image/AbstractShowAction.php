@@ -148,26 +148,13 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     __DIR__,
                     $this->configContainer->getThemePath()
                 );
-                switch ($type) {
-                    case 'video':
-                    case 'tvshow':
-                    case 'tvshow_season':
-                        $mime       = 'image/png';
-                        $defaultimg = $this->configContainer->get('custom_blankmovie');
-                        if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
-                            $defaultimg = $rootimg . "blankmovie.png";
-                        }
-                        $etag = "EmptyMediaMovie";
-                        break;
-                    default:
-                        $mime       = 'image/png';
-                        $defaultimg = $this->configContainer->get('custom_blankalbum');
-                        if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
-                            $defaultimg = $rootimg . "blankalbum.png";
-                        }
-                        $etag = "EmptyMediaAlbum";
-                        break;
+
+                $mime       = 'image/png';
+                $defaultimg = $this->configContainer->get('custom_blankalbum');
+                if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
+                    $defaultimg = $rootimg . "blankalbum.png";
                 }
+                $etag = "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
             } else {
                 $thumb_data = [];

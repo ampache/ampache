@@ -43,16 +43,11 @@ use DateTime;
 use DOMDocument;
 use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\TvShow;
-use Ampache\Repository\Model\TVShow_Episode;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\Video;
 use Exception;
 use XMLReader;
@@ -1021,42 +1016,6 @@ class Upnp_Api
 
         $meta = null;
         switch ($pathreq[0]) {
-            case 'tvshows':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = count(Catalog::get_tvshows());
-                        $meta   = [
-                            'id' => $root . '/tvshows',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('TV Shows'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->isNew() === false) {
-                            $tvshow->format();
-                            $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
-                        }
-                        break;
-                    case 3:
-                        $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->isNew() === false) {
-                            $season->format();
-                            $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
-                        }
-                        break;
-                    case 4:
-                        $video = new TVShow_Episode((int)$pathreq[3]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
-                        }
-                        break;
-                }
-                break;
             case 'clips':
                 switch (count($pathreq)) {
                     case 1:
@@ -1075,50 +1034,6 @@ class Upnp_Api
                         if ($video->isNew() === false) {
                             $video->format();
                             $meta = self::_itemVideo($video, $root . '/clips');
-                        }
-                        break;
-                }
-                break;
-            case 'movies':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = Catalog::get_videos_count(null, 'movie');
-                        $meta   = [
-                            'id' => $root . '/movies',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('Movies'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $video = new Movie((int)$pathreq[1]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/movies');
-                        }
-                        break;
-                }
-                break;
-            case 'personal_videos':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = Catalog::get_videos_count(null, 'personal_video');
-                        $meta   = [
-                            'id' => $root . '/personal_videos',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('Personal Videos'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $video = new Personal_Video((int)$pathreq[1]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/personal_videos');
                         }
                         break;
                 }
@@ -1161,42 +1076,6 @@ class Upnp_Api
         }
 
         switch ($pathreq[0]) {
-            case 'tvshows':
-                switch (count($pathreq)) {
-                    case 1: // Get tvshow list
-                        $tvshows                  = Catalog::get_tvshows();
-                        [$maxCount, $tvshows]     = self::_slice($tvshows, $start, $count);
-                        foreach ($tvshows as $tvshow) {
-                            $tvshow->format();
-                            $mediaItems[] = self::_itemTVShow($tvshow, $parent);
-                        }
-                        break;
-                    case 2: // Get season list
-                        $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->isNew() === false) {
-                            $season_ids                  = $tvshow->get_seasons();
-                            [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
-                            foreach ($season_ids as $season_id) {
-                                $season = new TVShow_Season($season_id);
-                                $season->format();
-                                $mediaItems[] = self::_itemTVShowSeason($season, $parent);
-                            }
-                        }
-                        break;
-                    case 3: // Get episode list
-                        $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->isNew() === false) {
-                            $episode_ids                  = $season->get_episodes();
-                            [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
-                            foreach ($episode_ids as $episode_id) {
-                                $video = new Video($episode_id);
-                                $video->format();
-                                $mediaItems[] = self::_itemVideo($video, $parent);
-                            }
-                        }
-                        break;
-                }
-                break;
             case 'clips':
                 // Get clips list
                 if (count($pathreq) == 1) {
@@ -1208,33 +1087,8 @@ class Upnp_Api
                     }
                 }
                 break;
-            case 'movies':
-                // Get movies list
-                if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'movie');
-                    [$maxCount, $videos] = self::_slice($videos, $start, $count);
-                    foreach ($videos as $video) {
-                        $video->format();
-                        $mediaItems[] = self::_itemVideo($video, $parent);
-                    }
-                }
-                break;
-            case 'personal_videos':
-                // Get personal_videos list
-                if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'personal_video');
-                    [$maxCount, $videos] = self::_slice($videos, $start, $count);
-                    foreach ($videos as $video) {
-                        $video->format();
-                        $mediaItems[] = self::_itemVideo($video, $parent);
-                    }
-                }
-                break;
             default:
                 $mediaItems[] = self::_videoMetadata('clips');
-                $mediaItems[] = self::_videoMetadata('tvshows');
-                $mediaItems[] = self::_videoMetadata('movies');
-                $mediaItems[] = self::_videoMetadata('personal_videos');
                 break;
         }
 
@@ -1784,40 +1638,6 @@ class Upnp_Api
 
             'res' => $radio->url,
             'protocolInfo' => $arrFileType['mime']
-        ];
-    }
-
-    /**
-     * @param $tvshow
-     * @param string $parent
-     * @return array
-     */
-    private static function _itemTVShow($tvshow, $parent): array
-    {
-        return [
-            'id' => 'amp://video/tvshows/' . $tvshow->id,
-            'parentID' => $parent,
-            'restricted' => '1',
-            'childCount' => count($tvshow->get_seasons()),
-            'dc:title' => self::_replaceSpecialSymbols($tvshow->f_name),
-            'upnp:class' => 'object.container',
-        ];
-    }
-
-    /**
-     * @param TVShow_Season $season
-     * @param string $parent
-     * @return array
-     */
-    private static function _itemTVShowSeason($season, $parent): array
-    {
-        return [
-            'id' => 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
-            'parentID' => $parent,
-            'restricted' => '1',
-            'childCount' => count($season->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($season->f_name),
-            'upnp:class' => 'object.container',
         ];
     }
 

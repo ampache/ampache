@@ -35,7 +35,7 @@ use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
 
 /**
- * This tracks ratings for songs, albums, artists, videos, tvshows, movies ...
+ * This tracks ratings for songs, albums, artists, videos...
  */
 class Rating extends database_object
 {
@@ -51,8 +51,6 @@ class Rating extends database_object
         'video',
         'playlist',
         'search',
-        'tvshow',
-        'tvshow_season',
         'podcast',
         'podcast_episode',
     ];
@@ -108,8 +106,6 @@ class Rating extends database_object
             'podcast_episode',
             'search',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video',
         ];

@@ -97,9 +97,6 @@ final class CatalogFile4Method
                 $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
             case 'clip':
-            case 'tvshow':
-            case 'movie':
-            case 'personal_video':
                 $type  = 'video';
                 $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;

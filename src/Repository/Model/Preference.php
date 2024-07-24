@@ -77,7 +77,6 @@ class Preference extends database_object
         'catalog_check_duplicate',
         'cron_cache',
         'custom_blankalbum',
-        'custom_blankmovie',
         'custom_datetime',
         'custom_favicon',
         'custom_login_background',
@@ -231,7 +230,6 @@ class Preference extends database_object
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
-        'tvdb_api_key',
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
@@ -772,7 +770,6 @@ class Preference extends database_object
             "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(150, 'sidebar_light', '0', 'Light sidebar by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
             "(151, 'custom_blankalbum', '', 'Custom blank album default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
             "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'browse'), " .
             "(154, 'show_skipped_times', '0', 'Show # skipped', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(155, 'custom_datetime', '', 'Custom datetime', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
@@ -869,7 +866,6 @@ class Preference extends database_object
             'catalogfav_max_items' => T_('Catalog favorites max items'),
             'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
-            'custom_blankmovie' => T_('Custom blank video default image'),
             'custom_datetime' => T_('Custom datetime'),
             'custom_favicon' => T_('Custom URL - Favicon'),
             'custom_login_background' => T_('Custom URL - Login page background'),
@@ -989,7 +985,6 @@ class Preference extends database_object
             'topmenu' => T_('Top menu'),
             'transcode_bitrate' => T_('Transcode Bitrate'),
             'transcode' => T_('Allow Transcoding'),
-            'tvdb_api_key' => T_('TVDb API key'),
             'ui_fixed' => T_('Fix header position on compatible themes'),
             'unique_playlist' => T_('Only add unique items to playlists'),
             'upload_access_level' => T_('Upload Access Level'),

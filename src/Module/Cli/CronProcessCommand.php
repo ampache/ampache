@@ -108,7 +108,6 @@ final class CronProcessCommand extends Command
          * Album::garbage_collection();
          * Artist::garbage_collection();
          * Video::garbage_collection();
-         * Movie::garbage_collection();
          * Art::garbage_collection();
          * Stats::garbage_collection();
          * Rating::garbage_collection();

@@ -102,13 +102,6 @@ final class VaInfo implements VaInfoInterface
         'totaldisks' => null,
         'totaltracks' => null,
         'track' => null,
-        'tvshow_art' => null,
-        'tvshow_episode' => null,
-        'tvshow' => null,
-        'tvshow_season_art' => null,
-        'tvshow_season' => null,
-        'tvshow_summary' => null,
-        'tvshow_year' => null,
         'video_bitrate' => null,
         'video_codec' => null,
         'year' => null
@@ -673,16 +666,6 @@ final class VaInfo implements VaInfoInterface
             $info['video_codec']   = (!$info['video_codec'] && array_key_exists('video_codec', $tags)) ? trim((string)$tags['video_codec']) : $info['video_codec'];
             $info['description']   = (!$info['description'] && array_key_exists('description', $tags)) ? trim((string)$tags['description']) : $info['description'];
 
-            $info['tvshow']         = (!$info['tvshow'] && array_key_exists('tvshow', $tags)) ? trim((string)$tags['tvshow']) : $info['tvshow'];
-            $info['tvshow_year']    = (!$info['tvshow_year'] && array_key_exists('tvshow_year', $tags)) ? trim((string)$tags['tvshow_year']) : $info['tvshow_year'];
-            $info['tvshow_season']  = (!$info['tvshow_season'] && array_key_exists('tvshow_season', $tags)) ? trim((string)$tags['tvshow_season']) : $info['tvshow_season'];
-            $info['tvshow_episode'] = (!$info['tvshow_episode'] && array_key_exists('tvshow_episode', $tags)) ? trim((string)$tags['tvshow_episode']) : $info['tvshow_episode'];
-            $info['release_date']   = (!$info['release_date'] && array_key_exists('release_date', $tags)) ? trim((string)$tags['release_date']) : $info['release_date'];
-            $info['summary']        = (!$info['summary'] && array_key_exists('summary', $tags)) ? trim((string)$tags['summary']) : $info['summary'];
-            $info['tvshow_summary'] = (!$info['tvshow_summary'] && array_key_exists('tvshow_summary', $tags)) ? trim((string)$tags['tvshow_summary']) : $info['tvshow_summary'];
-
-            $info['tvshow_art']        = (!$info['tvshow_art'] && array_key_exists('tvshow_art', $tags)) ? trim((string)$tags['tvshow_art']) : $info['tvshow_art'];
-            $info['tvshow_season_art'] = (!$info['tvshow_season_art'] && array_key_exists('tvshow_season_art', $tags)) ? trim((string)$tags['tvshow_season_art']) : $info['tvshow_season_art'];
             $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
             if (static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
@@ -953,11 +936,7 @@ final class VaInfo implements VaInfoInterface
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed = [];
-        if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
-            $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
-        } else {
-            $parsed['title'] = urldecode($this->_pathinfo['filename']);
-        }
+        $parsed['title'] = urldecode($this->_pathinfo['filename']);
         if (array_key_exists('audio', $tags)) {
             $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';
             if ($parsed['mode'] == 'con') {
@@ -1675,15 +1654,6 @@ final class VaInfo implements VaInfoInterface
                 case 'version':
                     $parsed['version'] = $data[0];
                     break;
-                case 'tv_episode':
-                    $parsed['tvshow_episode'] = $data[0];
-                    break;
-                case 'tv_season':
-                    $parsed['tvshow_season'] = $data[0];
-                    break;
-                case 'tv_show_name':
-                    $parsed['tvshow'] = $data[0];
-                    break;
                 default:
                     $parsed[strtolower($tag)] = $data[0];
                     break;
@@ -1828,18 +1798,7 @@ final class VaInfo implements VaInfoInterface
 
     /**
      * _parse_filename
-     * This function uses the file and directory patterns to pull out extra tag
-     * information.
-     *  parses TV show name variations:
-     *    1. title.[date].S#[#]E#[#].ext        (Upper/lower case)
-     *    2. title.[date].#[#]X#[#].ext        (both upper/lower case letters
-     *    3. title.[date].Season #[#] Episode #[#].ext
-     *    4. title.[date].###.ext        (maximum of 9 seasons)
-     *  parse directory  path for name, season and episode numbers
-     *   /TV shows/show name [(year)]/[season ]##/##.Episode.Title.ext
-     *  parse movie names:
-     *    title.[date].ext
-     *    /movie title [(date)]/title.ext
+     * This function uses the file and directory patterns to pull out extra tag information.
      * @param string $filepath
      * @return array
      */
@@ -1847,80 +1806,6 @@ final class VaInfo implements VaInfoInterface
     {
         $origin  = $filepath;
         $results = [];
-        $file    = pathinfo($filepath, PATHINFO_FILENAME);
-
-        if (in_array('tvshow', $this->gatherTypes)) {
-            $season  = [];
-            $episode = [];
-            $tvyear  = [];
-            $temp    = [];
-            preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}[^p]|[1|2][0-9]{3}[^p]~", $filepath, $tvyear);
-            $results['year'] = (!empty($tvyear)) ? (int) $tvyear[0] : null;
-
-            if (preg_match("~[Ss](\d+)[Ee](\d+)~", $file, $seasonEpisode)) {
-                $temp = preg_split("~(((\.|_|\s)[Ss]\d+(\.|_)*[Ee]\d+))~", $file, 2);
-                preg_match("~(?<=[Ss])\d+~", $file, $season);
-                preg_match("~(?<=[Ee])\d+~", $file, $episode);
-            } elseif (preg_match("~[\_\-\.\s](\d{1,2})[xX](\d{1,2})~", $file, $seasonEpisode)) {
-                $temp = preg_split("~[\.\_\s\-\_]\d+[xX]\d{2}[\.\s\-\_]*|$~", $file);
-                preg_match("~\d+(?=[Xx])~", $file, $season);
-                preg_match("~(?<=[Xx])\d+~", $file, $episode);
-            } elseif (preg_match("~[S|s]eason[\_\-\.\s](\d+)[\.\-\s\_]?\s?[e|E]pisode[\s\-\.\_]?(\d+)[\.\s\-\_]?~", $file, $seasonEpisode)) {
-                $temp = preg_split(
-                    "~[\.\s\-\_][S|s]eason[\s\-\.\_](\d+)[\.\s\-\_]?\s?[e|E]pisode[\s\-\.\_](\d+)([\s\-\.\_])*~",
-                    $file,
-                    3
-                );
-                preg_match("~(?<=[Ss]eason[\.\s\-\_])\d+~", $file, $season);
-                preg_match("~(?<=[Ee]pisode[\.\s\-\_])\d+~", $file, $episode);
-            } elseif (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]*~", $file, $seasonEpisode)) {
-                $temp      = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
-                $season[0] = $seasonEpisode[1];
-                if (preg_match("~[\_\-\.\s](\d)(\d\d)[\_\-\.\s]~", $file, $seasonEpisode)) {
-                    $temp       = preg_split("~[\.\s\-\_](\d)(\d\d)[\.\s\-\_]~", $file);
-                    $season[0]  = $seasonEpisode[1];
-                    $episode[0] = $seasonEpisode[2];
-                }
-            }
-
-            $results['tvshow_season']  = $season[0];
-            $results['tvshow_episode'] = $episode[0];
-            $results['tvshow']         = $this->formatVideoName($temp[0]);
-            $results['original_name']  = $this->formatVideoName($temp[1]);
-
-            // Try to identify the show information from parent folder
-            if (!$results['tvshow']) {
-                $folders = preg_split("~" . DIRECTORY_SEPARATOR . "~", $filepath, -1, PREG_SPLIT_NO_EMPTY);
-                if (array_key_exists('tvshow_season', $results) && array_key_exists('tvshow_episode', $results)) {
-                    // We have season and episode, we assume parent folder is the tvshow name
-                    $filetitle         = end($folders);
-                    $results['tvshow'] = $this->formatVideoName($filetitle);
-                } elseif (preg_match('/[\/\\\\]([^\/\\\\]*)[\/\\\\]Season (\d{1,2})[\/\\\\]((E|Ep|Episode)\s?(\d{1,2})[\/\\\\])?/i', $filepath, $matches)) {
-                    // Or we assume each parent folder contains one missing information
-                    if ($matches != null) {
-                        $results['tvshow']        = $this->formatVideoName($matches[1]);
-                        $results['tvshow_season'] = $matches[2];
-                        if (isset($matches[5])) {
-                            $results['tvshow_episode'] = $matches[5];
-                        } elseif (preg_match("~^(\d\d)[\_\-\.\s]?(.*)~", $file, $matches)) {
-                            // match pattern like 10.episode name.mp4
-                            $results['tvshow_episode'] = $matches[1];
-                            $results['original_name']  = $this->formatVideoName($matches[2]);
-                        } else {
-                            // Fallback to match any 3-digit Season/Episode that fails the standard pattern above.
-                            preg_match("~(\d)(\d\d)[\_\-\.\s]?~", $file, $matches);
-                            $results['tvshow_episode'] = $matches[2];
-                        }
-                    }
-                }
-            }
-
-            $results['title'] = $results['tvshow'];
-        }
-
-        if (in_array('movie', $this->gatherTypes)) {
-            $results['original_name'] = $results['title'] = $this->formatVideoName($file);
-        }
 
         if (in_array('music', $this->gatherTypes) || in_array('clip', $this->gatherTypes)) {
             $patres  = VaInfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
@@ -1992,37 +1877,6 @@ final class VaInfo implements VaInfoInterface
         }
 
         return $results;
-    }
-
-    /**
-     * removeCommonAbbreviations
-     * @param string $name
-     */
-    private function removeCommonAbbreviations($name): string
-    {
-        $abbr         = explode(",", $this->configContainer->get(ConfigurationKeyEnum::COMMON_ABBR));
-        $commonabbr   = preg_replace("~\n~", '', $abbr);
-        $commonabbr[] = '[1|2][0-9]{3}'; //Remove release year
-        $abbr_count   = count($commonabbr);
-
-        // scan for brackets, braces, etc and ignore case.
-        for ($count = 0; $count < $abbr_count; $count++) {
-            $commonabbr[$count] = "~\[*|\(*|\<*|\{*\b(?i)" . trim((string)$commonabbr[$count]) . "\b\]*|\)*|\>*|\}*~";
-        }
-
-        return preg_replace($commonabbr, '', $name);
-    }
-
-    /**
-     * formatVideoName
-     * @param string $name
-     */
-    private function formatVideoName($name): string
-    {
-        return ucwords(trim(
-            (string)$this->removeCommonAbbreviations(str_replace(['.', '_', '-'], ' ', $name)),
-            "\s\t\n\r\0\x0B\.\_\-"
-        ));
     }
 
     /**
