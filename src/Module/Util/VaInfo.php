@@ -935,7 +935,7 @@ final class VaInfo implements VaInfoInterface
     private function _parse_general($tags): array
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
-        $parsed = [];
+        $parsed          = [];
         $parsed['title'] = urldecode($this->_pathinfo['filename']);
         if (array_key_exists('audio', $tags)) {
             $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';

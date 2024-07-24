@@ -48,7 +48,6 @@ use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\Video;
 use Exception;
 use XMLReader;
 

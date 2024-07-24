@@ -154,7 +154,7 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                 if (empty($defaultimg) || (strpos($defaultimg, "http://") !== 0 && strpos($defaultimg, "https://") !== 0)) {
                     $defaultimg = $rootimg . "blankalbum.png";
                 }
-                $etag = "EmptyMediaAlbum";
+                $etag  = "EmptyMediaAlbum";
                 $image = file_get_contents($defaultimg);
             } else {
                 $thumb_data = [];
