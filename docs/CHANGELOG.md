@@ -22,7 +22,6 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Convert the remaining MyISAM tables to InnoDB
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
   * Add a `last_count` to playlist table to speed up access requests
-  * Delete user preference `home_recently_played_all`
   * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` table to allow browse access to playlists with collaborators
   * Convert system preference `upload_catalog` into a user preference
@@ -48,6 +47,13 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Unused stream actions
 * Old composer files
 * Unused PNG icons
+* Non-music Video features have been removed. You can no longer add catalogs for these video types
+  * Movies
+  * TV Shows
+  * Personal Videos
+* Plugins
+  * Omdb (Movie Database lookup)
+  * Tvdb (TV Database lookup)
 
 ### Fixed
 
