@@ -184,7 +184,7 @@ class Wanted extends database_object
                     if (
                         $add &&
                         (static::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
-                            ($artist !== null && $artist->id && static::getAlbumRepository()->getByName($group->title, $artist->id) === []))
+                        ($artist !== null && $artist->id && static::getAlbumRepository()->getByName($group->title, $artist->id) === []))
                     ) {
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
@@ -224,23 +224,23 @@ class Wanted extends database_object
                             $wanted->f_artist_link = ($artist !== null)
                                 ? $artist->get_f_link()
                                 : $wartist['link'] ?? '';
-                        }
 
-                        if (
-                            $user instanceof User &&
-                            $wanted->mbid &&
-                            ($wanted->artist || $wanted->artist_mbid) &&
-                            $wanted->name &&
-                            $wanted->year
-                        ) {
-                            static::getWantedManager()->add(
-                                $user,
-                                $wanted->mbid,
-                                $wanted->artist,
-                                $wanted->artist_mbid,
-                                $wanted->name,
+                            if (
+                                $user instanceof User &&
+                                $wanted->mbid &&
+                                ($wanted->artist || $wanted->artist_mbid) &&
+                                $wanted->name &&
                                 $wanted->year
-                            );
+                            ) {
+                                static::getWantedManager()->add(
+                                    $user,
+                                    $wanted->mbid,
+                                    $wanted->artist,
+                                    $wanted->artist_mbid,
+                                    $wanted->name,
+                                    $wanted->year
+                                );
+                            }
                         }
 
                         $results[] = $wanted;
