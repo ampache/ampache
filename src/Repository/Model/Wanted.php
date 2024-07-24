@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
+use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
@@ -113,14 +114,16 @@ class Wanted extends database_object
     {
         $lookupId = $artist->mbid ?? $mbid;
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
-        $includes = array('release-groups');
-        $types    = AmpConfig::get('wanted_types', array());
+        $includes = ['release-groups'];
+        $types    = AmpConfig::get('wanted_types', []);
         if (is_string($types)) {
             $types = explode(',', $types);
         }
+
         if (!$types) {
-            $types = array();
+            $types = [];
         }
+
         try {
             /**
              * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
@@ -147,13 +150,13 @@ class Wanted extends database_object
              */
             $martist = $mbrainz->lookup('artist', $lookupId, $includes);
             debug_event(self::class, 'get_missing_albums lookup: ' . $lookupId, 3);
-        } catch (Exception $error) {
-            debug_event(self::class, 'get_missing_albums ERROR: ' . $error, 3);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'get_missing_albums ERROR: ' . $exception, 3);
 
-            return array();
+            return [];
         }
 
-        $wartist = array();
+        $wartist = [];
         if ($artist === null) {
             $wartist['mbid'] = $lookupId;
             $wartist['name'] = $martist->{'name'};
@@ -163,8 +166,9 @@ class Wanted extends database_object
 
         $wantedRepository = self::getWantedRepository();
 
-        $results = array();
+        $results = [];
         if (!empty($martist)) {
+            $user = Core::get_global('user');
             foreach ($martist->{'release-groups'} as $group) {
                 if (is_array($types) && in_array(strtolower((string)$group->{'primary-type'}), $types)) {
                     $add     = true;
@@ -174,45 +178,68 @@ class Wanted extends database_object
                         $add = in_array(strtolower((string)$group->{'secondary-types'}[$i]), $types);
                     }
 
-                    if ($add) {
-                        if (
-                            empty(static::getAlbumRepository()->getByMbidGroup(($group->id))) ||
-                            ($artist !== null && $artist->id && empty(static::getAlbumRepository()->getByName($group->title, $artist->id)))
-                        ) {
-                            $wanted = $wantedRepository->findByMusicBrainzId($group->id);
-                            if ($wanted !== null) {
-                                $wanted->format();
+                    if (
+                        $add &&
+                        (static::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
+                            ($artist !== null && $artist->id && static::getAlbumRepository()->getByName($group->title, $artist->id) === []))
+                    ) {
+                        $wanted = $wantedRepository->findByMusicBrainzId($group->id);
+                        if ($wanted !== null) {
+                            $wanted->format();
+                        } else {
+                            $wanted       = $wantedRepository->prototype();
+                            $wanted->mbid = $group->id;
+                            if ($artist !== null) {
+                                $wanted->artist = $artist->id;
                             } else {
-                                $wanted       = $wantedRepository->prototype();
-                                $wanted->mbid = $group->id;
-                                if ($artist !== null) {
-                                    $wanted->artist = $artist->id;
-                                } else {
-                                    $wanted->artist_mbid = $lookupId;
-                                }
-                                $wanted->name = $group->title;
-                                if (!empty($group->{'first-release-date'})) {
-                                    if (strlen((string)$group->{'first-release-date'}) == 4) {
-                                        $wanted->year = $group->{'first-release-date'};
-                                    } else {
-                                        $wanted->year = (int)date("Y", strtotime($group->{'first-release-date'}));
-                                    }
-                                }
-                                $wanted->accepted = 0;
-                                $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
-                                if ($artist !== null) {
-                                    $wanted->link .= "&artist=" . $wanted->artist;
-                                } else {
-                                    $wanted->link .= "&artist_mbid=" . $lookupId;
-                                }
-                                $wanted->f_user        = (!empty(Core::get_global('user'))) ? Core::get_global('user')->get_fullname() : '';
-                                $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
-                                $wanted->f_artist_link = ($artist !== null)
-                                    ? $artist->get_f_link()
-                                    : $wartist['link'] ?? '';
+                                $wanted->artist_mbid = $lookupId;
                             }
-                            $results[] = $wanted;
+
+                            $wanted->user = $user->getId() ?? null;
+                            $wanted->name = $group->title;
+                            if (!empty($group->{'first-release-date'})) {
+                                if (strlen((string)$group->{'first-release-date'}) == 4) {
+                                    $wanted->year = $group->{'first-release-date'};
+                                } elseif (strtotime((string) $group->{'first-release-date'})) {
+                                    $wanted->year = (int)date("Y", strtotime((string) $group->{'first-release-date'}));
+                                } else {
+                                    $wanted->year = null;
+                                }
+                            }
+
+                            $wanted->accepted = 0;
+                            $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
+                            if ($artist !== null) {
+                                $wanted->link .= "&artist=" . $wanted->artist;
+                            } else {
+                                $wanted->link .= "&artist_mbid=" . $lookupId;
+                            }
+
+                            $wanted->f_user        = Core::get_global('user')?->get_fullname() ?? '';
+                            $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
+                            $wanted->f_artist_link = ($artist !== null)
+                                ? $artist->get_f_link()
+                                : $wartist['link'] ?? '';
                         }
+
+                        if (
+                            $user instanceof User &&
+                            $wanted->mbid &&
+                            $wanted->artist_mbid &&
+                            $wanted->name &&
+                            $wanted->year
+                        ) {
+                            static::getWantedManager()->add(
+                                $user,
+                                $wanted->mbid,
+                                $wanted->artist,
+                                $wanted->artist_mbid,
+                                $wanted->name,
+                                $wanted->year
+                            );
+                        }
+
+                        $results[] = $wanted;
                     }
                 }
             }
@@ -438,6 +465,16 @@ class Wanted extends database_object
         global $dic;
 
         return $dic->get(AlbumRepositoryInterface::class);
+    }
+
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getWantedManager(): WantedManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedManagerInterface::class);
     }
 
     /**
