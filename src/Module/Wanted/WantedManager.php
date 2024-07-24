@@ -74,7 +74,7 @@ final class WantedManager implements WantedManagerInterface
     /**
      * Add a new wanted release.
      */
-    public function add(User $user, string $mbid, ?int $artist, string $artist_mbid, string $name, int $year): void
+    public function add(User $user, string $mbid, ?int $artist, ?string $artist_mbid, string $name, int $year): void
     {
         Dba::write(
             "INSERT INTO `wanted` (`user`, `artist`, `artist_mbid`, `mbid`, `name`, `year`, `date`, `accepted`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
