@@ -81,7 +81,7 @@ final class WantedManager implements WantedManagerInterface
             [$user->getId(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0']
         );
 
-        if ($user->has_access(AccessLevelEnum::LEVEL_MANAGER) ? true : AmpConfig::get('wanted_auto_accept', false)) {
+        if (AmpConfig::get('wanted_auto_accept', false)) {
             $wanted_id = (int)Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 
