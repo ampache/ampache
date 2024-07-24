@@ -35,6 +35,7 @@ php bin/cli admin:updateConfigFile -e
 php bin/cli run:updateCatalog -t
 
 ### You don't always need to do this but some people might want to keep composer packages updated here
+### You might want the dev packages as well so you can remove '--no-dev' to install those
 #composer install --no-dev --prefer-source --no-interaction
 
 ### NPM is now required to handle all the javascript packages
