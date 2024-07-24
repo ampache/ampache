@@ -321,7 +321,6 @@ class Wanted extends database_object
             $user            = Core::get_global('user');
             $preview_plugins = Plugin::get_plugins('get_song_preview');
             if (
-                !empty($preview_plugins) &&
                 $user instanceof User &&
                 $this->mbid !== null
             ) {
