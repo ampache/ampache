@@ -32,6 +32,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
+use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\WantedRepositoryInterface;
 use Exception;
@@ -170,6 +171,7 @@ class Wanted extends database_object
 
         $results = [];
         if (!empty($martist)) {
+            $user = Core::get_global('user');
             foreach ($martist->{'release-groups'} as $group) {
                 if (is_array($types) && in_array(strtolower((string)$group->{'primary-type'}), $types)) {
                     $add     = true;
@@ -196,6 +198,7 @@ class Wanted extends database_object
                                 $wanted->artist_mbid = $lookupId;
                             }
 
+                            $wanted->user = $user?->getId();
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
                                 if (strlen((string)$group->{'first-release-date'}) == 4) {
@@ -220,6 +223,23 @@ class Wanted extends database_object
                             $wanted->f_artist_link = ($artist !== null)
                                 ? $artist->get_f_link()
                                 : $wartist['link'] ?? '';
+                        }
+
+                        if (
+                            $user instanceof User &&
+                            $wanted->mbid &&
+                            $wanted->artist_mbid &&
+                            $wanted->name &&
+                            $wanted->year
+                        ) {
+                            static::getWantedManager()->add(
+                                $user,
+                                $wanted->mbid,
+                                $wanted->artist,
+                                $wanted->artist_mbid,
+                                $wanted->name,
+                                $wanted->year
+                            );
                         }
 
                         $results[] = $wanted;
@@ -457,6 +477,15 @@ class Wanted extends database_object
         return $dic->get(AlbumRepositoryInterface::class);
     }
 
+    /**
+     * @deprecated inject by constructor
+     */
+    private static function getWantedManager(): WantedManagerInterface
+    {
+        global $dic;
+
+        return $dic->get(WantedManagerInterface::class);
+    }
     /**
      * @deprecated Inject dependency
      */
