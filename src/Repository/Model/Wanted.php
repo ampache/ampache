@@ -223,6 +223,11 @@ class Wanted extends database_object
                                 : $wartist['link'] ?? '';
                         }
 
+                        debug_event(self::class, 'get_missing_albums user_id: ' . $user->id, 3);
+                        debug_event(self::class, 'get_missing_albums mbid: ' . $wanted->mbid, 3);
+                        debug_event(self::class, 'get_missing_albums artist_mbid: ' . $wanted->artist_mbid, 3);
+                        debug_event(self::class, 'get_missing_albums name: ' . $wanted->name, 3);
+                        debug_event(self::class, 'get_missing_albums year: ' . $wanted->year, 3);
                         if (
                             $user instanceof User &&
                             $wanted->mbid &&
@@ -404,8 +409,9 @@ class Wanted extends database_object
                                     }
                                 }
 
-                                if ($song['file'] !== null) {
-                                    $this->songs[] = new Song_Preview(Song_Preview::insert($song));
+                                $insert_id = Song_Preview::insert($song);
+                                if ($insert_id) {
+                                    $this->songs[] = new Song_Preview($insert_id);
                                 }
                             }
                         }
