@@ -32,7 +32,7 @@ use Generator;
  */
 final class Versions
 {
-    public const MAXIMUM_UPDATABLE_VERSION = 700010; // AMPACHE_VERSION (db_version)
+    public const MAXIMUM_UPDATABLE_VERSION = 700011; // AMPACHE_VERSION (db_version)
 
     /** @var array<int, class-string<MigrationInterface>> List of available migrations */
     private static array $versions = [
@@ -289,6 +289,7 @@ final class Versions
         700008 => Migration\V7\Migration700008::class,
         700009 => Migration\V7\Migration700009::class,
         700010 => Migration\V7\Migration700010::class,
+        700011 => Migration\V7\Migration700011::class,
     ];
 
     /**
