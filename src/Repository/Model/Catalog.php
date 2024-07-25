@@ -1418,11 +1418,9 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
-     * @param int|null $catalog_id
-     * @param string $type
+     * get_videos_count
      */
-    public static function get_videos_count($catalog_id = 0): int
+    public static function get_videos_count(?int $catalog_id = 0): int
     {
         $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
 
