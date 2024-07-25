@@ -91,7 +91,8 @@ final class AdminUpdateDatabaseCommand extends Command
 
         // check tables
         try {
-            $missing = $this->updater->checkTables($execute);
+            $build   = (int)$this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+            $missing = $this->updater->checkTables($execute, $build);
             if ($missing->valid()) {
                 $message = ($execute)
                     ? T_('Missing database tables have been created')

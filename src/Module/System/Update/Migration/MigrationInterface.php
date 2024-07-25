@@ -59,6 +59,7 @@ interface MigrationInterface
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Traversable;
 }
