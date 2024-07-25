@@ -873,6 +873,7 @@ class Preference extends database_object
             'custom_login_background' => T_('Custom URL - Login page background'),
             'custom_login_logo' => T_('Custom URL - Login page logo'),
             'custom_logo' => T_('Custom URL - Logo'),
+            'custom_logo_user' => T_('Custom URL - Use your avatar for header logo'),
             'custom_text_footer' => T_('Custom text footer'),
             'custom_timezone' => T_('Custom timezone (Override PHP date.timezone)'),
             'daap_backend' => T_('Use DAAP backend'),
