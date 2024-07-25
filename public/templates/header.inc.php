@@ -115,7 +115,7 @@ $albumString = (AmpConfig::get('album_group'))
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
+                    <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
                   </a>
                 </h1>
                 <div id="headerbox">
