@@ -52,7 +52,6 @@ class Browse extends Query
         'artist',
         'broadcast',
         'catalog',
-        'clip',
         'democratic',
         'follower',
         'label',
@@ -444,7 +443,6 @@ class Browse extends Query
                 break;
             case 'video':
                 Video::build_cache($object_ids);
-                $video_type = 'video';
                 $box_title  = $this->get_title(T_('Videos'));
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
@@ -471,11 +469,6 @@ class Browse extends Query
             case 'license':
                 $box_title = $this->get_title(T_('Media Licenses'));
                 $box_req   = Ui::find_template('show_manage_license.inc.php');
-                break;
-            case 'clip':
-                $box_title  = $this->get_title(T_('Clips'));
-                $video_type = $type;
-                $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'label':
                 $box_title = $this->get_title(T_('Labels'));

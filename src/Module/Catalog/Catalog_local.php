@@ -614,7 +614,7 @@ class Catalog_local extends Catalog
             Podcast_Episode::clear_cache();
             $media_type = 'podcast_episode';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
-        } elseif ($catalog_media_type == 'clip') {
+        } elseif ($catalog_media_type == 'video') {
             Video::clear_cache();
             $media_type = 'video';
             $total      = self::count_table($media_type, $this->catalog_id, $update_time);
@@ -739,7 +739,7 @@ class Catalog_local extends Catalog
         $media_type         = 'song';
         if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'clip') {
+        } elseif ($catalog_media_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);
@@ -1063,7 +1063,7 @@ class Catalog_local extends Catalog
         $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $file);
         $results['catalog'] = $this->catalog_id;
 
-        $video_id = Video::insert($results, $gtypes, $options);
+        $video_id = Video::insert($results, $options);
         if ($results['art']) {
             $art = new Art($video_id, 'video');
             $art->insert_url($results['art']);
@@ -1172,7 +1172,7 @@ class Catalog_local extends Catalog
         $media_type         = 'song';
         if ($catalog_media_type == 'podcast') {
             $media_type = 'podcast_episode';
-        } elseif ($catalog_media_type == 'clip') {
+        } elseif ($catalog_media_type == 'video') {
             $media_type = 'video';
         }
         $total = self::count_table($media_type, $this->catalog_id);

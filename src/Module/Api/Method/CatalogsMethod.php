@@ -44,7 +44,7 @@ final class CatalogsMethod
      *
      * Get information about catalogs this user is allowed to manage.
      *
-     * filter = (string) set $filter_type 'music', 'clip', 'podcast' //optional
+     * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      * cond   = (string) Apply additional filters to the browse using ';' separated comma string pairs (e.g. 'filter1,value1;filter2,value2') //optional
@@ -57,8 +57,12 @@ final class CatalogsMethod
         $browse->set_filter('user', $user->getId());
         if (
             isset($input['filter']) &&
-            in_array($input['filter'], ['music', 'clip', 'podcast'])
+            in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast'])
         ) {
+            if (in_array($input['filter'], ['clip', 'tvshow', 'movie', 'personal_video'])) {
+                $input['filter'] = 'video';
+            }
+
             // filter for specific catalog types
             $browse->set_filter('gather_type', $input['filter']);
         }

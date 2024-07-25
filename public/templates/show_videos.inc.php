@@ -24,11 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
@@ -51,9 +49,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add essential"></th>
-<?php if (isset($video_type) && $video_type != 'video') {
-    require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
-} ?>
             <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
             <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
@@ -72,13 +67,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
     </thead>
     <tbody>
         <?php foreach ($object_ids as $video_id) {
-            if (isset($video_type)) {
-                $className = ObjectTypeToClassNameMapper::map($video_type);
-                /** @var Clip|Video $libitem */
-                $libitem   = new $className($video_id);
-            } else {
-                $libitem = new Video($video_id);
-            }
+            $libitem = new Video($video_id);
             if ($libitem->isNew()) {
                 continue;
             }
@@ -100,9 +89,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
             <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
             <th class="cel_add"></th>
-<?php if (isset($video_type) && $video_type != 'video') {
-    require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
-} ?>
             <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
             <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
             <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>

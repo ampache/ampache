@@ -776,9 +776,6 @@ abstract class Catalog extends database_object
             case "tag":
                 $sql = sprintf(' `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `tag_map`.`tag_id`) ', $user_id);
                 break;
-            case 'clip':
-                $sql = sprintf(' `%s`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = \'video\' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `video`.`id`) ', $type, $user_id);
-                break;
             case "object_count_album_disk":
                 // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video')
                 $sql = sprintf(' `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'album_disk\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $user_id);
@@ -1121,7 +1118,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, ['music', 'clip', 'podcast'])) {
+        if (!in_array($gather_types, ['music', 'video', 'podcast'])) {
             return 0;
         }
 
@@ -1173,7 +1170,7 @@ abstract class Catalog extends database_object
         }
 
         if (AmpConfig::get('video')) {
-            parent::remove_from_cache('user_catalogclip');
+            parent::remove_from_cache('user_catalogvideo');
         }
     }
 
@@ -1425,12 +1422,9 @@ abstract class Catalog extends database_object
      * @param int|null $catalog_id
      * @param string $type
      */
-    public static function get_videos_count($catalog_id = 0, $type = ''): int
+    public static function get_videos_count($catalog_id = 0): int
     {
         $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
-        if (!empty($type)) {
-            $sql .= "JOIN `" . $type . "` ON `" . $type . "`.`id` = `video`.`id` ";
-        }
 
         if ($catalog_id) {
             $sql .= "WHERE `video`.`catalog` = `" . $catalog_id . "`";
@@ -3310,7 +3304,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, ['clip']);
+            $types = array_diff($types, ['video']);
         }
 
         return $types;
@@ -3323,7 +3317,7 @@ abstract class Catalog extends database_object
     public static function get_table_from_type($gather_type): string
     {
         return match ($gather_type) {
-            'clip' => 'video',
+            'video' => 'video',
             'podcast' => 'podcast_episode',
             default => 'song',
         };
@@ -3374,7 +3368,6 @@ abstract class Catalog extends database_object
             Label::migrate('artist', $maxId, $minId);
             Rating::migrate('artist', $maxId, $minId);
             self::getWantedRepository()->migrateArtist($maxId, $minId);
-            Clip::migrate('artist', $maxId, $minId);
             self::migrate_map('artist', $maxId, $minId);
 
             // replace all songs and albums with the original artist
@@ -3718,7 +3711,7 @@ abstract class Catalog extends database_object
         } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
-        } elseif ($media_type == 'clip') {
+        } elseif ($media_type == 'video') {
             self::update_mapping('video');
         }
     }
@@ -4028,7 +4021,7 @@ abstract class Catalog extends database_object
                                     $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
                                     $className = Podcast_Episode::class;
                                     break;
-                                case 'clip':
+                                case 'video':
                                     $type      = 'video';
                                     $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
                                     $className = Video::class;

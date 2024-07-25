@@ -128,7 +128,7 @@ echo "function catalogTypeChanged() {var sel = document.getElementById('catalog_
                 <select name="gather_media">
                     <option value="music"><?php echo T_('Music'); ?></option>
             <?php if ($allow_video) { ?>
-                    <option value="clip"><?php echo T_('Music Clip'); ?></option>
+                    <option value="video"><?php echo T_('Video'); ?></option>
             <?php }
             if (AmpConfig::get('podcast')) { ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>

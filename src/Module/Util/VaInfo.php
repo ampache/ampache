@@ -1807,7 +1807,10 @@ final class VaInfo implements VaInfoInterface
         $origin  = $filepath;
         $results = [];
 
-        if (in_array('music', $this->gatherTypes) || in_array('clip', $this->gatherTypes)) {
+        if (
+            in_array('music', $this->gatherTypes) ||
+            in_array('video', $this->gatherTypes)
+        ) {
             $patres  = VaInfo::parse_pattern($filepath, $this->_dir_pattern, $this->_file_pattern);
             $results = array_merge($results, $patres);
             if ($this->islocal) {

@@ -52,7 +52,7 @@ final class CatalogAddMethod
      * name           = (string) catalog_name
      * path           = (string) URL or folder path for your catalog
      * type           = (string) catalog_type default: local ('local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote') //optional
-     * media_type     = (string) Default: 'music' ('music', 'podcast', 'clip') //optional
+     * media_type     = (string) Default: 'music' ('music', 'podcast', 'video') //optional
      * file_pattern   = (string) Pattern used identify tags from the file name. Default '%T - %t' //optional
      * folder_pattern = (string) Pattern used identify tags from the folder name. Default '%a/%A' //optional
      * username       = (string) login to remote catalog ('remote', 'subsonic', 'seafile') //optional
@@ -71,9 +71,12 @@ final class CatalogAddMethod
         $type           = $input['type'] ?? 'local';
         $rename_pattern = $input['file_pattern'] ?? '%T - %t';
         $sort_pattern   = $input['folder_pattern'] ?? '%a/%A';
-        $gather_types   = $input['media_type'] ?? 'music';
         $username       = $input['username'] ?? null;
         $password       = $input['password'] ?? null;
+        $gather_types   = $input['media_type'] ?? 'music';
+        if (in_array($gather_types, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+            $gather_types = 'video';
+        }
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['local', 'beets', 'remote', 'subsonic', 'seafile'])) {

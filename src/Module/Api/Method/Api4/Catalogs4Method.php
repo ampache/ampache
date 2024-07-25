@@ -42,14 +42,20 @@ final class Catalogs4Method
      *
      * Get information about catalogs this user is allowed to manage.
      *
-     * filter = (string) set $filter_type //optional
+     * filter = (string) set $filter_type 'music', 'video', 'podcast' //optional
      * offset = (integer) //optional
      * limit  = (integer) //optional
      */
     public static function catalogs(array $input, User $user): void
     {
         // filter for specific catalog types
-        $filter  = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'podcast'])) ? $input['filter'] : '';
+        $filter  = (isset($input['filter']) && in_array($input['filter'], ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'video', 'podcast']))
+            ? $input['filter']
+            : '';
+        if (in_array($filter, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+            $filter = 'video';
+        }
+
         $results = $user->get_catalogs($filter);
 
         ob_end_clean();

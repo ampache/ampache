@@ -101,7 +101,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
                 foreach ($missing as $table_name) {
-                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                    /* HINT: filename (File path) OR table name (podcast, video, etc) */
                     $interactor->info(
                         sprintf(T_('Missing: %s'), $table_name),
                         true
