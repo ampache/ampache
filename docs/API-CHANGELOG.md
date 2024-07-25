@@ -1,5 +1,12 @@
 # API CHANGELOG
 
+## API 6.6.1
+
+### Added
+
+* API6
+  * add `get_lyrics` parameter to allow forcibly refreshing lyrics if missing
+
 ## API 6.6.0
 
 Like with `total_count`, we've added an md5sum of the results (called `md5`) in responses
