@@ -32,6 +32,6 @@ final class Migration700010 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("UPDATE `catalog` SET `gather_types` = 'video' WHERE `gather_types` IN (`clip`, `tvshow`, `movie`, `personal_video`);");
+        $this->updateDatabase("UPDATE `catalog` SET `gather_types` = 'video' WHERE `gather_types` IN ('clip', 'tvshow', 'movie', 'personal_video');");
     }
 }
