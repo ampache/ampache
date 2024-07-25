@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,10 +20,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-/** @var Ampache\Repository\Model\Clip $video */
+namespace Ampache\Module\System\Update\Migration\V7;
 
-$videoprops[T_('Artist')] = $video->f_artist;
-$videoprops[T_('Song')]   = $video->f_song;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+final class Migration700012 extends AbstractMigration
+{
+    protected array $changelog = ['Custom URL - Use your avatar for header logo'];
+
+    public function migrate(): void
+    {
+        $this->updatePreferences('custom_logo_user', 'Custom URL - Use your avatar for header logo', '0', 25, 'boolean', 'interface', 'custom');
+    }
+}

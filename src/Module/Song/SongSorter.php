@@ -117,7 +117,7 @@ final class SongSorter implements SongSorterInterface
                             sprintf('Missing: %s', $song->file),
                             [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
-                        /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                        /* HINT: filename (File path) OR table name (podcast, video, etc) */
                         $interactor->info(
                             sprintf(T_('Missing: %s'), $song->file),
                             true

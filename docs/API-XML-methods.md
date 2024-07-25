@@ -748,7 +748,7 @@ This searches the catalogs and returns... catalogs
 
 | Input    | Type    | Description                                                                    | Optional |
 | -------- | ------- | ------------------------------------------------------------------------------ | -------: |
-| 'filter' | string  | `music`, `clip`, `tvshow`, `movie`, `personal_video`, `podcast` (Catalog type) |      YES |
+| 'filter' | string  | `music`, `video`, `podcast` (Catalog type)                                     |      YES |
 | 'offset' | integer | Return results starting from this index position                               |      YES |
 | 'limit'  | integer | Maximum number of results to return                                            |      YES |
 | 'cond'   | string  | Apply additional filters to the browse using `;` separated comma string pairs  |      YES |
@@ -839,7 +839,7 @@ Takes the file id with optional description and expires parameters.
 | 'name'           | string | Name for the catalog                                                             |       NO |
 | 'path'           | string | URL or folder path for your catalog                                              |       NO |
 | 'type'           | string | 'local', 'beets', 'remote', 'subsonic', 'seafile', 'beetsremote' Default: local  |      YES |
-| 'media_type'     | string | 'music', 'podcast', 'clip', 'tvshow', 'movie', 'personal_video' Default: 'music' |      YES |
+| 'media_type'     | string | 'music', 'podcast', 'video' Default: 'music'                                     |      YES |
 | 'file_pattern'   | string | Pattern used identify tags from the file name. Default: '%T - %t'                |      YES |
 | 'folder_pattern' | string | Pattern used identify tags from the folder name. Default: '%a/%A'                |      YES |
 | 'username'       | string | login to remote catalog ('remote', 'subsonic', 'seafile', 'beetsremote')         |      YES |
@@ -1033,7 +1033,7 @@ This flags a library item as a favorite
 | Input  | Type    | Description                                           | Optional |
 | ------ | ------- | ----------------------------------------------------- | -------: |
 | 'type' | string  | `song`, `album`, `artist`, `playlist`, `podcast`      |       NO |
-|        |         | `podcast_episode`, `video`, `tvshow`, `tvshow_season` |          |
+|        |         | `podcast_episode`, `video`                            |          |
 | 'id'   | integer | $object_id                                            |       NO |
 | 'flag' | boolean | `0`, `1`                                              |       NO |
 
@@ -2510,7 +2510,7 @@ This rates a library item
 | Input    | Type    | Description                                           | Optional |
 | -------- | ------- | ----------------------------------------------------- | -------: |
 | 'type'   | string  | `song`, `album`, `artist`, `playlist`, `podcast`      |       NO |
-|          |         | `podcast_episode`, `video`, `tvshow`, `tvshow_season` |          |
+|          |         | `podcast_episode`, `video`                            |          |
 | 'id'     | string  | library item id                                       |       NO |
 | 'rating' | integer | rating between 0-5                                    |       NO |
 

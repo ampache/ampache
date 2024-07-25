@@ -11986,56 +11986,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:_get_artist_id\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|float\\|int\\|string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$f_artist has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$f_song has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Clip\\:\\:\\$video has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Clip.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:add_vote\\(\\) has parameter \\$items with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -13151,27 +13101,7 @@ parameters:
 			path: src/Repository/Model/Video.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:insert\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:insert\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:insert_video_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:insert_video_type\\(\\) has parameter \\$gtypes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:insert_video_type\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Video.php
 
@@ -13218,6 +13148,11 @@ parameters:
 		-
 			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 2
+			path: src/Repository/Model/Wanted.php
+
+		-
+			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getWantedManager\\(\\) through static\\:\\:\\.$#"
+			count: 1
 			path: src/Repository/Model/Wanted.php
 
 		-

@@ -76,10 +76,11 @@ interface UpdaterInterface
      * Checks for missing database tables
      *
      * @param bool $migrate Set to `true` if the system should try to create the missing tables
+     * @param int $build Current Ampache database build number
      *
      * @return Iterator<string> The names of the missing database tables
      *
      * @throws UpdateFailedException
      */
-    public function checkTables(bool $migrate = false): Iterator;
+    public function checkTables(bool $migrate = false, int $build = 0): Iterator;
 }

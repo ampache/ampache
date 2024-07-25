@@ -191,10 +191,6 @@ msgstr ""
 msgid "Matomo"
 msgstr ""
 
-#: ./untranslated-strings.txt:140
-msgid "Omdb"
-msgstr ""
-
 #: ./untranslated-strings.txt:141
 msgid "Paypal"
 msgstr ""
@@ -233,10 +229,6 @@ msgstr ""
 
 #: ./untranslated-strings.txt:150
 msgid "TheAudioDb"
-msgstr ""
-
-#: ./untranslated-strings.txt:151
-msgid "Tvdb"
 msgstr ""
 
 #: ./untranslated-strings.txt:152

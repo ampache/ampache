@@ -20,27 +20,30 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository\Model;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-enum LibraryItemEnum: string
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+final class Migration700011 extends AbstractMigration
 {
-    case ALBUM           = 'album';
-    case ALBUM_DISK      = 'album_disk';
-    case ART             = 'art';
-    case ARTIST          = 'artist';
-    case BROADCAST       = 'broadcast';
-    case LABEL           = 'label';
-    case LIVE_STREAM     = 'live_stream';
-    case PLAYLIST        = 'playlist';
-    case PODCAST         = 'podcast';
-    case PODCAST_EPISODE = 'podcast_episode';
-    case SEARCH          = 'search';
-    case SONG            = 'song';
-    case SONG_PREVIEW    = 'song_preview';
-    case TAG_HIDDEN      = 'tag_hidden';
-    case TAG             = 'tag';
-    case VIDEO           = 'video';
+    protected array $changelog = [
+        'Drop `clip` table',
+        'Drop `movie` table',
+        'Drop `personal_video` table',
+        'Drop `tvshow` table',
+        'Drop `tvshow_episode` table',
+        'Drop `tvshow_season` table',
+    ];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase('DROP TABLE IF EXISTS `clip`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `movie`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `personal_video`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow_episode`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow_season`;');
+    }
 }

@@ -663,7 +663,7 @@ playlist_art = "true"
 ; method unless you want it to overwrite what's already in the
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder spotify musicbrainz google
-; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
+; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz
 art_order = "db,tags,folder,spotify,musicbrainz"
 

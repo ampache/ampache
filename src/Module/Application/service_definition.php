@@ -224,7 +224,6 @@ return [
     Browse\BroadcastAction::class => autowire(Browse\BroadcastAction::class),
     Browse\VideoAction::class => autowire(Browse\VideoAction::class),
     Browse\PodcastAction::class => autowire(Browse\PodcastAction::class),
-    Browse\ClipAction::class => autowire(Browse\ClipAction::class),
     Art\ClearArtAction::class => autowire(Art\ClearArtAction::class),
     Art\ShowArtDlgAction::class => autowire(Art\ShowArtDlgAction::class),
     Art\FindArtAction::class => autowire(Art\FindArtAction::class),

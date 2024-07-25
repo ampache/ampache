@@ -60,7 +60,7 @@ final class SystemUpdate5Method
             AutoUpdate::update_files(true);
             AutoUpdate::update_dependencies(static::getConfigContainer(), true);
             Preference::translate_db();
-            // check that the update completed or failed failed.
+            // check that the update completed or failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);

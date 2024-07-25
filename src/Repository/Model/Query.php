@@ -31,7 +31,6 @@ use Ampache\Module\Database\Query\AlbumQuery;
 use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
-use Ampache\Module\Database\Query\ClipQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
 use Ampache\Module\Database\Query\FollowerQuery;
 use Ampache\Module\Database\Query\LabelQuery;
@@ -449,8 +448,6 @@ class Query
                 return BroadcastQuery::FILTERS;
             case 'catalog':
                 return CatalogQuery::FILTERS;
-            case 'clip':
-                return ClipQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
             case 'follower':
@@ -524,9 +521,6 @@ class Query
                 break;
             case 'catalog':
                 $this->queryType = new CatalogQuery();
-                break;
-            case 'clip':
-                $this->queryType = new ClipQuery();
                 break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();
@@ -992,7 +986,6 @@ class Query
                 case 'album_disk':
                 case 'album':
                 case 'artist':
-                case 'clip':
                 case 'label':
                 case 'live_stream':
                 case 'playlist':

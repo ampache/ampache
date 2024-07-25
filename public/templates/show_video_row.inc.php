@@ -45,12 +45,8 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_counter */
 /** @var string $cel_tags */
-/** @var string|null $video_type */
 
-$web_path = AmpConfig::get('web_path');
-if (!isset($video_type)) {
-    $video_type = $libitem->getMediaType()->value;
-} ?>
+$web_path = AmpConfig::get('web_path'); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -88,10 +84,6 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php } ?>
     </span>
 </td>
-<?php
-if ($video_type !== 'video') {
-    require Ui::find_template('show_partial_' . $video_type . '_row.inc.php');
-} ?>
 <td class="cel_release_date"><?php echo $libitem->f_release_date; ?></td>
 <td class="cel_codec"><?php echo $libitem->f_codec; ?></td>
 <td class="cel_resolution"><?php echo $libitem->f_resolution; ?></td>

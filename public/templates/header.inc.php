@@ -29,6 +29,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Tmp_Playlist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
@@ -49,6 +50,9 @@ $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
 $_SESSION['login'] = false;
 $current_user      = Core::get_global('user');
+$logo_url          = ($current_user instanceof User && Preference::get_by_user($current_user->getId(), 'custom_logo_user'))
+    ? $current_user->get_avatar()['url_medium'] ?? Ui::get_logo_url()
+    : Ui::get_logo_url();
 $is_session        = (User::is_registered() && !empty($current_user) && ($current_user->id ?? 0) > 0);
 $allow_upload      = $access25 && Upload::can_upload($current_user);
 
@@ -111,7 +115,7 @@ $albumString = (AmpConfig::get('album_group'))
             <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
-                    <img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
+                    <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
                   </a>
                 </h1>
                 <div id="headerbox">
@@ -225,9 +229,9 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
                     echo '<div id=update_notify>';
-                    //if (!AmpConfig::get('hide_ampache_messages', false)) {
-                    //    AutoUpdate::show_ampache_message();
-                    //}
+                    if (!AmpConfig::get('hide_ampache_messages', false)) {
+                        AutoUpdate::show_ampache_message();
+                    }
                     if (AmpConfig::get('autoupdate')) {
                         $current_version = AutoUpdate::get_current_version();
                         $latest_version  = AutoUpdate::get_latest_version();
@@ -242,10 +246,12 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                             echo '<br />';
                         }
                     }
+
                     if (Plugin::is_update_available()) {
                         Plugin::show_update_available();
                         echo '<br>';
                     }
+
                     if (AmpConfig::get('int_config_version') > AmpConfig::get('config_version')) { ?>
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>

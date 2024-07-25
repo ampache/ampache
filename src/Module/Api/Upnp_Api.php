@@ -33,7 +33,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\User;
@@ -1018,21 +1018,21 @@ class Upnp_Api
             case 'clips':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::get_videos_count(null, 'clip');
+                        $counts = Catalog::get_videos_count();
                         $meta   = [
-                            'id' => $root . '/clips',
+                            'id' => $root . '/videos',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
-                            'dc:title' => T_('Clips'),
+                            'dc:title' => T_('Videos'),
                             'upnp:class' => 'object.container',
                         ];
                         break;
                     case 2:
-                        $video = new Clip((int)$pathreq[1]);
+                        $video = new Video((int)$pathreq[1]);
                         if ($video->isNew() === false) {
                             $video->format();
-                            $meta = self::_itemVideo($video, $root . '/clips');
+                            $meta = self::_itemVideo($video, $root . '/videos');
                         }
                         break;
                 }
@@ -1075,10 +1075,10 @@ class Upnp_Api
         }
 
         switch ($pathreq[0]) {
-            case 'clips':
-                // Get clips list
+            case 'videos':
+                // Get videos list
                 if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'clip');
+                    $videos              = Catalog::get_videos();
                     [$maxCount, $videos] = self::_slice($videos, $start, $count);
                     foreach ($videos as $video) {
                         $video->format();
@@ -1087,7 +1087,7 @@ class Upnp_Api
                 }
                 break;
             default:
-                $mediaItems[] = self::_videoMetadata('clips');
+                $mediaItems[] = self::_videoMetadata('videos');
                 break;
         }
 

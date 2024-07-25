@@ -58,7 +58,6 @@ $t_radioStations   = T_('Radio Stations');
 $t_radio           = T_('Radio');
 $t_podcasts        = T_('Podcasts');
 $t_videos          = T_('Videos');
-$t_musicClips      = T_('Music Clips');
 $t_genres          = T_('Genres');
 $t_upload          = T_('Upload');
 $t_uploads         = T_('Uploads');

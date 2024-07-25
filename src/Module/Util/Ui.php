@@ -843,6 +843,7 @@ class Ui implements UiInterface
             case 'catalogfav_gridview':
             case 'condPL':
             case 'cron_cache':
+            case 'custom_logo_user':
             case 'daap_backend':
             case 'demo_clear_sessions':
             case 'demo_mode':

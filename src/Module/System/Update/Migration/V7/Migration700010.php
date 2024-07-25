@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,13 +20,18 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Repository\Model\Clip;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-/** @var Clip $libitem */ ?>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
-                <td><?php show_artist_select('artist', (int)$libitem->artist); ?></td>
-            </tr>
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+final class Migration700010 extends AbstractMigration
+{
+    protected array $changelog = ['Convert `clip`, `tvshow`, `movie` and `personal_video` catalogs to \'video\''];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("UPDATE `catalog` SET `gather_types` = 'video' WHERE `gather_types` IN ('clip', 'tvshow', 'movie', 'personal_video');");
+    }
+}

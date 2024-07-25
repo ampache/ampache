@@ -30,7 +30,6 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemLoader;
@@ -65,7 +64,6 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::ART->value => Art::class,
         ObjectTypeEnum::ARTIST->value => Artist::class,
         ObjectTypeEnum::BOOKMARK->value => Bookmark::class,
-        ObjectTypeEnum::CLIP->value => Clip::class,
         ObjectTypeEnum::GENRE->value => Tag::class,
         ObjectTypeEnum::LABEL->value => Label::class,
         ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,
@@ -86,7 +84,6 @@ final class ObjectTypeToClassNameMapper
 
     /** @var array<class-string, ObjectTypeEnum> */
     public const VIDEO_TYPES = [
-        Clip::class => ObjectTypeEnum::CLIP,
         Video::class => ObjectTypeEnum::VIDEO,
     ];
 
