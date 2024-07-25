@@ -24,9 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
 final class Migration700012 extends AbstractMigration
 {
