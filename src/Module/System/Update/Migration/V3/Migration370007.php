@@ -53,7 +53,7 @@ final class Migration370007 extends AbstractMigration
         string $engine,
         int $build
     ): Generator {
-        if ($build > 370007){
+        if ($build > 370007) {
             yield 'daap_session' => "CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `creationdate` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }

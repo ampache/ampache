@@ -65,7 +65,7 @@ final class Migration370018 extends AbstractMigration
         string $engine,
         int $build
     ): Generator {
-        if ($build > 370018){
+        if ($build > 370018) {
             yield 'tag_merge' => "CREATE TABLE IF NOT EXISTS `tag_merge` (`tag_id` int(11) NOT NULL, `merged_to` int(11) NOT NULL, PRIMARY KEY (`tag_id`, `merged_to`), KEY `merged_to` (`merged_to`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }

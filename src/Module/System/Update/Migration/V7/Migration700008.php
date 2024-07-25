@@ -58,7 +58,7 @@ final class Migration700008 extends AbstractMigration
         string $engine,
         int $build
     ): Generator {
-        if ($build > 700008){
+        if ($build > 700008) {
             yield 'user_playlist_map' => "CREATE TABLE IF NOT EXISTS `user_playlist_map` (`playlist_id` int(11) UNSIGNED NOT NULL, `user_id` int(11) UNSIGNED NOT NULL, UNIQUE KEY `playlist_user` (`playlist_id`,`user_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
         }
     }

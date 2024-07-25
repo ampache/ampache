@@ -49,7 +49,7 @@ final class Migration370015 extends AbstractMigration
         string $engine,
         int $build
     ): Generator {
-        if ($build > 370015){
+        if ($build > 370015) {
             yield 'session_remember' => "CREATE TABLE IF NOT EXISTS `session_remember` (`username` varchar(16) NOT NULL, `token` varchar(32) NOT NULL, `expire` int(11) NULL, PRIMARY KEY (`username`, `token`)) ENGINE=$engine;";
         }
     }
