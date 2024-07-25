@@ -433,15 +433,22 @@ class AutoUpdate
             $config->getNpmBinaryPath()
         );
 
+        $cmdNpmBuild = sprintf(
+            '%s run build',
+            $config->getNpmBinaryPath()
+        );
+
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
             echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
+            echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
         ob_flush();
         chdir(__DIR__ . '/../../../');
         exec($cmdComposer);
         exec($cmdNpm);
+        exec($cmdNpmBuild);
         if (!$api) {
             echo T_('Done') . '<br />';
         }
