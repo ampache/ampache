@@ -576,6 +576,11 @@ final class SongSearch implements SearchInterface
                 case 'orphaned_album':
                     $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
                     break;
+                case 'waveform':
+                    $join['song_data'] = true;
+                    $operator_sql      = ((int) $operator_sql == 0) ? 'IS NULL' : 'IS NOT NULL';
+                    $where[]           = "`song_data`.`waveform` $operator_sql";
+                    break;
                 case 'metadata':
                     $field = (int)$rule[3];
                     if ($operator_sql === '=' && strlen((string)$input) == 0) {
