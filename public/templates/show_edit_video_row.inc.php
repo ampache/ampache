@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */ ?>
 <div>
