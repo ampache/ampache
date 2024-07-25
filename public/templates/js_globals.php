@@ -86,4 +86,9 @@ $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
     var jsVideoTitle = "<?php echo addslashes(T_('Video')); ?>";
     var jsSaveTitle = "<?php echo addslashes(T_('Save')); ?>";
     var jsCancelTitle = "<?php echo addslashes(T_('Cancel')); ?>";
+    var jsPlay = "<?php echo addslashes(T_('Play')); ?>";
+    var jsPlayNext = "<?php echo addslashes(T_('Play next')); ?>";
+    var jsPlayLast = "<?php echo addslashes(T_('Play last')); ?>";
+    var jsAddTmpPlaylist = "<?php echo addslashes(T_('Add to Temporary Playlist')); ?>";
+    var jsAddPlaylist = "<?php echo addslashes(T_('Add to playlist')); ?>";
 </script>
