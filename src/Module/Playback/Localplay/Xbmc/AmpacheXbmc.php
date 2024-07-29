@@ -204,7 +204,7 @@ class AmpacheXbmc extends localplay_controller
      * @param string $instance
      * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
@@ -419,22 +419,22 @@ class AmpacheXbmc extends localplay_controller
     /**
      * skip
      * This tells XBMC to skip to the specified song
-     * @param $song
+     * @param $track_id
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
         if (!$this->_xbmc) {
             return false;
         }
 
         // force integer, some apps sends string (subsonic jukebox)
-        $song = (int)$song;
+        $track_id = (int)$track_id;
 
         try {
             $this->_xbmc->Player->GoTo(
                 [
                     'playerid' => $this->_playerId,
-                    'to' => $song
+                    'to' => $track_id
                 ]
             );
 
@@ -571,7 +571,7 @@ class AmpacheXbmc extends localplay_controller
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -596,9 +596,9 @@ class AmpacheXbmc extends localplay_controller
     /**
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
-     * @param $onoff
+     * @param $state
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -608,7 +608,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Player->SetShuffle(
                 [
                     'playerid' => $this->_playerId,
-                    'shuffle' => $onoff
+                    'shuffle' => $state
                 ]
             );
 

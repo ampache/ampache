@@ -2322,7 +2322,7 @@ class Subsonic_Api
                 break;
             case 'skip':
                 if (isset($input['index'])) {
-                    if ($localplay->skip($input['index'])) {
+                    if ($localplay->skip((int)$input['index'])) {
                         $return = $localplay->play();
                     }
                 } elseif (isset($input['offset'])) {

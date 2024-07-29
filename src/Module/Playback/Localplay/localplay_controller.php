@@ -51,6 +51,27 @@ abstract class localplay_controller
     abstract public function play();
 
     abstract public function stop();
+    abstract public function clear_playlist(): bool;
+
+    abstract public function get_instance(?string $instance = ''): array;
+
+    abstract public function next(): bool;
+
+    abstract public function pause(): bool;
+
+    abstract public function prev(): bool;
+
+    abstract public function random(bool $state): bool;
+
+    abstract public function repeat(bool $state): bool;
+
+    abstract public function skip(int $track_id): bool;
+
+    abstract public function volume(int $volume): bool;
+
+    abstract public function volume_down(): bool;
+
+    abstract public function volume_up(): bool;
 
     abstract public function get();
 
@@ -60,7 +81,7 @@ abstract class localplay_controller
 
     abstract public function get_description(): string; // Returns the description
 
-    abstract public function is_installed(); // Returns an boolean t/f
+    abstract public function is_installed(): bool;
 
     abstract public function install();
 

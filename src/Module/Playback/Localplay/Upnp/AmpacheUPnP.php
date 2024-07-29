@@ -193,10 +193,9 @@ class AmpacheUPnP extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
      * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('upnp_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_upnp` WHERE `id` = ?" : "SELECT * FROM `localplay_upnp`";
@@ -323,15 +322,15 @@ class AmpacheUPnP extends localplay_controller
     /**
      * skip
      * This tells UPnP to skip to the specified song
-     * @param $pos
+     * @param $track_id
      */
-    public function skip($pos): bool
+    public function skip(int $track_id): bool
     {
         if (!$this->_upnp) {
             return false;
         }
 
-        $this->_upnp->Skip($pos);
+        $this->_upnp->Skip($track_id);
 
         return true;
     }
@@ -411,7 +410,7 @@ class AmpacheUPnP extends localplay_controller
      * This tells UPnP to set the repeating the playlist (i.e. loop) to either on or off
      * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         debug_event('upnp.controller', 'repeat: ' . $state, 5);
 
@@ -427,17 +426,17 @@ class AmpacheUPnP extends localplay_controller
     /**
      * random
      * This tells UPnP to turn on or off the playing of songs from the playlist in random order
-     * @param $onoff
+     * @param $state
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
-        debug_event('upnp.controller', 'random: ' . $onoff, 5);
+        debug_event('upnp.controller', 'random: ' . $state, 5);
 
         if (!$this->_upnp) {
             return false;
         }
 
-        $this->_upnp->PlayShuffle($onoff);
+        $this->_upnp->PlayShuffle($state);
 
         return true;
     }

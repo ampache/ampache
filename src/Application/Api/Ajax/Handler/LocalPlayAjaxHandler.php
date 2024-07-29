@@ -61,7 +61,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
-                $localplay->set_active_instance($_REQUEST['instance']);
+                $localplay->set_active_instance((int)$_REQUEST['instance']);
                 Preference::update('play_type', $user->getId(), $type);
 
                 // We should also refresh the sidebar

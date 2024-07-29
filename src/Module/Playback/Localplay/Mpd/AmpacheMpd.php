@@ -170,10 +170,9 @@ class AmpacheMpd extends localplay_controller
      * get_instance
      * This returns the specified instance and all it's pretty variables
      * If no instance is passed current is used
-     * @param string $instance
      * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('mpd_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_mpd` WHERE `id` = ?" : "SELECT * FROM `localplay_mpd`";
@@ -287,9 +286,9 @@ class AmpacheMpd extends localplay_controller
      * clear_playlist
      * This deletes the entire MPD playlist
      */
-    public function clear_playlist()
+    public function clear_playlist(): bool
     {
-        return $this->_mpd->PLClear();
+        return $this->_mpd->PLClear() !== false;
     }
 
     /**
@@ -297,9 +296,9 @@ class AmpacheMpd extends localplay_controller
      * This just tells MPD to start playing, it does not
      * take any arguments
      */
-    public function play()
+    public function play(): bool
     {
-        return $this->_mpd->Play();
+        return $this->_mpd->Play() !== false;
     }
 
     /**
@@ -315,11 +314,11 @@ class AmpacheMpd extends localplay_controller
     /**
      * skip
      * This tells MPD to skip to the specified song
-     * @param $song
+     * @param $track_id
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
-        if (!$this->_mpd->SkipTo($song)) {
+        if (!$this->_mpd->SkipTo($track_id)) {
             return false;
         }
         sleep(2);
@@ -333,79 +332,74 @@ class AmpacheMpd extends localplay_controller
     /**
      * This tells MPD to increase the volume by 5
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
-        return $this->_mpd->AdjustVolume('5');
+        return $this->_mpd->AdjustVolume('5') !== false;
     }
 
     /**
      * This tells MPD to decrease the volume by 5
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
-        return $this->_mpd->AdjustVolume('-5');
+        return $this->_mpd->AdjustVolume('-5') !== false;
     }
 
     /**
      * next
      * This just tells MPD to skip to the next song
      */
-    public function next()
+    public function next(): bool
     {
-        return $this->_mpd->Next();
+        return $this->_mpd->Next() !== false;
     }
 
     /**
      * prev
      * This just tells MPD to skip to the prev song
      */
-    public function prev()
+    public function prev(): bool
     {
-        return $this->_mpd->Previous();
+        return $this->_mpd->Previous() !== false;
     }
 
     /**
      * pause
      * This tells MPD to pause the current song
      */
-    public function pause()
+    public function pause(): bool
     {
-        return $this->_mpd->Pause();
+        return $this->_mpd->Pause() !== false;
     }
 
     /**
      * volume
      * This tells MPD to set the volume to the parameter
      * @param $volume
-     * @return bool|string
      */
-    public function volume($volume)
+    public function volume($volume): bool
     {
-        return $this->_mpd->SetVolume($volume);
+        return $this->_mpd->SetVolume($volume) !== false;
     }
 
     /**
      * repeat
-     * This tells MPD to set the repeating the playlist (i.e. loop) to either
-     * on or off.
-     * @param $state
-     * @return bool|string
+     * This tells MPD to set the repeating the playlist (i.e. loop) to either on or off.
      */
-    public function repeat($state)
+    public function repeat(bool $state): bool
     {
-        return $this->_mpd->SetRepeat($state);
+        return $this->_mpd->SetRepeat($state) !== false;
     }
 
     /**
      * random
      * This tells MPD to turn on or off the playing of songs from the
      * playlist in random order.
-     * @param $onoff
-     * @return bool|string
+     * @param $state
      */
-    public function random($onoff)
+    public function random(bool $state): bool
     {
-        return $this->_mpd->SetRandom($onoff);
+        return $this->_mpd->SetRandom($state) !== false;
     }
 
     /**
