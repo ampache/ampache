@@ -27,12 +27,12 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Playlist\AddSongAction;
 use Ampache\Module\Application\Playlist\CreatePlaylistAction;
 use Ampache\Module\Application\Playlist\DeletePlaylistAction;
+use Ampache\Module\Application\Playlist\ExportPlaylistAction;
 use Ampache\Module\Application\Playlist\RefreshPlaylistAction;
 use Ampache\Module\Application\Playlist\ImportPlaylistAction;
 use Ampache\Module\Application\Playlist\RemoveDuplicatesAction;
 use Ampache\Module\Application\Playlist\SetTrackNumbersAction;
 use Ampache\Module\Application\Playlist\ShowAction;
-use Ampache\Module\Application\Playlist\ShowExportPlaylistAction;
 use Ampache\Module\Application\Playlist\ShowImportPlaylistAction;
 use Ampache\Module\Application\Playlist\SortTrackAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
@@ -49,8 +49,8 @@ $dic->get(ApplicationRunner::class)->run(
         RemoveDuplicatesAction::REQUEST_KEY => RemoveDuplicatesAction::class,
         AddSongAction::REQUEST_KEY => AddSongAction::class,
         SetTrackNumbersAction::REQUEST_KEY => SetTrackNumbersAction::class,
+        ExportPlaylistAction::REQUEST_KEY => ExportPlaylistAction::class,
         ImportPlaylistAction::REQUEST_KEY => ImportPlaylistAction::class,
-        ShowExportPlaylistAction::REQUEST_KEY => ShowExportPlaylistAction::class,
         ShowImportPlaylistAction::REQUEST_KEY => ShowImportPlaylistAction::class,
         DeletePlaylistAction::REQUEST_KEY => DeletePlaylistAction::class,
         RefreshPlaylistAction::REQUEST_KEY => RefreshPlaylistAction::class,
