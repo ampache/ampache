@@ -339,6 +339,7 @@ abstract class playlist_object extends database_object implements library_item
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
                 if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
                     $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
+                    /** @var playable_item $libitem */
                     $libitem   = new $className($media['object_id']);
                     $parent    = $libitem->get_parent();
                     if ($parent !== null) {

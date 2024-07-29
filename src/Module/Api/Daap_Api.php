@@ -432,8 +432,9 @@ class Daap_Api
                     }
                     $params .= '&transcode_to=' . $type;
                     $className = ObjectTypeToClassNameMapper::map('song');
-                    $media     = new $className($object_id);
-                    $url       = $media->play_url($params, AccessTypeEnum::API->value, true, -1);
+                    /** @var Song $media */
+                    $media = new $className($object_id);
+                    $url   = $media->play_url($params, AccessTypeEnum::API->value, true, -1);
                     self::follow_stream($url);
 
                     return false;

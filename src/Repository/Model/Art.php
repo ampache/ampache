@@ -387,15 +387,16 @@ class Art extends database_object
 
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->type);
+            /** @var playable_item $object */
             $object    = new $className($this->uid);
             $songs     = [];
-            debug_event(self::class, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
+            debug_event(self::class, 'Inserting ' . $this->type . ' image' . $object->get_fullname() . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
-                $songs = $this->getSongRepository()->getByAlbum($object->id);
+                $songs = $this->getSongRepository()->getByAlbum($object->getId());
             } elseif ($this->type === 'artist') {
                 /** Use special treatment for artists */
-                $songs = $this->getSongRepository()->getByArtist($object->id);
+                $songs = $this->getSongRepository()->getByArtist($object->getId());
             }
 
             global $dic;
@@ -403,7 +404,7 @@ class Art extends database_object
 
             foreach ($songs as $song_id) {
                 $song        = new Song($song_id);
-                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->get_fullname();
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );

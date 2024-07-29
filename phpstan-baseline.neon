@@ -296,11 +296,6 @@ parameters:
 			path: src/Module/Api/DaapApiApplication.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Api/Daap_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:createError\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
@@ -7951,11 +7946,6 @@ parameters:
 			path: src/Module/Playback/Stream_Playlist.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:play_url\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream_Playlist\\:\\:\\$id has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Playlist.php
@@ -11191,11 +11181,6 @@ parameters:
 			path: src/Plugin/AmpacheShoutHome.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamBandwidth.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamBandwidth\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamBandwidth.php
@@ -11234,11 +11219,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$time\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
@@ -11499,21 +11479,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\AlbumDisk\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/AlbumDisk.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$full_name\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 2
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$name\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
 
 		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -13209,11 +13174,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playable_item\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playable_item.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:get_parent\\(\\)\\.$#"
-			count: 1
-			path: src/Repository/Model/playlist_object.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:gather_art\\(\\) has parameter \\$limit with no type specified\\.$#"

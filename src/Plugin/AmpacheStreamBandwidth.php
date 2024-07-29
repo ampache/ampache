@@ -27,6 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
@@ -108,8 +109,9 @@ class AmpacheStreamBandwidth implements AmpachePluginInterface
             $next_total = 0;
             foreach ($media_ids as $media_id) {
                 $className = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-                $media     = new $className($media_id['object_id']);
-                $next_total += $media->size;
+                /** @var Media $media */
+                $media = new $className($media_id['object_id']);
+                $next_total += $media->size ?? 0;
             }
 
             $graph         = new Graph();

@@ -718,7 +718,7 @@ class Stream_Playlist
                 }
 
                 $className = ObjectTypeToClassNameMapper::map($type);
-
+                /** @var Media $item */
                 $item = new $className($url_id);
                 $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";

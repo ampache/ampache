@@ -90,8 +90,8 @@ final class BookmarkEditMethod
                 return false;
             }
 
-            $item = new $className($object_id);
             /** @var Bookmark|Song|Podcast_Episode|Video $item */
+            $item = new $className($object_id);
             if ($item->getId() === 0) {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);

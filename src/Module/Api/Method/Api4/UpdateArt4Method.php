@@ -72,7 +72,7 @@ final class UpdateArt4Method
         }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album $item */
-        $item      = new $className($object_id);
+        $item = new $className($object_id);
         if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 
