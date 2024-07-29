@@ -33,7 +33,7 @@ $browse = new Browse($user);
 
 $browse->set_type('playlist_search');
 $browse->set_sort('name', 'ASC');
-$browse->set_filter('playlist_open', $user->getId());
+$browse->set_filter('playlist_open', $user?->getId() ?? 0);
 $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 
 $playlists = $browse->get_objects();
@@ -46,7 +46,7 @@ Ui::show_box_top(T_('Export Playlists'), 'box box_export_playlist'); ?>
                 <?php echo T_('Playlist'); ?>:
             </td>
             <td>
-            <?php 
+            <?php
 if (!empty($playlists)) {
     foreach ($playlists as $list_id => $list_name) {
         $selected  = ($list_id === $libitem->refresh_id) ? ' selected="selected"' : '';

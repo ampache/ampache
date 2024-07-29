@@ -64,7 +64,7 @@ final class ExportPlaylistAction extends AbstractStreamAction
         foreach ($objectIds as $object_id) {
             if ((int)$object_id === 0) {
                 $objectType = LibraryItemEnum::SEARCH;
-                $object_id = (int) str_replace('smart_', '', (string)$object_id);
+                $object_id  = (int) str_replace('smart_', '', (string)$object_id);
             }
 
             $item = $this->libraryItemLoader->load(
