@@ -188,7 +188,6 @@ return [
     Playlist\RemoveDuplicatesAction::class => autowire(Playlist\RemoveDuplicatesAction::class),
     Playlist\AddSongAction::class => autowire(Playlist\AddSongAction::class),
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
-    Playlist\ExportPlaylistAction::class => autowire(Playlist\ExportPlaylistAction::class),
     Playlist\ImportPlaylistAction::class => autowire(Playlist\ImportPlaylistAction::class),
     Playlist\ShowImportPlaylistAction::class => autowire(Playlist\ShowImportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),

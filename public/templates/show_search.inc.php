@@ -75,12 +75,6 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=search&id=' . $playlist->id, 'new_window', T_('Add All To Temporary Playlist'), 'play_playlist'); ?>
         </li>
-        <li>
-            <a href="<?php echo $web_path; ?>/stream.php?action=export_playlist&playlist_type=search&playlist_id=<?php echo $playlist->id; ?>">
-                <?php echo Ui::get_material_symbol('export_notes'); ?>
-                <?php echo T_('Export Playlist'); ?>
-            </a>
-        </li>
 <?php if ($playlist->has_access()) { ?>
         <li>
             <a id="<?php echo 'edit_playlist_' . $playlist->id; ?>" onclick="showEditDialog('search_row', '<?php echo $playlist->id; ?>', '<?php echo 'edit_playlist_' . $playlist->id; ?>', '<?php echo addslashes(T_('Smart Playlist Edit')); ?>', '')">
