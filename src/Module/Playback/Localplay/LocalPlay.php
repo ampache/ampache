@@ -503,12 +503,11 @@ class LocalPlay
      * get_instances
      * This returns the instances of the current type
      */
-    public function get_instances()
+    public function get_instances(): array
     {
-        return (
-            $this->_player instanceof localplay_controller &&
-            $this->_player->get_instances()
-        );
+        return ($this->_player instanceof localplay_controller)
+            ? $this->_player->get_instances()
+            : [];
     }
 
     /**

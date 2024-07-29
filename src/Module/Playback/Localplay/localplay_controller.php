@@ -110,7 +110,7 @@ abstract class localplay_controller
      */
     abstract public function update_instance($uid, $data);
 
-    abstract public function get_instances();
+    abstract public function get_instances(): array;
 
     abstract public function instance_fields(): array;
 
