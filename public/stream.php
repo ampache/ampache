@@ -27,6 +27,7 @@ use Ampache\Module\Application\ApplicationRunner;
 use Ampache\Module\Application\Stream\BasketAction;
 use Ampache\Module\Application\Stream\DemocraticAction;
 use Ampache\Module\Application\Stream\DownloadAction;
+use Ampache\Module\Application\Stream\ExportPlaylistAction;
 use Ampache\Module\Application\Stream\PlayItemAction;
 use Ampache\Module\Application\Stream\PlaylistRandomAction;
 use Ampache\Module\Application\Stream\RandomAction;
@@ -43,6 +44,7 @@ $dic->get(ApplicationRunner::class)->run(
     [
         DownloadAction::REQUEST_KEY => DownloadAction::class,
         DemocraticAction::REQUEST_KEY => DemocraticAction::class,
+        ExportPlaylistAction::REQUEST_KEY => ExportPlaylistAction::class,
         PlaylistRandomAction::REQUEST_KEY => PlaylistRandomAction::class,
         PlayItemAction::REQUEST_KEY => PlayItemAction::class,
         RandomAction::REQUEST_KEY => RandomAction::class,
