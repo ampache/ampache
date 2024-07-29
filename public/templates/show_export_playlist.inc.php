@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
 
 $user   = Core::get_global('user');
-$browse = new Browse();
+$browse = new Browse($user);
 
 $browse->set_type('playlist_search');
 $browse->set_sort('name', 'ASC');
