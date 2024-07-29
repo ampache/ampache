@@ -49,7 +49,8 @@ Ui::show_box_top(T_('Export Playlists'), 'box box_export_playlist'); ?>
             <?php
 if (!empty($playlists)) {
     foreach ($playlists as $list_id => $list_name) {
-        $options[] = '<option value="' . $list_id . '">' . scrub_out($list_name) . '</option>';
+        $selected  = ($list_id === $libitem->refresh_id) ? ' selected="selected"' : '';
+        $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
     }
     echo '<select name="playlist_id">' . implode("\n", $options) . '</select>';
 } ?>
