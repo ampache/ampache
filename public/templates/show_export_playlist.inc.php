@@ -27,8 +27,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Search;
 
 $user   = Core::get_global('user');
 $browse = new Browse();
@@ -41,7 +39,7 @@ $browse->set_conditions(html_entity_decode((string)($input['cond'] ?? '')));
 $playlists = $browse->get_objects();
 
 Ui::show_box_top(T_('Export Playlists'), 'box box_export_playlist'); ?>
-<form method="post" name="export_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/stream.php" enctype="multipart/form-data">
+<form method="post" name="export_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/playlist.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td>
@@ -50,14 +48,8 @@ Ui::show_box_top(T_('Export Playlists'), 'box box_export_playlist'); ?>
             <td>
             <?php
 if (!empty($playlists)) {
-    foreach ($playlists as $list_id) {
-        if ((int)$list_id === 0) {
-            $playlist = new Search((int) str_replace('smart_', '', (string)$list_id));
-        } else {
-            $playlist = new Playlist((int)$list_id);
-        }
-
-        $options[] = '<option value="' . $list_id . '">' . $playlist->getFullname() . '</option>';
+    foreach ($playlists as $list_id => $list_name) {
+        $options[] = '<option value="' . $list_id . '">' . scrub_out($list_name) . '</option>';
     }
     echo '<select name="playlist_id">' . implode("\n", $options) . '</select>';
 } ?>
