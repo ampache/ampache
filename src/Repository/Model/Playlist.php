@@ -811,8 +811,8 @@ class Playlist extends playlist_object
             in_array($column, ['last_count', 'last_duration']) &&
             $count >= 0
         ) {
-            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
-            Dba::write($sql);
+            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?;";
+            Dba::write($sql, [$this->id]);
         }
     }
 

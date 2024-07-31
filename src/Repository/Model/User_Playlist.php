@@ -183,7 +183,7 @@ class User_Playlist extends database_object
      * Add an array of songs to the playlist
      * @return PDOStatement|false
      */
-    public function add_items($data, $time)
+    public function add_items(array $data, int $time)
     {
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
         $values = [];

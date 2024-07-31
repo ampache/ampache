@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Plugin\AmpacheDiscogs;
+use Ampache\Plugin\AmpacheTheaudiodb;
 use WpOrg\Requests\Autoload;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\ArtCleanupInterface;
@@ -288,7 +290,7 @@ class Art extends database_object
 
         // return a default image if fallback is requested
         if (!$this->raw && $fallback) {
-            $this->raw      = $this->read_from_images();
+            $this->raw      = $this->read_from_images() ?? '';
             $this->raw_mime = 'image/png';
             $default_art    = true;
         }
@@ -730,7 +732,8 @@ class Art extends database_object
         debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
 
         if (Core::is_readable($path)) {
-            foreach (scandir($path) as $file) {
+            $scandir = scandir($path) ?: [];
+            foreach ($scandir as $file) {
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
@@ -927,7 +930,7 @@ class Art extends database_object
             $crop_y     = 0;
         }
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, $crop_x, $crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, (int)$crop_x, (int)$crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
             debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
@@ -1086,7 +1089,9 @@ class Art extends database_object
         }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
+            $sid = $sid
+                ? scrub_out($sid)
+                : scrub_out(session_id() ?: 'none');
             if ($sid == null) {
                 $sid = Session::create(['type' => 'api']);
             }
@@ -1131,7 +1136,7 @@ class Art extends database_object
                 $extension = 'jpg';
             }
 
-            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb';
+            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/thumb';
             if ($thumb !== null) {
                 $url .= $thumb;
             }
@@ -1141,7 +1146,7 @@ class Art extends database_object
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
-            $url = AmpConfig::get('web_path') . '/image.php?' . $actionStr . 'object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type);
+            $url = AmpConfig::get('web_path') . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }
@@ -1192,7 +1197,7 @@ class Art extends database_object
 
     /**
      * Gather metadata from plugin.
-     * @param $plugin
+     * @param AmpacheDiscogs|AmpacheTheaudiodb $plugin
      * @param string $type
      * @param array $options
      * @return list<array{

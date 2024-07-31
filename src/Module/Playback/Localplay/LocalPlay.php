@@ -639,7 +639,7 @@ class LocalPlay
      * get_user_state
      * This function returns a user friendly version
      * of the current player state
-     * @param $state
+     * @param string|null $state
      */
     public function get_user_state($state): string
     {

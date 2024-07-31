@@ -53,22 +53,19 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
  */
 class HttpQPlayer
 {
-    public $host;
-    public $port;
-    public $password;
+    public ?string $host;
+    public ?string $password;
+    public ?int $port;
 
     /**
      * HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
-     * @param string $host
-     * @param string $password
-     * @param int $port
      */
     public function __construct(
-        $host = "localhost",
-        $password = '',
-        $port = 4800
+        ?string $host = "localhost",
+        ?string $password = '',
+        ?int $port = 4800
     ) {
         $this->host     = $host;
         $this->port     = $port;
@@ -498,13 +495,13 @@ class HttpQPlayer
      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
-     * @param $cmd
-     * @param $args
+     * @param string $cmd
+     * @param array $args
      * @return string|bool
      */
     private function sendCommand($cmd, $args)
     {
-        $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
+        $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 
         if (!$fsock) {
             debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);

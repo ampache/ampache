@@ -206,8 +206,8 @@ class Recommendation
 
                         $artist_name = $child->artist->name;
                         $searchname  = Catalog::trim_prefix((string)$artist_name);
-                        $s_name      = Dba::escape($searchname['string']);
-                        $s_fullname  = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
+                        $s_name      = $searchname['string'];
+                        $s_fullname  = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
 
                         $sql = ($catalog_disable)
                             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `catalog`.`enabled` = '1'"
@@ -307,8 +307,8 @@ class Recommendation
                         // Then we fall back to the less likely to work exact name match
                         if ($local_id === null) {
                             $searchname = Catalog::trim_prefix($name);
-                            $s_name     = Dba::escape($searchname['string']);
-                            $s_fullname = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
+                            $s_name     = $searchname['string'];
+                            $s_fullname = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
                             $sql        = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)";

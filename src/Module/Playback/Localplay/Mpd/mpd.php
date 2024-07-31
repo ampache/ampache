@@ -183,8 +183,8 @@ class mpd
     private $port;
     private $password;
 
-    private $_mpd_sock      = null;
-    public bool $connected  = false;
+    private $_mpd_sock     = null;
+    public bool $connected = false;
 
     public $mpd_version = "(unknown)"; // MPD Status variables
 

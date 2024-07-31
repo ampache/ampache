@@ -116,9 +116,8 @@ final class Mailer implements MailerInterface
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
-     * @param string $address
      */
-    public static function validate_address($address): bool
+    public static function validate_address(string $address): bool
     {
         return PHPMailer::ValidateAddress($address);
     }

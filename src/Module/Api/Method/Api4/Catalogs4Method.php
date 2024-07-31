@@ -56,7 +56,7 @@ final class Catalogs4Method
             $filter = 'video';
         }
 
-        $results = $user->get_catalogs($filter);
+        $results = $user->get_catalogs((string)$filter);
 
         ob_end_clean();
         switch ($input['api_format']) {

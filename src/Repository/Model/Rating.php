@@ -79,7 +79,7 @@ class Rating extends database_object
         return (int)($this->id ?? 0);
     }
 
-    public static function is_valid($type): bool
+    public static function is_valid(string $type): bool
     {
         return in_array($type, self::RATING_TYPES);
     }

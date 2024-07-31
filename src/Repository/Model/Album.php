@@ -260,8 +260,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             !$this->album_artist &&
             $this->song_artist_count == 1
         ) {
-            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
-            $db_results = Dba::read($sql);
+            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
+            $db_results = Dba::read($sql, [$this->id]);
             $results    = Dba::fetch_assoc($db_results);
             // overwrite so you can get something
             $this->album_artist  = $results['artist_id'] ?? null;

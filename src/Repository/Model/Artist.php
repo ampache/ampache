@@ -797,6 +797,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * Refresh your atist name using external data based on the mbid
      * @param string $new_name
      * @param string $mbid
+     * @return array{prefix: ?string,name: string}
      */
     public static function update_name_from_mbid($new_name, $mbid): array
     {
@@ -824,8 +825,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     {
         //debug_event(self::class, "update: " . print_r($data, true), 5);
         // Save our current ID
-        $prefix      = Catalog::trim_prefix($data['name'])['prefix'];
-        $name        = Catalog::trim_prefix($data['name'])['string'] ?? $this->name;
+        $full_name   = $data['name'] ?? '';
+        $prefix      = Catalog::trim_prefix($full_name)['prefix'];
+        $name        = Catalog::trim_prefix($full_name)['string'];
         $mbid        = $data['mbid'] ?? null;
         $summary     = $data['summary'] ?? null;
         $placeformed = $data['placeformed'] ?? null;

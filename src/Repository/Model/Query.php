@@ -90,16 +90,14 @@ class Query
 
     /** @var array $_state */
     protected $_state = [
-        // Used by $browse->set_type() to filter artists to album artist only
-        'album_artist' => false,
+        'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
         'grid_view' => true,
         'group' => [],
-        // HAVING is not currently used in Query SQL
-        'having' => '',
+        'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
         'mashup' => null,
@@ -107,8 +105,7 @@ class Query
         'select' => [],
         'show_header' => true,
         'simple' => false,
-        // Used by $browse->set_type() to filter artists to song artist only
-        'song_artist' => null,
+        'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
         'sort' => [
             'name' => null,
             'order' => null,
@@ -121,8 +118,7 @@ class Query
         'type' => '',
         'update_session' => false,
         'use_alpha' => false,
-        // Used by $browse to hide the filter box in the sidebar
-        'use_filters' => true,
+        'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
         'use_pages' => false,
     ];
 
@@ -130,7 +126,7 @@ class Query
     protected $_cache;
 
     /** @var QueryInterface|null $queryType */
-    private $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
+    private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**
      * constructor
