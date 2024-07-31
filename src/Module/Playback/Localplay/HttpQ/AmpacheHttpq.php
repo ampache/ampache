@@ -36,7 +36,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * AmpacheHttpq Class
@@ -122,30 +121,27 @@ class AmpacheHttpq extends localplay_controller
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -172,7 +168,7 @@ class AmpacheHttpq extends localplay_controller
      * @param $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $uid  = Dba::escape($uid);
         $port = Dba::escape($data['port']);
@@ -182,8 +178,6 @@ class AmpacheHttpq extends localplay_controller
 
         $sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**

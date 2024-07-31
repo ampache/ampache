@@ -34,7 +34,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use XBMC_RPC_ConnectionException;
 use XBMC_RPC_Exception;
 use XBMC_RPC_HTTPClient;
@@ -124,29 +123,26 @@ class AmpacheXbmc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new xbmc instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
         $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id]);
+        Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
-
-        return true;
     }
 
     /**
@@ -173,12 +169,10 @@ class AmpacheXbmc extends localplay_controller
      * @param $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
-
-        return true;
     }
 
     /**
@@ -626,13 +620,12 @@ class AmpacheXbmc extends localplay_controller
      * The songs that XBMC currently has in it's playlist. This must be
      * done in a standardized fashion
      */
-    public function get()
+    public function get(): array
     {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
         $results = [];
+        if (!$this->_xbmc) {
+            return $results;
+        }
 
         try {
             $playlist = $this->_xbmc->Playlist->GetItems(

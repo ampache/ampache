@@ -179,7 +179,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 // Scrub it in
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
-                $localplay->delete_instance($_REQUEST['instance']);
+                $localplay->delete_instance((int)$_REQUEST['instance']);
 
                 $key           = 'localplay_instance_' . $_REQUEST['instance'];
                 $results[$key] = '';

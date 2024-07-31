@@ -36,7 +36,6 @@ use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use PDOStatement;
 
 /**
  * AmpacheMpd Class
@@ -122,30 +121,27 @@ class AmpacheMpd extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new MPD instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_mpd` WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -187,7 +183,7 @@ class AmpacheMpd extends localplay_controller
      * @param $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $uid  = Dba::escape($uid);
         $host = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
@@ -196,8 +192,6 @@ class AmpacheMpd extends localplay_controller
         $pass = Dba::escape($data['password']);
         $sql  = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -275,11 +269,10 @@ class AmpacheMpd extends localplay_controller
      * This must take a single ID (as returned by the get function)
      * and delete it from the current playlist
      * @param int $object_id
-     * @return bool|string
      */
-    public function delete_track($object_id)
+    public function delete_track($object_id): bool
     {
-        return $this->_mpd->PLRemove($object_id);
+        return $this->_mpd->PLRemove($object_id) !== false;
     }
 
     /**
@@ -306,9 +299,9 @@ class AmpacheMpd extends localplay_controller
      * This just tells MPD to stop playing, it does not take
      * any arguments
      */
-    public function stop()
+    public function stop(): bool
     {
-        return $this->_mpd->Stop();
+        return $this->_mpd->Stop() !== false;
     }
 
     /**
@@ -580,7 +573,7 @@ class AmpacheMpd extends localplay_controller
      * a boolean value for the status, to save time this handle
      * is stored in this class
      */
-    public function connect()
+    public function connect(): bool
     {
         // Look at the current instance and pull the options for said instance
         $options = self::get_instance();

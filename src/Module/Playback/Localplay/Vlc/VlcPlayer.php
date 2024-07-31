@@ -191,12 +191,12 @@ class VlcPlayer
      * stop
      * stops the current song amazing!
      */
-    public function stop(): ?bool
+    public function stop(): bool
     {
         $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;

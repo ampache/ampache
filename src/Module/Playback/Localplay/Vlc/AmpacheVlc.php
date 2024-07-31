@@ -35,7 +35,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This is the class for the VLC Localplay method to remote control
@@ -118,29 +117,26 @@ class AmpacheVlc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new VLC instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+        Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
-
-        return true;
     }
 
     /**
@@ -167,12 +163,10 @@ class AmpacheVlc extends localplay_controller
      * @param $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['password'], $uid]);
-
-        return true;
     }
 
     /**

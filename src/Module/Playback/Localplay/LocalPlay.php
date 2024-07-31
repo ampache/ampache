@@ -181,7 +181,7 @@ class LocalPlay
     {
         if (
             !$this->_player instanceof localplay_controller ||
-            !$this->_player->connect()
+            $this->_player->connect() === false
         ) {
             debug_event(self::class, 'Error Unable to connect, check ' . $this->type . ' controller', 1);
 
@@ -544,12 +544,11 @@ class LocalPlay
      * @param $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
-        return (
-            $this->_player instanceof localplay_controller &&
-            $this->_player->update_instance($uid, $data)
-        );
+        if ($this->_player instanceof localplay_controller) {
+            $this->_player->update_instance($uid, $data);
+        }
     }
 
     /**
@@ -557,7 +556,7 @@ class LocalPlay
      * This adds a new instance for the current controller type
      * @param array $data
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         if ($this->_player instanceof localplay_controller) {
             $this->_player->add_instance($data);
@@ -567,12 +566,12 @@ class LocalPlay
     /**
      * delete_instance
      * This removes an instance (it actually calls the players function)
-     * @param $instance_uid
+     * @param int $uid
      */
-    public function delete_instance($instance_uid)
+    public function delete_instance($uid): void
     {
         if ($this->_player instanceof localplay_controller) {
-            $this->_player->delete_instance($instance_uid);
+            $this->_player->delete_instance($uid);
         }
     }
 
