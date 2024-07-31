@@ -47,8 +47,8 @@ use Ampache\Module\System\Dba;
 class AmpacheHttpq extends localplay_controller
 {
     /* Variables */
-    private $version     = '000002';
-    private $description = "Controls an httpQ instance, requires Ampache's httpQ version";
+    private string $version     = '000002';
+    private string $description = "Controls an httpQ instance, requires Ampache's httpQ version";
 
     /* Constructed variables */
     private $_httpq;

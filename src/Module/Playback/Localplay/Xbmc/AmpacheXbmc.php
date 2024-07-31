@@ -45,8 +45,8 @@ use XBMC_RPC_HTTPClient;
 class AmpacheXbmc extends localplay_controller
 {
     /* Variables */
-    private $version     = '000001';
-    private $description = 'Controls a XBMC instance';
+    private string $version     = '000001';
+    private string $description = 'Controls a XBMC instance';
 
     /* Constructed variables */
     private $_xbmc;

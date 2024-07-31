@@ -46,8 +46,8 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 class AmpacheMpd extends localplay_controller
 {
     /* Variables */
-    private $version     = '000003';
-    private $description = 'Controls an instance of MPD';
+    private string $version     = '000003';
+    private string $description = 'Controls an instance of MPD';
 
     private $_add_count = 0;
 

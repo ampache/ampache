@@ -43,9 +43,9 @@ use Ampache\Module\System\Dba;
 class AmpacheUPnP extends localplay_controller
 {
     /* Variables */
-    private $_version = '000001';
+    private string $_version = '000001';
 
-    private $_description = 'Controls a UPnP instance';
+    private string $_description = 'Controls a UPnP instance';
 
     /** @var UPnPPlayer $object */
     private $_upnp;

@@ -43,8 +43,8 @@ use Ampache\Module\System\Dba;
 class AmpacheVlc extends localplay_controller
 {
     /* Variables */
-    private $version     = 'Beta 0.2';
-    private $description = 'Controls a VLC instance';
+    private string $version     = 'Beta 0.2';
+    private string $description = 'Controls a VLC instance';
 
     /* Constructed variables */
     private $_vlc;
