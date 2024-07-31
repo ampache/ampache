@@ -76,7 +76,7 @@ abstract class localplay_controller
 
     abstract public function connect(): bool;
 
-    abstract public function get_version(); // Returns the version of this plugin
+    abstract public function get_version(): string; // Returns the version of this plugin
 
     abstract public function get_description(): string; // Returns the description
 
@@ -101,7 +101,7 @@ abstract class localplay_controller
     abstract public function delete_instance($uid): void;
 
     /**
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
     abstract public function update_instance($uid, $data): void;

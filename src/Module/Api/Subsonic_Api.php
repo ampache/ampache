@@ -2298,7 +2298,7 @@ class Subsonic_Api
     {
         $action    = self::_check_parameter($input, 'action');
         $object_id = $input['id'] ?? [];
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $response  = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'jukeboxcontrol');
         $return    = false;
         if (empty($localplay->type) || !$localplay->connect()) {

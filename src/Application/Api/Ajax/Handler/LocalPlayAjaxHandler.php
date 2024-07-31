@@ -60,7 +60,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                 $type = (isset($_REQUEST['instance'])) ? 'localplay' : 'stream';
 
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->set_active_instance((int)$_REQUEST['instance']);
                 Preference::update('play_type', $user->getId(), $type);
 
@@ -78,7 +78,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
 
                 // Switch on valid commands
@@ -91,15 +91,27 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                         ob_end_clean();
                         break;
                     case 'prev':
+                        $localplay->prev();
+                        break;
                     case 'next':
+                        $localplay->next();
+                        break;
                     case 'stop':
+                        $localplay->stop();
+                        break;
                     case 'play':
+                        $localplay->play();
+                        break;
                     case 'pause':
                         $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
                         break;
                     case 'volume_up':
+                        $localplay->volume_up();
+                        break;
                     case 'volume_down':
+                        $localplay->volume_down();
+                        break;
                     case 'volume_mute':
                         $command = scrub_in((string) $_REQUEST['command']);
                         $localplay->$command();
@@ -145,7 +157,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
 
                 // Scrub in the delete request
@@ -178,7 +190,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub it in
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->delete_instance((int)$_REQUEST['instance']);
 
                 $key           = 'localplay_instance_' . $_REQUEST['instance'];
@@ -193,7 +205,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub her in
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
                 $localplay->repeat(make_bool($_REQUEST['value']));
 
@@ -213,7 +225,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // Scrub her in
-                $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+                $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
                 $localplay->random(make_bool($_REQUEST['value']));
 

@@ -223,7 +223,7 @@ if (
               <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/democratic.php?action=show_playlist"><?php echo $t_democratic; ?></a></li>
         <?php } ?>
         <?php if ($server_allow && $controller) { ?>
-            <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller'));
+            <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller', ''));
             $current_instance     = $localplay->current_instance();
             $class                = $current_instance ? '' : ' class="active_instance"'; ?>
                 <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>

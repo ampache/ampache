@@ -69,13 +69,16 @@ class Stream_Playlist
         'track_num' => 0,
     ];
 
-    public $id;
+    private ?string $streamtoken = null;
+
+    public string $id;
 
     /** @var list<Stream_Url> */
     public array $urls = [];
+
     public int $user;
-    private ?string $streamtoken;
-    public $title;
+
+    public ?string $title = null;
 
     /**
      * Stream_Playlist constructor
@@ -752,7 +755,7 @@ class Stream_Playlist
      */
     public function create_localplay(): void
     {
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $localplay->connect();
         $append = $_REQUEST['append'] ?? false;
         if (!$append) {

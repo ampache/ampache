@@ -35,10 +35,10 @@ use Ampache\Repository\Model\User;
 class LocalPlay
 {
     /* Base Variables */
-    public $type;
-    public $f_name;
-    public $f_description;
-    public $f_version;
+    public string $type;
+    public ?string $f_name        = null;
+    public ?string $f_description = null;
+    public ?string $f_version     = null;
 
     /* Built Variables */
     private ?localplay_controller $_player;
@@ -48,7 +48,7 @@ class LocalPlay
      * This must be called with a Localplay type, it then loads the config
      * file for the specified type and attempts to load in the function
      * map, the preferences and the template
-     * @param $type
+     * @param string $type
      */
     public function __construct($type)
     {
@@ -541,7 +541,7 @@ class LocalPlay
     /**
      * update_instance
      * This updates the specified instance with a named array of data (_POST most likely)
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
     public function update_instance($uid, $data): void

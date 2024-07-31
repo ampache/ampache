@@ -180,7 +180,7 @@ class AmpacheMpd extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
     public function update_instance($uid, $data): void
@@ -470,7 +470,8 @@ class AmpacheMpd extends localplay_controller
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media     = new $className($row['id']);
+                        /* @var Song|Live_Stream $media */
+                        $media = new $className($row['id']);
                         $media->format();
                         switch ($row['type']) {
                             case 'song':
