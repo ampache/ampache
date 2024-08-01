@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $workingUser */
-/** @var Traversable<array{date: int, ip: string, agent: string}> $history */
+/** @var Traversable<array{date: int, ip: string, agent: string, action: string}> $history */
 /** @var bool $showAll */
 /** @var string $webPath */
 
