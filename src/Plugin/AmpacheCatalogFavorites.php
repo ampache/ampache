@@ -109,8 +109,11 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
      */
     public function display_home(): void
     {
-        if (AmpConfig::get('ratings')) {
-            $userflags = Userflag::get_latest('song', null, $this->maxitems);
+        $userflags = Userflag::get_latest('song', null, $this->maxitems);
+        if (
+            AmpConfig::get('ratings') &&
+            !empty($userflags)
+        ) {
             $count     = 0;
             echo '<div class="home_plugin">';
             Ui::show_box_top(T_('Highlight'));
