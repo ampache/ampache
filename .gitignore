@@ -7,6 +7,8 @@
 .env
 .pc
 .project
+.phpunit.*
+.php-cs-fixer.cache
 bootstrap/
 build/
 config/ampache-doped.cfg.php
@@ -41,6 +43,7 @@ error_log
 php-cs-fixer.phar
 phpcbf*
 phpcs*
+phpunit.*
 robots.txt
 web.config
 *#
@@ -52,6 +55,3 @@ web.config
 *.swp
 *.v11.suo
 *~
-.php-cs-fixer.cache
-.phpunit.result.cache
-phpunit.xml.bak
