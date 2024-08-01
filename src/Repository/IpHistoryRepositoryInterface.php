@@ -56,6 +56,7 @@ interface IpHistoryRepositoryInterface
         User $user,
         string $ipAddress,
         string $userAgent,
-        DateTimeInterface $date
+        DateTimeInterface $date,
+        string $action
     ): void;
 }

@@ -170,7 +170,7 @@ final class Handshake5Method
 
                 // We're about to start. Record this user's IP.
                 if (AmpConfig::get('track_user_ip')) {
-                    static::getUserTracker()->trackIpAddress($client);
+                    static::getUserTracker()->trackIpAddress($client, 'handshake');
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);

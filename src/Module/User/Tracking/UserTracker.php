@@ -56,7 +56,8 @@ final class UserTracker implements UserTrackerInterface
      * Records the users ip in the ip history
      */
     public function trackIpAddress(
-        User $user
+        User $user,
+        string $action
     ): void {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::TRACK_USER_IP) === false) {
             return;
@@ -84,7 +85,8 @@ final class UserTracker implements UserTrackerInterface
             $user,
             trim((string)$ip, '[]'),
             Core::get_server('HTTP_USER_AGENT'),
-            new DateTimeImmutable()
+            new DateTimeImmutable(),
+            $action
         );
 
         /* Clean up old records... sometimes  */

@@ -64,7 +64,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
+                'SELECT `ip`, `date`, `agent`, `action` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
                 $where_sql,
             ),
             $params
@@ -75,6 +75,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
                 'ip' => (string) inet_ntop($row['ip']),
                 'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
                 'agent' => $row['agent'],
+                'action' => $row['action'],
             ];
         }
     }
@@ -114,19 +115,21 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
         User $user,
         string $ipAddress,
         string $userAgent,
-        DateTimeInterface $date
+        DateTimeInterface $date,
+        string $action
     ): void {
         if ($ipAddress !== '') {
             $ipAddress = inet_pton($ipAddress);
         }
 
         $this->connection->query(
-            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
             [
                 $ipAddress,
                 $user->getId(),
                 $date->getTimestamp(),
-                $userAgent
+                $userAgent,
+                $action
             ]
         );
     }

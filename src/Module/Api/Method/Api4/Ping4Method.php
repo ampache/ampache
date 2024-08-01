@@ -118,7 +118,7 @@ final class Ping4Method
 
             // We're about to start. Record this user's IP.
             if (AmpConfig::get('track_user_ip') && $user instanceof User) {
-                static::getUserTracker()->trackIpAddress($user);
+                static::getUserTracker()->trackIpAddress($user, 'ping');
             }
         }
 
