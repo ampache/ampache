@@ -49,7 +49,7 @@ final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Generator<array{date: int, ip: string, agent: string, action: string}>
+     * @return Generator<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
      */
     public function getHistory(
         User $user,

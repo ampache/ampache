@@ -24,6 +24,7 @@
 namespace Ampache\Repository;
 
 use Ampache\Repository\Model\User;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Traversable;
 
@@ -32,7 +33,7 @@ interface IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Traversable<array{date: int, ip: string, agent: string, action: string}>
+     * @return Traversable<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
      */
     public function getHistory(
         User $user,
