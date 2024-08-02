@@ -198,7 +198,7 @@ class Playlist extends playlist_object
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
      * @param int|null $user_id
-     * @return int[]
+     * @return array<string>
      */
     public static function get_playlist_array($user_id = null): array
     {
