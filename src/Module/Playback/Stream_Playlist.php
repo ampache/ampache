@@ -408,7 +408,7 @@ class Stream_Playlist
         return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
     }
 
-    public function generate_playlist(string $type, bool $redirect = false): bool
+    public function generate_playlist(string $type, bool $redirect = false, ?string $name = ''): bool
     {
         if (!count($this->urls)) {
             debug_event(self::class, 'Error: Empty URL array for ' . $this->id, 2);
@@ -509,10 +509,10 @@ class Stream_Playlist
 
             return false;
         }
-
+        $filename = (!empty($name)) ? rawurlencode($name) : 'ampache_playlist';
         if (isset($ext)) {
             header('Cache-control: public');
-            header('Content-Disposition: filename=ampache_playlist.' . $ext);
+            header('Content-Disposition: filename=' . $filename . '.' . $ext);
             header('Content-Type: ' . $ctype . ';');
         }
 

@@ -130,6 +130,12 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         <li>
             <?php echo Ajax::button_with_text('?action=basket&type=playlist_random&id=' . $playlist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'play_playlist_random'); ?>
         </li>
+        <li>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlist->id; ?>&name=<?php echo rawurlencode($playlist->name ?? 'ampache_playlist'); ?>">
+                <?php echo Ui::get_material_symbol('download', T_('Download Playlist')); ?>
+                <?php echo T_('Download Playlist'); ?>
+            </a>
+        </li>
     <?php if ($playlist->has_access()) { ?>
         <?php $search_id = $playlist->has_search((int)$playlist->user);
         if ($search_id > 0) { ?>
