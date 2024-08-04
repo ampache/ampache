@@ -74,7 +74,7 @@
 
         // Override the default repeat event handler
         this.options.repeat = function(event) {
-            console.log("repeat " + event.jPlayer.options.loop);
+            //console.log("repeat " + event.jPlayer.options.loop);
             self.loop = event.jPlayer.options.loop;
         };
 
@@ -240,7 +240,7 @@
             }
         },
         _refreshHtmlPlaylist: function() {
-            console.log("_refreshHtmlPlaylist");
+            //console.log("_refreshHtmlPlaylist");
             // After addAfter() and remove() functions, new items need their webPlayer indexes reset
             // _createListItem() adds the items in the right position but uses the length of the playlist for the name property
             var isAdjusted = false;
@@ -250,8 +250,8 @@
                 if (htmlIndex !== i) {
                     // set the self.current index playlistRow if it's going to change.
                     if (!isAdjusted && current_item === htmlIndex) {
-                        console.log("this.current: " + current_item + " => " + i);
-                        console.log(playlistRow);
+                        //console.log("this.current: " + current_item + " => " + i);
+                        //console.log(playlistRow);
                         current_item = i;
                     }
                     // re-index the list
@@ -353,7 +353,7 @@
             }
         },
         _highlight: function(index) {
-            console.log("_highlight " + index);
+            //console.log("_highlight " + index);
             $(this.cssSelector.title + " li:first").html("Playlist: " + this.name);
             $(this.cssSelector.title + " li:last").html(" ");
             if (this.playlist.length && typeof index !== "undefined") {
@@ -363,7 +363,7 @@
             }
         },
         add: function(media, playNow) {
-            console.log("add");
+            //console.log("add");
             var self = this;
             var playlist_before = self.playlist;
             var playlist_after = [];
@@ -380,10 +380,10 @@
             self.playlist = playlist_after;
             self.original = playlist_after;
 
-            console.log("current: " + self.current);
-            console.log(playlist_before);
-            console.log(self.playlist);
-            console.log("-----------");
+            //console.log("current: " + self.current);
+            //console.log(playlist_before);
+            //console.log(self.playlist);
+            //console.log("-----------");
 
             if (playNow) {
                 this.play(this.playlist.length - 1);
@@ -394,9 +394,9 @@
             }
         },
         addAfter: function(media, index) {
-            console.log("addAfter " + index);
+            //console.log("addAfter " + index);
             if (index >= this.playlist.length || index < 0) {
-                console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
+                //console.log("jPlayerPlaylist.addAfter: ERROR, Index out of bounds");
                 return;
             }
             var self = this;
@@ -421,13 +421,13 @@
                 this.select(0);
             }
             this._refreshHtmlPlaylist();
-            console.log("current: " + self.current);
-            console.log(playlist_before);
-            console.log(self.playlist);
-            console.log("-----------");
+            //console.log("current: " + self.current);
+            //console.log(playlist_before);
+            //console.log(self.playlist);
+            //console.log("-----------");
         },
         remove: function(index) {
-            console.log("remove " + index);
+            //console.log("remove " + index);
             var self = this;
             if (typeof index === "undefined") {
                 this._initPlaylist();
@@ -459,8 +459,8 @@
                             } else {
                                 // set the self.current index playlistRow if it's going to change.
                                 if ((current_item === htmlIndex || $(playlistRow).hasClass("jp-playlist-current"))) {
-                                    console.log("this.current: " + current_item + " => " + new_index);
-                                    console.log(playlistRow);
+                                    //console.log("this.current: " + current_item + " => " + new_index);
+                                    //console.log(playlistRow);
                                     self.current = new_index;
                                 }
                                 $(playlistRow).attr("name", new_index);
@@ -475,17 +475,17 @@
                     }
                     // sort the list after removal
                     this._refreshHtmlPlaylist();
-                    console.log("current: " + this.current);
-                    console.log(playlist_before);
-                    console.log(self.playlist);
-                    console.log("-----------");
+                    //console.log("current: " + this.current);
+                    //console.log(playlist_before);
+                    //console.log(self.playlist);
+                    //console.log("-----------");
 
                     return true;
                 }
             }
         },
         removeBefore: function(index) {
-            console.log("removeBefore " + index);
+            //console.log("removeBefore " + index);
             var self = this;
             if (typeof index === "undefined") {
                 this._initPlaylist();
@@ -512,8 +512,8 @@
                             } else {
                                 // set the self.current index playlistRow if it's going to change.
                                 if ((current_item === htmlIndex || $(playlistRow).hasClass("jp-playlist-current"))) {
-                                    console.log("this.current: " + current_item + " => " + new_index);
-                                    console.log(playlistRow);
+                                    //console.log("this.current: " + current_item + " => " + new_index);
+                                    //console.log(playlistRow);
                                     self.current = new_index;
                                 }
                                 $(playlistRow).attr("name", new_index);
@@ -526,10 +526,10 @@
                         this.original = playlist_after;
                     }
 
-                    console.log("current: " + self.current);
-                    console.log(playlist_before);
-                    console.log(self.playlist);
-                    console.log("-----------");
+                    //console.log("current: " + self.current);
+                    //console.log(playlist_before);
+                    //console.log(self.playlist);
+                    //console.log("-----------");
 
                     return true;
                 }
@@ -555,7 +555,7 @@
             });
         },
         scan: function() {
-            console.log("scan " + this.current);
+            //console.log("scan " + this.current);
             // scan is used when you rearrange items in the webplayer playlist (show_html5_player.inc.php)
             var self = this;
             var isAdjusted = false;
@@ -567,8 +567,8 @@
                 if (htmlIndex !== i) {
                     // set the self.current index playlistRow if it's going to change.
                     if (!isAdjusted && (current_item === htmlIndex || $(playlistRow).hasClass("jp-playlist-current"))) {
-                        console.log("this.current: " + current_item + " => " + i);
-                        console.log(playlistRow);
+                        //console.log("this.current: " + current_item + " => " + i);
+                        //console.log(playlistRow);
                         self.current = i;
                         isAdjusted = true;
                     }
@@ -580,19 +580,19 @@
             });
             self.playlist = playlist_after;
 
-            console.log("current: " + self.current);
-            console.log(playlist_before);
-            console.log(self.playlist);
-            console.log("-----------");
+            //console.log("current: " + self.current);
+            //console.log(playlist_before);
+            //console.log(self.playlist);
+            //console.log("-----------");
         },
         select: function(index) {
-            console.log("select " + index);
+            //console.log("select " + index);
             index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
             if (0 <= index && index < this.playlist.length) {
                 this.current = index;
                 this._highlight(index);
                 $(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
-                console.log(this.playlist[this.current]);
+                //console.log(this.playlist[this.current]);
             } else {
                 this.current = 0;
             }
@@ -601,14 +601,14 @@
             if (index < 0) {
                 index = 0;
             }
-            console.log("setCurrent " + index);
+            //console.log("setCurrent " + index);
             if (index >= 0 && this.current !== index) {
                 this.current = index;
             }
             this._highlight(index);
         },
         play: function(index) {
-            console.log("play " + index);
+            //console.log("play " + index);
             index = (index < 0) ? this.playlist.length + index : index; // Negative index relates to end of array.
             if ("function" === typeof this.options.callbackPlay) {
                 this.options.callbackPlay(index);
@@ -623,10 +623,10 @@
                 $(this.cssSelector.jPlayer).jPlayer("play");
             }
             // remove leftovers if needed
-            startIndex = index - this.options.playlistOptions.removeCount;
+            var startIndex = index - this.options.playlistOptions.removeCount;
             if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0 && !this.options.loopBack) {
-                console.log("index " + index);
-                console.log("startIndex " + startIndex);
+                //console.log("index " + index);
+                //console.log("startIndex " + startIndex);
                 this.removeBefore(startIndex);
                 this._refreshHtmlPlaylist();
             }
@@ -636,7 +636,7 @@
         },
         next: function() {
             var index = (this.current + 1 < this.playlist.length) ? this.current + 1 : 0;
-            console.log("next " + index);
+            //console.log("next " + index);
 
             if (this.loop) {
                 // repeat the track
@@ -647,9 +647,9 @@
                     this.play(index);
                 } else {
                     // The index will be zero if it just looped round so check for removal
-                    startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
+                    var startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
                     if (index === 0 && this.options.playlistOptions.removePlayed && !this.options.loopBack) {
-                        console.log("startIndex " + startIndex);
+                        //console.log("startIndex " + startIndex);
                         this.removeBefore(startIndex);
                     }
                 }
@@ -666,10 +666,11 @@
             var self = this;
 
             if (!self.shuffling) {
-                console.log("shuffle");
+                //console.log("shuffle");
                 self.shuffling = true;
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
                     var current_item = self.playlist[self.current];
+                    var playlist_before = self.playlist;
                     var final_list = [];
                     var playlist_items = [];
                     // push the current track first
@@ -697,14 +698,14 @@
 
                     $(this).slideDown(self.options.playlistOptions.shuffleTime);
                 });
-                console.log("current: " + self.current);
-                console.log(playlist_before);
-                console.log(self.playlist);
-                console.log("-----------");
+                //console.log("current: " + self.current);
+                //console.log(playlist_before);
+                //console.log(self.playlist);
+                //console.log("-----------");
             }
         },
         toggleLoop: function(bool) {
-            console.log("toggleLoop");
+            //console.log("toggleLoop");
             this.options.loopBack = bool;
         },
         blur: function(that) {
