@@ -61,7 +61,7 @@ final class PodcastCreate5Method
         if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -88,10 +88,10 @@ final class PodcastCreate5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::podcasts(array($podcast->getId()), $user, false, false);
+                echo Json5_Data::podcasts([$podcast->getId()], $user, false, false);
                 break;
             default:
-                echo Xml5_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml5_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

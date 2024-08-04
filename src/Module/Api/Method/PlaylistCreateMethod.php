@@ -52,7 +52,7 @@ final class PlaylistCreateMethod
      */
     public static function playlist_create(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('name'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['name'], self::ACTION)) {
             return false;
         }
         $name = $input['name'];
@@ -70,10 +70,10 @@ final class PlaylistCreateMethod
         Catalog::count_table('playlist');
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::playlists(array($object_id), $user, false, true, false);
+                echo Json_Data::playlists([$object_id], $user, false, true, false);
                 break;
             default:
-                echo Xml_Data::playlists(array($object_id), $user);
+                echo Xml_Data::playlists([$object_id], $user);
         }
 
         return true;

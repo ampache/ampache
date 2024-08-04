@@ -56,7 +56,7 @@ final class LabelArtists5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $include = [];

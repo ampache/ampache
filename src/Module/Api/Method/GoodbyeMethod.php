@@ -49,7 +49,7 @@ final class GoodbyeMethod
      */
     public static function goodbye(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('auth'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['auth'], self::ACTION)) {
             return false;
         }
         debug_event(self::class, 'Goodbye Received from ' . $user->id . ' ' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ' :: ' . $input['auth'], 5);
@@ -57,7 +57,7 @@ final class GoodbyeMethod
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists('api', $input['auth'])) {
             $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = 'api';";
-            Dba::write($sql, array($input['auth']));
+            Dba::write($sql, [$input['auth']]);
 
             ob_end_clean();
             Api::message($input['auth'], $input['api_format']);

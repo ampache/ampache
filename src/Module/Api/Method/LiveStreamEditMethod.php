@@ -59,7 +59,7 @@ final class LiveStreamEditMethod
         if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int)filter_var($input['filter'], FILTER_SANITIZE_NUMBER_INT);
@@ -98,14 +98,14 @@ final class LiveStreamEditMethod
             Api::error(sprintf('Not Found: %s', $catalog_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'catalog', $input['api_format']);
         }
 
-        $data = array(
+        $data = [
             "object_id" => $object_id,
             "name" => $name,
             "url" => $url,
             "codec" => $codec,
             "catalog" => $catalog_id,
             "site_url" => $site_url
-        );
+        ];
 
         // check for the live_stream first
         $results = $item->update($data);
@@ -118,10 +118,10 @@ final class LiveStreamEditMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($results), false);
+                echo Json_Data::live_streams([$results], false);
                 break;
             default:
-                echo Xml_Data::live_streams(array($results), $user);
+                echo Xml_Data::live_streams([$results], $user);
         }
 
         return true;

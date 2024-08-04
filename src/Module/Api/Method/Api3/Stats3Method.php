@@ -89,7 +89,7 @@ final class Stats3Method
 
         if ($results !== null) {
             ob_end_clean();
-            echo Xml3_Data::albums($results, array(), $user);
+            echo Xml3_Data::albums($results, [], $user);
         }
     }
 

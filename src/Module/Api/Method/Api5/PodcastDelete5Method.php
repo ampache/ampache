@@ -57,7 +57,7 @@ final class PodcastDelete5Method
         if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];

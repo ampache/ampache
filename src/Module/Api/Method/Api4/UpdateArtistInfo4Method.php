@@ -48,7 +48,7 @@ final class UpdateArtistInfo4Method
      */
     public static function update_artist_info(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('id'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
         if (!Api4::check_access('interface', 75, $user->id, 'update_artist_info', $input['api_format'])) {

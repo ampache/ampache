@@ -73,7 +73,7 @@ final class ShareCreate5Method
 
             return false;
         }
-        if (!Api5::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
 
@@ -82,7 +82,7 @@ final class ShareCreate5Method
         $description = $input['description'] ?? null;
         $expire_days = (isset($input['expires'])) ? filter_var($input['expires'], FILTER_SANITIZE_NUMBER_INT) : AmpConfig::get('share_expire', 7);
         // confirm the correct data
-        if (!in_array(strtolower($object_type), array('song', 'album', 'artist'))) {
+        if (!in_array(strtolower($object_type), ['song', 'album', 'artist'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -91,7 +91,7 @@ final class ShareCreate5Method
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
 
-        $results = array();
+        $results = [];
         if (!$className || !$object_id) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Bad Request: %s'), $object_type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);

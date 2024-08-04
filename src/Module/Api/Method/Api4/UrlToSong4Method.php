@@ -49,7 +49,7 @@ final class UrlToSong4Method
      */
     public static function url_to_song(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('url'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
         $charset  = AmpConfig::get('site_charset');
@@ -58,10 +58,10 @@ final class UrlToSong4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
+                echo Json4_Data::songs([(int)($url_data['id'] ?? 0)], $user);
                 break;
             default:
-                echo Xml4_Data::songs(array((int)($url_data['id'] ?? 0)), $user);
+                echo Xml4_Data::songs([(int)($url_data['id'] ?? 0)], $user);
         }
 
         return true;

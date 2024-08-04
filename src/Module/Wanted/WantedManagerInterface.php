@@ -51,7 +51,7 @@ interface WantedManagerInterface
         User $user,
         string $mbid,
         ?int $artist,
-        string $artist_mbid,
+        ?string $artist_mbid,
         string $name,
         int $year
     ): void;

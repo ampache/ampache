@@ -50,7 +50,7 @@ final class BookmarkMethod
      */
     public static function bookmark(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $bookmark = self::getBookmarkRepository()->findById((int) $input['filter']);
@@ -65,7 +65,7 @@ final class BookmarkMethod
         }
 
         $include = (bool)($input['include'] ?? false);
-        $results = array($bookmark->getId());
+        $results = [$bookmark->getId()];
 
         ob_end_clean();
         switch ($input['api_format']) {

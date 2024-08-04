@@ -90,7 +90,7 @@ class ShowActionTest extends MockeryTestCase
             ->with(true)
             ->once();
         $browse->shouldReceive('set_sort')
-            ->with('name', 'ASC')
+            ->with('username', 'ASC')
             ->once();
         $browse->shouldReceive('show_objects')
             ->with($objects)

@@ -50,7 +50,7 @@ final class CatalogMethod
      */
     public static function catalog(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -65,10 +65,10 @@ final class CatalogMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::catalogs(array($catalog->id), false);
+                echo Json_Data::catalogs([$catalog->id], false);
                 break;
             default:
-                echo Xml_Data::catalogs(array($catalog->id), $user);
+                echo Xml_Data::catalogs([$catalog->id], $user);
         }
 
         return true;

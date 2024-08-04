@@ -50,7 +50,7 @@ final class GenreArtists4Method
      */
     public static function genre_artists(array $input, User $user): bool
     {
-        if (!Api4::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $results = Tag::get_tag_objects('artist', (int)($input['filter'] ?? 0));
@@ -60,12 +60,12 @@ final class GenreArtists4Method
                 case 'json':
                     Json4_Data::set_offset($input['offset'] ?? 0);
                     Json4_Data::set_limit($input['limit'] ?? 0);
-                    echo Json4_Data::artists($results, array(), $user);
+                    echo Json4_Data::artists($results, [], $user);
                     break;
                 default:
                     Xml4_Data::set_offset($input['offset'] ?? 0);
                     Xml4_Data::set_limit($input['limit'] ?? 0);
-                    echo Xml4_Data::artists($results, array(), $user);
+                    echo Xml4_Data::artists($results, [], $user);
             }
         }
 

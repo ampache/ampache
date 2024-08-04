@@ -61,7 +61,7 @@ final class UserUpdate4Method
         if (!Api4::check_access('interface', 100, $user->id, 'user_update', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('username'), 'user_update')) {
+        if (!Api4::check_parameter($input, ['username'], 'user_update')) {
             return false;
         }
 

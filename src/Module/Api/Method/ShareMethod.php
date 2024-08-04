@@ -55,10 +55,10 @@ final class ShareMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $results = array((int) $input['filter']);
+        $results = [(int) $input['filter']];
 
         ob_end_clean();
         switch ($input['api_format']) {

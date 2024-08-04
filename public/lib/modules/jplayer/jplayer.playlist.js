@@ -623,7 +623,7 @@
                 $(this.cssSelector.jPlayer).jPlayer("play");
             }
             // remove leftovers if needed
-            startIndex = index - this.options.playlistOptions.removeCount;
+            var startIndex = index - this.options.playlistOptions.removeCount;
             if (index > 0 && !this.loop && this.options.playlistOptions.removePlayed && startIndex > 0 && !this.options.loopBack) {
                 console.log("index " + index);
                 console.log("startIndex " + startIndex);
@@ -647,7 +647,7 @@
                     this.play(index);
                 } else {
                     // The index will be zero if it just looped round so check for removal
-                    startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
+                    var startIndex = this.current + 1 - this.options.playlistOptions.removeCount;
                     if (index === 0 && this.options.playlistOptions.removePlayed && !this.options.loopBack) {
                         console.log("startIndex " + startIndex);
                         this.removeBefore(startIndex);
@@ -670,6 +670,7 @@
                 self.shuffling = true;
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
                     var current_item = self.playlist[self.current];
+                    var playlist_before = self.playlist;
                     var final_list = [];
                     var playlist_items = [];
                     // push the current track first

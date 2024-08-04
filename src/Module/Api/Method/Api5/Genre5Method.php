@@ -49,7 +49,7 @@ final class Genre5Method
      */
     public static function genre(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -64,10 +64,10 @@ final class Genre5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::genres(array($object_id), false);
+                echo Json5_Data::genres([$object_id], false);
                 break;
             default:
-                echo Xml5_Data::genres(array($object_id), $user);
+                echo Xml5_Data::genres([$object_id], $user);
         }
 
         return true;

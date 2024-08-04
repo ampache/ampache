@@ -49,7 +49,7 @@ final class UpdateArtistInfo5Method
      */
     public static function update_artist_info(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
 

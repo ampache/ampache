@@ -1,5 +1,13 @@
 # API CHANGELOG
 
+## API 6.6.1
+
+### Added
+
+* API6
+  * Add maximum ID properties to `handshake` and `ping` (with auth) responses for media types
+    * `max_song`, `max_album`, `max_artist`, `max_video`, `max_podcast`, `max_podcast_episode`
+
 ## API 6.6.0
 
 Like with `total_count`, we've added an md5sum of the results (called `md5`) in responses

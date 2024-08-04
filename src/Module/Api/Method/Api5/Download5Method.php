@@ -51,7 +51,7 @@ final class Download5Method
      */
     public static function download(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('id', 'type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['id', 'type'], self::ACTION)) {
             http_response_code(400);
 
             return false;
@@ -61,7 +61,7 @@ final class Download5Method
         $format    = $input['format'] ?? null; // mp3, flv or raw
 
         $params = '&client=api&action=download&cache=1';
-        if ($format && in_array($type, array('song', 'search', 'playlist'))) {
+        if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
         $url = '';

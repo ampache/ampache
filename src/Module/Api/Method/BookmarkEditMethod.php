@@ -60,7 +60,7 @@ final class BookmarkEditMethod
      */
     public static function bookmark_edit(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter', 'type', 'position'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter', 'type', 'position'], self::ACTION)) {
             return false;
         }
         $object_id = $input['filter'];
@@ -75,7 +75,7 @@ final class BookmarkEditMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('bookmark', 'song', 'video', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['bookmark', 'song', 'video', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -99,13 +99,13 @@ final class BookmarkEditMethod
                 return false;
             }
         }
-        $object = array(
+        $object = [
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
             'comment' => $comment,
             'position' => $position,
-        );
+        ];
 
         // check for the bookmark first
         $results = Bookmark::getBookmarks($object);

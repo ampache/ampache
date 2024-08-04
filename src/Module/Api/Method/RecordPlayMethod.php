@@ -54,7 +54,7 @@ final class RecordPlayMethod
      */
     public static function record_play(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('id'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
         $play_user = $user;
@@ -92,7 +92,7 @@ final class RecordPlayMethod
         debug_event(self::class, 'record_play: ' . $media->id . ' for ' . $play_user->username . ' using ' . $agent . ' ' . (string) time(), 5);
 
         // internal scrobbling (user_activity and object_count tables)
-        if ($media->set_played($play_user->id, $agent, array(), $date)) {
+        if ($media->set_played($play_user->id, $agent, [], $date)) {
             // scrobble plugins
             User::save_mediaplay($play_user, $media);
         }

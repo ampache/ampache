@@ -53,20 +53,20 @@ final class GetSimilarMethod
      */
     public static function get_similar(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('type', 'filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['type', 'filter'], self::ACTION)) {
             return false;
         }
         $type      = (string) $input['type'];
         $object_id = (int) $input['filter'];
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'artist'))) {
+        if (!in_array(strtolower($type), ['song', 'artist'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
 
-        $results = array();
-        $similar = array();
+        $results = [];
+        $similar = [];
         switch ($type) {
             case 'artist':
                 $similar = Recommendation::get_artists_like($object_id);
@@ -90,7 +90,7 @@ final class GetSimilarMethod
                 Json_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
-                        echo Json_Data::artists($results, array(), $user);
+                        echo Json_Data::artists($results, [], $user);
                         break;
                     case 'song':
                         echo Json_Data::songs($results, $user);
@@ -101,7 +101,7 @@ final class GetSimilarMethod
                 Xml_Data::set_limit($input['limit'] ?? 0);
                 switch ($type) {
                     case 'artist':
-                        echo Xml_Data::artists($results, array(), $user);
+                        echo Xml_Data::artists($results, [], $user);
                         break;
                     case 'song':
                         echo Xml_Data::songs($results, $user);

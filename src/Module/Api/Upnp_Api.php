@@ -220,8 +220,8 @@ class Upnp_Api
     public static function get_headers($data): array
     {
         $lines  = explode(PHP_EOL, $data); // split into lines
-        $keys   = array();
-        $values = array();
+        $keys   = [];
+        $values = [];
         foreach ($lines as $line) {
             //$line = str_replace( ' ', '', $line );
             $line   = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
@@ -295,7 +295,7 @@ class Upnp_Api
      */
     public static function parseUPnPRequest($prmRequest): array
     {
-        $retArr = array();
+        $retArr = [];
         $reader = new XMLReader();
         $result = $reader->XML($prmRequest);
         if (!$result) {
@@ -420,7 +420,7 @@ class Upnp_Api
 
         // sometimes here comes only one single item, not an array. Convert it to array. (TODO - UGLY)
         if ((count($prmItems) > 0) && (!is_array($prmItems[0]))) {
-            $prmItems = array($prmItems);
+            $prmItems = [$prmItems];
         }
 
         // Add each item in $prmItems array to $ndDIDL:
@@ -607,14 +607,14 @@ class Upnp_Api
             case 'artists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/artists',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['artist'],
                             'dc:title' => T_('Artists'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $artist = new Artist((int)$pathreq[1]);
@@ -628,14 +628,14 @@ class Upnp_Api
             case 'albums':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/albums',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['album'],
                             'dc:title' => T_('Albums'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $album = new Album((int)$pathreq[1]);
@@ -649,14 +649,14 @@ class Upnp_Api
             case 'songs':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/songs',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['song'],
                             'dc:title' => T_('Songs'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $song = new Song((int)$pathreq[1]);
@@ -670,14 +670,14 @@ class Upnp_Api
             case 'playlists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/playlists',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['playlist'],
                             'dc:title' => T_('Playlists'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $playlist = new Playlist((int)$pathreq[1]);
@@ -691,14 +691,14 @@ class Upnp_Api
             case 'smartplaylists':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['smartplaylist'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $playlist = new Search((int)$pathreq[1], 'song');
@@ -712,14 +712,14 @@ class Upnp_Api
             case 'live_streams':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/live_streams',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['live_stream'],
                             'dc:title' => T_('Radio Stations'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $radio = new Live_Stream((int)$pathreq[1]);
@@ -733,14 +733,14 @@ class Upnp_Api
             case 'podcasts':
                 switch (count($pathreq)) {
                     case 1:
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/podcasts',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts['podcast'],
                             'dc:title' => T_('Podcasts'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $podcast = self::getPodcastRepository()->findById((int)$pathreq[1]);
@@ -758,7 +758,7 @@ class Upnp_Api
                 }
                 break;
             default:
-                $meta = array(
+                $meta = [
                     'id' => $root,
                     'parentID' => '0',
                     'restricted' => '1',
@@ -767,7 +767,7 @@ class Upnp_Api
                     'dc:title' => T_('Music'),
                     'upnp:class' => 'object.container', //.storageFolder',
                     'upnp:storageUsed' => '-1',
-                );
+                ];
                 break;
         }
 
@@ -785,10 +785,10 @@ class Upnp_Api
         $maxCount = count($items);
         //debug_event(self::class, 'slice: ' . $maxCount . "   " . $start . "    " . $count, 5);
 
-        return array(
+        return [
             $maxCount,
             array_slice($items, $start, (($count == 0) ? $maxCount - $start : $count))
-        );
+        ];
     }
 
     /**
@@ -800,9 +800,9 @@ class Upnp_Api
      */
     public static function _musicChilds($prmPath, $prmQuery, $start, $count): array
     {
-        $mediaItems = array();
+        $mediaItems = [];
         $maxCount   = 0;
-        $queryData  = array();
+        $queryData  = [];
         parse_str($prmQuery, $queryData);
 
         debug_event(self::class, 'MusicChilds: [' . $prmPath . '] [' . $prmQuery . ']' . '[' . $start . '] [' . $count . ']', 5);
@@ -820,7 +820,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get artists list
                         $artists              = Catalog::get_artists(null, $count, $start);
-                        [$maxCount, $artists] = array($counts['artist'], $artists);
+                        [$maxCount, $artists] = [$counts['artist'], $artists];
                         foreach ($artists as $artist) {
                             $artist->format();
                             $mediaItems[] = self::_itemArtist($artist, $parent);
@@ -847,7 +847,7 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1: // Get albums list
                         $album_ids              = Catalog::get_albums($count, $start);
-                        [$maxCount, $album_ids] = array($counts['album'], $album_ids);
+                        [$maxCount, $album_ids] = [$counts['album'], $album_ids];
                         foreach ($album_ids as $album_id) {
                             $album = new Album($album_id);
                             if ($album->isNew()) {
@@ -1003,10 +1003,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array(
+        return [
             $maxCount,
             $mediaItems
-        );
+        ];
     }
 
     /**
@@ -1026,14 +1026,14 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1:
                         $counts = count(Catalog::get_tvshows());
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/tvshows',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
                             'dc:title' => T_('TV Shows'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $tvshow = new TvShow((int)$pathreq[1]);
@@ -1062,14 +1062,14 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1:
                         $counts = Catalog::get_videos_count(null, 'clip');
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/clips',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
                             'dc:title' => T_('Clips'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $video = new Clip((int)$pathreq[1]);
@@ -1084,14 +1084,14 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1:
                         $counts = Catalog::get_videos_count(null, 'movie');
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/movies',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
                             'dc:title' => T_('Movies'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $video = new Movie((int)$pathreq[1]);
@@ -1106,14 +1106,14 @@ class Upnp_Api
                 switch (count($pathreq)) {
                     case 1:
                         $counts = Catalog::get_videos_count(null, 'personal_video');
-                        $meta   = array(
+                        $meta   = [
                             'id' => $root . '/personal_videos',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
                             'dc:title' => T_('Personal Videos'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                         break;
                     case 2:
                         $video = new Personal_Video((int)$pathreq[1]);
@@ -1125,7 +1125,7 @@ class Upnp_Api
                 }
                 break;
             default:
-                $meta = array(
+                $meta = [
                     'id' => $root,
                     'parentID' => '0',
                     'restricted' => '1',
@@ -1134,7 +1134,7 @@ class Upnp_Api
                     'dc:title' => T_('Video'),
                     'upnp:class' => 'object.container', // .storageFolder',
                     'upnp:storageUsed' => '-1',
-                );
+                ];
                 break;
         }
 
@@ -1150,9 +1150,9 @@ class Upnp_Api
      */
     public static function _videoChilds($prmPath, $prmQuery, $start, $count): array
     {
-        $mediaItems = array();
+        $mediaItems = [];
         $maxCount   = 0;
-        $queryData  = array();
+        $queryData  = [];
         parse_str($prmQuery, $queryData);
 
         $parent  = 'amp://video' . $prmPath;
@@ -1243,10 +1243,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array(
+        return [
             $maxCount,
             $mediaItems
-        );
+        ];
     }
 
     /**
@@ -1255,8 +1255,8 @@ class Upnp_Api
      */
     private static function gettokens($str): array
     {
-        $tokens        = array();
-        $nospacetokens = array();
+        $tokens        = [];
+        $nospacetokens = [];
         // put the string into lowercase
         //    $str = strtolower($str);
 
@@ -1326,7 +1326,7 @@ class Upnp_Api
         //}
         debug_event(self::class, 'Token ' . var_export($tok, true), 5);
 
-        $term = array();
+        $term = [];
         if (sizeof($tok) == 3) {
             // tuple, we understand
             switch ($tok[0]) {
@@ -1355,9 +1355,9 @@ class Upnp_Api
                 case 'upnp:author@role':
                     $term['ruletype'] = $tok[2];
 
-                    return array();
+                    return [];
                 default:
-                    return array();
+                    return [];
             }
             switch ($tok[1]) {
                 case '=':
@@ -1398,15 +1398,15 @@ class Upnp_Api
     private static function parse_upnp_searchcriteria($query, $type): array
     {
         // Transforms a upnp search query into an Ampache search query
-        $upnp_translations = array(
-            array('upnp:class = "object.container.album.musicAlbum"', 'album'),
-            array('upnp:class derivedfrom "object.item.audioItem"', 'song'),
-            array('upnp:class = "object.container.person.musicArtist"', 'artist'),
-            array('upnp:class = "object.container.playlistContainer"', 'playlist'),
-            array('upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'),
-            array('upnp:class = "object.container.genre.musicGenre"', 'tag'),
-            array('@refID exists false', '')
-        );
+        $upnp_translations = [
+            ['upnp:class = "object.container.album.musicAlbum"', 'album'],
+            ['upnp:class derivedfrom "object.item.audioItem"', 'song'],
+            ['upnp:class = "object.container.person.musicArtist"', 'artist'],
+            ['upnp:class = "object.container.playlistContainer"', 'playlist'],
+            ['upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'],
+            ['upnp:class = "object.container.genre.musicGenre"', 'tag'],
+            ['@refID exists false', '']
+        ];
 
         $tokens = self::gettokens($query);
         $size   = sizeof($tokens);
@@ -1431,7 +1431,7 @@ class Upnp_Api
         //   echo $tokens[$i]."|";
         //}
         // Start to construct the Ampache Search data array
-        $data = array();
+        $data = [];
 
         // In some cases the first search term gives the type of search
         // Other types of device may specify the type of search implicitly by the type of filter
@@ -1527,15 +1527,15 @@ class Upnp_Api
         if (count($ids) == 0) {
             debug_event(self::class, 'Search returned no hits', 5);
 
-            return array(
+            return [
                 0,
-                array()
-            );
+                []
+            ];
         }
         //debug_event(self::class, 'Dumping $search results: '.var_export( $ids, true ), 5);
         debug_event(self::class, ' ' . (string) count($ids) . ' ids looking for type ' . $data['type'], 5);
 
-        $mediaItems = array();
+        $mediaItems = [];
         $maxCount   = 0;
         switch ($data['type']) {
             case 'artist':
@@ -1591,10 +1591,10 @@ class Upnp_Api
             $maxCount = count($mediaItems);
         }
 
-        return array(
+        return [
             $maxCount,
             $mediaItems
-        );
+        ];
     }
 
     /**
@@ -1626,7 +1626,7 @@ class Upnp_Api
      */
     private static function _itemArtist($artist, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://music/artists/' . $artist->id,
             'parentID' => $parent,
             'restricted' => 'false',
@@ -1634,7 +1634,7 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($artist->get_fullname()),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1644,7 +1644,7 @@ class Upnp_Api
      */
     private static function _itemTag($tag, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://music/tags/' . $tag->id,
             'parentID' => $parent,
             'restricted' => 'false',
@@ -1652,7 +1652,7 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($tag->f_name),
             //'upnp:class' => 'object.container.person.musicArtist',
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1665,7 +1665,7 @@ class Upnp_Api
         $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
         $art_url     = Art::url($album->id, 'album', $api_session);
 
-        return array(
+        return [
             'id' => 'amp://music/albums/' . $album->id,
             'parentID' => $parent,
             'restricted' => 'false',
@@ -1675,7 +1675,7 @@ class Upnp_Api
             //'upnp:class' => 'object.container',
             'upnp:albumArtist' => $album->album_artist,
             'upnp:albumArtURI' => $art_url,
-        );
+        ];
     }
 
     /**
@@ -1685,14 +1685,14 @@ class Upnp_Api
      */
     private static function _itemPlaylist($playlist, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://music/playlists/' . $playlist->id,
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container', // object.container.playlistContainer
-        );
+        ];
     }
 
     /**
@@ -1702,14 +1702,14 @@ class Upnp_Api
      */
     private static function _itemSmartPlaylist($playlist, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://music/smartplaylists/' . $playlist->id,
             'parentID' => $parent,
             'restricted' => 'false',
             'childCount' => count($playlist->get_items()),
             'dc:title' => self::_replaceSpecialSymbols($playlist->name),
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1738,7 +1738,7 @@ class Upnp_Api
          * microsoft:artistAlbumArtist, microsoft:artistPerformer, microsoft:artistConductor, microsoft:authorComposer, microsoft:authorOriginalLyricist,
          * microsoft:authorWriter
          */
-        return array(
+        return [
             'id' => 'amp://music/songs/' . $song->id,
             'parentID' => $parent,
             'restricted' => 'false', // XXX
@@ -1759,7 +1759,7 @@ class Upnp_Api
             'sampleFrequency' => $song->rate,
             'nrAudioChannels' => '2', // Just say its stereo as we don't have the real info
             'description' => self::_replaceSpecialSymbols($song->comment),
-        );
+        ];
     }
 
     /**
@@ -1775,7 +1775,7 @@ class Upnp_Api
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$radio->codec];
 
-        return array(
+        return [
             'id' => 'amp://music/live_streams/' . $radio->id,
             'parentID' => $parent,
             'restricted' => 'false',
@@ -1785,7 +1785,7 @@ class Upnp_Api
 
             'res' => $radio->url,
             'protocolInfo' => $arrFileType['mime']
-        );
+        ];
     }
 
     /**
@@ -1795,14 +1795,14 @@ class Upnp_Api
      */
     private static function _itemTVShow($tvshow, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://video/tvshows/' . $tvshow->id,
             'parentID' => $parent,
             'restricted' => '1',
             'childCount' => count($tvshow->get_seasons()),
             'dc:title' => self::_replaceSpecialSymbols($tvshow->f_name),
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1812,14 +1812,14 @@ class Upnp_Api
      */
     private static function _itemTVShowSeason($season, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
             'parentID' => $parent,
             'restricted' => '1',
             'childCount' => count($season->get_episodes()),
             'dc:title' => self::_replaceSpecialSymbols($season->f_name),
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1835,7 +1835,7 @@ class Upnp_Api
         $fileTypesByExt = self::_getFileTypes();
         $arrFileType    = $fileTypesByExt[$video->type];
 
-        return array(
+        return [
             'id' => $parent . '/' . $video->id,
             'parentID' => $parent,
             'restricted' => '1',
@@ -1848,7 +1848,7 @@ class Upnp_Api
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
             'duration' => $video->f_time_h . '.0',
-        );
+        ];
     }
 
     /**
@@ -1858,14 +1858,14 @@ class Upnp_Api
      */
     private static function _itemPodcast($podcast, $parent): array
     {
-        return array(
+        return [
             'id' => 'amp://music/podcasts/' . $podcast->id,
             'parentID' => $parent,
             'restricted' => '1',
             'childCount' => count($podcast->get_episodes()),
             'dc:title' => self::_replaceSpecialSymbols($podcast->get_fullname()),
             'upnp:class' => 'object.container',
-        );
+        ];
     }
 
     /**
@@ -1879,9 +1879,9 @@ class Upnp_Api
         $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
-        $arrFileType    = (!empty($episode->type)) ? $fileTypesByExt[$episode->type] : array();
+        $arrFileType    = (!empty($episode->type)) ? $fileTypesByExt[$episode->type] : [];
 
-        $ret = array(
+        $ret = [
             'id' => 'amp://music/podcasts/' . $episode->podcast . '/' . $episode->id,
             'parentID' => $parent,
             'restricted' => '1',
@@ -1889,7 +1889,7 @@ class Upnp_Api
             'upnp:album' => self::_replaceSpecialSymbols($episode->getPodcastName()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url
-        );
+        ];
         if (isset($arrFileType['mime'])) {
             $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
@@ -1905,62 +1905,62 @@ class Upnp_Api
      */
     private static function _getFileTypes(): array
     {
-        return array(
-            'wav' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-wav:*',),
-            'mpa' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
-            '.mp1' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
-            'mp3' => array('class' => 'object.item.audioItem.musicTrack', 'mime' => 'http-get:*:audio/mpeg:*',),
-            'aiff' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',),
-            'aif' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',),
-            'wma' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ms-wma:*',),
-            'lpcm' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',),
-            'aac' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aac:*',),
-            'm4a' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',),
-            'ac3' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ac3:*',),
-            'pcm' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',),
-            'flac' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/flac:*',),
-            'ogg' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:application/ogg:*',),
-            'mka' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-matroska:*',),
-            'mp4a' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',),
-            'mp2' => array('class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',),
-            'gif' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/gif:*',),
-            'jpg' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
-            'jpe' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
-            'png' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/png:*',),
-            'tiff' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',),
-            'tif' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',),
-            'jpeg' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',),
-            'bmp' => array('class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/bmp:*',),
-            'asf' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-asf:*',),
-            'wmv' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-wmv:*',),
-            'mpeg2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
-            'avi' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',),
-            'divx' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',),
-            'mpg' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'm1v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'm2v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'mp4' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
-            'mov' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/quicktime:*',),
-            'vob' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/dvd:*',),
-            'dvr-ms' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-dvr:*',),
-            'dat' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'mpeg' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'm1s' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',),
-            'm2p' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
-            'm2t' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'm2ts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'mts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'ts' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'tp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'trp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'm4t' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',),
-            'm4v' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/MP4V-ES:*',),
-            'vbs' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
-            'mod' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',),
-            'mkv' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-matroska:*',),
-            '3g2' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
-            '3gp' => array('class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',),
-        );
+        return [
+            'wav' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-wav:*',],
+            'mpa' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',],
+            '.mp1' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',],
+            'mp3' => ['class' => 'object.item.audioItem.musicTrack', 'mime' => 'http-get:*:audio/mpeg:*',],
+            'aiff' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',],
+            'aif' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aiff:*',],
+            'wma' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ms-wma:*',],
+            'lpcm' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',],
+            'aac' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-aac:*',],
+            'm4a' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',],
+            'ac3' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-ac3:*',],
+            'pcm' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/lpcm:*',],
+            'flac' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/flac:*',],
+            'ogg' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:application/ogg:*',],
+            'mka' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-matroska:*',],
+            'mp4a' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/x-m4a:*',],
+            'mp2' => ['class' => 'object.item.audioItem', 'mime' => 'http-get:*:audio/mpeg:*',],
+            'gif' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/gif:*',],
+            'jpg' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',],
+            'jpe' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',],
+            'png' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/png:*',],
+            'tiff' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',],
+            'tif' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/tiff:*',],
+            'jpeg' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/jpeg:*',],
+            'bmp' => ['class' => 'object.item.imageItem', 'mime' => 'http-get:*:image/bmp:*',],
+            'asf' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-asf:*',],
+            'wmv' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-wmv:*',],
+            'mpeg2' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',],
+            'avi' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',],
+            'divx' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-msvideo:*',],
+            'mpg' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'm1v' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'm2v' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'mp4' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',],
+            'mov' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/quicktime:*',],
+            'vob' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/dvd:*',],
+            'dvr-ms' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-ms-dvr:*',],
+            'dat' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'mpeg' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'm1s' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg:*',],
+            'm2p' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',],
+            'm2t' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'm2ts' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'mts' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'ts' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'tp' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'trp' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'm4t' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2ts:*',],
+            'm4v' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/MP4V-ES:*',],
+            'vbs' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',],
+            'mod' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mpeg2:*',],
+            'mkv' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/x-matroska:*',],
+            '3g2' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',],
+            '3gp' => ['class' => 'object.item.videoItem', 'mime' => 'http-get:*:video/mp4:*',],
+        ];
     }
 
     /**

@@ -56,7 +56,7 @@ final class LiveStreamMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id   = (int) $input['filter'];
@@ -71,10 +71,10 @@ final class LiveStreamMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::live_streams(array($object_id), false);
+                echo Json_Data::live_streams([$object_id], false);
                 break;
             default:
-                echo Xml_Data::live_streams(array($object_id), $user);
+                echo Xml_Data::live_streams([$object_id], $user);
         }
 
         return true;

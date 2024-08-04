@@ -51,11 +51,11 @@ final class Ping3Method
     {
         $version      = (isset($input['version'])) ? $input['version'] : Api3::$version;
         $data_version = (int)substr($version, 0, 1);
-        $results      = array(
+        $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api3::$version,
             'compatible' => '350001'
-        );
+        ];
 
         // Check and see if we should extend the api sessions (done if valid sess is passed)
         if (array_key_exists('auth', $input) && Session::exists('api', $input['auth'])) {
@@ -69,7 +69,7 @@ final class Ping3Method
                 Session::write($input['auth'], $data_version, $perpetual);
             }
             $results = array_merge(
-                array('session_expire' => $session_expire),
+                ['session_expire' => $session_expire],
                 $results
             );
 

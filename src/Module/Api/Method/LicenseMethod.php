@@ -56,7 +56,7 @@ final class LicenseMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -71,10 +71,10 @@ final class LicenseMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::licenses(array($object_id), false);
+                echo Json_Data::licenses([$object_id], false);
                 break;
             default:
-                echo Xml_Data::licenses(array($object_id), $user);
+                echo Xml_Data::licenses([$object_id], $user);
         }
 
         return true;

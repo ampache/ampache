@@ -59,7 +59,7 @@ final class UserUpdateMethod
      */
     public static function user_update(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
 

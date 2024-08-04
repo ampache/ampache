@@ -50,7 +50,7 @@ final class SongMethod
      */
     public static function song(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -65,10 +65,10 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs(array((int) $object_id), $user, true, false);
+                echo Json_Data::songs([(int) $object_id], $user, true, false);
                 break;
             default:
-                echo Xml_Data::songs(array((int) $object_id), $user);
+                echo Xml_Data::songs([(int) $object_id], $user);
         }
 
         return true;

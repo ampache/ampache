@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Ampache 6.6.1
+
+### Fixed
+
+* Wanted items were not being added to the DB correctly
+* RSS Feeds were not including other users
+* Ambiguous column in Rating::get_highest_sql()
+* Plugins
+  * Don't show that catalog favorites header if there isn't anything to show
+
 ## Ampache 6.6.0
 
 Another version bump due to additions in API6 related to playlists
