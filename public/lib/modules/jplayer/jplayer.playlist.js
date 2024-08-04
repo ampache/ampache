@@ -668,9 +668,9 @@
             if (!self.shuffling) {
                 console.log("shuffle");
                 self.shuffling = true;
+                var playlist_before = self.playlist;
                 $(this.cssSelector.playlist + " ul").slideUp(this.options.playlistOptions.shuffleTime, function() {
                     var current_item = self.playlist[self.current];
-                    var playlist_before = self.playlist;
                     var final_list = [];
                     var playlist_items = [];
                     // push the current track first
