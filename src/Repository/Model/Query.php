@@ -225,6 +225,7 @@ class Query
     public function set_filter($key, mixed $value): bool
     {
         switch ($key) {
+            case 'id':
             case 'gather_type':
             case 'gather_types':
             case 'hidden':
