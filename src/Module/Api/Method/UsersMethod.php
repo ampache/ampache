@@ -56,7 +56,7 @@ final class UsersMethod
         $browse = Api::getBrowse($user);
         $browse->set_type('user');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['id', 'ASC']);
 
         $browse->set_filter('disabled', 0);
 
