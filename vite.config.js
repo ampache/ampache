@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
     build: {
-        outDir: './public/dist',
+        outDir: './public/client/dist',
         copyPublicDir: false,
         modulePreload: {
           polyfill: false,

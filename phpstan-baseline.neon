@@ -4396,6 +4396,11 @@ parameters:
 			path: src/Module/Application/Stream/AbstractStreamAction.php
 
 		-
+			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\StreamItemAction\\:\\:\\$configContainer is never read, only written\\.$#"
+			count: 1
+			path: src/Module/Application/Stream/StreamItemAction.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Test/ConfigAction.php
@@ -8656,21 +8661,6 @@ parameters:
 			path: src/Module/Util/Horde_Browser.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:get_users\\(\\) has parameter \\$filter with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:get_users\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Mailer\\:\\:send_to_group\\(\\) has parameter \\$group_name with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Mailer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\MailerInterface\\:\\:send_to_group\\(\\) has parameter \\$group_name with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/MailerInterface.php
@@ -10821,11 +10811,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_name_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_stats\\(\\) should return array\\{tags\\: int, formatted_size\\: string, time_text\\: string, users\\: int, connected\\: int\\} but returns non\\-empty\\-array\\<int\\|string\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -11467,11 +11452,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_search_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 

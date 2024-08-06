@@ -1442,7 +1442,7 @@ abstract class Catalog extends database_object
      * @param string $table
      * @param string $sort
      * @param string $order
-     * @return array
+     * @return list<array{id?: string, name?: string}>
      */
     public static function get_name_array($objects, $table, $sort = '', $order = 'ASC'): array
     {

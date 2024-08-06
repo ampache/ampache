@@ -191,6 +191,7 @@ return [
     Playlist\SetTrackNumbersAction::class => autowire(Playlist\SetTrackNumbersAction::class),
     Playlist\ImportPlaylistAction::class => autowire(Playlist\ImportPlaylistAction::class),
     Playlist\ShowImportPlaylistAction::class => autowire(Playlist\ShowImportPlaylistAction::class),
+    Playlist\ShowExportPlaylistAction::class => autowire(Playlist\ShowExportPlaylistAction::class),
     Playlist\DeletePlaylistAction::class => autowire(Playlist\DeletePlaylistAction::class),
     Playlist\RefreshPlaylistAction::class => autowire(Playlist\RefreshPlaylistAction::class),
     Playlist\CreatePlaylistAction::class => autowire(Playlist\CreatePlaylistAction::class),

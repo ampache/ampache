@@ -53,15 +53,20 @@ final class StreamItemAction extends AbstractStreamAction
             return null;
         }
         $fileName   = $request->getQueryParams()['name'] ?? null;
-        $objectType = LibraryItemEnum::tryFrom($request->getQueryParams()['object_type'] ?? '');
-        if ($objectType === null) {
-            return null;
-        }
-
         $objectIds = explode(',', Core::get_get('object_id'));
         $mediaIds  = [];
 
         foreach ($objectIds as $object_id) {
+            $objectType = LibraryItemEnum::tryFrom($request->getQueryParams()['object_type'] ?? '');
+            if ($objectType === null) {
+                return null;
+            }
+            if (
+                $objectType->value === 'playlist' &&
+                (int)$object_id === 0
+            ) {
+                $objectType = LibraryItemEnum::SEARCH;
+            }
             $item = $this->libraryItemLoader->load(
                 $objectType,
                 (int) $object_id,
