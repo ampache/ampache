@@ -44,19 +44,19 @@ foreach ($theme_css_base as $css_base) { ?>
 <?php
 if (
     is_rtl(AmpConfig::get('lang', 'en_US')) &&
-    is_file(__DIR__ . '/../../public/' . $theme_path . '/rtl.css')
+    is_file(__DIR__ . '/../../public/client/' . $theme_path . '/rtl.css')
 ) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path; ?>/rtl.css" type="text/css" media="screen" />
 <?php } ?>
 
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-ui.custom.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/jquery-editdialog.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/components/prettyphoto/css/prettyPhoto.min.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/templates/jquery-ui.custom.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/templates/jquery-editdialog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/components/tag-it/css/jquery.tagit.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/modules/rhinoslider/css/rhinoslider-1.05.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/components/datetimepicker/jquery.datetimepicker.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/components/jquery-contextmenu/jquery.contextMenu.min.css" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/client/lib/components/filepond/filepond.min.css" type="text/css" media="screen">
 
 <?php Ui::show_custom_style(); ?>

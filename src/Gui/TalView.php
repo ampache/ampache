@@ -78,7 +78,7 @@ final class TalView implements TalViewInterface
     {
         if ($this->engine === null) {
             $theme_path = sprintf(
-                '%s/../../public/%s/templates/',
+                '%s/../../public/client/%s/templates/',
                 __DIR__,
                 $this->configContainer->getThemePath()
             );

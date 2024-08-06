@@ -103,7 +103,7 @@ class Ui implements UiInterface
     public static function find_template($template, bool $extern = false): string
     {
         $path      = AmpConfig::get('theme_path') . '/templates/' . $template;
-        $realpath  = __DIR__ . '/../../../public/' . $path;
+        $realpath  = __DIR__ . '/../../../public/client/' . $path;
         $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (($extension != 'php' || AmpConfig::get('allow_php_themes')) && file_exists($realpath) && is_file($realpath)) {
             return $path;
@@ -112,7 +112,7 @@ class Ui implements UiInterface
                 return '/templates/' . $template;
             }
 
-            return __DIR__ . '/../../../public/templates/' . $template;
+            return __DIR__ . '/../../../public/client/templates/' . $template;
         }
     }
 
@@ -412,7 +412,7 @@ class Ui implements UiInterface
         }
 
         $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
-        $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
 
         if (empty($filesearch)) {
             // if the theme is missing an icon, fall back to default images folder
@@ -421,7 +421,7 @@ class Ui implements UiInterface
             $filesearch = glob(__DIR__ . '/../../../resources/' . $path . 'icon_' . $name . '.svg', GLOB_BRACE);
             if (empty($filesearch)) {
                 // finally fall back to the public images folder
-                $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+                $filesearch = glob(__DIR__ . '/../../../public/client/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
             }
         }
 
@@ -510,14 +510,14 @@ class Ui implements UiInterface
 
         // always check themes first
         $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
-        $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        $filesearch = glob(__DIR__ . '/../../../public/client/' . $path . $name . '.{svg,png}', GLOB_BRACE);
         if (empty($filesearch)) {
             $path = 'images/';
             // check private resources folder for svg files
             $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg', GLOB_BRACE);
             if (empty($filesearch)) {
                 // finally fall back to the public images folder
-                $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+                $filesearch = glob(__DIR__ . '/../../../public/client/' . $path . $name . '.{svg,png}', GLOB_BRACE);
             }
         }
         if (empty($filesearch)) {

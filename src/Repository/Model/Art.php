@@ -652,7 +652,7 @@ class Art extends database_object
      */
     private function read_from_images(): ?string
     {
-        $path = __DIR__ . '/../../../public/images/blankalbum.png';
+        $path = __DIR__ . '/../../../public/client/images/blankalbum.png';
         if (!Core::is_readable($path)) {
             debug_event(self::class, 'read_from_images ' . $path . ' cannot be read.', 1);
 

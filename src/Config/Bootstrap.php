@@ -60,8 +60,8 @@ AmpConfig::set('load_time_begin', microtime(true));
 
 // We still allow scripts to run (it could be the purpose of the maintenance)
 if ($environment->isCli() === false) {
-    if (file_exists(__DIR__ . '/../../public/.maintenance')) {
-        require_once  __DIR__ . '/../../public/.maintenance';
+    if (file_exists(__DIR__ . '/../../public/client/.maintenance')) {
+        require_once  __DIR__ . '/../../public/client/.maintenance';
     }
 }
 

@@ -58,7 +58,7 @@ final class ConfigAction implements ApplicationActionInterface
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
         if (!count(parse_ini_file($configfile))) {
-            require_once __DIR__ . '/../../../../public/templates/show_test_config.inc.php';
+            require_once __DIR__ . '/../../../../public/client/templates/show_test_config.inc.php';
 
             return null;
         }
@@ -74,7 +74,7 @@ final class ConfigAction implements ApplicationActionInterface
         // Make sure the config file is set up and parsable
         $results = (is_readable($configfile)) ? parse_ini_file($configfile) : '';
         if (empty($results)) {
-            $link = __DIR__ . '/../../../../public/test.php?action=config';
+            $link = __DIR__ . '/../../../../public/client/test.php?action=config';
         }
         if (is_array($results)) {
             /* Temp Fixes */
@@ -89,12 +89,12 @@ final class ConfigAction implements ApplicationActionInterface
             AmpConfig::set('lang', $_COOKIE[$session_name . '_lang']);
         }
         if (!class_exists('Gettext\Translations')) {
-            require_once __DIR__ . '/../../../../public/templates/test_error_page.inc.php';
+            require_once __DIR__ . '/../../../../public/client/templates/test_error_page.inc.php';
             throw new Exception('load_gettext()');
         } else {
             load_gettext();
             // Load template
-            require_once __DIR__ . '/../../../../public/templates/show_test.inc.php';
+            require_once __DIR__ . '/../../../../public/client/templates/show_test.inc.php';
         }
 
         return null;

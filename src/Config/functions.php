@@ -1115,7 +1115,7 @@ function get_themes(): array
 {
     $results = [];
 
-    $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
+    $lst_files = glob(__DIR__ . '/../../public/client/themes/*/theme.cfg.php');
     if (!$lst_files) {
         debug_event('themes', 'Failed to open /themes directory', 2);
 
@@ -1160,7 +1160,7 @@ function get_theme($name)
         return $_mapcache[$name];
     }
 
-    $config_file = __DIR__ . "/../../public/themes/" . $name . "/theme.cfg.php";
+    $config_file = __DIR__ . "/../../public/client/themes/" . $name . "/theme.cfg.php";
     if (file_exists($config_file)) {
         $results = parse_ini_file($config_file);
         if (is_array($results)) {
