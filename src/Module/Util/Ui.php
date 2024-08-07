@@ -644,7 +644,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/fclient/avicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
