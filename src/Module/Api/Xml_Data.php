@@ -1123,8 +1123,11 @@ class Xml_Data
             }
 
             $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
-            if ($include) {
-                $user = User::get_from_username($bookmark->getUserName());
+            $user = User::get_from_username($bookmark->getUserName());
+            if (
+                $include &&
+                $user !== null
+            ) {
                 switch ($bookmark->object_type) {
                     case 'song':
                         $string .= self::songs([$bookmark->object_id], $user, false);

@@ -75,7 +75,7 @@ final class LabelArtistsMethod
         $browse = Api::getBrowse($user);
         $browse->set_type('artist');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
         $browse->set_filter('label', $label->getId());
 

@@ -165,6 +165,7 @@ return [
     Stream\DemocraticAction::class => autowire(Stream\DemocraticAction::class),
     Stream\PlaylistRandomAction::class => autowire(Stream\PlaylistRandomAction::class),
     Stream\PlayItemAction::class => autowire(Stream\PlayItemAction::class),
+    Stream\StreamItemAction::class => autowire(Stream\StreamItemAction::class),
     Stream\RandomAction::class => autowire(Stream\RandomAction::class),
     Stream\TmpPlaylistAction::class => autowire(Stream\TmpPlaylistAction::class),
     Stream\BasketAction::class => autowire(Stream\BasketAction::class),

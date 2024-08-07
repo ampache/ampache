@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<array{track: string, id: int, name: string}> $object_ids */
 
-$localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+$localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
 $localplay->connect();
 $status = $localplay->status(); ?>
 <?php if ($browse->is_show_header()) {

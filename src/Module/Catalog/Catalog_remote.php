@@ -350,7 +350,7 @@ class Catalog_remote extends Catalog
                         if (!Song::insert($data)) {
                             debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
                             /* HINT: Song Title */
-                            AmpError::add('general', T_('Unable to insert song - %s'), $song->title);
+                            AmpError::add('general', T_(sprintf('Unable to insert song - %s', $song->title)));
                             echo AmpError::display('general');
                             flush();
                         } else {
@@ -477,7 +477,12 @@ class Catalog_remote extends Catalog
                 debug_event('remote.catalog', 'Saving ' . $row['id'] . ' to (' . $target_file . ')', 5);
                 try {
                     $filehandle = fopen($target_file, 'w');
-                    $curl       = curl_init();
+                    if (!$filehandle) {
+                        debug_event('remote.catalog', 'Could not open file: ' . $target_file, 5);
+                        continue;
+                    }
+
+                    $curl = curl_init();
                     curl_setopt_array(
                         $curl,
                         [
@@ -495,6 +500,7 @@ class Catalog_remote extends Catalog
                 } catch (Exception $error) {
                     debug_event('remote.catalog', 'Cache error: ' . $row['id'] . ' ' . $error->getMessage(), 5);
                 }
+
                 // keep alive just in case
                 $remote_handle->send_command('ping');
             }

@@ -106,6 +106,12 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         echo "&nbsp;" . T_('Share playlist'); ?>
         </a>
     <?php } ?>
+        <li>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlist->id; ?>&name=<?php echo rawurlencode($playlist->name ?? 'ampache_playlist'); ?>">
+                <?php echo Ui::get_material_symbol('download', T_('Download Playlist')); ?>
+                <?php echo T_('Download Playlist'); ?>
+            </a>
+        </li>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play_circle', T_('Play All'), 'directplay_full_' . $playlist->id); ?>

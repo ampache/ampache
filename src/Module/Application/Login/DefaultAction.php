@@ -296,7 +296,7 @@ final class DefaultAction implements ApplicationActionInterface
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!
-            $this->userTracker->trackIpAddress($user);
+            $this->userTracker->trackIpAddress($user, 'Login');
 
             if (isset($username)) {
                 Session::create_user_cookie($username);

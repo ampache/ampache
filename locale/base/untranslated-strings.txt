@@ -238,3 +238,11 @@ msgstr ""
 #: ./untranslated-strings.txt:153
 msgid "YOURLS"
 msgstr ""
+
+#: ./untranslated-strings.txt:154
+msgid "handshake"
+msgstr ""
+
+#: ./untranslated-strings.txt:155
+msgid "ping"
+msgstr ""

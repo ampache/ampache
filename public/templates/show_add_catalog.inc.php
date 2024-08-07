@@ -73,6 +73,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
 
 foreach (Catalog::CATALOG_TYPES as $type => $className) {
+    /** @var Catalog $catalog */
     $catalog = new $className();
 
     if ($catalog->is_installed()) {

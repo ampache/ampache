@@ -123,7 +123,7 @@ class Json_Data
             ]
         ];
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -142,7 +142,7 @@ class Json_Data
             $message[$title] = $data;
         }
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -441,7 +441,7 @@ class Json_Data
         } // end foreach
         $output["list"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -484,7 +484,7 @@ class Json_Data
         } // end foreach
         $output["browse"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -527,7 +527,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -570,7 +570,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -624,7 +624,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -673,7 +673,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -756,7 +756,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -860,7 +860,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -966,7 +966,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1032,7 +1032,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1083,8 +1083,12 @@ class Json_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date
             ];
-            if ($include) {
-                $user = User::get_from_username($bookmark_username);
+
+            $user = User::get_from_username($bookmark_username);
+            if (
+                $include &&
+                $user !== null
+            ) {
                 switch ($bookmark_object_type) {
                     case 'song':
                         $JSON[$count]['song'] = self::songs([(int)$bookmark_object_id], $user, false, false);
@@ -1105,7 +1109,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1164,7 +1168,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1248,7 +1252,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1333,7 +1337,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1485,7 +1489,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1548,7 +1552,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1624,7 +1628,7 @@ class Json_Data
         } // end foreach
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1673,7 +1677,7 @@ class Json_Data
         }
         $output = ($object) ? ["user" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1711,7 +1715,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1752,7 +1756,7 @@ class Json_Data
         }
         $output = ["now_playing" => $JSON];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1784,7 +1788,7 @@ class Json_Data
         }
         $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1816,7 +1820,7 @@ class Json_Data
         }
         $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1886,7 +1890,7 @@ class Json_Data
         }
         $output["deleted_" . $object_type] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

@@ -27,7 +27,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $workingUser */
-/** @var Traversable<array{date: int, ip: string, agent: string}> $history */
+/** @var Traversable<array{date: int, ip: string, agent: string, action: string}> $history */
 /** @var bool $showAll */
 /** @var string $webPath */
 
@@ -56,11 +56,13 @@ use Ampache\Repository\Model\User;
   <col id="col_date" />
   <col id="col_ipaddress" />
   <col id="col_agent" />
+  <col id="col_action" />
 </colgroup>
 <tr class="th-top">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
     <th class="col_agent"><?php echo T_('Agent'); ?></th>
+    <th class="col_action"><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($history as $data) { ?>
 <tr>
@@ -73,12 +75,16 @@ use Ampache\Repository\Model\User;
     <td class="col_agent">
         <?php echo $data['agent'] ?: T_('Unknown'); ?>
     </td>
+    <td class="col_action">
+        <?php echo (empty($data['action'])) ? T_($data['action']) : T_('Unknown'); ?>
+    </td>
 </tr>
 <?php } ?>
 <tr class="th-bottom">
     <th class="cel_date"><?php echo T_('Date'); ?></th>
     <th class="cel_ipaddress"><?php echo T_('IP Address'); ?></th>
     <th class="col_agent"><?php echo T_('Agent'); ?></th>
+    <th class="col_action"><?php echo T_('Action'); ?></th>
 </tr>
 
 </table>

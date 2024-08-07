@@ -36,7 +36,6 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * AmpacheHttpq Class
@@ -48,8 +47,8 @@ use PDOStatement;
 class AmpacheHttpq extends localplay_controller
 {
     /* Variables */
-    private $version     = '000002';
-    private $description = "Controls an httpQ instance, requires Ampache's httpQ version";
+    private string $version     = '000002';
+    private string $description = "Controls an httpQ instance, requires Ampache's httpQ version";
 
     /* Constructed variables */
     private $_httpq;
@@ -122,30 +121,27 @@ class AmpacheHttpq extends localplay_controller
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
         $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -169,10 +165,10 @@ class AmpacheHttpq extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $uid  = Dba::escape($uid);
         $port = Dba::escape($data['port']);
@@ -182,8 +178,6 @@ class AmpacheHttpq extends localplay_controller
 
         $sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -205,10 +199,9 @@ class AmpacheHttpq extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all its variables
-     * @param string $instance
      * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
@@ -328,11 +321,11 @@ class AmpacheHttpq extends localplay_controller
     /**
      * skip
      * This tells httpQ to skip to the specified song
-     * @param $song
+     * @param $track_id
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
-        if ($this->_httpq->skip($song) === null) {
+        if ($this->_httpq->skip($track_id) === null) {
             return false;
         }
 
@@ -342,7 +335,7 @@ class AmpacheHttpq extends localplay_controller
     /**
      * This tells httpQ to increase the volume by WinAmps default amount
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         return $this->_httpq->volume_up();
     }
@@ -350,7 +343,7 @@ class AmpacheHttpq extends localplay_controller
     /**
      * This tells httpQ to decrease the volume by Winamp's default amount
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         return $this->_httpq->volume_down();
     }
@@ -411,7 +404,7 @@ class AmpacheHttpq extends localplay_controller
      * either on or off
      * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         if ($this->_httpq->repeat($state) === null) {
             return false;
@@ -424,11 +417,11 @@ class AmpacheHttpq extends localplay_controller
      * random
      * This tells httpQ to turn on or off the playing of songs from the
      * playlist in random order
-     * @param $onoff
+     * @param $state
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
-        if ($this->_httpq->random($onoff) === null) {
+        if ($this->_httpq->random($state) === null) {
             return false;
         }
 

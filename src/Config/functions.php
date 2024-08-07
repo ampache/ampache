@@ -160,6 +160,8 @@ function get_languages(): array
 
     if (!is_resource($handle)) {
         debug_event('general.lib', 'Error unable to open locale directory', 1);
+
+        return ["en_US" => "English (US)"];
     }
 
     $results = [];
@@ -440,7 +442,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
     $locale = AmpConfig::get('lang', 'en_US');
     $format = new IntlDateFormatter($locale, $date_type, $time_type, $timezone, null, $pattern);
 
-    return $format->format($time);
+    return $format->format($time) ?: '';
 }
 
 /**
@@ -679,9 +681,9 @@ function debug_event($type, $message, $level, $username = ''): bool
 function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
+        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
         if ($options) {
-            $sse_url .= "&options=" . urlencode(json_encode($_POST));
+            $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
         }
 
         echo '<script>';
@@ -1013,7 +1015,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 function display_notification($message, $timeout = 5000): void
 {
     echo "<script>";
-    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
+    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE) ?: '') . "', " . $timeout . ");";
     echo "</script>\n";
 }
 

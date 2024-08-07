@@ -69,13 +69,16 @@ class Stream_Playlist
         'track_num' => 0,
     ];
 
-    public $id;
+    private ?string $streamtoken = null;
+
+    public string $id;
 
     /** @var list<Stream_Url> */
     public array $urls = [];
+
     public int $user;
-    private ?string $streamtoken;
-    public $title;
+
+    public ?string $title = null;
 
     /**
      * Stream_Playlist constructor
@@ -405,7 +408,7 @@ class Stream_Playlist
         return (AmpConfig::get('ajax_load') && AmpConfig::get('play_type') == 'web_player');
     }
 
-    public function generate_playlist(string $type, bool $redirect = false): bool
+    public function generate_playlist(string $type, bool $redirect = false, ?string $name = ''): bool
     {
         if (!count($this->urls)) {
             debug_event(self::class, 'Error: Empty URL array for ' . $this->id, 2);
@@ -506,10 +509,10 @@ class Stream_Playlist
 
             return false;
         }
-
+        $filename = (!empty($name)) ? rawurlencode($name) : 'ampache_playlist';
         if (isset($ext)) {
             header('Cache-control: public');
-            header('Content-Disposition: filename=ampache_playlist.' . $ext);
+            header('Content-Disposition: filename=' . $filename . '.' . $ext);
             header('Content-Type: ' . $ctype . ';');
         }
 
@@ -718,7 +721,7 @@ class Stream_Playlist
                 }
 
                 $className = ObjectTypeToClassNameMapper::map($type);
-
+                /** @var Media $item */
                 $item = new $className($url_id);
                 $hu   = $item->play_url($additional_params);
                 $ret .= $hu . "\n";
@@ -752,7 +755,7 @@ class Stream_Playlist
      */
     public function create_localplay(): void
     {
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $localplay->connect();
         $append = $_REQUEST['append'] ?? false;
         if (!$append) {

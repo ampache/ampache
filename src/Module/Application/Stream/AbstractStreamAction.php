@@ -81,7 +81,8 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
     protected function stream(
         array $mediaIds,
         array $urls,
-        string $streamType = ''
+        string $streamType = '',
+        ?string $fileName = null
     ): ?ResponseInterface {
         if ($streamType == 'stream') {
             $streamType = $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE);
@@ -126,7 +127,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             }
 
             // Depending on the stream type, will either generate a redirect or actually do the streaming.
-            $playlist->generate_playlist($streamType);
+            $playlist->generate_playlist($streamType, false, $fileName);
         } else {
             $this->logger->debug(
                 'No item. Ignoring...',

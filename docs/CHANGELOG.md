@@ -10,6 +10,8 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
 * Added rated songs to user Wrapped pages
+* Search
+  * Added `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
 * CLI
   * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
 * Config version 74
@@ -18,7 +20,7 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Add `database_engine` to allow you to change from InnoDB if you want to
   * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
   * Enable `user_create_streamtoken` by default
-* Database 700011
+* Database 700012
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
@@ -29,6 +31,7 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Convert system preference `upload_catalog` into a user preference
   * Convert `clip`, `tvshow`, `movie` and `personal_video` catalogs to `video`
   * Remove `clip`,`movie`, `personal_video`, `tvshow`, `tvshow_episode` and `tvshow_season` tables
+  * Add user preference `Custom URL - Use your avatar for header logo` this allows you to override custom header logos with your avatar
 
 ### Changed
 

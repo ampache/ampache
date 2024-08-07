@@ -41,7 +41,7 @@ Ui::show_box_top(T_('Show Localplay Instances'), 'box box_localplay_instances');
     <th><?php echo T_('Action'); ?></th>
 </tr>
 <?php foreach ($instances as $uid => $name) {
-    $instance = $localplay->get_instance($uid); ?>
+    $instance = $localplay->get_instance((string)$uid); ?>
 <tr id="localplay_instance_<?php echo $uid; ?>">
     <?php foreach ($fields as $key => $field) { ?>
     <td>

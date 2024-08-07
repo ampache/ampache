@@ -111,7 +111,7 @@ class Share extends database_object
 
     /**
      * get_url
-     * @param null|int $share_id
+     * @param int $share_id
      * @param string $secret
      */
     public static function get_url($share_id, $secret): string

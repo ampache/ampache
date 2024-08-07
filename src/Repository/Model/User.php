@@ -285,7 +285,7 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return int[]
      */
-    public function get_catalogs($filter): array
+    public function get_catalogs(string $filter): array
     {
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
@@ -864,10 +864,12 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param string $state
-     * @param string $city
-     * @param bool $disabled
-     * @param bool $encrypted
+     * @param AccessLevelEnum $access
+     * @param int|null $catalog_filter_group
+     * @param string|null $state
+     * @param string|null $city
+     * @param bool|null $disabled
+     * @param bool|null $encrypted
      */
     public static function create(
         $username,
@@ -883,7 +885,10 @@ class User extends database_object
         $encrypted = false
     ): int {
         // don't try to overwrite users that already exist
-        if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
+        if (
+            static::getUserRepository()->idByUsername($username) > 0 ||
+            static::getUserRepository()->idByEmail($email) > 0
+        ) {
             return 0;
         }
 

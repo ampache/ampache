@@ -198,7 +198,7 @@ class Playlist extends playlist_object
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
      * @param int|null $user_id
-     * @return int[]
+     * @return array<string>
      */
     public static function get_playlist_array($user_id = null): array
     {
@@ -811,8 +811,8 @@ class Playlist extends playlist_object
             in_array($column, ['last_count', 'last_duration']) &&
             $count >= 0
         ) {
-            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = " . Dba::escape($this->id);
-            Dba::write($sql);
+            $sql = "UPDATE `playlist` SET `" . Dba::escape($column) . "` = " . $count . " WHERE `id` = ?;";
+            Dba::write($sql, [$this->id]);
         }
     }
 

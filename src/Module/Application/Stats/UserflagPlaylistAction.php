@@ -61,7 +61,6 @@ final readonly class UserflagPlaylistAction implements ApplicationActionInterfac
 
         $objects = Userflag::get_latest('playlist', $gatekeeper->getUser(), -1);
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('playlist');
         $browse->set_sort('user_flag', 'DESC');

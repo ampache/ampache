@@ -140,12 +140,13 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+                'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
                 [
                     inet_pton($ipAddress),
                     $userId,
                     $date->getTimestamp(),
-                    $userAgent
+                    $userAgent,
+                    'login'
                 ]
             );
 
@@ -153,7 +154,8 @@ class IpHistoryRepositoryTest extends TestCase
             $user,
             $ipAddress,
             $userAgent,
-            $date
+            $date,
+            'login'
         );
     }
 
@@ -172,12 +174,13 @@ class IpHistoryRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+                'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
                 [
                     '',
                     $userId,
                     $date->getTimestamp(),
-                    $userAgent
+                    $userAgent,
+                    'login'
                 ]
             );
 
@@ -185,7 +188,8 @@ class IpHistoryRepositoryTest extends TestCase
             $user,
             '',
             $userAgent,
-            $date
+            $date,
+            'login'
         );
     }
 }

@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Query;
 final class ArtistQuery implements QueryInterface
 {
     public const FILTERS = [
+        'id',
         'add_gt',
         'add_lt',
         'album_artist',
@@ -124,6 +125,13 @@ final class ArtistQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `artist`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);

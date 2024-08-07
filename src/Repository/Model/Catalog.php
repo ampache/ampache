@@ -3454,10 +3454,9 @@ abstract class Catalog extends database_object
     /**
      * trim_prefix
      * Splits the prefix from the string
-     * @param string $string
-     * @param string $pattern
+     * @return array{string: string, prefix: ?string}
      */
-    public static function trim_prefix($string, $pattern = null): array
+    public static function trim_prefix(string $string, ?string $pattern = null): array
     {
         $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', (string) AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {

@@ -240,7 +240,7 @@ class Json4_Data
             }
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -277,7 +277,7 @@ class Json4_Data
         // return a tag object
         $JSON[] = ["tag" => $TAGS];
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -350,7 +350,7 @@ class Json4_Data
         } // end foreach artists
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -427,7 +427,7 @@ class Json4_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -509,7 +509,7 @@ class Json4_Data
                 "averagerating" => (string)($rating->get_average_rating() ?? null)];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -562,7 +562,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allShares, JSON_PRETTY_PRINT);
+        return json_encode($allShares, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -611,7 +611,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+        return json_encode($allCatalogs, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -680,7 +680,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+        return json_encode($allPodcasts, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -740,7 +740,7 @@ class Json4_Data
         }
         $output = ($object) ? ["podcast_episode" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -857,7 +857,7 @@ class Json4_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -905,7 +905,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -960,7 +960,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1004,7 +1004,7 @@ class Json4_Data
             $JSON['user']['fullname'] = $user->fullname;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1029,7 +1029,7 @@ class Json4_Data
         // return a user object
         $JSON[] = ["user" => $user_array];
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1057,7 +1057,7 @@ class Json4_Data
             ];
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1091,7 +1091,7 @@ class Json4_Data
             $JSON['timeline'][] = $objArray;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

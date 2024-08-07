@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,17 +20,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Module\User\Tracking;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Repository\Model\User;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-interface UserTrackerInterface
+final class Migration700013 extends AbstractMigration
 {
-    /**
-     * Records the users ip in the ip history
-     */
-    public function trackIpAddress(User $user, string $action): void;
+    protected array $changelog = ['Add `action` column to `ip_history` table'];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase("ALTER TABLE `ip_history` ADD COLUMN `action` CHAR(36);");
+    }
 }
