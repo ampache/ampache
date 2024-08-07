@@ -1,7 +1,7 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(['vendor', 'lib/components', 'foam', 'ample', 'client', 'newclient'])
+    ->exclude(['vendor', 'client/lib/components', 'foam', 'ample', 'newclient'])
     ->in('public/')
     ->in('src/')
     ->in('tests/')
