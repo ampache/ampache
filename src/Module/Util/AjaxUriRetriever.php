@@ -41,7 +41,7 @@ final class AjaxUriRetriever implements AjaxUriRetrieverInterface
     {
         return sprintf(
             '%s/server/ajax.server.php',
-            $this->configContainer->getWebPath()
+            $this->configContainer->getWebPath(false)
         );
     }
 
@@ -49,7 +49,7 @@ final class AjaxUriRetriever implements AjaxUriRetrieverInterface
     {
         return sprintf(
             '%s/server',
-            $this->configContainer->getWebPath()
+            $this->configContainer->getWebPath(false)
         );
     }
 }
