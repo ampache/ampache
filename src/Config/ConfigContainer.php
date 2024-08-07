@@ -76,7 +76,7 @@ final class ConfigContainer implements ConfigContainerInterface
 
     public function getWebPath(): string
     {
-        return $this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '';
+        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . '/client';
     }
 
     /**
