@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Wanted;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\LegacyLogger;
 use Exception;
 use MusicBrainz\MusicBrainz;
@@ -150,7 +151,8 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             'mbid' => $this->mbid,
             'name' => $artistName,
             'link' => sprintf(
-                '<a href="/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
+                '<a href="%s/client/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
+                AmpConfig::get('web_path', ''),
                 $this->mbid,
                 $artistName,
                 $artistName

@@ -212,7 +212,7 @@ class Wanted extends database_object
                             }
 
                             $wanted->accepted = 0;
-                            $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
+                            $wanted->link     = AmpConfig::get('web_path') . "/client/albums.php?action=show_missing&mbid=" . $group->id;
                             if ($artist !== null) {
                                 $wanted->link .= "&artist=" . $wanted->artist;
                             } else {
@@ -449,7 +449,8 @@ class Wanted extends database_object
 
 
         $this->f_link = sprintf(
-            '<a href="/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+            '<a href="%s/client/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+            AmpConfig::get('web_path', ''),
             $this->mbid,
             $this->artist,
             $this->artist_mbid,
