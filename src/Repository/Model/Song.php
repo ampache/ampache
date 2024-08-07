@@ -1644,7 +1644,7 @@ class Song extends database_object implements
         // Format the size
         $this->f_size = Ui::format_bytes($this->size);
 
-        $web_path       = AmpConfig::get('web_path');
+        $web_path       = AmpConfig::get('web_path') . '/client';
         $this->f_lyrics = "<a title=\"" . scrub_out($this->title) . "\" href=\"" . $web_path . "/song.php?action=show_lyrics&song_id=" . $this->id . "\">" . T_('Show Lyrics') . "</a>";
 
         $this->f_composer  = $this->composer;
@@ -1729,7 +1729,7 @@ class Song extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get('web_path') . '/client';
             $this->link = $web_path . "/song.php?action=show_song&song_id=" . $this->id;
         }
 
@@ -1817,7 +1817,7 @@ class Song extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_album_link === null) {
             $this->f_album_link = '';
-            $web_path           = AmpConfig::get('web_path');
+            $web_path           = AmpConfig::get('web_path') . '/client';
             $this->f_album_link = "<a href=\"" . $web_path . "/albums.php?action=show&album=" . $this->album . "\" title=\"" . scrub_out($this->get_album_fullname()) . "\"> " . scrub_out($this->get_album_fullname()) . "</a>";
         }
 
@@ -1832,7 +1832,7 @@ class Song extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_album_disk_link === null) {
             $this->f_album_disk_link = '';
-            $web_path                = AmpConfig::get('web_path');
+            $web_path                = AmpConfig::get('web_path') . '/client';
             $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 

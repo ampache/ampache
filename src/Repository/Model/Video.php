@@ -328,7 +328,7 @@ class Video extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get('web_path') . '/client';
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }
 

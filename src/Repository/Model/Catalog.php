@@ -450,8 +450,8 @@ abstract class Catalog extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
-            $this->link = $web_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+            $base_path  = AmpConfig::get('web_path');
+            $this->link = $base_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         }
 
         return $this->link;

@@ -363,7 +363,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get('web_path') . '/client';
             $this->link = $web_path . '/albums.php?action=show_disk&album_disk=' . $this->id;
         }
 
