@@ -1296,7 +1296,7 @@ class User extends database_object
         $avatar['title'] = T_('User avatar');
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
-                '%s/image.php?action=%s&object_id=%d',
+                '%s/client/image.php?action=%s&object_id=%d',
                 $local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path'),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id

@@ -46,7 +46,7 @@ if (!empty($tab)) {
     Ui::show_box_top(sprintf(T_('Editing %s Preferences'), $fullname), 'box box_preferences');
     if ($tab !== 'account' && $tab !== 'modules') {
         debug_event('show_preferences.inc', (string) $tab, 5); ?>
-<form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/preferences.php?action=update_preferences" enctype="multipart/form-data">
+<form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/client/preferences.php?action=update_preferences" enctype="multipart/form-data">
 <?php $ui->showPreferenceBox(($preferences[$tab] ?? [])); ?>
 <div class="formValidation">
     <input class="button" type="submit" value="<?php echo T_('Update Preferences'); ?>" />

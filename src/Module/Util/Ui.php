@@ -1307,7 +1307,7 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 $url         = $plugin->_plugin->url;
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
-                $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                $callback    = rawurlencode(AmpConfig::get('web_path') . '/client/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
                 echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
