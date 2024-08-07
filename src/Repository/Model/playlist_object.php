@@ -329,7 +329,7 @@ abstract class playlist_object extends database_object implements library_item
         $count    = 0;
         $images   = [];
         $title    = T_('Playlist Items');
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get('web_path') . '/client';
         shuffle($medias);
         foreach ($medias as $media) {
             if ($count >= $limit) {

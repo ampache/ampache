@@ -1379,7 +1379,7 @@ class Art extends database_object
         $size        = self::get_thumb_size($thumb);
         $prettyPhoto = ($link === null);
         if ($link === null) {
-            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+            $link = AmpConfig::get('web_path') . "/client/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
             if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
                 $link .= "&auth=" . session_id();
             }
@@ -1396,7 +1396,7 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        $imgurl = AmpConfig::get('web_path') . "/client/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
