@@ -1308,7 +1308,7 @@ class Preference extends database_object
             $results['theme_name'] = 'reborn';
         }
 
-        $results['theme_path'] = '/client/themes/' . $results['theme_name'];
+        $results['theme_path'] = '/themes/' . $results['theme_name'];
 
         // Load theme settings
         $theme_cfg                 = get_theme($results['theme_name']);

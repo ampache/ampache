@@ -695,10 +695,10 @@ class Ui implements UiInterface
             return AmpConfig::get('custom_logo');
         }
         if ($color !== null) {
-            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
+            return AmpConfig::get('web_path') . '/client' . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+        return AmpConfig::get('web_path') . '/client' . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
     }
 
     /**
