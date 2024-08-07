@@ -41,7 +41,7 @@ use Ampache\Module\Util\Ui;
         <div class="navbar navbar-inverse" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
-                    <img src="./images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
+                    <img src="./client/images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music'); ?>
                 </a>
             </div>

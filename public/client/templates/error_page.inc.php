@@ -49,7 +49,7 @@ $dir       = $dir ?? 'ltr'; ?>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
-                <img src="./images/ampache-dark.png" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
+                <img src="./client/images/ampache-dark.png" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
                 <?php echo $t_ampache . ' :: ' . T_('For the Love of Music'); ?>
             </a>
         </div>
