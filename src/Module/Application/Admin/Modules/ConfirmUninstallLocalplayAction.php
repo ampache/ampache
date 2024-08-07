@@ -62,7 +62,7 @@ final class ConfirmUninstallLocalplayAction implements ApplicationActionInterfac
         $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url  = sprintf(
             '%s/admin/modules.php?action=uninstall_localplay&type=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath(false),
             $type
         );
         $title = T_('Are You Sure?');

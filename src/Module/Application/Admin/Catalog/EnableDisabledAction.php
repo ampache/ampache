@@ -69,7 +69,7 @@ final class EnableDisabledAction extends AbstractCatalogAction
         } else {
             $body = T_("You didn't select any disabled Songs");
         }
-        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath(false));
         $title = T_('Finished Processing Disabled Songs');
         $this->ui->showConfirmation($title, $body, $url);
 

@@ -39,10 +39,10 @@ require __DIR__ . '/install_header.inc.php'; ?>
             </p>
             <ul>
                 <li><?php echo T_('A MySQL server with a username and password that can create/modify databases'); ?></li>
-                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo sprintf(T_('Your webserver has read access to the files "%1$s" and "%2%s"'), __DIR__ . '/../../resources/sql/ampache.sql', __DIR__ . '/../../config/ampache.cfg.php.dist'); ?></li>
+                <li><?php /* HINT: %1 and %2 refer to Ampache configuration files */ echo sprintf(T_('Your webserver has read access to the files "%1$s" and "%2%s"'), __DIR__ . '/../../../resources/sql/ampache.sql', __DIR__ . '/../../../config/ampache.cfg.php.dist'); ?></li>
             </ul>
             <p>
-                <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), __DIR__ . '/../../config/ampache.cfg.php'); ?>
+                <?php echo sprintf(T_("Once you have ensured that the above requirements are met please fill out the information below. You will only be asked for the required config values. If you would like to make changes to your Ampache install at a later date simply edit %s"), __DIR__ . '/../../../config/ampache.cfg.php'); ?>
             </p>
         </div>
 <table class="table">
@@ -54,12 +54,12 @@ require __DIR__ . '/install_header.inc.php'; ?>
     <?php require __DIR__ . '/show_test_table.inc.php'; ?>
     <tr>
         <td><?php echo T_('"ampache.cfg.php.dist" is readable'); ?></td>
-        <td><?php echo debug_result(is_readable(__DIR__ . '/../../config/ampache.cfg.php.dist')); ?></td>
+        <td><?php echo debug_result(is_readable(__DIR__ . '/../../../config/ampache.cfg.php.dist')); ?></td>
         <td><?php echo T_('This tests whether the configuration template can be read.'); ?></td>
     </tr>
     <tr>
         <td><?php echo T_('"ampache.sql" is readable'); ?></td>
-        <td><?php echo debug_result(is_readable(__DIR__ . '/../../resources/sql/ampache.sql')); ?></td>
+        <td><?php echo debug_result(is_readable(__DIR__ . '/../../../resources/sql/ampache.sql')); ?></td>
         <td><?php echo T_('This tests whether the file needed to initialize the database structure is available.'); ?></td>
     </tr>
     <tr>

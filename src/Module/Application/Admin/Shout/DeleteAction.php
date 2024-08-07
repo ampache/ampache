@@ -67,7 +67,7 @@ final readonly class DeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Shoutbox post has been deleted'),
-            sprintf('%s/admin/shout.php', $this->configContainer->getWebPath())
+            sprintf('%s/admin/shout.php', $this->configContainer->getWebPath(false))
         );
 
         $this->ui->showQueryStats();

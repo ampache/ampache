@@ -76,7 +76,7 @@ final class UninstallCatalogTypeAction implements ApplicationActionInterface
         $catalog->uninstall();
 
         /* Show Confirmation */
-        $url   = sprintf('%s/admin/modules.php?action=show_catalog_types', $this->configContainer->getWebPath());
+        $url   = sprintf('%s/admin/modules.php?action=show_catalog_types', $this->configContainer->getWebPath(false));
         $title = T_('No Problem');
         $body  = T_('The Module has been disabled');
 

@@ -33,7 +33,7 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** require@ public/client/templates/header.inc.php */
+/** require@ public/templates/header.inc.php */
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 

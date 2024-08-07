@@ -48,7 +48,7 @@ $boxtitle = T_('Post to Shoutbox');
         $boxtitle .= ' (' . $data . ')';
     }
     Ui::show_box_top($boxtitle, 'box box_add_shout'); ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/shout.php?action=add_shout">
+<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/client/shout.php?action=add_shout">
 <table id="shoutbox-input">
 <tr>
     <td><strong><?php echo T_('Comment'); ?></strong>

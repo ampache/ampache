@@ -115,7 +115,7 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
     <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <dt><?php echo T_('Activity'); ?></dt>
     <dd><?php echo $client->f_usage; ?>
-        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+        <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <a href="<?php echo $web_path; ?>/stats.php?action=graph&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
         <?php } ?>
     </dd>

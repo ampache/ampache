@@ -197,7 +197,7 @@ if ($access25) {
     <?php }
     }
 if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user->id) || $access50) {
-    if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+    if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
                     <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));

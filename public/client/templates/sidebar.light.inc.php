@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Repository\Model\User;
 
-/** require@ public/client/templates/header.inc.php */
+/** require@ public/templates/header.inc.php */
 /** @var string $web_path */
 /** @var string $t_artists */
 /** @var string $t_albums */

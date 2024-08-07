@@ -44,6 +44,6 @@ function PlayerPopUp(URL)
 // end -->
 </script>
 </head>
-<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path'); ?>/web_player.php<?php echo '?playlist_id=' . $this->id; ?>')">
+<body onLoad="javascript:PlayerPopUp('<?php echo AmpConfig::get('web_path'); ?>/client/web_player.php<?php echo '?playlist_id=' . $this->id; ?>')">
 </body>
 </html>

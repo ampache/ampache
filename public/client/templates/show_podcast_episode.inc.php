@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
-$web_path = AmpConfig::get('web_path', '') . '/client';
+$web_path = (string)AmpConfig::get('web_path', '');
 
 Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">
@@ -96,7 +96,7 @@ Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 
             <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $episode->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
+            <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=podcast_episode&object_id=<?php echo $episode->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
             <?php } ?>
             <a onclick="showEditDialog('podcast_episode_row', '<?php echo $episode->id; ?>', '<?php echo 'edit_podcast_episode_' . $episode->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', '')">

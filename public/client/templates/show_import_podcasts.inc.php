@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 /** @var int $catalogId */
 
 ?>
-<form name="podcast" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=import_podcasts">
+<form name="podcast" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/client/podcast.php?action=import_podcasts">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('File'); ?> (<?php echo T_('Format: opml') ?>)</td>

@@ -40,7 +40,7 @@ use Ampache\Repository\Model\User;
 $ajax_page = $ajax_page ?? 'stats';
 $user_id   = $user_id ?? -1;
 $link      = AmpConfig::get('use_rss') ? ' ' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
-$web_path  = AmpConfig::get('web_path', '') . '/client';
+$web_path  = (string)AmpConfig::get('web_path', '');
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">

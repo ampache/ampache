@@ -69,7 +69,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
             <p><?php echo T_('Step 1 - Create the Ampache database'); ?></p>
                 <p><strong><?php echo T_('Step 2 - Create configuration files (ampache.cfg.php ...)'); ?></strong></p>
                 <dl>
-                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), realpath(__DIR__ . '/../../config')); ?></dd>
+                    <dd><?php printf(T_('This step takes the basic config values and generates the config file. If your config/ directory is writable, you can select "write" to have Ampache write the config file directly to the correct location. If you select "download" it will prompt you to download the config file, and you can then manually place the config file in %s.'), realpath(__DIR__ . '/../../../config')); ?></dd>
                 </dl>
             <ul class="list-unstyled">
                 <li><?php echo T_('Step 3 - Set up the initial account'); ?></li>

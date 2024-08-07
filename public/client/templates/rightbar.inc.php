@@ -72,7 +72,7 @@ global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
 if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('tmp_playlist')) { ?>
     <li>
-        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
+        <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/client/batch.php?action=tmp_playlist&id=<?php echo Core::get_global('user')?->playlist?->id; ?>">
             <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
         </a>
     </li>

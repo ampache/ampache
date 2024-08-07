@@ -72,7 +72,7 @@ if (Core::get_global('user') instanceof User && Access::check(AccessTypeEnum::IN
     <td class="cel_action">
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
-            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$libitem->username); ?>">
+            <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get('web_path'); ?>/client/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$libitem->username); ?>">
                 <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
             </a>
         <?php } ?>

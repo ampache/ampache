@@ -74,7 +74,7 @@ final class ClearNowPlayingAction implements ApplicationActionInterface
             T_('All Now Playing data has been cleared'),
             sprintf(
                 '%s/admin/catalog.php',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath(false)
             )
         );
 

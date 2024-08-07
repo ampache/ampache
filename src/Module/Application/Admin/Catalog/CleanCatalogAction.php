@@ -59,7 +59,7 @@ final class CleanCatalogAction extends AbstractCatalogAction
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Catalog cleaning process has started'),
-            sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
+            sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath(false)),
             0,
             'confirmation',
             false

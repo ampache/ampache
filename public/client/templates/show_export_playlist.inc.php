@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
 
 Ui::show_box_top(T_('Export Playlist to File'), 'box box_export_playlist'); ?>
-<form method="post" name="export_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/stream.php" enctype="multipart/form-data">
+<form method="post" name="export_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/client/stream.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td>

@@ -95,7 +95,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 <?php } ?>
 <td class="cel_action">
     <?php if (AmpConfig::get('download')) { ?>
-    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/stream.php?action=download&<?php echo $object_type; ?>_id=<?php echo $libitem->getId(); ?>">
+    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/client/stream.php?action=download&<?php echo $object_type; ?>_id=<?php echo $libitem->getId(); ?>">
         <?php echo Ui::get_material_symbol('download', T_('Download')); ?>
     </a>
     <?php

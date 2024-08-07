@@ -84,7 +84,7 @@ use Ampache\Module\Util\Ui;
     <?php
     }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
-    <a id="<?php echo 'delete_podcast_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=delete&podcast_id=<?php echo $libitem->getId(); ?>">
+    <a id="<?php echo 'delete_podcast_' . $libitem->getId(); ?>" href="<?php echo AmpConfig::get('web_path'); ?>/client/podcast.php?action=delete&podcast_id=<?php echo $libitem->getId(); ?>">
         <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
     <?php } ?>

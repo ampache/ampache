@@ -113,7 +113,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('Filter Updated'),
             sprintf(T_('%1$s has been updated'), $filter_name),
-            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
+            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath(false))
         );
 
         $this->ui->showQueryStats();

@@ -48,7 +48,7 @@ Ui::show_box_top($string, 'info-box'); ?>
 <?php } ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=manage">
+    <a href="<?php echo AmpConfig::get('web_path'); ?>/client/democratic.php?action=manage">
         <?php echo Ui::get_material_symbol('dns', T_('Configure Democratic Playlist')); ?>
         <?php echo T_('Configure Democratic Playlist'); ?>
     </a>

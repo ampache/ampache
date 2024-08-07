@@ -79,7 +79,7 @@ final class ConfirmDeleteAction extends AbstractUserAction
             throw new ObjectNotFoundException($userId);
         }
 
-        $redirectUrl = sprintf('%s/admin/users.php', $this->configContainer->getWebPath());
+        $redirectUrl = sprintf('%s/admin/users.php', $this->configContainer->getWebPath(false));
 
         $this->ui->showHeader();
 
