@@ -39,7 +39,7 @@ $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US')); ?>
 <body onload="self.resizeTo(document.images[0].width+30, document.images[0].height+70)">
 <?php
 echo '<a href="javascript:window.close()" title="' . T_('Click to close window') . '">';
-echo '<img src="' . AmpConfig::get('web_path') . '/image.php?object_id=' . scrub_out(Core::get_get('id')) . '&object_type=album" alt="" />';
+echo '<img src="' . AmpConfig::get('web_path') . '/client/image.php?object_id=' . scrub_out(Core::get_get('id')) . '&object_type=album" alt="" />';
 echo "</a>"; ?>
 </body>
 </html>

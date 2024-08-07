@@ -1146,7 +1146,7 @@ class Art extends database_object
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
-            $url = AmpConfig::get('web_path') . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
+            $url = AmpConfig::get('web_path') . '/client/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }

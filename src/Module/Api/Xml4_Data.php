@@ -449,7 +449,7 @@ class Xml4_Data
             $tag_string  = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = AmpConfig::get('web_path') . '/client/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             if (in_array("albums", $include)) {
@@ -500,7 +500,7 @@ class Xml4_Data
             $flag        = new Userflag($album_id, 'album');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = AmpConfig::get('web_path') . '/client/image.php?object_id=' . $album->id . '&object_type=album';
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->get_fullname() . "]]></name>\n";
 
