@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Song;
 ?>
 
 <?php
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get('web_path', '') . '/client';
 $wanted   = AmpConfig::get('wanted');
 if ($artists) { ?>
 <div class="np_group similars">

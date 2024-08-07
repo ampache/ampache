@@ -40,7 +40,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 global $dic;
-$web_path          = (string)AmpConfig::get('web_path', '');
+$web_path          = AmpConfig::get('web_path', '') . '/client';
 $access100         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $access25          = ($access100 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $site_lang         = AmpConfig::get('lang', 'en_US');

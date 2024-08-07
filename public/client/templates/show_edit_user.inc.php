@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path  = (string)AmpConfig::get('web_path', '');
+$web_path  = AmpConfig::get('web_path', '') . '/client';
 $access100 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>

@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get('web_path', '') . '/client';
 /** @var Ampache\Repository\Model\Catalog $catalog */
 
 if ($catalog->enabled) {

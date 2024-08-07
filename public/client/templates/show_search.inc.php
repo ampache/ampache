@@ -41,7 +41,7 @@ use Ampache\Repository\Model\Userflag;
 ob_start();
 echo $playlist->getFullname();
 $title    = ob_get_contents();
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get('web_path', '') . '/client';
 $browse   = new Browse();
 $browse->set_type('playlist_media');
 $browse->set_use_filters(false);

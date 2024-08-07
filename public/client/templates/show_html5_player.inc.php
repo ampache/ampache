@@ -23,7 +23,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 /** @var bool $iframed */
 /** @var bool|null $embed */
 /** @var Stream_Playlist $playlist */
-$web_path      = (string)AmpConfig::get('web_path', '');
+$web_path      = AmpConfig::get('web_path', '') . '/client';
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 7, path: '/', secure: true, samesite: 'Strict'"
     : "expires: 7, path: '/', samesite: 'Strict'";

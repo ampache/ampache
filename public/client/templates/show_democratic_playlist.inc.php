@@ -39,7 +39,7 @@ use Ampache\Repository\Model\Song;
 /** @var list<array{object_type: string, object_id: int, id: int}> $object_ids */
 
 $democratic = Democratic::get_current_playlist();
-$web_path   = (string)AmpConfig::get('web_path', '');
+$web_path   = AmpConfig::get('web_path', '') . '/client';
 $use_search = AmpConfig::get('demo_use_search');
 $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum  = AmpConfig::get('album_group');

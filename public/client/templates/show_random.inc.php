@@ -35,7 +35,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 /** @var VideoRepositoryInterface $videoRepository */
 /** @var list<int> $object_ids */
 
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get('web_path', '') . '/client';
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;

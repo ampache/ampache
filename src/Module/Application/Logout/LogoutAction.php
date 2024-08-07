@@ -76,7 +76,7 @@ final class LogoutAction implements ApplicationActionInterface
 
             $this->authenticationManager->logout((string)$input['session'], false);
         } else {
-            header('Location: ' . $this->configContainer->get('web_path'));
+            header('Location: ' . $this->configContainer->get('web_path') . '/client');
         }
 
         return null;

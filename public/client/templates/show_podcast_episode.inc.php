@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $episode */
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get('web_path', '') . '/client';
 
 Ui::show_box_top($episode->get_fullname() . ' - ' . $episode->getPodcastLink(), 'box box_podcast_episode_details'); ?>
 <dl class="media_details">

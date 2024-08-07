@@ -45,7 +45,7 @@ $user_id   = $user_id ?? -1;
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = (string)AmpConfig::get('web_path', '');
+$web_path  = AmpConfig::get('web_path', '') . '/client';
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $refresh, 'box_recently_played'); ?>

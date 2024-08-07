@@ -35,7 +35,7 @@ Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');
-$web_path   = (string)AmpConfig::get('web_path', ''); ?>
+$web_path   = AmpConfig::get('web_path', '') . '/client'; ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>

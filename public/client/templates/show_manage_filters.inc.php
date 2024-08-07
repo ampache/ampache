@@ -27,7 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>

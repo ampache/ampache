@@ -40,7 +40,7 @@ use Ampache\Module\Util\Ui;
 
 session_start();
 
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get('web_path', '') . '/client';
 $thcount      = 8;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');

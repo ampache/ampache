@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 
-$web_path      = (string)AmpConfig::get('web_path', '');
+$web_path      = AmpConfig::get('web_path', '') . '/client';
 $is_session    = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
@@ -137,7 +137,7 @@ $t_logout          = T_('Log out'); ?>
     } ?>
     <?php if ($is_session && !empty(Session::get())) { ?>
     <li id="sb_tab_logout" class="sb1">
-        <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
+        <a target="_top" href="<?php echo $web_path; ?>/client/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
         <?php echo Ui::get_material_symbol('logout', $t_logout); ?>
         </a>
     </li>

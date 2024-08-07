@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 use Idleberg\ViteManifest\Manifest;
 
 global $dic;
-$web_path          = (string)AmpConfig::get('web_path', '');
+$web_path          = AmpConfig::get('web_path', '') . '/client';
 $environment       = $dic->get(EnvironmentInterface::class);
 $manifest          = __DIR__ . '/../dist/.vite/manifest.json';
 $entrypoint        = false;

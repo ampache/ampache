@@ -32,7 +32,7 @@ $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
 /** @var list<int> $object_ids */
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
 <div id="information_actions">
     <ul>
         <li>

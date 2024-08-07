@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var array<string, class-string> $catalog_types */
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
     <thead>
