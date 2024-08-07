@@ -32,11 +32,11 @@ $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
 /** @var list<int> $object_ids */
 
-$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
+$base_path = AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo $web_path; ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
+            <a href="<?php echo $base_path; ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
         </li>
     </ul>
 </div>

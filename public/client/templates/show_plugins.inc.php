@@ -28,7 +28,7 @@ use Ampache\Repository\Model\Plugin;
 
 /** @var list<string> $plugins */
 
-$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
+$base_path = AmpConfig::get('web_path', ''); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
     <thead>
@@ -49,13 +49,13 @@ $web_path = AmpConfig::get('web_path', '') . '/client'; ?>
                 ? Plugin::get_plugin_version($plugin->_plugin->name)
                 : 0;
             if ($installed_version == 0) {
-                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
+                $action = "<a href=\"" . $base_path . "/admin/modules.php?action=install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {
-                $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
+                $action = "<a href=\"" . $base_path . "/admin/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
-                    $action .= '</br><a href="' . $web_path .
+                    $action .= '</br><a href="' . $base_path .
                     '/admin/modules.php?action=upgrade_plugin&plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }

@@ -40,7 +40,8 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\PrivateMessageRepositoryInterface;
 
 global $dic;
-$web_path          = AmpConfig::get('web_path', '') . '/client';
+$base_path         = AmpConfig::get('web_path', '');
+$web_path          = $base_path . '/client';
 $access100         = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $access25          = ($access100 || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER));
 $site_lang         = AmpConfig::get('lang', 'en_US');
@@ -256,8 +257,8 @@ echo $isCollapsed ? ' content-left-wild' : ''; ?>">
                             <div class="fatalerror">
                                 <?php echo T_('Your Ampache config file is out of date!'); ?>
                                 <br>
-                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
-                                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
+                                <a class="nohtml" href="<?php echo $base_path; ?>/admin/system.php?action=write_config"><?php echo T_('Update your current config file automatically'); ?></a> |
+                                <a class="nohtml" href="<?php echo $base_path; ?>/admin/system.php?action=generate_config"><?php echo T_('Download a copy of the new version'); ?></a>
                                 <br>
                             </div>
                 <?php }

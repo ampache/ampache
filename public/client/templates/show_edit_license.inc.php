@@ -23,13 +23,13 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\License;
 
 /** @var License $license */
-/** @var string $webPath */
 
 ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo $webPath; ?>/admin/license.php?action=edit">
+<form method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/license.php?action=edit">
 <input type="hidden" name="license_id" value="<?php echo $license->getId(); ?>" />
 <table class="tabledata">
 <tr>

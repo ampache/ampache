@@ -35,7 +35,7 @@ $environment = $dic->get(EnvironmentInterface::class);
 /** @var array $configuration */
 /** @var int $lastCronDate */
 
-$web_path    = AmpConfig::get('web_path', '') . '/client';
+$base_path = AmpConfig::get('web_path', '');
 // don't share the database password
 $configuration['database_password'] = '******';
 // check your versions
@@ -45,26 +45,26 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <div id="information_actions">
         <ul>
             <li>
-                <a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=generate_config"><?php echo Ui::get_material_symbol('settings', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
+                <a class="nohtml" href="<?php echo $base_path; ?>/admin/system.php?action=generate_config"><?php echo Ui::get_material_symbol('settings', T_('Generate Configuration File')) . ' ' . T_('Generate Configuration File'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=write_config"><?php echo Ui::get_material_symbol('settings', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=write_config"><?php echo Ui::get_material_symbol('settings', T_('Write New Config')) . ' ' . T_('Write New Config'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_material_symbol('dns', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=reset_db_charset"><?php echo Ui::get_material_symbol('dns', T_('Set Database Charset')) . ' ' . T_('Set Database Charset'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_material_symbol('settings', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=clear_cache&type=song"><?php echo Ui::get_material_symbol('settings', T_('Clear Songs Cache')) . ' ' . T_('Clear Songs Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_material_symbol('settings', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=clear_cache&type=artist"><?php echo Ui::get_material_symbol('settings', T_('Clear Artists Cache')) . ' ' . T_('Clear Artists Cache'); ?></a>
             </li>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_material_symbol('settings', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=clear_cache&type=album"><?php echo Ui::get_material_symbol('settings', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
     <?php if (AmpConfig::get('perpetual_api_session')) { ?>
             <li>
-                <a href="<?php echo $web_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
+                <a href="<?php echo $base_path; ?>/admin/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
             </li>
     <?php  } ?>
         </ul>
@@ -75,7 +75,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
 <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
     <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
 } ?>
-    <div><a class="nohtml" href="<?php echo $web_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
+    <div><a class="nohtml" href="<?php echo $base_path; ?>/admin/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
 <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
     AutoUpdate::show_new_version();
 } ?>

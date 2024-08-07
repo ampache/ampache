@@ -33,6 +33,7 @@ use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
 /** @var string $web_path */
+/** @var string $base_path */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
 /** @var User $libitem */
 /** @var string $last_seen */
@@ -58,7 +59,7 @@ if ($libitem->fullname_public || Access::check(AccessTypeEnum::INTERFACE, Access
         <?php
             if (AmpConfig::get('track_user_ip')) { ?>
                 <td class="cel_lastip">
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $libitem->id; ?>">
+                    <a href="<?php echo $base_path; ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $libitem->id; ?>">
                         <?php echo $libitem->ip_history; ?>
                     </a>
                 </td>
@@ -77,20 +78,20 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig
         <?php } ?>
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $libitem->id; ?>">
+            <a href="<?php echo $base_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $libitem->id; ?>">
                 <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
             </a>
-            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $libitem->id; ?>">
+            <a href="<?php echo $base_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $libitem->id; ?>">
                 <?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?>
             </a>
         <?php
     // FIXME: Fix this for the extra permission levels
     if ($libitem->disabled == '1') {
-        echo "<a href=\"" . $web_path . "/admin/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('check_circle', T_('Enable')) . "</a>";
+        echo "<a href=\"" . $base_path . "/admin/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('check_circle', T_('Enable')) . "</a>";
     } else {
-        echo "<a href=\"" . $web_path . "/admin/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('hide_source', T_('Disable')) . "</a>";
+        echo "<a href=\"" . $base_path . "/admin/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('hide_source', T_('Disable')) . "</a>";
     } ?>
-        <a href="<?php echo $web_path; ?>/admin/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
+        <a href="<?php echo $base_path; ?>/admin/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
         <?php } ?>

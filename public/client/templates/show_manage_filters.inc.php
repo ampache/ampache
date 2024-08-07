@@ -27,11 +27,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
+$base_path = AmpConfig::get('web_path', ''); ?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
-            <a class="option-list" href="<?php echo $web_path; ?>/admin/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a>
+            <a class="option-list" href="<?php echo $base_path; ?>/admin/filter.php?action=show_add_filter"><?php echo T_('Add Catalog Filter'); ?></a>
         </li>
     </ul>
 </div>

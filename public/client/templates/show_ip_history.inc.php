@@ -29,19 +29,19 @@ use Ampache\Repository\Model\User;
 /** @var User $workingUser */
 /** @var Traversable<array{date: int, ip: string, agent: string, action: string}> $history */
 /** @var bool $showAll */
-/** @var string $webPath */
+/** @var string $basePath */
 
 ?>
 <div id="information_actions">
 <ul>
 <li>
 <?php if ($showAll === true) { ?>
-    <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>">
+    <a href="<?php echo $basePath; ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>">
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Recent'); ?>
     </a>
 <?php } else { ?>
-    <a href="<?php echo $webPath?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>&all=1">
+    <a href="<?php echo $basePath; ?>/admin/users.php?action=show_ip_history&user_id=<?php echo $workingUser->getId()?>&all=1">
         <?php echo Ui::get_icon('add', T_('Add')); ?>
         <?php echo T_('Show All'); ?>
     </a>

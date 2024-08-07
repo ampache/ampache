@@ -34,7 +34,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $client */
-$web_path       = AmpConfig::get('web_path', '') . '/client';
+$base_path       = AmpConfig::get('web_path', '');
 $access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
@@ -87,7 +87,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('API key'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>
+                    <a href="<?php echo $base_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -102,7 +102,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('Stream Token'); ?>
                 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>
+                    <a href="<?php echo $base_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -117,7 +117,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $base_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
             <td>
