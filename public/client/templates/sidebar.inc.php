@@ -137,7 +137,7 @@ $t_logout          = T_('Log out'); ?>
     } ?>
     <?php if ($is_session && !empty(Session::get())) { ?>
     <li id="sb_tab_logout" class="sb1">
-        <a target="_top" href="<?php echo $web_path; ?>/client/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
+        <a target="_top" href="<?php echo $web_path; ?>/logout.php?session=<?php echo Session::get(); ?>" id="sidebar_logout" class="nohtml" >
         <?php echo Ui::get_material_symbol('logout', $t_logout); ?>
         </a>
     </li>
