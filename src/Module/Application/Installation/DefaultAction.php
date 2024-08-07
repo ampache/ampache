@@ -237,7 +237,7 @@ final class DefaultAction implements ApplicationActionInterface
                 if ($this->installationHelper->install_check_status($configfile)) {
                     require_once Ui::find_template('show_install_account.inc.php');
                 } else {
-                    header("Location: " . $web_path . '/login.php');
+                    header("Location: " . $web_path . '/client/login.php');
                 }
                 break;
             case 'create_account':
@@ -251,7 +251,7 @@ final class DefaultAction implements ApplicationActionInterface
                     break;
                 }
 
-                header("Location: " . $web_path . '/index.php');
+                header("Location: " . $web_path . '/client/index.php');
                 break;
             case 'init':
                 require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';
