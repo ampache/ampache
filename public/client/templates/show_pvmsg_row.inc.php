@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var PrivateMsg $libitem */
 
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = AmpConfig::get('web_path') . '/client'; ?>
 <td class="cel_select"><input type="checkbox" name="pvmsg_select[]" value="<?php echo $libitem->getId(); ?>" title="<?php echo T_('Select'); ?>" /></td>
 <td class="cel_subject"><?php echo $libitem->getLinkFormatted(); ?></td>
 <td class="cel_from_user"><?php echo $libitem->getSenderUserLink(); ?></td>

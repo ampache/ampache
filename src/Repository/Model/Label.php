@@ -391,7 +391,7 @@ class Label extends database_object implements library_item
             return '';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get('web_path') . '/client';
         $results  = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {

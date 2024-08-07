@@ -1769,7 +1769,7 @@ class Song extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_artist_link === null) {
             $this->f_artist_link = '';
-            $web_path            = AmpConfig::get('web_path');
+            $web_path            = AmpConfig::get('web_path') . '/client';
             if (!isset($this->artists)) {
                 $this->get_artists();
             }
@@ -1793,7 +1793,7 @@ class Song extends database_object implements
         // don't do anything if it's formatted
         if ($this->f_albumartist_link === null) {
             $this->f_albumartist_link = '';
-            $web_path                 = AmpConfig::get('web_path');
+            $web_path                 = AmpConfig::get('web_path') . '/client';
             if (!isset($this->albumartists)) {
                 $this->albumartists = self::get_parent_array($this->album, 'album');
             }

@@ -1029,7 +1029,7 @@ function show_now_playing(): void
     Session::garbage_collection();
     Stream::garbage_collection();
 
-    $web_path = AmpConfig::get('web_path');
+    $web_path = AmpConfig::get('web_path') . '/client';
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
 }

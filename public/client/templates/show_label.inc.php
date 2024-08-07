@@ -49,7 +49,7 @@ if (array_key_exists('argument', $_REQUEST)) {
     $argument = (string)scrub_in((string)$_REQUEST['argument']);
 }
 $f_name   = (string)$label->get_fullname();
-$web_path = AmpConfig::get('web_path');
+$web_path = AmpConfig::get('web_path') . '/client';
 Ui::show_box_top($f_name, 'info-box');
 if ($label->website) {
     echo "<a href=\"" . scrub_out($label->website) . "\">" . scrub_out($label->website) . "</a><br />";

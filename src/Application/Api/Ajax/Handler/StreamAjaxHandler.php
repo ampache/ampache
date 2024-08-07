@@ -124,7 +124,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
-                $web_path                     = AmpConfig::get('web_path');
+                $web_path                     = AmpConfig::get('web_path') . '/client';
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';

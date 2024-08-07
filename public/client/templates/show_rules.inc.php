@@ -42,7 +42,7 @@ if (isset($playlist)) {
     $logic_operator = Core::get_request('operator');
 }
 $logic_operator = strtolower((string)$logic_operator);
-$web_path       = AmpConfig::get('web_path'); ?>
+$web_path       = AmpConfig::get('web_path') . '/client'; ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 

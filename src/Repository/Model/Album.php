@@ -519,7 +519,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         if ($this->year === 0) {
             $this->f_year = "N/A";
         } else {
-            $web_path          = AmpConfig::get('web_path');
+            $web_path          = AmpConfig::get('web_path') . '/client';
             $year              = $this->year;
             $this->f_year_link = sprintf('<a href="%s/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=', $web_path) . $year . "\">" . $year . "</a>";
         }
@@ -691,7 +691,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
             } elseif ($this->album_artist !== null) {
                 $this->f_artist_link = '';
-                $web_path            = AmpConfig::get('web_path');
+                $web_path            = AmpConfig::get('web_path') . '/client';
                 if (!$this->album_artists) {
                     $this->get_artists();
                 }
