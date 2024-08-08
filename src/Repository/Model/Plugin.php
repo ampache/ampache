@@ -101,11 +101,12 @@ class Plugin
                 }
 
                 if (Plugin::is_installed($plugin->_plugin->name) === 0) {
+                    debug_event(self::class, 'Plugin ' . $name . ' is not installed, skipping', 5);
                     continue;
                 }
 
                 if (!$plugin->is_valid()) {
-                    debug_event(self::class, 'Plugin ' . $name . ' is not valid, skipping', 6);
+                    debug_event(self::class, 'Plugin ' . $name . ' failed is_valid check, skipping', 5);
                     continue;
                 }
 
