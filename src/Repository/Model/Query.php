@@ -224,19 +224,14 @@ class Query
      */
     public function set_filter($key, mixed $value): bool
     {
+        // only set filters for your type
+        if (!in_array($key, self::get_allowed_filters($this->get_type()))) {
+            debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+
+            return false;
+        }
+
         switch ($key) {
-            case 'id':
-            case 'gather_type':
-            case 'gather_types':
-            case 'hidden':
-            case 'hide_dupe_smartlist':
-            case 'not_like':
-            case 'object_type':
-            case 'smartlist':
-            case 'song_artist':
-            case 'user_catalog':
-                $this->_state['filter'][$key] = $value;
-                break;
             case 'access':
             case 'add_gt':
             case 'add_lt':
@@ -294,6 +289,7 @@ class Query
                 }
                 break;
             case 'playlist_type':
+                // 0 = your user only, 1 = public or your user (User is found using GLOBAL)
                 if (isset($this->_state['filter']['playlist_type'])) {
                     $this->_state['filter'][$key] = ($this->_state['filter'][$key] == 1) ? 0 : 1;
                 } else {
@@ -302,6 +298,7 @@ class Query
                 break;
             case 'genre':
             case 'tag':
+                // array values
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
                 } elseif (is_numeric($value)) {
@@ -311,9 +308,9 @@ class Query
                 }
                 break;
             default:
-                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
-
-                return false;
+                // string / unfiltered
+                $this->_state['filter'][$key] = $value;
+                break;
         }
 
         // ensure joins are set on $this->_state
