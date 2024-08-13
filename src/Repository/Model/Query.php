@@ -183,6 +183,8 @@ class Query
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)self::_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($this->_state['type']);
 
                 return;
             }
