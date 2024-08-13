@@ -175,6 +175,8 @@ class Query
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)$this->_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($this->_state['type']);
 
                 return;
             }
@@ -226,7 +228,7 @@ class Query
     {
         // only set filters for your type
         if (!in_array($key, self::get_allowed_filters($this->get_type()))) {
-            debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+            debug_event(self::class, 'IGNORED set_filter ' . ($this->get_type() ?? 'NO_TYPE') . ': ' . $key, 5);
 
             return false;
         }
