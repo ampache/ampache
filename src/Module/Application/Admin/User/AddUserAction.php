@@ -153,7 +153,7 @@ final class AddUserAction extends AbstractUserAction
             T_('New User Added'),
             /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
             sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $useraccess),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
         );
 
         $this->ui->showQueryStats();

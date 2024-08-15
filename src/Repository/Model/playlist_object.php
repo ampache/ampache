@@ -224,7 +224,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = ($this instanceof Search)
                 ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id
                 : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
@@ -329,7 +329,7 @@ abstract class playlist_object extends database_object implements library_item
         $count    = 0;
         $images   = [];
         $title    = T_('Playlist Items');
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         shuffle($medias);
         foreach ($medias as $media) {
             if ($count >= $limit) {

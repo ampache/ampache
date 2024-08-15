@@ -116,7 +116,7 @@ class DeleteActionTest extends MockeryTestCase
         $shout      = $this->mock(Shoutbox::class);
 
         $shoutId = 666;
-        $webPath = 'some-path';
+        $webPath = '/admin';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
@@ -136,6 +136,11 @@ class DeleteActionTest extends MockeryTestCase
             ->once()
             ->andReturn(['shout_id' => (string) $shoutId]);
 
+        $this->configContainer->shouldReceive('getWebPath')
+            ->with($webPath)
+            ->once()
+            ->andReturn($webPath);
+
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
@@ -143,7 +148,7 @@ class DeleteActionTest extends MockeryTestCase
             ->with(
                 'No Problem',
                 'Shoutbox post has been deleted',
-                sprintf('%s/admin/shout.php', $webPath)
+                sprintf('%s/shout.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -152,11 +157,6 @@ class DeleteActionTest extends MockeryTestCase
         $this->ui->shouldReceive('showFooter')
             ->withNoArgs()
             ->once();
-
-        $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($webPath);
 
         $this->assertNull(
             $this->subject->run(

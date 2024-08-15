@@ -26,17 +26,17 @@ declare(strict_types=0);
 use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
-/** @var string $web_path */
+/** @var string $admin_path */
 /** @var License $libitem */
 ?>
 <tr id="license_<?php echo $libitem->getId(); ?>">
     <td class="cel_name"><?php echo $libitem->getLinkFormatted(); ?></td>
     <td class="cel_description"><?php echo $libitem->getDescription(); ?></td>
     <td class="cel_action">
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=show_edit&license_id=<?php echo $libitem->getId(); ?>">
+        <a href="<?php echo $admin_path; ?>/license.php?action=show_edit&license_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/license.php?action=delete&license_id=<?php echo $libitem->getId(); ?>">
+        <a href="<?php echo $admin_path; ?>/license.php?action=delete&license_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
     </td>

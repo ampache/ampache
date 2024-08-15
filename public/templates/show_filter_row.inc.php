@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 /** @var array $filter */
 /** @var int $num_users */
 /** @var int $num_catalogs */

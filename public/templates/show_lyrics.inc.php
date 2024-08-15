@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Song;
 /** @var Song $song */
 /** @var array{text?: null|string, url?: null|string} $lyrics */
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 Ui::show_box_top("Song Lyrics", 'box box_lyrics_song');
 
 // Prepare the variables

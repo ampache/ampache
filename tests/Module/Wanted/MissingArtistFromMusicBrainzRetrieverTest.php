@@ -152,7 +152,7 @@ class MissingArtistFromMusicBrainzRetrieverTest extends TestCase
             'name' => $artistName,
             'link' => sprintf(
                 '<a href="%s/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
-                AmpConfig::get('web_path', ''),
+                AmpConfig::get_web_path(),
                 $this->mbid,
                 $artistName,
                 $artistName

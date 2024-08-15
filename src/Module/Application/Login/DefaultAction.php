@@ -105,7 +105,7 @@ final class DefaultAction implements ApplicationActionInterface
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
-                        $this->configContainer->get('web_path')
+                        $this->configContainer->getWebPath()
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie

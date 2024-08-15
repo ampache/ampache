@@ -107,8 +107,8 @@ final class SendMailAction implements ApplicationActionInterface
             }
 
             $url = sprintf(
-                '%s/admin/mail.php',
-                $this->configContainer->getWebPath()
+                '%s/mail.php',
+                $this->configContainer->getWebPath('/admin')
             );
             $this->ui->showConfirmation($title, $body, $url);
         }

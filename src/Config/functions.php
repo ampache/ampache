@@ -681,7 +681,7 @@ function debug_event($type, $message, $level, $username = ''): bool
 function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
+        $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
         }
@@ -1029,7 +1029,7 @@ function show_now_playing(): void
     Session::garbage_collection();
     Stream::garbage_collection();
 
-    $web_path = AmpConfig::get('web_path');
+    $web_path = AmpConfig::get_web_path();
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
 }

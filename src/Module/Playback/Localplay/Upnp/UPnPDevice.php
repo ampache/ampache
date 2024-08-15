@@ -188,7 +188,7 @@ class UPnPDevice
     /*
     public function Subscribe($type = 'AVTransport')
     {
-        $web_path = Ampache\Config\AmpConfig::get('web_path');
+        $web_path = Ampache\Config\AmpConfig::get_web_path();
         $eventSubsUrl = $web_path . '/upnp/play-event.php?device=' . urlencode($this->_descrUrl);
         $eventUrl = $this->_host . $this->_eventURLs[$type];
 

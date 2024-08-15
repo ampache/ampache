@@ -83,7 +83,7 @@ class ConfirmDeleteActionTest extends TestCase
     public function testHandleDeletes(): void
     {
         $userId   = 666;
-        $webPath  = 'some-path';
+        $webPath  = '/admin';
         $userName = 'some-name';
 
         $user = $this->createMock(User::class);
@@ -129,7 +129,7 @@ class ConfirmDeleteActionTest extends TestCase
             ->with(
                 'No Problem',
                 sprintf('%s has been deleted', $userName),
-                sprintf('%s/admin/users.php', $webPath)
+                sprintf('%s/users.php', $webPath)
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');
@@ -183,7 +183,7 @@ class ConfirmDeleteActionTest extends TestCase
     public function testHandleErrorsOnDeletionFailure(): void
     {
         $userId  = 666;
-        $webPath = 'some-path';
+        $webPath = '/admin';
 
         $user = $this->createMock(User::class);
 
@@ -228,7 +228,7 @@ class ConfirmDeleteActionTest extends TestCase
             ->with(
                 'There Was a Problem',
                 'You need at least one active Administrator account',
-                sprintf('%s/admin/users.php', $webPath)
+                sprintf('%s/users.php', $webPath)
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');

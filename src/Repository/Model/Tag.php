@@ -747,7 +747,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return '';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         $results  = '';
 
         // Iterate through the tags, format them according to type and element id

@@ -1242,7 +1242,7 @@ class User extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null && $this->id > 0) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
 
@@ -1297,7 +1297,7 @@ class User extends database_object
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
                 '%s/image.php?action=%s&object_id=%d',
-                $local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path'),
+                $local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id
             );
@@ -1326,7 +1326,7 @@ class User extends database_object
         }
 
         if (!array_key_exists('url', $avatar)) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
         }

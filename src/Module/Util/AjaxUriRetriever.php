@@ -40,16 +40,13 @@ final class AjaxUriRetriever implements AjaxUriRetrieverInterface
     public function getAjaxUri(): string
     {
         return sprintf(
-            '%s/server/ajax.server.php',
-            $this->configContainer->getWebPath()
+            '%s/ajax.server.php',
+            $this->getAjaxServerUri()
         );
     }
 
     public function getAjaxServerUri(): string
     {
-        return sprintf(
-            '%s/server',
-            $this->configContainer->getWebPath()
-        );
+        return $this->configContainer->getWebPath('/server');
     }
 }

@@ -436,7 +436,7 @@ class Ui implements UiInterface
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
             $url = $filesearch[0];
         } else {
-            $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
@@ -533,7 +533,7 @@ class Ui implements UiInterface
         ) {
             $url = $filesearch[0];
         } else {
-            $url = AmpConfig::get('web_path') . '/' . $path . $filename;
+            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
@@ -644,7 +644,7 @@ class Ui implements UiInterface
             echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
         echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
     }
 
@@ -695,10 +695,10 @@ class Ui implements UiInterface
             return AmpConfig::get('custom_logo');
         }
         if ($color !== null) {
-            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
+            return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
     }
 
     /**
@@ -1307,7 +1307,7 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 $url         = $plugin->_plugin->url;
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
-                $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                $callback    = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
                 echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;

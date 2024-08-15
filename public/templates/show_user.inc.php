@@ -56,7 +56,7 @@ use Ampache\Repository\Model\Useractivity;
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
 Ui::show_box_top(scrub_out($client->get_fullname())); ?>

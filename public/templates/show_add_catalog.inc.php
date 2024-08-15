@@ -42,7 +42,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 &nbsp;
 <?php echo AmpError::display('general'); ?>
 
-<form name="update_catalog" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
+<form name="update_catalog" method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
