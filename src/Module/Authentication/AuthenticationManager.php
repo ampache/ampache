@@ -123,7 +123,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
             $target = $this->configContainer->get('logout_redirect');
         } else {
-            $target = $this->configContainer->getWebPath(). '/login.php';
+            $target = $this->configContainer->getWebPath() . '/login.php';
         }
 
         // Do a quick check to see if this is an AJAXed logout request
