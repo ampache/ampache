@@ -1896,7 +1896,11 @@ class Search extends playlist_object
             return make_bool($data);
         }
 
-        return $data;
+        if ($data === null) {
+            return null;
+        }
+
+        return stripslashes($data);
     }
 
     /**
