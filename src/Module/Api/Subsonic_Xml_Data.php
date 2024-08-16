@@ -281,10 +281,11 @@ class Subsonic_Xml_Data
             $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 
+        if ($artist->has_art()) {
+            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+        }
+
         if ($extra) {
-            if ($artist->has_art()) {
-                $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-            }
             if ($albumsSet) {
                 $xartist->addAttribute('albumCount', (string)$artist->album_count);
             } else {
