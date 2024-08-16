@@ -139,8 +139,8 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
         }
     }
 
-    public function getWebPath(): string
+    public function getWebPath(?string $suffix = ''): string
     {
-        return $this->configContainer->getWebPath();
+        return $this->configContainer->getWebPath($suffix);
     }
 }

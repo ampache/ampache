@@ -31,7 +31,7 @@ if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
 
-$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
+$web_path = AmpConfig::get_web_path('/client'); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>

@@ -61,8 +61,8 @@ final class ShowDeleteCatalogAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         $next_url = sprintf(
-            '%s/admin/catalog.php?action=delete_catalog&catalogs[]=%s',
-            $this->configContainer->getWebPath(false),
+            '%s/catalog.php?action=delete_catalog&catalogs[]=%s',
+            $this->configContainer->getWebPath('/admin'),
             implode(',', $catalogs)
         );
         $this->ui->showConfirmation(

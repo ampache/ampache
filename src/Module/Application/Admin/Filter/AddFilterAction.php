@@ -111,7 +111,7 @@ final class AddFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('New Filter Added'),
             sprintf(T_('%1$s has been created'), $filter_name),
-            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath(false))
+            sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
         );
 
         $this->ui->showQueryStats();

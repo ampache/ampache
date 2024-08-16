@@ -52,7 +52,7 @@ $zipHandler = $dic->get(ZipHandlerInterface::class);
 $batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
-$web_path = AmpConfig::get('web_path', '') . '/client';
+$web_path = AmpConfig::get_web_path('/client');
 
 /** @var AlbumDisk $albumDisk */
 $simple   = $albumDisk->get_fullname(true);

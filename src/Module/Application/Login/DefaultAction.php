@@ -105,7 +105,7 @@ final class DefaultAction implements ApplicationActionInterface
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
-                        $this->configContainer->get('web_path') . '/client'
+                        $this->configContainer->getWebPath('/client')
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
@@ -344,7 +344,7 @@ final class DefaultAction implements ApplicationActionInterface
             /* Make sure they are actually trying to get to this site and don't try
              * to redirect them back into an admin section
              */
-            $web_path = $this->configContainer->getWebPath();
+            $web_path = $this->configContainer->getWebPath('/client');
             if (
                 (substr($_POST['referrer'], 0, strlen((string) $web_path)) == $web_path) &&
                 strpos($_POST['referrer'], 'install.php') === false &&
@@ -366,7 +366,7 @@ final class DefaultAction implements ApplicationActionInterface
                 ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
-                    sprintf('%s/index.php', $this->configContainer->getWebPath())
+                    sprintf('%s/index.php', $this->configContainer->getWebPath('/client'))
                 );
         } // auth success
 

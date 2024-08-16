@@ -450,8 +450,8 @@ abstract class Catalog extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $base_path  = AmpConfig::get('web_path');
-            $this->link = $base_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
+            $web_path   = AmpConfig::get_web_path('/client');
+            $this->link = $web_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         }
 
         return $this->link;
@@ -1442,7 +1442,7 @@ abstract class Catalog extends database_object
      * @param string $table
      * @param string $sort
      * @param string $order
-     * @return list<array{id?: string, name?: string}>
+     * @return array
      */
     public static function get_name_array($objects, $table, $sort = '', $order = 'ASC'): array
     {

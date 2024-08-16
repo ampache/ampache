@@ -120,8 +120,8 @@ final class AddHostAction implements ApplicationActionInterface
                 T_('No Problem'),
                 T_('Your new Access Control List(s) have been created'),
                 sprintf(
-                    '%s/admin/access.php',
-                    $this->configContainer->getWebPath(false)
+                    '%s/access.php',
+                    $this->configContainer->getWebPath('/admin')
                 )
             );
         } else {

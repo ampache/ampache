@@ -50,7 +50,7 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 /** @var string $cel_time */
 /** @var string $cel_counter */
 /** @var string $cel_tags */
-$web_path   = AmpConfig::get('web_path', '') . '/client'; ?>
+$web_path   = AmpConfig::get_web_path('/client'); ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">

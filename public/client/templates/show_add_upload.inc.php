@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 Ui::show_box_top(T_('Upload'));
 $artist   = (int) (Core::get_request('artist'));
 $album    = (int) (Core::get_request('album'));
-$web_path = AmpConfig::get('web_path', '') . '/client';
+$web_path = AmpConfig::get_web_path('/client');
 $access50 = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
 $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : -1; ?>
 

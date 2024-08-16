@@ -90,7 +90,7 @@ final class InstallLocalplayAction implements ApplicationActionInterface
         Preference::update('localplay_controller', $user->getId(), $localplay->type);
 
         /* Show Confirmation */
-        $url   = sprintf('%s/admin/modules.php?action=show_localplay', $this->configContainer->getWebPath(false));
+        $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('Localplay has been enabled');
         $this->ui->showConfirmation($title, $body, $url);

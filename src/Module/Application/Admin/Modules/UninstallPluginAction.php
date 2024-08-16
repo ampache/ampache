@@ -94,7 +94,7 @@ final class UninstallPluginAction implements ApplicationActionInterface
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath(false));
+        $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('The Plugin has been disabled');
 

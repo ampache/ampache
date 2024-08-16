@@ -100,7 +100,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
                                 T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'),
-                                '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">',
+                                '<a href="' . AmpConfig::get_web_path('/admin') . '/catalog.php?action=show_add_catalog">',
                                 '</a>.<br /><br />'
                             );
                         }
@@ -125,7 +125,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
                                 T_('No Catalog configured yet. To start streaming your media, you now need to %1$s add a Catalog %2$s'),
-                                '<a href="' . AmpConfig::get('web_path') . '/admin/catalog.php?action=show_add_catalog">',
+                                '<a href="' . AmpConfig::get_web_path('/admin') . '/catalog.php?action=show_add_catalog">',
                                 '</a>.<br /><br />'
                             );
                         }

@@ -74,11 +74,9 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
     }
 
-    public function getWebPath(?bool $subfolder = true): string
+    public function getWebPath(?string $suffix = ''): string
     {
-        $string = ($subfolder === false) ? '' : '/client';
-
-        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . $string;
+        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . $suffix;
     }
 
     /**

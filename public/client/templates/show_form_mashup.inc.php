@@ -10,7 +10,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get('web_path', '') . '/client';
+$web_path        = AmpConfig::get_web_path('/client');
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'

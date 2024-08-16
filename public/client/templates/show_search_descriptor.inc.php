@@ -31,7 +31,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n"; ?>
     <Description><?php echo scrub_out(AmpConfig::get('site_title')); ?></Description>
     <Url type="text/html"
         method="get"
-        template="<?php echo AmpConfig::get('web_path'); ?>/client/search.php">
+        template="<?php echo AmpConfig::get_web_path('/client'); ?>/search.php">
         <Param name="s_all" value="{searchTerms}"></Param>
         <Param name="action" value="search"></Param>
     </Url>

@@ -42,7 +42,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 
-$web_path     = AmpConfig::get('web_path', '') . '/client';
+$web_path     = AmpConfig::get_web_path('/client');
 $show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;

@@ -56,8 +56,7 @@ use Ampache\Repository\Model\Useractivity;
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$base_path    = AmpConfig::get('web_path', '');
-$web_path     = $base_path . '/client';
+$web_path     = AmpConfig::get_web_path('/client');
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
 Ui::show_box_top(scrub_out($client->get_fullname())); ?>
@@ -95,8 +94,8 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
             </a>
         <?php } ?>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
-            <a href="<?php echo $base_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
-            <a href="<?php echo $base_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_edit&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
+            <a href="<?php echo $web_path; ?>/admin/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
 

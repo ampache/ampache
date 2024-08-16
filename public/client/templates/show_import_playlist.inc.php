@@ -28,7 +28,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Importing a Playlist from a File'), 'box box_import_playlist'); ?>
-<form method="post" name="import_playlist" action="<?php echo AmpConfig::get('web_path'); ?>/client/playlist.php" enctype="multipart/form-data">
+<form method="post" name="import_playlist" action="<?php echo AmpConfig::get_web_path('/client'); ?>/playlist.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td>

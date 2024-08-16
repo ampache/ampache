@@ -29,7 +29,7 @@ use Ampache\Repository\Model\Song;
 /** @var Iterator<Song> $songs */
 ?>
 <br />
-<form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
+<form name="songs" method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/catalog.php" enctype="multipart/form-data" style="Display:inline">
     <table class="tabledata striped-rows">
         <thead>
             <tr class="th-top">

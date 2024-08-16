@@ -41,7 +41,7 @@ $data = !empty($_POST)
     : $_REQUEST;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = AmpConfig::get('web_path', '') . '/client';
+$web_path        = AmpConfig::get_web_path('/client');
 $limit           = $data['limit'] ?? 0;
 $limit1          = ($limit == 1) ? 'selected="selected"' : '';
 $limit5          = ($limit == 5) ? 'selected="selected"' : '';

@@ -65,7 +65,7 @@ final class ClearStatsAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         Stats::clear();
-        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath(false));
+        $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('Catalog statistics have been cleared');
 

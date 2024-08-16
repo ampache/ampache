@@ -66,7 +66,7 @@ final class UpdateArt5Method
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/client/image.php?object_id=' . $object_id . '&object_type=' . $type;
+        $art_url   = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {

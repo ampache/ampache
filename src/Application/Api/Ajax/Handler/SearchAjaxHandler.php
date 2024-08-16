@@ -62,7 +62,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'search':
-                $web_path    = AmpConfig::get('web_path') . '/client';
+                $web_path    = AmpConfig::get_web_path('/client');
                 $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
@@ -300,7 +300,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             default:

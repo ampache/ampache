@@ -117,8 +117,8 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 T_('No Problem'),
                 T_('Your Access Control List has been updated'),
                 sprintf(
-                    '%s/admin/access.php',
-                    $this->configContainer->getWebPath(false)
+                    '%s/access.php',
+                    $this->configContainer->getWebPath('/admin')
                 )
             );
         }

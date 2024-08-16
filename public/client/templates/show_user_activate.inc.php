@@ -29,7 +29,7 @@ use Ampache\Module\Util\Ui;
 /** @var bool $validationResult */
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path = AmpConfig::get('web_path', '') . '/client'; ?>
+$web_path = AmpConfig::get_web_path('/client'); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>

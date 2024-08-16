@@ -28,7 +28,7 @@ use Ampache\Module\Util\AjaxUriRetrieverInterface;
 use Ampache\Repository\Model\Preference;
 
 global $dic;
-$web_path         = AmpConfig::get('web_path', '') . '/client';
+$web_path         = AmpConfig::get_web_path('/client');
 $ajaxUriRetriever = $dic->get(AjaxUriRetrieverInterface::class);
 ?>
 

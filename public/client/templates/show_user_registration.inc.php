@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 /** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path = AmpConfig::get('web_path', '') . '/client';
+$web_path = AmpConfig::get_web_path('/client');
 
 $display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');

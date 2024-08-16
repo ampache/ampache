@@ -528,8 +528,8 @@ function check_config_writable(): bool
  */
 function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
+    return ((file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/')));
 }
 
 /**
@@ -537,8 +537,8 @@ function check_htaccess_rest_writable(): bool
  */
 function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
+    return ((file_exists(__DIR__ . '/../../public/client/play/.htaccess') && is_writeable(__DIR__ . '/../../public/client/play/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/client/play/.htaccess') && is_writeable(__DIR__ . '/../../public/client/play/')));
 }
 
 /**
@@ -681,7 +681,7 @@ function debug_event($type, $message, $level, $username = ''): bool
 function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
+        $sse_url = AmpConfig::get_web_path('/client') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
         }
@@ -1029,7 +1029,7 @@ function show_now_playing(): void
     Session::garbage_collection();
     Stream::garbage_collection();
 
-    $web_path = AmpConfig::get('web_path') . '/client';
+    $web_path = AmpConfig::get_web_path('/client');
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
 }

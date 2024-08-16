@@ -115,8 +115,8 @@ final class MissingArtistFromMusicBrainzRetriever implements MissingArtistRetrie
         // prepare the result
         $artist['name'] = (string) $result->name;
         $artist['link'] = sprintf(
-            '<a href="%s/client/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
-            AmpConfig::get('web_path', ''),
+            '<a href="%s/artists.php?action=show_missing&mbid=%s" title="%s">%s</a>',
+            AmpConfig::get_web_path('/client'),
             $artist['mbid'],
             $artist['name'],
             $artist['name']

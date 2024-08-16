@@ -40,7 +40,7 @@ use Ampache\Module\Util\Ui;
 
 /* HINT: Username FullName */
 Ui::show_box_top(sprintf(T_('Editing %s Preferences'), scrub_out($client->fullname)), 'box box_preferences'); ?>
-<form method="post" name="preferences" action="<?php echo AmpConfig::get('web_path'); ?>/client/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
+<form method="post" name="preferences" action="<?php echo AmpConfig::get_web_path('/client'); ?>/preferences.php?action=admin_update_preferences" enctype="multipart/form-data">
 <table class="tabledata striped-rows">
 <colgroup>
     <col id="col_preference" />

@@ -45,7 +45,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_time */
 /** @var string $cel_counter */
 
-$web_path = AmpConfig::get('web_path') . '/client';
+$web_path = AmpConfig::get_web_path('/client');
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>

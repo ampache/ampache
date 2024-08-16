@@ -91,7 +91,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-                    $web_path                     = AmpConfig::get('web_path') . '/client';
+                    $web_path                     = AmpConfig::get_web_path('/client');
                     $_SESSION['iframe']['target'] = $web_path . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
                     if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
@@ -124,7 +124,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
-                $web_path                     = AmpConfig::get('web_path') . '/client';
+                $web_path                     = AmpConfig::get_web_path('/client');
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';

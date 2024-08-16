@@ -96,7 +96,7 @@ final class EditAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
-            sprintf('%s/admin/license.php', $this->configContainer->getWebPath(false))
+            sprintf('%s/license.php', $this->configContainer->getWebPath('/admin'))
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

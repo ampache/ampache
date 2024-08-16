@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 /** @var ShoutObjectLoaderInterface $shoutObjectLoader */
 /** @var list<Shoutbox> $shouts */
 
-$base_path = AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get_web_path('/client'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

@@ -66,7 +66,7 @@ final class UninstallLocalplayAction implements ApplicationActionInterface
         $localplay->uninstall();
 
         /* Show Confirmation */
-        $url   = sprintf('%s/admin/modules.php?action=show_localplay', $this->configContainer->getWebPath(false));
+        $url   = sprintf('%s/modules.php?action=show_localplay', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('The Module has been disabled');
 

@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$web_path       = AmpConfig::get('web_path', '') . '/client';
+$web_path       = AmpConfig::get_web_path('/client');
 $theme_path     = AmpConfig::get('theme_path') . '/templates';
 $theme_color    = AmpConfig::get('theme_color');
 $theme_css_base = AmpConfig::get('theme_css_base');
