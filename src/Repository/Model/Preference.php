@@ -258,17 +258,15 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
-        $pref_id = self::id_from_name($pref_name);
-
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, [$pref_id, $user_id]);
+        $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?";
+        $db_results = Dba::read($sql, [$pref_name, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
-            $db_results = Dba::read($sql, [$pref_id]);
+            $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'";
+            $db_results = Dba::read($sql, [$pref_name]);
         }
 
         $data = Dba::fetch_assoc($db_results);
@@ -300,8 +298,10 @@ class Preference extends database_object
         }
 
         if (
-            $pref_id === null ||
-            $pref_id === 0 ||
+            (
+                $pref_id === null ||
+                $pref_id === 0
+            ) ||
             (
                 $name === null ||
                 $name === '' ||
@@ -315,7 +315,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        $params = [$value, $pref_id];
+        $params = [$value, $name];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -325,12 +325,12 @@ class Preference extends database_object
         }
 
         if ($applytodefault && $access100) {
-            $sql = "UPDATE `preference` SET `value` = ? WHERE `id` = ?";
+            $sql = "UPDATE `preference` SET `value` = ? WHERE `name` = ?";
             Dba::write($sql, $params);
         }
 
         if (self::has_access($name)) {
-            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? ' . $user_check;
+            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check;
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -364,21 +364,14 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param string|int $preference
+     * @param string $preference
      * @param string|int $value
      */
     public static function update_all($preference, $value): bool
     {
-        $preference_id = (is_string($preference))
-            ? (int)Preference::id_from_name($preference)
-            : (int)$preference;
 
-        if ($preference_id == 0) {
-            return false;
-        }
-
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
-        Dba::write($sql, [$value, $preference_id]);
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
+        Dba::write($sql, [$value, $preference]);
 
         parent::clear_cache();
         self::clear_from_session();
@@ -562,15 +555,15 @@ class Preference extends database_object
         }
 
         $pref_id    = Dba::insert_id();
-        $params     = [$pref_id, $default];
-        $sql        = "INSERT INTO `user_preference` VALUES (-1, ?, ?)";
+        $params     = [$pref_id, $name, $default];
+        $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
 
         if ($category !== "system") {
-            $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
+            $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;

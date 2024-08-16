@@ -24,21 +24,21 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Preference;
 
-final class Migration700009 extends AbstractMigration
+/**
+ * Add `disksubtitle` to `song_data` and `album_disk` table
+ */
+final class Migration700014 extends AbstractMigration
 {
-    protected array $changelog = ['Convert system preference `upload_catalog` into a user preference'];
+    protected array $changelog = ['Add `name` to `user_preference` table'];
 
     public function migrate(): void
     {
-        $upload_catalog = (empty(Preference::get_by_user(-1, 'upload_catalog')))
-            ? Preference::get_by_user(-1, 'upload_catalog')
-            : -1;
+        Dba::write('ALTER TABLE `user_preference` DROP COLUMN `name`;');
+        $this->updateDatabase('ALTER TABLE `user_preference` ADD COLUMN `name` varchar(128) DEFAULT NULL AFTER `preference`;');
+        $this->updateDatabase('UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;');
 
-        $this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'options', 'upload');
-        Preference::update_all('upload_catalog', (string)$upload_catalog);
     }
 }
