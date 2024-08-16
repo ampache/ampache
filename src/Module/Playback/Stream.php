@@ -724,10 +724,10 @@ class Stream
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
                 break;
             case 'send_clear':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
                 break;
             case 'clear':
             case 'default':
@@ -764,7 +764,7 @@ class Stream
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
-            : AmpConfig::get('web_path');
+            : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }

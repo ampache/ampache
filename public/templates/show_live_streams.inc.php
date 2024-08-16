@@ -42,7 +42,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create">
+    <a href="<?php echo AmpConfig::get_web_path(); ?>/radio.php?action=show_create">
         <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
         <?php echo T_('Add Radio Station'); ?>
     </a>

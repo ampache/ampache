@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 /** @var list<int> $object_ids */
 
 $thcount  = 5;
-$web_path = AmpConfig::get('web_path'); ?>
+$web_path = AmpConfig::get_web_path(); ?>
 <script>
     function getSelectionArray()
     {

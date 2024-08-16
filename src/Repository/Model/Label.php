@@ -176,7 +176,7 @@ class Label extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
         }
 
@@ -391,7 +391,7 @@ class Label extends database_object implements library_item
             return '';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         $results  = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {

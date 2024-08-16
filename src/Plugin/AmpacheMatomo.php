@@ -62,7 +62,7 @@ class AmpacheMatomo implements AmpachePluginInterface
         if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'matomo')) {
             return false;
         }
-        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get_web_path() . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

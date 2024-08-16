@@ -32,6 +32,7 @@ use Ampache\Repository\Model\User;
 
 /** require@ public/templates/header.inc.php */
 /** @var string $web_path */
+/** @var string $admin_path */
 /** @var string $t_artists */
 /** @var string $t_albums */
 /** @var string $t_playlists */

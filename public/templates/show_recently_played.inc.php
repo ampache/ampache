@@ -43,7 +43,7 @@ $rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnu
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = (string)AmpConfig::get('web_path', '');
+$web_path  = AmpConfig::get_web_path();
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>

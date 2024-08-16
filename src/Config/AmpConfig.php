@@ -72,6 +72,16 @@ class AmpConfig
     }
 
     /**
+     * get_web_path
+     *
+     * This return web_path for the site. This is used to allow creating custom configs and web locations
+     */
+    public static function get_web_path(?string $suffix = ''): string
+    {
+        return self::get('web_path', '') . $suffix;
+    }
+
+    /**
      * get_rating_filter
      * Find out whether you are filtering ratings on your search
      * This function is used in mashup and random queries
@@ -138,7 +148,7 @@ class AmpConfig
      */
     public static function get_skip_timer($previous_time): ?int
     {
-        $timekeeper = AmpConfig::get('skip_timer');
+        $timekeeper = self::get('skip_timer');
         $skip_time  = 20;
         if ((int)$timekeeper > 1) {
             $skip_time = $timekeeper;

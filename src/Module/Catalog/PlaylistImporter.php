@@ -63,7 +63,7 @@ final class PlaylistImporter
         $import   = [];
         $pinfo    = pathinfo($playlist_file);
         $track    = 1;
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         if (isset($files)) {
             foreach ($files as $file) {
                 $found    = false;

@@ -101,11 +101,12 @@ class Plugin
                 }
 
                 if (Plugin::is_installed($plugin->_plugin->name) === 0) {
+                    debug_event(self::class, 'Plugin ' . $name . ' is not installed, skipping', 5);
                     continue;
                 }
 
                 if (!$plugin->is_valid()) {
-                    debug_event(self::class, 'Plugin ' . $name . ' is not valid, skipping', 6);
+                    debug_event(self::class, 'Plugin ' . $name . ' failed is_valid check, skipping', 5);
                     continue;
                 }
 
@@ -368,11 +369,12 @@ class Plugin
      */
     public static function show_update_available(): void
     {
-        $web_path = AmpConfig::get('web_path');
+        $web_path   = AmpConfig::get_web_path();
+        $admin_path = AmpConfig::get_web_path('/admin');
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span> ' . T_('You have Plugins that need an update!');
         echo '<br />';
-        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $web_path . '/admin/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
+        echo '<a class="nohtml" href="' . $web_path . '/update.php?type=sources&action=update_plugins">' . T_('Update Plugins automatically') . '</a> | <a class="nohtml" href="' . $admin_path . '/modules.php?action=show_plugins">' . T_('Manage Plugins') . '</a>';
         echo '<br />';
         echo '</div>';
     }
