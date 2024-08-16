@@ -67,7 +67,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('This Label will be deleted'),
             sprintf(
                 '%s/labels.php?action=confirm_delete&label_id=%s',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $labelId
             ),
             1,

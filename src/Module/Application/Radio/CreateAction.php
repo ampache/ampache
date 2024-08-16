@@ -84,7 +84,7 @@ final class CreateAction implements ApplicationActionInterface
                 $body,
                 sprintf(
                     '%s/browse.php?action=live_stream',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

@@ -108,7 +108,7 @@ final readonly class ShoutCreator implements ShoutCreatorInterface
                     $message .= "\n\n----------------------\n\n";
                     $message .= sprintf(
                         '%s/shout.php?action=show_add_shout&type=%s&id=%d#shout%d',
-                        $this->configContainer->getWebPath(),
+                        $this->configContainer->getWebPath('/client'),
                         $objectType->value,
                         $libItem->getId(),
                         $shout->getId()

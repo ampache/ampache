@@ -78,7 +78,7 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
                 'type' => 'album_disk',
                 'target_url' => sprintf(
                     '%s/albums.php?action=show_disk&album_disk=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $albumDiskId
                 )
             ]

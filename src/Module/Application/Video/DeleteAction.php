@@ -76,7 +76,7 @@ final class DeleteAction implements ApplicationActionInterface
                 T_('The Video will be deleted'),
                 sprintf(
                     '%s/video.php?action=confirm_delete&video_id=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $videoId
                 ),
                 1,

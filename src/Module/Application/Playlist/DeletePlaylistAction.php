@@ -69,7 +69,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
-                        sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath())
+                        sprintf('%s/browse.php?action=playlist', $this->configContainer->getWebPath('/client'))
                     );
             }
         }

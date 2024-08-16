@@ -71,7 +71,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('The Playlist has been deleted'),
             sprintf(
                 '%s/democratic.php?action=manage_playlists',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             )
         );
 

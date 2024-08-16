@@ -80,7 +80,7 @@ final class DeleteAction implements ApplicationActionInterface
                 T_('The Album and all files will be deleted'),
                 sprintf(
                     '%s/albums.php?action=confirm_delete&album_id=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $albumId
                 ),
                 1,

@@ -71,7 +71,7 @@ final class DeletePlaylistAction implements ApplicationActionInterface
                         'Location',
                         sprintf(
                             '%s/browse.php?action=smartplaylist',
-                            $this->configContainer->getWebPath()
+                            $this->configContainer->getWebPath('/client')
                         )
                     );
             }

@@ -92,7 +92,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Share has been deleted'),
-            sprintf('%s/stats.php?action=share', $this->configContainer->getWebPath())
+            sprintf('%s/stats.php?action=share', $this->configContainer->getWebPath('/client'))
         );
         $this->ui->showFooter();
 

@@ -67,7 +67,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('The Artist and all files will be deleted'),
             sprintf(
                 '%s/artists.php?action=confirm_delete&artist_id=%d',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $artistId
             ),
             1,

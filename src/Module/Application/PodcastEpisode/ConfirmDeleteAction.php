@@ -96,7 +96,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             T_('Podcast Episode has been deleted'),
             sprintf(
                 '%s/podcast.php?action=show&podcast=%s',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $episode->podcast
             )
         );

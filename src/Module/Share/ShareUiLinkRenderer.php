@@ -49,7 +49,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
         LibraryItemEnum $object_type,
         int $object_id
     ): string {
-        $webPath = $this->configContainer->getWebPath();
+        $webPath = $this->configContainer->getWebPath('/client');
 
         $link = '<ul>';
         $link .= sprintf(

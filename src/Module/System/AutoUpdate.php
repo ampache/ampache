@@ -377,7 +377,7 @@ class AutoUpdate
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
-            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path('/client') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
         }
         echo '</div>';
     }

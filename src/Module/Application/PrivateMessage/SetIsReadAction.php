@@ -97,8 +97,8 @@ final class SetIsReadAction implements ApplicationActionInterface
             T_('No Problem'),
             T_('Message\'s state has been changed'),
             sprintf(
-                '%s/client/browse.php?action=pvmsg',
-                $this->configContainer->getWebPath()
+                '%s/browse.php?action=pvmsg',
+                $this->configContainer->getWebPath('/client')
             )
         );
         $this->ui->showQueryStats();

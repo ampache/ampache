@@ -82,7 +82,7 @@ final class PrivateMessageCreator implements PrivateMessageCreatorInterface
                 $message .= "\n\n----------------------\n\n";
                 $message .= $message;
                 $message .= "\n\n----------------------\n\n";
-                $message .= $this->configContainer->getWebPath() . "/pvmsg.php?action=show&pvmsg_id=" . $messageId;
+                $message .= $this->configContainer->getWebPath('/client') . "/pvmsg.php?action=show&pvmsg_id=" . $messageId;
 
                 $mailer->set_default_sender();
                 $mailer->setRecipient((string) $recipient->email, (string) $recipient->get_fullname());

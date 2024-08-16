@@ -121,7 +121,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
                 sprintf(T_('Podcast-import finished. Imported %d podcasts'), $importedCount),
                 sprintf(
                     '%s/browse.php?action=podcast',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

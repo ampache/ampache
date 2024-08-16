@@ -77,7 +77,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
                 'type' => 'album',
                 'target_url' => sprintf(
                     '%s/albums.php?action=show&album=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $albumId
                 )
             ]

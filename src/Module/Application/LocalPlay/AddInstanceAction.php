@@ -71,7 +71,7 @@ final class AddInstanceAction extends AbstractLocalPlayAction
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath())
+                sprintf('%s/localplay.php?action=show_instances', $this->configContainer->getWebPath('/client'))
             );
     }
 }

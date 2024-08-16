@@ -88,7 +88,7 @@ final class AddLabelAction implements ApplicationActionInterface
                 T_('The Label has been added'),
                 sprintf(
                     '%s/browse.php?action=label',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

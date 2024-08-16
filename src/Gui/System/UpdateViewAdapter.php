@@ -114,7 +114,7 @@ final class UpdateViewAdapter implements UpdateViewAdapterInterface
     {
         return sprintf(
             '%s/update.php?action=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             UpdateAction::REQUEST_KEY
         );
     }

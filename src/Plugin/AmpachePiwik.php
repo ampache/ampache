@@ -62,7 +62,7 @@ class AmpachePiwik implements AmpachePluginInterface
         if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path('/client') . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 

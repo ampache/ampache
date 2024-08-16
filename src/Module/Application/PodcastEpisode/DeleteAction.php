@@ -63,7 +63,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('The Podcast Episode will be deleted'),
             sprintf(
                 '%s/podcast_episode.php?action=confirm_delete&podcast_episode_id=%d',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $episode_id
             ),
             1,

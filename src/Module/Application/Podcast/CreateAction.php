@@ -116,7 +116,7 @@ final class CreateAction implements ApplicationActionInterface
                 T_('Subscribed to the Podcast'),
                 sprintf(
                     '%s/browse.php?action=podcast',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

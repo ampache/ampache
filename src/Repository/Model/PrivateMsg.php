@@ -106,7 +106,7 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
     {
         return sprintf(
             '<a href="%s/pvmsg.php?pvmsg_id=%d">%s</a>',
-            AmpConfig::get_web_path(),
+            AmpConfig::get_web_path('/client'),
             $this->id,
             $this->getSubjectFormatted()
         );

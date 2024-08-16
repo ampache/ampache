@@ -103,7 +103,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                 ),
                 sprintf(
                     '%1$s/playlist.php?action=show&playlist_id=%2$s',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $playlist_id
                 )
             );
@@ -113,7 +113,7 @@ final class SaveAsPlaylistAction implements ApplicationActionInterface
                 T_("Failed to create playlist"),
                 sprintf(
                     '%s/index.php',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

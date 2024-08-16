@@ -119,7 +119,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath('/client') . '/albums.php?action=show&album=' . $albumId);
 
         return '';
     }
@@ -207,7 +207,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=album_disk&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->albumDisk->getId()
         );
     }
@@ -239,7 +239,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     {
         return sprintf(
             '%s/batch.php?action=album_disk&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->albumDisk->getId()
         );
     }
@@ -268,7 +268,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     {
         return sprintf(
             '%s/albums.php?action=%s&album_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->albumDisk->getAlbumId()
         );

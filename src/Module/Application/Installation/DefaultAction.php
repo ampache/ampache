@@ -72,8 +72,8 @@ final class DefaultAction implements ApplicationActionInterface
 
         define('INSTALL', 1);
 
-        $htaccess_play_file = __DIR__ . '/../../../../public/play/.htaccess';
-        $htaccess_rest_file = __DIR__ . '/../../../../public/rest/.htaccess';
+        $htaccess_play_file = __DIR__ . '/../../../../public/client/play/.htaccess';
+        $htaccess_rest_file = __DIR__ . '/../../../../public/client/rest/.htaccess';
 
         // Clean up incoming variables
         $web_path   = scrub_in((string) ($_REQUEST['web_path'] ?? ''));
@@ -237,7 +237,7 @@ final class DefaultAction implements ApplicationActionInterface
                 if ($this->installationHelper->install_check_status($configfile)) {
                     require_once Ui::find_template('show_install_account.inc.php');
                 } else {
-                    header("Location: " . $web_path . '/client/login.php');
+                    header("Location: " . $web_path . '/login.php');
                 }
                 break;
             case 'create_account':
@@ -251,7 +251,7 @@ final class DefaultAction implements ApplicationActionInterface
                     break;
                 }
 
-                header("Location: " . $web_path . '/client/index.php');
+                header("Location: " . $web_path . '/index.php');
                 break;
             case 'init':
                 require_once __DIR__ . '/../../../../public/client/templates/show_install.inc.php';

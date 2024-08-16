@@ -71,7 +71,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('The Message will be deleted'),
             sprintf(
                 '%s/pvmsg.php?action=confirm_delete&msgs=%s',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $this->ui->scrubOut($request->getQueryParams()['msgs'] ?? '')
             ),
             1,

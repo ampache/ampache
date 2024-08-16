@@ -91,7 +91,7 @@ final class UpdateAction implements ApplicationActionInterface
                 ->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 );
         } elseif ($this->updater->hasPendingUpdates()) {
             try {

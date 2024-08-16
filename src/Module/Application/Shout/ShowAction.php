@@ -54,7 +54,7 @@ final class ShowAction implements ApplicationActionInterface
             ->createResponse()
             ->withHeader(
                 'Location',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
     }
 }

@@ -76,7 +76,7 @@ final class DeleteAction implements ApplicationActionInterface
         if ($broadcast->delete()) {
             $next_url = sprintf(
                 '%s/browse.php?action=broadcast',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
             $this->ui->showConfirmation(
                 T_('No Problem'),

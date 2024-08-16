@@ -113,7 +113,7 @@ final class AddMessageAction implements ApplicationActionInterface
                 T_('Message has been sent'),
                 sprintf(
                     '%s/browse.php?action=pvmsg',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         } catch (PrivateMessageCreationException | Exception) {

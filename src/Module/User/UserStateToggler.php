@@ -72,7 +72,7 @@ final class UserStateToggler implements UserStateTogglerInterface
                 /* HINT: Ampache Login Page */"\n\n" .
                 sprintf(
                     T_('You can log in at the following address %s'),
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
             $mailer->setRecipient((string) $user->email, (string) $user->get_fullname());

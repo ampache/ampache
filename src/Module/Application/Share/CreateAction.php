@@ -107,7 +107,7 @@ final readonly class CreateAction implements ApplicationActionInterface
             $this->ui->showConfirmation(
                 $title,
                 $body,
-                AmpConfig::get_web_path() . '/stats.php?action=share'
+                AmpConfig::get_web_path('/client') . '/stats.php?action=share'
             );
         } else {
             $this->logger->error(
@@ -124,7 +124,7 @@ final readonly class CreateAction implements ApplicationActionInterface
                 $this->ui->showContinue(
                     T_('There Was a Problem'),
                     T_('Failed to create share'),
-                    AmpConfig::get_web_path() . '/stats.php?action=share'
+                    AmpConfig::get_web_path('/client') . '/stats.php?action=share'
                 );
             } else {
                 $object->format();

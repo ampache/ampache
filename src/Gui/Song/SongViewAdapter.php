@@ -104,7 +104,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/waveform.php?song_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->song->getId()
         );
     }
@@ -187,7 +187,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=song&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->song->getId()
         );
     }
@@ -232,7 +232,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/stream.php?action=download&song_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->song->getId()
         );
     }
@@ -264,7 +264,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/stats.php?action=graph&object_type=song&object_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->song->getId()
         );
     }
@@ -273,7 +273,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/song.php?action=update_from_tags&song_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->song->getId()
         );
     }
@@ -350,7 +350,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return sprintf(
             '%s/song.php?action=%s&song_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->song->getId()
         );
@@ -398,7 +398,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
             $label_string = '';
             foreach (array_map('trim', explode(';', (string)$this->song->label)) as $label_name) {
-                $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+                $label_string .= "<a href=\"" . $this->configContainer->getWebPath('/client') . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
             }
             $songprops[T_('Label')] = rtrim($label_string, ', ');
         } else {

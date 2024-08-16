@@ -94,7 +94,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
             T_('Messages have been deleted'),
             sprintf(
                 '%s/browse.php?action=pvmsg',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             )
         );
         $this->ui->showQueryStats();

@@ -113,7 +113,7 @@ final class AddShoutAction implements ApplicationActionInterface
                 'Location',
                 sprintf(
                     '%s/shout.php?action=show_add_shout&type=%s&id=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $objectType->value,
                     $objectId
                 )

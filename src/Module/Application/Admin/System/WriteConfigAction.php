@@ -71,14 +71,14 @@ final class WriteConfigAction implements ApplicationActionInterface
             return $this->responseFactory->createResponse(StatusCode::FOUND)
                 ->withHeader(
                     'Location',
-                    sprintf('%s/index.php', $this->configContainer->getWebPath())
+                    sprintf('%s/index.php', $this->configContainer->getWebPath('/client'))
                 );
         }
 
         return $this->responseFactory->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                sprintf('%s/error.php?permission=%s', $this->configContainer->getWebPath(), rawurlencode('config/ampache.cfg.php'))
+                sprintf('%s/error.php?permission=%s', $this->configContainer->getWebPath('/client'), rawurlencode('config/ampache.cfg.php'))
             );
     }
 }

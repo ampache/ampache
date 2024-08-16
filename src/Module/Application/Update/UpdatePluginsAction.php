@@ -64,7 +64,7 @@ final class UpdatePluginsAction implements ApplicationActionInterface
             ->createResponse(StatusCode::FOUND)
             ->withHeader(
                 'Location',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             );
     }
 }

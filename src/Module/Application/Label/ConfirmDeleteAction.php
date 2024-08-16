@@ -90,7 +90,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The Label has been deleted'),
-            $this->configContainer->getWebPath()
+            $this->configContainer->getWebPath('/client')
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

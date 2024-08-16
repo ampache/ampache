@@ -681,7 +681,7 @@ class Stream_Playlist
             $result .= Xml_Data::keyed_array($xml, true);
         } // end foreach
 
-        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";
+        $ret = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . $this->title . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path('/client') . "</info>\n<trackList>\n";
         $ret .= $result;
         $ret .= "</trackList>\n</playlist>\n";
 

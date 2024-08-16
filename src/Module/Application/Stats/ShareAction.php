@@ -83,7 +83,7 @@ final class ShareAction implements ApplicationActionInterface
 
         printf(
             $text,
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             Ui::get_material_symbol('mop', T_('Clean')),
             T_('Clean Expired Shared Objects')
         );

@@ -37,7 +37,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->setTemplate((string) realpath(__DIR__ . '/../../../../../resources/templates/rss/generic_rss_feed.xml'));
         $tal->set('TITLE', AmpConfig::get('site_title') . ' - ' . $this->getTitle());
         $tal->set('ITEMS', $this->getItems());
-        $tal->set('LINK', AmpConfig::get_web_path());
+        $tal->set('LINK', AmpConfig::get_web_path('/client'));
         $tal->set('PUBDATE', $this->getPubDate());
     }
 

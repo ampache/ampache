@@ -86,7 +86,7 @@ final class CreateAction implements ApplicationActionInterface
                 'Location',
                 sprintf(
                     '%s/democratic.php?action=show',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
     }

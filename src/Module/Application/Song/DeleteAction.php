@@ -65,7 +65,7 @@ final class DeleteAction implements ApplicationActionInterface
             T_('The Song will be deleted'),
             sprintf(
                 '%s/song.php?action=confirm_delete&song_id=%d',
-                $this->configContainer->getWebPath(),
+                $this->configContainer->getWebPath('/client'),
                 $songId
             ),
             1,

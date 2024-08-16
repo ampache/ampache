@@ -91,7 +91,7 @@ final class GrantAction implements ApplicationActionInterface
                     }
                     $next_url = sprintf(
                         '%s/preferences.php?tab=plugins',
-                        $this->configContainer->getWebPath()
+                        $this->configContainer->getWebPath('/client')
                     );
 
                     $this->ui->showConfirmation($title, $text, $next_url);

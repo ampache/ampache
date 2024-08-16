@@ -114,7 +114,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         $thumb = $this->browse->is_grid_view() ? 1 : 11;
 
-        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath('/client') . '/albums.php?action=show&album=' . $albumId);
 
         return '';
     }
@@ -202,7 +202,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/shout.php?action=show_add_shout&type=album&id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->album->getId()
         );
     }
@@ -234,7 +234,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/batch.php?action=album&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             $this->album->id
         );
     }
@@ -263,7 +263,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return sprintf(
             '%s/albums.php?action=%s&album_id=%d',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             DeleteAction::REQUEST_KEY,
             $this->album->getId()
         );

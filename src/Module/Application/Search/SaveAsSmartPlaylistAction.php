@@ -77,7 +77,7 @@ final class SaveAsSmartPlaylistAction implements ApplicationActionInterface
             ),
             sprintf(
                 '%s/browse.php?action=smartplaylist',
-                $this->configContainer->getWebPath()
+                $this->configContainer->getWebPath('/client')
             )
         );
 

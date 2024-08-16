@@ -88,7 +88,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
                 'CAPTCHA_BASE_URL',
                 sprintf(
                     '%s/modules/captcha/captcha.php',
-                    $this->configContainer->getWebPath()
+                    $this->configContainer->getWebPath('/client')
                 )
             );
         }

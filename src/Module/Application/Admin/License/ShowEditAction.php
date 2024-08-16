@@ -80,7 +80,7 @@ final class ShowEditAction implements ApplicationActionInterface
             'show_edit_license.inc.php',
             [
                 'license' => $license,
-                'webPath' => $this->configContainer->getWebPath(),
+                'webPath' => $this->configContainer->getWebPath('/client'),
             ]
         );
         $this->ui->showBoxBottom();

@@ -77,7 +77,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
                 'type' => 'song',
                 'target_url' => sprintf(
                     '%s/song.php?action=show&song_id=%d',
-                    $this->configContainer->getWebPath(),
+                    $this->configContainer->getWebPath('/client'),
                     $songId
                 )
             ]

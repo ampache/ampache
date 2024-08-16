@@ -67,7 +67,7 @@ final class ShowDeleteAction implements ApplicationActionInterface
 
         $next_url = sprintf(
             '%s/broadcast.php?action=delete&id=%s',
-            $this->configContainer->getWebPath(),
+            $this->configContainer->getWebPath('/client'),
             scrub_out($object_id)
         );
         $this->ui->showConfirmation(
