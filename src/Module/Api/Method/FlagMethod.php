@@ -49,7 +49,7 @@ final class FlagMethod
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * date = (integer) UNIXTIME() //optional

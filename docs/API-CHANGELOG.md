@@ -2,11 +2,16 @@
 
 ## API 6.6.1
 
+This release keeps parity between Ampache7 releases by backported the updated code.
+
+The big difference is all the `array()`'s have been converted to the short form `[]`
+
 ### Added
 
 * API6
   * Add maximum ID properties to `handshake` and `ping` (with auth) responses for media types
     * `max_song`, `max_album`, `max_artist`, `max_video`, `max_podcast`, `max_podcast_episode`
+  * flag: add `date` as a parameter (set the time for your flag)
 
 ## API 6.6.0
 

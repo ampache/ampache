@@ -7,8 +7,21 @@
 * Wanted items were not being added to the DB correctly
 * RSS Feeds were not including other users
 * Ambiguous column in Rating::get_highest_sql()
+* Logic for `is_allowed_recent` check stopping RSS feed showing other users
+* Wanted / Song_Preview items were very broken and badly sorted results
+* Don't cache additional columns for songs causing dynamic properties
+* Browse
+  * Not restoring QueryType on reload of saved browse
+  * Sorting users by invalid sort type
+* Highest rating SQL had ambiguous column in select
 * Plugins
   * Don't show that catalog favorites header if there isn't anything to show
+* Search
+  * Stripslashes on input to fix `Don't` becoming `Don\'t` in the SQL
+* Subsonic
+  * Always include cover art in search results
+* webplayer
+  * Missing variable `playlist_before` in shuffle function
 
 ## Ampache 6.6.0
 
