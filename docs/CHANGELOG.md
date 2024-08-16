@@ -7,7 +7,6 @@
 * Wanted items were not being added to the DB correctly
 * RSS Feeds were not including other users
 * Ambiguous column in Rating::get_highest_sql()
-* Logic for `is_allowed_recent` check stopping RSS feed showing other users
 * Wanted / Song_Preview items were very broken and badly sorted results
 * Don't cache additional columns for songs causing dynamic properties
 * Browse
