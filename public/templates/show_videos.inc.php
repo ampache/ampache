@@ -60,7 +60,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=rating', T_('Rating'), 'video_sort_rating'); ?></th>
             <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
