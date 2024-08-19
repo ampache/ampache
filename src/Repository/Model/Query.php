@@ -695,7 +695,7 @@ class Query
      */
     public function set_select($field): void
     {
-        $this->_state['select'][] = $field;
+        $this->_state['select'] = [$field];
     }
 
     /**
@@ -924,7 +924,7 @@ class Query
             if ($this->queryType === null) {
                 $this->queryType = new SongQuery();
             }
-            $this->_state['select'][] = $this->queryType->get_select();
+            $this->_state['select'] = [$this->queryType->get_select()];
 
             // tag state should be set as they aren't really separate objects
             if ($this->get_type() === 'tag_hidden') {

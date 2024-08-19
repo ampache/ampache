@@ -58,6 +58,7 @@ final class PodcastQuery implements QueryInterface
         'episodes',
         'rand',
         'rating',
+        'total_count',
         'user_flag',
         'userflag',
         'user_flag_rating',
