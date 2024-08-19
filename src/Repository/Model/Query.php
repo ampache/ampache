@@ -852,9 +852,9 @@ class Query
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('data', $results) && !empty($results['data'])) {
-                $this->_state = (array)$this->_unserialize($results['data']);
+                $data = (array)$this->_unserialize($results['data']);
                 // queryType isn't set by restoring state
-                $this->set_type($this->_state['type']);
+                $this->set_type($data['type']);
             }
 
             if (array_key_exists('object_data', $results) && !empty($results['object_data'])) {
