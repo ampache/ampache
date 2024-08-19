@@ -31,6 +31,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Podcast_Episode;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
@@ -927,9 +928,9 @@ class Stats
             : "'$object_type'";
 
         $results = [];
-        $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`name`='personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`name`='personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
+        $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='allow_personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
         // check for valid catalogs
-        $sql .= " AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        $sql .= "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         if ((int)$user_id > 0 || !$access100) {
             $sql .= ($user_only)
