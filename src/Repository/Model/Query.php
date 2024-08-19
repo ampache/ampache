@@ -67,6 +67,7 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_ORDER = [
+        'active' => 'ASC',
         'last_count' => 'ASC',
         'last_update' => 'ASC',
         'limit' => 'ASC',
