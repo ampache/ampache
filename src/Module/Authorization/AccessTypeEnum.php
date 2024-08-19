@@ -33,7 +33,6 @@ enum AccessTypeEnum: string
     case ALL       = 'all';
     case API       = 'rpc';
     case INTERFACE = 'interface';
-    case LAN       = 'local';
     case LOCALPLAY = 'localplay';
     case NETWORK   = 'network';
     case STREAM    = 'stream';
@@ -42,7 +41,6 @@ enum AccessTypeEnum: string
     public const CONFIGURABLE_TYPE_LIST = [
         AccessTypeEnum::API,
         AccessTypeEnum::INTERFACE,
-        AccessTypeEnum::LAN,
         AccessTypeEnum::NETWORK,
         AccessTypeEnum::STREAM,
     ];

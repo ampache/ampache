@@ -71,7 +71,7 @@ $current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php } else {
             if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
-                <input type="hidden" name="type" value="local" />
+                <input type="hidden" name="type" value="network" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>
