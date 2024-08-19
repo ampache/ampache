@@ -47,7 +47,7 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
 
     // These are internal settings used by this class, run this->load to fill them out
     private User $user;
-    private $maxitems;
+    private int $maxitems;
     private bool $random;
     private bool $newest;
     private bool $recent;
@@ -149,7 +149,7 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
         : 'album_disk';
 
         $object_ids = ($this->random)
-            ? self::getAlbumRepository()->getRandom($this->user->getId() ?? -1, $limit)
+            ? self::getAlbumRepository()->getRandom($this->user->getId(), $limit)
             : [];
         if (!empty($object_ids)) {
             Ui::show_box_top(T_('Random'));

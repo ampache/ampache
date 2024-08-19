@@ -37,6 +37,7 @@ use Ampache\Module\Util\Ui;
 /** @var Live_Stream $libitem */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
+/** @var bool $show_ratings */
 
 $object_type = 'live_stream'; ?>
 <td class="cel_play">
