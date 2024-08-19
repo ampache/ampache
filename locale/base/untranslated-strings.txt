@@ -246,3 +246,7 @@ msgstr ""
 #: ./untranslated-strings.txt:155
 msgid "ping"
 msgstr ""
+
+#: ./untranslated-strings.txt:250
+msgid "Home Dashboard"
+msgstr ""

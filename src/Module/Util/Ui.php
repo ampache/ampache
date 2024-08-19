@@ -855,6 +855,11 @@ class Ui implements UiInterface
             case 'geolocation':
             case 'hide_genres':
             case 'hide_single_artist':
+            case 'homedash_random':
+            case 'homedash_newest':
+            case 'homedash_recent':
+            case 'homedash_trending':
+            case 'homedash_popular':
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_now_playing':
