@@ -37,7 +37,8 @@ use Ampache\Module\Util\Ui;
 /** @var Live_Stream $libitem */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
-?>
+
+$object_type = 'live_stream'; ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
