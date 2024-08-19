@@ -49,7 +49,7 @@ class AmpacheMpd extends localplay_controller
     private string $version     = '000003';
     private string $description = 'Controls an instance of MPD';
 
-    private $_add_count = 0;
+    private int $_add_count = 0;
 
     /* Constructed variables */
     private $_mpd;
@@ -416,7 +416,7 @@ class AmpacheMpd extends localplay_controller
      */
     public function get(): array
     {
-        if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
+        if (!$this->_mpd || !$this->_mpd->status) {
             return [];
         }
         // If we don't have the playlist yet, pull it
@@ -512,7 +512,7 @@ class AmpacheMpd extends localplay_controller
     public function status(): array
     {
         $array = [];
-        if (!$this->_mpd || ($this->_mpd && !$this->_mpd->status)) {
+        if (!$this->_mpd || !$this->_mpd->status) {
             return $array;
         }
         $track = $this->_mpd->status['song'] ?? 0;
@@ -581,7 +581,7 @@ class AmpacheMpd extends localplay_controller
         if (!array_key_exists('host', $options) && !array_key_exists('port', $options)) {
             return false;
         }
-        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? '', 'debug_event');
+        $this->_mpd = new mpd($options['host'], $options['port'], $options['password'] ?? null, 'debug_event');
 
         return $this->_mpd->connected;
     }
