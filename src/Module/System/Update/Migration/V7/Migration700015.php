@@ -28,10 +28,10 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration700015 extends AbstractMigration
 {
-    protected array $changelog = ['Add user Preference `index_dashboard_form` (Use Dashboard links for the index header)'];
+    protected array $changelog = ['Add user Preference `index_dashboard_form` (Use Dashboard links for the index page header)'];
 
     public function migrate(): void
     {
-        $this->updatePreferences('index_dashboard_form', 'Use Dashboard links for the index header', '0', 25, 'boolean', 'interface', 'home');
+        $this->updatePreferences('index_dashboard_form', 'Use Dashboard links for the index page header', '0', 25, 'boolean', 'interface', 'home');
     }
 }
