@@ -847,11 +847,17 @@ class Query
         }
 
         if (!$this->is_simple()) {
-            $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
+            $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, [session_id(), $this->id]);
             $results    = Dba::fetch_assoc($db_results);
 
-            if (array_key_exists('object_data', $results)) {
+            if (array_key_exists('data', $results) && !empty($results['data'])) {
+                $this->_state = (array)$this->_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($this->_state['type']);
+            }
+
+            if (array_key_exists('object_data', $results) && !empty($results['object_data'])) {
                 $this->_cache = (array)$this->_unserialize($results['object_data']);
 
                 return $this->_cache;
