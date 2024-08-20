@@ -370,10 +370,10 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ;#########################################################
 
 ; Downsample Remote
-; If this is set to true and access control is on any users who are not
-; coming from a defined 'network' ACL will be automatically downsampled
-; regardless of their preferences. Requires access_control to be enabled.
-; NOTE: Local network users will be downsampled when this is enabled.
+; When enabled, any users who are not coming from a defined 'network' ACL
+; will be automatically downsampled. ('transcoding' will be set to 'required')
+; regardless of their preferences. This requires access_control to be enabled.
+; NOTE: Local network users will disable all transcoding when enabled
 ; DEFAULT: "false"
 ;downsample_remote = "true"
 
