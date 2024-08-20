@@ -117,6 +117,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
         $accessId   = 666;
         $accessName = 'some-name';
+        $accessType = 'some-type';
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
@@ -141,7 +142,11 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
             ->with(
                 'Are You Sure?',
                 /* HINT: ACL Name */
-                sprintf('This will permanently delete the ACL "%s"', $accessName),
+                sprintf(
+                    'This will permanently delete the %s ACL "%s"',
+                    $accessType,
+                    $accessName
+                ),
                 sprintf('admin/access.php?action=delete_record&access_id=%d', $accessId),
                 1,
                 'delete_access'
@@ -160,6 +165,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
         $access->id   = $accessId;
         $access->name = $accessName;
+        $access->type = $accessType;
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
