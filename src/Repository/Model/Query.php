@@ -229,7 +229,7 @@ class Query
     {
         // only set filters for your type
         if (!in_array($key, self::get_allowed_filters($this->get_type()))) {
-            debug_event(self::class, 'IGNORED set_filter ' . (empty($this->get_type()) ? $this->get_type() : 'NO_TYPE') . ': ' . $key, 5);
+            debug_event(self::class, 'IGNORED set_filter ' . (!empty($this->get_type()) ? $this->get_type() : 'NO_TYPE') . ': ' . $key, 5);
 
             return false;
         }
