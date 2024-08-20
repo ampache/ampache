@@ -2024,7 +2024,7 @@ class Song extends database_object implements
 
         $downsample_remote = AmpConfig::get('downsample_remote', false);
         $lan_user          = $this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, (int)$uid, AccessLevelEnum::DEFAULT);
-        $transcode         = AmpConfig::get('transcode', 'never');
+        $transcode         = AmpConfig::get('transcode', 'default');
         // enforce or disable transcoding depending on local network ACL
         if ($downsample_remote) {
             if (!$lan_user) {

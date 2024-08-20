@@ -237,7 +237,7 @@ class WebPlayer
      */
     public static function add_media_js($playlist, $callback_container = ''): string
     {
-        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
         $addjs         = "";
         foreach ($playlist->urls as $item) {
             if ($item->type == 'broadcast') {
@@ -258,7 +258,7 @@ class WebPlayer
      */
     public static function play_next_js($playlist, $callback_container = ''): string
     {
-        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
         $addjs         = "";
         // play next for groups of items needs to be reversed to be in correct order
         foreach (array_reverse($playlist->urls) as $item) {
