@@ -227,13 +227,6 @@ class Query
      */
     public function set_filter($key, mixed $value): bool
     {
-        // only set filters for your type
-        if (!in_array($key, self::get_allowed_filters($this->get_type()))) {
-            debug_event(self::class, 'IGNORED set_filter ' . (!empty($this->get_type()) ? $this->get_type() : 'NO_TYPE') . ': ' . $key, 5);
-
-            return false;
-        }
-
         switch ($key) {
             case 'access':
             case 'add_gt':
@@ -311,6 +304,16 @@ class Query
                 }
                 break;
             default:
+                // you might be trying to set an invalid filter that doesn't exist
+                $type = (!empty($this->get_type()))
+                    ? $this->get_type()
+                    : 'NO_TYPE';
+
+                // warn about weird filters
+                if (!in_array($key, self::get_allowed_filters($type))) {
+                    debug_event(self::class, 'set_filter: UNKNOWN FILTER ' . $type . ': ' . $key, 5);
+                }
+
                 // string / unfiltered
                 $this->_state['filter'][$key] = $value;
                 break;
