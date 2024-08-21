@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --minify false",
-    "postinstall": "npm-run-all copy:**",
+    "postinstall": "npm-run-all copy:*",
     "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/lib/components/bootstrap",
     "copy:contextmenu": "copyfiles --up 3 node_modules/jquery-contextmenu/dist/* public/lib/components/jquery-contextmenu",
     "copy:datetimepicker": "copyfiles --up 3 node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css public/lib/components/datetimepicker",
