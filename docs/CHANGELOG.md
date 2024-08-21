@@ -9,9 +9,11 @@
 * Ambiguous column in Rating::get_highest_sql()
 * Wanted / Song_Preview items were very broken and badly sorted results
 * Don't cache additional columns for songs causing dynamic properties
+* Delete label confirmation missing ID
 * Browse
   * Not restoring QueryType on reload of saved browse
   * Sorting users by invalid sort type
+  * Dupe select in some areas (always overwrite instead of adding)
 * Highest rating SQL had ambiguous column in select
 * Plugins
   * Don't show that catalog favorites header if there isn't anything to show
