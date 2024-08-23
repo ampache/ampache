@@ -132,10 +132,11 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
     public function display_home(): void
     {
         if (
-            $this->newest &&
-            $this->recent &&
-            $this->trending &&
-            $this->popular
+            !$this->newest &&
+            !$this->random &&
+            !$this->recent &&
+            !$this->trending &&
+            !$this->popular
         ) {
             return;
         }
@@ -212,11 +213,12 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
             ? Stats::get_top($object_type, 100, $threshold, 0, $this->user)
             : [];
         if (!empty($object_ids)) {
-            Ui::show_box_top(T_('Popular'));
             shuffle($object_ids);
             $object_ids = array_slice($object_ids, 0, $limit);
+            Ui::show_box_top(T_('Popular'));
             $browse     = new Browse();
             $browse->set_type($object_type);
+            $browse->set_use_filters(false);
             $browse->set_show_header(false);
             $browse->set_grid_view(false, false);
             $browse->set_mashup(true);
