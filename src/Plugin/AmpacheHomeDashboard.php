@@ -41,7 +41,7 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
     public string $categories  = 'home';
     public string $description = 'Show Album dashboard sections on the homepage';
     public string $url         = '';
-    public string $version     = '000001';
+    public string $version     = '000002';
     public string $min_ampache = '370021';
     public string $max_ampache = '999999';
 
@@ -53,6 +53,7 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
     private bool $recent;
     private bool $trending;
     private bool $popular;
+    private int $order = 0;
 
     /**
      * Constructor
@@ -92,6 +93,10 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
             return false;
         }
 
+        if (!Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -107,7 +112,8 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
             Preference::delete('homedash_random') &&
             Preference::delete('homedash_recent') &&
             Preference::delete('homedash_trending') &&
-            Preference::delete('homedash_popular')
+            Preference::delete('homedash_popular') &&
+            Preference::delete('homedash_order')
         );
     }
 
@@ -120,6 +126,10 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
         $from_version = Plugin::get_plugin_version($this->name);
         if ($from_version == 0) {
             return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 
         return true;
@@ -141,7 +151,10 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
             return;
         }
 
-        echo '<div class="home_plugin">';
+        $divString = ($this->order > 0)
+            ? '<div class="homedash" style="order: '. $this->order . '>'
+            : '<div class="homedash">';
+        echo $divString;
 
         $threshold   = AmpConfig::get('stats_threshold', 7);
         $limit       = $this->maxitems;
@@ -249,6 +262,7 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
         $this->recent   = ($data['homedash_recent'] == '1');
         $this->trending = ($data['homedash_trending'] == '1');
         $this->popular  = ($data['homedash_popular'] == '1');
+        $this->order    = (int)($data['homedash_order'] ?? 0);
 
         return true;
     }

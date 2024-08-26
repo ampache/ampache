@@ -27,6 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
@@ -41,12 +42,13 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
     public string $categories  = 'home';
     public string $description = 'Friends Timeline on homepage';
     public string $url         = '';
-    public string $version     = '000001';
+    public string $version     = '000002';
     public string $min_ampache = '370040';
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+    private int $order = 0;
 
     /**
      * Constructor
@@ -66,6 +68,10 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
             return false;
         }
 
+        if (!Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -75,7 +81,10 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
      */
     public function uninstall(): bool
     {
-        return Preference::delete('ftl_max_items');
+        return (
+            Preference::delete('ftl_max_items') &&
+            Preference::delete('ftl_order')
+        );
     }
 
     /**
@@ -84,6 +93,15 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
      */
     public function upgrade(): bool
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
         return true;
     }
 
@@ -95,11 +113,14 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? false;
+            $user_id = $user->id ?? 0;
             if ($user_id) {
-                echo '<div class="home_plugin">';
+                $divString = ($this->order > 0)
+                    ? '<div class="ftl" style="order: '. $this->order . '>'
+                    : '<div class="ftl">';
+                echo $divString;
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(
-                    (int) $user_id,
+                    $user_id,
                     (int) $this->maxitems
                 );
                 if (!empty($activities)) {
@@ -133,6 +154,8 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }
+
+        $this->order = (int)($data['ftl_order'] ?? 0);
 
         return true;
     }

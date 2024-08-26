@@ -42,13 +42,14 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
     public string $categories  = 'home';
     public string $description = 'Catalog favorites on homepage';
     public string $url         = '';
-    public string $version     = '000002';
+    public string $version     = '000003';
     public string $min_ampache = '370021';
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
     private $gridview;
+    private int $order = 0;
 
     /**
      * Constructor
@@ -67,7 +68,12 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
         if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
@@ -82,7 +88,8 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
     {
         return (
             Preference::delete('catalogfav_max_items') &&
-            Preference::delete('catalogfav_gridview')
+            Preference::delete('catalogfav_gridview') &&
+            Preference::delete('catalogfav_order')
         );
     }
 
@@ -96,8 +103,10 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < (int)$this->version) {
             Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+            Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 
         return true;
@@ -115,7 +124,10 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
             !empty($userflags)
         ) {
             $count     = 0;
-            echo '<div class="home_plugin">';
+            $divString = ($this->order > 0)
+                ? '<div class="catalogfav" style="order: '. $this->order . '>'
+                : '<div class="catalogfav">';
+            echo $divString;
             Ui::show_box_top(T_('Highlight'));
             echo '<table class="tabledata striped-rows';
             if (!$this->gridview) {
@@ -192,7 +204,9 @@ class AmpacheCatalogFavorites implements PluginDisplayHomeInterface
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }
+
         $this->gridview = ($data['catalogfav_gridview'] == '1');
+        $this->order    = (int)($data['catalogfav_order'] ?? 0);
 
         return true;
     }

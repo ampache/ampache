@@ -1330,10 +1330,16 @@ class Ui implements UiInterface
             case 'of_the_moment':
             case 'amazon_max_results_pages':
             case 'catalogfav_max_items':
+            case 'catalogfav_order':
             case 'ftl_max_items':
+            case 'ftl_order':
             case 'homedash_max_items':
+            case 'homedash_order':
+            case 'personalfav_order':
             case 'rssview_max_items':
+            case 'rssview_order':
             case 'shouthome_max_items':
+            case 'shouthome_order':
             case 'stream_control_bandwidth_max':
             case 'stream_control_bandwidth_days':
             case 'stream_control_hits_max':

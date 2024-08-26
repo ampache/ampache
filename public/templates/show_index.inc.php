@@ -40,6 +40,7 @@ $header_form = AmpConfig::get('index_dashboard_form', false)
 <?php require_once Ui::find_template($header_form); ?>
 </div> <!-- Close browse_header Div -->
 
+<div id="home_plugin" style="display:flex;flex-direction:column;">
 <?php $user = Core::get_global('user');
 if ($user instanceof User) {
     foreach (Plugin::get_plugins(PluginTypeEnum::HOMEPAGE_WIDGET) as $plugin_name) {
@@ -49,6 +50,7 @@ if ($user instanceof User) {
         }
     }
 } ?>
+</div> <!-- Close home_plugin Div -->
 
 <?php if (AmpConfig::get('home_now_playing')) { ?>
 <div id="now_playing">
