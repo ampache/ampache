@@ -152,7 +152,7 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
         }
 
         $divString = ($this->order > 0)
-            ? '<div class="homedash" style="order: '. $this->order . '">'
+            ? '<div class="homedash" style="order: ' . $this->order . '">'
             : '<div class="homedash">';
         echo $divString;
 

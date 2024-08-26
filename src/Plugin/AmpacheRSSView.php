@@ -121,7 +121,7 @@ class AmpacheRSSView implements PluginDisplayHomeInterface
             Ui::show_box_top($xml->channel->title);
             $count     = 0;
             $divString = ($this->order > 0)
-                ? '<div class="home_plugin" style="order: '. $this->order . '"><table class="tabledata striped-rows">'
+                ? '<div class="home_plugin" style="order: ' . $this->order . '"><table class="tabledata striped-rows">'
                 : '<div class="home_plugin"><table class="tabledata striped-rows">';
             echo $divString;
             foreach ($xml->channel->item as $item) {
