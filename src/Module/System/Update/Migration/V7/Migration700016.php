@@ -44,6 +44,6 @@ final class Migration700016 extends AbstractMigration
         $this->updatePreferences('sidebar_order_information', 'Custom CSS Order - Information', 20, 25, 'integer', 'interface', 'sidebar');
         $this->updatePreferences('sidebar_order_playlist', 'Custom CSS Order - Playlist', 30, 25, 'integer', 'interface', 'sidebar');
         $this->updatePreferences('sidebar_order_search', 'Custom CSS Order - Search', 40, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_video', 'Custom CSS Order - Video', 60, 25, 'integer', 'interface', 'home');
+        $this->updatePreferences('sidebar_order_video', 'Custom CSS Order - Video', 60, 25, 'integer', 'interface', 'sidebar');
     }
 }
