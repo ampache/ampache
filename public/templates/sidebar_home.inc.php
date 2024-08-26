@@ -162,7 +162,7 @@ if (
     User::is_registered() &&
     !AmpConfig::get('sidebar_hide_dashboard', false)
 ) { ?>
-    <li class="sb2_dashboard" style="order: <?php echo $order_dashboard; ?>>
+    <li class="sb2_dashboard" style="order: <?php echo $order_dashboard; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
@@ -186,7 +186,7 @@ if (
     </li>
 <?php } ?>
 <?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
-    <li class="sb2_search" style="order: <?php echo $order_search; ?>>
+    <li class="sb2_search" style="order: <?php echo $order_search; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_search', 'header-img ' . $state_home_search); ?>
@@ -216,7 +216,7 @@ if (
     $access25 &&
     !AmpConfig::get('sidebar_hide_playlist', false)
 ) {  ?>
-    <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>>
+    <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
@@ -239,7 +239,7 @@ if (
     </li>
 <?php } ?>
 <?php if (!AmpConfig::get('sidebar_hide_information', false)) { ?>
-    <li class="sb2_information" style="order: <?php echo $order_information; ?>>
+    <li class="sb2_information" style="order: <?php echo $order_information; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
