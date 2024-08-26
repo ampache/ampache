@@ -1340,6 +1340,12 @@ class Ui implements UiInterface
             case 'rssview_order':
             case 'shouthome_max_items':
             case 'shouthome_order':
+            case 'sidebar_order_browse':
+            case 'sidebar_order_dashboard':
+            case 'sidebar_order_information':
+            case 'sidebar_order_playlist':
+            case 'sidebar_order_search':
+            case 'sidebar_order_video':
             case 'stream_control_bandwidth_max':
             case 'stream_control_bandwidth_days':
             case 'stream_control_hits_max':
