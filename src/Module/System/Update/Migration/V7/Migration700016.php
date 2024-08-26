@@ -39,11 +39,11 @@ final class Migration700016 extends AbstractMigration
         // separate sidebar preferences into their own category
         Dba::write("UPDATE `preference` SET `category` = 'sidebar' WHERE name IN ('sidebar_light', 'show_album_artist', 'show_artist', 'sidebar_hide_switcher', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_video', 'sidebar_hide_search', 'sidebar_hide_playlist', 'sidebar_hide_information')");
         // allow reordering the sidebar without relying on CSS
-        $this->updatePreferences('sidebar_order_browse', 'Hide sidebar switcher arrows', 10, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_dashboard', 'Hide the Browse menu in the sidebar', 15, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_information', 'Hide the Dashboard menu in the sidebar', 20, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_playlist', 'Hide the Video menu in the sidebar', 30, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_search', 'Hide the Search menu in the sidebar', 40, 25, 'integer', 'interface', 'sidebar');
-        $this->updatePreferences('sidebar_order_video', 'Hide the Playlist menu in the sidebar', 60, 25, 'integer', 'interface', 'home');
+        $this->updatePreferences('sidebar_order_browse', 'Custom CSS Order - Browse', 10, 25, 'integer', 'interface', 'sidebar');
+        $this->updatePreferences('sidebar_order_dashboard', 'Custom CSS Order - Dashboard', 15, 25, 'integer', 'interface', 'sidebar');
+        $this->updatePreferences('sidebar_order_information', 'Custom CSS Order - Information', 20, 25, 'integer', 'interface', 'sidebar');
+        $this->updatePreferences('sidebar_order_playlist', 'Custom CSS Order - Playlist', 30, 25, 'integer', 'interface', 'sidebar');
+        $this->updatePreferences('sidebar_order_search', 'Custom CSS Order - Search', 40, 25, 'integer', 'interface', 'sidebar');
+        $this->updatePreferences('sidebar_order_video', 'Custom CSS Order - Video', 60, 25, 'integer', 'interface', 'home');
     }
 }
