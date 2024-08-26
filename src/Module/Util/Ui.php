@@ -1317,6 +1317,31 @@ class Ui implements UiInterface
                 /* HINT: Plugin Name */
                 echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
                 break;
+            case 'bandwidth':
+            case 'features':
+            case 'share_expire':
+            case 'slideshow_time':
+            case 'concerts_limit_future':
+            case 'concerts_limit_past':
+            case 'direct_play_limit':
+            case 'browser_notify_timeout':
+            case 'podcast_keep':
+            case 'podcast_new_download':
+            case 'of_the_moment':
+            case 'amazon_max_results_pages':
+            case 'catalogfav_max_items':
+            case 'ftl_max_items':
+            case 'homedash_max_items':
+            case 'rssview_max_items':
+            case 'shouthome_max_items':
+            case 'stream_control_bandwidth_max':
+            case 'stream_control_bandwidth_days':
+            case 'stream_control_hits_max':
+            case 'stream_control_hits_days':
+            case 'stream_control_time_max':
+            case 'stream_control_time_days':
+                echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
+                break;
             default:
                 if (preg_match('/_pass$/', $name)) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
