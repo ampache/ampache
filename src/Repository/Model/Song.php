@@ -1980,18 +1980,31 @@ class Song extends database_object implements
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        $downsample_remote = false;
-        // enforce or disable transcoding depending on local network ACL
-        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
-            $downsample_remote = true;
-            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+
+        $downsample_remote = AmpConfig::get('downsample_remote', false);
+        $lan_user          = $this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT);
+        $transcode         = AmpConfig::get('transcode', 'default');
+
+        // enforce or disable transcoding depending on local network ACL. Transcoding must also not be disabled with 'never'
+        if (
+            $downsample_remote &&
+            $transcode !== 'never'
+        ) {
+            if (!$lan_user) {
+                // remote network user will require transcoding with downsample_remote
+                $transcode = 'required';
+                debug_event(self::class, "Transcoding due to downsample_remote", 3);
+            } else {
+                // lan user is allowed to play original quality
+                $transcode = 'never';
+                debug_event(self::class, "NOT transcoding local network due to downsample_remote", 5);
+            }
         }
 
         // if you transcode the media mime will change
         if (
-            AmpConfig::get('transcode') != 'never' &&
+            $transcode !== 'never' &&
             (
-                $downsample_remote ||
                 empty($additional_params) ||
                 (
                     strpos($additional_params, '&bitrate=') === false &&
