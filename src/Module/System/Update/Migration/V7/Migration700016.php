@@ -37,7 +37,7 @@ final class Migration700016 extends AbstractMigration
     public function migrate(): void
     {
         // separate sidebar preferences into their own category
-        Dba::write("UPDATE `preference` SET `category` = 'sidebar' WHERE name IN ('sidebar_light', 'show_album_artist', 'show_artist', 'sidebar_hide_switcher', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_video', 'sidebar_hide_search', 'sidebar_hide_playlist', 'sidebar_hide_information')");
+        Dba::write("UPDATE `preference` SET `subcategory` = 'sidebar' WHERE `name` IN ('sidebar_light', 'show_album_artist', 'show_artist', 'sidebar_hide_switcher', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_video', 'sidebar_hide_search', 'sidebar_hide_playlist', 'sidebar_hide_information');");
         // allow reordering the sidebar without relying on CSS
         $this->updatePreferences('sidebar_order_browse', 'Custom CSS Order - Browse', 10, 25, 'integer', 'interface', 'sidebar');
         $this->updatePreferences('sidebar_order_dashboard', 'Custom CSS Order - Dashboard', 15, 25, 'integer', 'interface', 'sidebar');
