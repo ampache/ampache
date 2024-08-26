@@ -23,31 +23,10 @@
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\User;
-
-interface AmpachePluginInterface
+interface PluginExternalShareInterface extends AmpachePluginInterface
 {
     /**
-     * install
-     * Inserts plugin preferences into Ampache
+     * external_share
      */
-    public function install(): bool;
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool;
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
+    public function external_share(string $url, string $text): string;
 }

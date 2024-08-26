@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheMatomo implements AmpachePluginInterface
+class AmpacheMatomo implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Matomo';
     public string $categories  = 'stats';
@@ -120,9 +120,8 @@ class AmpacheMatomo implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

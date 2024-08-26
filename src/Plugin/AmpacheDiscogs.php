@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs implements AmpachePluginInterface
+class AmpacheDiscogs implements PluginGatherArtsInterface
 {
     public string $name        = 'Discogs';
     public string $categories  = 'metadata';
@@ -96,9 +96,8 @@ class AmpacheDiscogs implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -190,11 +189,8 @@ class AmpacheDiscogs implements AmpachePluginInterface
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param array $gather_types
-     * @param array $media_info
-     * @return array
      */
-    public function get_metadata($gather_types, $media_info): array
+    public function get_metadata(array $gather_types, array $media_info): array
     {
         debug_event(self::class, 'Getting metadata from Discogs...', 5);
 
@@ -232,12 +228,10 @@ class AmpacheDiscogs implements AmpachePluginInterface
     }
 
     /**
-     * @param string $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * gather_arts
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

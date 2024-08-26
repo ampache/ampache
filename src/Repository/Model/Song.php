@@ -2151,7 +2151,7 @@ class Song extends database_object implements
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load($user)) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
-                if ($lyrics) {
+                if (!empty($lyrics)) {
                     // save the lyrics if not set before
                     if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
                         self::update_lyrics($lyrics['text'], $this->id);

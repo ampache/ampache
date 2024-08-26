@@ -23,31 +23,17 @@
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Wanted;
 
-interface AmpachePluginInterface
+interface PluginSongPreviewInterface extends AmpachePluginInterface
 {
     /**
-     * install
-     * Inserts plugin preferences into Ampache
+     * Get song preview.
      */
-    public function install(): bool;
+    public function get_song_preview(string $track_mbid, string $artist_name, string $title): array;
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * stream_song_preview
      */
-    public function uninstall(): bool;
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
+    public function stream_song_preview(string $file): void;
 }

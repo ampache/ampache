@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpacheGoogleAnalytics implements AmpachePluginInterface
+class AmpacheGoogleAnalytics implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'GoogleAnalytics';
     public string $categories  = 'stats';
@@ -102,9 +102,8 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $this->user = $user;
         $user->set_preferences();

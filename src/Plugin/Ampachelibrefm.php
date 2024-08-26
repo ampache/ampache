@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
 
-class Ampachelibrefm implements AmpachePluginInterface
+class Ampachelibrefm implements PluginSaveMediaplayInterface
 {
     public string $name        = 'Libre.FM';
     public string $categories  = 'scrobbling';
@@ -123,9 +123,8 @@ class Ampachelibrefm implements AmpachePluginInterface
     /**
      * save_mediaplay
      * This takes care of queueing and then submitting the tracks.
-     * @param Song $song
      */
-    public function save_mediaplay($song): bool
+    public function save_mediaplay(Song $song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -216,9 +215,8 @@ class Ampachelibrefm implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $this->api_key = AmpConfig::get('lastfm_api_key');
         $this->secret  = '';

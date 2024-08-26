@@ -232,9 +232,8 @@ class AmpacheHomeDashboard implements PluginDisplayHomeInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $this->user = $user;
         $user->set_preferences();

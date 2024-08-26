@@ -38,7 +38,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb implements AmpachePluginInterface
+class AmpacheTheaudiodb implements PluginGatherArtsInterface
 {
     public string $name        = 'TheAudioDb';
     public string $categories  = 'metadata';
@@ -112,9 +112,8 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -139,11 +138,8 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param array $gather_types
-     * @param array $media_info
-     * @return array
      */
-    public function get_metadata($gather_types, $media_info): array
+    public function get_metadata(array $gather_types, array $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
@@ -317,12 +313,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     }
 
     /**
-     * @param string $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * gather_arts
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 

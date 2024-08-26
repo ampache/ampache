@@ -23,31 +23,15 @@
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\User;
-
-interface AmpachePluginInterface
+interface PluginLocationInterface extends AmpachePluginInterface
 {
     /**
-     * install
-     * Inserts plugin preferences into Ampache
+     * get_location_name
      */
-    public function install(): bool;
+    public function get_location_name(float $latitude, float $longitude): string;
 
     /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
+     * display_map
      */
-    public function uninstall(): bool;
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
+    public function display_map(array $points): bool;
 }

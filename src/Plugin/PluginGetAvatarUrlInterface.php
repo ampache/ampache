@@ -25,29 +25,10 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-interface AmpachePluginInterface
+interface PluginGetAvatarUrlInterface extends AmpachePluginInterface
 {
     /**
-     * install
-     * Inserts plugin preferences into Ampache
+     * get_avatar_url
      */
-    public function install(): bool;
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool;
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
+    public function get_avatar_url(User $user, ?int $size = 80): string;
 }

@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheGoogleMaps implements AmpachePluginInterface
+class AmpacheGoogleMaps implements PluginLocationInterface
 {
     public string $name        = 'GoogleMaps';
     public string $categories  = 'geolocation';
@@ -85,10 +85,9 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     }
 
     /**
-     * @param float $latitude
-     * @param float $longitude
+     * get_location_name
      */
-    public function get_location_name($latitude, $longitude): string
+    public function get_location_name(float $latitude, float $longitude): string
     {
         $name = "";
         try {
@@ -107,9 +106,9 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     }
 
     /**
-     * @param array $points
+     * display_map
      */
-    public function display_map($points): bool
+    public function display_map(array $points): bool
     {
         if (!$this->api_key) {
             debug_event(self::class, 'Missing API key, display map plugin skipped.', 3);
@@ -161,9 +160,8 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

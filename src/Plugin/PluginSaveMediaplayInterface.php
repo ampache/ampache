@@ -23,31 +23,13 @@
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\User;
+use Ampache\Repository\Model\Song;
 
-interface AmpachePluginInterface
+interface PluginSaveMediaplayInterface extends AmpachePluginInterface
 {
     /**
-     * install
-     * Inserts plugin preferences into Ampache
+     * save_mediaplay
+     * This takes care of queueing and then submitting the tracks.
      */
-    public function install(): bool;
-
-    /**
-     * uninstall
-     * Removes our preferences from the database returning it to its original form
-     */
-    public function uninstall(): bool;
-
-    /**
-     * upgrade
-     * This is a recommended plugin function
-     */
-    public function upgrade(): bool;
-
-    /**
-     * load
-     * This loads up the data we need into this object, this stuff comes from the preferences.
-     */
-    public function load(User $user): bool;
+    public function save_mediaplay(Song $song): bool;
 }
