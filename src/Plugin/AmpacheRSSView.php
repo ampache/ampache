@@ -31,7 +31,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-class AmpacheRSSView implements AmpachePluginInterface
+class AmpacheRSSView implements PluginDisplayHomeInterface
 {
     public string $name        = 'RSSView';
     public string $categories  = 'home';

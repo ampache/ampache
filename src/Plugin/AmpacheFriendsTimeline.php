@@ -35,7 +35,7 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class AmpacheFriendsTimeline implements AmpachePluginInterface
+class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
 {
     public string $name        = 'Friends Timeline';
     public string $categories  = 'home';

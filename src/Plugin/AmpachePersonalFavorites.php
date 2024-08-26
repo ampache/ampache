@@ -32,7 +32,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-class AmpachePersonalFavorites implements AmpachePluginInterface
+class AmpachePersonalFavorites implements PluginDisplayHomeInterface
 {
     public string $name        = 'Personal Favorites';
     public string $categories  = 'home';

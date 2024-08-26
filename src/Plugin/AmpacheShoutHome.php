@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\ShoutRepositoryInterface;
 
-class AmpacheShoutHome implements AmpachePluginInterface
+class AmpacheShoutHome implements PluginDisplayHomeInterface
 {
     public string $name        = 'Shout Home';
     public string $categories  = 'home';
