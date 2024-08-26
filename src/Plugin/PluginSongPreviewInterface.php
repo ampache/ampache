@@ -23,8 +23,6 @@
 
 namespace Ampache\Plugin;
 
-use Ampache\Repository\Model\Wanted;
-
 interface PluginSongPreviewInterface extends AmpachePluginInterface
 {
     /**
