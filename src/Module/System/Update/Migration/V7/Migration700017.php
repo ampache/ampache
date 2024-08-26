@@ -34,6 +34,6 @@ final class Migration700017 extends AbstractMigration
     public function migrate(): void
     {
         // separate sidebar preferences into their own subcategory
-        Dba::write("UPDATE `preference` SET `subcategory` = 'sidebar' AND `category` = 'interface' WHERE `category` = 'sidebar' OR `name` = 'sidebar_order_video';");
+        $this->updateDatabase("UPDATE `preference` SET `subcategory` = 'sidebar' AND `category` = 'interface' WHERE `category` = 'sidebar' OR `name` = 'sidebar_order_video';");
     }
 }
