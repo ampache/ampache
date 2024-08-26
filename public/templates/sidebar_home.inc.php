@@ -105,10 +105,10 @@ $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['
 // sidebar CSS order
 $order_browse      = (int)AmpConfig::get('sidebar_order_browse', 10);
 $order_dashboard   = (int)AmpConfig::get('sidebar_order_dashboard', 15);
-$order_information = (int)AmpConfig::get('sidebar_order_information', 80);
+$order_video       = (int)AmpConfig::get('sidebar_order_video', 20);
 $order_playlist    = (int)AmpConfig::get('sidebar_order_playlist', 30);
 $order_search      = (int)AmpConfig::get('sidebar_order_search', 40);
-$order_video       = (int)AmpConfig::get('sidebar_order_video', 60); ?>
+$order_information = (int)AmpConfig::get('sidebar_order_information', 60); ?>
 <ul class="sb2" id="sb_home">
 <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";
