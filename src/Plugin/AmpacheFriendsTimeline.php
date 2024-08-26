@@ -116,7 +116,7 @@ class AmpacheFriendsTimeline implements PluginDisplayHomeInterface
             $user_id = $user->id ?? 0;
             if ($user_id) {
                 $divString = ($this->order > 0)
-                    ? '<div class="ftl" style="order: '. $this->order . '>'
+                    ? '<div class="ftl" style="order: '. $this->order . '">'
                     : '<div class="ftl">';
                 echo $divString;
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(

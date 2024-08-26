@@ -138,7 +138,7 @@ class AmpachePersonalFavorites implements PluginDisplayHomeInterface
             }
             if (!empty($list_array)) {
                 $divString = ($this->order > 0)
-                    ? '<div class="personalfav" style="order: '. $this->order . '>'
+                    ? '<div class="personalfav" style="order: '. $this->order . '">'
                     : '<div class="personalfav">';
                 echo $divString;
                 UI::show_box_top(T_('Favorite Lists'));
