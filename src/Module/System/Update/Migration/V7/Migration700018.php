@@ -27,13 +27,13 @@ namespace Ampache\Module\System\Update\Migration\V7;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-final class Migration700017 extends AbstractMigration
+final class Migration700018 extends AbstractMigration
 {
     protected array $changelog = ['Fix bad sidebar preferences category from the previous update'];
 
     public function migrate(): void
     {
         // separate sidebar preferences into their own subcategory
-        $this->updateDatabase("UPDATE `preference` SET `subcategory` = 'sidebar' AND `category` = 'interface' WHERE `category` = 'sidebar' OR `name` = 'sidebar_order_video';");
+        $this->updateDatabase("UPDATE `preference` SET `subcategory` = 'sidebar', `category` = 'interface' WHERE `category` = 'sidebar' OR `name` = 'sidebar_order_video';");
     }
 }
