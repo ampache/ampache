@@ -68,7 +68,7 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('homedash_max_items', T_('Home Dashboard max items'), 12, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('homedash_max_items', T_('Home Dashboard max items'), 6, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
@@ -84,7 +84,7 @@ class AmpacheHomeDashboard implements AmpachePluginInterface
             return false;
         }
 
-        if (!Preference::insert('homedash_trending', T_('Trending'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('homedash_trending', T_('Trending'), '1', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
 
