@@ -631,7 +631,7 @@ final class Play2Action implements ApplicationActionInterface
         }
 
         $transcode     = false;
-        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
         $cache_file    = false;
         $mediaOwnerId  = ($media instanceof Song_Preview)
             ? null

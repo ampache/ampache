@@ -38,7 +38,7 @@ final class AlbumDiskSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user?->getId() ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -329,7 +329,7 @@ final class AlbumDiskSearch implements SearchInterface
                     break;
                 case 'image_height':
                 case 'image_width':
-                    $looking       = ($rule[0] = 'image_width') ? 'width' : 'height';
+                    $looking       = str_replace('image_', '', $rule[0]);
                     $where[]       = "`image`.`$looking` $operator_sql ?";
                     $parameters[]  = $input;
                     $join['image'] = true;
@@ -461,9 +461,7 @@ final class AlbumDiskSearch implements SearchInterface
                 $where_sql = "`catalog_se`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = " . $search_user_id . " AND `catalog_filter_group_map`.`enabled`=1)";
             }
         }
-        if (array_key_exists('count', $join)) {
-            $table['object_count'] = "LEFT JOIN (SELECT `object_count`.`object_id`, MAX(`object_count`.`date`) AS `date` FROM `object_count` WHERE `object_count`.`object_type` = 'album' AND `object_count`.`user`='" . $search_user_id . "' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` ON `object_count`.`object_id` = `album`.`id`";
-        }
+
         if (array_key_exists('image', $join)) {
             $table['0_song'] = "LEFT JOIN `song` ON `song`.`album` = `album`.`id` LEFT JOIN `image` ON `image`.`object_id` = `album`.`id`";
             $where_sql       = "(" . $where_sql . ") AND `image`.`object_type`='album' AND `image`.`size`='original'";

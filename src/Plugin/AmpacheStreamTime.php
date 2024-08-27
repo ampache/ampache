@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamTime implements AmpachePluginInterface
+class AmpacheStreamTime implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Time';
     public string $categories  = 'stream_control';
@@ -95,9 +95,8 @@ class AmpacheStreamTime implements AmpachePluginInterface
 
     /**
      * Check stream control
-     * @param array $media_ids
      */
-    public function stream_control($media_ids): bool
+    public function stream_control(array $media_ids): bool
     {
         // No check if unlimited bandwidth (= -1)
         if ($this->time_max < 0) {
@@ -133,9 +132,8 @@ class AmpacheStreamTime implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

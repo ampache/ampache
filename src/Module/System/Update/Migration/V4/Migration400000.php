@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V4;
 
 use Ampache\Module\System\Update\Migration\AbstractMigration;
+use Ampache\Repository\Model\Preference;
 
 /**
  * Increase copyright column size to fix issue #1861
@@ -62,20 +63,20 @@ final class Migration400000 extends AbstractMigration
             "ALTER TABLE `user_activity` ADD COLUMN `name_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `name_album` varchar(255) NULL DEFAULT NULL;",
             "ALTER TABLE `user_activity` ADD COLUMN `mbid_track` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_artist` varchar(255) NULL DEFAULT NULL, ADD COLUMN `mbid_album` varchar(255) NULL DEFAULT NULL;",
             "INSERT IGNORE INTO `search` (`user`, `type`, `rules`, `name`, `logic_operator`, `random`, `limit`) VALUES (-1, 'public', '[[\"artistrating\",\"equal\",\"5\",null]]', 'Artist 5*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"4\",null]]', 'Artist 4*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"3\",null]]', 'Artist 3*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"2\",null]]', 'Artist 2*', 'AND', 0, 0), (-1, 'public', '[[\"artistrating\",\"equal\",\"1\",null]]', 'Artist 1*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"5\",null]]', 'Album 5*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"4\",null]]', 'Album 4*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"3\",null]]', 'Album 3*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"2\",null]]', 'Album 2*', 'AND', 0, 0), (-1, 'public', '[[\"albumrating\",\"equal\",\"1\",null]]', 'Album 1*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"5\",null]]', 'Song 5*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"4\",null]]', 'Song 4*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"3\",null]]', 'Song 3*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"2\",null]]', 'Song 2*', 'AND', 0, 0), (-1, 'public', '[[\"myrating\",\"equal\",\"1\",null]]', 'Song 1*', 'AND', 0, 0);",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_backend');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_username');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_authtoken');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'myplex_published');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_uniqid');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_servername');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_address');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_public_port');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_local_auth');",
-            "DELETE FROM `user_preference` WHERE `user_preference`.`preference` IN (SELECT `preference`.`id` FROM `preference` WHERE `preference`.`name` = 'plex_match_email');",
-            "DELETE FROM `preference` WHERE `preference`.`name` IN ('plex_backend', 'myplex_username', 'myplex_authtoken', 'myplex_published', 'plex_uniqid', 'plex_servername', 'plex_public_address', 'plex_public_port ', 'plex_local_auth', 'plex_match_email');"
         ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }
+
+        Preference::delete('plex_backend');
+        Preference::delete('myplex_username');
+        Preference::delete('myplex_authtoken');
+        Preference::delete('myplex_published');
+        Preference::delete('plex_uniqid');
+        Preference::delete('plex_servername');
+        Preference::delete('plex_public_address');
+        Preference::delete('plex_public_port');
+        Preference::delete('plex_local_auth');
+        Preference::delete('plex_match_email');
     }
 }

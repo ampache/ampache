@@ -2364,7 +2364,7 @@ class Subsonic_Api
                 break;
             case 'remove':
                 if (isset($input['index'])) {
-                    $return = $localplay->delete_track($input['index']);
+                    $return = $localplay->delete_track((int)$input['index']);
                 } else {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'jukeboxcontrol');
                 }

@@ -699,7 +699,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 if ($this->album_artists !== null) {
                     foreach ($this->album_artists as $artist_id) {
                         $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                        $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                        if (!empty($artist_fullname)) {
+                            $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                        }
                     }
 
                     $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");

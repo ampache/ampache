@@ -30,7 +30,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampachechartlyrics implements AmpachePluginInterface
+class Ampachechartlyrics implements PluginGetLyricsInterface
 {
     public string $name        = 'ChartLyrics';
     public string $categories  = 'lyrics';
@@ -79,9 +79,8 @@ class Ampachechartlyrics implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 
@@ -91,10 +90,8 @@ class Ampachechartlyrics implements AmpachePluginInterface
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
-     * @param Song $song
-     * @return array|false
      */
-    public function get_lyrics($song)
+    public function get_lyrics(Song $song): ?array
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
@@ -111,6 +108,6 @@ class Ampachechartlyrics implements AmpachePluginInterface
             }
         }
 
-        return false;
+        return null;
     }
 }

@@ -63,8 +63,8 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists'); ?></th>
-            <th class="cel_country optional"><?php echo T_('Country'); ?></th>
-            <th class="cel_status optional"><?php echo T_('Status'); ?></th>
+            <th class="cel_country optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=country', T_('Country'), 'label_sort_country'); ?></th>
+            <th class="cel_status optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=active', T_('Status'), 'label_sort_active'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>

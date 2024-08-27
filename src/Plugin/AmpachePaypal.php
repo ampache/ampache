@@ -31,7 +31,7 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpachePaypal implements AmpachePluginInterface
+class AmpachePaypal implements PluginDisplayUserFieldInterface
 {
     public string $name        = 'Paypal';
     public string $categories  = 'user';
@@ -94,9 +94,8 @@ class AmpachePaypal implements AmpachePluginInterface
     /**
      * display_user_field
      * This display the module in user page
-     * @param library_item|null $libitem
      */
-    public function display_user_field(library_item $libitem = null): void
+    public function display_user_field(?library_item $libitem = null): void
     {
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
         $lang = substr(AmpConfig::get('lang', 'en_US'), 0, 2);
@@ -120,9 +119,8 @@ class AmpachePaypal implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $this->user = $user;
         $user->set_preferences();

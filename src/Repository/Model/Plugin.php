@@ -101,7 +101,7 @@ class Plugin
                 }
 
                 if (Plugin::is_installed($plugin->_plugin->name) === 0) {
-                    debug_event(self::class, 'Plugin ' . $name . ' is not installed, skipping', 5);
+                    //debug_event(self::class, 'Plugin ' . $name . ' is not installed, skipping', 5);
                     continue;
                 }
 
@@ -243,9 +243,8 @@ class Plugin
     /**
      * load
      * This calls the plugin's load function
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         if ($this->_plugin === null) {
             return false;

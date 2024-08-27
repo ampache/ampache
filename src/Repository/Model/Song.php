@@ -1777,7 +1777,9 @@ class Song extends database_object implements
 
             foreach ($this->artists as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                if (!empty($artist_fullname)) {
+                    $this->f_artist_link .= "<a href=\"" . $web_path . "/artists.php?action=show&artist=" . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                }
             }
 
             $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");
@@ -1801,7 +1803,9 @@ class Song extends database_object implements
 
             foreach ($this->albumartists as $artist_id) {
                 $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                if (!empty($artist_fullname)) {
+                    $this->f_albumartist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                }
             }
 
             $this->f_albumartist_link = rtrim($this->f_albumartist_link, ",&nbsp");
@@ -2018,18 +2022,30 @@ class Song extends database_object implements
             $uid = -1;
         }
 
-        $downsample_remote = false;
-        // enforce or disable transcoding depending on local network ACL
-        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, (int)$uid, AccessLevelEnum::DEFAULT)) {
-            $downsample_remote = true;
-            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+        $downsample_remote = AmpConfig::get('downsample_remote', false);
+        $lan_user          = $this->getNetworkChecker()->check(AccessTypeEnum::NETWORK, (int)$uid, AccessLevelEnum::DEFAULT);
+        $transcode         = AmpConfig::get('transcode', 'default');
+
+        // enforce or disable transcoding depending on local network ACL. Transcoding must also not be disabled with 'never'
+        if (
+            $downsample_remote &&
+            $transcode !== 'never'
+        ) {
+            if (!$lan_user) {
+                // remote network user will require transcoding with downsample_remote
+                $transcode = 'required';
+                debug_event(self::class, "Transcoding due to downsample_remote", 3);
+            } else {
+                // lan user is allowed to play original quality
+                $transcode = 'never';
+                debug_event(self::class, "NOT transcoding local network due to downsample_remote", 5);
+            }
         }
 
         // if you transcode the media mime will change
         if (
-            AmpConfig::get('transcode') != 'never' &&
+            $transcode != 'never' &&
             (
-                $downsample_remote ||
                 empty($additional_params) ||
                 (
                     strpos($additional_params, '&bitrate=') === false &&
@@ -2135,7 +2151,7 @@ class Song extends database_object implements
             $plugin = new Plugin($plugin_name);
             if ($plugin->_plugin !== null && $plugin->load($user)) {
                 $lyrics = $plugin->_plugin->get_lyrics($this);
-                if ($lyrics) {
+                if (!empty($lyrics)) {
                     // save the lyrics if not set before
                     if (array_key_exists('text', $lyrics) && !empty($lyrics['text'])) {
                         self::update_lyrics($lyrics['text'], $this->id);
