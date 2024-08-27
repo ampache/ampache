@@ -210,7 +210,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $results = $preferred;
         }
 
-        if ($limit && count($results) > $limit) {
+        if (count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }
 

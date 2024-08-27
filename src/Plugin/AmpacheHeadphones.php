@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Wanted;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheHeadphones implements AmpachePluginInterface
+class AmpacheHeadphones implements PluginProcessWantedInterface
 {
     public string $name        = 'Headphones';
     public string $categories  = 'wanted';
@@ -94,9 +94,8 @@ class AmpacheHeadphones implements AmpachePluginInterface
     /**
      * process_wanted
      * This takes care of auto-download accepted Wanted List albums
-     * @param Wanted $wanted
      */
-    public function process_wanted($wanted): bool
+    public function process_wanted(Wanted $wanted): bool
     {
         set_time_limit(0);
 
@@ -145,9 +144,8 @@ class AmpacheHeadphones implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

@@ -4326,11 +4326,6 @@ parameters:
 			path: src/Module/Application/Album/SetTrackNumbersAction.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 2
-			path: src/Module/Application/Art/FindArtAction.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/Application/Image/AbstractShowAction.php
@@ -4449,11 +4444,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\DbCollectorModule\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/DbCollectorModule.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/FolderCollectorModule.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\FolderCollectorModule\\:\\:collect\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -5926,11 +5916,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 2
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
@@ -5986,11 +5971,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:\\$_add_count has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:\\$_mpd has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
@@ -5998,21 +5978,6 @@ parameters:
 		-
 			message: "#^Argument of an invalid type array\\|bool supplied for foreach, only iterables are supported\\.$#"
 			count: 2
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Call to function is_array\\(\\) with non\\-falsy\\-string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:AdjustVolume\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:Disconnect\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
@@ -6061,17 +6026,12 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLRemove\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:PLSave\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:QueueCommand\\(\\) has parameter \\$command with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:QueueCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -6091,12 +6051,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$arguments with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$command with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -6111,37 +6066,12 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SetVolume\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SkipTo\\(\\) has parameter \\$idx with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SkipTo\\(\\) should return bool but returns float\\|int\\|string\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) has parameter \\$debug_callback with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) has parameter \\$password with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) has parameter \\$port with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:__construct\\(\\) has parameter \\$server with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -6162,21 +6092,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_debug\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_debug\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_debug\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_debug\\(\\) has parameter \\$source with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -6206,12 +6121,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, null given\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$_COMPATIBILITY_TABLE has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$_COMPATIBILITY_TABLE type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -6681,11 +6591,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Offset 'root' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:\\$host has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
@@ -7121,17 +7026,7 @@ parameters:
 			path: src/Module/Playback/WebPlayer.php
 
 		-
-			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album_map\\?\\: true, image\\?\\: true, song\\: bool, catalog\\: bool, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\AlbumDiskSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumDiskSearch.php
-
-		-
-			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/AlbumDiskSearch.php
 

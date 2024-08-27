@@ -260,7 +260,7 @@ class VlcPlayer
 
         $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
-        $currentstat = $results['root']['state']['value'];
+        $currentstat = $results['root']['state']['value'] ?? $state;
 
         if ($currentstat == 'playing') {
             $state = 'play';
@@ -477,7 +477,7 @@ class VlcPlayer
 
             // This command will extract these variables into the foreach scope
             // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler.
+            extract($data); // We could use the array by itself, but this cooler. //TODO it's not
 
             $result          = [];
             $attributes_data = [];

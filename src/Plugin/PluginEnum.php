@@ -44,6 +44,7 @@ final class PluginEnum
         'googlemaps' => AmpacheGoogleMaps::class,
         'gravatar' => AmpacheGravatar::class,
         'headphones' => AmpacheHeadphones::class,
+        'homedashboard' => AmpacheHomeDashboard::class,
         'lastfm' => AmpacheLastfm::class,
         'libravatar' => AmpacheLibravatar::class,
         'librefm' => Ampachelibrefm::class,

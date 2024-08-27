@@ -102,7 +102,13 @@ $state_home_dashboard = (!isset($_COOKIE['sb_home_dashboard']) || $_COOKIE['sb_h
 $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['sb_home_information'] == 'expanded')
     ? 'expanded'
     : 'collapsed';
-?>
+// sidebar CSS order
+$order_browse      = (int)AmpConfig::get('sidebar_order_browse', 10);
+$order_dashboard   = (int)AmpConfig::get('sidebar_order_dashboard', 15);
+$order_video       = (int)AmpConfig::get('sidebar_order_video', 20);
+$order_playlist    = (int)AmpConfig::get('sidebar_order_playlist', 30);
+$order_search      = (int)AmpConfig::get('sidebar_order_search', 40);
+$order_information = (int)AmpConfig::get('sidebar_order_information', 60); ?>
 <ul class="sb2" id="sb_home">
 <?php if (AmpConfig::get('browse_filter')) {
     echo "<li>";
@@ -111,7 +117,7 @@ $state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['
     echo "</li>";
 }
 if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
-    <li class="sb2_browse">
+    <li class="sb2_browse" style="order: <?php echo $order_browse; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_browse; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_browse', 'header-img ' . $state_home_browse); ?>
@@ -156,7 +162,7 @@ if (
     User::is_registered() &&
     !AmpConfig::get('sidebar_hide_dashboard', false)
 ) { ?>
-    <li class="sb2_dashboard">
+    <li class="sb2_dashboard" style="order: <?php echo $order_dashboard; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
@@ -180,7 +186,7 @@ if (
     </li>
 <?php } ?>
 <?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
-    <li class="sb2_search">
+    <li class="sb2_search" style="order: <?php echo $order_search; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_search', 'header-img ' . $state_home_search); ?>
@@ -210,7 +216,7 @@ if (
     $access25 &&
     !AmpConfig::get('sidebar_hide_playlist', false)
 ) {  ?>
-    <li class="sb2_playlist">
+    <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
@@ -233,7 +239,7 @@ if (
     </li>
 <?php } ?>
 <?php if (!AmpConfig::get('sidebar_hide_information', false)) { ?>
-    <li class="sb2_information">
+    <li class="sb2_information" style="order: <?php echo $order_information; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>

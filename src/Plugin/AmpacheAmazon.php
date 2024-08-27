@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
 
-class AmpacheAmazon implements AmpachePluginInterface
+class AmpacheAmazon implements PluginGatherArtsInterface
 {
     public string $name        = 'Amazon';
     public string $categories  = 'metadata';
@@ -110,9 +110,8 @@ class AmpacheAmazon implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -173,13 +172,9 @@ class AmpacheAmazon implements AmpachePluginInterface
 
     /**
      * gather_arts
-     * Returns arts for what we're passed in.
-     * @param string $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         $images        = [];
         $final_results = [];
