@@ -10,6 +10,8 @@
 * Wanted / Song_Preview items were very broken and badly sorted results
 * Don't cache additional columns for songs causing dynamic properties
 * Delete label confirmation missing ID
+* Transcoding and not transcoding with `downsample_remote` enabled
+* Set default value for transcode on get ('default')
 * Browse
   * Not restoring QueryType on reload of saved browse
   * Sorting users by invalid sort type
