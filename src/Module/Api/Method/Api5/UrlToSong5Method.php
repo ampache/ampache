@@ -50,7 +50,7 @@ final class UrlToSong5Method
      */
     public static function url_to_song(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('url'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['url'], self::ACTION)) {
             return false;
         }
         $charset  = AmpConfig::get('site_charset');
@@ -64,10 +64,10 @@ final class UrlToSong5Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json5_Data::songs(array((int)$url_data['id']), $user, true, false);
+                echo Json5_Data::songs([(int)$url_data['id']], $user, true, false);
                 break;
             default:
-                echo Xml5_Data::songs(array((int)$url_data['id']), $user);
+                echo Xml5_Data::songs([(int)$url_data['id']], $user);
         }
 
         return true;

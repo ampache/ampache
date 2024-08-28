@@ -42,7 +42,7 @@ final class SearchSongs3Method
      */
     public static function search_songs(array $input, User $user): void
     {
-        $data                    = array();
+        $data                    = [];
         $data['type']            = 'song';
         $data['rule_1']          = 'anywhere';
         $data['rule_1_input']    = $input['filter'];

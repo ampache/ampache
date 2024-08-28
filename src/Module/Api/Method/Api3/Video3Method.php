@@ -44,6 +44,6 @@ final class Video3Method
         unset($user);
         $video_id = scrub_in((string) $input['filter']);
 
-        echo Xml3_Data::videos(array($video_id));
+        echo Xml3_Data::videos([$video_id]);
     }
 }

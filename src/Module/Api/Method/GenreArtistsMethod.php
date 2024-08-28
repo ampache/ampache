@@ -54,7 +54,7 @@ final class GenreArtistsMethod
      */
     public static function genre_artists(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -87,12 +87,12 @@ final class GenreArtistsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::artists($results, array(), $user);
+                echo Json_Data::artists($results, [], $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::artists($results, array(), $user);
+                echo Xml_Data::artists($results, [], $user);
         }
 
         return true;

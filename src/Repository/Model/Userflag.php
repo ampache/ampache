@@ -199,30 +199,35 @@ class Userflag extends database_object
      * If no user_id is passed in, we use the currently logged in user.
      * @param bool $flagged
      * @param int $user_id
+     * @param int|null $date
      */
-    public function set_flag($flagged, $user_id = null): bool
+    public function set_flag($flagged, $user_id = null, $date = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
         }
+
         if ($user_id === 0) {
             return false;
         }
-        debug_event(self::class, "Setting userflag for $this->type $this->id to $flagged", 4);
+
+        $date = $date ?? time();
+
+        debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
 
         if (!$flagged) {
             $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
-            $params = array($this->id, $this->type, $user_id);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(false));
+            $params = [$this->id, $this->type, $user_id];
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
         } else {
-            $date   = time();
             $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
-            $params = array($this->id, $this->type, $user_id, $date);
-            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, array(1, $date));
+            $params = [$this->id, $this->type, $user_id, $date];
+            parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
 
-            static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, (int) $this->id, time());
+            static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
         }
+
         Dba::write($sql, $params);
 
         if ($this->type == 'song') {

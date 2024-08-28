@@ -41,7 +41,7 @@ final class ArtistAlbums3Method
     public static function artist_albums(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
-        $results = array();
+        $results = [];
         if (isset($artist->id)) {
             $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
@@ -50,7 +50,7 @@ final class ArtistAlbums3Method
         Xml3_Data::set_offset($input['offset'] ?? 0);
         Xml3_Data::set_limit($input['limit'] ?? 0);
         ob_end_clean();
-        echo Xml3_Data::albums($results, array(), $user);
+        echo Xml3_Data::albums($results, [], $user);
     }
 
     /**

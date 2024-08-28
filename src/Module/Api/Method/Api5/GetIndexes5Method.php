@@ -61,7 +61,7 @@ final class GetIndexes5Method
      */
     public static function get_indexes(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
         $album_artist = ((string)$input['type'] == 'album_artist');
@@ -89,7 +89,7 @@ final class GetIndexes5Method
         $include = (array_key_exists('include', $input) && (int)$input['include'] == 1);
         $hide    = (array_key_exists('hide_search', $input) && (int)$input['hide_search'] == 1) || AmpConfig::get('hide_search', false);
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'album_artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'live_stream'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

@@ -183,6 +183,8 @@ class Query
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)self::_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($this->_state['type']);
 
                 return;
             }
@@ -732,7 +734,7 @@ class Query
      */
     public function set_select($field): void
     {
-        $this->_state['select'][] = $field;
+        $this->_state['select'] = [$field];
     }
 
     /**
@@ -869,12 +871,18 @@ class Query
         }
 
         if (!$this->is_simple()) {
-            $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
+            $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, array(session_id(), $this->id));
             $results    = Dba::fetch_assoc($db_results);
 
-            if (array_key_exists('object_data', $results)) {
-                $this->_cache = (array)self::_unserialize($results['object_data']);
+            if (array_key_exists('data', $results) && !empty($results['data'])) {
+                $data = (array)$this->_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($data['type']);
+            }
+
+            if (array_key_exists('object_data', $results) && !empty($results['object_data'])) {
+                $this->_cache = (array)$this->_unserialize($results['object_data']);
 
                 return $this->_cache;
             }
@@ -940,7 +948,7 @@ class Query
             if ($this->queryType === null) {
                 $this->queryType = new SongQuery();
             }
-            $this->_state['select'][] = $this->queryType->get_select();
+            $this->_state['select'] = [$this->queryType->get_select()];
 
             // tag state should be set as they aren't really separate objects
             if ($this->get_type() === 'tag_hidden') {
