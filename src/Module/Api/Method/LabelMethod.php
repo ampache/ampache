@@ -56,7 +56,7 @@ final class LabelMethod
 
             return false;
         }
-        if (!Api::check_parameter($input, array('filter'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
         $object_id = (int) $input['filter'];
@@ -73,10 +73,10 @@ final class LabelMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::labels(array($object_id), true, false);
+                echo Json_Data::labels([$object_id], true, false);
                 break;
             default:
-                echo Xml_Data::labels(array($object_id), $user);
+                echo Xml_Data::labels([$object_id], $user);
         }
 
         return true;

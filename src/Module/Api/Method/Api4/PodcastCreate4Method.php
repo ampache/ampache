@@ -60,7 +60,7 @@ final class PodcastCreate4Method
         if (!Api4::check_access('interface', 75, $user->id, 'update_podcast', $input['api_format'])) {
             return false;
         }
-        if (!Api4::check_parameter($input, array('url', 'catalog'), self::ACTION)) {
+        if (!Api4::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
             return false;
         }
 
@@ -87,10 +87,10 @@ final class PodcastCreate4Method
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json4_Data::podcasts(array($podcast->getId()), $user);
+                echo Json4_Data::podcasts([$podcast->getId()], $user);
                 break;
             default:
-                echo Xml4_Data::podcasts(array($podcast->getId()), $user);
+                echo Xml4_Data::podcasts([$podcast->getId()], $user);
         }
 
         return true;

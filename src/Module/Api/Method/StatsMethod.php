@@ -66,7 +66,7 @@ final class StatsMethod
      */
     public static function stats(array $input, User $user): bool
     {
-        if (!Api::check_parameter($input, array('type'), self::ACTION)) {
+        if (!Api::check_parameter($input, ['type'], self::ACTION)) {
             return false;
         }
         $type   = (string) $input['type'];
@@ -87,7 +87,7 @@ final class StatsMethod
             return false;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), array('song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'))) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
@@ -111,7 +111,7 @@ final class StatsMethod
 
             return false;
         }
-        $results = array();
+        $results = [];
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
             case 'newest':
@@ -213,12 +213,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::artists($results, array(), $user);
+                        echo Json_Data::artists($results, [], $user);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::artists($results, array(), $user);
+                        echo Xml_Data::artists($results, [], $user);
                 }
                 break;
             case 'album':
@@ -226,12 +226,12 @@ final class StatsMethod
                     case 'json':
                         Json_Data::set_offset($offset);
                         Json_Data::set_limit($limit);
-                        echo Json_Data::albums($results, array(), $user);
+                        echo Json_Data::albums($results, [], $user);
                         break;
                     default:
                         Xml_Data::set_offset($offset);
                         Xml_Data::set_limit($limit);
-                        echo Xml_Data::albums($results, array(), $user);
+                        echo Xml_Data::albums($results, [], $user);
                 }
                 break;
             case 'playlist':

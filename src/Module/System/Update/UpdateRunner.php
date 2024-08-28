@@ -86,6 +86,14 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 700014) {
+            if (Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+                // Migration700005
+                if (!Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")) {
+                    throw new UpdateFailedException();
+                }
+            }
+        }
         if ($currentVersion >= 700006) {
             // Migration700006
             if (!Preference::insert('home_recently_played_all', 'Show all media types in Recently Played', '1', 25, 'bool', 'interface', 'home', true)) {

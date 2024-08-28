@@ -6,7 +6,9 @@
 .buildpath
 .env
 .pc
+.phpunit.*
 .project
+.php-cs-fixer.cache
 bootstrap/
 build/
 config/ampache-doped.cfg.php
@@ -18,6 +20,7 @@ logs/
 nbproject/
 node_modules/
 .maintenance
+dist/
 play/.htaccess
 rest/.htaccess
 lib/components/
@@ -31,6 +34,7 @@ ample
 storage/
 tmp/
 vendor/
+resources/images/material-symbols
 composer.lock
 composer.phar
 cs_fixer_tmp_*
@@ -38,9 +42,9 @@ error_log
 php-cs-fixer.phar
 phpcbf*
 phpcs*
+phpunit.*
 robots.txt
 web.config
-*#
 *.log
 *.phpproj
 *.save
@@ -48,6 +52,5 @@ web.config
 *.suo
 *.swp
 *.v11.suo
+*#
 *~
-.php-cs-fixer.cache
-/resources/images/material-symbols

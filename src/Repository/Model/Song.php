@@ -489,8 +489,8 @@ class Song extends database_object implements
 
         // Song data cache
         $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, `file`, `catalog`, `album`, `year`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `played`, `song`.`enabled`, `update_time`, `tag_map`.`tag_id`, `mbid`, `addition_time`, `license`, `composer`, `user_upload`, `song`.`total_count`, `song`.`total_skip` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id`, `tag_map`.`object_id`, `tag_map`.`object_type`, `tag_map`.`user` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -504,14 +504,17 @@ class Song extends database_object implements
                     ? Stats::get_object_count('song', $row['id'], $limit_threshold, 'skip')
                     : $row['total_skip'];
             }
-            parent::add_to_cache('song', $row['id'], $row);
+
             $artists[$row['artist']] = $row['artist'];
 
             $albums[] = (int) $row['album'];
 
             if ($row['tag_id']) {
                 $tags[$row['tag_id']] = $row['tag_id'];
+                unset($row['tag_id']);
             }
+
+            parent::add_to_cache('song', $row['id'], $row);
         }
 
         Artist::build_cache($artists);
@@ -548,7 +551,7 @@ class Song extends database_object implements
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `song`.`user_upload`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, array($song_id));
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
@@ -1977,18 +1980,31 @@ class Song extends database_object implements
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
         }
-        $downsample_remote = false;
-        // enforce or disable transcoding depending on local network ACL
-        if (AmpConfig::get('downsample_remote') && !$this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT)) {
-            $downsample_remote = true;
-            debug_event(self::class, "Transcoding due to downsample_remote", 3);
+
+        $downsample_remote = AmpConfig::get('downsample_remote', false);
+        $lan_user          = $this->getNetworkChecker()->check(AccessLevelEnum::TYPE_NETWORK, $uid, AccessLevelEnum::LEVEL_DEFAULT);
+        $transcode         = AmpConfig::get('transcode', 'default');
+
+        // enforce or disable transcoding depending on local network ACL. Transcoding must also not be disabled with 'never'
+        if (
+            $downsample_remote &&
+            $transcode !== 'never'
+        ) {
+            if (!$lan_user) {
+                // remote network user will require transcoding with downsample_remote
+                $transcode = 'required';
+                debug_event(self::class, "Transcoding due to downsample_remote", 3);
+            } else {
+                // lan user is allowed to play original quality
+                $transcode = 'never';
+                debug_event(self::class, "NOT transcoding local network due to downsample_remote", 5);
+            }
         }
 
         // if you transcode the media mime will change
         if (
-            AmpConfig::get('transcode') != 'never' &&
+            $transcode !== 'never' &&
             (
-                $downsample_remote ||
                 empty($additional_params) ||
                 (
                     strpos($additional_params, '&bitrate=') === false &&

@@ -52,7 +52,7 @@ final class UpdateFromTags5Method
      */
     public static function update_from_tags(array $input, User $user): bool
     {
-        if (!Api5::check_parameter($input, array('type', 'id'), self::ACTION)) {
+        if (!Api5::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
         unset($user);
@@ -60,7 +60,7 @@ final class UpdateFromTags5Method
         $object_id = (int) $input['id'];
 
         // confirm the correct data
-        if (!in_array(strtolower($type), array('artist', 'album', 'song'))) {
+        if (!in_array(strtolower($type), ['artist', 'album', 'song'])) {
             Api5::error(sprintf(T_('Bad Request: %s'), $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
