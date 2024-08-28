@@ -753,6 +753,11 @@ class Search extends playlist_object
             $this->_add_type_select('catalog', T_('Catalog'), 'boolean_numeric', $catalogs, $t_file_data);
         }
 
+        // can't read the file from the db if it's stored on the disk
+        if (!AmpConfig::get('album_art_store_disk')) {
+            $this->_add_type_boolean('waveform', T_('Waveform'), 'boolean', $t_file_data);
+        }
+
         $t_musicbrainz = T_('MusicBrainz');
         $this->_add_type_text('mbid', T_('MusicBrainz ID'), $t_musicbrainz);
         $this->_add_type_text('mbid_album', T_('MusicBrainz ID (Album)'), $t_musicbrainz);
@@ -1184,6 +1189,7 @@ class Search extends playlist_object
      * get_search_array
      * Returns a list of searches accessible by the user with formatted name.
      * @param int|null $user_id
+     * @return array<string>
      */
     public static function get_search_array($user_id = null): array
     {
@@ -1890,7 +1896,11 @@ class Search extends playlist_object
             return make_bool($data);
         }
 
-        return $data;
+        if ($data === null) {
+            return null;
+        }
+
+        return stripslashes($data);
     }
 
     /**

@@ -105,7 +105,7 @@ final class DefaultAction implements ApplicationActionInterface
                     ->createResponse(StatusCode::FOUND)
                     ->withHeader(
                         'Location',
-                        $this->configContainer->get('web_path')
+                        $this->configContainer->getWebPath()
                     );
             } elseif (array_key_exists($name, $_COOKIE)) {
                 // now auth so unset this cookie
@@ -296,7 +296,7 @@ final class DefaultAction implements ApplicationActionInterface
             unset($_SESSION['userdata']['avatar']);
 
             // Record the IP of this person!
-            $this->userTracker->trackIpAddress($user);
+            $this->userTracker->trackIpAddress($user, 'Login');
 
             if (isset($username)) {
                 Session::create_user_cookie($username);

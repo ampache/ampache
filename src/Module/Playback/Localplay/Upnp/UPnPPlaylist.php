@@ -140,13 +140,16 @@ class UPnPPlaylist
     }
 
     /**
-     * @param $pos
+     * @param $track_id
      */
-    public function Skip($pos): bool
+    public function skip(int $track_id): bool
     {
         // note that pos is started from 1 not from zero
-        if (($pos >= 1) && ($pos <= count($this->_songs))) {
-            $this->_current = $pos - 1;
+        if (
+            $track_id >= 1 &&
+            $track_id <= count($this->_songs)
+        ) {
+            $this->_current = $track_id - 1;
             $this->PlayListSave();
 
             return true;

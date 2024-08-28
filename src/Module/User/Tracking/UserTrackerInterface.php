@@ -30,5 +30,5 @@ interface UserTrackerInterface
     /**
      * Records the users ip in the ip history
      */
-    public function trackIpAddress(User $user): void;
+    public function trackIpAddress(User $user, string $action): void;
 }

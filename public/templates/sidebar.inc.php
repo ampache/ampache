@@ -37,7 +37,8 @@ use Ampache\Module\Util\Ui;
 /** require@ src/Application/Api/Ajax/Handler/IndexAjaxHandler.php */
 /** require@ src/Application/Api/Ajax/Handler/LocalPlayAjaxHandler.php */
 
-$web_path      = (string)AmpConfig::get('web_path', '');
+$web_path      = AmpConfig::get_web_path();
+$admin_path    = AmpConfig::get_web_path('/admin');
 $is_session    = (User::is_registered() && !empty(Core::get_global('user')) && (Core::get_global('user')->id ?? 0) > 0);
 $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     ? "expires: 30, path: '/', secure: true, samesite: 'Strict'"
@@ -58,7 +59,6 @@ $t_radioStations   = T_('Radio Stations');
 $t_radio           = T_('Radio');
 $t_podcasts        = T_('Podcasts');
 $t_videos          = T_('Videos');
-$t_musicClips      = T_('Music Clips');
 $t_genres          = T_('Genres');
 $t_upload          = T_('Upload');
 $t_uploads         = T_('Uploads');

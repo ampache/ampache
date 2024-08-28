@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,10 +20,19 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Repository\Model\Clip;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-/** @var Clip $libitem */ ?>
-<td class="cel_artist"><?php echo $libitem->f_artist; ?></td>
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+
+final class Migration700018 extends AbstractMigration
+{
+    protected array $changelog = ['Fix bad sidebar preferences category from the previous update'];
+
+    public function migrate(): void
+    {
+        // separate sidebar preferences into their own subcategory
+        $this->updateDatabase("UPDATE `preference` SET `subcategory` = 'sidebar', `category` = 'interface' WHERE `category` = 'sidebar' OR `name` = 'sidebar_order_video';");
+    }
+}

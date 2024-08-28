@@ -36,7 +36,7 @@ $level75  = ($democratic->level == 75) ? 'selected' : '';
 $level100 = ($democratic->level == 100) ? 'selected' : '';
 $default  = ($democratic->primary) ? 'checked' : '';
 Ui::show_box_top(T_('Configure Democratic Playlist')); ?>
-<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/democratic.php?action=create" enctype="multipart/form-data">
+<form method="post" action="<?php echo AmpConfig::get_web_path(); ?>/democratic.php?action=create" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name'); ?></td>

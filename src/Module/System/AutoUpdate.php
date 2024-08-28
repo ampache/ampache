@@ -377,7 +377,7 @@ class AutoUpdate
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
-            echo ' | <a class="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
         }
         echo '</div>';
     }
@@ -433,15 +433,22 @@ class AutoUpdate
             $config->getNpmBinaryPath()
         );
 
+        $cmdNpmBuild = sprintf(
+            '%s run build',
+            $config->getNpmBinaryPath()
+        );
+
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
             echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
+            echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
         ob_flush();
         chdir(__DIR__ . '/../../../');
         exec($cmdComposer);
         exec($cmdNpm);
+        exec($cmdNpmBuild);
         if (!$api) {
             echo T_('Done') . '<br />';
         }

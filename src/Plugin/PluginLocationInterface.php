@@ -21,7 +21,17 @@
  *
  */
 
-/** @var Ampache\Repository\Model\Clip $video */
+namespace Ampache\Plugin;
 
-$videoprops[T_('Artist')] = $video->f_artist;
-$videoprops[T_('Song')]   = $video->f_song;
+interface PluginLocationInterface extends AmpachePluginInterface
+{
+    /**
+     * get_location_name
+     */
+    public function get_location_name(float $latitude, float $longitude): string;
+
+    /**
+     * display_map
+     */
+    public function display_map(array $points): bool;
+}

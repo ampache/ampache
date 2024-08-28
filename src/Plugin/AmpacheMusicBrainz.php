@@ -38,7 +38,7 @@ use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
-class AmpacheMusicBrainz implements AmpachePluginInterface
+class AmpacheMusicBrainz implements PluginGetMetadataInterface
 {
     public string $name        = 'MusicBrainz';
     public string $categories  = 'metadata';
@@ -109,9 +109,8 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -128,11 +127,8 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param array $gather_types
-     * @param array $media_info
-     * @return array
      */
-    public function get_metadata($gather_types, $media_info): array
+    public function get_metadata(array $gather_types, array $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {

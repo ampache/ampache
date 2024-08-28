@@ -111,12 +111,12 @@ class Share extends database_object
 
     /**
      * get_url
-     * @param null|int $share_id
+     * @param int $share_id
      * @param string $secret
      */
     public static function get_url($share_id, $secret): string
     {
-        $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
+        $url = AmpConfig::get_web_path() . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
             $url .= '&secret=' . $secret;
         }
@@ -150,7 +150,7 @@ class Share extends database_object
             }
 
             echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
-            echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
+            echo "<a href=\"" . AmpConfig::get_web_path() . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 

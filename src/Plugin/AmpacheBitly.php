@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheBitly implements AmpachePluginInterface
+class AmpacheBitly implements PluginShortenerInterface
 {
     public string $name        = 'Bit.ly';
     public string $categories  = 'shortener';
@@ -152,9 +152,8 @@ class AmpacheBitly implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

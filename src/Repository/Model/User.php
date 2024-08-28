@@ -285,7 +285,7 @@ class User extends database_object
      * This returns the catalogs as an array of ids that this user is allowed to access
      * @return int[]
      */
-    public function get_catalogs($filter): array
+    public function get_catalogs(string $filter): array
     {
         if (!isset($this->catalogs[$filter])) {
             $this->catalogs[$filter] = self::get_user_catalogs($this->id, $filter);
@@ -864,10 +864,12 @@ class User extends database_object
      * @param string $email
      * @param string $website
      * @param string $password
-     * @param string $state
-     * @param string $city
-     * @param bool $disabled
-     * @param bool $encrypted
+     * @param AccessLevelEnum $access
+     * @param int|null $catalog_filter_group
+     * @param string|null $state
+     * @param string|null $city
+     * @param bool|null $disabled
+     * @param bool|null $encrypted
      */
     public static function create(
         $username,
@@ -883,7 +885,10 @@ class User extends database_object
         $encrypted = false
     ): int {
         // don't try to overwrite users that already exist
-        if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
+        if (
+            static::getUserRepository()->idByUsername($username) > 0 ||
+            static::getUserRepository()->idByEmail($email) > 0
+        ) {
             return 0;
         }
 
@@ -1237,7 +1242,7 @@ class User extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null && $this->id > 0) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/stats.php?action=show_user&user_id=' . $this->id;
         }
 
@@ -1292,7 +1297,7 @@ class User extends database_object
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
                 '%s/image.php?action=%s&object_id=%d',
-                $local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path'),
+                $local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id
             );
@@ -1321,7 +1326,7 @@ class User extends database_object
         }
 
         if (!array_key_exists('url', $avatar)) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get('web_path')) . '/images/blankuser.png';
+            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
         }
@@ -1421,10 +1426,8 @@ class User extends database_object
     /**
      * stream_control
      * Check all stream control plugins
-     * @param array $media_ids
-     * @param User|null $user
      */
-    public static function stream_control($media_ids, ?User $user = null): bool
+    public static function stream_control(array $media_ids, ?User $user = null): bool
     {
         if ($user === null) {
             $user = Core::get_global('user');

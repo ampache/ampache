@@ -86,10 +86,10 @@ class DeleteActionTest extends MockeryTestCase
         $license    = $this->mock(License::class);
 
         $licenseId = 666;
-        $webPath   = 'some-path';
+        $webPath   = '/admin';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with($webPath)
             ->once()
             ->andReturn($webPath);
 
@@ -119,7 +119,7 @@ class DeleteActionTest extends MockeryTestCase
             ->with(
                 'No Problem',
                 'The License has been deleted',
-                sprintf('%s/admin/license.php', $webPath)
+                sprintf('%s/license.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Query;
 final class LiveStreamQuery implements QueryInterface
 {
     public const FILTERS = [
+        'id',
         'alpha_match',
         'catalog',
         'catalog_enabled',
@@ -113,6 +114,13 @@ final class LiveStreamQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `live_stream`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'equal':
             case 'exact_match':
                 $filter_sql = " `live_stream`.`name` = '" . Dba::escape($value) . "' AND ";

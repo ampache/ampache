@@ -61,7 +61,6 @@ final readonly class UserflagAlbumAction implements ApplicationActionInterface
 
         $objects = Userflag::get_latest('album', $gatekeeper->getUser(), -1);
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('album');
         $browse->set_sort('user_flag', 'DESC');

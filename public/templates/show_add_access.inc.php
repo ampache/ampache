@@ -40,7 +40,7 @@ $all          = T_('All');
 $current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
     ? ''
     : (string)filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
-<form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=add_host">
+<form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/access.php?action=add_host">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>
@@ -71,7 +71,7 @@ $current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
                     <option value="all"><?php echo $apirpc . ' + ' . $all; ?></option>
         <?php } else {
             if ($add_type == AccessListTypeEnum::ADD_TYPE_LOCAL) { ?>
-                <input type="hidden" name="type" value="local" />
+                <input type="hidden" name="type" value="network" />
                 <select name="addtype">
                     <option value="network"><?php echo $localnetwork; ?></option>
                     <option value="stream"><?php echo $localnetwork . ' + ' . $streamaccess; ?></option>

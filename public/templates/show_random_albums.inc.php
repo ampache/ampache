@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var int[] $albums */
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 $button   = Ajax::button('?page=index&action=random_albums', 'refresh', T_('Refresh'), 'random_refresh'); ?>
 <?php Ui::show_box_top(T_('Albums of the Moment') . ' ' . $button, 'box box_random_albums'); ?>
 <?php

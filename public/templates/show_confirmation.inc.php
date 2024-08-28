@@ -42,7 +42,7 @@ $confirmation = Core::form_register($form_name); ?>
         <?php echo $confirmation; ?>
     </form>
 <?php if ($cancel) { ?>
-    <form method="post" action="<?php echo AmpConfig::get('web_path') . '/' . return_referer(); ?>" style="display:inline;">
+    <form method="post" action="<?php echo AmpConfig::get_web_path() . '/' . return_referer(); ?>" style="display:inline;">
         <input type="submit" value="<?php echo T_('Cancel'); ?>" />
         <?php echo $confirmation; ?>
     </form>

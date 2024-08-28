@@ -113,7 +113,7 @@ class Json5_Data
      */
     public static function error($code, $string, $action, $type): string
     {
-        $message = [
+        $output = [
             "error" => [
                 "errorCode" => (string) $code,
                 "errorAction" => $action,
@@ -122,7 +122,7 @@ class Json5_Data
             ]
         ];
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -136,12 +136,12 @@ class Json5_Data
      */
     public static function success($string, $return_data = []): string
     {
-        $message = ["success" => $string];
+        $output = ["success" => $string];
         foreach ($return_data as $title => $data) {
-            $message[$title] = $data;
+            $output[$title] = $data;
         }
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -266,7 +266,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["live_stream" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -300,7 +300,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["license" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -341,7 +341,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["label" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -375,7 +375,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["genre" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -412,7 +412,7 @@ class Json5_Data
             $flag        = new Userflag($artist_id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
@@ -446,7 +446,7 @@ class Json5_Data
         if ($encode) {
             $output = ($object) ? ["artist" => $JSON] : $JSON[0] ?? [];
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -490,7 +490,7 @@ class Json5_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $objArray = [];
 
@@ -529,7 +529,7 @@ class Json5_Data
         if ($encode) {
             $output = ($object) ? ["album" => $JSON] : $JSON[0] ?? [];
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -614,7 +614,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["playlist" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -669,7 +669,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["share" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -716,7 +716,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["bookmark" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -767,7 +767,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["catalog" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -838,7 +838,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["podcast" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -902,7 +902,7 @@ class Json5_Data
         }
         $output = ($object) ? ["podcast_episode" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1025,7 +1025,7 @@ class Json5_Data
         if ($encode) {
             $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1076,7 +1076,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["video" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1133,7 +1133,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1177,7 +1177,7 @@ class Json5_Data
         }
         $output = ($object) ? ["user" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1200,7 +1200,7 @@ class Json5_Data
         } // end foreach
         $output = ($object) ? ["user" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1231,7 +1231,7 @@ class Json5_Data
         }
         $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1263,7 +1263,7 @@ class Json5_Data
         }
         $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1328,7 +1328,7 @@ class Json5_Data
         }
         $output = ["deleted_" . $object_type => $JSON];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

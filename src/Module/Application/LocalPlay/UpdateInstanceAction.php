@@ -65,7 +65,7 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
 
         // Setup the object
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
-        $localplay->update_instance($_REQUEST['instance'], $_POST);
+        $localplay->update_instance((int)$_REQUEST['instance'], $_POST);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

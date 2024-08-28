@@ -42,7 +42,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 &nbsp;
 <?php echo AmpError::display('general'); ?>
 
-<form name="update_catalog" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
+<form name="update_catalog" method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td style="width: 25%;"><?php echo T_('Catalog Name'); ?>: </td>
@@ -63,13 +63,6 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
                 <span class="format-specifier">%R</span> = <?php echo T_('Release Status'); ?><br />
                 <span class="format-specifier">%s</span> = <?php echo T_('Release Comment'); ?><br />
                 <span class="format-specifier">%b</span> = <?php echo T_('Barcode'); ?><br />
-                <?php if ($allow_video) { ?>
-                    <strong><?php echo T_('TV Shows'); ?>:</strong><br />
-                    <span class="format-specifier">%S</span> = <?php echo T_('TV Show'); ?><br />
-                    <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
-                    <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
-                    <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
-                <?php } ?>
             </td>
         </tr>
         <tr>
@@ -80,6 +73,7 @@ echo T_("In the form below enter either a local path (i.e. /data/music) or the U
 $seltypes = '<option value="none">[' . T_("Select") . ']</option>';
 
 foreach (Catalog::CATALOG_TYPES as $type => $className) {
+    /** @var Catalog $catalog */
     $catalog = new $className();
 
     if ($catalog->is_installed()) {
@@ -134,11 +128,11 @@ echo "function catalogTypeChanged() {var sel = document.getElementById('catalog_
 
                 <select name="gather_media">
                     <option value="music"><?php echo T_('Music'); ?></option>
-            <?php if ($allow_video) { ?>
-                    <option value="clip"><?php echo T_('Music Clip'); ?></option>
-            <?php }
-            if (AmpConfig::get('podcast')) { ?>
+            <?php if (AmpConfig::get('podcast')) { ?>
                     <option value="podcast"><?php echo T_('Podcast'); ?></option>
+            <?php } ?>
+            <?php if ($allow_video) { ?>
+                    <option value="video"><?php echo T_('Video'); ?></option>
             <?php } ?>
                 </select>
             </td>

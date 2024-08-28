@@ -31,7 +31,6 @@ use Ampache\Module\Database\Query\AlbumQuery;
 use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
-use Ampache\Module\Database\Query\ClipQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
 use Ampache\Module\Database\Query\FollowerQuery;
 use Ampache\Module\Database\Query\LabelQuery;
@@ -68,6 +67,7 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_ORDER = [
+        'active' => 'ASC',
         'last_count' => 'ASC',
         'last_update' => 'ASC',
         'limit' => 'ASC',
@@ -91,16 +91,14 @@ class Query
 
     /** @var array $_state */
     protected $_state = [
-        // Used by $browse->set_type() to filter artists to album artist only
-        'album_artist' => false,
+        'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
         'grid_view' => true,
         'group' => [],
-        // HAVING is not currently used in Query SQL
-        'having' => '',
+        'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
         'mashup' => null,
@@ -108,8 +106,7 @@ class Query
         'select' => [],
         'show_header' => true,
         'simple' => false,
-        // Used by $browse->set_type() to filter artists to song artist only
-        'song_artist' => null,
+        'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
         'sort' => [
             'name' => null,
             'order' => null,
@@ -122,8 +119,7 @@ class Query
         'type' => '',
         'update_session' => false,
         'use_alpha' => false,
-        // Used by $browse to hide the filter box in the sidebar
-        'use_filters' => true,
+        'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
         'use_pages' => false,
     ];
 
@@ -131,7 +127,7 @@ class Query
     protected $_cache;
 
     /** @var QueryInterface|null $queryType */
-    private $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
+    private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**
      * constructor
@@ -180,6 +176,8 @@ class Query
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)$this->_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($this->_state['type']);
 
                 return;
             }
@@ -230,17 +228,6 @@ class Query
     public function set_filter($key, mixed $value): bool
     {
         switch ($key) {
-            case 'gather_type':
-            case 'gather_types':
-            case 'hidden':
-            case 'hide_dupe_smartlist':
-            case 'not_like':
-            case 'object_type':
-            case 'smartlist':
-            case 'song_artist':
-            case 'user_catalog':
-                $this->_state['filter'][$key] = $value;
-                break;
             case 'access':
             case 'add_gt':
             case 'add_lt':
@@ -298,6 +285,7 @@ class Query
                 }
                 break;
             case 'playlist_type':
+                // 0 = your user only, 1 = public or your user (User is found using GLOBAL)
                 if (isset($this->_state['filter']['playlist_type'])) {
                     $this->_state['filter'][$key] = ($this->_state['filter'][$key] == 1) ? 0 : 1;
                 } else {
@@ -306,6 +294,7 @@ class Query
                 break;
             case 'genre':
             case 'tag':
+                // array values
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
                 } elseif (is_numeric($value)) {
@@ -315,9 +304,19 @@ class Query
                 }
                 break;
             default:
-                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+                // you might be trying to set an invalid filter that doesn't exist
+                $type = (!empty($this->get_type()))
+                    ? $this->get_type()
+                    : 'NO_TYPE';
 
-                return false;
+                // warn about weird filters
+                if (!in_array($key, self::get_allowed_filters($type))) {
+                    debug_event(self::class, 'set_filter: UNKNOWN FILTER ' . $type . ': ' . $key, 5);
+                }
+
+                // string / unfiltered
+                $this->_state['filter'][$key] = $value;
+                break;
         }
 
         // ensure joins are set on $this->_state
@@ -449,8 +448,6 @@ class Query
                 return BroadcastQuery::FILTERS;
             case 'catalog':
                 return CatalogQuery::FILTERS;
-            case 'clip':
-                return ClipQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
             case 'follower':
@@ -524,9 +521,6 @@ class Query
                 break;
             case 'catalog':
                 $this->queryType = new CatalogQuery();
-                break;
-            case 'clip':
-                $this->queryType = new ClipQuery();
                 break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();
@@ -705,7 +699,7 @@ class Query
      */
     public function set_select($field): void
     {
-        $this->_state['select'][] = $field;
+        $this->_state['select'] = [$field];
     }
 
     /**
@@ -857,11 +851,17 @@ class Query
         }
 
         if (!$this->is_simple()) {
-            $sql        = 'SELECT `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
+            $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
             $db_results = Dba::read($sql, [session_id(), $this->id]);
             $results    = Dba::fetch_assoc($db_results);
 
-            if (array_key_exists('object_data', $results)) {
+            if (array_key_exists('data', $results) && !empty($results['data'])) {
+                $data = (array)$this->_unserialize($results['data']);
+                // queryType isn't set by restoring state
+                $this->set_type($data['type']);
+            }
+
+            if (array_key_exists('object_data', $results) && !empty($results['object_data'])) {
                 $this->_cache = (array)$this->_unserialize($results['object_data']);
 
                 return $this->_cache;
@@ -928,7 +928,7 @@ class Query
             if ($this->queryType === null) {
                 $this->queryType = new SongQuery();
             }
-            $this->_state['select'][] = $this->queryType->get_select();
+            $this->_state['select'] = [$this->queryType->get_select()];
 
             // tag state should be set as they aren't really separate objects
             if ($this->get_type() === 'tag_hidden') {
@@ -992,7 +992,6 @@ class Query
                 case 'album_disk':
                 case 'album':
                 case 'artist':
-                case 'clip':
                 case 'label':
                 case 'live_stream':
                 case 'playlist':

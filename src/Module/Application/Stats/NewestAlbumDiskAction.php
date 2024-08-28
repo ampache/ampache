@@ -60,7 +60,6 @@ final readonly class NewestAlbumDiskAction implements ApplicationActionInterface
 
         $objects = Stats::get_newest('album_disk', -1, 0, 0, $gatekeeper->getUser());
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('album_disk');
         $browse->show_objects($objects);

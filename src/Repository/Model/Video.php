@@ -328,7 +328,7 @@ class Video extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }
 
@@ -475,8 +475,6 @@ class Video extends database_object implements
 
         // clean up missing catalogs
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
-        // clean up sub-tables of videos
-        Clip::garbage_collection();
     }
 
     /**
@@ -586,7 +584,7 @@ class Video extends database_object implements
     /**
      * Insert new video.
      */
-    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
+    public static function insert(array $data, ?array $options = []): int
     {
         $check_file = Catalog::get_id_from_file($data['file'], 'video');
         if ($check_file > 0) {
@@ -656,25 +654,7 @@ class Video extends database_object implements
             $art->insert_url($data['art']);
         }
 
-        $data['id'] = $video_id;
-
-        return self::insert_video_type($data, $gtypes, $options);
-    }
-
-    /**
-     * Insert video for derived type.
-     */
-    private static function insert_video_type(array $data, ?array $gtypes = [], ?array $options = []): int
-    {
-        if (is_array($gtypes) && $gtypes !== []) {
-            $gtype = $gtypes[0];
-            switch ($gtype) {
-                case 'clip':
-                    return Clip::insert($data, $gtypes, $options);
-            }
-        }
-
-        return $data['id'];
+        return $video_id;
     }
 
     /**

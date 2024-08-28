@@ -91,7 +91,8 @@ final class AdminUpdateDatabaseCommand extends Command
 
         // check tables
         try {
-            $missing = $this->updater->checkTables($execute);
+            $build   = (int)$this->updateInfoRepository->getValueByKey(UpdateInfoEnum::DB_VERSION);
+            $missing = $this->updater->checkTables($execute, $build);
             if ($missing->valid()) {
                 $message = ($execute)
                     ? T_('Missing database tables have been created')
@@ -101,7 +102,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
                 foreach ($missing as $table_name) {
-                    /* HINT: filename (File path) OR table name (podcast, clip, etc) */
+                    /* HINT: filename (File path) OR table name (podcast, video, etc) */
                     $interactor->info(
                         sprintf(T_('Missing: %s'), $table_name),
                         true

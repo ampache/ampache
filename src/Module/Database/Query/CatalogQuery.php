@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Query;
 final class CatalogQuery implements QueryInterface
 {
     public const FILTERS = [
+        'id',
         'alpha_match',
         'equal',
         'like',
@@ -116,6 +117,13 @@ final class CatalogQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `catalog`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'equal':
             case 'exact_match':
                 $filter_sql = " `catalog`.`name` = '" . Dba::escape($value) . "' AND ";

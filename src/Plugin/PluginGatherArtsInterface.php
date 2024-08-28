@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=0);
-
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -23,10 +21,13 @@ declare(strict_types=0);
  *
  */
 
-use Ampache\Repository\Model\Clip;
+namespace Ampache\Plugin;
 
-/** @var Clip $libitem */ ?>
-            <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
-                <td><?php show_artist_select('artist', (int)$libitem->artist); ?></td>
-            </tr>
+interface PluginGatherArtsInterface extends AmpachePluginInterface
+{
+    /**
+     * gather_arts
+     * Returns art items for the requested media type
+     */
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array;
+}

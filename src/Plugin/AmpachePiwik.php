@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpachePiwik implements AmpachePluginInterface
+class AmpachePiwik implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Piwik';
     public string $categories  = 'stats';
@@ -62,7 +62,7 @@ class AmpachePiwik implements AmpachePluginInterface
         if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get('web_path') . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
@@ -120,9 +120,8 @@ class AmpachePiwik implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

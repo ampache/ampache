@@ -28,7 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheLibravatar implements AmpachePluginInterface
+class AmpacheLibravatar implements PluginGetAvatarUrlInterface
 {
     public string $name        = 'Libravatar';
     public string $categories  = 'avatar';
@@ -74,10 +74,9 @@ class AmpacheLibravatar implements AmpachePluginInterface
     }
 
     /**
-     * @param User $user
-     * @param int $size
+     * get_avatar_url
      */
-    public function get_avatar_url($user, $size = 80): string
+    public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = "";
         if (!empty($user->email)) {
@@ -99,9 +98,8 @@ class AmpacheLibravatar implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 

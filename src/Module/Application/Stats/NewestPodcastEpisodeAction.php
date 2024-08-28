@@ -60,7 +60,6 @@ final readonly class NewestPodcastEpisodeAction implements ApplicationActionInte
 
         $objects = Stats::get_newest('podcast_episode', -1, 0, 0, $gatekeeper->getUser());
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('podcast_episode');
         $browse->show_objects($objects);

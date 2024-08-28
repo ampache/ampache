@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheYourls implements AmpachePluginInterface
+class AmpacheYourls implements PluginShortenerInterface
 {
     public string $name        = 'YOURLS';
     public string $categories  = 'shortener';
@@ -137,9 +137,8 @@ class AmpacheYourls implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

@@ -260,8 +260,8 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             !$this->album_artist &&
             $this->song_artist_count == 1
         ) {
-            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = " . $this->id . " GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
-            $db_results = Dba::read($sql);
+            $sql        = "SELECT MIN(`song`.`id`) AS `song_id`, `artist`.`name` AS `artist_name`, `artist`.`prefix` AS `artist_prefix`, MIN(`artist`.`id`) AS `artist_id` FROM `song` INNER JOIN `artist` ON `artist`.`id`=`song`.`artist` WHERE `song`.`album` = ? GROUP BY `song`.`album`, `artist`.`prefix`, `artist`.`name`";
+            $db_results = Dba::read($sql, [$this->id]);
             $results    = Dba::fetch_assoc($db_results);
             // overwrite so you can get something
             $this->album_artist  = $results['artist_id'] ?? null;
@@ -519,7 +519,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         if ($this->year === 0) {
             $this->f_year = "N/A";
         } else {
-            $web_path          = AmpConfig::get('web_path');
+            $web_path          = AmpConfig::get_web_path();
             $year              = $this->year;
             $this->f_year_link = sprintf('<a href="%s/search.php?type=album&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=', $web_path) . $year . "\">" . $year . "</a>";
         }
@@ -619,7 +619,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/albums.php?action=show&album=' . $this->id;
         }
 
@@ -691,7 +691,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 $this->f_artist_link = sprintf('<span title="%d ', $this->artist_count) . T_('Artists') . "\">" . T_('Various') . "</span>";
             } elseif ($this->album_artist !== null) {
                 $this->f_artist_link = '';
-                $web_path            = AmpConfig::get('web_path');
+                $web_path            = AmpConfig::get_web_path();
                 if (!$this->album_artists) {
                     $this->get_artists();
                 }
@@ -699,7 +699,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 if ($this->album_artists !== null) {
                     foreach ($this->album_artists as $artist_id) {
                         $artist_fullname = scrub_out(Artist::get_fullname_by_id($artist_id));
-                        $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                        if (!empty($artist_fullname)) {
+                            $this->f_artist_link .= "<a href=\"" . $web_path . '/artists.php?action=show&artist=' . $artist_id . "\" title=\"" . $artist_fullname . "\">" . $artist_fullname . "</a>,&nbsp";
+                        }
                     }
 
                     $this->f_artist_link = rtrim($this->f_artist_link, ",&nbsp");

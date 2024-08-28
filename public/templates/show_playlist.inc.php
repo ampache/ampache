@@ -52,7 +52,7 @@ use Ampache\Module\Util\ZipHandlerInterface;
 ob_start();
 echo $playlist->getFullname();
 $title    = ob_get_contents();
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
@@ -106,6 +106,12 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
         echo "&nbsp;" . T_('Share playlist'); ?>
         </a>
     <?php } ?>
+        <li>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=stream_item&object_type=playlist&object_id=<?php echo $playlist->id; ?>&name=<?php echo rawurlencode($playlist->name ?? 'ampache_playlist'); ?>">
+                <?php echo Ui::get_material_symbol('download', T_('Download Playlist')); ?>
+                <?php echo T_('Download Playlist'); ?>
+            </a>
+        </li>
     <?php if (AmpConfig::get('directplay')) { ?>
         <li>
             <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=playlist&object_id=' . $playlist->id, 'play_circle', T_('Play All'), 'directplay_full_' . $playlist->id); ?>

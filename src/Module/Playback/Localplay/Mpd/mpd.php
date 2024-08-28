@@ -161,7 +161,7 @@ class mpd
     public const TABLE_ALBUM  = 'album';
 
     // Table holding version compatibility information
-    private static $_COMPATIBILITY_TABLE = [
+    private static array $_COMPATIBILITY_TABLE = [
         self::COMMAND_CONSUME => ['min' => '0.15.0', 'max' => false],
         self::COMMAND_IDLE => ['min' => '0.14.0', 'max' => false],
         self::COMMAND_PASSWORD => ['min' => '0.10.0', 'max' => false],
@@ -183,8 +183,8 @@ class mpd
     private $port;
     private $password;
 
-    private $_mpd_sock = null;
-    public $connected  = false;
+    private $_mpd_sock     = null;
+    public bool $connected = false;
 
     public $mpd_version = "(unknown)"; // MPD Status variables
 
@@ -207,10 +207,10 @@ class mpd
      * Builds the MPD object, connects to the server, and refreshes all
      * local object properties.
      * mpd constructor.
-     * @param $server
-     * @param $port
-     * @param $password
-     * @param $debug_callback
+     * @param string $server
+     * @param string|int $port
+     * @param string $password
+     * @param string $debug_callback
      */
     public function __construct(
         $server,
@@ -219,7 +219,7 @@ class mpd
         $debug_callback = null
     ) {
         $this->host     = trim($server);
-        $this->port     = trim($port);
+        $this->port     = (int)$port;
         $this->password = $password;
 
         if (is_callable($debug_callback)) {
@@ -309,15 +309,18 @@ class mpd
      *
      * Sends a generic command to the MPD server. Several command constants
      * are pre-defined for use (see self::COMMAND_* constant definitions above).
-     * @param $command
-     * @param $arguments
+     * @param string $command
+     * @param array|string|float|int $arguments
      * @param bool $refresh_info
      * @return string|bool
      */
     public function SendCommand($command, $arguments = null, $refresh_info = true)
     {
         $this->_debug('SendCommand', "cmd: $command, args: " . json_encode($arguments), 5);
-        if (!$this->connected) {
+        if (
+            !$this->connected ||
+            !is_resource($this->_mpd_sock)
+        ) {
             $this->_error('SendCommand', 'Not connected');
 
             return false;
@@ -375,10 +378,10 @@ class mpd
      * CommandQueue can hold as many commands as needed, and are sent all
      * at once, in the order they were queued, using the SendCommandQueue
      * method. The syntax for queueing commands is identical to SendCommand.
-     * @param $command
-     * @param string $arguments
+     * @param string $command
+     * @param string|array|null $arguments
      */
-    public function QueueCommand($command, $arguments = ''): bool
+    public function QueueCommand($command, $arguments = null): bool
     {
         $this->_debug('QueueCommand', "start; cmd: $command args: " . json_encode($arguments), 5);
         if (!$this->connected) {
@@ -468,7 +471,7 @@ class mpd
      *
      * Adjusts the mixer volume on the MPD by <value>, which can be a
      * positive (volume increase) or negative (volume decrease) value.
-     * @param $value
+     * @param float|int|string $value
      * @return bool|string
      */
     public function AdjustVolume($value)
@@ -493,7 +496,7 @@ class mpd
      * SetVolume
      *
      * Sets the mixer volume to <value>, which should be between 1 - 100.
-     * @param $value
+     * @param float|int|string $value
      * @return bool|string
      */
     public function SetVolume($value)
@@ -692,7 +695,7 @@ class mpd
      * PLRemove
      *
      * Removes track <id> from the playlist.
-     * @param $id
+     * @param int $id
      * @return bool|string
      */
     public function PLRemove($id)
@@ -990,10 +993,12 @@ class mpd
      *
      * Closes the connection to the MPD server.
      */
-    public function Disconnect()
+    public function Disconnect(): void
     {
         $this->_debug('Disconnect', 'start', 5);
-        fclose($this->_mpd_sock);
+        if (is_resource($this->_mpd_sock)) {
+            fclose($this->_mpd_sock);
+        }
 
         $this->connected = false;
         unset($this->mpd_version);
@@ -1193,9 +1198,9 @@ class mpd
      * _debug
      *
      * Do the debugging boogaloo
-     * @param $source
-     * @param $message
-     * @param $level
+     * @param string $source
+     * @param string $message
+     * @param int $level
      */
     private function _debug($source, $message, $level)
     {
@@ -1203,7 +1208,7 @@ class mpd
             echo "$source / $message\n";
         }
 
-        if ($this->_debug_callback === null) {
+        if ($this->_debug_callback !== null) {
             call_user_func($this->_debug_callback, 'MPD', "$source / $message", $level);
         }
     }

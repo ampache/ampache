@@ -48,7 +48,7 @@ $allow_stream   = $_REQUEST['allow_stream'] ?? false;
 $allow_download = $_REQUEST['allow_download'] ?? false;
 
 Ui::show_box_top(T_('Create Share'), 'box box_add_share'); ?>
-<form name="share" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/share.php?action=create">
+<form name="share" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/share.php?action=create">
 <input type="hidden" name="type" value="<?php echo $object_type->value; ?>" />
 <input type="hidden" name="id" value="<?php echo $object->getId(); ?>" />
 <table class="tabledata">

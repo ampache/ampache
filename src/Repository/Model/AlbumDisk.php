@@ -263,7 +263,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         if (!$this->year) {
             $this->f_year = $this->album->f_year;
         } else {
-            $web_path          = AmpConfig::get('web_path');
+            $web_path          = AmpConfig::get_web_path();
             $year              = $this->year;
             $this->f_year_link = sprintf('<a href="%s/search.php?type=album_disk&action=search&limit=0rule_1=year&rule_1_operator=2&rule_1_input=', $web_path) . $year . "\">" . $year . "</a>";
         }
@@ -363,7 +363,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/albums.php?action=show_disk&album_disk=' . $this->id;
         }
 
