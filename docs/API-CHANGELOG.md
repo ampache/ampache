@@ -2,9 +2,7 @@
 
 ## API 6.6.1
 
-This release keeps parity between Ampache7 releases by backported the updated code.
-
-The big difference is all the `array()`'s have been converted to the short form `[]`
+This release keeps parity between Ampache7 releases by backporting the updated code.
 
 ### Added
 
