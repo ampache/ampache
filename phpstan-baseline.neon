@@ -9791,11 +9791,6 @@ parameters:
 			path: src/Plugin/AmpacheAmazon.php
 
 		-
-			message: "#^Parameter \\#1 \\$asin of method Ampache\\\\Module\\\\Util\\\\AmazonSearch\\:\\:lookup\\(\\) expects string, array given\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheAmazon.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:\\$amazon_base_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheAmazon.php
@@ -9882,6 +9877,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
+			count: 1
+			path: src/Plugin/AmpacheDiscogs.php
+
+		-
+			message: "#^Parameter \\#3 \\$options of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
 
@@ -10236,6 +10236,11 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
+			message: "#^Parameter \\#3 \\$options of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: src/Plugin/AmpacheTheaudiodb.php
+
+		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
@@ -10277,11 +10282,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:gather_arts\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampacheflickr.php
 
@@ -10364,6 +10364,51 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$token has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelistenbrainz.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGatherArtsInterface\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGatherArtsInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGatherArtsInterface\\:\\:gather_arts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGatherArtsInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGetLyricsInterface\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGetLyricsInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) has parameter \\$gather_types with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGetMetadataInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) has parameter \\$media_info with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGetMetadataInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginGetMetadataInterface\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginGetMetadataInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginLocationInterface\\:\\:display_map\\(\\) has parameter \\$points with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginLocationInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginSongPreviewInterface\\:\\:get_song_preview\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginSongPreviewInterface.php
+
+		-
+			message: "#^Method Ampache\\\\Plugin\\\\PluginStreamControlInterface\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Plugin/PluginStreamControlInterface.php
 
 		-
 			message: "#^Cannot access an offset on array\\<int\\<0, max\\>, int\\>\\|int\\.$#"
