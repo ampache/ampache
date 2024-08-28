@@ -216,7 +216,7 @@ class Wanted extends database_object
                                 $wanted->link .= "&artist_mbid=" . $lookupId;
                             }
 
-                            $wanted->f_user        = Core::get_global('user')?->get_fullname() ?? '';
+                            $wanted->f_user        = Core::get_global('user')->get_fullname() ?? '';
                             $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = ($artist !== null)
                                 ? $artist->get_f_link()

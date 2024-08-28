@@ -2,9 +2,9 @@ name: phplint74
 
 on:
   push:
-    branches: [ develop, master ]
+    branches: [ patch6, release6 ]
   pull_request:
-    branches: [ develop, master ]
+    branches: [ patch6, release6 ]
 
 jobs:
   lintphp74:
