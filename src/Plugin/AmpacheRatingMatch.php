@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\System\Dba;
 
-class AmpacheRatingMatch implements AmpachePluginInterface
+class AmpacheRatingMatch implements PluginSaveMediaplayInterface
 {
     public string $name        = 'RatingMatch';
     public string $categories  = 'scrobbling';
@@ -234,10 +234,9 @@ class AmpacheRatingMatch implements AmpachePluginInterface
 
     /**
      * save_mediaplay
-     * check for extra star rules.
-     * @param Song $song
+     * This takes care of queueing and then submitting the tracks.
      */
-    public function save_mediaplay($song): bool
+    public function save_mediaplay(Song $song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -342,9 +341,8 @@ class AmpacheRatingMatch implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data              = $user->prefs;

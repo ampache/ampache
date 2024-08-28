@@ -450,7 +450,7 @@ abstract class Catalog extends database_object
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/admin/catalog.php?action=show_customize_catalog&catalog_id=' . $this->id;
         }
 
@@ -776,20 +776,8 @@ abstract class Catalog extends database_object
             case "tag":
                 $sql = sprintf(' `tag`.`id` IN (SELECT `tag_id` FROM `tag_map` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `tag_map`.`object_type` AND `catalog_map`.`object_id` = `tag_map`.`object_id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `tag_map`.`tag_id`) ', $user_id);
                 break;
-            case 'tvshow':
-                $sql = sprintf(' `tvshow`.`id` IN (SELECT `tvshow` FROM `tvshow_season` LEFT JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = \'video\' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `tvshow_season`.`tvshow`) ', $user_id);
-                break;
-            case 'tvshow_season':
-                $sql = sprintf(' `tvshow_season`.`tvshow` IN (SELECT `season` FROM `tvshow_episode` LEFT JOIN `video` ON `tvshow_episode`.`id` = `video`.`id` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = \'video\' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `tvshow_episode`.`season`) ', $user_id);
-                break;
-            case 'tvshow_episode':
-            case 'movie':
-            case 'personal_video':
-            case 'clip':
-                $sql = sprintf(' `%s`.`id` IN (SELECT `video`.`id` FROM `video` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = \'video\' AND `catalog_map`.`object_id` = `video`.`id` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `video`.`id`) ', $type, $user_id);
-                break;
             case "object_count_album_disk":
-                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video')
+                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video')
                 $sql = sprintf(' `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'album_disk\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $user_id);
                 break;
             case "object_count_artist":
@@ -806,7 +794,7 @@ abstract class Catalog extends database_object
                 $sql  = sprintf(' `object_count`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'%s\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $type, $user_id);
                 break;
             case "rating_album_disk":
-                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video')
+                // enum('album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video')
                 $sql = sprintf(' `rating`.`object_id` IN (SELECT `catalog_map`.`object_id` FROM `catalog_map` LEFT JOIN `catalog` ON `catalog_map`.`catalog_id` = `catalog`.`id` WHERE `catalog_map`.`object_type` = \'album_disk\' AND `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) GROUP BY `catalog_map`.`object_id`) ', $user_id);
                 break;
             case "rating_artist":
@@ -815,8 +803,6 @@ abstract class Catalog extends database_object
             case "rating_stream":
             case "rating_live_stream":
             case "rating_video":
-            case "rating_tvshow":
-            case "rating_tvshow_season":
             case "rating_podcast":
             case "rating_podcast_episode":
                 $type = str_replace('rating_', '', (string) $type);
@@ -1132,7 +1118,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'])) {
+        if (!in_array($gather_types, ['music', 'video', 'podcast'])) {
             return 0;
         }
 
@@ -1184,10 +1170,7 @@ abstract class Catalog extends database_object
         }
 
         if (AmpConfig::get('video')) {
-            parent::remove_from_cache('user_catalogclip');
-            parent::remove_from_cache('user_catalogtvshow');
-            parent::remove_from_cache('user_catalogmovie');
-            parent::remove_from_cache('user_catalogpersonal_video');
+            parent::remove_from_cache('user_catalogvideo');
         }
     }
 
@@ -1435,16 +1418,11 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
-     * @param int|null $catalog_id
-     * @param string $type
+     * get_videos_count
      */
-    public static function get_videos_count($catalog_id = 0, $type = ''): int
+    public static function get_videos_count(?int $catalog_id = 0): int
     {
         $sql = "SELECT COUNT(`video`.`id`) AS `video_cnt` FROM `video` ";
-        if (!empty($type)) {
-            $sql .= "JOIN `" . $type . "` ON `" . $type . "`.`id` = `video`.`id` ";
-        }
 
         if ($catalog_id) {
             $sql .= "WHERE `video`.`catalog` = `" . $catalog_id . "`";
@@ -1454,51 +1432,6 @@ abstract class Catalog extends database_object
         $row        = Dba::fetch_row($db_results);
 
         return $row[0] ?? 0;
-    }
-
-    /**
-     * get_tvshow_ids
-     *
-     * This returns an array of ids of tvshows in this catalog
-     * @return int[]
-     */
-    public function get_tvshow_ids(): array
-    {
-        $results    = [];
-        $sql        = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`catalog` = ?';
-        $db_results = Dba::read($sql, [$this->id]);
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = (int)$row['id'];
-        }
-
-        return $results;
-    }
-
-    /**
-     * get_tvshows
-     * @param int[]|null $catalogs
-     * @return TvShow[]
-     */
-    public static function get_tvshows($catalogs = null): array
-    {
-        if (!$catalogs) {
-            $catalogs = self::get_catalogs();
-        }
-
-        $results = [];
-        foreach ($catalogs as $catalog_id) {
-            $catalog = self::create_from_id($catalog_id);
-            if ($catalog === null) {
-                break;
-            }
-
-            $tvshow_ids = $catalog->get_tvshow_ids();
-            foreach ($tvshow_ids as $tvshow_id) {
-                $results[] = new TvShow($tvshow_id);
-            }
-        }
-
-        return $results;
     }
 
     /**
@@ -2217,7 +2150,7 @@ abstract class Catalog extends database_object
      * Returns an array of song objects.
      * @return Song[]
      */
-    public function get_songs($offset = 0, $limit = 0): array
+    public function get_songs(?int $offset = 0, ?int $limit = 0): array
     {
         $songs   = [];
         $results = [];
@@ -2527,7 +2460,7 @@ abstract class Catalog extends database_object
      */
     public static function update_song_from_tags(array $results, Song $song): array
     {
-        //debug_event(__CLASS__, "update_song_from_tags results: " . print_r($results, true), 4);
+        //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
         $new_song       = new Song();
         $new_song->file = $results['file'];
@@ -2863,7 +2796,7 @@ abstract class Catalog extends database_object
 
         if ($metadataManager->isCustomMetadataEnabled()) {
             $ctags = self::filterMetadata($song, $results);
-            //debug_event(__CLASS__, "get_clean_metadata " . print_r($ctags, true), 4);
+            //debug_event(self::class, "get_clean_metadata " . print_r($ctags, true), 4);
             foreach ($ctags as $tag => $value) {
                 $metadataManager->updateOrAddMetadata($song, $tag, (string) $value);
             }
@@ -3162,7 +3095,7 @@ abstract class Catalog extends database_object
         $sql = "UPDATE `song` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'stream');";
         Dba::write($sql);
         if (AmpConfig::get('podcast')) {
-            //debug_event(__CLASS__, 'update_counts podcast_episode table', 5);
+            //debug_event(self::class, 'update_counts podcast_episode table', 5);
             // fix object_count table missing podcast row
             $sql        = "SELECT `podcast_episode`.`podcast`, `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` LEFT JOIN `podcast_episode` ON `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream' AND `object_count`.`object_id` = `podcast_episode`.`id` LEFT JOIN `object_count` AS `podcast_count` ON `podcast_count`.`object_type` = 'podcast' AND `object_count`.`date` = `podcast_count`.`date` AND `object_count`.`user` = `podcast_count`.`user` AND `object_count`.`agent` = `podcast_count`.`agent` AND `object_count`.`count_type` = `podcast_count`.`count_type` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = 'podcast_episode' AND `podcast_count`.`id` IS NULL LIMIT 100;";
             $db_results = Dba::read($sql);
@@ -3203,7 +3136,7 @@ abstract class Catalog extends database_object
         }
 
         if (AmpConfig::get('allow_video')) {
-            //debug_event(__CLASS__, 'update_counts video table', 5);
+            //debug_event(self::class, 'update_counts video table', 5);
             $sql = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
             Dba::write($sql);
             $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
@@ -3369,7 +3302,7 @@ abstract class Catalog extends database_object
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, ['personal_video', 'movie', 'tvshow', 'clip']);
+            $types = array_diff($types, ['video']);
         }
 
         return $types;
@@ -3382,7 +3315,7 @@ abstract class Catalog extends database_object
     public static function get_table_from_type($gather_type): string
     {
         return match ($gather_type) {
-            'clip', 'tvshow', 'movie', 'personal_video' => 'video',
+            'video' => 'video',
             'podcast' => 'podcast_episode',
             default => 'song',
         };
@@ -3420,22 +3353,23 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(self::class, "clean_duplicate_artists " . $row['maxid'] . "=>" . $row['minid'], 5);
+            $maxId = (int)$row['maxid'];
+            $minId = (int)$row['minid'];
             // migrate linked tables first
-            //Stats::migrate('artist', $row['maxid'], $row['minid']);
-            Useractivity::migrate('artist', $row['maxid'], $row['minid']);
-            Recommendation::migrate('artist', $row['maxid']);
-            self::getShareRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            self::getShoutRepository()->migrate('artist', (int) $row['maxid'], (int) $row['minid']);
-            Tag::migrate('artist', $row['maxid'], $row['minid']);
-            Userflag::migrate('artist', $row['maxid'], $row['minid']);
-            Label::migrate('artist', $row['maxid'], $row['minid']);
-            Rating::migrate('artist', $row['maxid'], $row['minid']);
-            self::getWantedRepository()->migrateArtist($row['maxid'], $row['minid']);
-            Clip::migrate('artist', $row['maxid'], $row['minid']);
-            self::migrate_map('artist', $row['maxid'], $row['minid']);
+            //Stats::migrate('artist', $maxId, $minId);
+            Useractivity::migrate('artist', $maxId, $minId);
+            Recommendation::migrate('artist', $maxId);
+            self::getShareRepository()->migrate('artist', $maxId, $minId);
+            self::getShoutRepository()->migrate('artist', $maxId, $minId);
+            Tag::migrate('artist', $maxId, $minId);
+            Userflag::migrate('artist', $maxId, $minId);
+            Label::migrate('artist', $maxId, $minId);
+            Rating::migrate('artist', $maxId, $minId);
+            self::getWantedRepository()->migrateArtist($maxId, $minId);
+            self::migrate_map('artist', $maxId, $minId);
 
             // replace all songs and albums with the original artist
-            Artist::migrate($row['maxid'], $row['minid']);
+            Artist::migrate($maxId, $minId);
         }
 
         // remove the duplicates after moving everything
@@ -3520,10 +3454,9 @@ abstract class Catalog extends database_object
     /**
      * trim_prefix
      * Splits the prefix from the string
-     * @param string $string
-     * @param string $pattern
+     * @return array{string: string, prefix: ?string}
      */
-    public static function trim_prefix($string, $pattern = null): array
+    public static function trim_prefix(string $string, ?string $pattern = null): array
     {
         $prefix_pattern = $pattern ?? '/^(' . implode('\\s|', explode('|', (string) AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
         if (preg_match($prefix_pattern, $string, $matches)) {
@@ -3775,7 +3708,7 @@ abstract class Catalog extends database_object
         } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
-        } elseif (in_array($media_type, ['clip', 'tvshow', 'movie', 'personal_video'])) {
+        } elseif ($media_type == 'video') {
             self::update_mapping('video');
         }
     }
@@ -3891,7 +3824,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @param Album|AlbumDisk|Artist|Song|Video|Podcast_Episode|TvShow|TVShow_Episode|Label|TVShow_Season $libitem
+     * @param Album|AlbumDisk|Artist|Song|Video|Podcast_Episode|Label $libitem
      * @param int|null $user_id
      */
     public static function can_remove($libitem, $user_id = 0): bool
@@ -4085,10 +4018,7 @@ abstract class Catalog extends database_object
                                     $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
                                     $className = Podcast_Episode::class;
                                     break;
-                                case 'clip':
-                                case 'tvshow':
-                                case 'movie':
-                                case 'personal_video':
+                                case 'video':
                                     $type      = 'video';
                                     $file_ids  = Catalog::get_ids_from_folder($clean_path, $type);
                                     $className = Video::class;

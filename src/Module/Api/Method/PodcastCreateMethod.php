@@ -81,7 +81,7 @@ final class PodcastCreateMethod
                 urldecode($input['url']),
                 $catalog
             );
-        } catch (PodcastCreationException $e) {
+        } catch (PodcastCreationException) {
             Api::error('Bad Request', '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;

@@ -27,6 +27,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -34,7 +35,8 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$is_table = $browse->is_grid_view();
+$is_table     = $browse->is_grid_view();
+$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
@@ -42,7 +44,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <div id="information_actions">
 <ul>
 <li>
-    <a href="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=show_create">
+    <a href="<?php echo AmpConfig::get_web_path(); ?>/radio.php?action=show_create">
         <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
         <?php echo T_('Add Radio Station'); ?>
     </a>
@@ -61,8 +63,11 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
             <th class="cel_streamname essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
             <th class="cel_add essential"></th>
-            <th class="cel_siteurl optional"><?php echo T_('Website'); ?></th>
+            <th class="cel_siteurl optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=site_url', T_('Website'), 'live_stream_sort_site_url'); ?></th>
             <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec'); ?></th>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=rating', T_('Rating'), 'live_stream_sort_rating'); ?></th>
+            <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -88,10 +93,13 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="cel_streamname"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', T_('Name'), 'live_stream_sort_name'); ?></th>
+            <th class="cel_streamname"></th>
             <th class="cel_add essential"></th>
             <th class="cel_siteurl"><?php echo T_('Website'); ?></th>
-            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=codec', T_('Codec'), 'live_stream_codec_bottom'); ?></th>
+            <th class="cel_codec"></th>
+            <?php if ($show_ratings) { ?>
+            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <?php } ?>
             <th class="cel_action"><?php echo T_('Action'); ?> </th>
         </tr>
     </tfoot>

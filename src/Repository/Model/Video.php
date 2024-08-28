@@ -232,10 +232,8 @@ class Video extends database_object implements
     /**
      * format
      * This formats a video object so that it is human readable
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         $this->get_f_link();
         $this->f_codec = $this->video_codec . ' / ' . $this->audio_codec;
@@ -330,7 +328,7 @@ class Video extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . "/video.php?action=show_video&video_id=" . $this->id;
         }
 
@@ -477,13 +475,6 @@ class Video extends database_object implements
 
         // clean up missing catalogs
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
-        // clean up sub-tables of videos
-        Movie::garbage_collection();
-        TVShow_Episode::garbage_collection();
-        TVShow_Season::garbage_collection();
-        TvShow::garbage_collection();
-        Personal_Video::garbage_collection();
-        Clip::garbage_collection();
     }
 
     /**
@@ -522,10 +513,10 @@ class Video extends database_object implements
         }
 
         $media_name = $this->get_stream_name() . "." . $this->type;
-        $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
+        $media_name = (string)preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode((string) $media_name)
-            : rawurlencode((string) $media_name);
+            ? urlencode($media_name)
+            : rawurlencode($media_name);
 
         $url = Stream::get_base_url($local, $streamToken) . "type=video&oid=" . $this->id . "&uid=" . $uid . $additional_params;
         if ($player !== '') {
@@ -593,7 +584,7 @@ class Video extends database_object implements
     /**
      * Insert new video.
      */
-    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
+    public static function insert(array $data, ?array $options = []): int
     {
         $check_file = Catalog::get_id_from_file($data['file'], 'video');
         if ($check_file > 0) {
@@ -663,31 +654,7 @@ class Video extends database_object implements
             $art->insert_url($data['art']);
         }
 
-        $data['id'] = $video_id;
-
-        return self::insert_video_type($data, $gtypes, $options);
-    }
-
-    /**
-     * Insert video for derived type.
-     */
-    private static function insert_video_type(array $data, ?array $gtypes = [], ?array $options = []): int
-    {
-        if (is_array($gtypes) && $gtypes !== []) {
-            $gtype = $gtypes[0];
-            switch ($gtype) {
-                case 'tvshow':
-                    return TVShow_Episode::insert($data, $gtypes, $options);
-                case 'movie':
-                    return Movie::insert($data, $gtypes, $options);
-                case 'clip':
-                    return Clip::insert($data, $gtypes, $options);
-                case 'personal_video':
-                    return Personal_Video::insert($data, $gtypes, $options);
-            }
-        }
-
-        return $data['id'];
+        return $video_id;
     }
 
     /**

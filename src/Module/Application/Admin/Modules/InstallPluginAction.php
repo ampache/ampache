@@ -79,7 +79,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         if (!array_key_exists($plugin_name, $plugins)) {
             $this->logger->error(
                 sprintf('Error: Invalid Plugin: %s selected', $plugin_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $this->ui->showQueryStats();
@@ -91,10 +91,10 @@ final class InstallPluginAction implements ApplicationActionInterface
         if ($plugin->_plugin === null || !$plugin->install()) {
             $this->logger->error(
                 sprintf('Error: Plugin Install Failed, %s', $plugin_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
+            $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));
             $title = T_('There Was a Problem');
             $body  = T_('Unable to install this Plugin');
             $this->ui->showConfirmation($title, $body, $url);
@@ -109,7 +109,7 @@ final class InstallPluginAction implements ApplicationActionInterface
         User::rebuild_all_preferences();
 
         /* Show Confirmation */
-        $url   = sprintf('%s/admin/modules.php?action=show_plugins', $this->configContainer->getWebPath());
+        $url   = sprintf('%s/modules.php?action=show_plugins', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('The Plugin has been enabled');
         $this->ui->showConfirmation($title, $body, $url);

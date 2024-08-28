@@ -173,10 +173,8 @@ class Podcast_Episode extends database_object implements
     /**
      * format
      * this function takes the object and formats some values
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         if ($this->isNew()) {
             return;
@@ -287,7 +285,7 @@ class Podcast_Episode extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         }
 

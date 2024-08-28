@@ -110,12 +110,12 @@ class VlcPlayer
      * next
      * go to next song
      */
-    public function next(): ?bool
+    public function next(): bool
     {
         $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -139,15 +139,17 @@ class VlcPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $pos
-     * @return bool|null
+     * @param $track_id
      */
-    public function skip($pos): ?bool
+    public function skip(int $track_id): bool
     {
-        $args    = ['command' => 'pl_play', '&id' => $pos];
+        $args    = [
+            'command' => 'pl_play',
+            '&id' => $track_id
+        ];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         // Works but if user clicks next afterwards player goes to first song our last song played before
@@ -159,12 +161,12 @@ class VlcPlayer
      * play
      * play the current song
      */
-    public function play(): ?bool
+    public function play(): bool
     {
         $args    = ['command' => 'pl_play'];
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -189,12 +191,12 @@ class VlcPlayer
      * stop
      * stops the current song amazing!
      */
-    public function stop(): ?bool
+    public function stop(): bool
     {
         $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -203,15 +205,14 @@ class VlcPlayer
     /**
      * repeat
      * This toggles the repeat state of VLC
-     * @param $value
-     * @return bool|null
+     * @param $state
      */
-    public function repeat($value): ?bool
+    public function repeat(bool $state): bool
     {
         $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -220,9 +221,9 @@ class VlcPlayer
     /**
      * random
      * this toggles the random state of VLC
-     * @param $value
+     * @param $state
      */
-    public function random($value): bool
+    public function random(bool $state): bool
     {
         $args    = ['command' => 'pl_random'];
         $results = $this->sendCommand('status.xml?', $args);
@@ -259,7 +260,7 @@ class VlcPlayer
 
         $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
-        $currentstat = $results['root']['state']['value'];
+        $currentstat = $results['root']['state']['value'] ?? $state;
 
         if ($currentstat == 'playing') {
             $state = 'play';
@@ -476,7 +477,7 @@ class VlcPlayer
 
             // This command will extract these variables into the foreach scope
             // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler.
+            extract($data); // We could use the array by itself, but this cooler. //TODO it's not
 
             $result          = [];
             $attributes_data = [];

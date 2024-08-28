@@ -110,11 +110,9 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      * format
      * this function takes the object and formats some values
      *
-     * @param bool $details
-     *
      * @deprecated
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
     }
 
@@ -166,7 +164,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/podcast.php?action=show&podcast=' . $this->id;
         }
 

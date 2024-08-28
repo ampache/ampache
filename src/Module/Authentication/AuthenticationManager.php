@@ -119,11 +119,11 @@ final class AuthenticationManager implements AuthenticationManagerInterface
         $key = empty($key) ? session_id() : $key;
 
         // Nuke the cookie before all else
-        Session::destroy($key);
+        Session::destroy((string)$key);
         if ((!$relogin) && $this->configContainer->get('logout_redirect')) {
             $target = $this->configContainer->get('logout_redirect');
         } else {
-            $target = $this->configContainer->get('web_path') . '/login.php';
+            $target = $this->configContainer->getWebPath() . '/login.php';
         }
 
         // Do a quick check to see if this is an AJAXed logout request

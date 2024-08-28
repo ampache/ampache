@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-class Ampachelistenbrainz implements AmpachePluginInterface
+class Ampachelistenbrainz implements PluginSaveMediaplayInterface
 {
     public string $name        = 'ListenBrainz';
     public string $categories  = 'scrobbling';
@@ -102,10 +102,9 @@ class Ampachelistenbrainz implements AmpachePluginInterface
 
     /**
      * save_mediaplay
-     * This takes care of queuing and then submitting the tracks.
-     * @param Song $song
+     * This takes care of queueing and then submitting the tracks.
      */
-    public function save_mediaplay($song): bool
+    public function save_mediaplay(Song $song): bool
     {
         // Only support songs
         if (get_class($song) != Song::class) {
@@ -210,9 +209,8 @@ class Ampachelistenbrainz implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

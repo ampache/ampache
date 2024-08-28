@@ -20,25 +20,35 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\TvShow\ConfirmDeleteAction;
-use Ampache\Module\Application\TvShow\DeleteAction;
-use Ampache\Module\Application\TvShow\ShowAction;
-use Nyholm\Psr7Server\ServerRequestCreatorInterface;
-use Psr\Container\ContainerInterface;
+namespace Ampache\Module\System\Update\Migration\V7;
 
+<<<<<<<< HEAD:tvshows.php
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/src/Config/Init.php';
+========
+use Ampache\Module\System\Update\Migration\AbstractMigration;
+>>>>>>>> patch7:src/Module/System/Update/Migration/V7/Migration700011.php
 
-$dic->get(ApplicationRunner::class)->run(
-    $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        ShowAction::REQUEST_KEY => ShowAction::class,
-        ConfirmDeleteAction::REQUEST_KEY => ConfirmDeleteAction::class,
-        DeleteAction::REQUEST_KEY => DeleteAction::class,
-    ],
-    ShowAction::REQUEST_KEY
-);
+final class Migration700011 extends AbstractMigration
+{
+    protected array $changelog = [
+        'Drop `clip` table',
+        'Drop `movie` table',
+        'Drop `personal_video` table',
+        'Drop `tvshow` table',
+        'Drop `tvshow_episode` table',
+        'Drop `tvshow_season` table',
+    ];
+
+    public function migrate(): void
+    {
+        $this->updateDatabase('DROP TABLE IF EXISTS `clip`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `movie`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `personal_video`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow_episode`;');
+        $this->updateDatabase('DROP TABLE IF EXISTS `tvshow_season`;');
+    }
+}

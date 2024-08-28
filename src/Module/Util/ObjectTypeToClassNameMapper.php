@@ -30,14 +30,11 @@ use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Bookmark;
-use Ampache\Repository\Model\Clip;
 use Ampache\Repository\Model\database_object;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\LibraryItemLoader;
 use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\ObjectTypeEnum;
-use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -46,9 +43,6 @@ use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Song_Preview;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\TvShow;
-use Ampache\Repository\Model\TVShow_Episode;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\Model\Wanted;
@@ -70,12 +64,9 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::ART->value => Art::class,
         ObjectTypeEnum::ARTIST->value => Artist::class,
         ObjectTypeEnum::BOOKMARK->value => Bookmark::class,
-        ObjectTypeEnum::CLIP->value => Clip::class,
         ObjectTypeEnum::GENRE->value => Tag::class,
         ObjectTypeEnum::LABEL->value => Label::class,
         ObjectTypeEnum::LIVE_STREAM->value => Live_Stream::class,
-        ObjectTypeEnum::MOVIE->value => Movie::class,
-        ObjectTypeEnum::PERSONAL_VIDEO->value => Personal_Video::class,
         ObjectTypeEnum::PLAYLIST->value => Playlist::class,
         ObjectTypeEnum::PODCAST->value => Podcast::class,
         ObjectTypeEnum::PODCAST_EPISODE->value => Podcast_Episode::class,
@@ -86,9 +77,6 @@ final class ObjectTypeToClassNameMapper
         ObjectTypeEnum::SONG_PREVIEW->value => Song_Preview::class,
         ObjectTypeEnum::TAG_HIDDEN->value => Tag::class,
         ObjectTypeEnum::TAG->value => Tag::class,
-        ObjectTypeEnum::TV_SHOW->value => TVShow::class,
-        ObjectTypeEnum::TV_SHOW_EPISODE->value => TVShow_Episode::class,
-        ObjectTypeEnum::TV_SHOW_SEASON->value => TVShow_Season::class,
         ObjectTypeEnum::USER->value => User::class,
         ObjectTypeEnum::VIDEO->value => Video::class,
         ObjectTypeEnum::WANTED->value => Wanted::class,
@@ -96,12 +84,6 @@ final class ObjectTypeToClassNameMapper
 
     /** @var array<class-string, ObjectTypeEnum> */
     public const VIDEO_TYPES = [
-        Clip::class => ObjectTypeEnum::CLIP,
-        Movie::class => ObjectTypeEnum::MOVIE,
-        Personal_Video::class => ObjectTypeEnum::PERSONAL_VIDEO,
-        TVShow::class => ObjectTypeEnum::TV_SHOW,
-        TVShow_Episode::class => ObjectTypeEnum::TV_SHOW_EPISODE,
-        TVShow_Season::class => ObjectTypeEnum::TV_SHOW_SEASON,
         Video::class => ObjectTypeEnum::VIDEO,
     ];
 

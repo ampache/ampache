@@ -87,7 +87,7 @@ class UPnPPlayer
         $name = "noname",
         $description_url = "http://localhost"
     ) {
-        debug_event(__CLASS__, 'constructor: ' . $name . ' | ' . $description_url, 5);
+        debug_event(self::class, 'constructor: ' . $name . ' | ' . $description_url, 5);
 
         $this->_description_url = $description_url;
 
@@ -205,11 +205,11 @@ class UPnPPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $pos
+     * @param $track_id
      */
-    public function Skip($pos): bool
+    public function skip(int $track_id): bool
     {
-        if ($this->Playlist()->Skip($pos)) {
+        if ($this->Playlist()->Skip($track_id)) {
             $this->Play();
 
             return true;
@@ -229,7 +229,7 @@ class UPnPPlayer
         }
 
         $songUrl = $song['link'];
-        $songId  = preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
+        $songId  = (int)preg_replace('/(.+)\/oid\/(\d+)\/(.+)/i', '${2}', $songUrl);
 
         $song = new Song($songId);
         $song->format();
@@ -327,9 +327,9 @@ class UPnPPlayer
     /**
      * Repeat
      * This toggles the repeat state
-     * @param $value
+     * @param $state
      */
-    public function Repeat($value): bool
+    public function repeat(bool $state): bool
     {
         //!! TODO not implemented yet
         return true;
@@ -338,9 +338,9 @@ class UPnPPlayer
     /**
      * Random
      * this toggles the random state
-     * @param $value
+     * @param $state
      */
-    public function Random($value): bool
+    public function Random(bool $state): bool
     {
         //!! TODO not implemented yet
         return true;

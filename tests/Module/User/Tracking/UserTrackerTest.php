@@ -67,7 +67,8 @@ class UserTrackerTest extends TestCase
             ->willReturn(false);
 
         $this->subject->trackIpAddress(
-            $this->createMock(User::class)
+            $this->createMock(User::class),
+            'login'
         );
     }
 }

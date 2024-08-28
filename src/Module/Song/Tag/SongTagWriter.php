@@ -71,7 +71,7 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing metadata to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $ndata = [];
@@ -254,7 +254,7 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing rating to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $vainfo = $this->utilityFactory->createVaInfo(
@@ -294,12 +294,12 @@ final class SongTagWriter implements SongTagWriterInterface
                     ];
                     $this->logger->debug(
                         print_r($ndata['Popularimeter'], true),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             } else {
@@ -319,7 +319,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -476,7 +476,7 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -522,7 +522,7 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }

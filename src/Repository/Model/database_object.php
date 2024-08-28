@@ -125,9 +125,8 @@ abstract class database_object
      * This attempts to retrieve the specified object from the cache we've got here
      * @param string $index
      * @param int|string $object_id
-     * @return array
      */
-    public static function get_from_cache($index, $object_id)
+    public static function get_from_cache($index, $object_id): array
     {
         // Check if the object is set
         if (isset(self::$object_cache[$index][$object_id]) && is_array(self::$object_cache[$index][$object_id])) {

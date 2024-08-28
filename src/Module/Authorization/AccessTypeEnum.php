@@ -30,12 +30,12 @@ namespace Ampache\Module\Authorization;
  */
 enum AccessTypeEnum: string
 {
+    case ALL       = 'all';
+    case API       = 'rpc';
+    case INTERFACE = 'interface';
     case LOCALPLAY = 'localplay';
     case NETWORK   = 'network';
     case STREAM    = 'stream';
-    case API       = 'rpc';
-    case INTERFACE = 'interface';
-    case ALL       = 'all';
 
     /** @var list<AccessTypeEnum> */
     public const CONFIGURABLE_TYPE_LIST = [

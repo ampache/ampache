@@ -80,7 +80,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $next_url = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $next_url = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         if ($deleted) {
             $this->ui->showConfirmation(
                 T_('No Problem'),

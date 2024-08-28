@@ -31,7 +31,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampacheflickr implements AmpachePluginInterface
+class Ampacheflickr implements PluginGatherArtsInterface
 {
     public string $name        = 'Flickr';
     public string $categories  = 'slideshow';
@@ -110,12 +110,10 @@ class Ampacheflickr implements AmpachePluginInterface
     }
 
     /**
-     * @param $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * gather_arts
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         if (!$limit) {
             $limit = 5;
@@ -145,9 +143,8 @@ class Ampacheflickr implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

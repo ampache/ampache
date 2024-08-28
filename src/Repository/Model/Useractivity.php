@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 class Useractivity extends database_object
 {
@@ -90,15 +89,11 @@ class Useractivity extends database_object
 
     /**
      * Migrate an object associate stats to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate(string $object_type, int $old_object_id, int $new_object_id): void
     {
         $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 }

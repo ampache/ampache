@@ -84,9 +84,8 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         // format shared lists using the username
         $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))
@@ -225,7 +224,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = ($this instanceof Search)
                 ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id
                 : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
@@ -330,7 +329,7 @@ abstract class playlist_object extends database_object implements library_item
         $count    = 0;
         $images   = [];
         $title    = T_('Playlist Items');
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         shuffle($medias);
         foreach ($medias as $media) {
             if ($count >= $limit) {
@@ -340,6 +339,7 @@ abstract class playlist_object extends database_object implements library_item
             if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
                 if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
                     $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
+                    /** @var playable_item $libitem */
                     $libitem   = new $className($media['object_id']);
                     $parent    = $libitem->get_parent();
                     if ($parent !== null) {

@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 
 /* HINT: Catalog Name */
 Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->name) . ' (' . $catalog->f_info . ')'), 'box box_edit_catalog'); ?>
-<form method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data">
+<form method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/catalog.php" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name'); ?></td>
@@ -57,7 +57,6 @@ Ui::show_box_top(sprintf(T_('Settings for Catalog: %s'), scrub_out($catalog->nam
                     <span class="format-specifier">%n</span> = <?php echo T_('Season'); ?><br />
                     <span class="format-specifier">%e</span> = <?php echo T_('Episode'); ?><br />
                     <span class="format-specifier">%t</span> = <?php echo T_('Title'); ?><br />
-                    <strong><a id="video-help" href="https://github.com/ampache/ampache/wiki/TV-Shows-and-Movies" title="<?php echo T_('Refer to the wiki for TV Shows and Movies'); ?>" target="_blank"><?php echo T_('Refer to the wiki for TV Shows and Movies'); ?></a></strong><br />
                 <?php } ?>
             </td>
         </tr>

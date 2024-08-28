@@ -123,7 +123,7 @@ class AmazonSearch
      * @param string $user
      * @param string $pass
      */
-    public function setProxy($host = '', $port = '', $user = '', $pass = '')
+    public function setProxy($host = '', $port = '', $user = '', $pass = ''): void
     {
         if ($host) {
             $this->_proxy_host = $host;
@@ -142,7 +142,7 @@ class AmazonSearch
     /**
      * Create the XML parser to process the response.
      */
-    public function createParser()
+    public function createParser(): void
     {
         $this->_parser = xml_parser_create();
 
@@ -160,7 +160,7 @@ class AmazonSearch
      *
      * @param string $url The URL of the Amazon webservice.
      */
-    public function runSearch($url)
+    public function runSearch($url): void
     {
         // create the parser
         $this->createParser();
@@ -294,7 +294,7 @@ class AmazonSearch
      *
      * @param string $asin The 'Amazon standard Identification Number'
      */
-    public function runSearchAsin($asin)
+    public function runSearchAsin($asin): void
     {
         // get the proxy config
         $options = $this->getProxyConfig();
@@ -346,7 +346,7 @@ class AmazonSearch
      * @param $tag
      * @param $attributes
      */
-    public function startElement($parser, $tag, $attributes)
+    public function startElement($parser, $tag, $attributes): void
     {
         if ($tag == "ASIN") {
             $this->_sourceTag = $tag;
@@ -370,7 +370,7 @@ class AmazonSearch
      * @param $parser
      * @param $cdata
      */
-    public function cdata($parser, $cdata)
+    public function cdata($parser, $cdata): void
     {
         $tag    = $this->_currentTag;
         $subtag = $this->_subTag;
@@ -400,7 +400,7 @@ class AmazonSearch
      * @param $parser
      * @param $tag
      */
-    public function endElement($parser, $tag)
+    public function endElement($parser, $tag): void
     {
         // zero the tag
         $this->_currentTag = '';

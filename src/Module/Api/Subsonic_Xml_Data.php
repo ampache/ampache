@@ -283,10 +283,11 @@ class Subsonic_Xml_Data
             $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 
+        if ($artist->has_art()) {
+            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
+        }
+
         if ($extra) {
-            if ($artist->has_art()) {
-                $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-            }
             if ($albumsSet) {
                 $xartist->addAttribute('albumCount', (string)$artist->album_count);
             } else {
@@ -505,7 +506,7 @@ class Subsonic_Xml_Data
             $xsong->addAttribute('contentType', (string)$song->mime);
             // Always return the original filename, not the transcoded one
             $xsong->addAttribute('path', (string)$song->file);
-            if (AmpConfig::get('transcode') != 'never') {
+            if (AmpConfig::get('transcode', 'default') != 'never') {
                 $cache_path     = (string)AmpConfig::get('cache_path', '');
                 $cache_target   = (string)AmpConfig::get('cache_target', '');
                 $file_target    = Catalog::get_cache_path($song->getId(), $song->getCatalogId(), $cache_path, $cache_target);
@@ -685,7 +686,7 @@ class Subsonic_Xml_Data
 
         self::_setIfStarred($xvideo, 'video', $video->id);
         // Set transcoding information if required
-        $transcode_cfg = AmpConfig::get('transcode');
+        $transcode_cfg = AmpConfig::get('transcode', 'default');
         $valid_types   = Stream::get_stream_types_for_type($video->type, 'api');
         if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && !in_array('native', $valid_types))) {
             $transcode_settings = $video->get_transcode_settings(null, 'api');

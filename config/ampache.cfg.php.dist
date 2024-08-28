@@ -274,7 +274,6 @@ metadata_order = "getID3,MusicBrainz,TheAudioDb,filename"
 ; This determines the order in which metadata sources are used (and in the
 ; case of plugins, checked) for video files
 ; POSSIBLE VALUES (builtins): filename and getID3
-; POSSIBLE VALUES (plugins): Tvdb,Tmdb,Omdb, plus any others you've installed.
 ; DEFAULT: "filename,getID3"
 metadata_order_video = "filename,getID3"
 
@@ -371,9 +370,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ;#########################################################
 
 ; Downsample Remote
-; If this is set to true and access control is on any users who are not
-; coming from a defined 'network' ACL will be automatically downsampled
-; regardless of their preferences. Requires access_control to be enabled
+; When enabled, any users who are not coming from a defined 'network' ACL
+; will be automatically downsampled. ('transcoding' will be set to 'required')
+; regardless of their preferences. This requires access_control to be enabled.
+; NOTE:
+;  * Local network users will disable all transcoding when enabled
+;  * If transcode is set to 'never' this setting will be ignored
 ; DEFAULT: "false"
 ;downsample_remote = "true"
 
@@ -664,7 +666,7 @@ playlist_art = "true"
 ; method unless you want it to overwrite what's already in the
 ; database
 ; POSSIBLE VALUES (builtins): db tags folder spotify musicbrainz google
-; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Tmdb,Omdb,Flickr
+; POSSIBLE VALUES (plugins): Amazon,TheAudioDb,Flickr
 ; DEFAULT: db,tags,folder,spotify,musicbrainz
 art_order = "db,tags,folder,spotify,musicbrainz"
 

@@ -79,7 +79,7 @@ final class ShowDiskAction implements ApplicationActionInterface
         if ($albumDisk->isNew()) {
             $this->logger->warning(
                 'Requested an album_disk that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

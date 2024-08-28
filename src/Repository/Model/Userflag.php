@@ -33,10 +33,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
-use PDOStatement;
 
 /**
- * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
+ * This user flag/unflag songs, albums, artists, videos... as favorite.
  */
 class Userflag extends database_object
 {
@@ -135,8 +134,6 @@ class Userflag extends database_object
             'podcast_episode',
             'search',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video',
         ];
@@ -211,8 +208,9 @@ class Userflag extends database_object
      * If no user_id is passed in, we use the currently logged in user.
      * @param bool $flagged
      * @param int $user_id
+     * @param int|null $date
      */
-    public function set_flag($flagged, $user_id = null): bool
+    public function set_flag($flagged, $user_id = null, $date = null): bool
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
@@ -223,19 +221,20 @@ class Userflag extends database_object
             return false;
         }
 
-        debug_event(self::class, sprintf('Setting userflag for %s %d to %s', $this->type, $this->id, $flagged), 4);
+        $date = $date ?? time();
+
+        debug_event(self::class, sprintf('Setting userflag for %s %d to %s (%s)', $this->type, $this->id, $flagged, $date), 4);
 
         if (!$flagged) {
             $sql    = "DELETE FROM `user_flag` WHERE `object_id` = ? AND `object_type` = ? AND `user` = ?";
             $params = [$this->id, $this->type, $user_id];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [false]);
         } else {
-            $date   = time();
             $sql    = "REPLACE INTO `user_flag` (`object_id`, `object_type`, `user`, `date`) VALUES (?, ?, ?, ?)";
             $params = [$this->id, $this->type, $user_id, $date];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
 
-            $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, time());
+            $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
         }
 
         Dba::write($sql, $params);
@@ -419,13 +418,12 @@ class Userflag extends database_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**

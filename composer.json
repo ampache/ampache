@@ -64,7 +64,6 @@
         "krixon/xbmc-php-rpc": "dev-master",
         "kunalvarma05/dropbox-php-sdk": "^0.4",
         "mikealmond/musicbrainz": "dev-master",
-        "moinax/tvdb": "1.*",
         "nyholm/psr7": "^1.3",
         "nyholm/psr7-server": "^1.0",
         "php-curl-class/php-curl-class": "^9.18",

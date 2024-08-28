@@ -78,7 +78,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!AmpConfig::get('access_control')) {
             $this->logger->warning(
                 'Error Attempted to use Subsonic API with Access Control turned off',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action));
@@ -121,7 +121,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             ob_end_clean();
             $this->logger->warning(
                 'Missing Subsonic base parameters',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, $action), $callback);
 
@@ -139,7 +139,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if ($user === null || !$auth['success']) {
             $this->logger->warning(
                 'Invalid authentication attempt to Subsonic API for user [' . $userName . ']',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_BADAUTH, $action), $callback);
@@ -152,7 +152,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         if (!$this->networkChecker->check(AccessTypeEnum::API, $user->id, AccessLevelEnum::GUEST)) {
             $this->logger->warning(
                 'Unauthorized access attempt to Subsonic API [' . filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) . ']',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, $action), $callback);
@@ -168,7 +168,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
             ob_end_clean();
             $this->logger->warning(
                 'Requested client version is not supported',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             Subsonic_Api::_apiOutput2($format, Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_APIVERSION_CLIENT, $action), $callback);
 
@@ -213,13 +213,13 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 if ($calc) {
                     $this->logger->notice(
                         "Got id parameter $decvalue, which looks like an IP address. This is a known bug in some players, rewriting it to $calc",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $decvalue = $calc;
                 } else {
                     $this->logger->warning(
                         "Got id parameter $decvalue, which looks like an IP address. Recalculation of the correct id failed, though",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -235,8 +235,8 @@ final class SubsonicApiApplication implements ApiApplicationInterface
                 $input[$decname] = $decvalue;
             }
         }
-        //$this->logger->debug(print_r($input, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
+        //$this->logger->debug(print_r($input, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
+        //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
         if (in_array($action, $methods)) {

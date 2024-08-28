@@ -27,12 +27,13 @@ namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamBandwidth implements AmpachePluginInterface
+class AmpacheStreamBandwidth implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Bandwidth';
     public string $categories  = 'stream_control';
@@ -94,9 +95,8 @@ class AmpacheStreamBandwidth implements AmpachePluginInterface
 
     /**
      * Check stream control
-     * @param array $media_ids
      */
-    public function stream_control($media_ids): bool
+    public function stream_control(array $media_ids): bool
     {
         // No check if unlimited bandwidth (= -1)
         if ($this->bandwidth_max < 0) {
@@ -108,8 +108,9 @@ class AmpacheStreamBandwidth implements AmpachePluginInterface
             $next_total = 0;
             foreach ($media_ids as $media_id) {
                 $className = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-                $media     = new $className($media_id['object_id']);
-                $next_total += $media->size;
+                /** @var Media $media */
+                $media = new $className($media_id['object_id']);
+                $next_total += $media->size ?? 0;
             }
 
             $graph         = new Graph();
@@ -131,9 +132,8 @@ class AmpacheStreamBandwidth implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

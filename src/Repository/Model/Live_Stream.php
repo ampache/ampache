@@ -103,10 +103,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details);
         $this->get_f_link();
@@ -142,7 +140,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
@@ -271,9 +269,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if (!$data['name']) {
             AmpError::add('general', T_('Name is required'));
@@ -304,7 +301,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";

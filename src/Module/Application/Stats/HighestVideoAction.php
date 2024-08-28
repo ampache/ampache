@@ -87,7 +87,6 @@ final class HighestVideoAction implements ApplicationActionInterface
         ) {
             $objects = Rating::get_highest('video', $limit, 0, $user_id);
             $browse  = $this->modelFactory->createBrowse();
-            $browse->set_threshold($thresh_value);
             $browse->set_type('video');
             $browse->show_objects($objects);
             $browse->store();

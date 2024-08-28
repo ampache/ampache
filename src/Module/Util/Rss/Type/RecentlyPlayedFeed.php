@@ -64,7 +64,7 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
             $row_id = ($item['user'] > 0) ? (int) $item['user'] : -1;
 
             $has_allowed_recent = (bool) $item['user_recent'];
-            $is_allowed_recent  = ($userId !== null) ? $userId === $row_id : $has_allowed_recent;
+            $is_allowed_recent  = ($userId > 0 && $userId == $row_id) || $has_allowed_recent;
             if ($song->enabled && $is_allowed_recent) {
 
                 yield [

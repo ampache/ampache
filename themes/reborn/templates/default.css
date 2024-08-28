@@ -790,34 +790,6 @@ div#autoupdate > span {
     flex-direction: column;
 }
 
-.sb2_browse {
-    order: 10;
-}
-
-.sb2_dashboard {
-    order: 15;
-}
-
-.sb2_video {
-    order: 20;
-}
-
-.sb2_playlist {
-    order: 30;
-}
-
-.sb2_search {
-    order: 40;
-}
-
-.sb2_random {
-    order: 50;
-}
-
-.sb2_information {
-    order: 60;
-}
-
 #sidebar-tabs #catalog_select {
     width: 130px;
 }

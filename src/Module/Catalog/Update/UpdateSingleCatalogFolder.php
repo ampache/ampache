@@ -84,10 +84,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Podcast_Episode::class;
                     break;
-                case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
+                case 'video':
                     $type      = 'video';
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Video::class;

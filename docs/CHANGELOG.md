@@ -9,6 +9,9 @@ Information and changes for this major release are recorded in the wiki [here](h
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
+* Added rated songs to user Wrapped pages
+* Search
+  * Added `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
 * CLI
   * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
 * Config version 74
@@ -16,16 +19,19 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Remove OpenID config
   * Add `database_engine` to allow you to change from InnoDB if you want to
   * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
-* Database 700009
+  * Enable `user_create_streamtoken` by default
+* Database 700012
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
   * Add a `last_count` to playlist table to speed up access requests
-  * Delete user preference `home_recently_played_all`
   * Add `collaborate` to the playlist table to allow other users to add songs to the list
   * Create `user_playlist_map` table to allow browse access to playlists with collaborators
   * Convert system preference `upload_catalog` into a user preference
+  * Convert `clip`, `tvshow`, `movie` and `personal_video` catalogs to `video`
+  * Remove `clip`,`movie`, `personal_video`, `tvshow`, `tvshow_episode` and `tvshow_season` tables
+  * Add user preference `Custom URL - Use your avatar for header logo` this allows you to override custom header logos with your avatar
 
 ### Changed
 
@@ -41,6 +47,7 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Reborn theme CSS updates after switching to Material icons
 * Update code style to convert long form arrays (`array()`) to short form (`[]`)
 * Pull prettyphoto from GitHub (`lachlan-00/prettyphoto`) using npm instead of merging into the project
+* Only allow Video catalogs instead of the different subtypes
 
 ### Removed
 
@@ -48,10 +55,18 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Unused stream actions
 * Old composer files
 * Unused PNG icons
+* Non-music Video features have been removed. You can no longer add catalogs for these video types
+  * Movies
+  * TV Shows
+  * Personal Videos
+* Plugins
+  * Omdb (Movie Database lookup)
+  * Tvdb (TV Database lookup)
 
 ### Fixed
 
 * Enforce sidebar_light when enabled, ignoring cookie if set
+* Don't create missing tables when they haven't been created for your database version
 
 ## Ampache 6.6.0
 

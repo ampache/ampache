@@ -77,12 +77,12 @@ class Preference extends database_object
         'catalog_check_duplicate',
         'cron_cache',
         'custom_blankalbum',
-        'custom_blankmovie',
         'custom_datetime',
         'custom_favicon',
         'custom_login_background',
         'custom_login_logo',
         'custom_logo',
+        'custom_logo_user',
         'custom_text_footer',
         'custom_timezone',
         'daap_backend',
@@ -101,6 +101,7 @@ class Preference extends database_object
         'home_moment_videos',
         'home_now_playing',
         'home_recently_played',
+        'home_recently_played_all',
         'httpq_active',
         'jp_volume',
         'lang',
@@ -188,14 +189,24 @@ class Preference extends database_object
         'bitly_username',
         'catalogfav_gridview',
         'catalogfav_max_items',
+        'catalogfav_order',
         'discogs_api_key',
         'discogs_secret_api_key',
         'flickr_api_key',
         'ftl_max_items',
+        'ftl_order',
         'gmaps_api_key',
         'googleanalytics_tracking_id',
         'headphones_api_key',
         'headphones_api_url',
+        'homedash_max_items',
+        'homedash_newest',
+        'homedash_order',
+        'homedash_popular',
+        'homedash_random',
+        'homedash_recent',
+        'homedash_trending',
+        'index_dashboard_form',
         'lastfm_challenge',
         'lastfm_grant_link',
         'librefm_challenge',
@@ -209,6 +220,7 @@ class Preference extends database_object
         'personalfav_display',
         'personalfav_playlist',
         'personalfav_smartlist',
+        'personalfav_order',
         'piwik_site_id',
         'piwik_url',
         'ratingmatch_flag_rule',
@@ -222,7 +234,9 @@ class Preference extends database_object
         'ratingmatch_write_tags',
         'rssview_feed_url',
         'rssview_max_items',
+        'rssview_order',
         'shouthome_max_items',
+        'shouthome_order',
         'stream_control_bandwidth_days',
         'stream_control_bandwidth_max',
         'stream_control_hits_days',
@@ -231,7 +245,6 @@ class Preference extends database_object
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
-        'tvdb_api_key',
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
@@ -258,17 +271,15 @@ class Preference extends database_object
     public static function get_by_user($user_id, $pref_name)
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
-        $pref_id = self::id_from_name($pref_name);
-
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, [$pref_id, $user_id]);
+        $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?";
+        $db_results = Dba::read($sql, [$pref_name, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
-            $db_results = Dba::read($sql, [$pref_id]);
+            $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'";
+            $db_results = Dba::read($sql, [$pref_name]);
         }
 
         $data = Dba::fetch_assoc($db_results);
@@ -300,8 +311,10 @@ class Preference extends database_object
         }
 
         if (
-            $pref_id === null ||
-            $pref_id === 0 ||
+            (
+                $pref_id === null ||
+                $pref_id === 0
+            ) ||
             (
                 $name === null ||
                 $name === '' ||
@@ -315,7 +328,7 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        $params = [$value, $pref_id];
+        $params = [$value, $name];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -325,12 +338,12 @@ class Preference extends database_object
         }
 
         if ($applytodefault && $access100) {
-            $sql = "UPDATE `preference` SET `value` = ? WHERE `id` = ?";
+            $sql = "UPDATE `preference` SET `value` = ? WHERE `name` = ?";
             Dba::write($sql, $params);
         }
 
         if (self::has_access($name)) {
-            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? ' . $user_check;
+            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check;
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -364,21 +377,14 @@ class Preference extends database_object
     /**
      * update_all
      * This takes a preference id and a value and updates all users with the new info
-     * @param string|int $preference
-     * @param string $value
+     * @param string $preference
+     * @param string|int $value
      */
     public static function update_all($preference, $value): bool
     {
-        $preference_id = (is_string($preference))
-            ? (int)Preference::id_from_name($preference)
-            : (int)$preference;
 
-        if ($preference_id == 0) {
-            return false;
-        }
-
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
-        Dba::write($sql, [$value, $preference_id]);
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
+        Dba::write($sql, [$value, $preference]);
 
         parent::clear_cache();
         self::clear_from_session();
@@ -562,15 +568,15 @@ class Preference extends database_object
         }
 
         $pref_id    = Dba::insert_id();
-        $params     = [$pref_id, $default];
-        $sql        = "INSERT INTO `user_preference` VALUES (-1, ?, ?)";
+        $params     = [$pref_id, $name, $default];
+        $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
 
         if ($category !== "system") {
-            $sql        = "INSERT INTO `user_preference` SELECT `user`.`id`, ?, ? FROM `user`";
+            $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
@@ -732,7 +738,7 @@ class Preference extends database_object
             "(109, 'topmenu', '0', 'Top menu', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
             "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', " . AccessLevelEnum::USER->value . ", 'boolean', 'playlist', null), " .
             "(111, 'show_donate', '1', 'Show donate button in footer', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'system', 'upload'), " .
+            "(112, 'upload_catalog', '-1', 'Destination catalog', " . AccessLevelEnum::ADMIN->value . ", 'integer', 'options', 'upload'), " .
             "(113, 'allow_upload', '0', 'Allow user uploads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
             "(114, 'upload_subdir', '1', 'Create a subdirectory per user', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
             "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'upload'), " .
@@ -772,7 +778,6 @@ class Preference extends database_object
             "(149, 'browse_filter', '0', 'Show filter box on browse', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(150, 'sidebar_light', '0', 'Light sidebar by default', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'theme'), " .
             "(151, 'custom_blankalbum', '', 'Custom blank album default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'custom'), " .
             "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', " . AccessLevelEnum::MANAGER->value . ", 'string', 'interface', 'browse'), " .
             "(154, 'show_skipped_times', '0', 'Show # skipped', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'browse'), " .
             "(155, 'custom_datetime', '', 'Custom datetime', " . AccessLevelEnum::USER->value . ", 'string', 'interface', 'custom'), " .
@@ -806,7 +811,8 @@ class Preference extends database_object
             "(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', NULL), " .
             "(185, 'jp_volume', '0.8', 'Default webplayer volume', " . AccessLevelEnum::USER->value . ", 'special', 'streaming', 'player'), " .
             "(186, 'perpetual_api_session', '0', 'API sessions do not expire', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'system', 'backend'), " .
-            "(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
+            "(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'home')," .
+            "(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', " . AccessLevelEnum::USER->value . ", 'bool', 'interface', 'privacy'), " .
             "(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
             "(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home'), " .
@@ -867,14 +873,15 @@ class Preference extends database_object
             'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
             'catalogfav_gridview' => T_('Catalog favorites grid view display'),
             'catalogfav_max_items' => T_('Catalog favorites max items'),
+            'catalogfav_order' => T_('Plugin CSS order'),
             'cron_cache' => T_('Cache computed SQL data (eg. media hits stats) using a cron'),
             'custom_blankalbum' => T_('Custom blank album default image'),
-            'custom_blankmovie' => T_('Custom blank video default image'),
             'custom_datetime' => T_('Custom datetime'),
             'custom_favicon' => T_('Custom URL - Favicon'),
             'custom_login_background' => T_('Custom URL - Login page background'),
             'custom_login_logo' => T_('Custom URL - Login page logo'),
             'custom_logo' => T_('Custom URL - Logo'),
+            'custom_logo_user' => T_('Custom URL - Use your avatar for header logo'),
             'custom_text_footer' => T_('Custom text footer'),
             'custom_timezone' => T_('Custom timezone (Override PHP date.timezone)'),
             'daap_backend' => T_('Use DAAP backend'),
@@ -890,6 +897,7 @@ class Preference extends database_object
             'flickr_api_key' => T_('Flickr API key'),
             'force_http_play' => T_('Force HTTP playback regardless of port'),
             'ftl_max_items' => T_('Friends timeline max items'),
+            'ftl_order' => T_('Plugin CSS order'),
             'geolocation' => T_('Allow Geolocation'),
             'gmaps_api_key' => T_('Google Maps API key'),
             'googleanalytics_tracking_id' => T_('Google Analytics Tracking ID'),
@@ -901,7 +909,16 @@ class Preference extends database_object
             'home_moment_videos' => T_('Show Videos of the Moment'),
             'home_now_playing' => T_('Show Now Playing'),
             'home_recently_played' => T_('Show Recently Played'),
+            'home_recently_played_all' => T_('Show all media types in Recently Played'),
+            'homedash_max_items' => T_('Home Dashboard max items'),
+            'homedash_random' => T_('Random'),
+            'homedash_newest' => T_('Newest'),
+            'homedash_recent' => T_('Recent'),
+            'homedash_trending' => T_('Trending'),
+            'homedash_popular' => T_('Popular'),
+            'homedash_order' => T_('Plugin CSS order'),
             'httpq_active' => T_('HTTPQ Active Instance'),
+            'index_dashboard_form' => T_('Use Dashboard links for the index page header'),
             'jp_volume' => T_('Default webplayer volume'),
             'lang' => T_('Language'),
             'lastfm_challenge' => T_('Last.FM Submit Challenge'),
@@ -927,6 +944,7 @@ class Preference extends database_object
             'personalfav_display' => T_('Personal favorites on the homepage'),
             'personalfav_playlist' => T_('Favorite Playlists'),
             'personalfav_smartlist' => T_('Favorite Smartlists'),
+            'personalfav_order' => T_('Plugin CSS order'),
             'piwik_site_id' => T_('Piwik Site ID'),
             'piwik_url' => T_('Piwik URL'),
             'playlist_method' => T_('Playlist Method'),
@@ -946,9 +964,11 @@ class Preference extends database_object
             'ratingmatch_stars' => T_('Minimum star rating to match'),
             'rssview_feed_url' => T_('RSS Feed URL'),
             'rssview_max_items' => T_('RSS Feed max items'),
+            'rssview_order' => T_('Plugin CSS order'),
             'share_expire' => T_('Share links default expiration days (0=never)'),
             'share' => T_('Allow Share'),
             'shouthome_max_items' => T_('Shoutbox on homepage max items'),
+            'shouthome_order' => T_('Plugin CSS order'),
             'show_album_artist' => T_("Show 'Album Artists' link in the main sidebar"),
             'show_artist' => T_("Show 'Artists' link in the main sidebar"),
             'show_donate' => T_('Show donate button in footer'),
@@ -969,6 +989,12 @@ class Preference extends database_object
             'sidebar_hide_search' => T_('Hide the Search menu in the sidebar'),
             'sidebar_hide_switcher' => T_('Hide sidebar switcher arrows'),
             'sidebar_hide_video' => T_('Hide the Video menu in the sidebar'),
+            'sidebar_order_browse' => T_('Custom CSS Order - Browse'),
+            'sidebar_order_dashboard' => T_('Custom CSS Order - Dashboard'),
+            'sidebar_order_information' => T_('Custom CSS Order - Information'),
+            'sidebar_order_playlist' => T_('Custom CSS Order - Playlist'),
+            'sidebar_order_search' => T_('Custom CSS Order - Search'),
+            'sidebar_order_video' => T_('Custom CSS Order - Video'),
             'site_title' => T_('Website Title'),
             'slideshow_time' => T_('Artist slideshow inactivity time'),
             'song_page_title' => T_('Show current song in Web player page title'),
@@ -989,7 +1015,6 @@ class Preference extends database_object
             'topmenu' => T_('Top menu'),
             'transcode_bitrate' => T_('Transcode Bitrate'),
             'transcode' => T_('Allow Transcoding'),
-            'tvdb_api_key' => T_('TVDb API key'),
             'ui_fixed' => T_('Fix header position on compatible themes'),
             'unique_playlist' => T_('Only add unique items to playlists'),
             'upload_access_level' => T_('Upload Access Level'),
@@ -1129,6 +1154,7 @@ class Preference extends database_object
             'cookie_disclaimer',
             'cookie_secure',
             'cron_cache',
+            'custom_logo_user',
             'daap_backend',
             'debug',
             'deferred_ext_metadata',
@@ -1158,7 +1184,15 @@ class Preference extends database_object
             'home_moment_videos',
             'home_now_playing',
             'home_recently_played',
+            'home_recently_played_all',
+            'homedash_max_items',
+            'homedash_random',
+            'homedash_newest',
+            'homedash_recent',
+            'homedash_trending',
+            'homedash_popular',
             'httpq_active',
+            'index_dashboard_form',
             'label',
             'ldap_start_tls',
             'libitem_contextmenu',

@@ -46,8 +46,11 @@ final class Migration370040 extends AbstractMigration
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Generator {
-        yield 'user_activity' => "CREATE TABLE IF NOT EXISTS `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;";
+        if ($build > 370040) {
+            yield 'user_activity' => "CREATE TABLE IF NOT EXISTS `user_activity` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `user` INT(11) NOT NULL, `action` varchar(20) NOT NULL, `object_id` INT(11) UNSIGNED NOT NULL, `object_type` varchar(32) NOT NULL, `activity_date` INT(11) UNSIGNED NOT NULL) ENGINE=$engine;";
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheFacebook implements AmpachePluginInterface
+class AmpacheFacebook implements PluginExternalShareInterface
 {
     public string $name        = 'Facebook';
     public string $categories  = 'share';
@@ -73,10 +73,9 @@ class AmpacheFacebook implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @param string $text
+     * external_share
      */
-    public function external_share($url, $text): string
+    public function external_share(string $url, string $text): string
     {
         unset($text);
         $share = "https://www.facebook.com/sharer/sharer.php";
@@ -88,9 +87,8 @@ class AmpacheFacebook implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 

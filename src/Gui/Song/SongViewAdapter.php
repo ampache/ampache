@@ -396,10 +396,9 @@ final class SongViewAdapter implements SongViewAdapterInterface
         }
         $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
-            $web_path     = $this->configContainer->getWebPath();
             $label_string = '';
             foreach (array_map('trim', explode(';', (string)$this->song->label)) as $label_name) {
-                $label_string .= "<a href=\"" . $web_path . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+                $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
             }
             $songprops[T_('Label')] = rtrim($label_string, ', ');
         } else {

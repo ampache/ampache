@@ -280,7 +280,7 @@ class Api
                 continue;
             }
             if (!array_key_exists($parameter, $input)) {
-                debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
+                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
@@ -326,12 +326,16 @@ class Api
     public static function server_details($token = ''): array
     {
         // We need to also get the 'last update' of the catalog information in an RFC 2822 Format
-        $sql        = 'SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`';
+        $sql        = 'SELECT `catalog`.`update`, `catalog`.`add`, `catalog`.`clean`, `maxid`.`max_song`, `maxid`.`max_album`, `maxid`.`max_artist`, `maxid`.`max_video`, `maxid`.`max_podcast`, `maxid`.`max_podcast_episode` FROM (SELECT MAX(`last_update`) AS `update`, MAX(`last_add`) AS `add`, MAX(`last_clean`) AS `clean` FROM `catalog`) AS `catalog` LEFT JOIN (SELECT (SELECT MAX(`id`) FROM `song`) AS `max_song`, (SELECT MAX(`id`) FROM `album`) AS `max_album`, (SELECT MAX(`id`) FROM `artist`) AS `max_artist`, (SELECT MAX(`id`) FROM `video`) AS `max_video`, (SELECT MAX(`id`) FROM `podcast`) AS `max_podcast`, (SELECT MAX(`id`) FROM `podcast_episode`) AS `max_podcast_episode`) AS `maxid` ON 1=1;';
         $db_results = Dba::read($sql);
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client    = static::getUserRepository()->findByApiKey(trim($token));
+        $client = static::getUserRepository()->findByApiKey(trim($token));
+        if (!$client instanceof User || $client->isNew()) {
+            return [];
+        }
+
         $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? $counts['playlist']
@@ -350,6 +354,12 @@ class Api
             'update' => date("c", (int)$details['update']),
             'add' => date("c", (int)$details['add']),
             'clean' => date("c", (int)$details['clean']),
+            'max_song' => (int)$details['max_song'],
+            'max_album' => (int)$details['max_album'],
+            'max_artist' => (int)$details['max_artist'],
+            'max_video' => (int)$details['max_video'],
+            'max_podcast' => (int)$details['max_podcast'],
+            'max_podcast_episode' => (int)$details['max_podcast_episode'],
             'songs' => $counts['song'],
             'albums' => $counts['album'],
             'artists' => $counts['artist'],
@@ -366,7 +376,7 @@ class Api
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
             'labels' => $counts['label'],
-            'username' => $client?->getUsername(),
+            'username' => $client->getUsername(),
         ];
 
         return array_merge($autharray, $outarray);

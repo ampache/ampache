@@ -37,7 +37,6 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
@@ -649,10 +648,9 @@ class Stream
 
         if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             // We need to check only for users which have allowed view of personal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id && Core::get_global('user') instanceof User) {
+            if (Core::get_global('user') instanceof User) {
                 $current_user = Core::get_global('user')->getId();
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
@@ -724,10 +722,10 @@ class Stream
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
                 break;
             case 'send_clear':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
                 break;
             case 'clear':
             case 'default':
@@ -764,7 +762,7 @@ class Stream
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
-            : AmpConfig::get('web_path');
+            : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }

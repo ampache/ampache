@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 
-class AmpacheStreamHits implements AmpachePluginInterface
+class AmpacheStreamHits implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Hits';
     public string $categories  = 'stream_control';
@@ -93,9 +93,8 @@ class AmpacheStreamHits implements AmpachePluginInterface
 
     /**
      * Check stream control
-     * @param array $media_ids
      */
-    public function stream_control($media_ids): bool
+    public function stream_control(array $media_ids): bool
     {
         // No check if unlimited hits (= -1)
         if ($this->hits_max < 0) {
@@ -122,9 +121,8 @@ class AmpacheStreamHits implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

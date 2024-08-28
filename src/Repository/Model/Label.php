@@ -30,7 +30,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
-use PDOStatement;
 
 /**
  * This is the class responsible for handling the Label object
@@ -122,9 +121,9 @@ class Label extends database_object implements library_item
     }
 
     /**
-     * @param bool $details
+     * format
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details);
         $this->get_f_link();
@@ -177,7 +176,7 @@ class Label extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/labels.php?action=show&label=' . $this->id;
         }
 
@@ -270,13 +269,12 @@ class Label extends database_object implements library_item
 
     /**
      * update
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         // duplicate name check
         if (static::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
-            return false;
+            return null;
         }
 
         $name     = $data['name'] ?? $this->name;
@@ -393,7 +391,7 @@ class Label extends database_object implements library_item
             return '';
         }
 
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         $results  = '';
         // Iterate through the labels, format them according to type and element id
         foreach ($labels as $label_id => $value) {
@@ -417,18 +415,15 @@ class Label extends database_object implements library_item
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `label_asso` SET `artist` = ? WHERE `artist` = ?";
             $params = [$new_object_id, $old_object_id];
 
-            return Dba::write($sql, $params);
+            Dba::write($sql, $params);
         }
-
-        return false;
     }
 
     public function getMediaType(): LibraryItemEnum

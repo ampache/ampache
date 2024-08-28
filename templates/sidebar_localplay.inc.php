@@ -42,7 +42,7 @@ $access_check = Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST)
 if ($server_allow && $controller && $access_check) { ?>
 <?php
     // Little bit of work to be done here
-    $localplay        = new LocalPlay(AmpConfig::get('localplay_controller'));
+    $localplay        = new LocalPlay(AmpConfig::get('localplay_controller', ''));
     $current_instance = $localplay->current_instance();
     $class            = $current_instance ? '' : ' class="active_instance"'; ?>
 <?php if (Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::USER)) { ?>

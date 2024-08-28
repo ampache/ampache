@@ -93,7 +93,7 @@ final class HtaccessCommand extends Command
         unlink($htaccess_rest_file);
 
         // create the files
-        if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->get('web_path'), false)) {
+        if (!$this->installationHelper->install_rewrite_rules($htaccess_play_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_play_file,
                 true
@@ -105,7 +105,7 @@ final class HtaccessCommand extends Command
 
             return;
         }
-        if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->get('web_path'), false)) {
+        if (!$this->installationHelper->install_rewrite_rules($htaccess_rest_file, $this->configContainer->getWebPath(), false)) {
             $interactor->error(
                 T_('Failed to write config file') . ": " . $htaccess_rest_file,
                 true

@@ -91,7 +91,7 @@ class Waveform
                 $catalog = Catalog::create_from_id($media->catalog);
                 if ($catalog !== null && $catalog->get_type() == 'local') {
                     $transcode_to  = 'wav';
-                    $transcode_cfg = AmpConfig::get('transcode');
+                    $transcode_cfg = AmpConfig::get('transcode', 'default');
                     $valid_types   = $media->get_stream_types();
 
                     if ($media->type != $transcode_to) {
@@ -271,7 +271,7 @@ class Waveform
         global $dic;
 
         if (!$dic->get(EnvironmentInterface::class)->check_php_gd()) {
-            debug_event(__CLASS__, 'GD extension must be loaded', 1);
+            debug_event(self::class, 'GD extension must be loaded', 1);
 
             return null;
         }

@@ -25,6 +25,7 @@ namespace Ampache\Plugin;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -32,13 +33,13 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-class AmpachePersonalFavorites implements AmpachePluginInterface
+class AmpachePersonalFavorites implements PluginDisplayHomeInterface
 {
     public string $name        = 'Personal Favorites';
     public string $categories  = 'home';
     public string $description = 'Personal favorites on homepage';
     public string $url         = '';
-    public string $version     = '000002';
+    public string $version     = '000003';
     public string $min_ampache = '370021';
     public string $max_ampache = '999999';
 
@@ -47,6 +48,7 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
     private $playlist;
     private $smartlist;
     private $user;
+    private int $order = 0;
 
     /**
      * Constructor
@@ -65,10 +67,16 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
         if (!Preference::insert('personalfav_display', T_('Personal favorites on the homepage'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('personalfav_playlist', T_('Favorite Playlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('personalfav_smartlist', T_('Favorite Smartlists'), '', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        if (!Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
@@ -84,7 +92,8 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
         return (
             Preference::delete('personalfav_display') &&
             Preference::delete('personalfav_playlist') &&
-            Preference::delete('personalfav_smartlist')
+            Preference::delete('personalfav_smartlist') &&
+            Preference::delete('personalfav_order')
         );
     }
 
@@ -94,6 +103,15 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
      */
     public function upgrade(): bool
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
         return true;
     }
 
@@ -119,7 +137,10 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
                 }
             }
             if (!empty($list_array)) {
-                echo '<div class="home_plugin">';
+                $divString = ($this->order > 0)
+                    ? '<div class="personalfav" style="order: ' . $this->order . '">'
+                    : '<div class="personalfav">';
+                echo $divString;
                 UI::show_box_top(T_('Favorite Lists'));
                 echo '<table class="tabledata striped-rows';
                 echo " disablegv";
@@ -171,9 +192,8 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -182,6 +202,7 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
         $this->display   = (array_key_exists('personalfav_display', $data) && $data['personalfav_display'] == '1');
         $this->playlist  = $data['personalfav_playlist'] ?? '';
         $this->smartlist = $data['personalfav_smartlist'] ?? '';
+        $this->order     = (int)($data['personalfav_order'] ?? 0);
 
         return true;
     }

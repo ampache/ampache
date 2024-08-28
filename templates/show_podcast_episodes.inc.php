@@ -62,7 +62,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
             <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time', T_('Time'), 'podcast_episode_sort_time'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'podcast_episode_sort_total_count' . $browse->id); ?></th>
             <?php } ?>
             <th class="cel_pubdate optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=pubdate', T_('Publication Date'), 'podcast_episode_sort_pubdate'); ?></th>
             <th class="cel_state optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=state', T_('Status'), 'podcast_episode_sort_state'); ?></th>

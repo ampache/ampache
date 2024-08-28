@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheTwitter implements AmpachePluginInterface
+class AmpacheTwitter implements PluginExternalShareInterface
 {
     public string $name        = 'Twitter';
     public string $categories  = 'share';
@@ -74,10 +74,8 @@ class AmpacheTwitter implements AmpachePluginInterface
 
     /**
      * external_share
-     * @param string $url
-     * @param string $text
      */
-    public function external_share($url, $text): string
+    public function external_share(string $url, string $text): string
     {
         $share = "https://twitter.com/share";
         $share .= "?url=" . rawurlencode($url);
@@ -91,9 +89,8 @@ class AmpacheTwitter implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 

@@ -73,7 +73,7 @@ final readonly class WantedManager implements WantedManagerInterface
         User $user,
         string $mbid,
         ?int $artist,
-        string $artist_mbid,
+        ?string $artist_mbid,
         string $name,
         int $year
     ): void {
@@ -82,10 +82,7 @@ final readonly class WantedManager implements WantedManagerInterface
             [$user->getId(), $artist, $artist_mbid, $mbid, $name, $year, time(), '0']
         );
 
-        if (
-            $user->has_access(AccessLevelEnum::MANAGER) ||
-            AmpConfig::get('wanted_auto_accept', false)
-        ) {
+        if (AmpConfig::get('wanted_auto_accept', false)) {
             $wanted_id = (int)Dba::insert_id();
             $wanted    = new Wanted($wanted_id);
 

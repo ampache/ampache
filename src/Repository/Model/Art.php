@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Plugin\AmpacheDiscogs;
+use Ampache\Plugin\AmpacheTheaudiodb;
 use WpOrg\Requests\Autoload;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\ArtCleanupInterface;
@@ -40,14 +42,13 @@ use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
-use PDOStatement;
 use WpOrg\Requests;
 use RuntimeException;
 
 /**
  * This class handles the images / artwork in ampache
  * This was initially in the album class, but was pulled out
- * to be more general and potentially apply to albums, artists, movies etc
+ * to be more general and potentially apply to albums, artists etc
  */
 class Art extends database_object
 {
@@ -289,7 +290,7 @@ class Art extends database_object
 
         // return a default image if fallback is requested
         if (!$this->raw && $fallback) {
-            $this->raw      = $this->read_from_images();
+            $this->raw      = $this->read_from_images() ?? '';
             $this->raw_mime = 'image/png';
             $default_art    = true;
         }
@@ -388,15 +389,16 @@ class Art extends database_object
 
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->type);
+            /** @var playable_item $object */
             $object    = new $className($this->uid);
             $songs     = [];
-            debug_event(self::class, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
+            debug_event(self::class, 'Inserting ' . $this->type . ' image' . $object->get_fullname() . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
-                $songs = $this->getSongRepository()->getByAlbum($object->id);
+                $songs = $this->getSongRepository()->getByAlbum($object->getId());
             } elseif ($this->type === 'artist') {
                 /** Use special treatment for artists */
-                $songs = $this->getSongRepository()->getByArtist($object->id);
+                $songs = $this->getSongRepository()->getByArtist($object->getId());
             }
 
             global $dic;
@@ -404,7 +406,7 @@ class Art extends database_object
 
             foreach ($songs as $song_id) {
                 $song        = new Song($song_id);
-                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->full_name;
+                $description = ($this->type == 'artist') ? $song->get_artist_fullname() : $object->get_fullname();
                 $vainfo      = $utilityFactory->createVaInfo(
                     $song->file
                 );
@@ -570,15 +572,14 @@ class Art extends database_object
      * @param int $uid
      * @param string $kind
      * @param bool $autocreate
-     * @return string|false
      */
-    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false)
+    public static function get_dir_on_disk($type, $uid, $kind = '', $autocreate = false): ?string
     {
         $path = AmpConfig::get('local_metadata_dir');
         if (!$path) {
             debug_event(self::class, 'local_metadata_dir setting is required to store art on disk.', 1);
 
-            return false;
+            return null;
         }
 
         // Correctly detect the slash we need to use here
@@ -622,7 +623,7 @@ class Art extends database_object
         $mime
     ): bool {
         $path = self::get_dir_on_disk($type, $uid, $kind, true);
-        if ($path === false) {
+        if (!$path) {
             return false;
         }
 
@@ -682,7 +683,7 @@ class Art extends database_object
     private static function read_from_dir($sizetext, $type, $uid, $kind, $mime): ?string
     {
         $path = self::get_dir_on_disk($type, $uid, $kind);
-        if ($path === false) {
+        if (!$path) {
             return null;
         }
 
@@ -716,7 +717,7 @@ class Art extends database_object
     {
         if ($type && $uid) {
             $path = self::get_dir_on_disk($type, $uid, $kind);
-            if ($path !== false) {
+            if ($path !== null) {
                 self::delete_rec_dir(rtrim($path, '/'));
             }
         }
@@ -731,7 +732,8 @@ class Art extends database_object
         debug_event(self::class, 'Deleting ' . $path . ' directory...', 5);
 
         if (Core::is_readable($path)) {
-            foreach (scandir($path) as $file) {
+            $scandir = scandir($path) ?: [];
+            foreach ($scandir as $file) {
                 if ('.' === $file || '..' === $file) {
                     continue;
                 } elseif (is_dir($path . '/' . $file)) {
@@ -928,7 +930,7 @@ class Art extends database_object
             $crop_y     = 0;
         }
 
-        if (!imagecopyresampled($thumbnail, $source, 0, 0, $crop_x, $crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
+        if (!imagecopyresampled($thumbnail, $source, 0, 0, (int)$crop_x, (int)$crop_y, $new_width, $new_height, $source_size['width'], $source_size['height'])) {
             debug_event(self::class, 'Unable to create resized image', 1);
             imagedestroy($source);
             imagedestroy($thumbnail);
@@ -1087,7 +1089,9 @@ class Art extends database_object
         }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
+            $sid = $sid
+                ? scrub_out($sid)
+                : scrub_out(session_id() ?: 'none');
             if ($sid == null) {
                 $sid = Session::create(['type' => 'api']);
             }
@@ -1132,7 +1136,7 @@ class Art extends database_object
                 $extension = 'jpg';
             }
 
-            $url = AmpConfig::get('web_path') . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . scrub_out($uid) . '/thumb';
+            $url = AmpConfig::get_web_path() . '/play/art/' . $sid . '/' . scrub_out($type) . '/' . $uid . '/thumb';
             if ($thumb !== null) {
                 $url .= $thumb;
             }
@@ -1142,7 +1146,7 @@ class Art extends database_object
             $actionStr = ($type === 'user')
                     ? 'action=show_user_avatar&'
                     : '';
-            $url = AmpConfig::get('web_path') . '/image.php?' . $actionStr . 'object_id=' . scrub_out($uid) . '&object_type=' . scrub_out($type);
+            $url = AmpConfig::get_web_path() . '/image.php?' . $actionStr . 'object_id=' . $uid . '&object_type=' . scrub_out($type);
             if ($thumb !== null) {
                 $url .= '&thumb=' . $thumb;
             }
@@ -1158,22 +1162,21 @@ class Art extends database_object
 
     /**
      * Duplicate an object associate images to a new object
-     * @param string $object_type
-     * @param int $old_object_id
-     * @param int $new_object_id
-     * @param string $new_object_type
-     * @return PDOStatement|bool
      */
-    public static function duplicate($object_type, $old_object_id, $new_object_id, $new_object_type = null)
+    public static function duplicate(string $object_type, int $old_object_id, int $new_object_id, ?string $new_object_type = null): void
     {
-        $write_type = (self::is_valid_type($new_object_type))
+        $write_type = ($new_object_type !== null && self::is_valid_type($new_object_type))
             ? $new_object_type
             : $object_type;
-        if (Art::has_db($new_object_id, $write_type) || $old_object_id == $new_object_id) {
-            return false;
+
+        if (
+            !$new_object_id ||
+            Art::has_db($new_object_id, $write_type) ||
+            $old_object_id == $new_object_id
+        ) {
+            return;
         }
 
-        debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
             $db_results = Dba::read($sql, [$object_type, $old_object_id]);
@@ -1187,12 +1190,14 @@ class Art extends database_object
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id]);
+        if (Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id])) {
+            debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
+        }
     }
 
     /**
      * Gather metadata from plugin.
-     * @param $plugin
+     * @param AmpacheDiscogs|AmpacheTheaudiodb $plugin
      * @param string $type
      * @param array $options
      * @return list<array{
@@ -1206,14 +1211,6 @@ class Art extends database_object
         $gtypes     = [];
         $media_info = [];
         switch ($type) {
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-                $gtypes[]                     = 'tvshow';
-                $media_info['tvshow']         = $options['tvshow'];
-                $media_info['tvshow_season']  = $options['tvshow_season'];
-                $media_info['tvshow_episode'] = $options['tvshow_episode'];
-                break;
             case 'song':
                 $media_info['mb_trackid'] = $options['mb_trackid'];
                 $media_info['title']      = $options['title'];
@@ -1235,10 +1232,6 @@ class Art extends database_object
                 $gtypes[]                  = 'music';
                 $gtypes[]                  = 'artist';
                 break;
-            case 'movie':
-                $gtypes[]            = 'movie';
-                $media_info['title'] = $options['keyword'];
-                break;
         }
 
         $meta   = $plugin->get_metadata($gtypes, $media_info);
@@ -1246,18 +1239,6 @@ class Art extends database_object
 
         if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
-            $ures     = pathinfo((string) $url);
-            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
-        }
-
-        if (array_key_exists('tvshow_season_art', $meta)) {
-            $url      = $meta['tvshow_season_art'];
-            $ures     = pathinfo((string) $url);
-            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
-        }
-
-        if (array_key_exists('tvshow_art', $meta)) {
-            $url      = $meta['tvshow_art'];
             $ures     = pathinfo((string) $url);
             $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
         }
@@ -1395,10 +1376,11 @@ class Art extends database_object
             return false;
         }
 
+        $web_path    = AmpConfig::get_web_path();
         $size        = self::get_thumb_size($thumb);
         $prettyPhoto = ($link === null);
         if ($link === null) {
-            $link = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+            $link = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
             if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
                 $link .= "&auth=" . session_id();
             }
@@ -1415,7 +1397,7 @@ class Art extends database_object
         }
 
         echo ">";
-        $imgurl = AmpConfig::get('web_path') . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
+        $imgurl = $web_path . "/image.php?object_id=" . $object_id . "&object_type=" . $object_type . "&thumb=" . $thumb;
         if ($kind != 'default') {
             $imgurl .= '&kind=' . $kind;
         }
@@ -1455,10 +1437,10 @@ class Art extends database_object
                 $user instanceof User &&
                 ($user->has_access(AccessLevelEnum::CONTENT_MANAGER) || $user->has_access(AccessLevelEnum::USER) && $user->id == $libitem->get_user_owner())
             ) {
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=show_art_dlg&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\">";
                 echo Ui::get_material_symbol('edit', T_('Edit/Find Art'));
                 echo "</a>";
-                echo "<a href=\"javascript:NavigateTo('" . AmpConfig::get('web_path') . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
+                echo "<a href=\"javascript:NavigateTo('" . $web_path . "/arts.php?action=clear_art&object_type=" . $object_type . "&object_id=" . $object_id . "&burl=' + getCurrentPage());\" onclick=\"return confirm('" . T_('Do you really want to reset art?') . "');\">";
                 echo Ui::get_material_symbol('close', T_('Reset Art'));
                 echo "</a>";
             }

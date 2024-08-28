@@ -38,7 +38,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Repository\UserActivityRepositoryInterface;
-use PDOStatement;
 
 /**
  * Stats Class
@@ -102,12 +101,11 @@ class Stats
      * @param int $old_object_id
      * @param int $new_object_id
      * @param int $child_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id, $child_id): void
     {
-        if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'tvshow'])) {
-            return false;
+        if (!in_array($object_type, ['song', 'album', 'artist', 'video', 'live_stream', 'playlist', 'podcast', 'podcast_episode'])) {
+            return;
         }
         $sql    = "UPDATE IGNORE `object_count` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
         $params = [$new_object_id, $object_type, $old_object_id];
@@ -116,7 +114,7 @@ class Stats
             $params[] = $child_id;
         }
 
-        return Dba::write($sql, $params);
+        Dba::write($sql, $params);
     }
 
     /**
@@ -125,7 +123,7 @@ class Stats
     public static function duplicate_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "duplicate_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -141,7 +139,7 @@ class Stats
     public static function delete_map(string $source_type, int $source_id, string $dest_type, int $dest_id): void
     {
         if ($source_id > 0 && $dest_id > 0) {
-            debug_event(__CLASS__, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
+            debug_event(self::class, "delete_map " . $source_type . " {" . $source_id . "} => " . $dest_type . " {" . $dest_id . "}", 5);
             $sql        = "SELECT `object_count`.`date`, `object_count`.`user`, `object_count`.`agent`, `object_count`.`geo_latitude`, `object_count`.`geo_longitude`, `object_count`.`geo_name`, `object_count`.`count_type` FROM `object_count` WHERE `object_count`.`count_type` = 'stream' AND `object_count`.`object_type` = ? AND `object_count`.`object_id` = ?;";
             $db_results = Dba::read($sql, [$source_type, $source_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -413,9 +411,8 @@ class Stats
      * get_cached_place_name
      * @param float $latitude
      * @param float $longitude
-     * @return mixed|null
      */
-    public static function get_cached_place_name($latitude, $longitude)
+    public static function get_cached_place_name($latitude, $longitude): ?string
     {
         $name       = null;
         $sql        = "SELECT `geo_name` FROM `object_count` WHERE `geo_latitude` = ? AND `geo_longitude` = ? AND `geo_name` IS NOT NULL ORDER BY `id` DESC LIMIT 1";
@@ -523,9 +520,8 @@ class Stats
      * @param int $user_id
      * @param int $object_id
      * @param string $object_type
-     * @return PDOStatement|bool
      */
-    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type)
+    public static function skip_last_play($date, $agent, $user_id, $object_id, $object_type): void
     {
         // change from a stream to a skip
         $sql = "UPDATE `object_count` SET `count_type` = 'skip' WHERE `date` = ? AND `agent` = ? AND `user` = ? AND `object_count`.`object_type` = ? ORDER BY `object_count`.`date` DESC";
@@ -555,7 +551,7 @@ class Stats
         // To remove associated album and artist entries
         $sql = "DELETE FROM `object_count` WHERE `object_type` IN ('album', 'artist', 'podcast') AND `date` = ? AND `agent` = ? AND `user` = ? ";
 
-        return Dba::write($sql, [$date, $agent, $user_id]);
+        Dba::write($sql, [$date, $agent, $user_id]);
     }
 
     /**
@@ -924,19 +920,16 @@ class Stats
      */
     public static function get_recently_played(?int $user_id, $count_type = 'stream', $object_type = null, $user_only = false): array
     {
-        $personal_info_recent = 91;
-        $personal_info_time   = 92;
-        $personal_info_agent  = 93;
-        $limit                = AmpConfig::get('popular_threshold', 10);
-        $access100            = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-        $object_string        = (empty($object_type))
+        $limit         = AmpConfig::get('popular_threshold', 10);
+        $access100     = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+        $object_string = (empty($object_type) || !in_array($object_type, ['album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video']))
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
             : "'$object_type'";
 
         $results = [];
-        $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`preference`='$personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`preference`='$personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`preference`='$personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
+        $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='allow_personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`name`='personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`name`='personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
         // check for valid catalogs
-        $sql .= " AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        $sql .= "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         if ((int)$user_id > 0 || !$access100) {
             $sql .= ($user_only)
@@ -972,10 +965,6 @@ class Stats
             case 'tag':
             case 'song':
             case 'video':
-            case 'tvshow':
-            case 'tvshow_season':
-            case 'tvshow_episode':
-            case 'movie':
             case 'playlist':
             case 'podcast':
             case 'podcast_episode':

@@ -92,11 +92,11 @@ final class CreateAction implements ApplicationActionInterface
                     $data['feed'] ?? '',
                     $catalog
                 );
-            } catch (InvalidFeedUrlException $e) {
+            } catch (InvalidFeedUrlException) {
                 AmpError::add('feed', T_('Feed URL is invalid'));
-            } catch (InvalidCatalogException $e) {
+            } catch (InvalidCatalogException) {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
-            } catch (FeedNotLoadableException $e) {
+            } catch (FeedNotLoadableException) {
                 AmpError::add('feed', T_('Can not read the feed'));
             }
         }

@@ -68,11 +68,8 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::ART => new Art($objectId),
             LibraryItemEnum::ARTIST => new Artist($objectId),
             LibraryItemEnum::BROADCAST => new Broadcast($objectId),
-            LibraryItemEnum::CLIP => new Clip($objectId),
             LibraryItemEnum::LABEL => $this->dic->get(LabelRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::LIVE_STREAM => $this->dic->get(LiveStreamRepositoryInterface::class)->findById($objectId),
-            LibraryItemEnum::MOVIE => new Movie($objectId),
-            LibraryItemEnum::PERSONAL_VIDEO => new Personal_Video($objectId),
             LibraryItemEnum::PLAYLIST => new Playlist($objectId),
             LibraryItemEnum::PODCAST => $this->dic->get(PodcastRepositoryInterface::class)->findById($objectId),
             LibraryItemEnum::PODCAST_EPISODE => $this->dic->get(PodcastEpisodeRepositoryInterface::class)->findById($objectId),
@@ -80,9 +77,6 @@ final readonly class LibraryItemLoader implements LibraryItemLoaderInterface
             LibraryItemEnum::SONG => new Song($objectId),
             LibraryItemEnum::SONG_PREVIEW => new Song_Preview($objectId),
             LibraryItemEnum::TAG_HIDDEN, LibraryItemEnum::TAG => new Tag($objectId),
-            LibraryItemEnum::TV_SHOW => new TvShow($objectId),
-            LibraryItemEnum::TV_SHOW_EPISODE => new TVShow_Episode($objectId),
-            LibraryItemEnum::TV_SHOW_SEASON => new TVShow_Season($objectId),
             LibraryItemEnum::VIDEO => new Video($objectId),
         };
 

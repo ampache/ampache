@@ -24,20 +24,14 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\Clip;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
-use Ampache\Repository\Model\TVShow_Episode;
-use Ampache\Repository\Model\TVShow_Season;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
@@ -53,36 +47,27 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr class="th-top">
             <th class="cel_play essential"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
+            <th class="cel_title essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'video_sort_title'); ?></th>
             <th class="cel_add essential"></th>
-<?php if (isset($video_type) && $video_type != 'video') {
-    require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
-} ?>
-            <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
-            <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
-            <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
-            <th class="cel_length optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'sort_video_length'); ?></th>
+            <th class="cel_release_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'video_sort_release_date'); ?></th>
+            <th class="cel_codec optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'video_sort_codec'); ?></th>
+            <th class="cel_resolution optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'video_sort_resolution'); ?></th>
+            <th class="cel_length optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'video_sort_length'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', T_('Played'), 'video_sort_total_count' . $browse->id); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php } ?>
             <?php if ($show_ratings) { ?>
-            <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
+            <th class="cel_ratings optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=rating', T_('Rating'), 'video_sort_rating'); ?></th>
             <?php } ?>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($object_ids as $video_id) {
-            if (isset($video_type)) {
-                $className = ObjectTypeToClassNameMapper::map($video_type);
-                /** @var Movie|Clip|Personal_Video|TVShow_Episode|TVShow_Season|Video $libitem */
-                $libitem   = new $className($video_id);
-            } else {
-                $libitem = new Video($video_id);
-            }
+            $libitem = new Video($video_id);
             if ($libitem->isNew()) {
                 continue;
             }
@@ -102,15 +87,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <tr class="th-bottom">
             <th class="cel_play"></th>
             <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'sort_video_title'); ?></th>
+            <th class="cel_title"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=title', T_('Title'), 'video_sort_title'); ?></th>
             <th class="cel_add"></th>
-<?php if (isset($video_type) && $video_type != 'video') {
-    require Ui::find_template('show_partial_' . $video_type . 's.inc.php');
-} ?>
-            <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'sort_video_release_date'); ?></th>
-            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'sort_video_codec'); ?></th>
-            <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'sort_video_rez'); ?></th>
-            <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'sort_video_length'); ?></th>
+            <th class="cel_release_date"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=release_date', T_('Release Date'), 'video_sort_release_date'); ?></th>
+            <th class="cel_codec"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=codec', T_('Codec'), 'video_sort_codec'); ?></th>
+            <th class="cel_resolution"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=resolution', T_('Resolution'), 'video_sort_resolution'); ?></th>
+            <th class="cel_length"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=video&sort=length', T_('Time'), 'video_sort_length'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) { ?>
             <th class="<?php echo $cel_counter; ?> optional"><?php echo T_('Played'); ?></th>
             <?php } ?>

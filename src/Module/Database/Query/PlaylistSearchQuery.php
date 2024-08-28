@@ -32,6 +32,7 @@ use Ampache\Repository\Model\Query;
 final class PlaylistSearchQuery implements QueryInterface
 {
     public const FILTERS = [
+        'id',
         'alpha_match',
         'equal',
         'like',
@@ -116,6 +117,15 @@ final class PlaylistSearchQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `playlist`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= ((int)str_replace('smart_', '', $uid) > 0)
+                        ? Dba::escape($uid) . ','
+                        : (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'equal':
             case 'exact_match':
                 $filter_sql = " `playlist`.`name` = '" . Dba::escape($value) . "' AND ";

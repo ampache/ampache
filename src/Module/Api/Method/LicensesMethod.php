@@ -64,7 +64,7 @@ final class LicensesMethod
         $browse = Api::getBrowse($user);
         $browse->set_type('license');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');

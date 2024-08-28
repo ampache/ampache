@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheBitly implements AmpachePluginInterface
+class AmpacheBitly implements PluginShortenerInterface
 {
     public string $name        = 'Bit.ly';
     public string $categories  = 'shortener';
@@ -101,10 +101,9 @@ class AmpacheBitly implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @return string|false
+     *shortener
      */
-    public function shortener($url)
+    public function shortener(string $url): ?string
     {
         if (empty($this->bitly_token) || empty($this->bitly_group_guid)) {
             debug_event('bitly.plugin', 'Bit.ly Token or Group GUID missing', 3);
@@ -142,20 +141,19 @@ class AmpacheBitly implements AmpachePluginInterface
                 return $result->link;
             }
 
-            return false;
+            return null;
         } catch (Exception $error) {
             debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
 
-            return false;
+            return null;
         }
     }
 
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

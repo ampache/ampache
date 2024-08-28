@@ -152,7 +152,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
             try {
                 $migration->migrate();
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 throw new UpdateFailedException();
             }
 
@@ -200,21 +200,22 @@ final class UpdateRunner implements UpdateRunnerInterface
      */
     public function runTableCheck(
         Traversable $updates,
-        bool $migrate = false
+        bool $migrate = false,
+        int $build = 0
     ): Generator {
         $collation = $this->configContainer->get('database_collation') ?? 'utf8mb4_unicode_ci';
         $charset   = $this->configContainer->get('database_charset') ?? 'utf8mb4';
         $engine    = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         foreach ($updates as $update) {
-            $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine);
+            $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine, $build);
 
             foreach ($tableMigrations as $tableName => $migrationSql) {
                 try {
                     $this->connection->query(sprintf('DESCRIBE `%s`', $tableName));
 
                     continue;
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $this->logger->warning(
                         'Missing table: ' . $tableName,
                         [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -229,7 +230,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 try {
                     $this->connection->query($migrationSql);
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $error = sprintf('Failed creating missing table: %s', $tableName);
 
                     $this->logger->critical(

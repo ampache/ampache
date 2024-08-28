@@ -28,6 +28,8 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Repository\Model\Live_Stream;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
@@ -35,7 +37,9 @@ use Ampache\Module\Util\Ui;
 /** @var Live_Stream $libitem */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
-?>
+/** @var bool $show_ratings */
+
+$object_type = 'live_stream'; ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
@@ -67,6 +71,18 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 </td>
 <td class="cel_siteurl"><?php echo $libitem->f_site_url_link; ?></td>
 <td class="cel_codec"><?php echo $libitem->codec; ?></td>
+<?php if ($show_ratings) { ?>
+    <td class="cel_ratings">
+        <?php if (AmpConfig::get('ratings')) { ?>
+            <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Rating::show($libitem->getId(), $object_type); ?>
+            </span>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <?php echo Userflag::show($libitem->getId(), $object_type); ?>
+            </span>
+        <?php } ?>
+    </td>
+<?php } ?>
 <td class="cel_action">
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>

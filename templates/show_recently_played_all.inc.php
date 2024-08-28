@@ -30,7 +30,6 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -43,14 +42,13 @@ use Ampache\Repository\Model\Video;
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = (string)AmpConfig::get('web_path', '');
+$web_path  = AmpConfig::get_web_path();
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
-UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
+UI::show_box_top(T_('Recently Played') . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">

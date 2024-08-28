@@ -110,10 +110,7 @@ final class CatalogFolderMethod
                 $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Podcast_Episode::class;
                 break;
-            case 'clip':
-            case 'tvshow':
-            case 'movie':
-            case 'personal_video':
+            case 'video':
                 $type      = 'video';
                 $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Video::class;

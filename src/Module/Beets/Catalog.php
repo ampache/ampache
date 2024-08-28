@@ -191,22 +191,23 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return int|false
      */
-    protected function insertSong($song)
+    protected function insertSong($song): ?int
     {
         $inserted = Song::insert($song);
         if ($inserted) {
             debug_event(self::class, 'Adding song ' . $song['file'], 5);
-        } else {
-            debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-            /* HINT: filename (file path) */
-            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-            echo AmpError::display('general');
-        }
-        flush();
+            flush();
 
-        return $inserted;
+            return $inserted;
+        }
+
+        debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
+        /* HINT: filename (file path) */
+        AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+        echo AmpError::display('general');
+
+        return null;
     }
 
     /**

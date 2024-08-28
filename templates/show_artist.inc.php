@@ -51,7 +51,7 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
-$web_path          = (string)AmpConfig::get('web_path', '');
+$web_path          = AmpConfig::get_web_path();
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');

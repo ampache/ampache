@@ -43,7 +43,7 @@ class Graph
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             return true;
         }
-        debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
+        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
         return false;
     }
@@ -231,7 +231,7 @@ class Graph
      * @param string $fct
      * @param Data $MyData
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -631,7 +631,7 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date

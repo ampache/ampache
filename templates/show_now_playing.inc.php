@@ -58,7 +58,7 @@ if (count($results)) {
             $np_user->fullname = "Ampache User";
         }
         if (!$np_user->f_avatar_medium) {
-            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get('web_path') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
+            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get_web_path() . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
         }
         echo "<div class=\"np_row\">";
         if (get_class($media) == Song::class) {

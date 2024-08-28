@@ -91,7 +91,7 @@ final class BrowseMethod
                 $gather_types[] = 'podcast';
             }
             if (AmpConfig::get('video')) {
-                $gather_types = array_merge($gather_types, ['clip', 'tvshow', 'movie', 'personal_video']);
+                $gather_types = array_merge($gather_types, ['video']);
             }
 
             $browse->set_type($output_type);
@@ -111,10 +111,7 @@ final class BrowseMethod
             }
 
             switch ((string)$catalog->gather_types) {
-                case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
+                case 'video':
                     $output_type = 'video';
                     $gather_type = 'video';
                     $browse->set_type('video');
@@ -137,7 +134,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);

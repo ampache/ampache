@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 $embed    = $_REQUEST['embed'] ?? false;
 $isShare  = true;
 $playlist = $share->create_fake_playlist();
-$web_path = AmpConfig::get('web_path');
+$web_path = AmpConfig::get_web_path();
 
 require Ui::find_template('show_web_player.inc.php');
 

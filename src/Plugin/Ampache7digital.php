@@ -32,7 +32,7 @@ use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 
-class Ampache7digital implements AmpachePluginInterface
+class Ampache7digital implements PluginSongPreviewInterface
 {
     public string $name        = '7digital';
     public string $categories  = 'preview';
@@ -93,20 +93,16 @@ class Ampache7digital implements AmpachePluginInterface
 
     /**
      * Get song preview.
-     * @param string $track_mbid
-     * @param string $artist_name
-     * @param string $title
-     * @return array
      */
-    public function get_song_preview($track_mbid, $artist_name, $title): array
+    public function get_song_preview(string $track_mbid, string $artist_name, string $title): array
     {
         return [];
     }
 
     /**
-     * @param string $file
+     * stream_song_preview
      */
-    public function stream_song_preview($file): void
+    public function stream_song_preview(string $file): void
     {
         if (strpos($file, "7digital") !== false) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
@@ -121,9 +117,8 @@ class Ampache7digital implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;

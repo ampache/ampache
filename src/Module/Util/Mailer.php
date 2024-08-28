@@ -116,9 +116,8 @@ final class Mailer implements MailerInterface
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
-     * @param string $address
      */
-    public static function validate_address($address): bool
+    public static function validate_address(string $address): bool
     {
         return PHPMailer::ValidateAddress($address);
     }
@@ -145,8 +144,8 @@ final class Mailer implements MailerInterface
      * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
-     * @param $filter
-     * @return array
+     * @param string $filter
+     * @return array<int, array{id: string, fullname: string, email: string}>
      */
     public static function get_users($filter): array
     {
@@ -262,7 +261,7 @@ final class Mailer implements MailerInterface
     }
 
     /**
-     * @param $group_name
+     * @param string $group_name
      * @return bool
      * @throws Exception
      */

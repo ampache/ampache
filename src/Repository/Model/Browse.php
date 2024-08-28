@@ -52,14 +52,11 @@ class Browse extends Query
         'artist',
         'broadcast',
         'catalog',
-        'clip',
         'democratic',
         'follower',
         'label',
         'license',
         'live_stream',
-        'movie',
-        'personal_video',
         'playlist',
         'playlist_localplay',
         'playlist_media',
@@ -74,9 +71,6 @@ class Browse extends Query
         'song_preview',
         'tag',
         'tag_hidden',
-        'tvshow',
-        'tvshow_episode',
-        'tvshow_season',
         'user',
         'video',
         'wanted',
@@ -449,7 +443,6 @@ class Browse extends Query
                 break;
             case 'video':
                 Video::build_cache($object_ids);
-                $video_type = 'video';
                 $box_title  = $this->get_title(T_('Videos'));
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
@@ -476,34 +469,6 @@ class Browse extends Query
             case 'license':
                 $box_title = $this->get_title(T_('Media Licenses'));
                 $box_req   = Ui::find_template('show_manage_license.inc.php');
-                break;
-            case 'tvshow':
-                $box_title = $this->get_title(T_('TV Shows'));
-                $box_req   = Ui::find_template('show_tvshows.inc.php');
-                break;
-            case 'tvshow_season':
-                $box_title = $this->get_title(T_('Seasons'));
-                $box_req   = Ui::find_template('show_tvshow_seasons.inc.php');
-                break;
-            case 'tvshow_episode':
-                $box_title  = $this->get_title(T_('Episodes'));
-                $video_type = $type;
-                $box_req    = Ui::find_template('show_videos.inc.php');
-                break;
-            case 'movie':
-                $box_title  = $this->get_title(T_('Movies'));
-                $video_type = $type;
-                $box_req    = Ui::find_template('show_videos.inc.php');
-                break;
-            case 'clip':
-                $box_title  = $this->get_title(T_('Clips'));
-                $video_type = $type;
-                $box_req    = Ui::find_template('show_videos.inc.php');
-                break;
-            case 'personal_video':
-                $box_title  = $this->get_title(T_('Personal Videos'));
-                $video_type = $type;
-                $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'label':
                 $box_title = $this->get_title(T_('Labels'));

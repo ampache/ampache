@@ -82,7 +82,7 @@ final class ShowAction implements ApplicationActionInterface
         if ($label_id < 1) {
             $this->logger->warning(
                 'Requested a label that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
             $this->ui->showFooter();

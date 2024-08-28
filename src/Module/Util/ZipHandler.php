@@ -131,7 +131,7 @@ final class ZipHandler implements ZipHandlerInterface
 
         $this->logger->debug(
             'Sending Zip ' . $archiveName,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // Various different browsers dislike various characters here. Strip them all for safety.

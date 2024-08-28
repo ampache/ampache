@@ -86,6 +86,7 @@ final class StatsMethod
 
             return false;
         }
+
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'video', 'playlist', 'podcast', 'podcast_episode'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -93,6 +94,7 @@ final class StatsMethod
 
             return false;
         }
+
         $user_id = $user->id;
         // override your user if you're looking at others
         if (array_key_exists('username', $input) && User::get_from_username($input['username'])) {
@@ -105,12 +107,14 @@ final class StatsMethod
                 $user    = new User($user_id);
             }
         }
+
         if (!$user instanceof User || $user->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', 'user'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;
         }
+
         $results = [];
         $filter  = $input['filter'] ?? '';
         switch ($filter) {
@@ -192,6 +196,24 @@ final class StatsMethod
             Api::empty($type, $input['api_format']);
 
             return false;
+        }
+
+        $has_sort = isset($input['sort']);
+        $has_cond = isset($input['cond']);
+        // allow sorting results
+        if ($has_sort || $has_cond) {
+            $outputBrowse = Api::getBrowse($user);
+            $outputBrowse->set_type($type);
+            $outputBrowse->set_filter('id', $results);
+            if ($has_sort) {
+                $outputBrowse->set_sort_order(html_entity_decode((string)$input['sort']), ['', '']);
+            }
+
+            if ($has_cond) {
+                $outputBrowse->set_conditions(html_entity_decode((string)$input['cond']));
+            }
+
+            $results = $outputBrowse->get_objects();
         }
 
         ob_end_clean();

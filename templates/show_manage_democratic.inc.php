@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var list<int> $playlists */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = AmpConfig::get_web_path();
 Ui::show_box_top(T_('Manage')); ?>
 <table class="tabledata striped-rows">
     <tr class="th-top">

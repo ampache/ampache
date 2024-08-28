@@ -2188,7 +2188,7 @@ class Subsonic_Api
                     self::getPodcastCreator()->create($url, $catalog);
 
                     $response = Subsonic_Xml_Data::addSubsonicResponse('createpodcastchannel');
-                } catch (PodcastCreationException $e) {
+                } catch (PodcastCreationException) {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_GENERIC, 'createpodcastchannel');
                 }
             } else {
@@ -2298,17 +2298,17 @@ class Subsonic_Api
     {
         $action    = self::_check_parameter($input, 'action');
         $object_id = $input['id'] ?? [];
-        $localplay = new LocalPlay(AmpConfig::get('localplay_controller'));
+        $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
         $response  = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'jukeboxcontrol');
         $return    = false;
         if (empty($localplay->type) || !$localplay->connect()) {
-            debug_event(__CLASS__, 'Error Localplay controller: ' . AmpConfig::get('localplay_controller', 'Is not set'), 3);
+            debug_event(self::class, 'Error Localplay controller: ' . AmpConfig::get('localplay_controller', 'Is not set'), 3);
             self::_apiOutput($input, $response);
 
             return;
         }
 
-        debug_event(__CLASS__, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
+        debug_event(self::class, 'Using Localplay controller: ' . AmpConfig::get('localplay_controller'), 5);
         switch ($action) {
             case 'get':
             case 'status':
@@ -2322,7 +2322,7 @@ class Subsonic_Api
                 break;
             case 'skip':
                 if (isset($input['index'])) {
-                    if ($localplay->skip($input['index'])) {
+                    if ($localplay->skip((int)$input['index'])) {
                         $return = $localplay->play();
                     }
                 } elseif (isset($input['offset'])) {
@@ -2364,7 +2364,7 @@ class Subsonic_Api
                 break;
             case 'remove':
                 if (isset($input['index'])) {
-                    $return = $localplay->delete_track($input['index']);
+                    $return = $localplay->delete_track((int)$input['index']);
                 } else {
                     $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_MISSINGPARAM, 'jukeboxcontrol');
                 }

@@ -56,7 +56,7 @@ use Ampache\Repository\Model\Useractivity;
 $current_user = Core::get_global('user');
 $last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
 $create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $allow_upload = Upload::can_upload($current_user);
 $client->format();
 Ui::show_box_top(scrub_out($client->get_fullname())); ?>
@@ -176,8 +176,14 @@ $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
 $user       = $client;
-$data       = Stats::get_recently_played($client->getId(), 'stream', null, true);
-require_once Ui::find_template('show_recently_played_all.inc.php');  ?>
+if (AmpConfig::get('home_recently_played_all')) {
+    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
+    require_once Ui::find_template('show_recently_played_all.inc.php');
+} else {
+    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+    Song::build_cache(array_keys($data));
+    require Ui::find_template('show_recently_played.inc.php');
+} ?>
         </div>
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';

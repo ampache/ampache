@@ -30,12 +30,9 @@ use Ampache\Module\Application\Browse\AlbumArtistAction;
 use Ampache\Module\Application\Browse\ArtistAction;
 use Ampache\Module\Application\Browse\BroadcastAction;
 use Ampache\Module\Application\Browse\CatalogAction;
-use Ampache\Module\Application\Browse\ClipAction;
 use Ampache\Module\Application\Browse\FileAction;
 use Ampache\Module\Application\Browse\LabelAction;
 use Ampache\Module\Application\Browse\LiveStreamAction;
-use Ampache\Module\Application\Browse\MovieAction;
-use Ampache\Module\Application\Browse\PersonalVideoAction;
 use Ampache\Module\Application\Browse\PlaylistAction;
 use Ampache\Module\Application\Browse\PodcastAction;
 use Ampache\Module\Application\Browse\PodcastEpisodeAction;
@@ -43,9 +40,6 @@ use Ampache\Module\Application\Browse\PrivateMessageAction;
 use Ampache\Module\Application\Browse\SmartPlaylistAction;
 use Ampache\Module\Application\Browse\SongAction;
 use Ampache\Module\Application\Browse\TagAction;
-use Ampache\Module\Application\Browse\TvShowAction;
-use Ampache\Module\Application\Browse\TvShowEpisodeAction;
-use Ampache\Module\Application\Browse\TvShowSeasonAction;
 use Ampache\Module\Application\Browse\VideoAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -65,20 +59,14 @@ $dic->get(ApplicationRunner::class)->run(
         SongAction::REQUEST_KEY => SongAction::class,
         PlaylistAction::REQUEST_KEY => PlaylistAction::class,
         SmartPlaylistAction::REQUEST_KEY => SmartPlaylistAction::class,
-        TvShowSeasonAction::REQUEST_KEY => TvShowSeasonAction::class,
         PodcastEpisodeAction::REQUEST_KEY => PodcastEpisodeAction::class,
         CatalogAction::REQUEST_KEY => CatalogAction::class,
         PrivateMessageAction::REQUEST_KEY => PrivateMessageAction::class,
         LiveStreamAction::REQUEST_KEY => LiveStreamAction::class,
-        TvShowAction::REQUEST_KEY => TvShowAction::class,
         LabelAction::REQUEST_KEY => LabelAction::class,
         BroadcastAction::REQUEST_KEY => BroadcastAction::class,
         VideoAction::REQUEST_KEY => VideoAction::class,
         PodcastAction::REQUEST_KEY => PodcastAction::class,
-        TvShowEpisodeAction::REQUEST_KEY => TvShowEpisodeAction::class,
-        MovieAction::REQUEST_KEY => MovieAction::class,
-        ClipAction::REQUEST_KEY => ClipAction::class,
-        PersonalVideoAction::REQUEST_KEY => PersonalVideoAction::class,
     ],
     CatalogAction::REQUEST_KEY
 );

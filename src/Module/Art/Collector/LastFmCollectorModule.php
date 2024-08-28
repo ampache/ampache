@@ -85,7 +85,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                             $lastFmApiKey
                         )
                     );
-                } catch (LastFmQueryFailedException $e) {
+                } catch (LastFmQueryFailedException) {
                     return [];
                 }
                 if (!$xmldata->album->image) {
@@ -105,13 +105,13 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                 if (is_array($url) || strpos($url, '/noimage/') !== false) {
                     $this->logger->notice(
                         'LastFM: Detected as noimage, skipped',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     continue;
                 }
                 $this->logger->notice(
                     'LastFM: found image ' . $url,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 // HACK: we shouldn't rely on the extension to determine file type
@@ -127,7 +127,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
         } catch (Exception $error) {
             $this->logger->error(
                 'LastFM error: ' . $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

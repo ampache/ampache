@@ -79,7 +79,7 @@ final class DeleteAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('The License has been deleted'),
-            sprintf('%s/admin/license.php', $this->configContainer->getWebPath())
+            sprintf('%s/license.php', $this->configContainer->getWebPath('/admin'))
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

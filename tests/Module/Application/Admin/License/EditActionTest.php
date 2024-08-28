@@ -86,7 +86,7 @@ class EditActionTest extends MockeryTestCase
         $license    = $this->createMock(License::class);
 
         $licenseId    = 666;
-        $webPath      = 'some-path';
+        $webPath      = '/admin';
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-external-link';
@@ -112,7 +112,7 @@ class EditActionTest extends MockeryTestCase
             ->method('save');
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with($webPath)
             ->once()
             ->andReturn($webPath);
 
@@ -138,7 +138,7 @@ class EditActionTest extends MockeryTestCase
             ->with(
                 T_('No Problem'),
                 'The License has been updated',
-                sprintf('%s/admin/license.php', $webPath)
+                sprintf('%s/license.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -196,10 +196,10 @@ class EditActionTest extends MockeryTestCase
 
         $name        = 'some-name';
         $description = 'some-description';
-        $webPath     = 'some-path';
+        $webPath     = '/admin';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with($webPath)
             ->once()
             ->andReturn($webPath);
 
@@ -242,7 +242,7 @@ class EditActionTest extends MockeryTestCase
             ->with(
                 T_('No Problem'),
                 'A new License has been created',
-                sprintf('%s/admin/license.php', $webPath)
+                sprintf('%s/license.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

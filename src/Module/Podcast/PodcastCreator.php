@@ -101,7 +101,7 @@ final class PodcastCreator implements PodcastCreatorInterface
 
         try {
             $feed = $this->feedLoader->load($feedUrl);
-        } catch (FeedLoadingException $e) {
+        } catch (FeedLoadingException) {
             throw new FeedNotLoadableException();
         }
 
@@ -120,9 +120,9 @@ final class PodcastCreator implements PodcastCreatorInterface
 
         try {
             $this->podcastFolderProvider->getBaseFolder($podcast);
-        } catch (PodcastFolderException $e) {
+        } catch (PodcastFolderException $error) {
             $this->logger->critical(
-                $e->getMessage(),
+                $error->getMessage(),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }

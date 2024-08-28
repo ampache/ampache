@@ -54,5 +54,6 @@ return (new PhpCsFixer\Config())
     ->setFinder($finder)
     ->setLineEnding("\n")
     ->setUsingCache(true)
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
 ;
 

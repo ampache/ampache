@@ -79,7 +79,7 @@ class UPnPDevice
         curl_close($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
-        $responseXML = simplexml_load_string($response);
+        $responseXML = simplexml_load_string((string)$response);
         $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
@@ -152,7 +152,7 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = [];
-        $tmp     = explode("\r\n\r\n", $response);
+        $tmp     = explode("\r\n\r\n", (string)$response);
 
         foreach ($tmp as $key => $value) {
             if (substr($value, 0, 8) == 'HTTP/1.1') {
@@ -188,7 +188,7 @@ class UPnPDevice
     /*
     public function Subscribe($type = 'AVTransport')
     {
-        $web_path = Ampache\Config\AmpConfig::get('web_path');
+        $web_path = Ampache\Config\AmpConfig::get_web_path();
         $eventSubsUrl = $web_path . '/upnp/play-event.php?device=' . urlencode($this->_descrUrl);
         $eventUrl = $this->_host . $this->_eventURLs[$type];
 

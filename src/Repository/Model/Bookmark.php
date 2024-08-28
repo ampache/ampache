@@ -28,7 +28,6 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This manage bookmark on playable items
@@ -146,9 +145,8 @@ class Bookmark extends database_object
      *  object_id: int,
      *  position: int
      * } $data
-     * @return PDOStatement|bool
      */
-    public static function create(array $data, int $userId, int $updateDate)
+    public static function create(array $data, int $userId, int $updateDate): void
     {
         $comment = scrub_in((string) $data['comment']);
         if (AmpConfig::get('bookmark_latest', false)) {
@@ -160,7 +158,7 @@ class Bookmark extends database_object
         //insert the new bookmark
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, [$userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate]);
+        Dba::write($sql, [$userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate]);
     }
 
     /**
@@ -169,13 +167,12 @@ class Bookmark extends database_object
      *  position: int,
      *  comment: null|string
      * } $data
-     * @return PDOStatement|bool
      */
-    public static function edit(int $bookmarkId, array $data, int $updateDate)
+    public static function edit(int $bookmarkId, array $data, int $updateDate): void
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, [$data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId]);
+        Dba::write($sql, [$data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId]);
     }
 
     public function getUserName(): string

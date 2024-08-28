@@ -79,8 +79,8 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
             ->withHeader(
                 'Location',
                 sprintf(
-                    '%s/admin/users.php?action=show_preferences&user_id=%s',
-                    $this->configContainer->getWebPath(),
+                    '%s/users.php?action=show_preferences&user_id=%s',
+                    $this->configContainer->getWebPath('/admin'),
                     scrub_out(Core::get_post('user_id'))
                 )
             );

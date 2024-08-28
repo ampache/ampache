@@ -69,14 +69,14 @@ final class LogoutAction implements ApplicationActionInterface
             ];
             $this->logger->debug(
                 'LogoutAction: ' . $sessionName,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             // To end a legitimate session, just call logout.
             setcookie($sessionName . '_remember', '', $cookie_options);
 
-            $this->authenticationManager->logout($input['session'], false);
+            $this->authenticationManager->logout((string)$input['session'], false);
         } else {
-            header('Location: ' . $this->configContainer->get('web_path'));
+            header('Location: ' . $this->configContainer->getWebPath());
         }
 
         return null;

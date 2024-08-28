@@ -78,14 +78,14 @@ final class ExportArtCommand extends Command
                 $this->dic->get(MetadataWriter::class),
                 $clearData
             );
-        } catch (ArtExportException $e) {
+        } catch (ArtExportException $error) {
             $this->logger->error(
-                $e->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                $error->getMessage(),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $interactor->error(
-                $e->getMessage(),
+                $error->getMessage(),
                 true
             );
         }

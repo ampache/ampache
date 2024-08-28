@@ -116,7 +116,7 @@ final class AddMessageAction implements ApplicationActionInterface
                     $this->configContainer->getWebPath()
                 )
             );
-        } catch (PrivateMessageCreationException | Exception $e) {
+        } catch (PrivateMessageCreationException | Exception) {
             $this->ui->show('show_add_pvmsg.inc.php');
         }
 

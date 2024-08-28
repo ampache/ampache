@@ -132,7 +132,7 @@ final class ShowMissingAction implements ApplicationActionInterface
         );
 
         printf(
-            '<div id="information_actions"><h3>%1$s:</h3><ul><li>%1$s:<div id="wanted_action_%2$d">',
+            '<div id="information_actions"><h3>%1$s:</h3><ul><li><div id="wanted_action_%2$d">',
             T_('Actions'),
             $walbum->mbid
         );
