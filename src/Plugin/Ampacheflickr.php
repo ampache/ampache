@@ -119,7 +119,7 @@ class Ampacheflickr implements PluginGatherArtsInterface
             $limit = 5;
         }
 
-        $images  = $this->get_photos($options['keyword'], '');
+        $images  = $this->get_photos(($options['keyword'] ?? ''), '');
         $results = [];
         foreach ($images as $image) {
             $title = $this->name;
