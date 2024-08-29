@@ -23,19 +23,39 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Core;
+use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
-/** @var string $object_type */
-/** @var User $user */
+global $dic;
 
-$threshold      = AmpConfig::get('stats_threshold', 7);
-$limit          = (int)AmpConfig::get('popular_threshold', 10);
-$web_path       = AmpConfig::get_web_path();
+$albumRepository = $dic->get(AlbumRepositoryInterface::class);
+
+/** @var User|null $user */
+$user = $user ?? Core::get_global('user');
+/** @var string $object_type */
+$object_type = $object_type ?? (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
+
+$threshold = AmpConfig::get('stats_threshold', 7);
+$limit     = (int)AmpConfig::get('popular_threshold', 10);
+$web_path  = AmpConfig::get_web_path();
 
 require_once Ui::find_template('show_form_mashup.inc.php');
 
+$object_ids = $albumRepository->getRandom($user?->getId() ?? 0, $limit);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Random'));
+    $browse = new Browse();
+    $browse->set_type($object_type);
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_grid_view(false, false);
+    $browse->set_mashup(true);
+    $browse->show_objects($object_ids);
+    Ui::show_box_bottom();
+}
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user);
 if (!empty($object_ids)) {
     echo "<a href=\"" . $web_path . "/stats.php?action=newest_" . $object_type . "\">";
