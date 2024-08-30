@@ -449,10 +449,7 @@ class AmpacheVlc extends localplay_controller
         $results = [];
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
-        if (
-            array_key_exists('leaf', $list['node']['node'][0]) &&
-            $list['node']['node'][0]['leaf'][$counter]['attr']['uri']
-        ) {
+        if (isset($list['node']['node'][0]['leaf'][$counter]['attr']['uri'])) {
             while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
                     $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
@@ -461,17 +458,11 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif (
-            array_key_exists('leaf', $list['node']['node'][0]) &&
-            $list['node']['node'][0]['leaf']['attr']['uri']
-        ) {
+        } elseif (isset($list['node']['node'][0]['leaf']['attr']['uri'])) {
             // if there is only one song look here,and media library is used
             $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
-        } elseif (
-            array_key_exists('leaf', $list['node']['node']) &&
-            $list['node']['node']['leaf'][$counter]['attr']['uri']
-        ) {
+        } elseif (isset($list['node']['node']['leaf'][$counter]['attr']['uri'])) {
             // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
                 $songs[] = htmlspecialchars_decode(
@@ -481,10 +472,7 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif (
-            array_key_exists('leaf', $list['node']['node']) &&
-            $list['node']['node']['leaf']['attr']['uri']
-        ) {
+        } elseif (isset($list['node']['node']['leaf']['attr']['uri'])) {
             $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
