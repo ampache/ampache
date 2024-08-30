@@ -477,7 +477,7 @@ class VlcPlayer
 
             // This command will extract these variables into the foreach scope
             // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler. //TODO it's not
+            extract($data); // We could use the array by itself, but this cooler. // TODO it's not, Replace extract with the values
 
             $result          = [];
             $attributes_data = [];
