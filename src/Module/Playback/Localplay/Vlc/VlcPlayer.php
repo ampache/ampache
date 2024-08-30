@@ -58,10 +58,8 @@ class VlcPlayer
     /**
      * add
      * append a song to the playlist
-     * $name    Name to be shown in the playlist
-     * $url        URL of the song
-     * @param string $name
-     * @param $url
+     * @param string $name // Name to be shown in the playlist
+     * @param string $url // URL of the song
      */
     public function add($name, $url): bool
     {
