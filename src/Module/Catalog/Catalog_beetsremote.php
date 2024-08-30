@@ -36,10 +36,10 @@ use Ampache\Module\System\Dba;
  */
 class Catalog_beetsremote extends Catalog
 {
-    protected $version     = '000001';
-    protected $type        = 'beetsremote';
-    protected $description = 'Beets Remote Catalog';
-    protected $listCommand = 'item/query';
+    protected string $version     = '000001';
+    protected string $type        = 'beetsremote';
+    protected string $description = 'Beets Remote Catalog';
+    protected string $listCommand = 'item/query';
 
     protected string $uri = '';
 
