@@ -579,10 +579,10 @@ class LocalPlay
      * set_active_instance
      * This sets the active instance of the Localplay controller
      */
-    public function set_active_instance(int $instance_id): void
+    public function set_active_instance(int $uid): void
     {
         if ($this->_player instanceof localplay_controller) {
-            $this->_player->set_active_instance($instance_id);
+            $this->_player->set_active_instance($uid);
         }
     }
 

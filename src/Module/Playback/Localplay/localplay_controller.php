@@ -110,10 +110,7 @@ abstract class localplay_controller
 
     abstract public function instance_fields(): array;
 
-    /**
-     * @param $uid
-     */
-    abstract public function set_active_instance($uid): bool;
+    abstract public function set_active_instance(int $uid): bool;
 
     abstract public function get_active_instance();
 

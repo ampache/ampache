@@ -213,9 +213,8 @@ class AmpacheMpd extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param string $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
         if (empty($user)) {
