@@ -36,14 +36,12 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var list<array{object_type: LibraryItemEnum, object_id: int, id: int}> $object_ids */
-
 $democratic = Democratic::get_current_playlist();
 $web_path   = AmpConfig::get_web_path();
 $use_search = AmpConfig::get('demo_use_search');
 $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum  = AmpConfig::get('album_group');
+/** @var Ampache\Repository\Model\Browse $browse */
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -59,7 +57,8 @@ if ($browse->is_show_header()) {
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php if (empty($object_ids) && isset($democratic->base_playlist)) {
+<?php /** @var list<array{object_type: LibraryItemEnum, object_id: int, id: int}> $object_ids */
+if (empty($object_ids) && isset($democratic->base_playlist)) {
     $playlist = ($use_search)
         ? new Search($democratic->base_playlist)
         : new Playlist($democratic->base_playlist); ?>

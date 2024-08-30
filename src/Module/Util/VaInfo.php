@@ -146,7 +146,7 @@ final class VaInfo implements VaInfoInterface
      * @param array $gatherTypes
      * @param string $encoding
      * @param string $encodingId3v1
-     * //TODO: where did this go? param string $encodingId3v2
+     * // TODO: where did this go? param string $encodingId3v2
      * @param string $dirPattern
      * @param string $filePattern
      * @param bool $islocal
