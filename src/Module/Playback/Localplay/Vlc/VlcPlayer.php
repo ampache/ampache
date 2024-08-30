@@ -453,7 +453,7 @@ class VlcPlayer
             $parser,
             XML_OPTION_TARGET_ENCODING,
             "UTF-8"
-        ); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        );
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);

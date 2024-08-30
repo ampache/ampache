@@ -565,9 +565,11 @@ class AmpacheVlc extends localplay_controller
         $array['track_artist'] = '';
         $array['track_album']  = '';
         $array['state']        = $state ?? '';
-        $array['volume']       = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
-        $array['repeat']       = $arrayholder['root']['repeat']['value'];
-        $array['random']       = $arrayholder['root']['random']['value'];
+        $array['volume']       = ($arrayholder['root']['volume']['value'] > 0)
+            ? (int)(((int)($arrayholder['root']['volume']['value']) / 2.56))
+            : 0;
+        $array['repeat'] = $arrayholder['root']['repeat']['value'];
+        $array['random'] = $arrayholder['root']['random']['value'];
 
         //api version 1
         if(array_key_exists('meta-information', $arrayholder['root']['information'])) {
