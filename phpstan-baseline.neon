@@ -6,56 +6,6 @@ parameters:
 			path: public/templates/show_edit_search_row.inc.php
 
 		-
-			message: "#^Parameter \\#1 \\$sid of static method Ampache\\\\Module\\\\System\\\\Session\\:\\:update_geolocation\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Ajax/Handler/StatsAjaxHandler.php
-
-		-
-			message: "#^Cannot access offset 'scheme' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Offset 'host' does not exist on array\\{scheme\\: 'amp', host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Offset 'path' does not exist on array\\{scheme\\: 'amp', host\\: 'music', port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\.$#"
-			count: 2
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Offset 'path' does not exist on array\\{scheme\\: 'amp', host\\: 'video', port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\.$#"
-			count: 2
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Offset 'query' does not exist on array\\{scheme\\: 'amp', host\\: 'music', port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Offset 'query' does not exist on array\\{scheme\\: 'amp', host\\: 'video', port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Application/Api/Upnp/ControlReplyApplication.php
-
-		-
 			message: "#^Method Ampache\\\\Config\\\\AmpConfig\\:\\:get_all\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/AmpConfig.php
@@ -364,16 +314,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Daap_Api\\:\\:tlv_version\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Daap_Api.php
-
-		-
-			message: "#^Parameter \\#1 \\$instance of static method Ampache\\\\Module\\\\Util\\\\InterfaceImplementationChecker\\:\\:is_library_item\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$object_type of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:map\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/AbstractEditAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
@@ -882,11 +822,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\Stats3Method\\:\\:stats\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/Stats3Method.php
-
-		-
-			message: "#^Parameter \\#3 \\$threshold of static method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_top\\(\\) expects int, string given\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/Stats3Method.php
 
@@ -4311,16 +4246,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$current of method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:generate_config\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/System/GenerateConfigAction.php
-
-		-
-			message: "#^Parameter \\#4 \\$cLength of method Ampache\\\\Module\\\\Util\\\\Horde_Browser\\:\\:getDownloadHeaders\\(\\) expects string\\|null, int\\<0, max\\> given\\.$#"
-			count: 1
-			path: src/Module/Application/Admin/System/GenerateConfigAction.php
-
-		-
 			message: "#^Binary operation \"\\+\" between non\\-falsy\\-string and 1 results in an error\\.$#"
 			count: 1
 			path: src/Module/Application/Album/SetTrackNumbersAction.php
@@ -4336,17 +4261,7 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of static method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$conf of function check_config_values expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
 
@@ -4786,21 +4701,6 @@ parameters:
 			path: src/Module/Authorization/Check/FunctionChecker.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:\\$description\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:\\$type\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:\\$version\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -4827,11 +4727,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:getAllSongfiles\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:getParser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -4891,7 +4786,7 @@ parameters:
 			path: src/Module/Beets/CliHandler.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:\\$fieldMapping\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:dispatch\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Handler.php
 
@@ -4906,24 +4801,14 @@ parameters:
 			path: src/Module/Beets/Handler.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{mixed, mixed\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{Ampache\\\\Module\\\\Beets\\\\Catalog, string\\} given\\.$#"
 			count: 1
 			path: src/Module/Beets/Handler.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:\\$handler has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:\\$fieldMapping type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Handler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\Handler\\:\\:\\$handlerCommand has no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/Handler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:__construct\\(\\) has parameter \\$uri with no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:createFileUrl\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
@@ -4942,11 +4827,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$handlerCommand has no type specified\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$uri has no type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -5086,21 +4966,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_beets.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beets.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beets.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beets\\:\\:\\$version has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beets.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:catalog_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_beetsremote.php
@@ -5112,21 +4977,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_beetsremote.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_beetsremote\\:\\:\\$version has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_beetsremote.php
 
@@ -6646,11 +6496,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:add_instance\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/localplay_controller.php
@@ -6707,11 +6552,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\localplay_controller\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/localplay_controller.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{class\\-string, 'play_url'\\} given\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
@@ -6886,11 +6726,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream_Url\\:\\:parse\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Url.php
@@ -6904,11 +6739,6 @@ parameters:
 			message: "#^Variable \\$elements in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream_Url.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$type\\.$#"
-			count: 2
-			path: src/Module/Playback/WebPlayer.php
 
 		-
 			message: "#^Class Ampache\\\\Module\\\\Playback\\\\Stream_Url referenced with incorrect case\\: Ampache\\\\Module\\\\Playback\\\\Stream_URL\\.$#"
@@ -7131,11 +6961,6 @@ parameters:
 			path: src/Module/System/AmpError.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$sha\\.$#"
-			count: 1
-			path: src/Module/System/AutoUpdate.php
-
-		-
 			message: "#^Argument of an invalid type object supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Module/System/AutoUpdate.php
@@ -7226,11 +7051,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_check_status\\(\\) has parameter \\$configfile with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:install_config_backends\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelper.php
@@ -7287,11 +7107,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_check_rewrite_rules\\(\\) has parameter \\$web_path with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelperInterface.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelperInterface\\:\\:install_check_status\\(\\) has parameter \\$configfile with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/InstallationHelperInterface.php
 
@@ -9676,36 +9491,6 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$catalog\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$file\\.$#"
-			count: 3
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$id\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$size\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Media\\:\\:\\$update_time\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/WebDav/WebDavFile.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampache7digital\\:\\:get_song_preview\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
@@ -9919,11 +9704,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$image\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLyristLyrics.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheLyristLyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -10146,11 +9926,6 @@ parameters:
 			path: src/Plugin/AmpacheStreamTime.php
 
 		-
-			message: "#^Access to an undefined property Ampache\\\\Repository\\\\Model\\\\Artist\\|Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$prefix\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
@@ -10177,11 +9952,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:search_track\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Parameter \\#3 \\$options of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 

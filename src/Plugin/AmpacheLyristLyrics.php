@@ -115,13 +115,15 @@ class AmpacheLyristLyrics implements PluginGetLyricsInterface
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);
-            if ($json) {
-                if (!empty($json->lyrics)) {
-                    return [
-                        'text' => nl2br($json->lyrics),
-                        'url' => $json->image
-                    ];
-                }
+            if (
+                $json &&
+                !empty($json->lyrics) &&
+                !empty($json->image)
+            ) {
+                return [
+                    'text' => nl2br($json->lyrics),
+                    'url' => $json->image
+                ];
             }
         }
 

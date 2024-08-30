@@ -25,6 +25,8 @@ namespace Ampache\Module\Playback\Localplay;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
 
 /**
  * localplay_controller Class
@@ -128,9 +130,11 @@ abstract class localplay_controller
             return $object;
         }
 
+        /** @var Media $class */
         $class = get_class($object);
 
-        return call_user_func([$class, 'play_url'], $object->id);
+        /** @var library_item $object */
+        return call_user_func([$class, 'play_url'], $object->getId());
     }
 
     /**

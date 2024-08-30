@@ -70,7 +70,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if ($latitude > 0 && $longitude > 0) {
-                                Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                                Session::update_geolocation((string)session_id(), $latitude, $longitude, $name);
                             }
                         }
                     }

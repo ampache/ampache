@@ -207,7 +207,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
-                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                        $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
@@ -227,7 +227,11 @@ final class DefaultAction implements ApplicationActionInterface
                 }
 
                 /* Make sure we've got a valid config file */
-                if (!check_config_values($results) || !$created_config) {
+                if (
+                    !$results ||
+                    !check_config_values($results) ||
+                    !$created_config
+                ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
                     require_once Ui::find_template('show_install_config.inc.php');
                     break;

@@ -97,6 +97,7 @@ class WebPlayer
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
+            /** @var Video|Podcast_Episode|Song|Song_Preview $media */
             $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } elseif ($item->type == 'live_stream') {

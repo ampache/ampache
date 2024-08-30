@@ -79,12 +79,10 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * this function checks to see if we actually
-     * still need to install ampache. This function is
-     * very important, we don't want to reinstall over top of an existing install
-     * @param $configfile
+     * this function checks to see if we actually still need to install Ampache.
+     * This function is very important, we don't want to reinstall over top of an existing install
      */
-    public function install_check_status($configfile): bool
+    public function install_check_status(string $configfile): bool
     {
         /**
          * Check and see if the config file exists
@@ -116,7 +114,6 @@ final class InstallationHelper implements InstallationHelperInterface
 
         $sql        = 'SELECT * FROM `user`';
         $db_results = Dba::read($sql);
-
         if (!$db_results) {
             AmpError::add('general', T_('Unable to query the database, check your Ampache config'));
 
@@ -125,11 +122,11 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if (!Dba::num_rows($db_results)) {
             return true;
-        } else {
-            AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
-
-            return false;
         }
+
+        AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
+
+        return false;
     }
 
     /**

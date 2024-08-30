@@ -59,7 +59,7 @@ final class Stats3Method
         } elseif ($type == "highest") {
             $results = Rating::get_highest("album", $limit, $offset);
         } elseif ($type == "frequent") {
-            $results = Stats::get_top("album", $limit, '', $offset);
+            $results = Stats::get_top("album", $limit, 0, $offset);
         } elseif ($type == "recent") {
             if (!empty($username)) {
                 if ($user->isNew()) {
