@@ -463,6 +463,7 @@ class VlcPlayer
 
         // Initializations
         $bigxml_array = [];
+        $parent       = [];
 
         $current = &$bigxml_array; // Reference
 
@@ -470,32 +471,37 @@ class VlcPlayer
         // Multiple tags with same name will be turned into an array
         $repeated_tag_index = [];
         foreach ($xml_values as $data) {
-            // Remove existing values, or there will be trouble
+            // Remove existing values, or there will be trouble. (these are optional)
             unset($attributes, $value);
 
-            // This command will extract these variables into the foreach scope
-            // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler. // TODO it's not, Replace extract with the values
+            // tag(string), type(string), level(int), attributes(array)
+            $tag        = (string)$data['tag'];
+            $type       = (string)$data['type'];
+            $level      = (int)$data['level'];
+            $value      = $data['value'] ?? null;
+            $attributes = $data['attributes'] ?? null;
 
             $result          = [];
             $attributes_data = [];
 
-            if (isset($value)) {
+            if ($value !== null) {
                 if ($priority == 'tag') {
                     $result = $value;
                 } else {
+                    // Put the value in a assoc array if we are in the 'Attribute' mode
                     $result['value'] = $value;
-                } // Put the value in a assoc array if we are in the 'Attribute' mode
+                }
             }
 
             // Set the attributes too.
-            if (isset($attributes) && $get_attributes) {
+            if ($attributes !== null && $get_attributes) {
                 foreach ($attributes as $attr => $val) {
                     if ($priority == 'tag') {
                         $attributes_data[$attr] = $val;
                     } else {
+                        // Set all the attributes in a array called 'attr'
                         $result['attr'][$attr] = $val;
-                    } // Set all the attributes in a array called 'attr'
+                    }
                 }
             }
 
