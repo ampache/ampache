@@ -1776,39 +1776,6 @@ class Subsonic_Api
     }
 
     /**
-     * getLyricsBySongId
-     * Searches for and returns lyrics for a given song.
-     * Returns a <subsonic-response> element with a nested <lyrics> element on success.
-     * The <lyrics> element is empty if no matching lyrics was found.
-     * https://opensubsonic.netlify.app/docs/endpoints/getlyricsbysongid/
-     * @param array $input
-     * @param User $user
-     */
-    public static function getlyricsbysongid($input, $user): void
-    {
-        unset($user);
-        $sub_id = self::_check_parameter($input, 'id');
-        if (!$sub_id) {
-            return;
-        }
-
-        $song = new Song(Subsonic_Xml_Data::_getAmpacheId($sub_id));
-        if (!$song instanceof Song) {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getlyricsbysongid');
-        } else {
-            $response = Subsonic_Xml_Data::addSubsonicResponse('getlyricsbysongid');
-            Subsonic_Xml_Data::addLyrics(
-                $response,
-                $song->get_artist_fullname(),
-                $song->get_fullname(),
-                $song
-            );
-        }
-
-        self::_apiOutput($input, $response);
-    }
-
-    /**
      * getAvatar
      * Returns the avatar (personal image) for a user.
      * Returns the avatar image in binary form.
