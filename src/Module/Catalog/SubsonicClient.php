@@ -71,6 +71,7 @@ class SubsonicClient
             'getArtistInfo',
             'search',
             'search2',
+            'getOpenSubsonicExtensions',
             'getPlaylists',
             'getPlaylist',
             'createPlaylist',

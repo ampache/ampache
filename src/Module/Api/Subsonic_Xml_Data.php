@@ -249,6 +249,21 @@ class Subsonic_Xml_Data
     }
 
     /**
+     * addOpenSubsonicExtension
+     * @param SimpleXMLElement $xml
+     * @param string $name
+     * @param int[] $versions
+     */
+    public static function addOpenSubsonicExtensions($xml, $name, $versions): void
+    {
+        $xextension = self::addChildToResultXml($xml, 'opensubsonicextension');
+        $xextension->addAttribute('name', $name);
+        foreach ($versions as $version) {
+            $xextension->addChild('versions', (string)$version);
+        }
+    }
+
+    /**
      * addArtists
      * @param SimpleXMLElement $xml
      * @param array $artists
@@ -1484,6 +1499,7 @@ class Subsonic_Xml_Data
         $response->addAttribute('version', (string)$version);
         $response->addAttribute('type', 'ampache');
         $response->addAttribute('serverVersion', Api::$version);
+        $response->addAttribute('openSubsonic', 1);
 
         return $response;
     }
