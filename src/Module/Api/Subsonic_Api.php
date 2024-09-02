@@ -1213,11 +1213,21 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      * @param string $elementName
+     * @param bool $search3
      */
-    public static function search2($input, $user, $elementName = "searchResult2"): void
+    public static function search2($input, $user, $elementName = "searchResult2", $search3 = false): void
     {
+        $query = $search3
+            ? $input['query'] ?? ''
+            : self::_check_parameter($input, 'query');
+
+        // opensubsonic allows empty queries for search3 calls
+        if ($query === false) {
+            return;
+        }
+
         $operator = 0; // contains
-        $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
+        $original = unhtmlentities((string)$query);
         $query    = $original;
         if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
             $query = substr($original, 1, -1);
@@ -1321,7 +1331,7 @@ class Subsonic_Api
      */
     public static function search3($input, $user): void
     {
-        self::search2($input, $user, "searchResult3");
+        self::search2($input, $user, "searchResult3", true);
     }
 
     /**
