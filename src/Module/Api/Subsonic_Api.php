@@ -167,6 +167,7 @@ class Subsonic_Api
         'track',
         'userRating',
         'visitCount',
+        'versions',
         'year',
     ];
 
