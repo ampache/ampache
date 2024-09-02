@@ -486,12 +486,24 @@ class Subsonic_Api
                                 $options['alwaysArray']
                             ) || !$options['autoArray'] ? [$childProperties] : $childProperties;
                         }
-                    } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
-                        // key already exists and is integer indexed array
-                        $tagsArray[$childTagName][] = $childProperties;
                     } else {
-                        // key exists so convert to integer indexed array with previous value in position 0
-                        $tagsArray[$childTagName] = [$tagsArray[$childTagName], $childProperties];
+                        // existing arrays of data
+                        if (in_array($childTagName, $options['alwaysInteger'])) {
+                            $childProperties = (int)$childProperties;
+                        }
+                        if (in_array($childTagName, $options['alwaysDouble'])) {
+                            $childProperties = (float)$childProperties;
+                        }
+                        if (in_array($childTagName, $options['alwaysBool'])) {
+                            $childProperties = (bool)$childProperties;
+                        }
+                        if (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
+                            // key already exists and is integer indexed array
+                            $tagsArray[$childTagName][] = $childProperties;
+                        } else {
+                            // key exists so convert to integer indexed array with previous value in position 0
+                            $tagsArray[$childTagName] = [$tagsArray[$childTagName], $childProperties];
+                        }
                     }
                 }
             } // REPLACING list($childTagName, $childProperties) = each($childArray);
