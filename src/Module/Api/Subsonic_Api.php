@@ -95,7 +95,7 @@ class Subsonic_Api
         '_apiOutput',
         '_apiOutput2',
         '_check_parameter',
-        '_decrypt_password',
+        '_decryptPassword',
         '_follow_stream',
         '_hasNestedArray',
         '_output_body',
@@ -1783,8 +1783,9 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      */
-    public static function getLyricsBySongId($input, $user): void
+    public static function getlyricsbysongid($input, $user): void
     {
+        unset($user);
         $sub_id = self::_check_parameter($input, 'id');
         if (!$sub_id) {
             return;
