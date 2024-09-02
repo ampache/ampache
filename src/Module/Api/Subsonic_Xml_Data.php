@@ -1629,6 +1629,7 @@ class Subsonic_Xml_Data
         if (Subsonic_Xml_Data::_isPodcastEpisode($object_id)) {
             return new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($object_id));
         }
+        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
 
         return null;
     }

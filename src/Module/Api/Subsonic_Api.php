@@ -1791,8 +1791,7 @@ class Subsonic_Api
             return;
         }
 
-        $song = Subsonic_Xml_Data::_getAmpacheObject((string)$sub_id);
-
+        $song = new Song(Subsonic_Xml_Data::_getAmpacheId($sub_id));
         if (!$song instanceof Song) {
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'getlyricsbysongid');
         } else {
