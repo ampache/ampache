@@ -1181,11 +1181,14 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param string $artist
      * @param string $title
-     * @param int $song_id
+     * @param Song $song
      */
-    public static function addLyrics($xml, $artist, $title, $song_id): void
+    public static function addLyrics($xml, $artist, $title, $song): void
     {
-        $song = new Song($song_id);
+        if ($song->isNew()) {
+            return;
+        }
+
         $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
