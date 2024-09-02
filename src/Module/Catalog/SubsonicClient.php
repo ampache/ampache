@@ -88,6 +88,7 @@ class SubsonicClient
             'getAlbumList',
             'getRandomSongs',
             'getLyrics',
+            'getLyricsBySongId',
             'jukeboxControl',
             'getPordcasts',
             'createShare',
