@@ -30,7 +30,8 @@ use Ampache\Repository\Model\Query;
 
 final class TagQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
+        'id',
         'alpha_match',
         'equal',
         'like',
@@ -44,10 +45,10 @@ final class TagQuery implements QueryInterface
         'not_starts_with',
         'not_like',
         'tag',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'rand',
         'tag',
@@ -56,7 +57,7 @@ final class TagQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`tag`.`id`";
@@ -108,6 +109,13 @@ final class TagQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `tag`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'equal':
             case 'exact_match':
                 $filter_sql = " `tag`.`name` = '" . Dba::escape($value) . "' AND ";

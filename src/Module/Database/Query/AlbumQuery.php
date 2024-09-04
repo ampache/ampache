@@ -31,7 +31,8 @@ use Ampache\Repository\Model\Query;
 
 final class AlbumQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
+        'id',
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -54,10 +55,10 @@ final class AlbumQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'album_artist',
         'artist',
@@ -84,7 +85,7 @@ final class AlbumQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`album`.`id`";
@@ -136,6 +137,13 @@ final class AlbumQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `album`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
