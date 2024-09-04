@@ -31,7 +31,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampacheflickr implements PluginGatherArtsInterface
+class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Flickr';
     public string $categories  = 'slideshow';

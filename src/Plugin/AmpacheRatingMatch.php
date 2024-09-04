@@ -36,7 +36,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\System\Dba;
 
-class AmpacheRatingMatch implements PluginSaveMediaplayInterface
+class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'RatingMatch';
     public string $categories  = 'scrobbling';

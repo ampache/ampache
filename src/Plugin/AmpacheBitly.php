@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheBitly implements PluginShortenerInterface
+class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 {
     public string $name        = 'Bit.ly';
     public string $categories  = 'shortener';

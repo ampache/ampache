@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs implements PluginGatherArtsInterface
+class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Discogs';
     public string $categories  = 'metadata';

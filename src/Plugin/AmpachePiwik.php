@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpachePiwik implements PluginDisplayOnFooterInterface
+class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Piwik';
     public string $categories  = 'stats';

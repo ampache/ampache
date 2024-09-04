@@ -32,7 +32,7 @@ use Ampache\Module\Util\OAuth\OAuthConsumer;
 use Ampache\Module\Util\OAuth\OAuthRequest;
 use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 
-class Ampache7digital implements PluginSongPreviewInterface
+class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {
     public string $name        = '7digital';
     public string $categories  = 'preview';

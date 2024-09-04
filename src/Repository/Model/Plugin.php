@@ -28,12 +28,12 @@ namespace Ampache\Repository\Model;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Plugin\AmpachePlugin;
 use Ampache\Plugin\PluginEnum;
 
 class Plugin
 {
-    /** @var null|string $name */
-    public $name;
+    public ?string $name;
 
     public $_plugin;
 
@@ -48,6 +48,7 @@ class Plugin
         if (!$name) {
             $this->_plugin = null;
             $this->name    = null;
+            $this->version = null;
 
             return;
         }
@@ -66,12 +67,14 @@ class Plugin
             debug_event(self::class, 'Cannot find plugin `' . $cname . '`.', 1);
             $this->_plugin = null;
             $this->name    = null;
+            $this->version = null;
 
             return false;
         }
 
         $this->_plugin = new $controller();
         $this->name    = $cname;
+        $this->version = $this->_plugin->version;
 
         return $this->is_valid();
     }
@@ -184,9 +187,8 @@ class Plugin
      * is_installed
      * This checks to see if the specified plugin is currently installed in
      * the database, it doesn't check the files for integrity
-     * @param $plugin_name
      */
-    public static function is_installed($plugin_name): int
+    public static function is_installed(string $plugin_name): int
     {
         /* All we do is check the version */
         return self::get_plugin_version($plugin_name);
@@ -199,7 +201,10 @@ class Plugin
      */
     public function install(): bool
     {
-        if ($this->_plugin !== null && $this->_plugin->install()) {
+        if (
+            $this->_plugin instanceof AmpachePlugin &&
+            $this->_plugin->install()
+        ) {
             $this->set_plugin_version($this->_plugin->version);
 
             return true;
@@ -215,7 +220,11 @@ class Plugin
      */
     public function uninstall(): bool
     {
-        if ($this->_plugin !== null && method_exists($this->_plugin, 'uninstall') && $this->_plugin->uninstall()) {
+        if (
+            $this->_plugin instanceof AmpachePlugin &&
+            method_exists($this->_plugin, 'uninstall') &&
+            $this->_plugin->uninstall()
+        ) {
             $this->remove_plugin_version();
 
             return true;
@@ -258,9 +267,8 @@ class Plugin
     /**
      * get_plugin_version
      * This returns the version of the specified plugin
-     * @param $plugin_name
      */
-    public static function get_plugin_version($plugin_name): int
+    public static function get_plugin_version(string $plugin_name): int
     {
         $name       = Dba::escape('Plugin_' . $plugin_name);
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
@@ -298,23 +306,27 @@ class Plugin
     /**
      * Check all plugins for updates and update them if required.
      */
-    public static function update_all(): void
+    public static function update_all(): bool
     {
+        $failure = false;
         foreach (array_keys(PluginEnum::LIST) as $name) {
             $plugin            = new Plugin($name);
-            $installed_version = self::get_plugin_version($plugin->_plugin->name);
+            $installed_version = self::get_plugin_version($plugin->_plugin->name ?? '');
             if (
+                $plugin->_plugin instanceof AmpachePlugin &&
                 $installed_version > 0 &&
                 $installed_version < $plugin->_plugin->version &&
-                (
-                    $plugin->_plugin !== null &&
-                    method_exists($plugin->_plugin, 'upgrade')
-                ) &&
-                $plugin->_plugin->upgrade()
+                method_exists($plugin->_plugin, 'upgrade')
             ) {
-                $plugin->set_plugin_version($plugin->_plugin->version);
+                if ($plugin->_plugin->upgrade()) {
+                    $plugin->set_plugin_version($plugin->_plugin->version);
+                } else {
+                    $failure = true;
+                }
             }
         }
+
+        return $failure !== true;
     }
 
     /**
@@ -333,9 +345,8 @@ class Plugin
     /**
      * set_plugin_version
      * This sets the plugin version in the update_info table
-     * @param $version
      */
-    public function set_plugin_version($version): void
+    public function set_plugin_version(string $version): void
     {
         if ($this->_plugin === null) {
             return;

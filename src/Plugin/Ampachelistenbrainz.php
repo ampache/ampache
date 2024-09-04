@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-class Ampachelistenbrainz implements PluginSaveMediaplayInterface
+class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'ListenBrainz';
     public string $categories  = 'scrobbling';
