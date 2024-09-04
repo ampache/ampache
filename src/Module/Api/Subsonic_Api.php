@@ -1565,10 +1565,10 @@ class Subsonic_Api
                 $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         }
 
         // return an error on missing files
