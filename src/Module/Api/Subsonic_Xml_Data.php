@@ -1244,6 +1244,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $info
      * @param array $similars
+     * @param string $elementName
      */
     public static function addArtistInfo($xml, $info, $similars, $elementName = 'artistInfo'): void
     {
