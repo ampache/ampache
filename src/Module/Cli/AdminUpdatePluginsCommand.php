@@ -32,7 +32,8 @@ use Ampache\Repository\Model\Plugin;
 
 final class AdminUpdatePluginsCommand extends Command
 {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('admin:updatePlugins', T_('Update Plugins automatically'));
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
