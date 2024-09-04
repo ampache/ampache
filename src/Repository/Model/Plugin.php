@@ -48,7 +48,6 @@ class Plugin
         if (!$name) {
             $this->_plugin = null;
             $this->name    = null;
-            $this->version = null;
 
             return;
         }
@@ -67,14 +66,12 @@ class Plugin
             debug_event(self::class, 'Cannot find plugin `' . $cname . '`.', 1);
             $this->_plugin = null;
             $this->name    = null;
-            $this->version = null;
 
             return false;
         }
 
         $this->_plugin = new $controller();
         $this->name    = $cname;
-        $this->version = $this->_plugin->version;
 
         return $this->is_valid();
     }
@@ -240,7 +237,11 @@ class Plugin
      */
     public function upgrade(): bool
     {
-        if ($this->_plugin !== null && method_exists($this->_plugin, 'upgrade') && $this->_plugin->upgrade()) {
+        if (
+            $this->_plugin instanceof AmpachePlugin &&
+            method_exists($this->_plugin, 'upgrade') &&
+            $this->_plugin->upgrade()
+        ) {
             $this->set_plugin_version($this->_plugin->version);
 
             return true;

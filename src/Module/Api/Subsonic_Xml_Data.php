@@ -1499,7 +1499,7 @@ class Subsonic_Xml_Data
         $response->addAttribute('version', (string)$version);
         $response->addAttribute('type', 'ampache');
         $response->addAttribute('serverVersion', Api::$version);
-        $response->addAttribute('openSubsonic', 1);
+        $response->addAttribute('openSubsonic', "1");
 
         return $response;
     }

@@ -3201,6 +3201,11 @@ parameters:
 			path: src/Module/Api/Subsonic_Api.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getopensubsonicextensions\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Subsonic_Api.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Subsonic_Api\\:\\:getplaylist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Subsonic_Api.php
@@ -4381,11 +4386,6 @@ parameters:
 			path: src/Module/Art/Collector/GoogleCollectorModule.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/GoogleCollectorModule.php
-
-		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/LastFmCollectorModule.php
@@ -5449,6 +5449,21 @@ parameters:
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
 			count: 2
 			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Cli/AdminUpdatePluginsCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
+			count: 2
+			path: src/Module/Cli/AdminUpdatePluginsCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
+			count: 2
+			path: src/Module/Cli/AdminUpdatePluginsCommand.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
@@ -7156,6 +7171,56 @@ parameters:
 			path: src/Module/System/LegacyLogger.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:alert\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:critical\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:debug\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:emergency\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:error\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:info\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:log\\(\\) has parameter \\$level with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:log\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:notice\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:warning\\(\\) has parameter \\$message with no type specified\\.$#"
+			count: 1
+			path: src/Module/System/LegacyLogger.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\Session\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/System/Session.php
@@ -7946,22 +8011,22 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_text_disable.php
 
 		-
-			message: "#^Binary operation \"\\*\" between string and non\\-falsy\\-string results in an error\\.$#"
+			message: "#^Binary operation \"\\*\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
 
 		-
-			message: "#^Binary operation \"\\+\" between string and non\\-falsy\\-string results in an error\\.$#"
+			message: "#^Binary operation \"\\+\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
 
 		-
-			message: "#^Binary operation \"\\-\" between string and non\\-falsy\\-string results in an error\\.$#"
+			message: "#^Binary operation \"\\-\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
 
 		-
-			message: "#^Binary operation \"/\" between string and non\\-falsy\\-string results in an error\\.$#"
+			message: "#^Binary operation \"/\" between non\\-empty\\-string and non\\-falsy\\-string results in an error\\.$#"
 			count: 2
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
 
@@ -7972,6 +8037,36 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_text_math_formula\\:\\:solved\\(\\) has parameter \\$input with no type specified\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 0 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 1 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 2 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 3 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 4 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
+			count: 1
+			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
+
+		-
+			message: "#^Offset 5 does not exist on array\\{0\\?\\: string, 1\\?\\: numeric\\-string, 2\\?\\: '\\*'\\|'\\+'\\|'\\-'\\|'/', 3\\?\\: numeric\\-string, 4\\?\\: ''\\|'\\*'\\|'\\+'\\|'\\-'\\|'/', 5\\?\\: numeric\\-string\\}\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_text_math_formula.php
 
@@ -10847,36 +10942,6 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$name on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot access property \\$version on class\\-string\\|object\\.$#"
-			count: 2
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot call method uninstall\\(\\) on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Cannot call method upgrade\\(\\) on class\\-string\\|object\\.$#"
-			count: 2
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:get_plugin_version\\(\\) has parameter \\$plugin_name with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:is_installed\\(\\) has parameter \\$plugin_name with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Plugin.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Plugin\\:\\:set_plugin_version\\(\\) has parameter \\$version with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Plugin.php
 
