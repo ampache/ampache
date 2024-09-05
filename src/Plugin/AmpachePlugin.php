@@ -27,73 +27,37 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterface
+abstract class AmpachePlugin implements AmpachePluginInterface
 {
-    public string $name        = 'Twitter';
-    public string $categories  = 'share';
-    public string $description = 'Twitter share';
-    public string $url         = 'https://twitter.com';
-    public string $version     = '000001';
-    public string $min_ampache = '370027';
-    public string $max_ampache = '999999';
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->description = T_('Twitter share');
-    }
+    public string $name;
+    public string $categories;
+    public string $description;
+    public string $url;
+    public string $version;
+    public string $min_ampache;
+    public string $max_ampache;
 
     /**
      * install
      * Inserts plugin preferences into Ampache
      */
-    public function install(): bool
-    {
-        return true;
-    }
+    abstract public function install(): bool;
 
     /**
      * uninstall
      * Removes our preferences from the database returning it to its original form
      */
-    public function uninstall(): bool
-    {
-        return true;
-    }
+    abstract public function uninstall(): bool;
 
     /**
      * upgrade
      * This is a recommended plugin function
      */
-    public function upgrade(): bool
-    {
-        return true;
-    }
-
-    /**
-     * external_share
-     */
-    public function external_share(string $url, string $text): string
-    {
-        $share = "https://twitter.com/share";
-        $share .= "?url=" . rawurlencode($url);
-        if (!empty($text)) {
-            $share .= "&text=" . rawurlencode($text);
-        }
-
-        return $share;
-    }
+    abstract public function upgrade(): bool;
 
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
      */
-    public function load(User $user): bool
-    {
-        $user->set_preferences();
-
-        return true;
-    }
+    abstract public function load(User $user): bool;
 }

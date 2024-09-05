@@ -30,7 +30,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampachechartlyrics implements PluginGetLyricsInterface
+class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     public string $name        = 'ChartLyrics';
     public string $categories  = 'lyrics';

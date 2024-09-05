@@ -58,10 +58,8 @@ class VlcPlayer
     /**
      * add
      * append a song to the playlist
-     * $name    Name to be shown in the playlist
-     * $url        URL of the song
-     * @param string $name
-     * @param $url
+     * @param string $name // Name to be shown in the playlist
+     * @param string $url // URL of the song
      */
     public function add($name, $url): bool
     {
@@ -453,7 +451,7 @@ class VlcPlayer
             $parser,
             XML_OPTION_TARGET_ENCODING,
             "UTF-8"
-        ); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        );
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
@@ -465,6 +463,7 @@ class VlcPlayer
 
         // Initializations
         $bigxml_array = [];
+        $parent       = [];
 
         $current = &$bigxml_array; // Reference
 
@@ -472,32 +471,37 @@ class VlcPlayer
         // Multiple tags with same name will be turned into an array
         $repeated_tag_index = [];
         foreach ($xml_values as $data) {
-            // Remove existing values, or there will be trouble
+            // Remove existing values, or there will be trouble. (these are optional)
             unset($attributes, $value);
 
-            // This command will extract these variables into the foreach scope
-            // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler. //TODO it's not
+            // tag(string), type(string), level(int), attributes(array)
+            $tag        = (string)$data['tag'];
+            $type       = (string)$data['type'];
+            $level      = (int)$data['level'];
+            $value      = $data['value'] ?? null;
+            $attributes = $data['attributes'] ?? null;
 
             $result          = [];
             $attributes_data = [];
 
-            if (isset($value)) {
+            if ($value !== null) {
                 if ($priority == 'tag') {
                     $result = $value;
                 } else {
+                    // Put the value in a assoc array if we are in the 'Attribute' mode
                     $result['value'] = $value;
-                } // Put the value in a assoc array if we are in the 'Attribute' mode
+                }
             }
 
             // Set the attributes too.
-            if (isset($attributes) && $get_attributes) {
+            if ($attributes !== null && $get_attributes) {
                 foreach ($attributes as $attr => $val) {
                     if ($priority == 'tag') {
                         $attributes_data[$attr] = $val;
                     } else {
+                        // Set all the attributes in a array called 'attr'
                         $result['attr'][$attr] = $val;
-                    } // Set all the attributes in a array called 'attr'
+                    }
                 }
             }
 

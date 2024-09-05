@@ -29,7 +29,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpacheGoogleAnalytics implements PluginDisplayOnFooterInterface
+class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'GoogleAnalytics';
     public string $categories  = 'stats';

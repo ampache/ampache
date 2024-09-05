@@ -38,10 +38,10 @@ use Exception;
  */
 class Catalog_beets extends Catalog
 {
-    protected $version     = '000001';
-    protected $type        = 'beets';
-    protected $description = 'Beets Catalog';
-    protected $listCommand = 'ls';
+    protected string $version     = '000001';
+    protected string $type        = 'beets';
+    protected string $description = 'Beets Catalog';
+    protected string $listCommand = 'ls';
 
     protected string $beetsdb = '';
 

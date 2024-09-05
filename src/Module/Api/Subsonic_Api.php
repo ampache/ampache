@@ -95,7 +95,7 @@ class Subsonic_Api
         '_apiOutput',
         '_apiOutput2',
         '_check_parameter',
-        '_decrypt_password',
+        '_decryptPassword',
         '_follow_stream',
         '_hasNestedArray',
         '_output_body',
@@ -131,10 +131,13 @@ class Subsonic_Api
         'similarArtist',
         'song',
         'users',
+        'versions',
         'video',
     ];
 
     private const ALWAYS_DOUBLE = ['averageRating'];
+
+    private const ALWAYS_BOOL = ['openSubsonic'];
 
     private const ALWAYS_INTEGER = [
         'albumCount',
@@ -164,6 +167,7 @@ class Subsonic_Api
         'track',
         'userRating',
         'visitCount',
+        'versions',
         'year',
     ];
 
@@ -371,7 +375,7 @@ class Subsonic_Api
         }
         // saving xml can fail
         if (!$output) {
-            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\"" . ">" .
+            $output = "<subsonic-response status=\"failed\" " . "version=\"1.16.1\" " . "type=\"ampache\" " . "serverVersion=\"" . Api::$version . "\" " . "openSubsonic=\"1\" " . ">" .
                 "<error code=\"0\" message=\"Error creating response.\"/>" .
                 "</subsonic-response>";
         }
@@ -394,6 +398,7 @@ class Subsonic_Api
             'alwaysArray' => self::ALWAYS_ARRAY, // array of xml tag names which should always become arrays
             'alwaysDouble' => self::ALWAYS_DOUBLE,  // array of xml tag names which should always become doubles
             'alwaysInteger' => self::ALWAYS_INTEGER, // array of xml tag names which should always become integers
+            'alwaysBool' => self::ALWAYS_BOOL, // array of xml tag names which should always become booleans
             'autoArray' => true, // create arrays for tags which appear more than once
             'textContent' => 'value', // key used for the text content of elements
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
@@ -423,6 +428,9 @@ class Subsonic_Api
                     }
                     if (in_array($attributeName, $options['alwaysDouble'])) {
                         $vattr = (float) $strattr;
+                    }
+                    if (in_array($attributeName, $options['alwaysBool'])) {
+                        $vattr = (bool) $strattr;
                     }
                 }
                 $attributesArray[$attributeKey] = $vattr;
@@ -463,18 +471,39 @@ class Subsonic_Api
                                 ) || !$options['autoArray'] ? [$childProperties] : $childProperties;
                             }
                         } else {
+                            if (in_array($childTagName, $options['alwaysInteger'])) {
+                                $childProperties = (int)$childProperties;
+                            }
+                            if (in_array($childTagName, $options['alwaysDouble'])) {
+                                $childProperties = (float)$childProperties;
+                            }
+                            if (in_array($childTagName, $options['alwaysBool'])) {
+                                $childProperties = (bool)$childProperties;
+                            }
                             // test if tags of this type should always be arrays, no matter the element count
                             $tagsArray[$childTagName] = in_array(
                                 $childTagName,
                                 $options['alwaysArray']
                             ) || !$options['autoArray'] ? [$childProperties] : $childProperties;
                         }
-                    } elseif (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
-                        //key already exists and is integer indexed array
-                        $tagsArray[$childTagName][] = $childProperties;
                     } else {
-                        //key exists so convert to integer indexed array with previous value in position 0
-                        $tagsArray[$childTagName] = [$tagsArray[$childTagName], $childProperties];
+                        // existing arrays of data
+                        if (in_array($childTagName, $options['alwaysInteger'])) {
+                            $childProperties = (int)$childProperties;
+                        }
+                        if (in_array($childTagName, $options['alwaysDouble'])) {
+                            $childProperties = (float)$childProperties;
+                        }
+                        if (in_array($childTagName, $options['alwaysBool'])) {
+                            $childProperties = (bool)$childProperties;
+                        }
+                        if (is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName]) === range(0, count($tagsArray[$childTagName]) - 1)) {
+                            // key already exists and is integer indexed array
+                            $tagsArray[$childTagName][] = $childProperties;
+                        } else {
+                            // key exists so convert to integer indexed array with previous value in position 0
+                            $tagsArray[$childTagName] = [$tagsArray[$childTagName], $childProperties];
+                        }
                     }
                 }
             } // REPLACING list($childTagName, $childProperties) = each($childArray);
@@ -488,11 +517,13 @@ class Subsonic_Api
         }
 
         // stick it all together
-        $propertiesArray = !$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === '') ? array_merge(
-            $attributesArray,
-            $tagsArray,
-            $textContentArray
-        ) : $plainText;
+        $propertiesArray = (!$options['autoText'] || !empty($attributesArray) || !empty($tagsArray) || ($plainText === ''))
+            ? array_merge(
+                $attributesArray,
+                $tagsArray,
+                $textContentArray
+            )
+            : $plainText;
 
         if (isset($propertiesArray['xmlns'])) {
             unset($propertiesArray['xmlns']);
@@ -1213,11 +1244,21 @@ class Subsonic_Api
      * @param array $input
      * @param User $user
      * @param string $elementName
+     * @param bool $search3
      */
-    public static function search2($input, $user, $elementName = "searchResult2"): void
+    public static function search2($input, $user, $elementName = "searchResult2", $search3 = false): void
     {
+        $query = ($search3)
+            ? $input['query'] ?? ''
+            : self::_check_parameter($input, 'query');
+
+        // opensubsonic allows empty queries for search3 calls
+        if ($query === false) {
+            return;
+        }
+
         $operator = 0; // contains
-        $original = unhtmlentities((string)self::_check_parameter($input, 'query'));
+        $original = unhtmlentities((string)$query);
         $query    = $original;
         if (substr($original, 0, 1) == '"' && (substr($original, -1) == '"')) {
             $query = substr($original, 1, -1);
@@ -1321,7 +1362,7 @@ class Subsonic_Api
      */
     public static function search3($input, $user): void
     {
-        self::search2($input, $user, "searchResult3");
+        self::search2($input, $user, "searchResult3", true);
     }
 
     /**
@@ -1524,10 +1565,10 @@ class Subsonic_Api
                 $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
         }
 
         // return an error on missing files
@@ -1757,7 +1798,8 @@ class Subsonic_Api
             $songs    = Search::run($data, $user);
             $response = Subsonic_Xml_Data::addSubsonicResponse('getlyrics');
             if (count($songs) > 0) {
-                Subsonic_Xml_Data::addLyrics($response, $artist, $title, $songs[0]);
+                $song = new Song($songs[0]);
+                Subsonic_Xml_Data::addLyrics($response, $artist, $title, $song);
             }
         }
 
@@ -2749,6 +2791,23 @@ class Subsonic_Api
             $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_UNAUTHORIZED, 'updateuser');
         }
 
+        self::_apiOutput($input, $response);
+    }
+
+    /**
+     * getOpenSubsonicExtensions
+     * List the OpenSubsonic extensions supported by this server.
+     * https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/
+     * @param array $input
+     * @param User $user
+     */
+    public static function getopensubsonicextensions($input, $user): void
+    {
+        unset($user);
+        $response = Subsonic_Xml_Data::addSubsonicResponse('getopensubsonicextensions');
+
+        Subsonic_Xml_Data::addOpenSubsonicExtensions($response, 'formPost', [1]);
+        Subsonic_Xml_Data::addOpenSubsonicExtensions($response, 'transcodeOffset', [1]);
         self::_apiOutput($input, $response);
     }
 

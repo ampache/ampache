@@ -2442,7 +2442,7 @@ abstract class Catalog extends database_object
             $update = [];
         }
 
-        // remote catalogs should unlink the temp files if needed //TODO add other types of remote catalog
+        // remote catalogs should unlink the temp files if needed // TODO add other types of remote catalog
         if ($catalog instanceof Catalog_Seafile) {
             $catalog->clean_tmp_file($streamConfiguration['file_path']);
         }

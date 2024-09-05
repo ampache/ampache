@@ -90,7 +90,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                         [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $results = pathinfo($match);
-                    $test    = $results['extension'];
+                    $test    = $results['extension'] ?? '';
                     $pos     = strpos($test, '?');
                     if ($pos > 0) {
                         $results['extension'] = substr($test, 0, $pos);

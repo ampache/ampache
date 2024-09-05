@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
 
-class AmpacheAmazon implements PluginGatherArtsInterface
+class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Amazon';
     public string $categories  = 'metadata';

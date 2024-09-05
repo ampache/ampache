@@ -31,6 +31,9 @@ php bin/cli admin:updateDatabase -e
 ### Check for config file updates
 php bin/cli admin:updateConfigFile -e
 
+### Check for plugin updates
+php bin/cli admin:updatePlugins -e
+
 ### Clean up your garbage data
 php bin/cli run:updateCatalog -t
 

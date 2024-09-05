@@ -24,12 +24,12 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Search\SaveAsSmartPlaylistAction;
-use Ampache\Module\Application\Search\SaveAsPlaylistAction;
-use Ampache\Module\Application\Search\SearchAction;
-use Ampache\Module\Application\Search\ShowAction;
+use Ampache\Module\Application\Search\DescriptorAction;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
+
+define('NO_SESSION', '1');
+define('OUTDATED_DATABASE_OK', 1);
 
 /** @var ContainerInterface $dic */
 $dic = require __DIR__ . '/../src/Config/Init.php';
@@ -37,10 +37,7 @@ $dic = require __DIR__ . '/../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
-        SearchAction::REQUEST_KEY => SearchAction::class,
-        SaveAsSmartPlaylistAction::REQUEST_KEY => SaveAsSmartPlaylistAction::class,
-        SaveAsPlaylistAction::REQUEST_KEY => SaveAsPlaylistAction::class,
-        ShowAction::REQUEST_KEY => ShowAction::class,
+        DescriptorAction::REQUEST_KEY => DescriptorAction::class,
     ],
-    ShowAction::REQUEST_KEY
+    DescriptorAction::REQUEST_KEY
 );

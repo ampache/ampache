@@ -210,9 +210,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
         if (!$user instanceof User) {
@@ -696,7 +695,7 @@ class AmpacheXbmc extends localplay_controller
                 );
 
                 //speed == 0, pause
-                if($speed['speed'] == 0) {
+                if ($speed['speed'] == 0) {
                     $array['state'] = 'pause';
                 }
 
@@ -737,7 +736,7 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($playlist_item);
                 $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
-                if(!empty($oid)) {
+                if (!empty($oid)) {
                     $song = new Song($oid);
                     if ($song->isNew() === false) {
                         $array['track_title']  = $song->title;

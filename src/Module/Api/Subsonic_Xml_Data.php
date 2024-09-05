@@ -249,6 +249,21 @@ class Subsonic_Xml_Data
     }
 
     /**
+     * addOpenSubsonicExtension
+     * @param SimpleXMLElement $xml
+     * @param string $name
+     * @param int[] $versions
+     */
+    public static function addOpenSubsonicExtensions($xml, $name, $versions): void
+    {
+        $xextension = self::addChildToResultXml($xml, 'opensubsonicextension');
+        $xextension->addAttribute('name', $name);
+        foreach ($versions as $version) {
+            $xextension->addChild('versions', (string)$version);
+        }
+    }
+
+    /**
      * addArtists
      * @param SimpleXMLElement $xml
      * @param array $artists
@@ -1181,11 +1196,14 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param string $artist
      * @param string $title
-     * @param int $song_id
+     * @param Song $song
      */
-    public static function addLyrics($xml, $artist, $title, $song_id): void
+    public static function addLyrics($xml, $artist, $title, $song): void
     {
-        $song = new Song($song_id);
+        if ($song->isNew()) {
+            return;
+        }
+
         $song->fill_ext_info('lyrics');
         $lyrics = $song->get_lyrics();
 
@@ -1226,6 +1244,7 @@ class Subsonic_Xml_Data
      * @param SimpleXMLElement $xml
      * @param array $info
      * @param array $similars
+     * @param string $elementName
      */
     public static function addArtistInfo($xml, $info, $similars, $elementName = 'artistInfo'): void
     {
@@ -1481,6 +1500,7 @@ class Subsonic_Xml_Data
         $response->addAttribute('version', (string)$version);
         $response->addAttribute('type', 'ampache');
         $response->addAttribute('serverVersion', Api::$version);
+        $response->addAttribute('openSubsonic', "1");
 
         return $response;
     }
@@ -1629,6 +1649,7 @@ class Subsonic_Xml_Data
         if (Subsonic_Xml_Data::_isPodcastEpisode($object_id)) {
             return new Podcast_Episode(Subsonic_Xml_Data::_getAmpacheId($object_id));
         }
+        debug_event(self::class, 'Couldn\'t identify Ampache object from ' . $object_id, 5);
 
         return null;
     }

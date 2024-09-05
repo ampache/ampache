@@ -126,7 +126,7 @@
         "tests": "vendor/bin/phpunit -c phpunit.xml",
         "syntax": "resources/scripts/tests/syntax.sh",
         "cs:fix": "vendor/bin/php-cs-fixer fix",
-        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run",
+        "cs:check": "vendor/bin/php-cs-fixer fix --dry-run -vv",
         "post-autoload-dump": [
             "@php resources/scripts/composer/check_tag_tools.php"
         ],
