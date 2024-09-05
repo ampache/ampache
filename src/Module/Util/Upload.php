@@ -345,8 +345,12 @@ class Upload
 
         $rootdir = "";
         if ($catalog !== null && $catalog->id) {
-            $rootdir = realpath($catalog->get_path());
-            if (!empty($rootdir)) {
+            $pathname = realpath($catalog->get_path());
+            if (
+                is_string($pathname) &&
+                !empty($pathname)
+            ) {
+                $rootdir = $pathname;
                 if (AmpConfig::get('upload_subdir')) {
                     $rootdir .= DIRECTORY_SEPARATOR . $username;
                     if (!Core::is_readable($rootdir)) {

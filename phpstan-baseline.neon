@@ -366,11 +366,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:error\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -402,11 +397,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:success\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -467,11 +457,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:empty\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -4441,11 +4426,6 @@ parameters:
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:getArtTypePriority\\(\\) should return int but returns int\\|string\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/MetaTagCollectorModule.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\MetaTagCollectorModule\\:\\:sortArtByPriority\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/MetaTagCollectorModule.php
@@ -5406,11 +5386,6 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Update\\\\UpdateCatalog\\:\\:lookupCatalogs\\(\\) should return PDOStatement but returns PDOStatement\\|false\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Catalog/Update/UpdateCatalog.php
@@ -5871,11 +5846,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SeekTo\\(\\) should return bool but returns float\\|int\\|string\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SendCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -5892,11 +5862,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SkipTo\\(\\) has parameter \\$idx with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:SkipTo\\(\\) should return bool but returns float\\|int\\|string\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
@@ -9021,11 +8986,6 @@ parameters:
 			path: src/Module/Util/Upload.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Upload\\:\\:get_root\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\UtilityFactory\\:\\:createVaInfo\\(\\) has parameter \\$gatherTypes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/UtilityFactory.php
@@ -9461,16 +9421,6 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Cannot access offset 'handle' on array\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:create_waveform\\(\\) should return string\\|null but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:findValues\\(\\) has parameter \\$byte1 with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
@@ -9487,16 +9437,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$character of function ord expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function file_put_contents expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
 
@@ -10069,16 +10009,6 @@ parameters:
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelibrefm\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampachelibrefm.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
-
-		-
-			message: "#^Parameter \\#2 \\$content of method Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:post_json_url\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Plugin/Ampachelistenbrainz.php
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampachelistenbrainz\\:\\:\\$api_host has no type specified\\.$#"

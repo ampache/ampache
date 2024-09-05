@@ -837,7 +837,7 @@ class mpd
      *
      * Skips directly to the <idx> song in the MPD playlist.
      * @param $idx
-     * @return bool
+     * @return bool|float|int|string
      */
     public function SkipTo($idx)
     {
@@ -863,7 +863,7 @@ class mpd
      * assumed.
      * @param $pos
      * @param int $track
-     * @return bool
+     * @return bool|float|int|string
      */
     public function SeekTo($pos, $track = -1)
     {

@@ -154,7 +154,7 @@ class Json5_Data
      */
     public static function empty($type): string
     {
-        return json_encode([$type => []], JSON_PRETTY_PRINT);
+        return json_encode([$type => []], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
