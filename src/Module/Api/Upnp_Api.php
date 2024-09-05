@@ -688,7 +688,7 @@ class Upnp_Api
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylist'],
+                            'childCount' => $counts['search'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         ];

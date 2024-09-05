@@ -1283,7 +1283,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @param int $catalog_id
-     * @return int[]
+     * @return array{items: int, time: int, size: int}
      */
     public static function count_catalog($catalog_id): array
     {
