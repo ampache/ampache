@@ -5061,16 +5061,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:perform_ready\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:show_ready_process\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Parameter \\#2 \\$offset of function substr expects int, int\\<1, max\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_dropbox.php
@@ -5137,11 +5127,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:check_catalog_proc\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:connect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
 
@@ -5691,21 +5676,6 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:get_now_playing\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:get_random\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:get_repeat\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\HttpQPlayer\\:\\:sendCommand\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
@@ -5946,16 +5916,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_debug\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:_parseFileListResponse\\(\\) has parameter \\$response with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -6126,27 +6086,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:__construct\\(\\) has parameter \\$descriptionUrl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:instanceOnly\\(\\) has parameter \\$command with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:parseDescriptionUrl\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:parseDescriptionUrl\\(\\) has parameter \\$descriptionUrl with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:restoreDescriptionUrl\\(\\) has parameter \\$descriptionUrl with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPDevice.php
 
@@ -6251,11 +6191,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:\\$_description_url has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:\\$_device has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -6281,12 +6216,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:AllItems\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:Clear\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlaylist\\:\\:AllItems\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlaylist.php
 
@@ -6391,7 +6321,7 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:fullstate\\(\\) has no return type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:fullstate\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
@@ -10566,22 +10496,12 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:perform_ready\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:show_ready_process\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 

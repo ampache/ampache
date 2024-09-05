@@ -31,7 +31,7 @@ use Ampache\Module\System\Session;
 class UPnPPlaylist
 {
     private $_deviceGUID;
-    private $_songs = [];
+    private $_songs   = [];
     private $_current = 0;
 
     /**
