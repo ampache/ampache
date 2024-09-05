@@ -543,6 +543,10 @@ class AmpacheVlc extends localplay_controller
     public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
+        if (!$arrayholder) {
+            return [];
+        }
+
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
         $listtracks  = $this->get();

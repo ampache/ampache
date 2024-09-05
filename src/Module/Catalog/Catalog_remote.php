@@ -226,6 +226,7 @@ class Catalog_remote extends Catalog
      * connect
      *
      * Connects to the remote catalog that we are.
+     * @return AmpacheApi\AmpacheApi|false
      */
     public function connect()
     {

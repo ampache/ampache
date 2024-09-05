@@ -1188,7 +1188,7 @@ class mpd
      * @param string $message
      * @param int $level
      */
-    private function _error($source, $message, $level = 1)
+    private function _error($source, $message, $level = 1): void
     {
         $this->err_str = "$source: $message";
         $this->_debug($source, $message, $level);
@@ -1202,7 +1202,7 @@ class mpd
      * @param string $message
      * @param int $level
      */
-    private function _debug($source, $message, $level)
+    private function _debug($source, $message, $level): void
     {
         if ($this->debugging) {
             echo "$source / $message\n";

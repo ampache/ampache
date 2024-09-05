@@ -275,6 +275,7 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
+     * @return array|false
      */
     public function fullstate()
     {

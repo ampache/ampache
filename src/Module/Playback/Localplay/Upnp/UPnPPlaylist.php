@@ -31,7 +31,7 @@ use Ampache\Module\System\Session;
 class UPnPPlaylist
 {
     private $_deviceGUID;
-    private $_songs;
+    private $_songs = [];
     private $_current = 0;
 
     /**
@@ -67,14 +67,14 @@ class UPnPPlaylist
         $this->PlayListSave();
     }
 
-    public function Clear()
+    public function Clear(): void
     {
         $this->_songs   = [];
         $this->_current = 0;
         $this->PlayListSave();
     }
 
-    public function AllItems()
+    public function AllItems(): array
     {
         return $this->_songs;
     }
