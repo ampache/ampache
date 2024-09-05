@@ -46,6 +46,7 @@ class UPnPPlayer
     /** @var UPnPDevice $object */
     private $_device;
 
+    /** @var string $_description_url */
     private $_description_url;
 
     // 0 - stopped, 1 - playing

@@ -163,12 +163,12 @@ class Catalog_dropbox extends Catalog
         return (!empty($this->authtoken));
     }
 
-    public function show_ready_process()
+    public function show_ready_process(): void
     {
         // $this->showAuthToken();
     }
 
-    public function perform_ready()
+    public function perform_ready(): void
     {
         // $this->authcode = $_REQUEST['authcode'];
         // $this->completeAuthToken();

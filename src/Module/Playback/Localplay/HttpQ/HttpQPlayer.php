@@ -438,6 +438,7 @@ class HttpQPlayer
     /**
      * get_repeat
      * This returns the current state of the repeat
+     * @return string|bool
      */
     public function get_repeat()
     {
@@ -449,6 +450,7 @@ class HttpQPlayer
     /**
      * get_random
      * This returns the current state of shuffle
+     * @return string|bool
      */
     public function get_random()
     {
@@ -461,6 +463,7 @@ class HttpQPlayer
      * get_now_playing
      * This returns the file information for the currently
      * playing song
+     * @return string|bool
      */
     public function get_now_playing()
     {

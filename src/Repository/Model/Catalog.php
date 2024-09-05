@@ -320,7 +320,7 @@ abstract class Catalog extends database_object
     /**
      * Show a message to make the catalog ready.
      */
-    public function show_ready_process()
+    public function show_ready_process(): void
     {
         // Do nothing.
     }
@@ -328,7 +328,7 @@ abstract class Catalog extends database_object
     /**
      * Perform the last step process to make the catalog ready.
      */
-    public function perform_ready()
+    public function perform_ready(): void
     {
         // Do nothing.
     }

@@ -117,7 +117,7 @@ class Json4_Data
      */
     public static function error($code, $string): string
     {
-        return json_encode(["error" => ["code" => $code, "message" => $string]], JSON_PRETTY_PRINT);
+        return json_encode(["error" => ["code" => $code, "message" => $string]], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -130,7 +130,7 @@ class Json4_Data
      */
     public static function success($string): string
     {
-        return json_encode(["success" => $string], JSON_PRETTY_PRINT);
+        return json_encode(["success" => $string], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

@@ -155,9 +155,9 @@ class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayIn
                     ]
                 ]
             ]
-        );
+        ) ?: '';
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
-        $response = $this->post_json_url('/1/submit-listens', $json);
+        $response = $this->post_json_url('/1/submit-listens', $json) ?: '';
 
         if (!strpos($response, "ok")) {
             debug_event('listenbrainz.plugin', "Submission Failed", 5);
