@@ -1073,13 +1073,7 @@ abstract class Catalog extends database_object
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
      * @param int|null $catalog_id
-     * @return array{
-     *  tags: int,
-     *  formatted_size: string,
-     *  time_text: string,
-     *  users: int,
-     *  connected: int
-     * }
+     * @return array<string, int|string>
      */
     public static function get_stats($catalog_id = 0): array
     {
@@ -1222,7 +1216,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
      * @param int $user_id
-     * @return int[]
+     * @return array<string, int>
      */
     public static function get_server_counts($user_id): array
     {
@@ -1236,7 +1230,7 @@ abstract class Catalog extends database_object
         }
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = (int)$row['value'];
+            $results[(string)$row['key']] = (int)$row['value'];
         }
 
         return $results;

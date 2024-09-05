@@ -2226,16 +2226,6 @@ parameters:
 			path: src/Module/Api/Method/DownloadMethod.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Method\\\\Exception\\\\RequestParamMissingException\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Exception/RequestParamMissingException.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Method\\\\Exception\\\\ResultEmptyException\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Exception/ResultEmptyException.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\FlagMethod\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/FlagMethod.php
@@ -4319,11 +4309,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/ArtCollectorInterface.php
-
-		-
-			message: "#^PHPDoc tag @var for constant Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorTypeEnum\\:\\:TYPE_CLASS_MAP with type array\\<Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\> is incompatible with value array\\{google\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\GoogleCollectorModule', musicbrainz\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\MusicbrainzCollectorModule', lastfm\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\LastFmCollectorModule', spotify\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\SpotifyCollectorModule', db\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\DbCollectorModule', folder\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\FolderCollectorModule', tags\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\MetaTagCollectorModule'\\}\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollectorTypeEnum.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\:\\:collect\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -10417,11 +10402,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_name_array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_stats\\(\\) should return array\\{tags\\: int, formatted_size\\: string, time_text\\: string, users\\: int, connected\\: int\\} but returns non\\-empty\\-array\\<int\\|string\\>\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
