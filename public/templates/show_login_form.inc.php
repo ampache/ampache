@@ -33,6 +33,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
+$t_ampache = T_('Ampache');
 $web_path = AmpConfig::get_web_path();
 $htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $dir      = is_rtl(AmpConfig::get('lang', 'en_US'))
@@ -66,7 +67,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -104,7 +105,7 @@ $_SESSION['login'] = true; ?>
             </form>
             <?php if ($mobile_session) {
                 echo '<div id="mobileheader"><!-- This is the header -->';
-                echo '<h1 id="headerlogo"></h1>';
+                echo "<h1 id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo '</div>';
             }
 if (AmpConfig::get('cookie_disclaimer')) {

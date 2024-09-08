@@ -312,14 +312,19 @@ div#autoupdate > span {
 }
 
 #header #headerlogo img {
-    height: 64px;
-    width: 64px;
+    height: 128px;
+    width: 128px;
 }
 
 #mobileheader {
     height: 64px;
     padding-bottom: 64px;
     padding-top: 24px;
+}
+
+#mobileheader #headerlogo img {
+    height: 64px;
+    width: 64px;
 }
 
 #header #headerbox {

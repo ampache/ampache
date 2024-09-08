@@ -28,8 +28,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var bool $validationResult */
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path = AmpConfig::get_web_path(); ?>
+$t_ampache = T_('Amapche');
+$htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$web_path  = AmpConfig::get_web_path(); ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
     <head>
@@ -42,7 +43,7 @@ $web_path = AmpConfig::get_web_path(); ?>
     <body id="registerPage">
         <div id="maincontainer">
             <div id="header">
-                <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
+                <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1></a>
                 <span><?php echo T_('Registration Validation'); ?>.</span>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>

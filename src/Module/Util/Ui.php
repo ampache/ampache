@@ -698,7 +698,7 @@ class Ui implements UiInterface
             return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**
