@@ -312,8 +312,8 @@ div#autoupdate > span {
 }
 
 #header #headerlogo img {
-    height: 128px;
-    width: 128px;
+    height: 64px;
+    width: 64px;
 }
 
 #mobileheader {
