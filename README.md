@@ -133,7 +133,9 @@ Ampache would like to request anyone wanting to donate to the project spend that
 
 If you use these projects please consider donating in any way possible. (Including your time if you can help out!)
 
-@mitchray developer of [ample](https://github.com/mitchray/ample). https://buymeacoffee.com/mitchray
+@mitchray developer of [ample](https://github.com/mitchray/ample).
+<a target="_blank" href="[https://www.paypal.com/paypalme/musiquelibre](https://buymeacoffee.com/mitchray)">
+<img width="32" height="32" class="octicon rounded-2 d-block" alt="buy_me_a_coffee" src="https://github.githubassets.com/assets/buy_me_a_coffee-63ed78263f6e.svg">https://buymeacoffee.com/mitchray</a>
 
 @icefields developer of [Power Ampache](https://power.ampache.dev/)
 <a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
@@ -141,7 +143,7 @@ If you use these projects please consider donating in any way possible. (Includi
 <a target="_blank" href="https://paypal.me/powerampache">
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
 
-Use [play.dogmazic.net](https://play.dogmazic.net/)? Donate to the libre music association
+If you're a fan of [play.dogmazic.net](https://play.dogmazic.net/)? Donate to the libre music association
 <a target="_blank" href="https://www.paypal.com/paypalme/musiquelibre">
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
 
