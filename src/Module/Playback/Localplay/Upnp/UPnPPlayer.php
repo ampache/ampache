@@ -270,7 +270,7 @@ class UPnPPlayer
 
         $this->SetIntState(1);
 
-        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
+        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current") ?? [];
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
         $args     = ['InstanceID' => 0, 'Speed' => 1];

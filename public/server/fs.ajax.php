@@ -40,8 +40,8 @@ if (empty($rootdir)) {
 $rootdir .= DIRECTORY_SEPARATOR;
 
 if (isset($_GET['operation'])) {
-    $fs = new FileSystem($rootdir);
     try {
+        $fs   = new FileSystem($rootdir);
         $rslt = null;
         $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
         switch (Core::get_get('operation')) {

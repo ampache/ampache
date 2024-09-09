@@ -46,9 +46,13 @@ use Ampache\Repository\Model\User;
  */
 class Ui implements UiInterface
 {
-    private static $_ticker;
-    private static $_icon_cache;
-    private static $_image_cache;
+    private static int $_ticker = 0;
+
+    /** @var array<string, string> $_icon_cache */
+    private static array $_icon_cache = [];
+
+    /** @var array<string, string> $_image_cache */
+    private static array $_image_cache = [];
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer
@@ -434,7 +438,7 @@ class Ui implements UiInterface
             return __DIR__ . '/../../../resources/images/icon_error.svg';
         }
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
-            $url = $filesearch[0];
+            $url = (string)$filesearch[0];
         } else {
             $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }

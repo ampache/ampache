@@ -123,12 +123,9 @@ class AmpConfig
     /**
      * set_by_array
      *
-     * This is the same as the set function except it takes an array as
-     * input.
-     * @param array $array
-     * @param bool $clobber
+     * This is the same as the set function except it takes an array as input.
      */
-    public static function set_by_array($array, $clobber = false): void
+    public static function set_by_array(array $array, bool $clobber = false): void
     {
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);

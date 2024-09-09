@@ -85,7 +85,7 @@ final class ShowEditObjectAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream($results)
+                $this->streamFactory->createStream((string)$results)
             );
     }
 

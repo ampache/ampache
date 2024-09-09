@@ -106,8 +106,8 @@ class OAuthRequest
 
     /**
      * pretty much a helper function to set up the request
-     * @param $consumer
-     * @param string $token
+     * @param OAuthConsumer $consumer
+     * @param string|null $token
      * @param string $http_method
      * @param string $http_url
      * @param array $parameters

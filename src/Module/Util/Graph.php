@@ -830,13 +830,13 @@ class Graph
      * @param string $zoom
      */
     public function display_map(
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day'
-    ) {
+        $user_id,
+        $object_type,
+        $object_id,
+        $start_date,
+        $end_date,
+        $zoom,
+    ): bool {
         $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
         $user = Core::get_global('user');
         if (!$user instanceof User) {

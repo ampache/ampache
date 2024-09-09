@@ -306,19 +306,9 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/RefreshUpdatedAction.php
-
-		-
 			message: "#^Variable \\$argument in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/ShowEditObjectAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
@@ -4111,11 +4101,6 @@ parameters:
 			path: src/Module/Application/Installation/DefaultAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of static method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) expects array, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
 			message: "#^Variable \\$auth in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: src/Module/Application/Login/DefaultAction.php
@@ -4159,11 +4144,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Application\\\\Stream\\\\StreamItemAction\\:\\:\\$configContainer is never read, only written\\.$#"
 			count: 1
 			path: src/Module/Application/Stream/StreamItemAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Test/ConfigAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -4516,17 +4496,7 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Parameter \\#1 \\$searchresult of static method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:clean_search_results\\(\\) expects array, array\\<int\\|string, array\\|int\\>\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
 			message: "#^Parameter \\#2 \\$result of function ldap_get_entries expects LDAP\\\\Result, array\\|LDAP\\\\Result given\\.$#"
-			count: 2
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -5087,16 +5057,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:to_virtual_path\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -6006,11 +5966,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Parameter \\#2 \\$arguments of method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:sendRequestToDevice\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:\\$_device has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -6358,16 +6313,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$track with no type specified\\.$#"
 			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function http_build_query expects array\\|object, array\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, string\\|false given\\.$#"
-			count: 3
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
@@ -7941,47 +7886,12 @@ parameters:
 			path: src/Module/Util/FileSystem.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '/' and array\\<string\\>\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_clean_name\\(\\) never returns array\\<string\\> so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#1 \\$from_encoding of function iconv expects string, array\\|string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#3 \\$translated_filename of method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_rename_file\\(\\) expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:display_map\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -8072,11 +7982,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$Indexes of method CpChart\\\\BaseDraw\\:\\:writeLabel\\(\\) expects array, int given\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_geolocation_pts\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -8327,11 +8232,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:build_signature\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:from_consumer_and_token\\(\\) has parameter \\$consumer with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -8721,13 +8621,8 @@ parameters:
 			path: src/Module/Util/Recommendation.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strip_tags expects string, string\\|null given\\.$#"
-			count: 3
 			path: src/Module/Util/Recommendation.php
 
 		-
@@ -8777,21 +8672,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_icon_cache has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_image_cache has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_ticker has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -9091,37 +8971,12 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 9
 			path: src/Module/Util/VaInfo.php
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:splitSlashedlist\\(\\) expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_map expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int, string\\>\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
-			count: 2
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -9296,11 +9151,6 @@ parameters:
 			path: src/Plugin/Ampache7digital.php
 
 		-
-			message: "#^Parameter \\#2 \\$token of static method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:from_consumer_and_token\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
@@ -9407,11 +9257,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Parameter \\#3 \\$options of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
 

@@ -666,14 +666,12 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            $tempfile = $this->seafile->download($file);
-
-            $stream_path = $tempfile;
+            $stream_path = $this->seafile->download($file);
             $stream_name = $fileinfo['filename'];
 
             // in case this didn't get set for some reason
             if ($size == 0) {
-                $size = Core::get_filesize($tempfile);
+                $size = Core::get_filesize($stream_path);
             }
         }
 

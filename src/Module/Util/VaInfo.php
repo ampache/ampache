@@ -106,6 +106,7 @@ final class VaInfo implements VaInfoInterface
         'video_codec' => null,
         'year' => null
     ];
+
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
     public $encoding      = '';
@@ -179,9 +180,9 @@ final class VaInfo implements VaInfoInterface
         } else {
             $this->_pathinfo = pathinfo(str_replace('%2F', '/', urlencode($this->filename)));
         }
-        $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension']);
+        $this->_pathinfo['extension'] = strtolower($this->_pathinfo['extension'] ?? '');
 
-        // convert all tag sources always to lowercase or results doesn't contains plugin results
+        // convert all tag sources always to lowercase or results doesn't contain plugin results
         $enabled_sources = array_map('strtolower', $this->get_metadata_order());
 
         if (in_array('getid3', $enabled_sources) && $this->islocal) {
@@ -1268,8 +1269,9 @@ final class VaInfo implements VaInfoInterface
                         /**
                          * @todo check functionality; looks like an array is used for a string
                          */
+                        $items       = preg_split("/^rating:/", $user_rating) ?: [];
                         $rating_user = $this->userRepository->findByEmail(
-                            array_map('trim', preg_split("/^rating:/", $user_rating))[1] ?? ''
+                            array_map('trim', $items)[1] ?? ''
                         );
                         if ($rating_user !== null) {
                             $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
@@ -1977,8 +1979,8 @@ final class VaInfo implements VaInfoInterface
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (!empty($data) && !empty($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
-            $items   = preg_split($pattern, $data);
-            $items   = array_map('trim', $items ?: []);
+            $items   = preg_split($pattern, $data) ?: [];
+            $items   = array_map('trim', $items);
             if (empty($items)) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }
