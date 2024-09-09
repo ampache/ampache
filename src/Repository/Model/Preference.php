@@ -696,22 +696,15 @@ class Preference extends database_object
         foreach (self::SYSTEM_LIST as $preference) {
             $sql .= "SELECT '$preference' AS `item` UNION ALL ";
         }
+
         $sql = rtrim($sql, " UNION ALL ");
         $sql .= ") AS `items` LEFT JOIN `preference` ON `items`.`item` = `preference`.`name` WHERE `preference`.`name` IS NULL;";
-        $results    = [];
+
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = $row['item'];
-        }
-
-        if (!empty($results)) {
-            debug_event(self::class, 'set_defaults: missing preferences found', 5);
-        }
-
-        foreach ($results as $name) {
-            debug_event(self::class, 'Insert preference: ' . $name, 2);
+            debug_event(self::class, 'Insert preference: ' . $row['item'], 2);
             $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES ";
-            switch ($name) {
+            switch ($row['item']) {
                 case 'download':
                     Dba::write($sql . "(1, 'download', '1', 'Allow Downloads', " . AccessLevelEnum::ADMIN->value . ", 'boolean', 'options', 'feature');");
                     break;
@@ -1116,7 +1109,7 @@ class Preference extends database_object
                     break;
                 default:
                     // todo custom_logo_user Amapche7 prefs i haven't done yet
-                    debug_event(self::class, 'ERROR: missing preference insert code for: ' . $name, 1);
+                    debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
             Dba::write($sql);
         }
