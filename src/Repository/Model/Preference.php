@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * This handles all of the preference stuff for Ampache
@@ -1050,6 +1051,10 @@ class Preference extends database_object
             }
             Dba::write($sql);
         }
+
+        foreach (array_merge([-1], self::getUserRepository()->getValid()) as $user_id) {
+            User::fix_preferences($user_id);
+        }
     }
 
     /**
@@ -1554,5 +1559,15 @@ class Preference extends database_object
         $_SESSION['userdata']['uid']         = $user_id;
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }
