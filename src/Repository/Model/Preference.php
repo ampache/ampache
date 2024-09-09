@@ -130,6 +130,7 @@ class Preference extends database_object
         'show_album_artist',
         'show_artist',
         'show_donate',
+        'show_header_login',
         'show_license',
         'show_lyrics',
         'show_original_year',
