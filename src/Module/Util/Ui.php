@@ -645,7 +645,7 @@ class Ui implements UiInterface
         }
 
         if (AmpConfig::get('custom_login_logo', false)) {
-            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
         $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";

@@ -311,6 +311,11 @@ div#autoupdate > span {
     width: 20%;
 }
 
+#header #logo img {
+    height: 128px;
+    width: 128px;
+}
+
 #header #headerlogo img {
     height: 64px;
     width: 64px;
@@ -437,8 +442,8 @@ div#autoupdate > span {
     box-shadow: none;
 }
 
-#loginPage #headerlogo,
-#registerPage #headerlogo {
+#loginPage #logo,
+#registerPage #logo {
     width: 128px;
     height: 128px;
     background-repeat: no-repeat;

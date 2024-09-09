@@ -67,7 +67,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"rlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -105,7 +105,7 @@ $_SESSION['login'] = true; ?>
             </form>
             <?php if ($mobile_session) {
                 echo '<div id="mobileheader"><!-- This is the header -->';
-                echo "<h1 id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
+                echo "<h1 id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo '</div>';
             }
 if (AmpConfig::get('cookie_disclaimer')) {

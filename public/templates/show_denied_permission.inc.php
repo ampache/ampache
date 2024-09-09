@@ -48,7 +48,7 @@ $web_path = AmpConfig::get_web_path(); ?>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
-                <a class="navbar-brand" href="<?php echo $web_path; ?>" id="headerlogo">
+                <a class="navbar-brand" href="<?php echo $web_path; ?>" id="logo">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
                     <?php echo scrub_out(AmpConfig::get('site_title')); ?>
                 </a>

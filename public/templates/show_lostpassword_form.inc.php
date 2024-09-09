@@ -63,7 +63,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -80,7 +80,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             </form>
             <?php if ($mobile_session) {
                 echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                echo "<h1 id=\"headerlogo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
+                echo "<h1 id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo "</div>";
             } ?>
         </div>

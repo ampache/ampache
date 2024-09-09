@@ -58,7 +58,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <div id="header">
             <a href="<?php echo $web_path; ?>">
-                <h1 id="headerlogo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
+                <h1 id="logo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
             </a>
         </div>
 <?php $action    = scrub_in(Core::get_request('action'));
