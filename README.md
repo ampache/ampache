@@ -141,6 +141,10 @@ If you use these projects please consider donating in any way possible. (Includi
 <a target="_blank" href="https://paypal.me/powerampache">
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
 
+Use [play.dogmazic.net](https://play.dogmazic.net/)? Donate to the libre music association
+<a target="_blank" href="https://www.paypal.com/paypalme/musiquelibre">
+<img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
+
 Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGEMENTS.md).
 
 ## Contact Us
