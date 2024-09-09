@@ -70,7 +70,7 @@ final class Timeline5Method
             $user = User::get_from_username($username);
             if ($user instanceof User) {
                 if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                    $results = static::getUseractivityRepository()->getActivities(
+                    $results = self::getUseractivityRepository()->getActivities(
                         $user->getId(),
                         $limit,
                         $since

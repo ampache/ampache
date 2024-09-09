@@ -55,7 +55,7 @@ final class ArtistSongs4Method
             return false;
         }
         $artist  = new Artist($input['filter']);
-        $results = static::getSongRepository()->getByArtist($artist->id);
+        $results = self::getSongRepository()->getByArtist($artist->id);
 
         if (!empty($results)) {
             ob_end_clean();

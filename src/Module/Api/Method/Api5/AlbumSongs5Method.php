@@ -67,7 +67,7 @@ class AlbumSongs5Method
 
         ob_end_clean();
         // songs for all disks
-        $results = static::getSongRepository()->getByAlbum($album->id);
+        $results = self::getSongRepository()->getByAlbum($album->id);
         if (empty($results)) {
             Api5::empty('song', $input['api_format']);
 

@@ -257,7 +257,7 @@ class User extends database_object
      */
     public static function get_from_username($username): ?User
     {
-        return static::getUserRepository()->findByUsername($username);
+        return self::getUserRepository()->findByUsername($username);
     }
 
     /**
@@ -886,8 +886,8 @@ class User extends database_object
     ): int {
         // don't try to overwrite users that already exist
         if (
-            static::getUserRepository()->idByUsername($username) > 0 ||
-            static::getUserRepository()->idByEmail($email) > 0
+            self::getUserRepository()->idByUsername($username) > 0 ||
+            self::getUserRepository()->idByEmail($email) > 0
         ) {
             return 0;
         }
@@ -1178,7 +1178,7 @@ class User extends database_object
         Dba::write($sql, [$this->username]);
 
         Catalog::count_table('user');
-        static::getUserRepository()->collectGarbage();
+        self::getUserRepository()->collectGarbage();
 
         return true;
     }
@@ -1271,7 +1271,7 @@ class User extends database_object
      */
     public static function get_username($user_id): string
     {
-        $users = static::getUserRepository()->getValidArray(true);
+        $users = self::getUserRepository()->getValidArray(true);
 
         return $users[$user_id] ?? T_('System');
     }
@@ -1282,7 +1282,7 @@ class User extends database_object
      */
     public static function getValidArray(): array
     {
-        return static::getUserRepository()->getValidArray();
+        return self::getUserRepository()->getValidArray();
     }
 
     /**

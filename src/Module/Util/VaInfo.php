@@ -213,8 +213,8 @@ final class VaInfo implements VaInfoInterface
 
             if ($configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER)) {
                 $mb_order = $configContainer->get(ConfigurationKeyEnum::MB_DETECT_ORDER);
-            } elseif (function_exists('mb_detect_order')) {
-                $mb_order = (mb_detect_order()) ? implode(", ", mb_detect_order()) : 'auto';
+            } elseif (function_exists('mb_detect_order') && is_array(mb_detect_order())) {
+                $mb_order = implode(", ", mb_detect_order());
             } else {
                 $mb_order = 'auto';
             }
@@ -517,9 +517,9 @@ final class VaInfo implements VaInfoInterface
     public static function get_tag_type($results, $configKey = 'metadata_order'): array
     {
         $tagorderMap = [
-            'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
 
@@ -668,7 +668,7 @@ final class VaInfo implements VaInfoInterface
 
             $info['art']               = (!$info['art'] && array_key_exists('art', $tags)) ? trim((string)$tags['art']) : $info['art'];
 
-            if (static::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
+            if (self::getConfigContainer()->get(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) && is_array($tags)) {
                 // Add rest of the tags without typecast to the array
                 foreach ($tags as $tag => $value) {
                     if (!array_key_exists($tag, $info) && !is_array($value)) {
@@ -875,9 +875,9 @@ final class VaInfo implements VaInfoInterface
     private function get_metadata_order(): array
     {
         $tagorderMap = [
-            'metadata_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
-            'metadata_order_video' => static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => static::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
+            'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
         // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
@@ -1830,7 +1830,7 @@ final class VaInfo implements VaInfoInterface
      */
     public static function parse_pattern($filepath, $dirPattern, $filePattern): array
     {
-        $logger          = static::getLogger();
+        $logger          = self::getLogger();
         $results         = [];
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
@@ -1851,10 +1851,10 @@ final class VaInfo implements VaInfoInterface
 
         // Mangle the pattern by turning the codes into regex captures
         $pattern = preg_replace('/\%[d]/', '([0-9]?)', $pattern);
-        $pattern = preg_replace('/\%[TyY]/', '([0-9]+?)', $pattern);
-        $pattern = preg_replace('/\%\w/', '(.+?)', $pattern);
-        $pattern = str_replace('/', '\/', $pattern);
-        $pattern = str_replace(' ', '\s', $pattern);
+        $pattern = preg_replace('/\%[TyY]/', '([0-9]+?)', (string)$pattern);
+        $pattern = preg_replace('/\%\w/', '(.+?)', (string)$pattern);
+        $pattern = str_replace('/', '\/', (string)$pattern);
+        $pattern = str_replace(' ', '\s', (string)$pattern);
         $pattern = '/' . $pattern . '\..+$/';
 
         // Pull out our actual matches
@@ -1978,7 +1978,7 @@ final class VaInfo implements VaInfoInterface
         if (!empty($data) && !empty($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
             $items   = preg_split($pattern, $data);
-            $items   = array_map('trim', $items);
+            $items   = array_map('trim', $items ?: []);
             if (empty($items)) {
                 throw new Exception('Pattern given in additional_genre_delimiters is not functional. Please ensure is it a valid regex (delimiter ~)');
             }

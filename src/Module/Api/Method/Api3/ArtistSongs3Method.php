@@ -44,7 +44,7 @@ final class ArtistSongs3Method
     public static function artist_songs(array $input, User $user): void
     {
         $artist  = new Artist($input['filter']);
-        $results = static::getSongRepository()->getByArtist($artist->id);
+        $results = self::getSongRepository()->getByArtist($artist->id);
 
         // Set the offset
         Xml3_Data::set_offset($input['offset'] ?? 0);

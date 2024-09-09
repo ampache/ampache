@@ -161,11 +161,6 @@ parameters:
 			path: src/Module/Api/Api.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Api\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api4\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api4.php
@@ -182,11 +177,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:server_details\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Api5.php
 
@@ -421,16 +411,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -498,16 +478,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Json5_Data.php
 
 		-
@@ -621,16 +591,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\AdvancedSearchMethod\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/AdvancedSearchMethod.php
@@ -672,11 +632,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
 
@@ -892,11 +847,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AlbumSongs4Method\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
 
@@ -1437,11 +1387,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\AlbumSongs5Method\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
 
@@ -3541,21 +3486,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:\\$enable_json_checks has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
 			count: 4
 			path: src/Module/Api/Upnp_Api.php
@@ -3876,21 +3806,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getLiveStreamRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:_header\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -3981,16 +3896,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -4056,16 +3961,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 3
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -4118,16 +4013,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Xml5_Data.php
 
 		-
@@ -4198,16 +4083,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Xml_Data.php
 
 		-
@@ -4782,11 +4657,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$fieldMapping type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$handlerCommand has no type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -6822,21 +6692,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUseractivityRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -10516,36 +10371,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getCatalogGarbageCollector\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getConfigContainer\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getLicenseRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getSongTagWriter\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:add_vote\\(\\) has parameter \\$items with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
@@ -10658,11 +10483,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artists type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Repository/Model/Label.php
 
 		-
@@ -10971,11 +10791,6 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
@@ -11227,11 +11042,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -11501,11 +11311,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 6
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
@@ -11647,16 +11452,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$songs type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getWantedManager\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 

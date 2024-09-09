@@ -58,7 +58,7 @@ final class SystemUpdate5Method
         if (AutoUpdate::is_update_available(true)) {
             // run the update
             AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies(static::getConfigContainer(), true);
+            AutoUpdate::update_dependencies(self::getConfigContainer(), true);
             Preference::translate_db();
             // check that the update completed or failed.
             if (AutoUpdate::is_update_available(true)) {

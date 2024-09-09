@@ -60,7 +60,7 @@ final class UpdatePodcast4Method
         $podcast   = self::getPodcastRepository()->findById($object_id);
 
         if ($podcast !== null) {
-            if (static::getPodcastSyncer()->sync($podcast, true)) {
+            if (self::getPodcastSyncer()->sync($podcast, true)) {
                 Api4::message('success', 'Synced episodes for podcast: ' . (string) $object_id, null, $input['api_format']);
                 Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
