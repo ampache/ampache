@@ -129,7 +129,19 @@ The [Ampache Helper Scripts](https://github.com/icefields/Ampache-Helper-Scripts
 
 ## Credits
 
-Thanks to all those who have helped make Ampache awesome: [Credits](docs/ACKNOWLEDGEMENTS.md)
+Ampache would like to request anyone wanting to donate to the project spend that money on the people who really deserve it.
+
+If you use these projects please consider donating in any way possible. (Including your time if you can help out!)
+
+@mitchray developer of [ample](https://github.com/mitchray/ample). https://buymeacoffee.com/mitchray
+
+@icefields developer of [Power Ampache](https://power.ampache.dev/)
+<a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
+<img height="30" hspace="20" alt="Donate Bitcoin" src="https://f-droid.org/assets/bitcoin_u5ZHZdqBG9Z1IRMuwLjo739g-ULyCRR8aKF01ViGn9w=.png"></a>
+<a target="_blank" href="https://paypal.me/powerampache">
+<img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
+
+Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGEMENTS.md).
 
 ## Contact Us
 
