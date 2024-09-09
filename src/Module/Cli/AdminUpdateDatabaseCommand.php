@@ -203,6 +203,7 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
             }
+
             // Make sure all default preferences are set
             Preference::set_defaults();
         } else {
