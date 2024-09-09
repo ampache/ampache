@@ -29,6 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
@@ -201,6 +202,9 @@ final class AdminUpdateDatabaseCommand extends Command
                     true
                 );
             }
+
+            // Make sure all default preferences are set
+            Preference::set_defaults();
         } else {
             foreach ($result as $updateInfo) {
                 $interactor->cyan(
