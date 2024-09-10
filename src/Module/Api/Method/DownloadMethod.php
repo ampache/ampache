@@ -52,6 +52,7 @@ final class DownloadMethod
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
      * bitrate = (integer) max bitrate for transcoding, '128', '256' //optional SONG ONLY
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding //optional SONG ONLY
+     * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      */
     public static function download(array $input, User $user): bool
     {
@@ -76,9 +77,15 @@ final class DownloadMethod
             $type      = 'search';
         }
 
-        $maxBitRate = (int)($input['bitrate'] ?? 0);
-        $format     = $input['format'] ?? null; // mp3, flv or raw
-        $params     = '&client=api&action=download&cache=1';
+        $maxBitRate  = (int)($input['bitrate'] ?? 0);
+        $format      = $input['format'] ?? null; // mp3, flv or raw
+        $params      = '&client=api&action=download';
+        $recordStats = (int)($input['stats'] ?? 1);
+
+        if ($recordStats == 0) {
+            $params .= '&cache=1';
+        }
+
         if ($format && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
