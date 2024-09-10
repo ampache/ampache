@@ -331,7 +331,7 @@ class Api
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client = static::getUserRepository()->findByApiKey(trim($token));
+        $client = self::getUserRepository()->findByApiKey(trim($token));
         if (!$client instanceof User || $client->isNew()) {
             return [];
         }

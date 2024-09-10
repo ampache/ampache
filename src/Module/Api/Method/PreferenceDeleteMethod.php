@@ -64,7 +64,7 @@ final class PreferenceDeleteMethod
             return false;
         }
         // Might be a good idea to not delete system preferences
-        if (in_array($pref_name, Preference::SYSTEM_LIST)) {
+        if (in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 

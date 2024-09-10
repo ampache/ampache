@@ -46,9 +46,13 @@ use Ampache\Repository\Model\User;
  */
 class Ui implements UiInterface
 {
-    private static $_ticker;
-    private static $_icon_cache;
-    private static $_image_cache;
+    private static int $_ticker = 0;
+
+    /** @var array<string, string> $_icon_cache */
+    private static array $_icon_cache = [];
+
+    /** @var array<string, string> $_image_cache */
+    private static array $_image_cache = [];
 
     public function __construct(
         private readonly ConfigContainerInterface $configContainer
@@ -434,7 +438,7 @@ class Ui implements UiInterface
             return __DIR__ . '/../../../resources/images/icon_error.svg';
         }
         if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
-            $url = $filesearch[0];
+            $url = (string)$filesearch[0];
         } else {
             $url = AmpConfig::get_web_path() . '/' . $path . $filename;
         }
@@ -641,7 +645,7 @@ class Ui implements UiInterface
         }
 
         if (AmpConfig::get('custom_login_logo', false)) {
-            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
         $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
@@ -698,7 +702,7 @@ class Ui implements UiInterface
             return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**

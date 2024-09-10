@@ -127,7 +127,7 @@ final class UserEditMethod
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = static::getUserStateToggler();
+            $userStateToggler = self::getUserStateToggler();
             if ((int)$user->disabled === 0 && $disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ((int)$user->disabled === 1 && $disable === '0') {
@@ -143,10 +143,10 @@ final class UserEditMethod
                 $update_user->update_fullname_public($fullname_public);
             }
             if ($reset_apikey) {
-                static::getUserKeyGenerator()->generateApikey($update_user);
+                self::getUserKeyGenerator()->generateApikey($update_user);
             }
             if ($reset_streamtoken) {
-                static::getUserKeyGenerator()->generateStreamToken($update_user);
+                self::getUserKeyGenerator()->generateStreamToken($update_user);
             }
             if ($clear_stats) {
                 Stats::clear($user_id);

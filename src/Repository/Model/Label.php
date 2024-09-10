@@ -273,7 +273,7 @@ class Label extends database_object implements library_item
     public function update(array $data): ?int
     {
         // duplicate name check
-        if (static::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
+        if (self::getLabelRepository()->lookup($data['name'], $this->id) !== 0) {
             return null;
         }
 
@@ -320,7 +320,7 @@ class Label extends database_object implements library_item
      */
     public static function create(array $data): ?int
     {
-        if (static::getLabelRepository()->lookup($data['name']) !== 0) {
+        if (self::getLabelRepository()->lookup($data['name']) !== 0) {
             return null;
         }
 

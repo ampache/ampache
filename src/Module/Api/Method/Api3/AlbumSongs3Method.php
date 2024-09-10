@@ -46,7 +46,7 @@ class AlbumSongs3Method
         $album   = new Album($input['filter']);
         $results = [];
         if (isset($album->id)) {
-            $results = static::getAlbumRepository()->getSongs($album->id);
+            $results = self::getAlbumRepository()->getSongs($album->id);
         }
 
         // Set the offset

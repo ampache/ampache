@@ -91,7 +91,7 @@ final class HandshakeMethod
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
+            $client   = self::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
             $client = User::get_from_username($username);
@@ -125,7 +125,7 @@ final class HandshakeMethod
                 }
 
                 // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
-                $realpwd = static::getUserRepository()->retrievePasswordFromUser($client->getId());
+                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client->getId());
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
@@ -172,7 +172,7 @@ final class HandshakeMethod
 
                 // We're about to start. Record this user's IP.
                 if (AmpConfig::get('track_user_ip')) {
-                    static::getUserTracker()->trackIpAddress($client, 'handshake');
+                    self::getUserTracker()->trackIpAddress($client, 'handshake');
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);

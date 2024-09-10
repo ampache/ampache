@@ -64,7 +64,7 @@ final class RecordPlay4Method
                 : User::get_from_username((string)$input['user']);
         }
         // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
+        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 

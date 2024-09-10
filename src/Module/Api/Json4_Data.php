@@ -318,12 +318,12 @@ class Json4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -404,7 +404,7 @@ class Json4_Data
 
             // Handle includes
             if ($include && in_array("songs", $include) && isset($album->id)) {
-                $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user, false);
+                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;
             }

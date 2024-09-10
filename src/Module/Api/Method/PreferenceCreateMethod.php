@@ -68,7 +68,7 @@ final class PreferenceCreateMethod
         $pref_name = (string)($input['filter'] ?? '');
         $pref_list = Preference::get($pref_name, -1);
         // if you found the preference or it's a system preference; don't add it.
-        if (!empty($pref_list) || in_array($pref_name, Preference::SYSTEM_LIST)) {
+        if (!empty($pref_list) || in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 

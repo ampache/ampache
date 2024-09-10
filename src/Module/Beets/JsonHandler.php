@@ -37,11 +37,6 @@ class JsonHandler extends Handler
     protected Catalog $handler;
 
     /**
-     * string handler command to do whatever we need
-     */
-    protected $handlerCommand;
-
-    /**
      * Seperator between command and arguments
      * @var string
      */

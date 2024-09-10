@@ -233,6 +233,6 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
      */
     public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
-        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 }

@@ -1073,13 +1073,7 @@ abstract class Catalog extends database_object
      * objects that are associated with this catalog. This is used
      * to build the stats box, it also calculates time.
      * @param int|null $catalog_id
-     * @return array{
-     *  tags: int,
-     *  formatted_size: string,
-     *  time_text: string,
-     *  users: int,
-     *  connected: int
-     * }
+     * @return array<string, int|string>
      */
     public static function get_stats($catalog_id = 0): array
     {
@@ -1222,7 +1216,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, albums, artists, items, etc across all catalogs on the server
      * @param int $user_id
-     * @return int[]
+     * @return array<string, int>
      */
     public static function get_server_counts($user_id): array
     {
@@ -1236,7 +1230,7 @@ abstract class Catalog extends database_object
         }
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['key']] = (int)$row['value'];
+            $results[(string)$row['key']] = (int)$row['value'];
         }
 
         return $results;
@@ -1283,7 +1277,7 @@ abstract class Catalog extends database_object
      *
      * This returns the current number of songs, videos, podcast_episodes in this catalog.
      * @param int $catalog_id
-     * @return int[]
+     * @return array{items: int, time: int, size: int}
      */
     public static function count_catalog($catalog_id): array
     {
@@ -2073,7 +2067,7 @@ abstract class Catalog extends database_object
             Recommendation::get_artists_like($object_id);
             Artist::set_last_update($object_id);
             // get similar songs too
-            $artistSongs = static::getSongRepository()->getAllByArtist($object_id);
+            $artistSongs = self::getSongRepository()->getAllByArtist($object_id);
             foreach ($artistSongs as $song_id) {
                 Recommendation::get_songs_like($song_id);
             }
@@ -2105,7 +2099,7 @@ abstract class Catalog extends database_object
 
         // only allow your primary external metadata source to update values
         $overwrites  = true;
-        $meta_order  = array_map('strtolower', static::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
+        $meta_order  = array_map('strtolower', self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER));
         $plugin_list = Plugin::get_plugins(PluginTypeEnum::EXTERNAL_METADATA_RETRIEVER);
         $user        = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')
@@ -2261,16 +2255,16 @@ abstract class Catalog extends database_object
         switch ($type) {
             case 'album':
                 $libitem = new Album($object_id);
-                $songs   = static::getSongRepository()->getByAlbum($object_id);
+                $songs   = self::getSongRepository()->getByAlbum($object_id);
                 break;
             case 'album_disk':
                 $albumDisk = new AlbumDisk($object_id);
                 $libitem   = new Album($albumDisk->album_id);
-                $songs     = static::getSongRepository()->getByAlbumDisk($object_id);
+                $songs     = self::getSongRepository()->getByAlbumDisk($object_id);
                 break;
             case 'artist':
                 $libitem = new Artist($object_id);
-                $songs   = static::getSongRepository()->getAllByArtist($object_id);
+                $songs   = self::getSongRepository()->getAllByArtist($object_id);
                 break;
             case 'song':
                 $songs[] = $object_id;
@@ -2353,7 +2347,7 @@ abstract class Catalog extends database_object
         // artist
         if ($libitem instanceof Artist) {
             // make sure albums are updated before the artist (include if you're just a song artist too)
-            foreach (static::getAlbumRepository()->getAlbumByArtist($object_id) as $album_id) {
+            foreach (self::getAlbumRepository()->getAlbumByArtist($object_id) as $album_id) {
                 $album_tags = self::getSongTags('album', $album_id);
                 Tag::update_tag_list(implode(',', $album_tags), 'album', $album_id, true);
             }
@@ -2496,7 +2490,7 @@ abstract class Catalog extends database_object
             strip_tags((string) $results['lyrics'])
         );
         if (isset($results['license'])) {
-            $licenseRepository = static::getLicenseRepository();
+            $licenseRepository = self::getLicenseRepository();
             $licenseName       = (string) $results['license'];
             $licenseId         = $licenseRepository->find($licenseName);
 
@@ -2835,7 +2829,7 @@ abstract class Catalog extends database_object
         }
 
         if ($song->label && AmpConfig::get('label')) {
-            $labelRepository = static::getLabelRepository();
+            $labelRepository = self::getLabelRepository();
 
             foreach (array_map('trim', explode(';', $song->label)) as $label_name) {
                 $label_id = Label::helper($label_name) ?? $labelRepository->lookup($label_name);
@@ -3500,7 +3494,7 @@ abstract class Catalog extends database_object
      */
     public static function trim_slashed_list($string, $doTrim = true)
     {
-        $delimiters = static::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
+        $delimiters = self::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
         $items      = preg_split($pattern, (string)$string);
         if (!$items) {
@@ -3670,7 +3664,7 @@ abstract class Catalog extends database_object
         Dba::write($sql, $params);
 
         // run garbage collection
-        static::getCatalogGarbageCollector()->collect();
+        self::getCatalogGarbageCollector()->collect();
 
         return true;
     }
@@ -4110,7 +4104,7 @@ abstract class Catalog extends database_object
                 );
 
                 if (!empty($catalogs)) {
-                    $songTagWriter = static::getSongTagWriter();
+                    $songTagWriter = self::getSongTagWriter();
                     set_time_limit(0);
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
@@ -4133,7 +4127,7 @@ abstract class Catalog extends database_object
                 break;
             case 'garbage_collect':
                 debug_event(self::class, 'Run Garbage collection', 5);
-                static::getCatalogGarbageCollector()->collect();
+                self::getCatalogGarbageCollector()->collect();
                 $catalog_media_types = [];
                 if (!empty($catalogs)) {
                     foreach ($catalogs as $catalog_id) {

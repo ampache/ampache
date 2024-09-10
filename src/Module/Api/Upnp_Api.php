@@ -688,7 +688,7 @@ class Upnp_Api
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylist'],
+                            'childCount' => $counts['search'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         ];
@@ -822,7 +822,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist((int)$pathreq[1]);
                         if ($artist->isNew() === false) {
-                            $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+                            $album_ids              = self::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
@@ -853,7 +853,7 @@ class Upnp_Api
                     case 2: // Get album's songs list
                         $album = new Album((int)$pathreq[1]);
                         if (isset($album->id)) {
-                            $song_ids              = static::getSongRepository()->getByAlbum($album->id);
+                            $song_ids              = self::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
@@ -940,7 +940,7 @@ class Upnp_Api
                 if (count($pathreq) == 1) {
                     /** @var User|null $user */
                     $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
-                    $radios = static::getLiveStreamRepository()->findAll(
+                    $radios = self::getLiveStreamRepository()->findAll(
                         $user
                     );
 

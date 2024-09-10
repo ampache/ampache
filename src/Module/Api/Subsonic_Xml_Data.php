@@ -90,7 +90,7 @@ class Subsonic_Xml_Data
     public const AMPACHEID_PODCASTEP = 700000000;
     public const AMPACHEID_PLAYLIST  = 800000000;
 
-    public static $enable_json_checks = false;
+    public static bool $enable_json_checks = false;
 
     /**
      * addSubsonicResponse
@@ -295,7 +295,7 @@ class Subsonic_Xml_Data
         $xartist->addAttribute('name', (string)self::_checkName($artist->get_fullname()));
         $allalbums = [];
         if (($extra && !$albumsSet) || $albums) {
-            $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 
         if ($artist->has_art()) {
@@ -447,7 +447,7 @@ class Subsonic_Xml_Data
         self::_setIfStarred($xalbum, 'album', $album->id);
 
         if ($songs) {
-            $media_ids = static::getAlbumRepository()->getSongs($album->id);
+            $media_ids = self::getAlbumRepository()->getSongs($album->id);
             foreach ($media_ids as $song_id) {
                 self::addSong($xalbum, $song_id);
             }
@@ -579,7 +579,7 @@ class Subsonic_Xml_Data
         }
         $xdir->addAttribute('name', (string)$data['f_name']);
         self::_setIfStarred($xdir, 'artist', $artist_id);
-        $allalbums = static::getAlbumRepository()->getAlbumByArtist($artist_id);
+        $allalbums = self::getAlbumRepository()->getAlbumByArtist($artist_id);
         foreach ($allalbums as $album_id) {
             $album = new Album($album_id);
             // TODO addChild || use addChildArray
@@ -606,7 +606,7 @@ class Subsonic_Xml_Data
         $xdir->addAttribute('name', (string)self::_checkName($album->get_fullname()));
         self::_setIfStarred($xdir, 'album', $album->id);
 
-        $media_ids = static::getAlbumRepository()->getSongs($album->id);
+        $media_ids = self::getAlbumRepository()->getSongs($album->id);
         foreach ($media_ids as $song_id) {
             // TODO addChild || use addChildArray
             self::addSong($xdir, $song_id, "child");
@@ -1144,7 +1144,7 @@ class Subsonic_Xml_Data
                 self::addSong($xshare, $song_id, "entry");
             }
         } elseif ($share->object_type == 'album') {
-            $songs = static::getSongRepository()->getByAlbum($share->object_id);
+            $songs = self::getSongRepository()->getByAlbum($share->object_id);
             foreach ($songs as $song_id) {
                 // TODO addEntry
                 self::addSong($xshare, $song_id, "entry");

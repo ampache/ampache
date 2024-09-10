@@ -281,14 +281,14 @@ class Random
             case 'album':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
+                    $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
                 }
 
                 return $songs;
             case 'artist':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, static::getSongRepository()->getByArtist($object_id));
+                    $songs = array_merge($songs, self::getSongRepository()->getByArtist($object_id));
                 }
 
                 return $songs;

@@ -76,7 +76,7 @@ final class Stats3Method
             if (!$limit) {
                 $limit = AmpConfig::get('popular_threshold');
             }
-            $results = static::getAlbumRepository()->getRandom($user->id, $limit);
+            $results = self::getAlbumRepository()->getRandom($user->id, $limit);
         }
 
         if ($results !== null) {

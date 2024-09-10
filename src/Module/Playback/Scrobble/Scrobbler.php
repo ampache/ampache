@@ -91,7 +91,7 @@ class Scrobbler
      * @param array $vars
      * @return string|false
      */
-    public function call_url($url, $method = 'GET', $vars = null)
+    public function call_url($url, $method = 'GET', $vars = [])
     {
         // Encode parameters per RFC1738
         $params = http_build_query($vars);
@@ -168,7 +168,9 @@ class Scrobbler
             $vars['api_sig'] = $sig;
             // call the getSession API
             $response = $this->call_url('/2.0/', 'GET', $vars);
-            $xml      = simplexml_load_string($response);
+            $xml      = ($response)
+                ? simplexml_load_string($response)
+                : false;
             if ($xml) {
                 $status = (string)$xml['status'];
                 if ($status == 'ok') {
@@ -275,7 +277,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {
@@ -316,7 +320,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {

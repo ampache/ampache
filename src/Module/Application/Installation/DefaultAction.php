@@ -245,7 +245,7 @@ final class DefaultAction implements ApplicationActionInterface
                 }
                 break;
             case 'create_account':
-                $results = parse_ini_file($configfile);
+                $results = parse_ini_file($configfile) ?: [];
                 AmpConfig::set_by_array($results, true);
 
                 $password2 = $_REQUEST['local_pass2'];

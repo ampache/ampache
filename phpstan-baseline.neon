@@ -161,11 +161,6 @@ parameters:
 			path: src/Module/Api/Api.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Api\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api4\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api4.php
@@ -182,11 +177,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:server_details\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Api5.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Api5\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Api5.php
 
@@ -316,19 +306,9 @@ parameters:
 			path: src/Module/Api/Daap_Api.php
 
 		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/RefreshUpdatedAction.php
-
-		-
 			message: "#^Variable \\$argument in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Module/Api/Edit/RefreshUpdatedAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of method Psr\\\\Http\\\\Message\\\\StreamFactoryInterface\\:\\:createStream\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Module/Api/Edit/ShowEditObjectAction.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) has parameter \\$albums with no value type specified in iterable type array\\.$#"
@@ -421,16 +401,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -498,16 +468,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Json5_Data.php
 
 		-
@@ -621,16 +581,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\AdvancedSearchMethod\\:\\:advanced_search\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/AdvancedSearchMethod.php
@@ -672,11 +622,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:album_songs\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api3\\\\AlbumSongs3Method\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api3/AlbumSongs3Method.php
 
@@ -892,11 +837,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api4\\\\AlbumSongs4Method\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api4/AlbumSongs4Method.php
 
@@ -1437,11 +1377,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Method\\\\Api5\\\\AlbumSongs5Method\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Method/Api5/AlbumSongs5Method.php
 
@@ -2224,16 +2159,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\DownloadMethod\\:\\:download\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/DownloadMethod.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Method\\\\Exception\\\\RequestParamMissingException\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Exception/RequestParamMissingException.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Method\\\\Exception\\\\ResultEmptyException\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Method/Exception/ResultEmptyException.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\FlagMethod\\:\\:flag\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -3551,21 +3476,6 @@ parameters:
 			path: src/Module/Api/Subsonic_Xml_Data.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:\\$enable_json_checks has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Subsonic_Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Subsonic_Xml_Data.php
-
-		-
 			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
 			count: 4
 			path: src/Module/Api/Upnp_Api.php
@@ -3886,21 +3796,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getLiveStreamRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:_header\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -3991,16 +3886,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -4066,16 +3951,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 3
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -4128,16 +4003,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Xml5_Data.php
 
 		-
@@ -4211,16 +4076,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Application\\\\Admin\\\\Catalog\\\\AbstractCatalogAction\\:\\:getCatalogIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
@@ -4242,11 +4097,6 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of static method Ampache\\\\Config\\\\AmpConfig\\:\\:set_by_array\\(\\) expects array, array\\|false given\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
 
@@ -4296,11 +4146,6 @@ parameters:
 			path: src/Module/Application/Stream/StreamItemAction.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|false given\\.$#"
-			count: 1
-			path: src/Module/Application/Test/ConfigAction.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollector\\:\\:collect\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/ArtCollector.php
@@ -4319,11 +4164,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorInterface\\:\\:collect\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Art/Collector/ArtCollectorInterface.php
-
-		-
-			message: "#^PHPDoc tag @var for constant Ampache\\\\Module\\\\Art\\\\Collector\\\\ArtCollectorTypeEnum\\:\\:TYPE_CLASS_MAP with type array\\<Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\> is incompatible with value array\\{google\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\GoogleCollectorModule', musicbrainz\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\MusicbrainzCollectorModule', lastfm\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\LastFmCollectorModule', spotify\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\SpotifyCollectorModule', db\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\DbCollectorModule', folder\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\FolderCollectorModule', tags\\: 'Ampache\\\\\\\\Module\\\\\\\\Art\\\\\\\\Collector\\\\\\\\MetaTagCollectorModule'\\}\\.$#"
-			count: 1
-			path: src/Module/Art/Collector/ArtCollectorTypeEnum.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Art\\\\Collector\\\\CollectorModuleInterface\\:\\:collect\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -4656,17 +4496,7 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Parameter \\#1 \\$searchresult of static method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:clean_search_results\\(\\) expects array, array\\<int\\|string, array\\|int\\>\\|false given\\.$#"
-			count: 1
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
 			message: "#^Parameter \\#2 \\$result of function ldap_get_entries expects LDAP\\\\Result, array\\|LDAP\\\\Result given\\.$#"
-			count: 2
-			path: src/Module/Authentication/Ldap/Ldap.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Authentication\\\\Ldap\\\\Ldap\\:\\:array_filter_key\\(\\) through static\\:\\:\\.$#"
 			count: 2
 			path: src/Module/Authentication/Ldap/Ldap.php
 
@@ -4797,11 +4627,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$fieldMapping type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/JsonHandler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Beets\\\\JsonHandler\\:\\:\\$handlerCommand has no type specified\\.$#"
 			count: 1
 			path: src/Module/Beets/JsonHandler.php
 
@@ -5232,16 +5057,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:to_virtual_path\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/Catalog/SeafileAdapter.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
 
@@ -6151,11 +5966,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^Parameter \\#2 \\$arguments of method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPDevice\\:\\:sendRequestToDevice\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:\\$_device has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -6506,16 +6316,6 @@ parameters:
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
 		-
-			message: "#^Parameter \\#1 \\$data of function http_build_query expects array\\|object, array\\|null given\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of function simplexml_load_string expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
@@ -6837,21 +6637,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:get_recently_played\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:insert\\(\\) has parameter \\$location with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Statistics/Stats.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Statistics\\\\Stats\\:\\:getUseractivityRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Statistics/Stats.php
 
@@ -8101,47 +7886,12 @@ parameters:
 			path: src/Module/Util/FileSystem.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Binary operation \"\\.\" between '/' and array\\<string\\>\\|string\\|null results in an error\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_clean_name\\(\\) never returns array\\<string\\> so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#1 \\$from_encoding of function iconv expects string, array\\|string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
-			count: 1
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
-			message: "#^Parameter \\#3 \\$translated_filename of method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverter\\:\\:charset_rename_file\\(\\) expects string, string\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/FileSystem/FileNameConverter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:__construct\\(\\) with return type void returns false but should not return anything\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:__construct\\(\\) with return type void returns true but should not return anything\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:display_map\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -8232,11 +7982,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$Indexes of method CpChart\\\\BaseDraw\\:\\:writeLabel\\(\\) expects array, int given\\.$#"
-			count: 1
-			path: src/Module/Util/Graph.php
-
-		-
-			message: "#^Parameter \\#2 \\$object_type of method Ampache\\\\Module\\\\Util\\\\Graph\\:\\:get_geolocation_pts\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Util/Graph.php
 
@@ -8487,11 +8232,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:build_signature\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/OAuth/OAuthRequest.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:from_consumer_and_token\\(\\) has parameter \\$consumer with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/OAuth/OAuthRequest.php
 
@@ -8881,13 +8621,8 @@ parameters:
 			path: src/Module/Util/Recommendation.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\Recommendation\\:\\:update_recommendation_cache\\(\\) has parameter \\$recommendations with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Util/Recommendation.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strip_tags expects string, string\\|null given\\.$#"
-			count: 3
 			path: src/Module/Util/Recommendation.php
 
 		-
@@ -8937,21 +8672,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_icon_cache has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_image_cache has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Ui\\:\\:\\$_ticker has no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
 
@@ -9251,37 +8971,12 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Offset 'extension' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 9
 			path: src/Module/Util/VaInfo.php
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:splitSlashedlist\\(\\) expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_map expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function implode expects array\\|null, array\\<int, string\\>\\|true given\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
-			count: 2
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -9456,11 +9151,6 @@ parameters:
 			path: src/Plugin/Ampache7digital.php
 
 		-
-			message: "#^Parameter \\#2 \\$token of static method Ampache\\\\Module\\\\Util\\\\OAuth\\\\OAuthRequest\\:\\:from_consumer_and_token\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/Ampache7digital.php
@@ -9567,11 +9257,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:search_artist\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Parameter \\#3 \\$options of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:gather_metadata_plugin\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheDiscogs.php
 
@@ -10421,11 +10106,6 @@ parameters:
 			path: src/Repository/Model/Catalog.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:get_stats\\(\\) should return array\\{tags\\: int, formatted_size\\: string, time_text\\: string, users\\: int, connected\\: int\\} but returns non\\-empty\\-array\\<int\\|string\\>\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:process_action\\(\\) has parameter \\$catalogs with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
@@ -10532,36 +10212,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getCatalogGarbageCollector\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getConfigContainer\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getLicenseRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 4
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:getSongTagWriter\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -10678,11 +10328,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artists type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:getLabelRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Repository/Model/Label.php
 
 		-
@@ -10991,11 +10636,6 @@ parameters:
 			path: src/Repository/Model/Random.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Random\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Random.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Rating\\:\\:build_cache\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Rating.php
@@ -11247,11 +10887,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:getUserActivityPoster\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
 
@@ -11521,11 +11156,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 6
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
@@ -11667,16 +11297,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$songs type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getWantedManager\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Repository/Model/Wanted.php
 

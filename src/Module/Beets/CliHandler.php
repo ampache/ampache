@@ -37,11 +37,6 @@ class CliHandler extends Handler
     protected Catalog $handler;
 
     /**
-     * string handler command to do whatever we need using call_user_func
-     */
-    protected string $handlerCommand;
-
-    /**
      * Field separator for beets field format
      */
     protected string $seperator = '###';

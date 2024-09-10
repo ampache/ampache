@@ -290,14 +290,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
             if (!Dba::write($sql_user)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
-                    $db_user,
-                    $database,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 user, %2 database, %3 host, %4 error message */
+                        T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
+                        $db_user,
+                        $database,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
                 // this user might exist but we don't always care
                 if (!$overwrite) {
                     return false;
@@ -311,14 +314,17 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
-                    $database,
-                    $db_user,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 database, %2 user, %3 host, %4 error message */
+                        T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
+                        $database,
+                        $db_user,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
 
                 return false;
             }
