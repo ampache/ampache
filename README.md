@@ -141,9 +141,9 @@ If you use these projects please consider donating in any way possible. (Includi
 <a target="_blank" href="https://www.patreon.com/Icefields">
 <img height="50" hspace="20" alt="Become a patreon" src="https://github.com/user-attachments/assets/3318ab05-3c7e-42dd-8784-f12129c0915d"></a>
 <a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
-<img height="30" hspace="20" alt="Donate Bitcoin" src="https://f-droid.org/assets/bitcoin_u5ZHZdqBG9Z1IRMuwLjo739g-ULyCRR8aKF01ViGn9w=.png"></a>
+<img height="30" hspace="20" alt="Donate Bitcoin" src="https://power.ampache.dev/images/banner_bitcoin.png"></a>
 <a target="_blank" href="https://paypal.me/powerampache">
-<img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
+<img height="40" hspace="20" alt="Donate - Paypal" src="https://power.ampache.dev/images/banner_paypal.png"></a>
 
 If you're a fan of [play.dogmazic.net](https://play.dogmazic.net/)? Donate to the libre music association
 <a target="_blank" href="https://www.paypal.com/paypalme/musiquelibre">
