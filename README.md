@@ -138,6 +138,8 @@ If you use these projects please consider donating in any way possible. (Includi
 <img width="32" height="32" class="octicon rounded-2 d-block" alt="buy_me_a_coffee" src="https://github.githubassets.com/assets/buy_me_a_coffee-63ed78263f6e.svg">https://buymeacoffee.com/mitchray</a>
 
 @icefields developer of [Power Ampache](https://power.ampache.dev/)
+<a target="_blank" href="https://www.patreon.com/Icefields">
+<img height="50" hspace="20" alt="Become a patreon" src="https://github.com/user-attachments/assets/3318ab05-3c7e-42dd-8784-f12129c0915d"></a>
 <a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
 <img height="30" hspace="20" alt="Donate Bitcoin" src="https://f-droid.org/assets/bitcoin_u5ZHZdqBG9Z1IRMuwLjo739g-ULyCRR8aKF01ViGn9w=.png"></a>
 <a target="_blank" href="https://paypal.me/powerampache">
