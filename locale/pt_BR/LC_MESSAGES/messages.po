@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-08-20 09:01+1000\n"
+"POT-Creation-Date: 2024-08-28 11:30+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Paulo Schopf, 2017-2024\n"
 "Language-Team: Portuguese (Brazil) (http://app.transifex.com/ampache/ampache/language/pt_BR/)\n"
@@ -187,6 +187,7 @@ msgstr "Recolher/Expandir a Barra Lateral"
 #: ../../public/templates/show_denied_permission.inc.php:42
 #: ../../public/templates/show_denied_permission.inc.php:52
 #: ../../public/templates/show_mail_users.inc.php:51
+#: ../../public/templates/show_search_descriptor.inc.php:35
 #: ../../public/templates/show_test_config.inc.php:44
 #: ../../public/templates/show_test_config.inc.php:45
 #: ../../public/templates/show_test.inc.php:36
@@ -283,8 +284,8 @@ msgstr "Início"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:122
 #: ../../src/Gui/Song/SongViewAdapter.php:119
 #: ../../src/Module/Shout/ShoutRenderer.php:87
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:136
-#: ../../src/Plugin/AmpachePersonalFavorites.php:137
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:148
+#: ../../src/Plugin/AmpachePersonalFavorites.php:158
 #: ../../src/Repository/Model/Art.php:1424
 msgid "Play"
 msgstr "Tocar"
@@ -493,8 +494,8 @@ msgstr "Player local"
 #: ../../public/templates/js_globals.php:62
 #: ../../public/templates/show_playlist.inc.php:131
 #: ../../public/templates/show_search.inc.php:73
-#: ../../src/Plugin/AmpachePersonalFavorites.php:151
-#: ../../src/Plugin/AmpachePersonalFavorites.php:154
+#: ../../src/Plugin/AmpachePersonalFavorites.php:172
+#: ../../src/Plugin/AmpachePersonalFavorites.php:175
 msgid "Random Play"
 msgstr "Reprodução aleatória"
 
@@ -766,8 +767,8 @@ msgstr "Cancelar"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:156
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:134
 #: ../../src/Gui/Song/SongViewAdapter.php:131
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:143
-#: ../../src/Plugin/AmpachePersonalFavorites.php:139
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:155
+#: ../../src/Plugin/AmpachePersonalFavorites.php:160
 msgid "Play next"
 msgstr "Tocar na próxima"
 
@@ -796,8 +797,8 @@ msgstr "Tocar na próxima"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:168
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:146
 #: ../../src/Gui/Song/SongViewAdapter.php:143
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:151
-#: ../../src/Plugin/AmpachePersonalFavorites.php:145
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:163
+#: ../../src/Plugin/AmpachePersonalFavorites.php:166
 msgid "Play last"
 msgstr "Tocar por último"
 
@@ -825,8 +826,8 @@ msgstr "Tocar por último"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:180
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:158
 #: ../../src/Gui/Song/SongViewAdapter.php:172
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:156
-#: ../../src/Plugin/AmpachePersonalFavorites.php:156
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:168
+#: ../../src/Plugin/AmpachePersonalFavorites.php:177
 msgid "Add to Temporary Playlist"
 msgstr "Adicionar a uma playlist temporária"
 
@@ -1079,7 +1080,7 @@ msgstr "Nível"
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:140
 #: ../../src/Module/Authorization/AccessLevelEnum.php:64
 #: ../../src/Module/Util/Rss/Type/RecentlyPlayedFeed.php:80
-#: ../../src/Module/Util/Ui.php:1157 ../../src/Plugin/AmpachePaypal.php:101
+#: ../../src/Module/Util/Ui.php:1157 ../../src/Plugin/AmpachePaypal.php:100
 msgid "User"
 msgstr "Usuário"
 
@@ -2562,8 +2563,8 @@ msgstr "Salvar a ordem das trilhas"
 #: ../../public/templates/show_artist.inc.php:336
 #: ../../public/templates/show_artist.inc.php:342
 #: ../../public/templates/show_artist.inc.php:351
-#: ../../public/templates/show_index.inc.php:68
-#: ../../public/templates/show_index.inc.php:77
+#: ../../public/templates/show_index.inc.php:70
+#: ../../public/templates/show_index.inc.php:79
 #: ../../public/templates/show_label.inc.php:133
 #: ../../public/templates/show_missing_artist.inc.php:37
 #: ../../public/templates/show_now_playing_row.inc.php:106
@@ -3315,7 +3316,7 @@ msgid "Feed"
 msgstr "Feed"
 
 #: ../../public/templates/show_edit_podcast_row.inc.php:46
-#: ../../src/Repository/Model/Preference.php:914
+#: ../../src/Repository/Model/Preference.php:923
 msgid "Language"
 msgstr "Idioma"
 
@@ -3328,9 +3329,9 @@ msgstr "Idioma"
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:462
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:505
 #: ../../src/Module/Playback/Stream_Url.php:196
-#: ../../src/Plugin/AmpacheHomeDashboard.php:75
-#: ../../src/Plugin/AmpacheHomeDashboard.php:155
-#: ../../src/Repository/Model/Preference.php:906
+#: ../../src/Plugin/AmpacheHomeDashboard.php:76
+#: ../../src/Plugin/AmpacheHomeDashboard.php:169
+#: ../../src/Repository/Model/Preference.php:914
 msgid "Random"
 msgstr "Aleatório"
 
@@ -3534,18 +3535,18 @@ msgstr "Melhores avaliados"
 #: ../../public/templates/show_form_newest.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:42
 #: ../../public/templates/sidebar.inc.php:77
-#: ../../src/Plugin/AmpacheHomeDashboard.php:79
-#: ../../src/Plugin/AmpacheHomeDashboard.php:170
-#: ../../src/Repository/Model/Preference.php:907
+#: ../../src/Plugin/AmpacheHomeDashboard.php:80
+#: ../../src/Plugin/AmpacheHomeDashboard.php:184
+#: ../../src/Repository/Model/Preference.php:915
 msgid "Newest"
 msgstr "Mais novos"
 
 #: ../../public/templates/show_form_popular.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:85
 #: ../../public/templates/sidebar.inc.php:78
-#: ../../src/Plugin/AmpacheHomeDashboard.php:91
-#: ../../src/Plugin/AmpacheHomeDashboard.php:215
-#: ../../src/Repository/Model/Preference.php:910
+#: ../../src/Plugin/AmpacheHomeDashboard.php:92
+#: ../../src/Plugin/AmpacheHomeDashboard.php:231
+#: ../../src/Repository/Model/Preference.php:918
 msgid "Popular"
 msgstr "Populares"
 
@@ -3553,9 +3554,9 @@ msgstr "Populares"
 #: ../../public/templates/show_ip_history.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:57
 #: ../../public/templates/sidebar.inc.php:76
-#: ../../src/Plugin/AmpacheHomeDashboard.php:83
-#: ../../src/Plugin/AmpacheHomeDashboard.php:185
-#: ../../src/Repository/Model/Preference.php:908
+#: ../../src/Plugin/AmpacheHomeDashboard.php:84
+#: ../../src/Plugin/AmpacheHomeDashboard.php:199
+#: ../../src/Repository/Model/Preference.php:916
 msgid "Recent"
 msgstr "Recentes"
 
@@ -3805,13 +3806,13 @@ msgstr "Arquivo"
 msgid "Format: opml"
 msgstr ""
 
-#: ../../public/templates/show_index.inc.php:67
+#: ../../public/templates/show_index.inc.php:69
 #: ../../public/templates/show_random_album_disks.inc.php:41
 #: ../../public/templates/show_random_albums.inc.php:41
 msgid "Albums of the Moment"
 msgstr "Álbuns do momento"
 
-#: ../../public/templates/show_index.inc.php:76
+#: ../../public/templates/show_index.inc.php:78
 #: ../../public/templates/show_random_videos.inc.php:42
 msgid "Videos of the Moment"
 msgstr "Vídeos do momento"
@@ -4019,7 +4020,7 @@ msgid ""
 msgstr "Configurações recomendadas ao usar o Ampache como interface para uma comunidade musical."
 
 #: ../../public/templates/show_install_config.inc.php:147
-#: ../../src/Repository/Model/Preference.php:999
+#: ../../src/Repository/Model/Preference.php:1017
 msgid "Allow Transcoding"
 msgstr "Permitir transcodificação"
 
@@ -4247,7 +4248,7 @@ msgstr "Agente"
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:544
 #: ../../src/Repository/Model/playlist_object.php:96
 #: ../../src/Repository/Model/playlist_object.php:97
-#: ../../src/Repository/Model/Preference.php:348
+#: ../../src/Repository/Model/Preference.php:354
 #: ../../src/Repository/Model/User.php:1018
 #: ../../src/Repository/Model/Video.php:822
 msgid "Unknown"
@@ -4504,9 +4505,9 @@ msgid "Date Added"
 msgstr "Adicionado em"
 
 #: ../../public/templates/show_mashup.inc.php:71
-#: ../../src/Plugin/AmpacheHomeDashboard.php:87
-#: ../../src/Plugin/AmpacheHomeDashboard.php:200
-#: ../../src/Repository/Model/Preference.php:909
+#: ../../src/Plugin/AmpacheHomeDashboard.php:88
+#: ../../src/Plugin/AmpacheHomeDashboard.php:214
+#: ../../src/Repository/Model/Preference.php:917
 msgid "Trending"
 msgstr "Mais populares"
 
@@ -5569,7 +5570,7 @@ msgstr "Tipos de catálogo"
 
 #: ../../public/templates/sidebar_admin.inc.php:104
 #: ../../src/Module/Application/Admin/Modules/ShowPluginsAction.php:61
-#: ../../src/Repository/Model/Plugin.php:377
+#: ../../src/Repository/Model/Plugin.php:376
 msgid "Manage Plugins"
 msgstr "Gerenciar plugins"
 
@@ -6502,8 +6503,8 @@ msgstr "Tem Certeza?"
 #. HINT: ACL Name
 #: ../../src/Module/Application/Admin/Access/ShowDeleteRecordAction.php:81
 #, php-format
-msgid "This will permanently delete the ACL \"%s\""
-msgstr "Isso irá excluir permanentemente a ACL \"%s\""
+msgid "This will permanently delete the %s ACL \"%s\""
+msgstr ""
 
 #: ../../src/Module/Application/Admin/Access/UpdateRecordAction.php:118
 msgid "Your Access Control List has been updated"
@@ -6967,8 +6968,8 @@ msgstr "O Artista e todos os arquivos serão excluídos"
 #: ../../src/Plugin/AmpacheMusicBrainz.php:97
 #: ../../src/Plugin/AmpacheTheaudiodb.php:75
 #: ../../src/Plugin/AmpacheTheaudiodb.php:105
-#: ../../src/Repository/Model/Preference.php:926
-#: ../../src/Repository/Model/Preference.php:994
+#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Repository/Model/Preference.php:1012
 msgid "Overwrite Artist names that match an mbid"
 msgstr "Sobrescrever os nomes de Artista que batem com um mbid"
 
@@ -8406,7 +8407,7 @@ msgid "Table engine: %s"
 msgstr "Motor da tabela: %s"
 
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:100
-#: ../../src/Repository/Model/Preference.php:911
+#: ../../src/Repository/Model/Preference.php:920
 msgid "HTTPQ Active Instance"
 msgstr "Instância Ativa HTTPQ"
 
@@ -8441,12 +8442,12 @@ msgid "Paused"
 msgstr "Pausado"
 
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:101
-#: ../../src/Repository/Model/Preference.php:927
+#: ../../src/Repository/Model/Preference.php:936
 msgid "MPD Active Instance"
 msgstr "Instância Ativa MPD"
 
 #: ../../src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php:97
-#: ../../src/Repository/Model/Preference.php:1010
+#: ../../src/Repository/Model/Preference.php:1028
 msgid "UPnP Active Instance"
 msgstr "Instância Ativa UPnP"
 
@@ -8455,12 +8456,12 @@ msgid "URL"
 msgstr "URL"
 
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:96
-#: ../../src/Repository/Model/Preference.php:1014
+#: ../../src/Repository/Model/Preference.php:1032
 msgid "VLC Active Instance"
 msgstr "Instância VLC Ativa"
 
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:102
-#: ../../src/Repository/Model/Preference.php:1022
+#: ../../src/Repository/Model/Preference.php:1040
 msgid "XBMC Active Instance"
 msgstr "Instância Ativa XBMC"
 
@@ -8610,7 +8611,7 @@ msgid "There was an error trying to delete \"%s\""
 msgstr "Erro ao excluir \"%s\""
 
 #: ../../src/Module/System/AutoUpdate.php:371
-#: ../../src/Repository/Model/Plugin.php:375
+#: ../../src/Repository/Model/Plugin.php:374
 msgid "Update available"
 msgstr "Atualização disponível"
 
@@ -8912,12 +8913,12 @@ msgstr "Data de reprodução"
 msgid "Enabled"
 msgstr "Ativado"
 
-#: ../../src/Module/Util/Ui.php:937 ../../src/Module/Util/Ui.php:1354
+#: ../../src/Module/Util/Ui.php:937 ../../src/Module/Util/Ui.php:1391
 msgid "On"
 msgstr "Ligado"
 
 #: ../../src/Module/Util/Ui.php:938 ../../src/Module/Util/Ui.php:1055
-#: ../../src/Module/Util/Ui.php:1356
+#: ../../src/Module/Util/Ui.php:1393
 msgid "Off"
 msgstr "Desligado"
 
@@ -9043,12 +9044,12 @@ msgid "Song preview from 7digital"
 msgstr "Prévia da música de 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:63
-#: ../../src/Repository/Model/Preference.php:828
+#: ../../src/Repository/Model/Preference.php:834
 msgid "7digital consumer key"
 msgstr "Chave de consumidor 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:66
-#: ../../src/Repository/Model/Preference.php:829
+#: ../../src/Repository/Model/Preference.php:835
 msgid "7digital secret"
 msgstr "Senha 7digital"
 
@@ -9057,27 +9058,27 @@ msgid "Amazon art search"
 msgstr "Pesquisa de arte na Amazon"
 
 #: ../../src/Plugin/AmpacheAmazon.php:66
-#: ../../src/Repository/Model/Preference.php:844
+#: ../../src/Repository/Model/Preference.php:850
 msgid "Amazon base url"
 msgstr "Url base da Amazon"
 
 #: ../../src/Plugin/AmpacheAmazon.php:69
-#: ../../src/Repository/Model/Preference.php:848
+#: ../../src/Repository/Model/Preference.php:854
 msgid "Amazon max results pages"
 msgstr "Máximo de páginas de resultado da Amazon"
 
 #: ../../src/Plugin/AmpacheAmazon.php:72
-#: ../../src/Repository/Model/Preference.php:847
+#: ../../src/Repository/Model/Preference.php:853
 msgid "Amazon Access Key ID"
 msgstr "ID da chave de acesso da Amazon"
 
 #: ../../src/Plugin/AmpacheAmazon.php:75
-#: ../../src/Repository/Model/Preference.php:846
+#: ../../src/Repository/Model/Preference.php:852
 msgid "Amazon Secret Access Key"
 msgstr "Chave de acesso secreta da Amazon"
 
 #: ../../src/Plugin/AmpacheAmazon.php:78
-#: ../../src/Repository/Model/Preference.php:845
+#: ../../src/Repository/Model/Preference.php:851
 msgid "Amazon associate tag"
 msgstr "Etiqueta de associado da Amazon"
 
@@ -9093,22 +9094,43 @@ msgstr "Token Bit.ly"
 msgid "Bit.ly Group GUID"
 msgstr "GUID do Grupo Bit.ly"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:58
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:59
 msgid "Catalog favorites on homepage"
 msgstr "Favoritos do catálogo na página inicial"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:67
-#: ../../src/Repository/Model/Preference.php:869
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:68
+#: ../../src/Repository/Model/Preference.php:875
 msgid "Catalog favorites max items"
 msgstr "Máximo de itens favoritos do catálogo"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:70
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:100
-#: ../../src/Repository/Model/Preference.php:868
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:72
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:108
+#: ../../src/Repository/Model/Preference.php:874
 msgid "Catalog favorites grid view display"
 msgstr "Visualização em grade dos favoritos do catálogo"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:119
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:76
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:109
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:71
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:102
+#: ../../src/Plugin/AmpacheHomeDashboard.php:96
+#: ../../src/Plugin/AmpacheHomeDashboard.php:132
+#: ../../src/Plugin/AmpachePersonalFavorites.php:79
+#: ../../src/Plugin/AmpachePersonalFavorites.php:112
+#: ../../src/Plugin/AmpacheRSSView.php:72
+#: ../../src/Plugin/AmpacheRSSView.php:104
+#: ../../src/Plugin/AmpacheShoutHome.php:69
+#: ../../src/Plugin/AmpacheShoutHome.php:100
+#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:971
+msgid "Plugin CSS order"
+msgstr ""
+
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:131
 msgid "Highlight"
 msgstr "Destaque"
 
@@ -9121,12 +9143,12 @@ msgid "Discogs metadata integration"
 msgstr "Integração de metadados do Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:64
-#: ../../src/Repository/Model/Preference.php:887
+#: ../../src/Repository/Model/Preference.php:894
 msgid "Discogs consumer key"
 msgstr "Chave de consumidor Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:67
-#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:895
 msgid "Discogs secret"
 msgstr "Senha do Discogs"
 
@@ -9139,20 +9161,20 @@ msgid "Artist photos from Flickr"
 msgstr "Fotos do artista do Flickr"
 
 #: ../../src/Plugin/Ampacheflickr.php:61
-#: ../../src/Repository/Model/Preference.php:890
+#: ../../src/Repository/Model/Preference.php:897
 msgid "Flickr API key"
 msgstr "Chave API do Flickr"
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:56
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:58
 msgid "Friend's Timeline on homepage"
 msgstr "Linha do tempo de amigos na página inicial"
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:65
-#: ../../src/Repository/Model/Preference.php:892
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:67
+#: ../../src/Repository/Model/Preference.php:899
 msgid "Friends timeline max items"
 msgstr "Máximo de itens da linha do tempo de amigos "
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:106
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:127
 msgid "Friends Timeline"
 msgstr "Linha do tempo dos amigos"
 
@@ -9161,7 +9183,7 @@ msgid "Google Analytics statistics"
 msgstr "Estatísticas Google Analytics"
 
 #: ../../src/Plugin/AmpacheGoogleAnalytics.php:60
-#: ../../src/Repository/Model/Preference.php:895
+#: ../../src/Repository/Model/Preference.php:903
 msgid "Google Analytics Tracking ID"
 msgstr "ID de Rastreamento do Google Analytics"
 
@@ -9170,15 +9192,15 @@ msgid "Show user's location with Google Maps"
 msgstr "Mostrar a localização do usuário com o Google Maps"
 
 #: ../../src/Plugin/AmpacheGoogleMaps.php:62
-#: ../../src/Repository/Model/Preference.php:894
+#: ../../src/Repository/Model/Preference.php:902
 msgid "Google Maps API key"
 msgstr "Chave API do Google Maps"
 
-#: ../../src/Plugin/AmpacheGoogleMaps.php:135
+#: ../../src/Plugin/AmpacheGoogleMaps.php:134
 msgid "Hits"
 msgstr "Dicas"
 
-#: ../../src/Plugin/AmpacheGoogleMaps.php:136
+#: ../../src/Plugin/AmpacheGoogleMaps.php:135
 msgid "Last activity"
 msgstr "Última atividade"
 
@@ -9191,21 +9213,21 @@ msgid "Automatically download accepted Wanted List albums with Headphones"
 msgstr "Baixar automaticamente os álbuns aceitos da Lista de Procurados com Headphones"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:63
-#: ../../src/Repository/Model/Preference.php:897
+#: ../../src/Repository/Model/Preference.php:905
 msgid "Headphones URL"
 msgstr "URL de Headphones"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:66
-#: ../../src/Repository/Model/Preference.php:896
+#: ../../src/Repository/Model/Preference.php:904
 msgid "Headphones API key"
 msgstr "Chave API de Headphones"
 
-#: ../../src/Plugin/AmpacheHomeDashboard.php:62
+#: ../../src/Plugin/AmpacheHomeDashboard.php:63
 msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
-#: ../../src/Plugin/AmpacheHomeDashboard.php:71
-#: ../../src/Repository/Model/Preference.php:905
+#: ../../src/Plugin/AmpacheHomeDashboard.php:72
+#: ../../src/Repository/Model/Preference.php:913
 msgid "Home Dashboard max items"
 msgstr ""
 
@@ -9215,13 +9237,13 @@ msgstr "Grave as preferências musicais do que você toca na sua conta Last.FM"
 
 #: ../../src/Plugin/AmpacheLastfm.php:70
 #: ../../src/Plugin/AmpacheLastfm.php:118
-#: ../../src/Repository/Model/Preference.php:915
+#: ../../src/Repository/Model/Preference.php:924
 msgid "Last.FM Submit Challenge"
 msgstr "Desafio de Last.FM"
 
 #: ../../src/Plugin/AmpacheLastfm.php:73
 #: ../../src/Plugin/AmpacheLastfm.php:117
-#: ../../src/Repository/Model/Preference.php:916
+#: ../../src/Repository/Model/Preference.php:925
 msgid "Last.FM Grant URL"
 msgstr "URL de Concessão Last.FM"
 
@@ -9234,7 +9256,7 @@ msgid "Scrobble songs you play to your Libre.FM Account"
 msgstr "Grave as preferências musicais do que você toca na sua conta Libre.FM"
 
 #: ../../src/Plugin/Ampachelibrefm.php:70
-#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:928
 msgid "Libre.FM Submit Challenge"
 msgstr "Submeter Desafio à Libre.FM"
 
@@ -9248,7 +9270,7 @@ msgid "Scrobble songs you play to your ListenBrainz Account"
 msgstr "Grave as preferências musicais do que você toca na sua conta ListenBrainz"
 
 #: ../../src/Plugin/Ampachelistenbrainz.php:67
-#: ../../src/Repository/Model/Preference.php:920
+#: ../../src/Repository/Model/Preference.php:929
 msgid "ListenBrainz User Token"
 msgstr "Token de Usuário ListenBrainz"
 
@@ -9270,12 +9292,12 @@ msgid "Matomo statistics"
 msgstr "Estatísticas Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:62
-#: ../../src/Repository/Model/Preference.php:924
+#: ../../src/Repository/Model/Preference.php:933
 msgid "Matomo Site ID"
 msgstr "ID do Site Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:65
-#: ../../src/Repository/Model/Preference.php:925
+#: ../../src/Repository/Model/Preference.php:934
 msgid "Matomo URL"
 msgstr "URL do Matomo"
 
@@ -9288,43 +9310,43 @@ msgid "PayPal donation button on user page"
 msgstr "Botão de doação do PayPal na página do usuário"
 
 #: ../../src/Plugin/AmpachePaypal.php:63
-#: ../../src/Repository/Model/Preference.php:932
+#: ../../src/Repository/Model/Preference.php:941
 msgid "PayPal ID"
 msgstr "ID do PayPal"
 
 #: ../../src/Plugin/AmpachePaypal.php:66
-#: ../../src/Repository/Model/Preference.php:933
+#: ../../src/Repository/Model/Preference.php:942
 msgid "PayPal Currency Code"
 msgstr "Código da Moeda do Paypal"
 
-#: ../../src/Plugin/AmpachePaypal.php:101
+#: ../../src/Plugin/AmpachePaypal.php:100
 msgid "on"
 msgstr "em"
 
-#: ../../src/Plugin/AmpachePaypal.php:115
+#: ../../src/Plugin/AmpachePaypal.php:114
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr "PayPal - A maneira mais fácil e segura de pagar online!"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:56
+#: ../../src/Plugin/AmpachePersonalFavorites.php:58
 msgid "Personal favorites on homepage"
 msgstr "Favoritos pessoais na página inicial"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:65
-#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Plugin/AmpachePersonalFavorites.php:67
+#: ../../src/Repository/Model/Preference.php:944
 msgid "Personal favorites on the homepage"
 msgstr "Favoritos pessoais na página inicial"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:68
-#: ../../src/Repository/Model/Preference.php:936
+#: ../../src/Plugin/AmpachePersonalFavorites.php:71
+#: ../../src/Repository/Model/Preference.php:945
 msgid "Favorite Playlists"
 msgstr "Playlists Favoritas"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:71
-#: ../../src/Repository/Model/Preference.php:937
+#: ../../src/Plugin/AmpachePersonalFavorites.php:75
+#: ../../src/Repository/Model/Preference.php:946
 msgid "Favorite Smartlists"
 msgstr "Listas Inteligentes Favoritas"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:123
+#: ../../src/Plugin/AmpachePersonalFavorites.php:144
 msgid "Favorite Lists"
 msgstr "Listas de Favoritos"
 
@@ -9333,12 +9355,12 @@ msgid "Piwik statistics"
 msgstr "Estatísticas Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:62
-#: ../../src/Repository/Model/Preference.php:938
+#: ../../src/Repository/Model/Preference.php:948
 msgid "Piwik Site ID"
 msgstr "ID do Site Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:65
-#: ../../src/Repository/Model/Preference.php:939
+#: ../../src/Repository/Model/Preference.php:949
 msgid "Piwik URL"
 msgstr "URL do Piwik"
 
@@ -9347,49 +9369,49 @@ msgid "Raise the album and artist rating to match the highest song rating"
 msgstr "Aumente a classificação do álbum e do artista para corresponder à classificação mais alta da música"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:75
-#: ../../src/Repository/Model/Preference.php:954
+#: ../../src/Repository/Model/Preference.php:964
 msgid "Minimum star rating to match"
 msgstr "Classificação mínima de estrelas para corresponder"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:78
 #: ../../src/Plugin/AmpacheRatingMatch.php:136
-#: ../../src/Repository/Model/Preference.php:948
+#: ../../src/Repository/Model/Preference.php:958
 msgid "When you love a track, flag the album and artist"
 msgstr "Quando você adorar uma faixa, marque o álbum e o artista"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:81
 #: ../../src/Plugin/AmpacheRatingMatch.php:139
-#: ../../src/Repository/Model/Preference.php:949
+#: ../../src/Repository/Model/Preference.php:959
 msgid "Match rule for 1 Star ($play,$skip)"
 msgstr "Regra de correspondência para 1 estrela ($play,$skip)"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:84
 #: ../../src/Plugin/AmpacheRatingMatch.php:140
-#: ../../src/Repository/Model/Preference.php:950
+#: ../../src/Repository/Model/Preference.php:960
 msgid "Match rule for 2 Stars"
 msgstr "Regra de correspondência para 2 estrelas"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:87
 #: ../../src/Plugin/AmpacheRatingMatch.php:141
-#: ../../src/Repository/Model/Preference.php:951
+#: ../../src/Repository/Model/Preference.php:961
 msgid "Match rule for 3 Stars"
 msgstr "Regra de correspondência para 3 estrelas"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:90
 #: ../../src/Plugin/AmpacheRatingMatch.php:142
-#: ../../src/Repository/Model/Preference.php:952
+#: ../../src/Repository/Model/Preference.php:962
 msgid "Match rule for 4 Stars"
 msgstr "Regra de correspondência para 4 estrelas"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:93
 #: ../../src/Plugin/AmpacheRatingMatch.php:143
-#: ../../src/Repository/Model/Preference.php:953
+#: ../../src/Repository/Model/Preference.php:963
 msgid "Match rule for 5 Stars"
 msgstr "Regra de correspondência para 5 estrelas"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:96
 #: ../../src/Plugin/AmpacheRatingMatch.php:144
-#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:957
 msgid "Match rule for Flags"
 msgstr "Regra de correspondência para bandeiras"
 
@@ -9398,26 +9420,26 @@ msgstr "Regra de correspondência para bandeiras"
 msgid "Save ratings to file tags when changed"
 msgstr "Salvar avaliações para as tags do arquivo ao alterar"
 
-#: ../../src/Plugin/AmpacheRSSView.php:53
+#: ../../src/Plugin/AmpacheRSSView.php:55
 msgid "RSS View"
 msgstr "Visualização RSS"
 
-#: ../../src/Plugin/AmpacheRSSView.php:62
-#: ../../src/Repository/Model/Preference.php:955
+#: ../../src/Plugin/AmpacheRSSView.php:64
+#: ../../src/Repository/Model/Preference.php:965
 msgid "RSS Feed URL"
 msgstr "URL do Feed RSS"
 
-#: ../../src/Plugin/AmpacheRSSView.php:65
-#: ../../src/Repository/Model/Preference.php:956
+#: ../../src/Plugin/AmpacheRSSView.php:68
+#: ../../src/Repository/Model/Preference.php:966
 msgid "RSS Feed max items"
 msgstr "Máximo de itens do Feed RSS"
 
-#: ../../src/Plugin/AmpacheShoutHome.php:54
+#: ../../src/Plugin/AmpacheShoutHome.php:56
 msgid "Shoutbox on homepage"
 msgstr "Mensagem na página inicial"
 
-#: ../../src/Plugin/AmpacheShoutHome.php:63
-#: ../../src/Repository/Model/Preference.php:959
+#: ../../src/Plugin/AmpacheShoutHome.php:65
+#: ../../src/Repository/Model/Preference.php:970
 msgid "Shoutbox on homepage max items"
 msgstr "Máximo de itens de mensagens na página inicial"
 
@@ -9426,12 +9448,12 @@ msgid "Control bandwidth per user"
 msgstr "Controle da largura de banda por usuário"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:65
-#: ../../src/Repository/Model/Preference.php:986
+#: ../../src/Repository/Model/Preference.php:1004
 msgid "Stream control maximal bandwidth (month)"
 msgstr "Controle de limite de banda máxima de Stream (mês)"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:68
-#: ../../src/Repository/Model/Preference.php:985
+#: ../../src/Repository/Model/Preference.php:1003
 msgid "Stream control bandwidth history (days)"
 msgstr "Histórico do controle de limite de banda de Stream (dias)"
 
@@ -9440,12 +9462,12 @@ msgid "Control hits per user"
 msgstr "Controle de acessos por usuário"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:63
-#: ../../src/Repository/Model/Preference.php:988
+#: ../../src/Repository/Model/Preference.php:1006
 msgid "Stream control maximal hits"
 msgstr "Controle do máximo de acesso de Stream"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:66
-#: ../../src/Repository/Model/Preference.php:987
+#: ../../src/Repository/Model/Preference.php:1005
 msgid "Stream control hits history (days)"
 msgstr "Histórico do controle de acesso de Stream (dias)"
 
@@ -9454,12 +9476,12 @@ msgid "Control time per user"
 msgstr "Controle de tempo por usuário"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:65
-#: ../../src/Repository/Model/Preference.php:990
+#: ../../src/Repository/Model/Preference.php:1008
 msgid "Stream control maximal time (minutes)"
 msgstr "Controle do tempo máximo de Stream (minutos)"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:68
-#: ../../src/Repository/Model/Preference.php:989
+#: ../../src/Repository/Model/Preference.php:1007
 msgid "Stream control time history (days)"
 msgstr "Histórico do controle de tempo de Stream (dias)"
 
@@ -9468,7 +9490,7 @@ msgid "TheAudioDb metadata integration"
 msgstr "Integração de metadados do AudioDb"
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:72
-#: ../../src/Repository/Model/Preference.php:993
+#: ../../src/Repository/Model/Preference.php:1011
 msgid "TheAudioDb API key"
 msgstr "Chave API do AudioDb"
 
@@ -9481,17 +9503,17 @@ msgid "URL shorteners on shared links with YOURLS"
 msgstr "Encurtadores de URL em links compartilhados com YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:64
-#: ../../src/Repository/Model/Preference.php:1024
+#: ../../src/Repository/Model/Preference.php:1042
 msgid "YOURLS domain name"
 msgstr "Nome de domínio YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:67
-#: ../../src/Repository/Model/Preference.php:1025
+#: ../../src/Repository/Model/Preference.php:1043
 msgid "YOURLS use IDN"
 msgstr "YOURLS usa IDN"
 
 #: ../../src/Plugin/AmpacheYourls.php:70
-#: ../../src/Repository/Model/Preference.php:1023
+#: ../../src/Repository/Model/Preference.php:1041
 msgid "YOURLS API key"
 msgstr "Chave API YOURLS"
 
@@ -9621,545 +9643,569 @@ msgstr "Codec é necessário (MP3, OGG, etc...)"
 msgid "Catalog is invalid"
 msgstr "Catálogo é inválido"
 
-#: ../../src/Repository/Model/Plugin.php:375
+#: ../../src/Repository/Model/Plugin.php:374
 msgid "You have Plugins that need an update!"
 msgstr "Existem Plugins a atualizar!"
 
-#: ../../src/Repository/Model/Plugin.php:377
+#: ../../src/Repository/Model/Plugin.php:376
 msgid "Update Plugins automatically"
 msgstr "Atualizar Plugins automaticamente"
 
-#: ../../src/Repository/Model/Preference.php:830
+#: ../../src/Repository/Model/Preference.php:836
 msgid "Ajax page load"
 msgstr "Carregamento da página Ajax"
 
-#: ../../src/Repository/Model/Preference.php:831
+#: ../../src/Repository/Model/Preference.php:837
 msgid "Album - Group multiple disks"
 msgstr "Álbum - Agrupar vários discos"
 
-#: ../../src/Repository/Model/Preference.php:832
+#: ../../src/Repository/Model/Preference.php:838
 msgid "Album - Group per release type sort"
 msgstr "Album - Grupo por tipo de liberação"
 
-#: ../../src/Repository/Model/Preference.php:833
+#: ../../src/Repository/Model/Preference.php:839
 msgid "Album - Group per release type"
 msgstr "Álbum - Agrupar por tipo de lançamento"
 
-#: ../../src/Repository/Model/Preference.php:834
+#: ../../src/Repository/Model/Preference.php:840
 msgid "Album - Default sort"
 msgstr "Álbum - Classificação padrão"
 
-#: ../../src/Repository/Model/Preference.php:835
+#: ../../src/Repository/Model/Preference.php:841
 msgid "Allow Democratic Play"
 msgstr "Permitir tocar o democrático"
 
-#: ../../src/Repository/Model/Preference.php:836
+#: ../../src/Repository/Model/Preference.php:842
 msgid "Allow Localplay Play"
 msgstr "Permitir tocar player local"
 
-#: ../../src/Repository/Model/Preference.php:837
+#: ../../src/Repository/Model/Preference.php:843
 msgid "Share Recently Played information - Allow access to streaming agent"
 msgstr "Compartilhar informação do Tocado Recentemente - Permitir acesso ao agente do streaming"
 
-#: ../../src/Repository/Model/Preference.php:838
+#: ../../src/Repository/Model/Preference.php:844
 msgid "Share Now Playing information"
 msgstr "Compartilhar informação do Tocando Agora"
 
-#: ../../src/Repository/Model/Preference.php:839
+#: ../../src/Repository/Model/Preference.php:845
 msgid "Share Recently Played information"
 msgstr "Compartilhar informação do Tocado Recentemente"
 
-#: ../../src/Repository/Model/Preference.php:840
+#: ../../src/Repository/Model/Preference.php:846
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
 msgstr "Compartilhar informação do Tocado Recentemente - Permitir acesso à data/hora do streaming"
 
-#: ../../src/Repository/Model/Preference.php:841
+#: ../../src/Repository/Model/Preference.php:847
 msgid "Allow Streaming"
 msgstr "Permitir transmissão"
 
-#: ../../src/Repository/Model/Preference.php:842
+#: ../../src/Repository/Model/Preference.php:848
 msgid "Allow user uploads"
 msgstr "Permitir uploads de usuário"
 
-#: ../../src/Repository/Model/Preference.php:843
+#: ../../src/Repository/Model/Preference.php:849
 msgid "Allow Video Features"
 msgstr "Permitir recursos de vídeo"
 
-#: ../../src/Repository/Model/Preference.php:849
+#: ../../src/Repository/Model/Preference.php:855
 msgid "Allow Ampache API3 responses"
 msgstr "Permitir respostas da API3 do Ampache"
 
-#: ../../src/Repository/Model/Preference.php:850
+#: ../../src/Repository/Model/Preference.php:856
 msgid "Allow Ampache API4 responses"
 msgstr "Permitir respostas da API4 do Ampache"
 
-#: ../../src/Repository/Model/Preference.php:851
+#: ../../src/Repository/Model/Preference.php:857
 msgid "Allow Ampache API5 responses"
 msgstr "Permitir respostas da API5 do Ampache"
 
-#: ../../src/Repository/Model/Preference.php:852
+#: ../../src/Repository/Model/Preference.php:858
 msgid "Allow Ampache API6 responses"
 msgstr "Permitir respostas da API6 do Ampache"
 
-#: ../../src/Repository/Model/Preference.php:853
+#: ../../src/Repository/Model/Preference.php:859
 msgid "Force a specific API response no matter what version you send"
 msgstr "Forçar uma resposta API específica independente da versão enviada"
 
-#: ../../src/Repository/Model/Preference.php:854
+#: ../../src/Repository/Model/Preference.php:860
 msgid "Hide playlists in Subsonic and API clients that start with this string"
 msgstr "Ocultar playlists no Subsonic e clientes API que iniciarem com esta string"
 
-#: ../../src/Repository/Model/Preference.php:855
+#: ../../src/Repository/Model/Preference.php:861
 msgid "Hide smartlists that match playlist names in Subsonic and API clients"
 msgstr "Ocultar playlists inteligentes que batem com nomes de playlists no Subsonic e clientes API"
 
-#: ../../src/Repository/Model/Preference.php:856
+#: ../../src/Repository/Model/Preference.php:862
 msgid "AutoUpdate last check time"
 msgstr "Data e hora da última checagem do auto-autualizador"
 
-#: ../../src/Repository/Model/Preference.php:857
+#: ../../src/Repository/Model/Preference.php:863
 msgid "AutoUpdate last version from last check is newer"
 msgstr "A versão encontrada pelo auto-atualizador na última checagem é mais nova"
 
-#: ../../src/Repository/Model/Preference.php:858
+#: ../../src/Repository/Model/Preference.php:864
 msgid "AutoUpdate last version from last check"
 msgstr "Versão encontrada pelo auto-atualizador na última checagem"
 
-#: ../../src/Repository/Model/Preference.php:859
+#: ../../src/Repository/Model/Preference.php:865
 msgid "Check for Ampache updates automatically"
 msgstr "Verificar por atualizações do Ampache automaticamente"
 
-#: ../../src/Repository/Model/Preference.php:860
+#: ../../src/Repository/Model/Preference.php:866
 msgid "Bit.ly API key"
 msgstr "Chave API do Bit.ly"
 
-#: ../../src/Repository/Model/Preference.php:861
+#: ../../src/Repository/Model/Preference.php:867
 msgid "Bit.ly Username"
 msgstr "Nome de Usuário Bit.ly"
 
-#: ../../src/Repository/Model/Preference.php:862
+#: ../../src/Repository/Model/Preference.php:868
 msgid "Only keep the latest media bookmark"
 msgstr "Manter apenas o favorito de mídia mais recente"
 
-#: ../../src/Repository/Model/Preference.php:863
+#: ../../src/Repository/Model/Preference.php:869
 msgid "Broadcast web player by default"
 msgstr "Transmitir pelo player web por padrão"
 
-#: ../../src/Repository/Model/Preference.php:864
+#: ../../src/Repository/Model/Preference.php:870
 msgid "Show filter box on browse"
 msgstr "Mostrar caixa de filtro na navegação"
 
-#: ../../src/Repository/Model/Preference.php:865
+#: ../../src/Repository/Model/Preference.php:871
 msgid "Web Player browser notifications timeout (seconds)"
 msgstr "Expiração para notificações do player web via navegador (segundos)"
 
-#: ../../src/Repository/Model/Preference.php:866
+#: ../../src/Repository/Model/Preference.php:872
 msgid "Web Player browser notifications"
 msgstr "Notificações do player web via navegador"
 
-#: ../../src/Repository/Model/Preference.php:867
+#: ../../src/Repository/Model/Preference.php:873
 msgid "Check library item at import time and disable duplicates"
 msgstr "Verificar item da biblioteca no momento da importação e desativar duplicatas"
 
-#: ../../src/Repository/Model/Preference.php:870
+#: ../../src/Repository/Model/Preference.php:877
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
 msgstr "Cache de dados SQL calculados (por exemplo, estatísticas de hits da mídia) usando um cron"
 
-#: ../../src/Repository/Model/Preference.php:871
+#: ../../src/Repository/Model/Preference.php:878
 msgid "Custom blank album default image"
 msgstr "Personalizar a imagem em branco padrão de álbum"
 
-#: ../../src/Repository/Model/Preference.php:872
+#: ../../src/Repository/Model/Preference.php:879
 msgid "Custom datetime"
 msgstr "Data e hora personalizadas"
 
-#: ../../src/Repository/Model/Preference.php:873
+#: ../../src/Repository/Model/Preference.php:880
 msgid "Custom URL - Favicon"
 msgstr "URL personalizada - Ícone de favoritos"
 
-#: ../../src/Repository/Model/Preference.php:874
+#: ../../src/Repository/Model/Preference.php:881
 msgid "Custom URL - Login page background"
 msgstr "URL personalizada - Fundo da página de login"
 
-#: ../../src/Repository/Model/Preference.php:875
+#: ../../src/Repository/Model/Preference.php:882
 msgid "Custom URL - Login page logo"
 msgstr "URL personalizada - Logotipo da página de login"
 
-#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:883
 msgid "Custom URL - Logo"
 msgstr "URL personalizada - Logotipo"
 
-#: ../../src/Repository/Model/Preference.php:877
+#: ../../src/Repository/Model/Preference.php:884
 msgid "Custom URL - Use your avatar for header logo"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:878
+#: ../../src/Repository/Model/Preference.php:885
 msgid "Custom text footer"
 msgstr "Texto personalizado do rodapé"
 
-#: ../../src/Repository/Model/Preference.php:879
+#: ../../src/Repository/Model/Preference.php:886
 msgid "Custom timezone (Override PHP date.timezone)"
 msgstr "Fuso horário personalizado (Substitui o date.timezone do PHP)"
 
-#: ../../src/Repository/Model/Preference.php:880
+#: ../../src/Repository/Model/Preference.php:887
 msgid "Use DAAP backend"
 msgstr "Usar a plataforma de serviço DAAP"
 
-#: ../../src/Repository/Model/Preference.php:881
+#: ../../src/Repository/Model/Preference.php:888
 msgid "DAAP backend password"
 msgstr "Senha da plataforma de serviço DAAP"
 
-#: ../../src/Repository/Model/Preference.php:882
+#: ../../src/Repository/Model/Preference.php:889
 msgid "Democratic - Clear votes for expired user sessions"
 msgstr "Democrática - Limpar votos para sessões de usuários expiradas"
 
-#: ../../src/Repository/Model/Preference.php:883
+#: ../../src/Repository/Model/Preference.php:890
 msgid "Democratic - Use smartlists for base playlist"
 msgstr "Democrática - Usar listas inteligentes para a playlist base"
 
-#: ../../src/Repository/Model/Preference.php:884
+#: ../../src/Repository/Model/Preference.php:891
 msgid "Limit direct play to maximum media count"
 msgstr "Limitar a reprodução direta à contagem máxima de mídias"
 
-#: ../../src/Repository/Model/Preference.php:885
+#: ../../src/Repository/Model/Preference.php:892
 msgid "Custom metadata - Define field list"
 msgstr "Metadados personalizados - Definir lista de campos"
 
-#: ../../src/Repository/Model/Preference.php:886
+#: ../../src/Repository/Model/Preference.php:893
 msgid "Custom metadata - Disable these fields"
 msgstr "Metadados personalizados - Desativar estes campos"
 
-#: ../../src/Repository/Model/Preference.php:889
+#: ../../src/Repository/Model/Preference.php:896
 msgid "Allow Downloads"
 msgstr "Permitir baixar"
 
-#: ../../src/Repository/Model/Preference.php:891
+#: ../../src/Repository/Model/Preference.php:898
 msgid "Force HTTP playback regardless of port"
 msgstr "Forçar a reprodução via HTTP, independentemente da porta"
 
-#: ../../src/Repository/Model/Preference.php:893
+#: ../../src/Repository/Model/Preference.php:901
 msgid "Allow Geolocation"
 msgstr "Permitir geolocalização"
 
-#: ../../src/Repository/Model/Preference.php:898
+#: ../../src/Repository/Model/Preference.php:906
 msgid "Hide the Genre column in browse table rows"
 msgstr "Ocultar a coluna Gênero nas linhas da navegação"
 
-#: ../../src/Repository/Model/Preference.php:899
+#: ../../src/Repository/Model/Preference.php:907
 msgid "Hide the Song Artist column for Albums with one Artist"
 msgstr "Ocultar a coluna Artista para Álbuns com um só Artista"
 
-#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:908
 msgid "Show Albums of the Moment"
 msgstr "Mostrar álbuns do momento"
 
-#: ../../src/Repository/Model/Preference.php:901
+#: ../../src/Repository/Model/Preference.php:909
 msgid "Show Videos of the Moment"
 msgstr "Mostrar vídeos do momento"
 
-#: ../../src/Repository/Model/Preference.php:902
+#: ../../src/Repository/Model/Preference.php:910
 msgid "Show Now Playing"
 msgstr "Mostrar os Tocando Agora"
 
-#: ../../src/Repository/Model/Preference.php:903
+#: ../../src/Repository/Model/Preference.php:911
 msgid "Show Recently Played"
 msgstr "Mostrar o Tocado Recentemente"
 
-#: ../../src/Repository/Model/Preference.php:904
+#: ../../src/Repository/Model/Preference.php:912
 msgid "Show all media types in Recently Played"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:912
+#: ../../src/Repository/Model/Preference.php:921
 msgid "Use Dashboard links for the index page header"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:913
+#: ../../src/Repository/Model/Preference.php:922
 msgid "Default webplayer volume"
 msgstr "Volume padrão do webplayer"
 
-#: ../../src/Repository/Model/Preference.php:917
+#: ../../src/Repository/Model/Preference.php:926
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "Navegação alfabética por padrão nos seguintes itens da biblioteca (álbum, artista, ...)"
 
-#: ../../src/Repository/Model/Preference.php:918
+#: ../../src/Repository/Model/Preference.php:927
 msgid "Library item context menu"
 msgstr "Menu de contexto de item da biblioteca"
 
-#: ../../src/Repository/Model/Preference.php:921
+#: ../../src/Repository/Model/Preference.php:930
 msgid "Localplay Type"
 msgstr "Tipo de player local"
 
-#: ../../src/Repository/Model/Preference.php:922
+#: ../../src/Repository/Model/Preference.php:931
 msgid "Localplay Access"
 msgstr "Acesso ao player local"
 
-#: ../../src/Repository/Model/Preference.php:923
+#: ../../src/Repository/Model/Preference.php:932
 msgid "Lock Songs"
 msgstr "Trancar músicas"
 
-#: ../../src/Repository/Model/Preference.php:928
+#: ../../src/Repository/Model/Preference.php:937
 msgid "Allow E-mail notifications"
 msgstr "Permitir notificações por e-mail"
 
-#: ../../src/Repository/Model/Preference.php:929
+#: ../../src/Repository/Model/Preference.php:938
 msgid "Now Playing filtered per user"
 msgstr "Tocando Agora filtrado por usuário"
 
-#: ../../src/Repository/Model/Preference.php:930
+#: ../../src/Repository/Model/Preference.php:939
 msgid "Offset Limit"
 msgstr "Deslocamento limite"
 
-#: ../../src/Repository/Model/Preference.php:931
+#: ../../src/Repository/Model/Preference.php:940
 msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr "Defina a quantidade de itens que o Álbum/Vídeo do Momento exibirá"
 
-#: ../../src/Repository/Model/Preference.php:934
+#: ../../src/Repository/Model/Preference.php:943
 msgid "API sessions do not expire"
 msgstr "Sessões API não expiram"
 
-#: ../../src/Repository/Model/Preference.php:940
+#: ../../src/Repository/Model/Preference.php:950
 msgid "Playlist Method"
 msgstr "Método da playlist"
 
-#: ../../src/Repository/Model/Preference.php:941
+#: ../../src/Repository/Model/Preference.php:951
 msgid "Playlist Type"
 msgstr "Tipo de playlist"
 
-#: ../../src/Repository/Model/Preference.php:942
+#: ../../src/Repository/Model/Preference.php:952
 msgid "Playback Type"
 msgstr "Tipo de playback"
 
-#: ../../src/Repository/Model/Preference.php:943
+#: ../../src/Repository/Model/Preference.php:953
 msgid "# latest episodes to keep"
 msgstr "# episódios mais recentes a manter"
 
-#: ../../src/Repository/Model/Preference.php:944
+#: ../../src/Repository/Model/Preference.php:954
 msgid "# episodes to download when new episodes are available"
 msgstr "# episódios a baixar quando novos episódios estiverem disponíveis"
 
-#: ../../src/Repository/Model/Preference.php:945
+#: ../../src/Repository/Model/Preference.php:955
 msgid "Popular Threshold"
 msgstr "Threshold popular"
 
-#: ../../src/Repository/Model/Preference.php:946
+#: ../../src/Repository/Model/Preference.php:956
 msgid "Rate Limit"
 msgstr "Taxa limite"
 
-#: ../../src/Repository/Model/Preference.php:957
+#: ../../src/Repository/Model/Preference.php:968
 msgid "Share links default expiration days (0=never)"
 msgstr "Dias de expiração padrão de links de compartilhamento (0 = nunca)"
 
-#: ../../src/Repository/Model/Preference.php:958
+#: ../../src/Repository/Model/Preference.php:969
 msgid "Allow Share"
 msgstr "Permitir compartilhamento"
 
-#: ../../src/Repository/Model/Preference.php:960
+#: ../../src/Repository/Model/Preference.php:972
 msgid "Show 'Album Artists' link in the main sidebar"
 msgstr "Mostrar link 'Álbum dos Artistas' na barra lateral principal"
 
-#: ../../src/Repository/Model/Preference.php:961
+#: ../../src/Repository/Model/Preference.php:973
 msgid "Show 'Artists' link in the main sidebar"
 msgstr "Mostrar link 'Artistas' na barra lateral principal"
 
-#: ../../src/Repository/Model/Preference.php:962
+#: ../../src/Repository/Model/Preference.php:974
 msgid "Show donate button in footer"
 msgstr "Mostrar botão de doação no rodapé"
 
-#: ../../src/Repository/Model/Preference.php:963
+#: ../../src/Repository/Model/Preference.php:975
 msgid "Show the login / registration links in the site header"
 msgstr "Mostrar os links de login/registro no cabeçalho do site"
 
-#: ../../src/Repository/Model/Preference.php:964
+#: ../../src/Repository/Model/Preference.php:976
 msgid "Show License"
 msgstr "Mostrar Licença"
 
-#: ../../src/Repository/Model/Preference.php:965
+#: ../../src/Repository/Model/Preference.php:977
 msgid "Show lyrics"
 msgstr "Mostrar letra"
 
-#: ../../src/Repository/Model/Preference.php:966
+#: ../../src/Repository/Model/Preference.php:978
 msgid "Show Album original year on links (if available)"
 msgstr "Mostrar o ano original do álbum nos links (se disponível)"
 
-#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:979
 msgid "Show # played"
 msgstr "Mostrar quantas vezes que foi tocada"
 
-#: ../../src/Repository/Model/Preference.php:968
+#: ../../src/Repository/Model/Preference.php:980
 msgid "Show playlist owner username in titles"
 msgstr "Mostrar o usuário dono da playlist nos títulos"
 
-#: ../../src/Repository/Model/Preference.php:969
+#: ../../src/Repository/Model/Preference.php:981
 msgid "Show # skipped"
 msgstr "Mostrar # pulado"
 
-#: ../../src/Repository/Model/Preference.php:970
+#: ../../src/Repository/Model/Preference.php:982
 msgid "Show Album subtitle on links (if available)"
 msgstr "Mostrar a legenda do álbum nos links (se disponível)"
 
-#: ../../src/Repository/Model/Preference.php:971
+#: ../../src/Repository/Model/Preference.php:983
 msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
 msgstr "Ative o acesso ao seu \"Spotify Embalado\" na sua página de usuário"
 
-#: ../../src/Repository/Model/Preference.php:972
+#: ../../src/Repository/Model/Preference.php:984
 msgid "Light sidebar by default"
 msgstr "Barra lateral clara por padrão"
 
-#: ../../src/Repository/Model/Preference.php:973
+#: ../../src/Repository/Model/Preference.php:985
 msgid "Hide the Browse menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:974
+#: ../../src/Repository/Model/Preference.php:986
 msgid "Hide the Dashboard menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:975
+#: ../../src/Repository/Model/Preference.php:987
 msgid "Hide the Information menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:976
+#: ../../src/Repository/Model/Preference.php:988
 msgid "Hide the Playlist menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:977
+#: ../../src/Repository/Model/Preference.php:989
 msgid "Hide the Search menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:978
+#: ../../src/Repository/Model/Preference.php:990
 msgid "Hide sidebar switcher arrows"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:979
+#: ../../src/Repository/Model/Preference.php:991
 msgid "Hide the Video menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:980
+#: ../../src/Repository/Model/Preference.php:992
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:993
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:994
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:995
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:996
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:997
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:998
 msgid "Website Title"
 msgstr "Título do site"
 
-#: ../../src/Repository/Model/Preference.php:981
+#: ../../src/Repository/Model/Preference.php:999
 msgid "Artist slideshow inactivity time"
 msgstr "Tempo de inatividade do slideshow do artista"
 
-#: ../../src/Repository/Model/Preference.php:982
+#: ../../src/Repository/Model/Preference.php:1000
 msgid "Show current song in Web player page title"
 msgstr "Mostra música atual no título da página web do player"
 
-#: ../../src/Repository/Model/Preference.php:983
+#: ../../src/Repository/Model/Preference.php:1001
 msgid "Statistics Day Threshold"
 msgstr "Estatísticas de limite do dia"
 
-#: ../../src/Repository/Model/Preference.php:984
+#: ../../src/Repository/Model/Preference.php:1002
 msgid "Enable URL Rewriting"
 msgstr "Ativar a reescrita de URL"
 
-#: ../../src/Repository/Model/Preference.php:991
+#: ../../src/Repository/Model/Preference.php:1009
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
 msgstr "Forçar download de streams Subsonic. (Ative scrobble em seu cliente para gravar estatísticas)"
 
-#: ../../src/Repository/Model/Preference.php:992
+#: ../../src/Repository/Model/Preference.php:1010
 msgid "Use Subsonic backend"
 msgstr "Usar backend Subsonic"
 
-#: ../../src/Repository/Model/Preference.php:995
+#: ../../src/Repository/Model/Preference.php:1013
 msgid "Theme color"
 msgstr "Cor do tema"
 
-#: ../../src/Repository/Model/Preference.php:996
+#: ../../src/Repository/Model/Preference.php:1014
 msgid "Theme"
 msgstr "Tema"
 
-#: ../../src/Repository/Model/Preference.php:997
+#: ../../src/Repository/Model/Preference.php:1015
 msgid "Top menu"
 msgstr "Menu superior"
 
-#: ../../src/Repository/Model/Preference.php:998
+#: ../../src/Repository/Model/Preference.php:1016
 msgid "Transcode Bitrate"
 msgstr "Taxa de bits da transcodificação"
 
-#: ../../src/Repository/Model/Preference.php:1000
+#: ../../src/Repository/Model/Preference.php:1018
 msgid "Fix header position on compatible themes"
 msgstr "Corrigir a posição do cabeçalho em temas compatíveis"
 
-#: ../../src/Repository/Model/Preference.php:1001
+#: ../../src/Repository/Model/Preference.php:1019
 msgid "Only add unique items to playlists"
 msgstr "Adicione apenas itens exclusivos às playlists"
 
-#: ../../src/Repository/Model/Preference.php:1002
+#: ../../src/Repository/Model/Preference.php:1020
 msgid "Upload Access Level"
 msgstr "Nível de Acesso de Upload"
 
-#: ../../src/Repository/Model/Preference.php:1003
+#: ../../src/Repository/Model/Preference.php:1021
 msgid "Allow users to edit uploaded songs"
 msgstr "Permitir que os usuários editem músicas enviadas"
 
-#: ../../src/Repository/Model/Preference.php:1004
+#: ../../src/Repository/Model/Preference.php:1022
 msgid "Allow users to remove uploaded songs"
 msgstr "Permitir que os usuários excluam músicas enviadas"
 
-#: ../../src/Repository/Model/Preference.php:1005
+#: ../../src/Repository/Model/Preference.php:1023
 msgid "Rename uploaded file according to catalog pattern"
 msgstr "Renomear o arquivo enviado de acordo com o padrão do catálogo"
 
-#: ../../src/Repository/Model/Preference.php:1006
+#: ../../src/Repository/Model/Preference.php:1024
 msgid "Destination catalog"
 msgstr "Catálogo de destino"
 
-#: ../../src/Repository/Model/Preference.php:1007
+#: ../../src/Repository/Model/Preference.php:1025
 msgid "Post-upload script (current directory = upload target directory)"
 msgstr "Script pós-upload (pasta atual = pasta de destino do upload)"
 
-#: ../../src/Repository/Model/Preference.php:1008
+#: ../../src/Repository/Model/Preference.php:1026
 msgid "Create a subdirectory per user"
 msgstr "Criar uma pasta por usuário"
 
-#: ../../src/Repository/Model/Preference.php:1009
+#: ../../src/Repository/Model/Preference.php:1027
 msgid "Consider the user sender as the track's artist"
 msgstr "Considerar o usuário remetente como o artista da faixa"
 
-#: ../../src/Repository/Model/Preference.php:1011
+#: ../../src/Repository/Model/Preference.php:1029
 msgid "Use UPnP backend"
 msgstr "Usar a plataforma de serviço UPnP"
 
-#: ../../src/Repository/Model/Preference.php:1012
+#: ../../src/Repository/Model/Preference.php:1030
 msgid "Browse by Original Year for albums (falls back to Year)"
 msgstr "Navegar pelo Ano Original dos álbuns (volta ao ano)"
 
-#: ../../src/Repository/Model/Preference.php:1013
+#: ../../src/Repository/Model/Preference.php:1031
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
 msgstr "Use uma ação de reprodução alternativa para streaming se tiver problemas com a reprodução de música"
 
-#: ../../src/Repository/Model/Preference.php:1015
+#: ../../src/Repository/Model/Preference.php:1033
 msgid "Use WebDAV backend"
 msgstr "Usar plataforma de serviço WebDAV"
 
-#: ../../src/Repository/Model/Preference.php:1016
+#: ../../src/Repository/Model/Preference.php:1034
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
 msgstr "Autorizar decodificador JavaScript (Aurora.js) no player web"
 
-#: ../../src/Repository/Model/Preference.php:1017
+#: ../../src/Repository/Model/Preference.php:1035
 msgid "Confirmation when closing current playing window"
 msgstr "Confirmar ao fechar janela de reprodução atual"
 
-#: ../../src/Repository/Model/Preference.php:1018
+#: ../../src/Repository/Model/Preference.php:1036
 msgid "Authorize Flash Web Player"
 msgstr "Autorizar o player web Flash"
 
-#: ../../src/Repository/Model/Preference.php:1019
+#: ../../src/Repository/Model/Preference.php:1037
 msgid "Authorize HTML5 Web Player"
 msgstr "Autorizar o player web HTML5"
 
-#: ../../src/Repository/Model/Preference.php:1020
+#: ../../src/Repository/Model/Preference.php:1038
 msgid "Auto-pause between tabs"
 msgstr "Pausar automaticamente entre guias"
 
-#: ../../src/Repository/Model/Preference.php:1021
+#: ../../src/Repository/Model/Preference.php:1039
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
 msgstr "Remove as faixas antes do item da playlist atual no webplayer quando reproduzidas"
@@ -11616,4 +11662,8 @@ msgstr ""
 
 #: ./untranslated-strings.txt:250
 msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:254
+msgid "sidebar"
 msgstr ""
