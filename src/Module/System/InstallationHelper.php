@@ -79,12 +79,10 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * this function checks to see if we actually
-     * still need to install ampache. This function is
-     * very important, we don't want to reinstall over top of an existing install
-     * @param $configfile
+     * this function checks to see if we actually still need to install Ampache.
+     * This function is very important, we don't want to reinstall over top of an existing install
      */
-    public function install_check_status($configfile): bool
+    public function install_check_status(string $configfile): bool
     {
         /**
          * Check and see if the config file exists
@@ -116,7 +114,6 @@ final class InstallationHelper implements InstallationHelperInterface
 
         $sql        = 'SELECT * FROM `user`';
         $db_results = Dba::read($sql);
-
         if (!$db_results) {
             AmpError::add('general', T_('Unable to query the database, check your Ampache config'));
 
@@ -125,11 +122,11 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if (!Dba::num_rows($db_results)) {
             return true;
-        } else {
-            AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
-
-            return false;
         }
+
+        AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
+
+        return false;
     }
 
     /**
@@ -293,14 +290,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
             if (!Dba::write($sql_user)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
-                    $db_user,
-                    $database,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 user, %2 database, %3 host, %4 error message */
+                        T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
+                        $db_user,
+                        $database,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
                 // this user might exist but we don't always care
                 if (!$overwrite) {
                     return false;
@@ -314,14 +314,17 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
-                    $database,
-                    $db_user,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 database, %2 user, %3 host, %4 error message */
+                        T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
+                        $database,
+                        $db_user,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
 
                 return false;
             }

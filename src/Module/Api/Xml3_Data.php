@@ -329,14 +329,14 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
             } else {
                 $albums = (AmpConfig::get('album_group'))
                     ? $artist->album_count
                     : $artist->album_disk_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, '', false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -392,7 +392,7 @@ class Xml3_Data
 
             // Handle includes
             if ($include && in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;
             }

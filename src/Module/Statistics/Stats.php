@@ -211,7 +211,7 @@ class Stats
      * @param int $object_id
      * @param int $user_id
      * @param string $agent
-     * @param array $location
+     * @param array{latitude?: string, longitude?: string, name?: string,} $location
      * @param string $count_type
      * @param int|null $date
      * @return bool
@@ -264,7 +264,7 @@ class Stats
                 self::count($type, $object_id, 'up');
                 // don't register activity for album or artist plays
                 if (!in_array($type, ['album', 'artist', 'podcast'])) {
-                    static::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
+                    self::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
                 }
             }
 
@@ -599,7 +599,7 @@ class Stats
             debug_event(self::class, 'Last ' . $previous['object_type'] . ' played within skip limit (' . $diff . '/' . $skip_time . 's). Skipping {' . $previous['object_id'] . '}', 3);
             self::skip_last_play($previous['date'], $previous['agent'], $previous['user'], $previous['object_id'], $previous['object_type']);
             // delete song, podcast_episode and video from user_activity to keep stats in line
-            static::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
+            self::getUseractivityRepository()->deleteByDate($previous['date'], 'play', (int) $previous['user']);
         }
 
         return true;
@@ -941,8 +941,8 @@ class Stats
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (empty($row['geo_name']) && array_key_exists('latitude', $row) && array_key_exists('longitude', $row)) {
-                $row['geo_name'] = Stats::get_cached_place_name((float)$row['latitude'], (float)$row['longitude']);
+            if (empty($row['geo_name']) && array_key_exists('geo_latitude', $row) && array_key_exists('geo_longitude', $row)) {
+                $row['geo_name'] = Stats::get_cached_place_name((float)$row['geo_latitude'], (float)$row['geo_longitude']);
             }
             $results[] = $row;
         }

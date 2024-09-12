@@ -110,7 +110,7 @@ final class UserUpdate4Method
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = static::getUserStateToggler();
+            $userStateToggler = self::getUserStateToggler();
             if ($disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {

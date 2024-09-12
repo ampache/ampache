@@ -2,14 +2,25 @@
 
 ## Ampache 7.0.0
 
-Information and changes for this major release are recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
+Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
 
 ### Added
 
+* Translations 2024-08
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
 * Added rated songs to user Wrapped pages
+* Show ratings on live_stream pages
+* User option to show dashboard links on the index instead of browse links
+* Use number for preference text boxes when the preference is numeric
+* Plugins
+  * Home Dashboard: show album dashboard sections on the index
+  * Preferences for sorting display_home plugins using CSS order
+* Browse
+  * Sort by play count (`total_count`) for podcast, podcast_episode and video 
+  * Add `country` and `active` sort to label
+  * Add `rating` sort to live_stream and video
 * Search
   * Added `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
 * CLI
@@ -20,7 +31,7 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Add `database_engine` to allow you to change from InnoDB if you want to
   * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
   * Enable `user_create_streamtoken` by default
-* Database 700012
+* Database 700018
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
@@ -32,6 +43,11 @@ Information and changes for this major release are recorded in the wiki [here](h
   * Convert `clip`, `tvshow`, `movie` and `personal_video` catalogs to `video`
   * Remove `clip`,`movie`, `personal_video`, `tvshow`, `tvshow_episode` and `tvshow_season` tables
   * Add user preference `Custom URL - Use your avatar for header logo` this allows you to override custom header logos with your avatar
+  * Add `action` column to `ip_history` table
+  * Add `name` to `user_preference` table
+  * Add user Preference `index_dashboard_form` (Use Dashboard links for the index page header)
+  * Put sidebar preferences into their own category
+  * Add user preferences to order menu sections in the sidebar
 
 ### Changed
 
@@ -48,6 +64,9 @@ Information and changes for this major release are recorded in the wiki [here](h
 * Update code style to convert long form arrays (`array()`) to short form (`[]`)
 * Pull prettyphoto from GitHub (`lachlan-00/prettyphoto`) using npm instead of merging into the project
 * Only allow Video catalogs instead of the different subtypes
+* Use preference names for lookups instead of guessing ID's
+* Skip empty sections when showing a Dashboard (mashup) page
+* Put each plugin class into extended interfaces to ensure functions meet expected requirements
 
 ### Removed
 
@@ -67,6 +86,33 @@ Information and changes for this major release are recorded in the wiki [here](h
 
 * Enforce sidebar_light when enabled, ignoring cookie if set
 * Don't create missing tables when they haven't been created for your database version
+* Don't put empty artists into artist links
+
+## Ampache 6.6.1
+
+### Fixed
+
+* Wanted items were not being added to the DB correctly
+* RSS Feeds were not including other users
+* Ambiguous column in Rating::get_highest_sql()
+* Wanted / Song_Preview items were very broken and badly sorted results
+* Don't cache additional columns for songs causing dynamic properties
+* Delete label confirmation missing ID
+* Transcoding and not transcoding with `downsample_remote` enabled
+* Set default value for transcode on get ('default')
+* Browse
+  * Not restoring QueryType on reload of saved browse
+  * Sorting users by invalid sort type
+  * Dupe select in some areas (always overwrite instead of adding)
+* Highest rating SQL had ambiguous column in select
+* Plugins
+  * Don't show that catalog favorites header if there isn't anything to show
+* Search
+  * Stripslashes on input to fix `Don't` becoming `Don\'t` in the SQL
+* Subsonic
+  * Always include cover art in search results
+* webplayer
+  * Missing variable `playlist_before` in shuffle function
 
 ## Ampache 6.6.0
 

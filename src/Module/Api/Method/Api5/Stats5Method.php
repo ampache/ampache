@@ -147,13 +147,13 @@ final class Stats5Method
                         $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
-                        $results = static::getArtistRepository()->getRandom(
+                        $results = self::getArtistRepository()->getRandom(
                             $user_id,
                             $limit
                         );
                         break;
                     case 'album':
-                        $results = static::getAlbumRepository()->getRandom(
+                        $results = self::getAlbumRepository()->getRandom(
                             $user_id,
                             $limit
                         );

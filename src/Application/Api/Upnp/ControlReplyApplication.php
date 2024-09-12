@@ -164,35 +164,45 @@ final class ControlReplyApplication implements ApplicationInterface
                      */
                     $reqObjectURL = parse_url($upnpRequest['objectid']);
                     debug_event('control-reply', 'ObjectID: ' . $upnpRequest['objectid'], 5);
-                    switch ($reqObjectURL['scheme']) {
+                    switch ($reqObjectURL['scheme'] ?? '') {
                         case 'amp':
-                            switch ($reqObjectURL['host']) {
+                            switch ($reqObjectURL['host'] ?? '') {
                                 case 'music':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                        $items = Upnp_Api::_musicMetadata($reqObjectURL['path']);
+                                        $items = Upnp_Api::_musicMetadata($reqObjectURL['path'] ?? '');
                                         //debug_event('control-reply', 'Metadata count '. (string) $totMatches . ' '. (string) count($items), 5);
                                         //debug_event('control-reply', 'Export items ' . var_export($items,true), 5);
                                         $totMatches = 1;
                                         $numRet     = 1;
                                     } else {
                                         debug_event('control-reply', 'Listrequest ', 5);
-                                        list($totMatches, $items) = Upnp_Api::_musicChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                                        list($totMatches, $items) = Upnp_Api::_musicChilds(
+                                            $reqObjectURL['path'] ?? '',
+                                            $reqObjectURL['query'] ?? '',
+                                            $upnpRequest['startingindex'],
+                                            $upnpRequest['requestedcount']
+                                        );
                                         debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
                                         //debug_event('control-reply', 'Listrequest '. (string) $upnpRequest['startingindex'] . ':' . (string) $upnpRequest['requestedcount'] . ':' . (string) $totMatches, 5);
                                     }
                                     break;
                                 case 'video':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                                        $items      = Upnp_Api::_videoMetadata($reqObjectURL['path']);
+                                        $items      = Upnp_Api::_videoMetadata($reqObjectURL['path'] ?? '');
                                         $totMatches = 1;
                                     } else {
-                                        list($totMatches, $items) = Upnp_Api::_videoChilds($reqObjectURL['path'], $reqObjectURL['query'], $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                                        list($totMatches, $items) = Upnp_Api::_videoChilds(
+                                            $reqObjectURL['path'] ?? '',
+                                            $reqObjectURL['query'] ?? '',
+                                            $upnpRequest['startingindex'],
+                                            $upnpRequest['requestedcount']
+                                        );
                                     }
                                     break;
                             }
                             break;
                         default:
-                            debug_event('control-reply', 'Unrecognized scheme: ' . $reqObjectURL['scheme'], 5);
+                            debug_event('control-reply', 'Unrecognized scheme: ' . ($reqObjectURL['scheme'] ?? ''), 5);
                             break;
                     }
                 }
@@ -211,18 +221,22 @@ final class ControlReplyApplication implements ApplicationInterface
                 }
             }
             $xmlDIDL  = $domDIDL->saveXML();
-            $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?' . '>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
-            $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
-            $soapXML  = $domSOAP->saveXML();
+            if ($xmlDIDL) {
+                $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?' . '>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
+                $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
+                $soapXML  = $domSOAP->saveXML();
+            }
         }
         debug_event('control-reply', 'Content: ' . (string) $soapXML, 5);
 
         // Set the overall content length in the header correctly, having appended $soapXML
-        $contentLength = strlen($soapXML);
-        header("Content-Length: $contentLength");
+        if ($soapXML) {
+            $contentLength = strlen($soapXML);
+            header("Content-Length: $contentLength");
 
-        //print $soapXML;
-        debug_event('control-reply', 'Response: ' . $soapXML, 5);
-        echo $soapXML;
+            //print $soapXML;
+            debug_event('control-reply', 'Response: ' . $soapXML, 5);
+            echo $soapXML;
+        }
     }
 }

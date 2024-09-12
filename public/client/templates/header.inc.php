@@ -78,7 +78,7 @@ $albumString = (AmpConfig::get('album_group'))
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
     <head>
         <!-- Propelled by Ampache | ampache.org -->
-        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/search.php?action=descriptor">
+        <link rel="search" type="application/opensearchdescription+xml" title="<?php echo $site_title; ?>" href="<?php echo $web_path; ?>/opensearch.php?action=descriptor">
         <?php if (AmpConfig::get('use_rss')) { ?>
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Now Playing'); ?>" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::NOW_PLAYING->value; ?>">
         <link rel="alternate" type="application/rss+xml" title="<?php echo T_('Recently Played'); ?>" href="<?php echo $web_path; ?>/rss.php?type=<?php echo RssFeedTypeEnum::RECENTLY_PLAYED->value; ?>">

@@ -54,8 +54,8 @@ if (file_exists($manifest)) {
 <?php require_once Ui::find_template('js_globals.php'); ?>
 
 <?php if ($environment->isDevJS('src/js/main.js')): ?>
-    <script type="module" src="http://localhost:5173/@vite/client" crossorigin></script>
-    <script type="module" src="http://localhost:5173/src/js/main.js" crossorigin></script>
+    <script type="module" src="http://localhost:5177/@vite/client" crossorigin></script>
+    <script type="module" src="http://localhost:5177/src/js/main.js" crossorigin></script>
 <?php elseif ($entrypoint): ?>
     <script type="module" src="<?php echo "{$web_path}/dist/{$entrypoint['url']}" ?>" crossorigin></script>
 <?php else: ?>

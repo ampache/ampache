@@ -29,6 +29,7 @@ use Ampache\Module\Util\Ui;
 
 /** @var AddUserAction $this */
 
+$t_ampache         = T_('Ampache');
 $htmllang          = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
 $web_path          = AmpConfig::get_web_path('/client');
 $_SESSION['login'] = true; ?>
@@ -44,7 +45,7 @@ $_SESSION['login'] = true; ?>
     <body id="registerPage">
         <div id="maincontainer">
             <div id="header">
-                <a href="<?php echo $web_path; ?>"><h1 id="headerlogo"></h1></a>
+                <a href="<?php echo $web_path; ?>"><h1 id="logo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1></a>
             </div>
             <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
             <div id="content">

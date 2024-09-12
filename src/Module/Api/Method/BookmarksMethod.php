@@ -53,8 +53,8 @@ final class BookmarksMethod
     {
         $include = (bool)($input['include'] ?? false);
         $results = (!empty($input['client']))
-            ? static::getBookmarkRepository()->getByUserAndComment($user, scrub_in((string) $input['client']))
-            : static::getBookmarkRepository()->getByUser($user);
+            ? self::getBookmarkRepository()->getByUserAndComment($user, scrub_in((string) $input['client']))
+            : self::getBookmarkRepository()->getByUser($user);
         if (empty($results)) {
             Api::empty('bookmark', $input['api_format']);
 

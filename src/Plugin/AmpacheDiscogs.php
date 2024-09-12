@@ -32,7 +32,7 @@ use Ampache\Repository\Model\User;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheDiscogs implements PluginGatherArtsInterface
+class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Discogs';
     public string $categories  = 'metadata';
@@ -233,6 +233,6 @@ class AmpacheDiscogs implements PluginGatherArtsInterface
      */
     public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
-        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 }

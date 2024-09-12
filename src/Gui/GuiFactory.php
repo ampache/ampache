@@ -193,13 +193,7 @@ final class GuiFactory implements GuiFactoryInterface
     }
 
     /**
-     * @param array{
-     *  tags: int,
-     *  formatted_size: string,
-     *  time_text: string,
-     *  users: int,
-     *  connected: int
-     * } $stats
+     * @param array<string, int|string> $stats
      */
     public function createCatalogStats(array $stats): CatalogStatsInterface
     {

@@ -270,8 +270,8 @@ final class Environment implements EnvironmentInterface
 
     public function isDevJS(string $entry): bool
     {
-        // the default vite port is hardcoded for simplicity
-        $handle = curl_init('http://localhost:5173/' . $entry);
+        // hardcoded port for simplicity
+        $handle = curl_init('http://localhost:5177/' . $entry);
 
         if ($handle === false) {
             return false;

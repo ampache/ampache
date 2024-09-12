@@ -104,12 +104,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             switch ($browse->get_type()) {
                                 case 'album':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
+                                        $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
                                     }
                                     break;
                                 case 'artist':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, static::getSongRepository()->getAllByArtist($object_id));
+                                        $songs = array_merge($songs, self::getSongRepository()->getAllByArtist($object_id));
                                     }
                                     break;
                                 case 'song':

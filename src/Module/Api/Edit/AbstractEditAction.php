@@ -66,10 +66,10 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         );
 
         // Post first
-        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string)($_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $object_id   = (int) Core::get_get('id');
         if (empty($object_type)) {
-            $object_type = $source_object_type = filter_input(
+            $object_type = $source_object_type = (string)filter_input(
                 INPUT_GET,
                 'object_type',
                 FILTER_SANITIZE_SPECIAL_CHARS

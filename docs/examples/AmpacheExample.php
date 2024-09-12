@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheExample implements AmpachePluginInterface
+class AmpacheExample extends AmpachePlugin
 {
     public string $name        = 'Example';
     public string $categories  = 'home';

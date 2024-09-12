@@ -283,7 +283,7 @@ class Api5
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client    = static::getUserRepository()->findByApiKey(trim($token));
+        $client    = self::getUserRepository()->findByApiKey(trim($token));
         $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? ($counts['playlist'])

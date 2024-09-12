@@ -59,7 +59,7 @@ final class Stats3Method
         } elseif ($type == "highest") {
             $results = Rating::get_highest("album", $limit, $offset);
         } elseif ($type == "frequent") {
-            $results = Stats::get_top("album", $limit, '', $offset);
+            $results = Stats::get_top("album", $limit, 0, $offset);
         } elseif ($type == "recent") {
             if (!empty($username)) {
                 if ($user->isNew()) {
@@ -76,7 +76,7 @@ final class Stats3Method
             if (!$limit) {
                 $limit = AmpConfig::get('popular_threshold');
             }
-            $results = static::getAlbumRepository()->getRandom($user->id, $limit);
+            $results = self::getAlbumRepository()->getRandom($user->id, $limit);
         }
 
         if ($results !== null) {

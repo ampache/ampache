@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheGoogleMaps implements PluginLocationInterface
+class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 {
     public string $name        = 'GoogleMaps';
     public string $categories  = 'geolocation';

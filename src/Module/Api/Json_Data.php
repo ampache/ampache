@@ -720,10 +720,10 @@ class Json_Data
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
+                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false)
+                ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false)
                 : [];
 
             $JSON[] = [
@@ -833,7 +833,7 @@ class Json_Data
 
             // Handle includes
             $songs = ($include && in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
+                ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
             $objArray['time']          = (int)$album->total_duration;

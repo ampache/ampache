@@ -20,7 +20,7 @@
     "wunderbaum": "0.8.2"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5177",
     "build": "vite build --minify false",
     "postinstall": "npm-run-all copy:*",
     "copy:bootstrap": "copyfiles --up 3 node_modules/bootstrap/dist/**/* public/client/lib/components/bootstrap",

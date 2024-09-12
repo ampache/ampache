@@ -70,7 +70,7 @@ final class Scrobble5Method
         $album_mbid  = html_entity_decode(scrub_out($input['album_mbid'] ?? $input['albummbid'] ?? ''), ENT_QUOTES, $charset); //optional
         $date        = (array_key_exists('date', $input) && is_numeric(scrub_in((string) $input['date']))) ? (int) scrub_in((string) $input['date']) : time(); //optional
         $user_id     = $user->id;
-        $valid       = in_array($user->id, static::getUserRepository()->getValid());
+        $valid       = in_array($user->id, self::getUserRepository()->getValid());
 
         // validate supplied user
         if ($valid === false) {

@@ -181,7 +181,10 @@ class AutoUpdate
             } else {
                 $commits = self::github_request('/commits/' . $git_branch);
             }
-            if (!empty($commits)) {
+            if (
+                !empty($commits) &&
+                isset($commits->sha)
+            ) {
                 $lastversion = $commits->sha;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);

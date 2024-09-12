@@ -31,7 +31,7 @@ use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpachePaypal implements PluginDisplayUserFieldInterface
+class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInterface
 {
     public string $name        = 'Paypal';
     public string $categories  = 'user';

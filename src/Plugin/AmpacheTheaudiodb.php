@@ -38,7 +38,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb implements PluginGatherArtsInterface
+class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'TheAudioDb';
     public string $categories  = 'metadata';
@@ -295,7 +295,9 @@ class AmpacheTheaudiodb implements PluginGatherArtsInterface
                         strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
                     ) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
-                        $object->prefix = $name_check['prefix'];
+                        if (isset($object->prefix)) {
+                            $object->prefix = $name_check['prefix'];
+                        }
                         $object->name   = $name_check['name'];
                     }
                 }
@@ -320,7 +322,7 @@ class AmpacheTheaudiodb implements PluginGatherArtsInterface
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 
     /**

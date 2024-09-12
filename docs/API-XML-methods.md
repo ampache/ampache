@@ -3464,7 +3464,7 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 | --------- | ------- | ---------------------------------------------------------- | -------: |
 | 'id'      | integer | $object_id                                                 |       NO |
 | 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
-| 'bitrate' | integer | max bitrate for transcoding                                |      YES |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)    |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
 | 'offset'  | integer | Return results starting from this index position           |      YES |
 | 'length'  | boolean | `0`, `1`                                                   |      YES |
@@ -3483,7 +3483,7 @@ Downloads a given media file. set format=raw to download the full file
 | --------- | ------- | ---------------------------------------------------------- | -------: |
 | 'id'      | integer | $object_id                                                 |       NO |
 | 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
-| 'bitrate' | integer | max bitrate for transcoding                                |      YES |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)    |      YES |
 | 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
 
 * return file (HTTP 200 OK)

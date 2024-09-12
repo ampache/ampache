@@ -38,7 +38,7 @@ use MusicBrainz\Filters\LabelFilter;
 use MusicBrainz\MusicBrainz;
 use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 
-class AmpacheMusicBrainz implements PluginGetMetadataInterface
+class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
     public string $name        = 'MusicBrainz';
     public string $categories  = 'metadata';

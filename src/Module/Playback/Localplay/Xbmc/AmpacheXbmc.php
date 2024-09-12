@@ -195,8 +195,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -210,9 +208,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
         if (!$user instanceof User) {
@@ -413,7 +410,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * skip
      * This tells XBMC to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -563,7 +559,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * repeat
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -590,7 +585,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
-     * @param $state
      */
     public function random(bool $state): bool
     {
@@ -696,7 +690,7 @@ class AmpacheXbmc extends localplay_controller
                 );
 
                 //speed == 0, pause
-                if($speed['speed'] == 0) {
+                if ($speed['speed'] == 0) {
                     $array['state'] = 'pause';
                 }
 
@@ -737,7 +731,7 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($playlist_item);
                 $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
-                if(!empty($oid)) {
+                if (!empty($oid)) {
                     $song = new Song($oid);
                     if ($song->isNew() === false) {
                         $array['track_title']  = $song->title;

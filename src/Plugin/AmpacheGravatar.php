@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheGravatar implements PluginGetAvatarUrlInterface
+class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
     public string $name        = 'Gravatar';
     public string $categories  = 'avatar';

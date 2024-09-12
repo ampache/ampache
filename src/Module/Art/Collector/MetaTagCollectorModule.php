@@ -110,7 +110,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             return sizeof($priorities);
         }
 
-        return $priority;
+        return (int)$priority;
     }
 
     /**

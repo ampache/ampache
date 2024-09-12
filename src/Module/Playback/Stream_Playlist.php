@@ -305,7 +305,10 @@ class Stream_Playlist
         // Don't add disabled media objects to the stream playlist
         // Playing a disabled media return a 404 error that could make failed the player (mpd ...)
         if (!isset($object->enabled) || make_bool($object->enabled)) {
-            if ($urltype == 'file') {
+            if (
+                $urltype == 'file' &&
+                isset($object->file)
+            ) {
                 $url['url'] = $object->file;
                 // Relative path
                 if (!empty($additional_params) && strpos($url['url'], $additional_params) === 0) {

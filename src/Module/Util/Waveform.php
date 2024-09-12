@@ -111,7 +111,11 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                $filepointer        = $transcoder['handle'];
+                                if (!is_array($transcoder)) {
+                                    return null;
+                                }
+
+                                $filepointer = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
                                     debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 
@@ -220,6 +224,9 @@ class Waveform
     public static function save_to_file($object_id, $object_type, $waveform)
     {
         $file = self::get_filepath($object_id, $object_type);
+        if (!$file) {
+            return false;
+        }
 
         return file_put_contents($file, $waveform);
     }
@@ -355,12 +362,12 @@ class Waveform
                         break;
                     case 2:
                         // get value for 16-bit wav
-                        if (ord($bytes[1]) & 128) {
+                        if (ord((string)$bytes[1]) & 128) {
                             $temp = 0;
                         } else {
                             $temp = 128;
                         }
-                        $temp = chr((ord($bytes[1]) & 127) + $temp);
+                        $temp = chr((ord((string)$bytes[1]) & 127) + $temp);
                         $data = floor(self::findValues($bytes[0], $temp) / 256);
                         break;
                     default:
@@ -420,7 +427,7 @@ class Waveform
         $imgdata = ob_get_contents();
         ob_clean();
 
-        return $imgdata;
+        return $imgdata ?: null;
     }
 
     /**

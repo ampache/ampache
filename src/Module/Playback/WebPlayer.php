@@ -97,6 +97,7 @@ class WebPlayer
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
+            /** @var Video|Podcast_Episode|Song|Song_Preview $media */
             $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
         } elseif ($item->type == 'live_stream') {
@@ -322,15 +323,15 @@ class WebPlayer
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
 
-                // this should probably only be in songs
-                if ($media->type != $types['real']) {
-                    $pos = strrpos($url, '&');
-                    if ($pos !== false) {
-                        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
-                    } else {
-                        $url .= '&transcode_to=' . $types['real'];
-                    }
-                }
+                // this should probably only be in songs todo i think this should be removed...
+                //if ($media->type != $types['real']) {
+                //    $pos = strrpos($url, '&');
+                //    if ($pos !== false) {
+                //        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
+                //    } else {
+                //        $url .= '&transcode_to=' . $types['real'];
+                //    }
+                //}
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];

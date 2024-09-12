@@ -58,7 +58,7 @@ $shuffleoff = addslashes(T_('Shuffle Off'));
 $repeaton   = addslashes(T_('Repeat'));
 $repeatoff  = addslashes(T_('Repeat Off'));
 $showalbum  = addslashes(T_('Show Album'));
-$replaygain = (AmpConfig::get('theme_color') == 'light')
+$replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     ? 'replaygain_dark'
     : 'replaygain'; ?>
 <script>

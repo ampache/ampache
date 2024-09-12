@@ -34,9 +34,11 @@ use Ampache\Module\Util\Ui;
 if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 604800)) {
     $remember_disabled = 'disabled="disabled"';
 }
-$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$dir      = is_rtl(AmpConfig::get('lang', 'en_US')) ? 'rtl' : 'ltr';
-$web_path = AmpConfig::get_web_path('/client');
+
+$t_ampache = T_('Ampache');
+$htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$dir       = is_rtl(AmpConfig::get('lang', 'en_US')) ? 'rtl' : 'ltr';
+$web_path  = AmpConfig::get_web_path('/client');
 
 $_SESSION['login'] = true;
 $mobile_session    = false;
@@ -61,7 +63,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\"><h1 id=\"headerlogo\"></h1></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -78,7 +80,7 @@ if (strpos($user_agent, 'Mobile') && (strpos($user_agent, 'Android') || strpos($
             </form>
             <?php if ($mobile_session) {
                 echo "<div id=\"mobileheader\"><!-- This is the header -->";
-                echo "<h1 id=\"headerlogo\"></h1>";
+                echo "<h1 id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo "</div>";
             } ?>
         </div>

@@ -38,7 +38,7 @@ class UPnPDevice
 
     /**
      * UPnPDevice constructor.
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
     public function __construct($descriptionUrl)
     {
@@ -49,7 +49,7 @@ class UPnPDevice
 
     /**
      * Reads description URL from session
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
     private function restoreDescriptionUrl($descriptionUrl): bool
     {
@@ -66,9 +66,9 @@ class UPnPDevice
     }
 
     /**
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
-    private function parseDescriptionUrl($descriptionUrl)
+    private function parseDescriptionUrl($descriptionUrl): void
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 

@@ -93,7 +93,7 @@ final class RegisterMethod
             return true;
         }
 
-        $userRepository = static::getUserRepository();
+        $userRepository = self::getUserRepository();
 
         if ($userRepository->idByUsername($username) > 0) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

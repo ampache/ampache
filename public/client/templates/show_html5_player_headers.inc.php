@@ -18,7 +18,7 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
     : "path: '/', samesite: 'Strict'";
 $iframed   = $iframed ?? false;
 $isShare   = $isShare ?? false;
-$isLight   = (AmpConfig::get('theme_color') == 'light');
+$isLight   = (AmpConfig::get('theme_color', 'dark') == 'light');
 $highlight = $isLight
     ? 'blue'
     : 'orange';

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Scrobble\Scrobbler;
 
-class Ampachelibrefm implements PluginSaveMediaplayInterface
+class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'Libre.FM';
     public string $categories  = 'scrobbling';

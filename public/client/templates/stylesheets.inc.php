@@ -28,7 +28,7 @@ use Ampache\Module\Util\Ui;
 
 $web_path       = AmpConfig::get_web_path('/client');
 $theme_path     = AmpConfig::get('theme_path') . '/templates';
-$theme_color    = AmpConfig::get('theme_color');
+$theme_color    = AmpConfig::get('theme_color', 'dark');
 $theme_css_base = AmpConfig::get('theme_css_base');
 if (!is_array($theme_css_base)) {
     $theme_css_base = [$theme_css_base];

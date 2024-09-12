@@ -503,7 +503,7 @@ class Xml_Data
                         if ($artist->isNew()) {
                             break;
                         }
-                        $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
+                        $albums = self::getAlbumRepository()->getAlbumByArtist($object_id);
                         $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
@@ -927,8 +927,8 @@ class Xml_Data
             $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
-            $albums = (in_array("albums", $include)) ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false) : '';
-            $songs  = (in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false) : '';
+            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false) : '';
+            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false) : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int)$artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
@@ -991,7 +991,7 @@ class Xml_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
+            $songs = ($include && in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
 
             // Build the Art URL, include session
             $art_url = AmpConfig::get_web_path('/client') . '/image.php?object_id=' . $album->id . '&object_type=album';
