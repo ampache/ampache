@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
