@@ -206,7 +206,7 @@ final class AdminUpdateDatabaseCommand extends Command
             }
 
             // Make sure all default preferences are set
-            User::rebuild_all_preferences();
+            Preference::set_defaults();
         } else {
             foreach ($result as $updateInfo) {
                 $interactor->cyan(
