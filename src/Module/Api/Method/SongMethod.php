@@ -46,8 +46,7 @@ final class SongMethod
      *
      * return a single song
      *
-     * filter     = (string) UID of song
-     * get_lyrics = (integer) 0,1, if true fetch lyrics or try to find them using plugins //optional
+     * filter = (string) UID of song
      */
     public static function song(array $input, User $user): bool
     {
@@ -61,10 +60,6 @@ final class SongMethod
             Api::error(sprintf('Not Found: %s', $object_id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'filter', $input['api_format']);
 
             return false;
-        }
-
-        if (array_key_exists('get_lyrics', $input) && (int)$input['get_lyrics'] == 1) {
-            $song->get_lyrics();
         }
 
         ob_end_clean();

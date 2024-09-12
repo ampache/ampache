@@ -31,7 +31,8 @@ use Ampache\Repository\Model\Query;
 
 final class VideoQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
+        'id',
         'add_gt',
         'add_lt',
         'alpha_match',
@@ -50,10 +51,10 @@ final class VideoQuery implements QueryInterface
         'update_gt',
         'update_lt',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -70,7 +71,7 @@ final class VideoQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`video`.`id`";
@@ -122,6 +123,13 @@ final class VideoQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `video`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`video`.`id`', 100);

@@ -52,6 +52,7 @@ final class FlagMethod
      * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
+     * date = (integer) UNIXTIME() //optional
      */
     public static function flag(array $input, User $user): bool
     {
@@ -67,6 +68,8 @@ final class FlagMethod
         $type      = (string) $input['type'];
         $object_id = (int) $input['id'];
         $flag      = (bool)($input['flag'] ?? false);
+        $date      = (int)($input['date'] ?? time());
+
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
@@ -98,7 +101,7 @@ final class FlagMethod
                 return false;
             }
             $userflag = new Userflag($object_id, $type);
-            if ($userflag->set_flag($flag, $user->id)) {
+            if ($userflag->set_flag($flag, $user->id, $date)) {
                 $message = ($flag) ? 'flag ADDED to ' : 'flag REMOVED from ';
                 Api::message($message . $object_id, $input['api_format']);
 
