@@ -259,7 +259,7 @@ class Json_Data
                         $db_results = Dba::read($sql, [$object_id]);
                         while ($row = Dba::fetch_assoc($db_results)) {
                             $output[$object_id][] = [
-                                "id" => $row['id'],
+                                "id" => $row['album_id'],
                                 "type" => 'album'
                             ];
                         }
