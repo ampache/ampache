@@ -17,9 +17,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Jul 10, 2024 at 09:15 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- Host: 192.168.1.9
+-- Generation Time: Sep 12, 2024 at 02:09 AM
+-- Server version: 11.4.3-MariaDB-1
 -- PHP Version: 8.2.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -367,20 +367,6 @@ CREATE TABLE IF NOT EXISTS `catalog_remote` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clip`
---
-
-DROP TABLE IF EXISTS `clip`;
-CREATE TABLE IF NOT EXISTS `clip` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `artist` int(11) DEFAULT NULL,
-  `song` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `daap_session`
 --
 
@@ -507,6 +493,7 @@ CREATE TABLE IF NOT EXISTS `ip_history` (
   `ip` varbinary(255) DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `agent` varchar(255) DEFAULT NULL,
+  `action` char(36) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`user`),
   KEY `date` (`date`),
@@ -683,22 +670,6 @@ CREATE TABLE IF NOT EXISTS `metadata_field` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `movie`
---
-
-DROP TABLE IF EXISTS `movie`;
-CREATE TABLE IF NOT EXISTS `movie` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `original_name` varchar(80) DEFAULT NULL,
-  `summary` varchar(256) DEFAULT NULL,
-  `year` int(11) UNSIGNED DEFAULT NULL,
-  `prefix` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `now_playing`
 --
 
@@ -745,20 +716,6 @@ CREATE TABLE IF NOT EXISTS `object_count` (
   KEY `object_type_date_IDX` (`object_type`,`date`) USING BTREE,
   KEY `object_count_idx_count_type_date_id` (`count_type`,`object_type`,`date`,`object_id`) USING BTREE,
   KEY `object_count_idx_count_type_id` (`count_type`,`object_type`,`object_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `personal_video`
---
-
-DROP TABLE IF EXISTS `personal_video`;
-CREATE TABLE IF NOT EXISTS `personal_video` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `location` varchar(256) DEFAULT NULL,
-  `summary` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -900,7 +857,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=196 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -959,7 +916,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'),
 (110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', NULL),
 (111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', NULL),
-(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'),
+(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'options', 'upload'),
 (113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'),
 (114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'),
 (115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'),
@@ -997,7 +954,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'),
 (148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'),
 (149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'),
-(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'),
+(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'sidebar'),
 (151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'),
 (152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'),
 (153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'),
@@ -1011,19 +968,19 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'),
 (162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'),
 (163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'),
-(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'),
-(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', NULL),
-(166, 'api_enable_4', '1', 'Allow Ampache API4 responses', 25, 'boolean', 'options', NULL),
-(167, 'api_enable_5', '1', 'Allow Ampache API5 responses', 25, 'boolean', 'options', NULL),
-(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', NULL),
+(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api'),
+(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'api'),
+(166, 'api_enable_4', '1', 'Allow Ampache API4 responses', 25, 'boolean', 'options', 'api'),
+(167, 'api_enable_5', '1', 'Allow Ampache API5 responses', 25, 'boolean', 'options', 'api'),
+(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'api'),
 (169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'),
-(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', NULL),
-(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL),
-(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
-(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
+(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', 'api'),
+(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', 'api'),
+(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'sidebar'),
 (175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL),
 (176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player'),
-(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', NULL),
+(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', 'api'),
 (178, 'upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload'),
 (179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
@@ -1035,13 +992,22 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend'),
 (187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home'),
 (188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy'),
-(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', 25, 'boolean', 'interface', 'home'),
-(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', 25, 'boolean', 'interface', 'home'),
-(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', 25, 'boolean', 'interface', 'home'),
-(192, 'sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', 25, 'boolean', 'interface', 'home'),
-(193, 'sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', 25, 'boolean', 'interface', 'home'),
-(194, 'sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', 25, 'boolean', 'interface', 'home'),
-(195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', 25, 'boolean', 'interface', 'home');
+(189, 'sidebar_hide_switcher', '0', 'Hide sidebar switcher arrows', 25, 'boolean', 'interface', 'sidebar'),
+(190, 'sidebar_hide_browse', '0', 'Hide the Browse menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(191, 'sidebar_hide_dashboard', '0', 'Hide the Dashboard menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(192, 'sidebar_hide_video', '0', 'Hide the Video menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(193, 'sidebar_hide_search', '0', 'Hide the Search menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(194, 'sidebar_hide_playlist', '0', 'Hide the Playlist menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', 25, 'boolean', 'interface', 'sidebar'),
+(197, 'custom_logo_user', '0', 'Custom URL - Use your avatar for header logo', 25, 'boolean', 'interface', 'custom'),
+(198, 'index_dashboard_form', '0', 'Use Dashboard links for the index page header', 25, 'boolean', 'interface', 'home'),
+(199, 'sidebar_order_browse', '10', 'Custom CSS Order - Browse', 25, 'integer', 'interface', 'sidebar'),
+(200, 'sidebar_order_dashboard', '15', 'Custom CSS Order - Dashboard', 25, 'integer', 'interface', 'sidebar'),
+(201, 'sidebar_order_video', '20', 'Custom CSS Order - Video', 25, 'integer', 'interface', 'sidebar'),
+(202, 'sidebar_order_playlist', '30', 'Custom CSS Order - Playlist', 25, 'integer', 'interface', 'sidebar'),
+(203, 'sidebar_order_search', '40', 'Custom CSS Order - Search', 25, 'integer', 'interface', 'sidebar'),
+(204, 'sidebar_order_information', '60', 'Custom CSS Order - Information', 25, 'integer', 'interface', 'sidebar'),
+(205, 'api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api');
 
 -- --------------------------------------------------------
 
@@ -1430,52 +1396,6 @@ CREATE TABLE IF NOT EXISTS `tmp_playlist_data` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tvshow`
---
-
-DROP TABLE IF EXISTS `tvshow`;
-CREATE TABLE IF NOT EXISTS `tvshow` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) DEFAULT NULL,
-  `summary` varchar(256) DEFAULT NULL,
-  `year` int(11) UNSIGNED DEFAULT NULL,
-  `prefix` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tvshow_episode`
---
-
-DROP TABLE IF EXISTS `tvshow_episode`;
-CREATE TABLE IF NOT EXISTS `tvshow_episode` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `original_name` varchar(80) DEFAULT NULL,
-  `season` int(11) UNSIGNED NOT NULL,
-  `episode_number` int(11) UNSIGNED NOT NULL,
-  `summary` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tvshow_season`
---
-
-DROP TABLE IF EXISTS `tvshow_season`;
-CREATE TABLE IF NOT EXISTS `tvshow_season` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `season_number` int(11) UNSIGNED NOT NULL,
-  `tvshow` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `update_info`
 --
 
@@ -1491,7 +1411,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '700008'),
+('db_version', '700019'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1636,6 +1556,7 @@ DROP TABLE IF EXISTS `user_preference`;
 CREATE TABLE IF NOT EXISTS `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `name` varchar(128) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   KEY `user` (`user`),
   KEY `preference` (`preference`)
@@ -1645,142 +1566,151 @@ CREATE TABLE IF NOT EXISTS `user_preference` (
 -- Dumping data for table `user_preference`
 --
 
-INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
-(-1, 1, '1'),
-(-1, 4, '10'),
-(-1, 19, '32'),
-(-1, 22, 'Ampache :: For the Love of Music'),
-(-1, 23, '0'),
-(-1, 24, '0'),
-(-1, 41, 'mpd'),
-(-1, 29, 'web_player'),
-(-1, 31, 'en_US'),
-(-1, 32, 'm3u'),
-(-1, 33, 'reborn'),
-(-1, 51, '50'),
-(-1, 40, '100'),
-(-1, 44, '1'),
-(-1, 45, '1'),
-(-1, 46, '1'),
-(-1, 47, '7'),
-(-1, 52, '8192'),
-(-1, 53, 'default'),
-(-1, 55, 'default'),
-(-1, 69, '0'),
-(-1, 70, '0'),
-(-1, 71, '0'),
-(-1, 77, ''),
-(-1, 78, ''),
-(-1, 114, '1'),
-(-1, 113, '0'),
-(-1, 112, '-1'),
-(-1, 111, '1'),
-(-1, 110, '0'),
-(-1, 109, '0'),
-(-1, 108, '1'),
-(-1, 105, '0'),
-(-1, 104, '0'),
-(-1, 103, '7'),
-(-1, 102, '0'),
-(-1, 101, '0'),
-(-1, 100, '1'),
-(-1, 99, '0'),
-(-1, 95, '1'),
-(-1, 94, '0'),
-(-1, 93, '1'),
-(-1, 92, '1'),
-(-1, 91, '1'),
-(-1, 90, '1'),
-(-1, 89, '1'),
-(-1, 88, '1'),
-(-1, 86, '1'),
-(-1, 85, '1'),
-(-1, 84, '0'),
-(-1, 83, '0'),
-(-1, 82, '1'),
-(-1, 154, '0'),
-(-1, 116, ''),
-(-1, 117, '1'),
-(-1, 118, '0'),
-(-1, 119, ''),
-(-1, 120, '0'),
-(-1, 121, '0'),
-(-1, 122, '1'),
-(-1, 123, '1'),
-(-1, 124, '0'),
-(-1, 125, '1'),
-(-1, 126, '1'),
-(-1, 127, '1'),
-(-1, 128, '1'),
-(-1, 129, ''),
-(-1, 130, 'album,ep,live,single'),
-(-1, 131, '1'),
-(-1, 132, '10'),
-(-1, 133, '0'),
-(-1, 134, '1'),
-(-1, 135, '1'),
-(-1, 136, ''),
-(-1, 137, ''),
-(-1, 138, ''),
-(-1, 139, '0'),
-(-1, 140, '0'),
-(-1, 141, 'dark'),
-(-1, 142, ''),
-(-1, 143, ''),
-(-1, 96, ''),
-(-1, 97, ''),
-(-1, 98, ''),
-(-1, 144, '10'),
-(-1, 145, '1'),
-(-1, 146, '1'),
-(-1, 147, '0'),
-(-1, 148, '0'),
-(-1, 149, '0'),
-(-1, 150, '0'),
-(-1, 151, ''),
-(-1, 152, ''),
-(-1, 153, ''),
-(-1, 155, ''),
-(-1, 156, '0'),
-(-1, 157, ''),
-(-1, 115, '0'),
-(-1, 158, '6'),
-(-1, 159, ''),
-(-1, 160, '1'),
-(-1, 161, '0'),
-(-1, 162, '0'),
-(-1, 163, '0'),
-(-1, 164, '0'),
-(-1, 165, '1'),
-(-1, 166, '1'),
-(-1, 167, '1'),
-(-1, 168, '1'),
-(-1, 169, '0'),
-(-1, 170, '1'),
-(-1, 171, ''),
-(-1, 172, '0'),
-(-1, 173, '1'),
-(-1, 175, '0'),
-(-1, 176, '0'),
-(-1, 177, '1'),
-(-1, 178, '25'),
-(-1, 179, '1'),
-(-1, 180, '1'),
-(-1, 181, '1'),
-(-1, 182, '0'),
-(-1, 183, ''),
-(-1, 184, '0'),
-(-1, 185, '0.8'),
-(-1, 186, '0'),
-(-1, 187, '1'),
-(-1, 188, '0'),
-(-1, 189, '0'),
-(-1, 190, '0'),
-(-1, 191, '0'),
-(-1, 192, '0'),
-(-1, 193, '0'),
-(-1, 194, '0'),
-(-1, 195, '0');
+INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
+(-1, 1, 'download', '1'),
+(-1, 4, 'popular_threshold', '10'),
+(-1, 19, 'transcode_bitrate', '32'),
+(-1, 22, 'site_title', 'Ampache :: For the Love of Music'),
+(-1, 23, 'lock_songs', '0'),
+(-1, 24, 'force_http_play', '0'),
+(-1, 29, 'play_type', 'web_player'),
+(-1, 31, 'lang', 'en_US'),
+(-1, 32, 'playlist_type', 'm3u'),
+(-1, 33, 'theme_name', 'reborn'),
+(-1, 40, 'localplay_level', '100'),
+(-1, 41, 'localplay_controller', 'mpd'),
+(-1, 44, 'allow_stream_playback', '1'),
+(-1, 45, 'allow_democratic_playback', '1'),
+(-1, 46, 'allow_localplay_playback', '1'),
+(-1, 47, 'stats_threshold', '7'),
+(-1, 51, 'offset_limit', '50'),
+(-1, 52, 'rate_limit', '8192'),
+(-1, 53, 'playlist_method', 'default'),
+(-1, 55, 'transcode', 'default'),
+(-1, 69, 'show_lyrics', '0'),
+(-1, 70, 'mpd_active', '0'),
+(-1, 71, 'httpq_active', '0'),
+(-1, 77, 'lastfm_grant_link', ''),
+(-1, 78, 'lastfm_challenge', ''),
+(-1, 82, 'now_playing_per_user', '1'),
+(-1, 83, 'album_sort', '0'),
+(-1, 84, 'show_played_times', '0'),
+(-1, 85, 'song_page_title', '1'),
+(-1, 86, 'subsonic_backend', '1'),
+(-1, 88, 'webplayer_flash', '1'),
+(-1, 89, 'webplayer_html5', '1'),
+(-1, 90, 'allow_personal_info_now', '1'),
+(-1, 91, 'allow_personal_info_recent', '1'),
+(-1, 92, 'allow_personal_info_time', '1'),
+(-1, 93, 'allow_personal_info_agent', '1'),
+(-1, 94, 'ui_fixed', '0'),
+(-1, 95, 'autoupdate', '1'),
+(-1, 96, 'autoupdate_lastcheck', '1726106728'),
+(-1, 97, 'autoupdate_lastversion', ''),
+(-1, 98, 'autoupdate_lastversion_new', ''),
+(-1, 99, 'webplayer_confirmclose', '0'),
+(-1, 100, 'webplayer_pausetabs', '1'),
+(-1, 101, 'stream_beautiful_url', '0'),
+(-1, 102, 'share', '1'),
+(-1, 103, 'share_expire', '7'),
+(-1, 104, 'slideshow_time', '0'),
+(-1, 105, 'broadcast_by_default', '0'),
+(-1, 108, 'album_group', '1'),
+(-1, 109, 'topmenu', '0'),
+(-1, 110, 'demo_clear_sessions', '0'),
+(-1, 111, 'show_donate', '1'),
+(-1, 112, 'upload_catalog', '-1'),
+(-1, 113, 'allow_upload', '0'),
+(-1, 114, 'upload_subdir', '1'),
+(-1, 115, 'upload_user_artist', '0'),
+(-1, 116, 'upload_script', ''),
+(-1, 117, 'upload_allow_edit', '1'),
+(-1, 118, 'daap_backend', '0'),
+(-1, 119, 'daap_pass', ''),
+(-1, 120, 'upnp_backend', '0'),
+(-1, 121, 'allow_video', '1'),
+(-1, 122, 'album_release_type', '1'),
+(-1, 123, 'ajax_load', '1'),
+(-1, 124, 'direct_play_limit', '0'),
+(-1, 125, 'home_moment_albums', '1'),
+(-1, 126, 'home_moment_videos', '1'),
+(-1, 127, 'home_recently_played', '1'),
+(-1, 128, 'home_now_playing', '1'),
+(-1, 129, 'custom_logo', ''),
+(-1, 130, 'album_release_type_sort', 'album,ep,live,single'),
+(-1, 131, 'browser_notify', '1'),
+(-1, 132, 'browser_notify_timeout', '10'),
+(-1, 133, 'geolocation', '0'),
+(-1, 134, 'webplayer_aurora', '1'),
+(-1, 135, 'upload_allow_remove', '1'),
+(-1, 136, 'custom_login_logo', ''),
+(-1, 137, 'custom_favicon', ''),
+(-1, 138, 'custom_text_footer', ''),
+(-1, 139, 'webdav_backend', '0'),
+(-1, 140, 'notify_email', '0'),
+(-1, 141, 'theme_color', 'dark'),
+(-1, 142, 'disabled_custom_metadata_fields', ''),
+(-1, 143, 'disabled_custom_metadata_fields_input', ''),
+(-1, 144, 'podcast_keep', '10'),
+(-1, 145, 'podcast_new_download', '1'),
+(-1, 146, 'libitem_contextmenu', '1'),
+(-1, 147, 'upload_catalog_pattern', '0'),
+(-1, 148, 'catalog_check_duplicate', '0'),
+(-1, 149, 'browse_filter', '0'),
+(-1, 150, 'sidebar_light', '0'),
+(-1, 151, 'custom_blankalbum', ''),
+(-1, 152, 'custom_blankmovie', ''),
+(-1, 153, 'libitem_browse_alpha', ''),
+(-1, 154, 'show_skipped_times', '0'),
+(-1, 155, 'custom_datetime', ''),
+(-1, 156, 'cron_cache', '0'),
+(-1, 157, 'unique_playlist', ''),
+(-1, 158, 'of_the_moment', '6'),
+(-1, 159, 'custom_login_background', ''),
+(-1, 160, 'show_license', '1'),
+(-1, 161, 'use_original_year', '0'),
+(-1, 162, 'hide_single_artist', '0'),
+(-1, 163, 'hide_genres', '0'),
+(-1, 164, 'subsonic_always_download', '0'),
+(-1, 165, 'api_enable_3', '1'),
+(-1, 166, 'api_enable_4', '1'),
+(-1, 167, 'api_enable_5', '1'),
+(-1, 168, 'api_force_version', '1'),
+(-1, 169, 'show_playlist_username', '0'),
+(-1, 170, 'api_hidden_playlists', '1'),
+(-1, 171, 'api_hide_dupe_searches', ''),
+(-1, 172, 'show_album_artist', '0'),
+(-1, 173, 'show_artist', '1'),
+(-1, 175, 'demo_use_search', '0'),
+(-1, 176, 'webplayer_removeplayed', '0'),
+(-1, 177, 'api_enable_6', '1'),
+(-1, 178, 'upload_access_level', '25'),
+(-1, 179, 'show_subtitle', '1'),
+(-1, 180, 'show_original_year', '1'),
+(-1, 181, 'show_header_login', '1'),
+(-1, 182, 'use_play2', '0'),
+(-1, 183, 'custom_timezone', ''),
+(-1, 184, 'bookmark_latest', '0'),
+(-1, 185, 'jp_volume', '0.8'),
+(-1, 186, 'perpetual_api_session', '0'),
+(-1, 187, 'home_recently_played_all', '1'),
+(-1, 188, 'show_wrapped', '0'),
+(-1, 189, 'sidebar_hide_switcher', '0'),
+(-1, 190, 'sidebar_hide_browse', '0'),
+(-1, 191, 'sidebar_hide_dashboard', '0'),
+(-1, 192, 'sidebar_hide_video', '0'),
+(-1, 193, 'sidebar_hide_search', '0'),
+(-1, 194, 'sidebar_hide_playlist', '0'),
+(-1, 195, 'sidebar_hide_information', '0'),
+(-1, 197, 'custom_logo_user', '0'),
+(-1, 198, 'index_dashboard_form', '0'),
+(-1, 199, 'sidebar_order_browse', '10'),
+(-1, 200, 'sidebar_order_dashboard', '15'),
+(-1, 201, 'sidebar_order_video', '20'),
+(-1, 202, 'sidebar_order_playlist', '30'),
+(-1, 203, 'sidebar_order_search', '40'),
+(-1, 204, 'sidebar_order_information', '60'),
+(-1, 205, 'api_always_download', '0'),;
 
 -- --------------------------------------------------------
 
