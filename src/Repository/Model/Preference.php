@@ -26,9 +26,11 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Repository\UserRepositoryInterface;
 
 /**
  * This handles all of the preference stuff for Ampache
@@ -55,6 +57,7 @@ class Preference extends database_object
         'allow_stream_playback',
         'allow_upload',
         'allow_video',
+        'api_always_download',
         'api_enable_3',
         'api_enable_4',
         'api_enable_5',
@@ -652,123 +655,407 @@ class Preference extends database_object
      */
     public static function set_defaults(): void
     {
-        $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES " .
-            "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature'), " .
-            "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding'), " .
-            "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom'), " .
-            "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', null), " .
-            "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null), " .
-            "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', null), " .
-            "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', null), " .
-            "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', null), " .
-            "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme'), " .
-            "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay'), " .
-            "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay'), " .
-            "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature'), " .
-            "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature'), " .
-            "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay'), " .
-            "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query'), " .
-            "(51, 'offset_limit', '50', 'Offset Limit', 5, 'integer', 'interface', 'query'), " .
-            "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding'), " .
-            "(53, 'playlist_method', 'default', 'Playlist Method', 5, 'string', 'playlist', null), " .
-            "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'), " .
-            "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'), " .
-            "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'), " .
-            "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'), " .
-            "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm'), " .
-            "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm'), " .
-            "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'), " .
-            "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library'), " .
-            "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse'), " .
-            "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player'), " .
-            "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend'), " .
-            "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy'), " .
-            "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy'), " .
-            "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy'), " .
-            "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme'), " .
-            "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update'), " .
-            "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update'), " .
-            "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update'), " .
-            "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update'), " .
-            "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player'), " .
-            "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player'), " .
-            "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null), " .
-            "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature'), " .
-            "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share'), " .
-            "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player'), " .
-            "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player'), " .
-            "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library'), " .
-            "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme'), " .
-            "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null), " .
-            "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', null), " .
-            "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'system', 'upload'), " .
-            "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload'), " .
-            "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload'), " .
-            "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload'), " .
-            "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload'), " .
-            "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend'), " .
-            "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend'), " .
-            "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature'), " .
-            "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library'), " .
-            "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', null), " .
-            "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player'), " .
-            "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home'), " .
-            "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home'), " .
-            "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home'), " .
-            "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom'), " .
-            "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library'), " .
-            "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification'), " .
-            "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification'), " .
-            "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature'), " .
-            "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player'), " .
-            "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'), " .
-            "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'), " .
-            "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'), " .
-            "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'), " .
-            "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'), " .
-            "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null), " .
-            "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'), " .
-            "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata'), " .
-            "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata'), " .
-            "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast'), " .
-            "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast'), " .
-            "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library'), " .
-            "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload'), " .
-            "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog'), " .
-            "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse'), " .
-            "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme'), " .
-            "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom'), " .
-            "(152, 'custom_blankmovie', '', 'Custom blank video default image', 75, 'string', 'interface', 'custom'), " .
-            "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse'), " .
-            "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse'), " .
-            "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom'), " .
-            "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog'), " .
-            "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL), " .
-            "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home'), " .
-            "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom'), " .
-            "(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse'), " .
-            "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'), " .
-            "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'), " .
-            "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'), " .
-            "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'), " .
-            "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache'), " .
-            "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache'), " .
-            "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'), " .
-            "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null), " .
-            "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL), " .
-            "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'), " .
-            "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);";
-        Dba::write($sql);
+        $sql = "SELECT `item` FROM (";
+        foreach (self::SYSTEM_LIST as $preference) {
+            $sql .= "SELECT '$preference' AS `item` UNION ALL ";
+        }
+
+        $sql = rtrim($sql, " UNION ALL ");
+        $sql .= ") AS `items` LEFT JOIN `preference` ON `items`.`item` = `preference`.`name` WHERE `preference`.`name` IS NULL;";
+
+        $db_results = Dba::read($sql);
+        while ($row = Dba::fetch_assoc($db_results)) {
+            debug_event(self::class, 'Insert preference: ' . $row['item'], 2);
+            $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES ";
+            switch ($row['item']) {
+                case 'download':
+                    Dba::write($sql . "(1, 'download', '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature');");
+                    break;
+                case 'popular_threshold':
+                    Dba::write($sql . "(4, 'popular_threshold', '10', 'Popular Threshold', 25, 'integer', 'interface', 'query');");
+                    break;
+                case 'transcode_bitrate':
+                    Dba::write($sql . "(19, 'transcode_bitrate', '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding');");
+                    break;
+                case 'site_title':
+                    Dba::write($sql . "(22, 'site_title', 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom');");
+                    break;
+                case 'lock_songs':
+                    Dba::write($sql . "(23, 'lock_songs', '0', 'Lock Songs', 100, 'boolean', 'system', NULL);");
+                    break;
+                case 'force_http_play':
+                    Dba::write($sql . "(24, 'force_http_play', '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', NULL);");
+                    break;
+                case 'play_type':
+                    Dba::write($sql . "(29, 'play_type', 'web_player', 'Playback Type', 25, 'special', 'streaming', NULL);");
+                    break;
+                case 'lang':
+                    Dba::write($sql . "(31, 'lang', 'en_US', 'Language', 100, 'special', 'interface', NULL);");
+                    break;
+                case 'playlist_type':
+                    Dba::write($sql . "(32, 'playlist_type', 'm3u', 'Playlist Type', 100, 'special', 'playlist', NULL);");
+                    break;
+                case 'theme_name':
+                    Dba::write($sql . "(33, 'theme_name', 'reborn', 'Theme', 0, 'special', 'interface', 'theme');");
+                    break;
+                case 'localplay_level':
+                    Dba::write($sql . "(40, 'localplay_level', '0', 'Localplay Access', 100, 'special', 'options', 'localplay');");
+                    break;
+                case 'localplay_controller':
+                    Dba::write($sql . "(41, 'localplay_controller', '0', 'Localplay Type', 100, 'special', 'options', 'localplay');");
+                    break;
+                case 'allow_stream_playback':
+                    Dba::write($sql . "(44, 'allow_stream_playback', '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature');");
+                    break;
+                case 'allow_democratic_playback':
+                    Dba::write($sql . "(45, 'allow_democratic_playback', '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature');");
+                    break;
+                case 'allow_localplay_playback':
+                    Dba::write($sql . "(46, 'allow_localplay_playback', '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay');");
+                    break;
+                case 'stats_threshold':
+                    Dba::write($sql . "(47, 'stats_threshold', '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query');");
+                    break;
+                case 'offset_limit':
+                    Dba::write($sql . "(51, 'offset_limit', '50', 'Offset Limit', 0, 'integer', 'interface', 'query');");
+                    break;
+                case 'rate_limit':
+                    Dba::write($sql . "(52, 'rate_limit', '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding');");
+                    break;
+                case 'playlist_method':
+                    Dba::write($sql . "(53, 'playlist_method', 'default', 'Playlist Method', 0, 'string', 'playlist', NULL);");
+                    break;
+                case 'transcode':
+                    Dba::write($sql . "(55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding');");
+                    break;
+                case 'show_lyrics':
+                    Dba::write($sql . "(69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player');");
+                    break;
+                case 'mpd_active':
+                    Dba::write($sql . "(70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd');");
+                    break;
+                case 'httpq_active':
+                    Dba::write($sql . "(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq');");
+                    break;
+                case 'lastfm_grant_link':
+                    Dba::write($sql . "(77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm');");
+                    break;
+                case 'lastfm_challenge':
+                    Dba::write($sql . "(78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm');");
+                    break;
+                case 'now_playing_per_user':
+                    Dba::write($sql . "(82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home');");
+                    break;
+                case 'album_sort':
+                    Dba::write($sql . "(83, 'album_sort', '0', 'Album - Default sort', 25, 'string', 'interface', 'library');");
+                    break;
+                case 'show_played_times':
+                    Dba::write($sql . "(84, 'show_played_times', '0', 'Show # played', 25, 'string', 'interface', 'browse');");
+                    break;
+                case 'song_page_title':
+                    Dba::write($sql . "(85, 'song_page_title', '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player');");
+                    break;
+                case 'subsonic_backend':
+                    Dba::write($sql . "(86, 'subsonic_backend', '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend');");
+                    break;
+                case 'webplayer_flash':
+                    Dba::write($sql . "(88, 'webplayer_flash', '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player');");
+                    break;
+                case 'webplayer_html5':
+                    Dba::write($sql . "(89, 'webplayer_html5', '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player');");
+                    break;
+                case 'allow_personal_info_now':
+                    Dba::write($sql . "(90, 'allow_personal_info_now', '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy');");
+                    break;
+                case 'allow_personal_info_recent':
+                    Dba::write($sql . "(91, 'allow_personal_info_recent', '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy');");
+                    break;
+                case 'allow_personal_info_time':
+                    Dba::write($sql . "(92, 'allow_personal_info_time', '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy');");
+                    break;
+                case 'allow_personal_info_agent':
+                    Dba::write($sql . "(93, 'allow_personal_info_agent', '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy');");
+                    break;
+                case 'ui_fixed':
+                    Dba::write($sql . "(94, 'ui_fixed', '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme');");
+                    break;
+                case 'autoupdate':
+                    Dba::write($sql . "(95, 'autoupdate', '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update');");
+                    break;
+                case 'autoupdate_lastcheck':
+                    Dba::write($sql . "(96, 'autoupdate_lastcheck', '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update');");
+                    break;
+                case 'autoupdate_lastversion':
+                    Dba::write($sql . "(97, 'autoupdate_lastversion', '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update');");
+                    break;
+                case 'autoupdate_lastversion_new':
+                    Dba::write($sql . "(98, 'autoupdate_lastversion_new', '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update');");
+                    break;
+                case 'webplayer_confirmclose':
+                    Dba::write($sql . "(99, 'webplayer_confirmclose', '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player');");
+                    break;
+                case 'webplayer_pausetabs':
+                    Dba::write($sql . "(100, 'webplayer_pausetabs', '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player');");
+                    break;
+                case 'stream_beautiful_url':
+                    Dba::write($sql . "(101, 'stream_beautiful_url', '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', NULL);");
+                    break;
+                case 'share':
+                    Dba::write($sql . "(102, 'share', '0', 'Allow Share', 100, 'boolean', 'options', 'feature');");
+                    break;
+                case 'share_expire':
+                    Dba::write($sql . "(103, 'share_expire', '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share');");
+                    break;
+                case 'slideshow_time':
+                    Dba::write($sql . "(104, 'slideshow_time', '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player');");
+                    break;
+                case 'broadcast_by_default':
+                    Dba::write($sql . "(105, 'broadcast_by_default', '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player');");
+                    break;
+                case 'album_group':
+                    Dba::write($sql . "(108, 'album_group', '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library');");
+                    break;
+                case 'topmenu':
+                    Dba::write($sql . "(109, 'topmenu', '0', 'Top menu', 25, 'boolean', 'interface', 'theme');");
+                    break;
+                case 'demo_clear_sessions':
+                    Dba::write($sql . "(110, 'demo_clear_sessions', '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', NULL);");
+                    break;
+                case 'show_donate':
+                    Dba::write($sql . "(111, 'show_donate', '1', 'Show donate button in footer', 25, 'boolean', 'interface', NULL);");
+                    break;
+                case 'upload_catalog':
+                    Dba::write($sql . "(112, 'upload_catalog', '-1', 'Destination catalog', 100, 'integer', 'options', 'upload');");
+                    break;
+                case 'allow_upload':
+                    Dba::write($sql . "(113, 'allow_upload', '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'upload_subdir':
+                    Dba::write($sql . "(114, 'upload_subdir', '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'upload_user_artist':
+                    Dba::write($sql . "(115, 'upload_user_artist', '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'upload_script':
+                    Dba::write($sql . "(116, 'upload_script', '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload');");
+                    break;
+                case 'upload_allow_edit':
+                    Dba::write($sql . "(117, 'upload_allow_edit', '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'daap_backend':
+                    Dba::write($sql . "(118, 'daap_backend', '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend');");
+                    break;
+                case 'daap_pass':
+                    Dba::write($sql . "(119, 'daap_pass', '', 'DAAP backend password', 100, 'string', 'system', 'backend');");
+                    break;
+                case 'upnp_backend':
+                    Dba::write($sql . "(120, 'upnp_backend', '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend');");
+                    break;
+                case 'allow_video':
+                    Dba::write($sql . "(121, 'allow_video', '0', 'Allow Video Features', 75, 'integer', 'options', 'feature');");
+                    break;
+                case 'album_release_type':
+                    Dba::write($sql . "(122, 'album_release_type', '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library');");
+                    break;
+                case 'ajax_load':
+                    Dba::write($sql . "(123, 'ajax_load', '1', 'Ajax page load', 25, 'boolean', 'interface', NULL);");
+                    break;
+                case 'direct_play_limit':
+                    Dba::write($sql . "(124, 'direct_play_limit', '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player');");
+                    break;
+                case 'home_moment_albums':
+                    Dba::write($sql . "(125, 'home_moment_albums', '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home');");
+                    break;
+                case 'home_moment_videos':
+                    Dba::write($sql . "(126, 'home_moment_videos', '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home');");
+                    break;
+                case 'home_recently_played':
+                    Dba::write($sql . "(127, 'home_recently_played', '1', 'Show Recently Played', 25, 'integer', 'interface', 'home');");
+                    break;
+                case 'home_now_playing':
+                    Dba::write($sql . "(128, 'home_now_playing', '1', 'Show Now Playing', 25, 'integer', 'interface', 'home');");
+                    break;
+                case 'custom_logo':
+                    Dba::write($sql . "(129, 'custom_logo', '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom');");
+                    break;
+                case 'album_release_type_sort':
+                    Dba::write($sql . "(130, 'album_release_type_sort', 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library');");
+                    break;
+                case 'browser_notify':
+                    Dba::write($sql . "(131, 'browser_notify', '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification');");
+                    break;
+                case 'browser_notify_timeout':
+                    Dba::write($sql . "(132, 'browser_notify_timeout', '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification');");
+                    break;
+                case 'geolocation':
+                    Dba::write($sql . "(133, 'geolocation', '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature');");
+                    break;
+                case 'webplayer_aurora':
+                    Dba::write($sql . "(134, 'webplayer_aurora', '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player');");
+                    break;
+                case 'upload_allow_remove':
+                    Dba::write($sql . "(135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'custom_login_logo':
+                    Dba::write($sql . "(136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom');");
+                    break;
+                case 'custom_favicon':
+                    Dba::write($sql . "(137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom');");
+                    break;
+                case 'custom_text_footer':
+                    Dba::write($sql . "(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom');");
+                    break;
+                case 'webdav_backend':
+                    Dba::write($sql . "(139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend');");
+                    break;
+                case 'notify_email':
+                    Dba::write($sql . "(140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', NULL);");
+                    break;
+                case 'theme_color':
+                    Dba::write($sql . "(141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme');");
+                    break;
+                case 'disabled_custom_metadata_fields':
+                    Dba::write($sql . "(142, 'disabled_custom_metadata_fields', '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata');");
+                    break;
+                case 'disabled_custom_metadata_fields_input':
+                    Dba::write($sql . "(143, 'disabled_custom_metadata_fields_input', '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata');");
+                    break;
+                case 'podcast_keep':
+                    Dba::write($sql . "(144, 'podcast_keep', '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast');");
+                    break;
+                case 'podcast_new_download':
+                    Dba::write($sql . "(145, 'podcast_new_download', '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast');");
+                    break;
+                case 'libitem_contextmenu':
+                    Dba::write($sql . "(146, 'libitem_contextmenu', '1', 'Library item context menu', 0, 'boolean', 'interface', 'library');");
+                    break;
+                case 'upload_catalog_pattern':
+                    Dba::write($sql . "(147, 'upload_catalog_pattern', '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload');");
+                    break;
+                case 'catalog_check_duplicate':
+                    Dba::write($sql . "(148, 'catalog_check_duplicate', '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog');");
+                    break;
+                case 'browse_filter':
+                    Dba::write($sql . "(149, 'browse_filter', '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'sidebar_light':
+                    Dba::write($sql . "(150, 'sidebar_light', '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme');");
+                    break;
+                case 'custom_blankalbum':
+                    Dba::write($sql . "(151, 'custom_blankalbum', '', 'Custom blank album default image', 75, 'string', 'interface', 'custom');");
+                    break;
+                case 'libitem_browse_alpha':
+                    Dba::write($sql . "(153, 'libitem_browse_alpha', '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse');");
+                    break;
+                case 'show_skipped_times':
+                    Dba::write($sql . "(154, 'show_skipped_times', '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'custom_datetime':
+                    Dba::write($sql . "(155, 'custom_datetime', '', 'Custom datetime', 25, 'string', 'interface', 'custom');");
+                    break;
+                case 'cron_cache':
+                    Dba::write($sql . "(156, 'cron_cache', '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog');");
+                    break;
+                case 'unique_playlist':
+                    Dba::write($sql . "(157, 'unique_playlist', '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', NULL);");
+                    break;
+                case 'of_the_moment':
+                    Dba::write($sql . "(158, 'of_the_moment', '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home');");
+                    break;
+                case 'custom_login_background':
+                    Dba::write($sql . "(159, 'custom_login_background', '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom');");
+                    break;
+                case 'show_license':
+                    Dba::write($sql . "(160, 'show_license', '1', 'Show License', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'use_original_year':
+                    Dba::write($sql . "(161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'hide_single_artist':
+                    Dba::write($sql . "(162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'hide_genres':
+                    Dba::write($sql . "(163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'subsonic_always_download':
+                    Dba::write($sql . "(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic');");
+                    break;
+                case 'api_enable_3':
+                    Dba::write($sql . "(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache');");
+                    break;
+                case 'api_enable_4':
+                    Dba::write($sql . "(166, 'api_enable_4', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache');");
+                    break;
+                case 'api_enable_5':
+                    Dba::write($sql . "(167, 'api_enable_5', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache');");
+                    break;
+                case 'api_force_version':
+                    Dba::write($sql . "(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache');");
+                    break;
+                case 'show_playlist_username':
+                    Dba::write($sql . "(169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'api_hidden_playlists':
+                    Dba::write($sql . "(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', NULL);");
+                    break;
+                case 'api_hide_dupe_searches':
+                    Dba::write($sql . "(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL);");
+                    break;
+                case 'show_album_artist':
+                    Dba::write($sql . "(172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme');");
+                    break;
+                case 'show_artist':
+                    Dba::write($sql . "(173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme');");
+                    break;
+                case 'demo_use_search':
+                    Dba::write($sql . "(175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL);");
+                    break;
+                case 'webplayer_removeplayed':
+                    Dba::write($sql . "(176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player');");
+                    break;
+                case 'api_enable_6':
+                    Dba::write($sql . "(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', NULL);");
+                    break;
+                case 'upload_access_level':
+                    Dba::write($sql . "(178, 'upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload');");
+                    break;
+                case 'show_subtitle':
+                    Dba::write($sql . "(179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'show_original_year':
+                    Dba::write($sql . "(180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse');");
+                    break;
+                case 'show_header_login':
+                    Dba::write($sql . "(181, 'show_header_login', '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface');");
+                    break;
+                case 'use_play2':
+                    Dba::write($sql . "(182, 'use_play2', '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'boolean', 'streaming', 'player');");
+                    break;
+                case 'custom_timezone':
+                    Dba::write($sql . "(183, 'custom_timezone', '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom');");
+                    break;
+                case 'bookmark_latest':
+                    Dba::write($sql . "(184, 'bookmark_latest', '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', NULL);");
+                    break;
+                case 'jp_volume':
+                    Dba::write($sql . "(185, 'jp_volume', '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player');");
+                    break;
+                case 'perpetual_api_session':
+                    Dba::write($sql . "(186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend');");
+                    break;
+                case 'home_recently_played_all':
+                    Dba::write($sql . "(187, 'home_recently_played_all', '1', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home');");
+                    break;
+                case 'show_wrapped':
+                    Dba::write($sql . "(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy');");
+                    break;
+            }
+            Dba::write($sql);
+        }
+
+        foreach (array_merge([-1], self::getUserRepository()->getValid()) as $user_id) {
+            User::fix_preferences($user_id);
+        }
     }
 
     /**
@@ -800,6 +1087,7 @@ class Preference extends database_object
             'amazon_developer_private_api_key' => T_('Amazon Secret Access Key'),
             'amazon_developer_public_key' => T_('Amazon Access Key ID'),
             'amazon_max_results_pages' => T_('Amazon max results pages'),
+            'api_always_download' => T_('Force API streams to download. (Enable scrobble in your client to record stats)'),
             'api_enable_3' => T_('Allow Ampache API3 responses'),
             'api_enable_4' => T_('Allow Ampache API4 responses'),
             'api_enable_5' => T_('Allow Ampache API5 responses'),
@@ -1273,5 +1561,15 @@ class Preference extends database_object
         $_SESSION['userdata']['uid']         = $user_id;
 
         return true;
+    }
+
+    /**
+     * @deprecated inject dependency
+     */
+    private static function getUserRepository(): UserRepositoryInterface
+    {
+        global $dic;
+
+        return $dic->get(UserRepositoryInterface::class);
     }
 }
