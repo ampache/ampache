@@ -50,10 +50,11 @@ final class StreamMethod
      *
      * id      = (string) $song_id|$podcast_episode_id|$search_id|$playlist_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist'
-     * bitrate = (integer) max bitrate for transcoding // Song only
+     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
+     * stats   = (integer) 0,1, if false disable stat recording when playing the object (default: 1) //optional
      */
     public static function stream(array $input, User $user): bool
     {
@@ -68,7 +69,10 @@ final class StreamMethod
 
         if (
             $object_id === 0 &&
-            ($type == 'playlist' || $type == 'search')
+            (
+                $type == 'playlist' ||
+                $type == 'search'
+            )
         ) {
             // The API can use searches as playlists so check for those too
             $object_id = (int)str_replace('smart_', '', $input['id']);
@@ -80,17 +84,25 @@ final class StreamMethod
         $transcode_to  = $format && $format != 'raw';
         $timeOffset    = $input['offset'] ?? null;
         $contentLength = (int)($input['length'] ?? 0); // Force content-length guessing if transcode
+        $recordStats   = (int)($input['stats'] ?? 1);
 
         $params = '&client=api';
+        if ($recordStats == 0) {
+            $params .= '&cache=1';
+        }
+
         if ($contentLength == 1) {
             $params .= '&content_length=required';
         }
+
         if ($transcode_to && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&format=' . $format;
         }
+
         if ($maxBitRate > 0 && in_array($type, ['song', 'search', 'playlist'])) {
             $params .= '&bitrate=' . $maxBitRate;
         }
+
         if ($timeOffset) {
             $params .= '&frame=' . $timeOffset;
         }
