@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
-class AmpacheHomeDashboard implements PluginDisplayHomeInterface
+class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Home Dashboard';
     public string $categories  = 'home';

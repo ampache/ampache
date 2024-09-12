@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheFacebook implements PluginExternalShareInterface
+class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterface
 {
     public string $name        = 'Facebook';
     public string $categories  = 'share';

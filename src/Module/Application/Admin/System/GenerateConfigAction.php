@@ -77,14 +77,14 @@ final class GenerateConfigAction implements ApplicationActionInterface
         }
 
         $generatedConfig = $this->installationHelper->generate_config(
-            parse_ini_file($this->configContainer->getConfigFilePath())
+            parse_ini_file($this->configContainer->getConfigFilePath()) ?: []
         );
 
         $headers = $this->browser->getDownloadHeaders(
             'ampache.cfg.php',
             'text/plain',
             false,
-            strlen($generatedConfig)
+            (string)strlen($generatedConfig)
         );
 
         $response = $this->responseFactory->createResponse();

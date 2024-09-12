@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\AmazonSearch;
 
-class AmpacheAmazon implements PluginGatherArtsInterface
+class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Amazon';
     public string $categories  = 'metadata';
@@ -212,7 +212,7 @@ class AmpacheAmazon implements PluginGatherArtsInterface
         // while we have pages to search
         do {
             $raw_results = $amazon->search(
-                ['artist' => '', 'album' => '', 'keywords' => $options['keyword']],
+                ['artist' => '', 'album' => '', 'keywords' => ($options['keyword'] ?? '')],
                 $mediaType
             );
             $total = count($raw_results) + count($search_results);
@@ -239,13 +239,15 @@ class AmpacheAmazon implements PluginGatherArtsInterface
 
         // Only do the second search if the first actually returns something
         if (count($search_results)) {
-            $final_results = $amazon->lookup($search_results);
+            foreach ($search_results as $result) {
+                $final_results[] = $amazon->lookup($result);
+            }
         }
 
         /* Log this if we're doin debug */
         debug_event(
             'amazon.plugin',
-            "Searched using " . $options['keyword'] . ", results: " . count($final_results),
+            "Searched using " . ($options['keyword'] ?? '') . ", results: " . count($final_results),
             5
         );
 

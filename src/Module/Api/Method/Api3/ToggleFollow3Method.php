@@ -48,7 +48,7 @@ final class ToggleFollow3Method
             if (!empty($username)) {
                 $leader = User::get_from_username($username);
                 if ($leader instanceof User) {
-                    static::getUserFollowToggler()->toggle(
+                    self::getUserFollowToggler()->toggle(
                         $leader,
                         $user
                     );

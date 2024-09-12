@@ -46,6 +46,7 @@ class UPnPPlayer
     /** @var UPnPDevice $object */
     private $_device;
 
+    /** @var string $_description_url */
     private $_description_url;
 
     // 0 - stopped, 1 - playing
@@ -205,7 +206,6 @@ class UPnPPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -269,7 +269,7 @@ class UPnPPlayer
 
         $this->SetIntState(1);
 
-        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current");
+        $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current") ?? [];
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
         $args     = ['InstanceID' => 0, 'Speed' => 1];
@@ -327,7 +327,6 @@ class UPnPPlayer
     /**
      * Repeat
      * This toggles the repeat state
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -338,7 +337,6 @@ class UPnPPlayer
     /**
      * Random
      * this toggles the random state
-     * @param $state
      */
     public function Random(bool $state): bool
     {

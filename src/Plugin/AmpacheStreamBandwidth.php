@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamBandwidth implements PluginStreamControlInterface
+class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Bandwidth';
     public string $categories  = 'stream_control';

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-class Ampachelistenbrainz implements PluginSaveMediaplayInterface
+class Ampachelistenbrainz extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'ListenBrainz';
     public string $categories  = 'scrobbling';
@@ -155,9 +155,9 @@ class Ampachelistenbrainz implements PluginSaveMediaplayInterface
                     ]
                 ]
             ]
-        );
+        ) ?: '';
         debug_event('listenbrainz.plugin', 'Submission content: ' . $json, 5);
-        $response = $this->post_json_url('/1/submit-listens', $json);
+        $response = $this->post_json_url('/1/submit-listens', $json) ?: '';
 
         if (!strpos($response, "ok")) {
             debug_event('listenbrainz.plugin', "Submission Failed", 5);

@@ -33,7 +33,7 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamTime implements PluginStreamControlInterface
+class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Time';
     public string $categories  = 'stream_control';

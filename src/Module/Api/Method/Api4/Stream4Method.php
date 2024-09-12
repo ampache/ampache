@@ -48,7 +48,7 @@ final class Stream4Method
      *
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
-     * bitrate = (integer) max bitrate for transcoding
+     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb)
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1

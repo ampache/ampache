@@ -68,7 +68,7 @@ final class ShowEditObjectAction extends AbstractEditAction
         int $object_id
     ): ?ResponseInterface {
         ob_start();
-        $users     = static::getUserRepository()->getValidArray();
+        $users     = self::getUserRepository()->getValidArray();
         $users[-1] = T_('System');
 
         $this->ui->show(
@@ -85,7 +85,7 @@ final class ShowEditObjectAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream($results)
+                $this->streamFactory->createStream((string)$results)
             );
     }
 

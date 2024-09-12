@@ -41,17 +41,18 @@ use Ampache\Repository\Model\Video;
  */
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
+    protected string $version;
+    protected string $type;
+    protected string $description;
+
     /**
      * Added Songs counter
      * @var int
      */
     protected $addedSongs = 0;
 
-    /**
-     * Verified Songs counter
-     * @var int
-     */
-    protected $verifiedSongs = 0;
+    /** Verified Songs counter */
+    protected int $verifiedSongs = 0;
 
     /**
      * Array of all songs
@@ -59,11 +60,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected $songs = [];
 
-    /**
-     * command which provides the list of all songs
-     * @var string $listCommand
-     */
-    protected $listCommand;
+    /** command which provides the list of all songs */
+    protected string $listCommand;
 
     /**
      * Counter used for cleaning actions
@@ -131,6 +129,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get the parser class like CliHandler or JsonHandler
+     * @return CliHandler|JsonHandler
      */
     abstract protected function getParser();
 
@@ -150,6 +149,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         }
         /** @var Handler $parser */
         $parser = $this->getParser();
+        /** @see self::addSong() */
         $parser->setHandler($this, 'addSong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
         $this->updateUi('add', $this->addedSongs, null, true);
@@ -221,6 +221,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $date = time();
         /** @var Handler $parser */
         $parser = $this->getParser();
+        /** @see self::verifySong() */
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
         $this->updateUi('verify', $this->verifiedSongs, null, true);
@@ -257,6 +258,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         /** @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
+        /** @see self::removeFromDeleteList() */
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
         $count = count($this->songs);

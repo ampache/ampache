@@ -57,7 +57,7 @@ final class ConfigAction implements ApplicationActionInterface
         // through to the default, else show the appropriate template
         $configfile = __DIR__ . '/../../../../config/ampache.cfg.php';
 
-        if (!count(parse_ini_file($configfile))) {
+        if (!count(parse_ini_file($configfile) ?: [])) {
             require_once __DIR__ . '/../../../../templates/show_test_config.inc.php';
 
             return null;

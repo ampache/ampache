@@ -32,8 +32,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path = AmpConfig::get_web_path();
+$t_ampache = T_('Ampache');
+$htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$web_path  = AmpConfig::get_web_path();
 
 $display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
@@ -57,7 +58,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <div id="header">
             <a href="<?php echo $web_path; ?>">
-                <h1 id="headerlogo"></h1>
+                <h1 id="logo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
             </a>
         </div>
 <?php $action    = scrub_in(Core::get_request('action'));

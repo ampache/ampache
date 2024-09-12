@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheMatomo implements PluginDisplayOnFooterInterface
+class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Matomo';
     public string $categories  = 'stats';

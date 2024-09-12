@@ -117,7 +117,11 @@ abstract class database_object
             return false;
         }
 
-        return array_key_exists($object_id, self::$object_cache[$index]) && !empty(self::$object_cache[$index][$object_id]);
+        return (
+            $object_id &&
+            array_key_exists((string)$object_id, self::$object_cache[$index]) &&
+            !empty(self::$object_cache[$index][$object_id])
+        );
     }
 
     /**

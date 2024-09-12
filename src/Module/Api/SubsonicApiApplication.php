@@ -239,7 +239,7 @@ final class SubsonicApiApplication implements ApiApplicationInterface
         //$this->logger->debug(print_r(apache_request_headers(), true), [LegacyLogger::CONTEXT_TYPE => self::class]);
 
         // Call your function if it's valid
-        if (in_array($action, $methods)) {
+        if (in_array(strtolower($action), $methods)) {
             /** @see Subsonic_Api */
             call_user_func([Subsonic_Api::class, $action], $input, $user);
 

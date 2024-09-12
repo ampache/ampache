@@ -188,8 +188,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -203,9 +201,8 @@ class AmpacheVlc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
         if (!$user instanceof User) {
@@ -312,15 +309,14 @@ class AmpacheVlc extends localplay_controller
     /**
      * skip
      * This tells VLC to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
         //vlc skip is based on his playlist track, we convert ampache localplay track to vlc
         //playlist id
         $listtracks = $this->get();
-        foreach($listtracks as $track) {
-            if($track['id'] == $track_id) {
+        foreach ($listtracks as $track) {
+            if ($track['id'] == $track_id) {
                 if ($this->_vlc->skip($track['vlid']) === null) {
                     return false;
                 }
@@ -401,7 +397,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * repeat
      * This tells VLC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -415,7 +410,6 @@ class AmpacheVlc extends localplay_controller
     /**
      * random
      * This tells VLC to turn on or off the playing of songs from the playlist in random order
-     * @param $state
      */
     public function random(bool $state): bool
     {
@@ -443,12 +437,13 @@ class AmpacheVlc extends localplay_controller
         if (!$list) {
             return [];
         }
+
         $songs   = [];
         $song_id = [];
         $results = [];
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
-        if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
+        if (isset($list['node']['node'][0]['leaf'][$counter]['attr']['uri'])) {
             while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
                     $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
@@ -457,11 +452,11 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
+        } elseif (isset($list['node']['node'][0]['leaf']['attr']['uri'])) {
             // if there is only one song look here,and media library is used
             $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
-        } elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+        } elseif (isset($list['node']['node']['leaf'][$counter]['attr']['uri'])) {
             // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
                 $songs[] = htmlspecialchars_decode(
@@ -471,7 +466,7 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif ($list['node']['node']['leaf']['attr']['uri']) {
+        } elseif (isset($list['node']['node']['leaf']['attr']['uri'])) {
             $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
@@ -543,6 +538,10 @@ class AmpacheVlc extends localplay_controller
     public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
+        if (!$arrayholder) {
+            return [];
+        }
+
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
         $listtracks  = $this->get();
@@ -565,12 +564,14 @@ class AmpacheVlc extends localplay_controller
         $array['track_artist'] = '';
         $array['track_album']  = '';
         $array['state']        = $state ?? '';
-        $array['volume']       = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
-        $array['repeat']       = $arrayholder['root']['repeat']['value'];
-        $array['random']       = $arrayholder['root']['random']['value'];
+        $array['volume']       = ($arrayholder['root']['volume']['value'] > 0)
+            ? (int)(((int)($arrayholder['root']['volume']['value']) / 2.56))
+            : 0;
+        $array['repeat'] = $arrayholder['root']['repeat']['value'];
+        $array['random'] = $arrayholder['root']['random']['value'];
 
-        //api version 1
-        if(array_key_exists('meta-information', $arrayholder['root']['information'])) {
+        // api version 1
+        if (isset($arrayholder['root']['information']['meta-information']['title']['value'])) {
             $ampurl  = htmlspecialchars_decode(
                 $arrayholder['root']['information']['meta-information']['title']['value'],
                 ENT_NOQUOTES
@@ -578,21 +579,20 @@ class AmpacheVlc extends localplay_controller
             $url_data = $this->parse_url($ampurl);
             $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
 
-            foreach($listtracks as $track) {
-                if($track['oid'] == $oid) {
+            foreach ($listtracks as $track) {
+                if ($track['oid'] == $oid) {
                     $array['track'] = $track['track'];
                     break;
                 }
             }
         }
 
-        //api version 3
-        if(array_key_exists('currentplid', $arrayholder['root'])) {
-            $numtrack = 0 ;
-            $numtrack = (int)$arrayholder['root']['currentplid']['value'];
+        // api version 3
+        if (isset($arrayholder['root']['currentplid'])) {
+            $numtrack = (int)($arrayholder['root']['currentplid']['value'] ?? 0);
 
-            foreach($listtracks as $track) {
-                if($track['vlid'] == $numtrack) {
+            foreach ($listtracks as $track) {
+                if ($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
                     $oid            = $track['oid'];
                     break;
@@ -600,7 +600,7 @@ class AmpacheVlc extends localplay_controller
             }
         }
 
-        if(!empty($oid)) {
+        if (!empty($oid)) {
             $song = new Song($oid);
             if ($song->isNew()) {
                 // if not a known format

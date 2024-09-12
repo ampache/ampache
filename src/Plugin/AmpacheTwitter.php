@@ -27,7 +27,7 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheTwitter implements PluginExternalShareInterface
+class AmpacheTwitter extends AmpachePlugin implements PluginExternalShareInterface
 {
     public string $name        = 'Twitter';
     public string $categories  = 'share';

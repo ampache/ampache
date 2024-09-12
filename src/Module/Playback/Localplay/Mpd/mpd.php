@@ -837,7 +837,7 @@ class mpd
      *
      * Skips directly to the <idx> song in the MPD playlist.
      * @param $idx
-     * @return bool
+     * @return bool|float|int|string
      */
     public function SkipTo($idx)
     {
@@ -863,7 +863,7 @@ class mpd
      * assumed.
      * @param $pos
      * @param int $track
-     * @return bool
+     * @return bool|float|int|string
      */
     public function SeekTo($pos, $track = -1)
     {
@@ -1188,7 +1188,7 @@ class mpd
      * @param string $message
      * @param int $level
      */
-    private function _error($source, $message, $level = 1)
+    private function _error($source, $message, $level = 1): void
     {
         $this->err_str = "$source: $message";
         $this->_debug($source, $message, $level);
@@ -1202,7 +1202,7 @@ class mpd
      * @param string $message
      * @param int $level
      */
-    private function _debug($source, $message, $level)
+    private function _debug($source, $message, $level): void
     {
         if ($this->debugging) {
             echo "$source / $message\n";

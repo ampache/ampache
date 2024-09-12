@@ -153,10 +153,13 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(
-                T_('Could not find the Seafile library called "%s", no media was updated'),
-                $this->library_name
-            ));
+            AmpError::add(
+                'general',
+                sprintf(
+                    T_('Could not find the Seafile library called "%s", no media was updated'),
+                    $this->library_name
+                )
+            );
 
             return false;
         }
@@ -333,9 +336,10 @@ class SeafileAdapter
 
         $tempfile = fopen($tempfilename, 'wb');
 
-        fwrite($tempfile, $response->getBody());
-
-        fclose($tempfile);
+        if ($tempfile) {
+            fwrite($tempfile, $response->getBody());
+            fclose($tempfile);
+        }
 
         return $tempfilename;
     }

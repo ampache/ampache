@@ -32,7 +32,7 @@ use Ampache\Repository\Model\Wanted;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheHeadphones implements PluginProcessWantedInterface
+class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface
 {
     public string $name        = 'Headphones';
     public string $categories  = 'wanted';

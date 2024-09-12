@@ -74,11 +74,11 @@ final class Ping3Method
                 $results
             );
 
-            $user = static::getUserRepository()->findByApiKey($input['auth']);
+            $user = self::getUserRepository()->findByApiKey($input['auth']);
 
             // We're about to start. Record this user's IP.
             if (AmpConfig::get('track_user_ip') && $user instanceof User) {
-                static::getUserTracker()->trackIpAddress($user, 'ping');
+                self::getUserTracker()->trackIpAddress($user, 'ping');
             }
         }
 

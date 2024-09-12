@@ -300,7 +300,7 @@ class Catalog_Seafile extends Catalog
                         return 1;
                     }
                 } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                    //TODO $this->insert_video();
+                    // TODO $this->insert_video();
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, video is unsupported", 5);
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
@@ -666,14 +666,12 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            $tempfile = $this->seafile->download($file);
-
-            $stream_path = $tempfile;
+            $stream_path = $this->seafile->download($file);
             $stream_name = $fileinfo['filename'];
 
             // in case this didn't get set for some reason
             if ($size == 0) {
-                $size = Core::get_filesize($tempfile);
+                $size = Core::get_filesize($stream_path);
             }
         }
 

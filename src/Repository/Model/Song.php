@@ -474,7 +474,7 @@ class Song extends database_object implements
         Album::update_album_count($album_id);
 
         if ($user_upload) {
-            static::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
+            self::getUserActivityPoster()->post((int) $user_upload, 'upload', 'song', $song_id, time());
         }
 
         // Allow scripts to populate new tags when injecting user uploads

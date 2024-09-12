@@ -32,7 +32,7 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheYourls implements PluginShortenerInterface
+class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
     public string $name        = 'YOURLS';
     public string $categories  = 'shortener';

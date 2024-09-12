@@ -66,7 +66,7 @@ final class RecordPlayMethod
                 : User::get_from_username((string)$input['user']);
         }
         // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
+        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Not Found: %s', $input['user'] ?? $user->id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'user', $input['api_format']);

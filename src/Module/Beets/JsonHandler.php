@@ -32,27 +32,20 @@ namespace Ampache\Module\Beets;
  */
 class JsonHandler extends Handler
 {
-    protected $uri;
+    protected string $uri;
 
-    /** @var Catalog */
-    protected $handler;
-
-    /**
-     * string handler command to do whatever we need
-     */
-    protected $handlerCommand;
+    protected Catalog $handler;
 
     /**
      * Seperator between command and arguments
      * @var string
      */
-    protected $commandSeperator = '/';
+    protected string $commandSeperator = '/';
 
     /**
      * Defines the differences between beets and ampache fields
-     * @var array
      */
-    protected $fieldMapping = [
+    protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'length' => ['time', '%d'],
         'comments' => ['comment', '%s'],
@@ -61,9 +54,8 @@ class JsonHandler extends Handler
 
     /**
      * JsonHandler constructor.
-     * @param $uri
      */
-    public function __construct($uri)
+    public function __construct(string $uri)
     {
         $this->uri = $uri;
     }

@@ -31,7 +31,7 @@ use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 
-class AmpacheStreamHits implements PluginStreamControlInterface
+class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Hits';
     public string $categories  = 'stream_control';

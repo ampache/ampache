@@ -108,6 +108,8 @@ class easy_captcha_text_math_formula extends easy_captcha
             ];
         }
 
-        return ($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));
+        return (isset($calc) && $calc[$op1 . $op2])
+            ? $calc[$op1 . $op2]
+            : rand(0, 1 << 23);
     }
 }
