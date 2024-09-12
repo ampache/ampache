@@ -30,7 +30,8 @@ use Ampache\Repository\Model\Query;
 
 final class UserQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
+        'id',
         'alpha_match',
         'equal',
         'like',
@@ -42,10 +43,10 @@ final class UserQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'rand',
         'id',
         'username',
@@ -59,7 +60,7 @@ final class UserQuery implements QueryInterface
         'state',
         'city',
         'fullname_public',
-    );
+    ];
 
     /** @var string */
     protected $select = "`user`.`id`";
@@ -111,6 +112,13 @@ final class UserQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `user`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'equal':
             case 'exact_match':
                 $filter_sql = " (`user`.`fullname` = '" . Dba::escape($value) . "' OR `user`.`username` = '" . Dba::escape($value) . "' OR `user`.`email` = '" . Dba::escape($value) . "') AND ";

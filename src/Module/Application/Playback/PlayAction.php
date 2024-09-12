@@ -144,7 +144,7 @@ final class PlayAction implements ApplicationActionInterface
             $session_id   = scrub_in((string) ($new_request['ssid'] ?? ''));
             $type         = scrub_in((string) ($new_request['type'] ?? ''));
             $client       = scrub_in((string) ($new_request['client'] ?? ''));
-            $cache        = scrub_in((string) ($new_request['cache'] ?? '1'));
+            $cache        = (int)scrub_in((string) ($new_request['cache'] ?? 1));
             $bitrate      = (int)scrub_in((string) ($new_request['bitrate'] ?? 0));
             $player       = scrub_in((string) ($new_request['player'] ?? ''));
             $format       = scrub_in((string) ($new_request['format'] ?? ''));
@@ -170,7 +170,7 @@ final class PlayAction implements ApplicationActionInterface
             $session_id   = scrub_in((string) filter_input(INPUT_GET, 'ssid', FILTER_SANITIZE_SPECIAL_CHARS));
             $type         = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
             $client       = scrub_in((string) filter_input(INPUT_GET, 'client', FILTER_SANITIZE_SPECIAL_CHARS));
-            $cache        = scrub_in((string) filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
+            $cache        = (int)scrub_in((string) filter_input(INPUT_GET, 'cache', FILTER_SANITIZE_NUMBER_INT));
             $bitrate      = (int)filter_input(INPUT_GET, 'bitrate', FILTER_SANITIZE_NUMBER_INT);
             $player       = scrub_in((string) filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
             $format       = scrub_in((string) filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -201,10 +201,7 @@ final class PlayAction implements ApplicationActionInterface
         if (empty($action)) {
             $action = 'stream';
         }
-        // make sure a download is recorded on cache events
-        if ($cache == '1') {
-            $action = 'download';
-        }
+
         // disable share access if config is disabled
         if (!$can_share && $share_id > 0) {
             $this->logger->error(
@@ -214,12 +211,17 @@ final class PlayAction implements ApplicationActionInterface
             $share_id = 0;
             $secret   = '';
         }
+
         // allow disabling stat recording from the play url
         $record_stats = true;
-        if ($action == 'download' && !in_array($type, array('song', 'video', 'podcast_episode'))) {
+        if (
+            $share_id ||
+            $cache == 1 ||
+            !in_array($type, ['song', 'video', 'podcast_episode'])
+        ) {
             $this->logger->debug(
                 'record_stats disabled: cache {' . $type . "}",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             $record_stats = false;
         }

@@ -31,7 +31,8 @@ use Ampache\Repository\Model\Query;
 
 final class PodcastEpisodeQuery implements QueryInterface
 {
-    public const FILTERS = array(
+    public const FILTERS = [
+        'id',
         'podcast',
         'catalog',
         'catalog_enabled',
@@ -48,10 +49,10 @@ final class PodcastEpisodeQuery implements QueryInterface
         'not_like',
         'unplayed',
         'user_catalog',
-    );
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'podcast',
         'title',
@@ -70,7 +71,7 @@ final class PodcastEpisodeQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`podcast_episode`.`id`";
@@ -122,6 +123,13 @@ final class PodcastEpisodeQuery implements QueryInterface
     {
         $filter_sql = '';
         switch ($filter) {
+            case 'id':
+                $filter_sql = " `podcast_episode`.`id` IN (";
+                foreach ($value as $uid) {
+                    $filter_sql .= (int)$uid . ',';
+                }
+                $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
             case 'podcast':
                 $filter_sql = " `podcast_episode`.`podcast` = '" . Dba::escape($value) . "' AND ";
                 break;

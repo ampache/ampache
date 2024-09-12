@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\User\NewPasswordSenderInterface;
 use Ampache\Module\Util\Mailer;
@@ -65,9 +66,17 @@ final class LostPasswordMethod
         if (!Mailer::is_mail_enabled()) {
             Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
         }
+
+        if (AmpConfig::get('simple_user_mode')) {
+            Api::error('simple_user_mode', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
+
+            return false;
+        }
+
         if (!Api::check_parameter($input, ['auth'], self::ACTION)) {
             return false;
         }
+
         // identify the user to modify
         $user_id     = self::getUserRepository()->idByResetToken($input['auth']);
         $update_user = new User($user_id);
