@@ -1150,9 +1150,8 @@ class Preference extends database_object
             Dba::write($sql);
         }
 
-        foreach (array_merge([-1], self::getUserRepository()->getValid()) as $user_id) {
-            User::fix_preferences($user_id);
-        }
+        // Ensure valid prefs are set
+        User::rebuild_all_preferences();
     }
 
     /**
