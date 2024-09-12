@@ -1115,12 +1115,15 @@ class User extends database_object
 
         // If your user is missing preferences we copy the value from system (Except for plugins and system prefs)
         if ($user_id != '-1') {
-            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`category` NOT IN ('plugins', 'system');";
+            $sql        = "SELECT `user_preference`.`preference`, `user_preference`.`name`, `user_preference`.`value` FROM `user_preference`, `preference` WHERE `user_preference`.`preference` = `preference`.`id` AND `user_preference`.`user`='-1' AND `preference`.`category` NOT IN ('plugins', 'system');";
             $db_results = Dba::read($sql);
             /* While through our base stuff */
             while ($row = Dba::fetch_assoc($db_results)) {
                 $key                = $row['preference'];
-                $zero_results[$key] = $row['value'];
+                $zero_results[$key] = [
+                    'name' => $row['name'],
+                    'value' => $row['value']
+                ];
             }
         } // if not user -1
 
@@ -1140,11 +1143,12 @@ class User extends database_object
             // Check if this preference is set
             if (!isset($results[$key])) {
                 if (isset($zero_results[$key])) {
-                    $row['value'] = $zero_results[$key];
+                    $row['value'] = $zero_results[$key]['value'];
+                    $row['name']  = $zero_results[$key]['name'];
                 }
 
-                $sql = "INSERT INTO user_preference (`user`, `preference`, `value`) VALUES (?, ?, ?)";
-                Dba::write($sql, [$user_id, $key, $row['value']]);
+                $sql = "INSERT INTO user_preference (`user`, `preference`, `name`, `value`) VALUES (?, ?, ?, ?)";
+                Dba::write($sql, [$user_id, $key, $row['name'], $row['value']]);
             }
         } // while preferences
     }
@@ -1406,6 +1410,12 @@ class User extends database_object
         // delete system prefs from users
         $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
         Dba::write($sql);
+        // ensure preference names are updated
+        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
+        Dba::write($sql);
+
+        // Fix the system user preferences first
+        self::fix_preferences(-1);
 
         // How many preferences should we have?
         $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
@@ -1418,9 +1428,6 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences((int)$row['user']);
         }
-
-        // Fix the system user preferences
-        self::fix_preferences(-1);
     }
 
     /**

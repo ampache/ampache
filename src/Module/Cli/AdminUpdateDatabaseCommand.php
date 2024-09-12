@@ -31,6 +31,7 @@ use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\UpdateInfoEnum;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
 final class AdminUpdateDatabaseCommand extends Command
