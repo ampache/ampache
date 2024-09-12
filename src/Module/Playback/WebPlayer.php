@@ -323,15 +323,15 @@ class WebPlayer
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
 
-                // this should probably only be in songs
-                if ($media->type != $types['real']) {
-                    $pos = strrpos($url, '&');
-                    if ($pos !== false) {
-                        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
-                    } else {
-                        $url .= '&transcode_to=' . $types['real'];
-                    }
-                }
+                // this should probably only be in songs todo i think this should be removed...
+                //if ($media->type != $types['real']) {
+                //    $pos = strrpos($url, '&');
+                //    if ($pos !== false) {
+                //        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
+                //    } else {
+                //        $url .= '&transcode_to=' . $types['real'];
+                //    }
+                //}
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];

@@ -140,7 +140,7 @@ class UPnPPlaylist
     }
 
     /**
-     * @param $track_id
+     * skip
      */
     public function skip(int $track_id): bool
     {

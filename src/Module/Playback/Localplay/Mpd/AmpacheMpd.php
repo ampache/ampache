@@ -306,7 +306,6 @@ class AmpacheMpd extends localplay_controller
     /**
      * skip
      * This tells MPD to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -387,7 +386,6 @@ class AmpacheMpd extends localplay_controller
      * random
      * This tells MPD to turn on or off the playing of songs from the
      * playlist in random order.
-     * @param $state
      */
     public function random(bool $state): bool
     {

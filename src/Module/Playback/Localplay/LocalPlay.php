@@ -426,7 +426,6 @@ class LocalPlay
     /**
      * skip
      * This isn't a required function, it tells the daemon to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {

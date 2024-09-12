@@ -315,7 +315,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * skip
      * This tells UPnP to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -401,7 +400,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * repeat
      * This tells UPnP to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -411,7 +409,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->Repeat(['repeat' => ($state ? 'all' : 'off')]);
+        $this->_upnp->Repeat($state);
 
         return true;
     }
@@ -419,7 +417,6 @@ class AmpacheUPnP extends localplay_controller
     /**
      * random
      * This tells UPnP to turn on or off the playing of songs from the playlist in random order
-     * @param $state
      */
     public function random(bool $state): bool
     {

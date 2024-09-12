@@ -320,7 +320,6 @@ class AmpacheHttpq extends localplay_controller
     /**
      * skip
      * This tells httpQ to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -401,7 +400,6 @@ class AmpacheHttpq extends localplay_controller
      * repeat
      * This tells httpQ to set the repeating the playlist (i.e. loop) to
      * either on or off
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -416,7 +414,6 @@ class AmpacheHttpq extends localplay_controller
      * random
      * This tells httpQ to turn on or off the playing of songs from the
      * playlist in random order
-     * @param $state
      */
     public function random(bool $state): bool
     {

@@ -172,7 +172,6 @@ class HttpQPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -253,7 +252,6 @@ class HttpQPlayer
     /**
      * repeat
      * This toggles the repeat state of HttpQ
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -273,7 +271,6 @@ class HttpQPlayer
     /**
      * random
      * this toggles the random state of HttpQ
-     * @param $state
      */
     public function random(bool $state): bool
     {
