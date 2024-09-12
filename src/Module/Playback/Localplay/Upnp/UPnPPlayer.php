@@ -206,7 +206,6 @@ class UPnPPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -328,7 +327,6 @@ class UPnPPlayer
     /**
      * Repeat
      * This toggles the repeat state
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -339,7 +337,6 @@ class UPnPPlayer
     /**
      * Random
      * this toggles the random state
-     * @param $state
      */
     public function Random(bool $state): bool
     {

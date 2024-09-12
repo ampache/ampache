@@ -137,7 +137,6 @@ class VlcPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -203,7 +202,6 @@ class VlcPlayer
     /**
      * repeat
      * This toggles the repeat state of VLC
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -219,7 +217,6 @@ class VlcPlayer
     /**
      * random
      * this toggles the random state of VLC
-     * @param $state
      */
     public function random(bool $state): bool
     {

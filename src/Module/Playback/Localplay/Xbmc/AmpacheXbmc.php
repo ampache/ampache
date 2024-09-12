@@ -195,8 +195,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
      */
     public function get_instance(?string $instance = ''): array
     {
@@ -412,7 +410,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * skip
      * This tells XBMC to skip to the specified song
-     * @param $track_id
      */
     public function skip(int $track_id): bool
     {
@@ -562,7 +559,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * repeat
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
     public function repeat(bool $state): bool
     {
@@ -589,7 +585,6 @@ class AmpacheXbmc extends localplay_controller
     /**
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
-     * @param $state
      */
     public function random(bool $state): bool
     {
