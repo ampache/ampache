@@ -59,6 +59,7 @@ class Preference extends database_object
         'allow_stream_playback',
         'allow_upload',
         'allow_video',
+        'api_always_download',
         'api_enable_3',
         'api_enable_4',
         'api_enable_5',
@@ -1109,7 +1110,7 @@ class Preference extends database_object
                     Dba::write($sql . "(195, 'sidebar_hide_information', '0', 'Hide the Information menu in the sidebar', " . AccessLevelEnum::USER->value . ", 'boolean', 'interface', 'home');");
                     break;
                 default:
-                    // todo custom_logo_user Amapche7 prefs i haven't done yet
+                    // todo custom_logo_user, api_always_download Amapche7 prefs i haven't done yet
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
             Dba::write($sql);
@@ -1149,6 +1150,7 @@ class Preference extends database_object
             'amazon_developer_private_api_key' => T_('Amazon Secret Access Key'),
             'amazon_developer_public_key' => T_('Amazon Access Key ID'),
             'amazon_max_results_pages' => T_('Amazon max results pages'),
+            'api_always_download' => T_('Force API streams to download. (Enable scrobble in your client to record stats)'),
             'api_enable_3' => T_('Allow Ampache API3 responses'),
             'api_enable_4' => T_('Allow Ampache API4 responses'),
             'api_enable_5' => T_('Allow Ampache API5 responses'),
@@ -1412,6 +1414,7 @@ class Preference extends database_object
             'allow_upload_scripts',
             'allow_video',
             'allow_zip_download',
+            'api_always_download',
             'api_enable_3',
             'api_enable_4',
             'api_enable_5',
