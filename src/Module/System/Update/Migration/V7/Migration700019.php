@@ -28,7 +28,7 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Add ui option ('subsonic_always_download') Force Subsonic streams to download. (Enable scrobble in your client to record stats)
+ * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
  */
 final class Migration700019 extends AbstractMigration
 {

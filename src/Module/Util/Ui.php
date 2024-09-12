@@ -832,6 +832,7 @@ class Ui implements UiInterface
             case 'allow_stream_playback':
             case 'allow_upload':
             case 'allow_video':
+            case 'api_always_download':
             case 'api_enable_3':
             case 'api_enable_4':
             case 'api_enable_5':
