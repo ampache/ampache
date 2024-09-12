@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
@@ -88,7 +89,7 @@ final class StreamMethod
         $recordStats   = (int)($input['stats'] ?? 1);
 
         $params = '&client=api';
-        if ($recordStats == 0) {
+        if (AmpConfig::get('api_always_download') || $recordStats == 0) {
             $params .= '&cache=1';
         }
 
