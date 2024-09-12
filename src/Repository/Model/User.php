@@ -1072,10 +1072,6 @@ class User extends database_object
      */
     public static function fix_preferences(int $user_id): void
     {
-        // ensure preference names are updated
-        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
-        Dba::write($sql);
-
         // Check default group (autoincrement starts at 1 so force it to be 0)
         $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
         $db_results = Dba::read($sql);
@@ -1414,6 +1410,12 @@ class User extends database_object
         // delete system prefs from users
         $sql = "DELETE `user_preference`.* FROM `user_preference` LEFT JOIN `preference` ON `user_preference`.`preference` = `preference`.`id` WHERE `user_preference`.`user` != -1 AND `preference`.`category` = 'system';";
         Dba::write($sql);
+        // ensure preference names are updated
+        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
+        Dba::write($sql);
+
+        // Fix the system user preferences first
+        self::fix_preferences(-1);
 
         // How many preferences should we have?
         $sql        = "SELECT COUNT(`id`) AS `pref_count` FROM `preference` WHERE `category` != 'system';";
@@ -1426,9 +1428,6 @@ class User extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             self::fix_preferences((int)$row['user']);
         }
-
-        // Fix the system user preferences
-        self::fix_preferences(-1);
     }
 
     /**
