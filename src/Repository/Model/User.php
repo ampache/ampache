@@ -1072,6 +1072,10 @@ class User extends database_object
      */
     public static function fix_preferences(int $user_id): void
     {
+        // ensure preference names are updated
+        $sql = "UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;";
+        Dba::write($sql);
+
         // Check default group (autoincrement starts at 1 so force it to be 0)
         $sql        = "SELECT `id`, `name` FROM `catalog_filter_group` WHERE `name` = 'DEFAULT';";
         $db_results = Dba::read($sql);
