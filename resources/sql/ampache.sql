@@ -1411,7 +1411,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '700019'),
+('db_version', '700020'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1556,8 +1556,9 @@ DROP TABLE IF EXISTS `user_preference`;
 CREATE TABLE IF NOT EXISTS `user_preference` (
   `user` int(11) NOT NULL,
   `preference` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  `name` varchar(128) DEFAULT NULL,
+  `name` varchar(128) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `unique_name` (`user`,`name`),
   KEY `user` (`user`),
   KEY `preference` (`preference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
