@@ -131,6 +131,16 @@ final class UpdateRunner implements UpdateRunnerInterface
                 }
             }
         }
+
+        if ($currentVersion >= 700012) {
+            // Migration\V7\Migration700012
+            if (
+                !Preference::delete('custom_logo_user')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 700006) {
             // Migration\V7\Migration700006
             if (!Preference::insert('home_recently_played_all', 'Show all media types in Recently Played', '1', 25, 'bool', 'interface', 'home', true)) {

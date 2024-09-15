@@ -1053,6 +1053,29 @@ class Preference extends database_object
             Dba::write($sql);
         }
 
+        // delete Ampache 7 preferences that you don't need on db update as well
+        // Migration\V7\Migration700019
+        Preference::delete('api_always_download');
+        // Migration\V7\Migration700016
+        Preference::delete('sidebar_order_browse');
+        Preference::delete('sidebar_order_dashboard');
+        Preference::delete('sidebar_order_video');
+        Preference::delete('sidebar_order_playlist');
+        Preference::delete('sidebar_order_search');
+        Preference::delete('sidebar_order_information');
+        // Migration\V7\Migration700015
+        Preference::delete('index_dashboard_form');
+        // Migration\V7\Migration700012
+        Preference::delete('custom_logo_user');
+        // Migration\V7\Migration700001
+        Preference::delete('sidebar_hide_switcher');
+        Preference::delete('sidebar_hide_browse');
+        Preference::delete('sidebar_hide_dashboard');
+        Preference::delete('sidebar_hide_video');
+        Preference::delete('sidebar_hide_search');
+        Preference::delete('sidebar_hide_playlist');
+        Preference::delete('sidebar_hide_information');
+
         foreach (array_merge([-1], self::getUserRepository()->getValid()) as $user_id) {
             User::fix_preferences($user_id);
         }
