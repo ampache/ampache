@@ -1049,6 +1049,9 @@ class Preference extends database_object
                 case 'show_wrapped':
                     Dba::write($sql . "(188, 'show_wrapped', '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy');");
                     break;
+                case 'api_always_download':
+                    Dba::write($sql . "(189, 'api_always_download', 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'api');");
+                    break;
             }
             Dba::write($sql);
         }
