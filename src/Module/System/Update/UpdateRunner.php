@@ -86,16 +86,53 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 700020) {
+            // Migration\V7\Migration700020
+            Dba::write("ALTER TABLE `user_preference` DROP KEY `unique_name`;");
+        }
+
+        if ($currentVersion >= 700019) {
+            // Migration\V7\Migration700019
+            if (
+                !Preference::delete('api_always_download')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700016) {
+            // Migration\V7\Migration700016
+            if (
+                !Preference::delete('sidebar_order_browse') ||
+                !Preference::delete('sidebar_order_dashboard') ||
+                !Preference::delete('sidebar_order_video') ||
+                !Preference::delete('sidebar_order_playlist') ||
+                !Preference::delete('sidebar_order_search') ||
+                !Preference::delete('sidebar_order_information')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700015) {
+            // Migration\V7\Migration700015
+            if (
+                !Preference::delete('index_dashboard_form')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 700014) {
             if (Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
-                // Migration700005
+                // Migration\V7\Migration700005
                 if (!Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")) {
                     throw new UpdateFailedException();
                 }
             }
         }
         if ($currentVersion >= 700006) {
-            // Migration700006
+            // Migration\V7\Migration700006
             if (!Preference::insert('home_recently_played_all', 'Show all media types in Recently Played', '1', 25, 'bool', 'interface', 'home', true)) {
                 throw new UpdateFailedException();
             }
@@ -103,7 +140,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
         if ($currentVersion >= 700005) {
             if (Dba::read('SELECT SUM(`last_count`) from `playlist`;')) {
-                // Migration700005
+                // Migration\V7\Migration700005
                 if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")) {
                     throw new UpdateFailedException();
                 }
@@ -111,7 +148,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700001) {
-            // Migration700001
+            // Migration\V7\Migration700001
             if (
                 !Preference::delete('sidebar_hide_switcher') ||
                 !Preference::delete('sidebar_hide_browse') ||
