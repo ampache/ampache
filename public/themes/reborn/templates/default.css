@@ -1691,7 +1691,8 @@ span.fatalerror {
     display: block;
 }
 
-.item_art:hover  .item_art_play {
+.item_art:hover  .item_art_play,
+.item_art:hover  .item_art_play_150 {
     display: block;
 }
 
