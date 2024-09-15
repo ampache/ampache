@@ -1054,8 +1054,6 @@ class Preference extends database_object
         }
 
         // delete Ampache 7 preferences that you don't need on db update as well
-        // Migration\V7\Migration700019
-        Preference::delete('api_always_download');
         // Migration\V7\Migration700016
         Preference::delete('sidebar_order_browse');
         Preference::delete('sidebar_order_dashboard');
