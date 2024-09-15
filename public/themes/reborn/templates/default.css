@@ -1627,7 +1627,16 @@ span.fatalerror {
     width: 64px;
 }
 
-.item_art .item_art_play .item_art_play_icon {
+.item_art .item_art_play_150 {
+    display: none;
+    height: 64px;
+    margin: 43px auto 0 auto;
+    position: relative;
+    width: 64px;
+}
+
+.item_art .item_art_play .item_art_play_icon,
+.item_art .item_art_play_150 .item_art_play_icon {
     display: block;
     height: 64px;
     opacity: 0.4;
@@ -1636,7 +1645,8 @@ span.fatalerror {
     width: 64px;
 }
 
-.item_art .item_art_play .item_art_play_icon:hover {
+.item_art .item_art_play .item_art_play_icon:hover,
+.item_art .item_art_play_150 .item_art_play_icon:hover {
     opacity: 1;
 }
 
