@@ -132,7 +132,9 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
                 if (
-                    $field !== null && $field->isPublic() && !in_array($field->getName(), $dismetas)
+                    $field !== null &&
+                    $field->isPublic() &&
+                    !in_array($field->getName(), $dismetas)
                 ) {
                     echo '<tr>' .
                     '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>' .

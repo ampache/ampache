@@ -34,15 +34,22 @@ use Ampache\Module\System\Core;
 class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Piwik';
+
     public string $categories  = 'stats';
+
     public string $description = 'Piwik statistics';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370034';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $site_id;
+
     private $piwik_url;
 
     /**
@@ -62,11 +69,8 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         if (!Preference::insert('piwik_site_id', T_('Piwik Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'piwik')) {
             return false;
         }
-        if (!Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('piwik_url', T_('Piwik URL'), AmpConfig::get_web_path() . '/piwik/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -109,6 +113,7 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         if (Core::get_global('user')?->getId() > 0) {
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
+
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
@@ -126,21 +131,21 @@ class AmpachePiwik extends AmpachePlugin implements PluginDisplayOnFooterInterfa
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['piwik_site_id'])) || !strlen(trim($data['piwik_url']))) {
+        if (!strlen(trim((string) $data['piwik_site_id'])) || !strlen(trim((string) $data['piwik_url']))) {
             $data                  = [];
             $data['piwik_site_id'] = Preference::get_by_user(-1, 'piwik_site_id');
             $data['piwik_url']     = Preference::get_by_user(-1, 'piwik_url');
         }
 
-        $this->site_id = trim($data['piwik_site_id']);
-        if (!strlen($this->site_id)) {
+        $this->site_id = trim((string) $data['piwik_site_id']);
+        if ($this->site_id === '') {
             debug_event('piwik.plugin', 'No Piwik Site ID, user field plugin skipped', 3);
 
             return false;
         }
 
-        $this->piwik_url = trim($data['piwik_url']);
-        if (!strlen($this->piwik_url)) {
+        $this->piwik_url = trim((string) $data['piwik_url']);
+        if ($this->piwik_url === '') {
             debug_event('piwik.plugin', 'No Piwik URL, user field plugin skipped', 3);
 
             return false;

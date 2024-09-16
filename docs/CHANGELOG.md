@@ -60,6 +60,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 
 * Prefer the name of the artist provided by MusicBrainz plugin
 * Use PHP functions for php8.2+
+* Update rector minimum to php8.2 and extend rector source directories
 * Default to InnoDB on new installs
 * Change URL for user avatar links
 * Move JavaScript out of PHP where possible

@@ -55,7 +55,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'song':
                 $songs = Random::get_default((int)AmpConfig::get('offset_limit', 50), $user);
-                if (!count($songs)) {
+                if ($songs === []) {
                     break;
                 }
 
@@ -63,6 +63,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
+
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'album':
@@ -70,7 +71,7 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                     $user->getId()
                 );
 
-                if (empty($album_id)) {
+                if ($album_id === []) {
                     break;
                 }
 
@@ -81,11 +82,12 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
+
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'artist':
                 $artist_id = Random::artist();
-                if (!$artist_id) {
+                if ($artist_id === 0) {
                     break;
                 }
 
@@ -95,12 +97,13 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($songs as $song_id) {
                     $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                 }
+
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'playlist':
                 $playlist_id = Random::playlist();
 
-                if (!$playlist_id) {
+                if ($playlist_id === 0) {
                     break;
                 }
 
@@ -111,14 +114,12 @@ final readonly class RandomAjaxHandler implements AjaxHandlerInterface
                 foreach ($items as $item) {
                     $user->playlist?->add_object((int)$item['object_id'], $item['object_type']);
                 }
+
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'send_playlist':
                 $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=random' . '&random_type=' . scrub_out($_REQUEST['random_type']) . '&random_id=' . scrub_out($_REQUEST['random_id']);
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

@@ -173,19 +173,12 @@ final class AddUserAction implements ApplicationActionInterface
             return null;
         }
 
-        /* Attempt to create the new user */
-        switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
-            case 'admin':
-                $access = AccessLevelEnum::ADMIN;
-                break;
-            case 'user':
-                $access = AccessLevelEnum::USER;
-                break;
-            case 'guest':
-            default:
-                $access = AccessLevelEnum::GUEST;
-                break;
-        } // auto-user level
+        // Attempt to create the new user
+        $access = match ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
+            'admin' => AccessLevelEnum::ADMIN,
+            'user' => AccessLevelEnum::USER,
+            default => AccessLevelEnum::GUEST,
+        };
 
         $userId = User::create(
             $username,

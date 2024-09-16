@@ -41,11 +41,17 @@ use MusicBrainz\HttpAdapters\RequestsHttpAdapter;
 class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInterface
 {
     public string $name        = 'MusicBrainz';
+
     public string $categories  = 'metadata';
+
     public string $description = 'MusicBrainz metadata integration';
+
     public string $url         = 'http://www.musicbrainz.org';
+
     public string $version     = '000003';
+
     public string $min_ampache = '360003';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -66,11 +72,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
      */
     public function install(): bool
     {
-        if (!Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
@@ -92,17 +94,14 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if ($from_version == 0) {
             return false;
         }
-        if (!Preference::exists('mb_overwrite_name')) {
+
+        if (Preference::exists('mb_overwrite_name') === 0) {
             // this wasn't installed correctly only upgraded so may be missing
             Preference::insert('mb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         // did the upgrade work?
-        if (Preference::exists('mb_overwrite_name')) {
-            return true;
-        }
-
-        return false;
+        return (bool) Preference::exists('mb_overwrite_name');
     }
 
     /**
@@ -118,6 +117,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         if (!array_key_exists('mb_overwrite_name', $data)) {
             $data['mb_overwrite_name'] = Preference::get_by_user(-1, 'mb_overwrite_name');
         }
+
         // overwrite matching MBID artist names
         $this->overwrite_name = (bool)$data['mb_overwrite_name'];
 
@@ -159,8 +159,8 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
              * } $track
              */
             $track = $mbrainz->lookup('recording', $mbid, $includes);
-        } catch (Exception $error) {
-            debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
+        } catch (Exception $exception) {
+            debug_event('MusicBrainz.plugin', 'Lookup error ' . $exception, 3);
 
             return [];
         }
@@ -186,8 +186,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
      * get_external_metadata
      * Update an object (label or artist for now) using musicbrainz
      * @param Label|Artist $object
-     * @param string $object_type
-     * @return bool
      */
     public function get_external_metadata($object, string $object_type): bool
     {
@@ -205,25 +203,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
             try {
                 switch ($object_type) {
                     case 'label':
-                        /**
-                         * https://musicbrainz.org/ws/2/label/b66d15cc-b372-4dc1-8cbd-efdeb02e23e7?fmt=json
-                         * @var object{
-                         *     isnis: array,
-                         *     id: string,
-                         *     label-code: ?string,
-                         *     type-id: string,
-                         *     disambiguation: string,
-                         *     area: object,
-                         *     life-span: object,
-                         *     name: string,
-                         *     country: string,
-                         *     sort-name: string,
-                         *     type: string,
-                         *     ipis: array,
-                         * } $results
-                         */
-                        $results = $mbrainz->lookup($object_type, $object->mbid);
-                        break;
                     case 'artist':
                         /**
                          * https://musicbrainz.org/ws/2/artist/859a5c63-08df-42da-905c-7307f56db95d?inc=release-groups&fmt=json
@@ -275,6 +254,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         if (!empty($results->{'labels'})) {
                             $results = $results->{'labels'}[0];
                         }
+
                         break;
                     case 'artist':
                         /**
@@ -290,6 +270,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         if (!empty($results->{'artists'})) {
                             $results = $results->{'artists'}[0];
                         }
+
                         break;
                     default:
                 }
@@ -299,8 +280,9 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 return false;
             }
         }
+
         if (!empty($results)) {
-            debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
+            debug_event('MusicBrainz.plugin', sprintf('Updating %s: ', $object_type) . $object->get_fullname(), 3);
             $data = [];
             switch ($object_type) {
                 case 'label':
@@ -336,9 +318,11 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                         $object->prefix = $name_check['prefix'];
                         $object->name   = $name_check['name'];
                     }
+
                     break;
                 default:
             }
+
             if (!empty($data)) {
                 $object->update($data);
             }
@@ -352,8 +336,6 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
     /**
      * get_artist
      * Get an artist from musicbrainz
-     * @param string $mbid
-     * @return array
      */
     public function get_artist(string $mbid): array
     {
@@ -393,6 +375,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 return $data;
             }
         }
+
         if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
             $data = [
                 'name' => $results->{'name'},

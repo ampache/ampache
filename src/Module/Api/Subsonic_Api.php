@@ -464,10 +464,15 @@ class Subsonic_Api
                                 $tagsArray[$childTagName] = (object)$childProperties;
                             } else {
                                 // test if tags of this type should always be arrays, no matter the element count
-                                $tagsArray[$childTagName] = in_array(
-                                    $childTagName,
-                                    $options['alwaysArray']
-                                ) || !$options['autoArray'] ? [$childProperties] : $childProperties;
+                                $tagsArray[$childTagName] = (
+                                    in_array(
+                                        $childTagName,
+                                        $options['alwaysArray']
+                                    ) ||
+                                    !$options['autoArray']
+                                )
+                                    ? [$childProperties]
+                                    : $childProperties;
                             }
                         } else {
                             if (in_array($childTagName, $options['alwaysInteger'])) {
@@ -480,10 +485,15 @@ class Subsonic_Api
                                 $childProperties = (bool)$childProperties;
                             }
                             // test if tags of this type should always be arrays, no matter the element count
-                            $tagsArray[$childTagName] = in_array(
-                                $childTagName,
-                                $options['alwaysArray']
-                            ) || !$options['autoArray'] ? [$childProperties] : $childProperties;
+                            $tagsArray[$childTagName] = (
+                                in_array(
+                                    $childTagName,
+                                    $options['alwaysArray']
+                                ) ||
+                                !$options['autoArray']
+                            )
+                                ? [$childProperties]
+                                : $childProperties;
                         }
                     } else {
                         // existing arrays of data

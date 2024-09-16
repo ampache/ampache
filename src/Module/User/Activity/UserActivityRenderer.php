@@ -62,29 +62,15 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
         }
 
         $descr   = $user->get_f_link() . ' ';
-        switch ($useractivity->action) {
-            case 'shout':
-                $descr .= T_('commented on');
-                break;
-            case 'upload':
-                $descr .= T_('uploaded');
-                break;
-            case 'play':
-                $descr .= T_('played');
-                break;
-            case 'userflag':
-                $descr .= T_('favorited');
-                break;
-            case 'follow':
-                $descr .= T_('started to follow');
-                break;
-            case 'rating':
-                $descr .= T_('rated');
-                break;
-            default:
-                $descr .= T_('did something on');
-                break;
-        }
+        $descr .= match ($useractivity->action) {
+            'shout' => T_('commented on'),
+            'upload' => T_('uploaded'),
+            'play' => T_('played'),
+            'userflag' => T_('favorited'),
+            'follow' => T_('started to follow'),
+            'rating' => T_('rated'),
+            default => T_('did something on'),
+        };
 
         return sprintf(
             '<div>%s %s %s</div>',

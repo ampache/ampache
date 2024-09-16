@@ -31,11 +31,17 @@ use Ampache\Module\System\Core;
 class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
     public string $name        = 'Libravatar';
+
     public string $categories  = 'avatar';
+
     public string $description = 'Users avatar\'s with Libravatar';
+
     public string $url         = 'https://www.libravatar.org';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360040';
+
     public string $max_ampache = '999999';
 
     /**
@@ -79,13 +85,18 @@ class AmpacheLibravatar extends AmpachePlugin implements PluginGetAvatarUrlInter
     public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = "";
-        if (!empty($user->email)) {
+        if (
+            $user->email !== null &&
+            $user->email !== '' &&
+            $user->email !== '0'
+        ) {
             // Federated Servers are not supported here without libravatar.org. Should query DNS server first.
             if (isset($_SERVER['HTTPS']) && Core::get_server('HTTPS') !== 'off') {
                 $url = "https://seccdn.libravatar.org";
             } else {
                 $url = "http://cdn.libravatar.org";
             }
+
             $url .= "/avatar/";
             $url .= md5(strtolower(trim($user->email)));
             $url .= "?s=" . $size . "&r=g";

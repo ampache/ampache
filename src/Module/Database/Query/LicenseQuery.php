@@ -51,11 +51,9 @@ final class LicenseQuery implements QueryInterface
         'external_link',
     ];
 
-    /** @var string */
-    protected $select = "`license`.`id`";
+    protected string $select = "`license`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `license` ";
+    protected string $base = "SELECT %%SELECT%% FROM `license` ";
 
     /**
      * get_select

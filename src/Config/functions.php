@@ -169,173 +169,71 @@ function get_languages(): array
     while (false !== ($file = readdir($handle))) {
         $full_file = __DIR__ . '/../../locale/' . $file;
 
-        /* Check to see if it's a directory */
-        if (is_dir($full_file) && substr($file, 0, 1) != '.' && $file != 'base') {
-            switch ($file) {
-                case 'af_ZA':
-                    $name = 'Afrikaans';
-                    break; /* Afrikaans */
-                case 'bg_BG':
-                    $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;';
-                    break; /* Bulgarian */
-                case 'ca_ES':
-                    $name = 'Catal&#224;';
-                    break; /* Catalan */
-                case 'cs_CZ':
-                    $name = '&#x010c;esky';
-                    break; /* Czech */
-                case 'da_DK':
-                    $name = 'Dansk';
-                    break; /* Danish */
-                case 'de_CH':
-                    $name = 'Deutschschweiz';
-                    break; /* German (Switzerland) */
-                case 'de_DE':
-                    $name = 'Deutsch';
-                    break; /* German */
-                case 'el_GR':
-                    $name = 'Greek';
-                    break; /* Greek */
-                case 'en_AU':
-                    $name = 'English (AU)';
-                    break; /* English */
-                case 'en_GB':
-                    $name = 'English (UK)';
-                    break; /* English */
-                case 'en_US':
-                    $name = 'English (US)';
-                    break; /* English */
-                case 'es_AR':
-                    $name = 'Espa&#241;ol (AR)';
-                    break; /* Spanish */
-                case 'es_ES':
-                    $name = 'Espa&#241;ol';
-                    break; /* Spanish */
-                case 'es_MX':
-                    $name = 'Espa&#241;ol (MX)';
-                    break; /* Spanish */
-                case 'et_EE':
-                    $name = 'Eesti';
-                    break; /* Estonian */
-                case 'eu_ES':
-                    $name = 'Euskara';
-                    break; /* Basque */
-                case 'fi_FI':
-                    $name = 'Suomi';
-                    break; /* Finnish */
-                case 'fr_BE':
-                    $name = 'Fran&#231;ais de Belgique ';
-                    break; /* French (Belgium) */
-                case 'fr_FR':
-                    $name = 'Fran&#231;ais';
-                    break; /* French */
-                case 'ga_IE':
-                    $name = 'Gaeilge';
-                    break; /* Irish */
-                case 'gl_ES':
-                    $name = 'Galician';
-                    break; /* Galician (gl_ES) */
-                case 'hi_IN':
-                    $name = 'Hindi';
-                    break; /* Hindi (India) */
-                case 'hu_HU':
-                    $name = 'Magyar';
-                    break; /* Hungarian */
-                case 'id_ID':
-                    $name = 'Indonesia';
-                    break; /* Indonesian */
-                case 'is_IS':
-                    $name = 'Icelandic';
-                    break; /* Icelandic */
-                case 'it_IT':
-                    $name = 'Italiano';
-                    break; /* Italian */
-                case 'ja_JP':
-                    $name = '&#x65e5;&#x672c;&#x8a9e;';
-                    break; /* Japanese */
-                case 'ko_KR':
-                    $name = '&#xd55c;&#xad6d;&#xb9d0;';
-                    break; /* Korean */
-                case 'lt_LT':
-                    $name = 'Lietuvi&#371;';
-                    break; /* Lithuanian */
-                case 'lv_LV':
-                    $name = 'Latvie&#353;u';
-                    break; /* Latvian */
-                case 'nb_NO':
-                    $name = 'Norsk';
-                    break; /* Norwegian */
-                case 'nl_NL':
-                    $name = 'Nederlands';
-                    break; /* Dutch */
-                case 'no_NO':
-                    $name = 'Norsk bokm&#229;l';
-                    break; /* Norwegian */
-                case 'pl_PL':
-                    $name = 'Polski';
-                    break; /* Polish */
-                case 'pt_BR':
-                    $name = 'Portugu&#234;s Brasileiro';
-                    break; /* Portuguese */
-                case 'pt_PT':
-                    $name = 'Portugu&#234;s';
-                    break; /* Portuguese */
-                case 'ro_RO':
-                    $name = 'Rom&#226;n&#259;';
-                    break; /* Romanian */
-                case 'ru_RU':
-                    $name = '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;';
-                    break; /* Russian */
-                case 'sk_SK':
-                    $name = 'Sloven&#269;ina';
-                    break; /* Slovak */
-                case 'sl_SI':
-                    $name = 'Sloven&#353;&#269;ina';
-                    break; /* Slovenian */
-                case 'sr_CS':
-                    $name = 'Srpski';
-                    break; /* Serbian */
-                case 'sv_SE':
-                    $name = 'Svenska';
-                    break; /* Swedish */
-                case 'tr_TR':
-                    $name = 'T&#252;rk&#231;e';
-                    break; /* Turkish */
-                case 'uk_UA':
-                    $name = 'Українська';
-                    break; /* Ukrainian */
-                case 'vi_VN':
-                    $name = 'Ti&#7871;ng Vi&#7879;t';
-                    break; /* Vietnamese */
-                case 'zh_CN':
-                    $name = '&#31616;&#20307;&#20013;&#25991;';
-                    break; /* Chinese (simplified)*/
-                case 'zh_TW':
-                    $name = '&#32321;&#39636;&#20013;&#25991;';
-                    break; /* Chinese (traditional)*/
-                case 'zh-Hant':
-                    $name = '&#32321;&#39636;&#20013;&#25991; (' . $file . ')';
-                    break; /* Chinese (traditional) (zh_Hant)*/
-                case 'zh_SG':
-                    $name = 'Chinese (Singapore)';
-                    break; /* Chinese (Singapore)*/
-                case 'ar_SA':
-                    $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;';
-                    break; /* Arabic (Right to Left RTL) */
-                case 'he_IL':
-                    $name = '&#1506;&#1489;&#1512;&#1497;&#1514;';
-                    break; /* Hebrew (Right to Left RTL) */
-                case 'fa_IR':
-                    $name = '&#1601;&#1575;&#1585;&#1587;&#1610;';
-                    break; /* Farsi (Right to Left RTL) */
-                default:
-                    $name = sprintf(
-                        /* HINT: File */
-                        T_('Unknown %s'),
-                        '(' . $file . ')'
-                    );
-                    break;
-            } // end switch
+        // Check to see if it's a directory
+        if (
+            is_dir($full_file) &&
+            substr($file, 0, 1) != '.' &&
+            $file != 'base'
+        ) {
+            $name = match ($file) {
+                'af_ZA' => 'Afrikaans',
+                'bg_BG' => '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;',
+                'ca_ES' => 'Catal&#224;',
+                'cs_CZ' => '&#x010c;esky',
+                'da_DK' => 'Dansk',
+                'de_CH' => 'Deutschschweiz',
+                'de_DE' => 'Deutsch',
+                'el_GR' => 'Greek',
+                'en_AU' => 'English (AU)',
+                'en_GB' => 'English (UK)',
+                'en_US' => 'English (US)',
+                'es_AR' => 'Espa&#241;ol (AR)',
+                'es_ES' => 'Espa&#241;ol',
+                'es_MX' => 'Espa&#241;ol (MX)',
+                'et_EE' => 'Eesti',
+                'eu_ES' => 'Euskara',
+                'fi_FI' => 'Suomi',
+                'fr_BE' => 'Fran&#231;ais de Belgique ',
+                'fr_FR' => 'Fran&#231;ais',
+                'ga_IE' => 'Gaeilge',
+                'gl_ES' => 'Galician',
+                'hi_IN' => 'Hindi',
+                'hu_HU' => 'Magyar',
+                'id_ID' => 'Indonesia',
+                'is_IS' => 'Icelandic',
+                'it_IT' => 'Italiano',
+                'ja_JP' => '&#x65e5;&#x672c;&#x8a9e;',
+                'ko_KR' => '&#xd55c;&#xad6d;&#xb9d0;',
+                'lt_LT' => 'Lietuvi&#371;',
+                'lv_LV' => 'Latvie&#353;u',
+                'nb_NO' => 'Norsk',
+                'nl_NL' => 'Nederlands',
+                'no_NO' => 'Norsk bokm&#229;l',
+                'pl_PL' => 'Polski',
+                'pt_BR' => 'Portugu&#234;s Brasileiro',
+                'pt_PT' => 'Portugu&#234;s',
+                'ro_RO' => 'Rom&#226;n&#259;',
+                'ru_RU' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;',
+                'sk_SK' => 'Sloven&#269;ina',
+                'sl_SI' => 'Sloven&#353;&#269;ina',
+                'sr_CS' => 'Srpski',
+                'sv_SE' => 'Svenska',
+                'tr_TR' => 'T&#252;rk&#231;e',
+                'uk_UA' => 'Українська',
+                'vi_VN' => 'Ti&#7871;ng Vi&#7879;t',
+                'zh_CN' => '&#31616;&#20307;&#20013;&#25991;',
+                'zh_TW' => '&#32321;&#39636;&#20013;&#25991;',
+                'zh-Hant' => '&#32321;&#39636;&#20013;&#25991; (' . $file . ')',
+                'zh_SG' => 'Chinese (Singapore)',
+                'ar_SA' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;',
+                'he_IL' => '&#1506;&#1489;&#1512;&#1497;&#1514;',
+                'fa_IR' => '&#1601;&#1575;&#1585;&#1587;&#1610;',
+                default => sprintf(
+                    /* HINT: File */
+                    T_('Unknown %s'),
+                    '(' . $file . ')'
+                ),
+            }; // end switch
 
             $results[$file] = $name;
         }
@@ -962,7 +860,7 @@ function show_user_select($name, $selected = '', $style = ''): void
             $select_txt = 'selected="selected"';
         }
         // If they don't have a full name, revert to the username
-        $row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username'];
+        $row['fullname'] = $row['fullname'] ?: $row['username'];
 
         echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
     } // end while users

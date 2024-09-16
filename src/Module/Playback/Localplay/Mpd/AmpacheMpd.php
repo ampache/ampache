@@ -186,8 +186,12 @@ class AmpacheMpd extends localplay_controller
     public function update_instance($uid, $data): void
     {
         $uid  = Dba::escape($uid);
-        $host = $data['host'] ? Dba::escape($data['host']) : '127.0.0.1';
-        $port = $data['port'] ? Dba::escape($data['port']) : '6600';
+        $host = ($data['host'])
+            ? Dba::escape($data['host'])
+            : '127.0.0.1';
+        $port = ($data['port'])
+            ? Dba::escape($data['port'])
+            : '6600';
         $name = Dba::escape($data['name']);
         $pass = Dba::escape($data['password']);
         $sql  = "UPDATE `localplay_mpd` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";

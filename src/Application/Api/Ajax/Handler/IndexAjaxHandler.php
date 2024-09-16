@@ -87,7 +87,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $user->id ?? -1,
                     $moment
                 );
-                if (count($albums)) {
+                if ($albums !== []) {
                     ob_start();
                     require_once Ui::find_template('show_random_albums.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -106,13 +106,14 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
                 }
+
                 break;
             case 'random_album_disks':
                 $albumDisks = $this->albumRepository->getRandomAlbumDisk(
                     $user->id ?? -1,
                     $moment
                 );
-                if (count($albumDisks)) {
+                if ($albumDisks !== []) {
                     ob_start();
                     require_once Ui::find_template('show_random_album_disks.inc.php');
                     $results['random_selection'] = ob_get_clean();
@@ -131,19 +132,21 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         }
                     }
                 }
+
                 break;
             case 'random_videos':
                 $videos = $this->videoRepository->getRandom(
                     $user->id ?? -1,
                     $moment
                 );
-                if (count($videos)) {
+                if ($videos !== []) {
                     ob_start();
                     require_once Ui::find_template('show_random_videos.inc.php');
                     $results['random_video_selection'] = ob_get_clean();
                 } else {
                     $results['random_video_selection'] = '<!-- None found -->';
                 }
+
                 break;
             case 'artist_info':
                 if (AmpConfig::get('lastfm_api_key') && (array_key_exists('artist', $_REQUEST) || array_key_exists('fullname', $_REQUEST))) {
@@ -152,16 +155,19 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         if ($artist->isNew() === false) {
                             $artist->format();
                         }
+
                         $biography = Recommendation::get_artist_info($artist->id);
                     } else {
                         $fullname  = $this->requestParser->getFromRequest('fullname');
                         $artist    = $this->wantedRepository->findByName($fullname);
                         $biography = Recommendation::get_artist_info_by_name(rawurldecode($fullname));
                     }
+
                     ob_start();
                     require_once Ui::find_template('show_artist_info.inc.php');
                     $results['artist_biography'] = ob_get_clean();
                 }
+
                 break;
             case 'similar_artist':
                 if (AmpConfig::get('show_similar') && array_key_exists('artist', $_REQUEST)) {
@@ -179,24 +185,25 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                             }
                         }
                     }
+
                     ob_start();
                     require_once Ui::find_template('show_recommended_artists.inc.php');
                     $results['similar_artist'] = ob_get_clean();
                 }
+
                 break;
             case 'similar_songs':
                 $artist     = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
                 $object_ids = [];
-                if (!empty($similars)) {
-                    foreach ($similars as $similar) {
-                        if ($similar['id']) {
-                            $similar_artist = new Artist($similar['id']);
-                            // get the songs in a random order for even more chaos
-                            $object_ids = array_merge($object_ids, $this->songRepository->getRandomByArtist($similar_artist));
-                        }
+                foreach ($similars as $similar) {
+                    if ($similar['id']) {
+                        $similar_artist = new Artist($similar['id']);
+                        // get the songs in a random order for even more chaos
+                        $object_ids = array_merge($object_ids, $this->songRepository->getRandomByArtist($similar_artist));
                     }
                 }
+
                 // randomize and slice
                 shuffle($object_ids);
                 $object_ids   = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
@@ -215,16 +222,16 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     require_once Ui::find_template('show_now_playing_similar.inc.php');
                     $results['similar_items_' . $media_id] = ob_get_clean();
                 }
+
                 break;
             case 'labels':
                 if (AmpConfig::get('label') && array_key_exists('artist', $_REQUEST)) {
                     $labels     = $this->labelRepository->getByArtist((int)$this->requestParser->getFromRequest('artist'));
                     $object_ids = [];
-                    if (count($labels) > 0) {
-                        foreach ($labels as $labelid => $label) {
-                            $object_ids[] = $labelid;
-                        }
+                    foreach ($labels as $labelid => $label) {
+                        $object_ids[] = $labelid;
                     }
+
                     $browse = new Browse();
                     $browse->set_type('label');
                     $browse->set_simple_browse(false);
@@ -234,12 +241,17 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     require_once Ui::find_template('show_labels.inc.php');
                     $results['labels'] = ob_get_clean();
                 }
+
                 break;
             case 'wanted_missing_albums':
                 if (AmpConfig::get('wanted') && (array_key_exists('artist', $_REQUEST) || array_key_exists('artist_mbid', $_REQUEST))) {
                     if (array_key_exists('artist', $_REQUEST)) {
                         $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
-                        if (!empty($artist->mbid)) {
+                        if (
+                            $artist->mbid !== null &&
+                            $artist->mbid !== '' &&
+                            $artist->mbid !== '0'
+                        ) {
                             $walbums = Wanted::get_missing_albums($artist);
                         } else {
                             debug_event('index.ajax', 'Cannot get missing albums: MusicBrainz ID required.', 3);
@@ -254,6 +266,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     require_once Ui::find_template('show_missing_albums.inc.php');
                     $results['missing_albums'] = ob_get_clean();
                 }
+
                 break;
             case 'add_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
@@ -266,6 +279,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $aobj        = new Artist($artist);
                         $artist_mbid = $aobj->mbid;
                     }
+
                     $name = $this->requestParser->getFromRequest('name');
                     $year = (int) $this->requestParser->getFromRequest('year');
 
@@ -287,6 +301,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         debug_event('index.ajax', 'Already wanted, skipped.', 5);
                     }
                 }
+
                 break;
             case 'remove_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
@@ -305,6 +320,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
                     }
                 }
+
                 break;
             case 'accept_wanted':
                 if (AmpConfig::get('wanted') && array_key_exists('mbid', $_REQUEST)) {
@@ -318,11 +334,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         $results['wanted_action_' . $mbid] = $walbum->show_action_buttons();
                     }
                 }
+
                 break;
             case 'delete_play':
                 if (isset($_REQUEST['activity_id'])) {
                     Stats::delete((int)$_REQUEST['activity_id']);
                 }
+
                 ob_start();
                 $user_id   = $user->id ?? -1;
                 $ajax_page = 'index';
@@ -334,6 +352,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
+
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'refresh_now_playing':
@@ -356,6 +375,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
+
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'sidebar':
@@ -373,6 +393,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                         } else {
                             return;
                         }
+
                         break;
                     default:
                         return;
@@ -388,12 +409,13 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             case 'slideshow':
                 ob_start();
                 $images = $this->slideshow->getCurrentSlideshow($user);
-                if (count($images) > 0) {
+                if ($images !== []) {
                     $fsname = 'fslider_' . time();
                     echo "<div id='" . $fsname . "'>";
                     foreach ($images as $image) {
                         echo "<img src='" . $image['url'] . "' alt= '' onclick='update_action();' />";
                     }
+
                     echo "</div>";
                     $results['fslider'] = ob_get_clean();
                     ob_start();
@@ -410,6 +432,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
             });";
                     echo "</script>";
                 }
+
                 $results['fslider_script'] = ob_get_clean();
                 break;
             case 'songs':
@@ -419,11 +442,9 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 if ($label_id > 0) {
                     $label = $this->labelRepository->findById($label_id);
 
-                    if ($label === null) {
-                        $object_ids = [];
-                    } else {
-                        $object_ids = $this->songRepository->getByLabel((string)$label->name);
-                    }
+                    $object_ids = ($label === null)
+                        ? []
+                        : $this->songRepository->getByLabel((string)$label->name);
 
                     $browse = new Browse();
                     $browse->set_type('song');
@@ -439,9 +460,6 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['songs'] = ob_get_contents();
                 ob_end_clean();
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

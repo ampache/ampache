@@ -36,11 +36,9 @@ final class DemocraticQuery implements QueryInterface
     protected array $sorts = [
     ];
 
-    /** @var string */
-    protected $select = "";
+    protected string $select = "";
 
-    /** @var string */
-    protected $base = "";
+    protected string $base = "";
 
     /**
      * get_select

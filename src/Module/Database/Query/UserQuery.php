@@ -62,11 +62,9 @@ final class UserQuery implements QueryInterface
         'fullname_public',
     ];
 
-    /** @var string */
-    protected $select = "`user`.`id`";
+    protected string $select = "`user`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `user` ";
+    protected string $base = "SELECT %%SELECT%% FROM `user` ";
 
     /**
      * get_select

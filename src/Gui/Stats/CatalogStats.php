@@ -27,17 +27,11 @@ namespace Ampache\Gui\Stats;
 
 final class CatalogStats implements CatalogStatsInterface
 {
-    /** @var array<string, int|string> $stats
-     */
-    private array $stats;
-
     /**
      * @param array<string, int|string> $stats
      */
-    public function __construct(
-        array $stats
-    ) {
-        $this->stats = $stats;
+    public function __construct(private array $stats)
+    {
     }
 
     public function getConnectedCount(): int

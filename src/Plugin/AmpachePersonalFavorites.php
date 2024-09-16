@@ -36,18 +36,28 @@ use Ampache\Module\Util\Ui;
 class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Personal Favorites';
+
     public string $categories  = 'home';
+
     public string $description = 'Personal favorites on homepage';
+
     public string $url         = '';
+
     public string $version     = '000003';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $display;
+
     private $playlist;
+
     private $smartlist;
+
     private $user;
+
     private int $order = 0;
 
     /**
@@ -76,11 +86,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
             return false;
         }
 
-        if (!Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('personalfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -124,19 +130,21 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
         // display if you've enabled it
         if ($this->display) {
             $list_array = [];
-            foreach (explode(',', $this->playlist) as $list_id) {
+            foreach (explode(',', (string) $this->playlist) as $list_id) {
                 $playlist     = new Playlist((int)$list_id);
                 if ($playlist->isNew() === false) {
                     $list_array[] = [$playlist, 'playlist'];
                 }
             }
-            foreach (explode(',', $this->smartlist) as $list_id) {
+
+            foreach (explode(',', (string) $this->smartlist) as $list_id) {
                 $smartlist = new Search((int)$list_id);
                 if ($smartlist->isNew() === false) {
                     $list_array[] = [$smartlist, 'search'];
                 }
             }
-            if (!empty($list_array)) {
+
+            if ($list_array !== []) {
                 $divString = ($this->order > 0)
                     ? '<div class="personalfav" style="order: ' . $this->order . '">'
                     : '<div class="personalfav">';
@@ -159,6 +167,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                             if (Stream_Playlist::check_autoplay_next()) {
                                 echo Ajax::button('?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_playlist_' . $item[0]->id);
                             }
+
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=' . $item[1] . '&object_id=' . $item[0]->id . '&append=true',
@@ -168,12 +177,15 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                                 );
                             }
                         }
+
                         if ($item[0] instanceof Playlist) {
                             echo Ajax::button('?page=random&action=send_playlist&random_type=playlist&random_id=' . $item[0]->id, 'shuffle', T_('Random Play'), 'play_random_' . $item[0]->id);
                         }
+
                         if ($item[0] instanceof Search) {
                             echo Ajax::button('?page=random&action=send_playlist&random_type=search&random_id=' . $item[0]->id, 'shuffle', T_('Random Play'), 'play_random_' . $item[0]->id);
                         }
+
                         echo Ajax::button('?action=basket&type=' . $item[1] . '&id=' . $item[0]->id, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $item[0]->id);
                         echo '</span></td>';
                         echo '<td class="optional">';
@@ -182,6 +194,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                         $count++;
                     }
                 }
+
                 echo '</table>';
                 UI::show_box_bottom();
                 echo '</div>';

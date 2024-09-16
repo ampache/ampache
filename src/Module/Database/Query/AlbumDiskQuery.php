@@ -90,11 +90,9 @@ final class AlbumDiskQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`album_disk`.`id`";
+    protected string $select = "`album_disk`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
+    protected string $base = "SELECT %%SELECT%% AS `id` FROM `album_disk` ";
 
     /**
      * get_select

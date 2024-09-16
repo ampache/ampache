@@ -540,7 +540,9 @@ class Rating extends database_object
             );
         }
 
-        $ratedText = $rate < 1 ? T_('not rated yet') : sprintf(T_('%s of 5'), $rate);
+        $ratedText = ($rate < 1)
+            ? T_('not rated yet')
+            : sprintf(T_('%s of 5'), $rate);
 
         return sprintf(
             '<span class="star-rating dynamic-star-rating">

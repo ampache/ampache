@@ -45,11 +45,8 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     protected string $type;
     protected string $description;
 
-    /**
-     * Added Songs counter
-     * @var int
-     */
-    protected $addedSongs = 0;
+    /** Added Songs counter */
+    protected int $addedSongs = 0;
 
     /** Verified Songs counter */
     protected int $verifiedSongs = 0;

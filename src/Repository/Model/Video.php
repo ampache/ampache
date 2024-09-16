@@ -504,7 +504,7 @@ class Video extends database_object implements
 
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?? 0;
+            $uid = Core::get_global('user')?->getId() ?? 0;
         }
 
         // set no use when using auth
@@ -1055,8 +1055,7 @@ class Video extends database_object implements
      */
     public function remove(): bool
     {
-        $deleted = file_exists($this->file) ? unlink($this->file) : true;
-
+        $deleted = !file_exists($this->file) || unlink($this->file);
         if ($deleted) {
             // keep details about deletions
             $params = [$this->id];

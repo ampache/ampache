@@ -127,7 +127,9 @@ class UPnPFind
             $tmp = explode(':', trim($line));
 
             $key   = strtoupper(array_shift($tmp));
-            $value = (count($tmp) > 0 ? trim(join(':', $tmp)) : null);
+            $value = (count($tmp) > 0)
+                ? trim(join(':', $tmp))
+                : null;
 
             $result[$key] = $value;
         }

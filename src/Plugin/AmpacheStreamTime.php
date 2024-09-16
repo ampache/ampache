@@ -36,16 +36,24 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Time';
+
     public string $categories  = 'stream_control';
+
     public string $description = 'Control time per user';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370024';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $time_days;
+
     private $time_max;
 
     /**
@@ -65,11 +73,8 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
         if (!Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -102,6 +107,7 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
         if ($this->time_max < 0) {
             return true;
         }
+
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             // Calculate all media time
@@ -124,6 +130,7 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
 
             return ($next_total <= $max);
         }
+
         debug_event('streamtime.plugin', 'Access denied, statistical graph disabled.', 1);
 
         return true;
@@ -138,17 +145,11 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->user_id = $user->id;
-        if ((int)($data['stream_control_time_max'])) {
-            $this->time_max = (int)($data['stream_control_time_max']);
-        } else {
-            $this->time_max = 1024;
-        }
-        if ((int)($data['stream_control_time_days']) > 0) {
-            $this->time_days = (int)($data['stream_control_time_days']);
-        } else {
-            $this->time_days = 30;
-        }
+        $this->user_id   = $user->id;
+        $this->time_max  = (int)($data['stream_control_time_max']) ?: 1024;
+        $this->time_days = ((int)($data['stream_control_time_days']) > 0)
+            ? (int)($data['stream_control_time_days'])
+            : 30;
 
         return true;
     }

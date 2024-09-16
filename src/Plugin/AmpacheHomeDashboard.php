@@ -38,21 +38,34 @@ use Ampache\Module\Util\Ui;
 class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Home Dashboard';
+
     public string $categories  = 'home';
+
     public string $description = 'Show Album dashboard sections on the homepage';
+
     public string $url         = '';
+
     public string $version     = '000002';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private User $user;
+
     private int $maxitems;
+
     private bool $random;
+
     private bool $newest;
+
     private bool $recent;
+
     private bool $trending;
+
     private bool $popular;
+
     private int $order = 0;
 
     /**
@@ -93,11 +106,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             return false;
         }
 
-        if (!Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('homedash_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -163,9 +172,9 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         : 'album_disk';
 
         $object_ids = ($this->random)
-            ? self::getAlbumRepository()->getRandom($this->user->getId(), $limit)
+            ? $this->getAlbumRepository()->getRandom($this->user->getId(), $limit)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             Ui::show_box_top(T_('Random'));
             $browse = new Browse();
             $browse->set_type($object_type);
@@ -180,7 +189,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $object_ids = ($this->newest)
             ? Stats::get_newest($object_type, $limit, 0, 0, $this->user)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             Ui::show_box_top(T_('Newest'));
             $browse = new Browse();
             $browse->set_type($object_type);
@@ -195,7 +204,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $object_ids = ($this->recent)
             ? Stats::get_recent($object_type, $limit)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             Ui::show_box_top(T_('Recent'));
             $browse = new Browse();
             $browse->set_type($object_type);
@@ -210,7 +219,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $object_ids = ($this->trending)
             ? Stats::get_top($object_type, $limit, $threshold)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             Ui::show_box_top(T_('Trending'));
             $browse = new Browse();
             $browse->set_type($object_type);
@@ -225,7 +234,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $object_ids = ($this->popular)
             ? Stats::get_top($object_type, 100, $threshold, 0, $this->user)
             : [];
-        if (!empty($object_ids)) {
+        if ($object_ids !== []) {
             shuffle($object_ids);
             $object_ids = array_slice($object_ids, 0, $limit);
             Ui::show_box_top(T_('Popular'));
@@ -250,6 +259,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     {
         $this->user = $user;
         $user->set_preferences();
+
         $data = $user->prefs;
 
         $this->maxitems = (int)($data['homedash_max_items']);
@@ -270,7 +280,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
     /**
      * @deprecated Inject by constructor
      */
-    private static function getAlbumRepository(): AlbumRepositoryInterface
+    private function getAlbumRepository(): AlbumRepositoryInterface
     {
         global $dic;
 

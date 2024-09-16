@@ -37,15 +37,22 @@ use Ampache\Repository\ShoutRepositoryInterface;
 class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Shout Home';
+
     public string $categories  = 'home';
+
     public string $description = 'Shoutbox on homepage';
+
     public string $url         = '';
+
     public string $version     = '000002';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+
     private int $order = 0;
 
     /**
@@ -66,11 +73,7 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
             return false;
         }
 
-        if (!Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('shouthome_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -119,9 +122,10 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
             );
             $shoutRenderer = $this->getShoutRenderer();
 
-            if (count($shouts) > 0) {
+            if ($shouts !== []) {
                 require_once Ui::find_template('show_shoutbox.inc.php');
             }
+
             echo "</div>\n";
         }
     }

@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Search;
 
 final class ArtistSearch implements SearchInterface
 {
-    private $subType; // artist, album_artist, song_artist
+    private string $subType; // artist, album_artist, song_artist
 
     /**
      * constructor

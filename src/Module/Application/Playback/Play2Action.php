@@ -750,8 +750,10 @@ final class Play2Action implements ApplicationActionInterface
 
         header('Access-Control-Allow-Origin: *');
 
-        $sessionkey = $session_id === '' ? Stream::get_session() : $session_id;
-        $agent      = (!empty($client))
+        $sessionkey = ($session_id === '')
+            ? Stream::get_session()
+            : $session_id;
+        $agent = (!empty($client))
             ? $client
             : Session::agent($sessionkey);
         $location = Session::get_geolocation($sessionkey);

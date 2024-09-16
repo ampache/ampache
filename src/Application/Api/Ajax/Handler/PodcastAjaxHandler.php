@@ -91,7 +91,6 @@ final readonly class PodcastAjaxHandler implements AjaxHandlerInterface
                 } else {
                     $this->podcastSyncer->sync($podcast, true);
                 }
-                break;
         }
     }
 }
