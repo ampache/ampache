@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Repository\UserRepositoryInterface;
 use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
