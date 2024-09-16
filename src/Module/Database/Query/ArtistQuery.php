@@ -75,11 +75,9 @@ final class ArtistQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`artist`.`id`";
+    protected string $select = "`artist`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `artist` ";
+    protected string $base = "SELECT %%SELECT%% FROM `artist` ";
 
     /**
      * get_select

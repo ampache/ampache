@@ -29,7 +29,7 @@ use Exception;
 
 class FileSystem
 {
-    protected $base = null;
+    protected ?string $base = null;
 
     /**
      * @param $path
@@ -42,7 +42,7 @@ class FileSystem
         if (!$temp) {
             throw new Exception('Path does not exist: ' . $path);
         }
-        if ($this->base && strlen($this->base)) {
+        if (!empty($this->base)) {
             if (strpos($temp, $this->base) !== 0) {
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
@@ -73,7 +73,7 @@ class FileSystem
     protected function id($path): string
     {
         $path = $this->real($path);
-        $path = substr($path, strlen($this->base));
+        $path = substr($path, strlen((string)$this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
 
@@ -127,10 +127,13 @@ class FileSystem
         usort($res, function ($a, $b) {
             return strcasecmp($a['title'], $b['title']);
         });
-        if ($with_root && $this->id($dir) === '/') {
+        if (
+            $with_root &&
+            $this->id($dir) === '/'
+        ) {
             $res = [
                 [
-                    'title' => basename($this->base),
+                    'title' => basename((string)$this->base),
                     'children' => $res,
                     'key' => '/',
                     'expanded' => true,

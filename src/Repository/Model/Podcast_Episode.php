@@ -319,7 +319,7 @@ class Podcast_Episode extends database_object implements
     {
         if ($this->podcast_link === null) {
             $podcast              = $this->getPodcastRepository()->findById($this->podcast);
-            $this->podcast_link   = $podcast?->get_f_link();
+            $this->podcast_link   = (string)$podcast?->get_f_link();
         }
 
         return $this->podcast_link;

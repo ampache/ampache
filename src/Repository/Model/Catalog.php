@@ -2027,7 +2027,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $this?->get_video_ids();
+        $searches['video'] = $this->get_video_ids();
 
         debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
         // Run through items and get the art!

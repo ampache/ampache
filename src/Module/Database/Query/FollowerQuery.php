@@ -41,11 +41,9 @@ final class FollowerQuery implements QueryInterface
         'user',
     ];
 
-    /** @var string */
-    protected $select = "`user_follower`.`id`";
+    protected string $select = "`user_follower`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `user_follower` ";
+    protected string $base = "SELECT %%SELECT%% FROM `user_follower` ";
 
     /**
      * get_select

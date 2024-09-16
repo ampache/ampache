@@ -1702,14 +1702,4 @@ class Preference extends database_object
 
         return true;
     }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
-    }
 }
