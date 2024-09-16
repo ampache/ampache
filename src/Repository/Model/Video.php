@@ -504,7 +504,7 @@ class Video extends database_object implements
 
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?? 0;
+            $uid = Core::get_global('user')?->getId() ?? 0;
         }
 
         // set no use when using auth

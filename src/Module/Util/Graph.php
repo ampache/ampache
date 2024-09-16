@@ -54,21 +54,12 @@ class Graph
      */
     protected function get_sql_date_format($field, $zoom): string
     {
-        switch ($zoom) {
-            case 'hour':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')";
-                break;
-            case 'year':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
-                break;
-            case 'month':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
-                break;
-            case 'day':
-            default:
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
-                break;
-        }
+        $dateformat = match ($zoom) {
+            'hour' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')",
+            'year' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')",
+            'month' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')",
+            default => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')",
+        };
 
         return "UNIX_TIMESTAMP(" . $dateformat . ")";
     }

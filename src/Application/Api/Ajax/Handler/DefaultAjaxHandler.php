@@ -68,9 +68,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
             case 'current_playlist':
                 if ($request_type == 'delete') {
                     $user->load_playlist();
-                    if ($user->playlist !== null) {
-                        $user->playlist->delete_track($request_id);
-                    }
+                    $user->playlist?->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');

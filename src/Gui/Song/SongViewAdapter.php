@@ -219,7 +219,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
             '',
             '',
             false,
-            Core::get_global('user')->id ?? 0
+            Core::get_global('user')?->getId() ?? 0
         );
     }
 

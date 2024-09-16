@@ -84,16 +84,13 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
         }
 
         // Switch on the type
-        switch ($type) {
-            case AccessTypeEnum::LOCALPLAY:
-                // Check their localplay_level
-                return $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
-                    $user->access >= AccessLevelEnum::ADMIN->value;
-            case AccessTypeEnum::INTERFACE:
-                // Check their standard user level
-                return ($user->access >= $level->value);
-            default:
-                return false;
-        }
+        return match ($type) {
+            AccessTypeEnum::LOCALPLAY => (
+                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
+                $user->access >= AccessLevelEnum::ADMIN->value
+            ),
+            AccessTypeEnum::INTERFACE => ($user->access >= $level->value),
+            default => false,
+        };
     }
 }

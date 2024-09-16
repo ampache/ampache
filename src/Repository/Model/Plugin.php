@@ -83,7 +83,7 @@ class Plugin
      */
     public static function get_plugins(?PluginTypeEnum $type = null): array
     {
-        $type = $type === null ? '' : $type->value;
+        $type = $type?->value;
 
         // make static cache for optimization when multiple call
         static $plugins_list = [];

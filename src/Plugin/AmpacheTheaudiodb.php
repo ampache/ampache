@@ -235,55 +235,24 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     debug_event('theaudiodb.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
                     $data['name'] = $release->strArtist ?? null;
                     // get the biography based on your locale
-                    $locale = explode('_', AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
-                    switch ($locale) {
-                        case 'de':
-                            $data['summary'] = $release->strBiographyDE ?? null;
-                            break;
-                        case 'fr':
-                            $data['summary'] = $release->strBiographyFR ?? null;
-                            break;
-                        case 'cn':
-                            $data['summary'] = $release->strBiographyCN ?? null;
-                            break;
-                        case 'it':
-                            $data['summary'] = $release->strBiographyIT ?? null;
-                            break;
-                        case 'jp':
-                            $data['summary'] = $release->strBiographyJP ?? null;
-                            break;
-                        case 'ru':
-                            $data['summary'] = $release->strBiographyRU ?? null;
-                            break;
-                        case 'es':
-                            $data['summary'] = $release->strBiographyES ?? null;
-                            break;
-                        case 'pt':
-                            $data['summary'] = $release->strBiographyPT ?? null;
-                            break;
-                        case 'se':
-                            $data['summary'] = $release->strBiographySE ?? null;
-                            break;
-                        case 'nl':
-                            $data['summary'] = $release->strBiographyNL ?? null;
-                            break;
-                        case 'hu':
-                            $data['summary'] = $release->strBiographyHU ?? null;
-                            break;
-                        case 'no':
-                            $data['summary'] = $release->strBiographyNO ?? null;
-                            break;
-                        case 'il':
-                            $data['summary'] = $release->strBiographyIL ?? null;
-                            break;
-                        case 'pl':
-                            $data['summary'] = $release->strBiographyPL ?? null;
-                            break;
-                        case 'en':
-                        default:
-                            $data['summary'] = $release->strBiographyEN ?? null;
-                            break;
-                    }
+                    $locale          = explode('_', AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
+                    $data['summary'] = match ($locale) {
+                        'de' => $release->strBiographyDE ?? null,
+                        'fr' => $release->strBiographyFR ?? null,
+                        'cn' => $release->strBiographyCN ?? null,
+                        'it' => $release->strBiographyIT ?? null,
+                        'jp' => $release->strBiographyJP ?? null,
+                        'ru' => $release->strBiographyRU ?? null,
+                        'es' => $release->strBiographyES ?? null,
+                        'pt' => $release->strBiographyPT ?? null,
+                        'se' => $release->strBiographySE ?? null,
+                        'nl' => $release->strBiographyNL ?? null,
+                        'hu' => $release->strBiographyHU ?? null,
+                        'no' => $release->strBiographyNO ?? null,
+                        'il' => $release->strBiographyIL ?? null,
+                        'pl' => $release->strBiographyPL ?? null,
+                        default => $release->strBiographyEN ?? null,
+                    };
                     $data['placeformed'] = $release->strCountry ?? null;
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
