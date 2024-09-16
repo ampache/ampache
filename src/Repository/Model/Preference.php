@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
-use Ampache\Repository\UserRepositoryInterface;
 use SimpleXMLElement;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -398,7 +397,6 @@ class Preference extends database_object
      */
     public static function update_all($preference, $value): bool
     {
-
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
         Dba::write($sql, [$value, $preference]);
 
@@ -1147,7 +1145,6 @@ class Preference extends database_object
                     // todo custom_logo_user, api_always_download Amapche7 prefs i haven't done yet
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
-            Dba::write($sql);
         }
 
         // Ensure valid prefs are set
@@ -1702,15 +1699,5 @@ class Preference extends database_object
         $_SESSION['userdata']['uid']         = $user_id;
 
         return true;
-    }
-
-    /**
-     * @deprecated inject dependency
-     */
-    private static function getUserRepository(): UserRepositoryInterface
-    {
-        global $dic;
-
-        return $dic->get(UserRepositoryInterface::class);
     }
 }

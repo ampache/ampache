@@ -85,7 +85,7 @@ Please see [the wiki](https://github.com/ampache/ampache/wiki/Installation) and 
   * php-intl
   * php-zip
  
-* Node.js v15+, npm v7+ (Required in Ampache 7.0.0 and higher)
+* Node.js v15+, npm v7+ ([Required](https://github.com/ampache/ampache/wiki/ampache7-for-admins#npm-is-required-for-js-package-installation) in Ampache 7.0.0 and higher)
 
 * MySQL 5.x / MySQL 8.x / MariaDB 10.x
 

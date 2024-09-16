@@ -46,38 +46,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-final class AlbumViewAdapter implements AlbumViewAdapterInterface
+final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private GuiGatekeeperInterface $gatekeeper;
-
-    private Browse $browse;
-
-    private Album $album;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker,
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        Album $album
-    ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->zipHandler      = $zipHandler;
-        $this->functionChecker = $functionChecker;
-        $this->gatekeeper      = $gatekeeper;
-        $this->browse          = $browse;
-        $this->album           = $album;
+    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private GuiGatekeeperInterface $gatekeeper, private Browse $browse, private Album $album)
+    {
     }
 
     public function getId(): int
@@ -193,7 +165,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -291,12 +263,12 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return (string)$this->album->get_link();
+        return $this->album->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return (string)$this->album->get_f_link();
+        return $this->album->get_f_link();
     }
 
     public function getArtistLink(): string

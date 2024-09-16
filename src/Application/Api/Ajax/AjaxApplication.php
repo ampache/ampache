@@ -47,7 +47,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\System\Core;
 use Psr\Container\ContainerInterface;
 
-final class AjaxApplication implements ApplicationInterface
+final readonly class AjaxApplication implements ApplicationInterface
 {
     /** @var array<string, class-string> */
     private const HANDLER_LIST = [
@@ -87,7 +87,7 @@ final class AjaxApplication implements ApplicationInterface
             throw new AccessDeniedException();
         }
 
-        $handlerClassName = static::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
+        $handlerClassName = self::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);

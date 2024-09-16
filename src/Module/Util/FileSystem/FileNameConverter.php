@@ -207,7 +207,6 @@ final class FileNameConverter implements FileNameConverterInterface
         string $full_file,
         string $translated_filename
     ): bool {
-
         // First break out the base directory name and make sure it exists
         // in case our crap char is in the directory
         $directory = dirname($translated_filename);

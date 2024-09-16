@@ -48,11 +48,9 @@ final class PvmsgQuery implements QueryInterface
         'is_read',
     ];
 
-    /** @var string */
-    protected $select = "`user_pvmsg`.`id`";
+    protected string $select = "`user_pvmsg`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `user_pvmsg` ";
+    protected string $base = "SELECT %%SELECT%% FROM `user_pvmsg` ";
 
     /**
      * get_select

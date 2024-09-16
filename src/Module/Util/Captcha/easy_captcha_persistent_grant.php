@@ -52,7 +52,7 @@ class easy_captcha_persistent_grant extends easy_captcha
         return false;
     }
 
-    #-- set captcha persistence cookie
+    // set captcha persistence cookie
     public function grant()
     {
         if (!headers_sent()) {
@@ -67,7 +67,7 @@ class easy_captcha_persistent_grant extends easy_captcha
         }
     }
 
-    #-- pseudo password (time-bombed)
+    // pseudo password (time-bombed)
 
     /**
      * @param int $deviation

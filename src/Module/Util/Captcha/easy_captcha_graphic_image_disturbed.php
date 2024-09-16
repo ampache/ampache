@@ -38,7 +38,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
      */
     public function jpeg()
     {
-        #-- step by step
+        // step by step
         $this->create();
         $this->background_lines();
         $this->background_letters();
@@ -47,14 +47,13 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         return $this->output();
     }
 
-
-    #-- initialize in-memory image with gd library
+    // initialize in-memory image with gd library
     public function create()
     {
         $this->img = imagecreatetruecolor($this->width, $this->height);
         imagefilledrectangle($this->img, 0, 0, $this->width, $this->height, $this->random_color(222, 255));
 
-        #-- encolour bg
+        // encolour bg
         $wd = 20;
         $x  = 0;
         while ($x < $this->width) {
@@ -63,7 +62,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- make interesting background I, lines
+    // make interesting background I, lines
     public function background_lines()
     {
         $c1 = rand(150, 185);
@@ -91,7 +90,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- more disturbing II, random letters
+    // more disturbing II, random letters
     public function background_letters()
     {
         $limit = rand(30, 90);
@@ -109,7 +108,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- add the real text to it
+    // add the real text to it
     public function text()
     {
         $phrase = $this->solution;

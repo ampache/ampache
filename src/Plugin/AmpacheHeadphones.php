@@ -35,15 +35,22 @@ use WpOrg\Requests\Requests;
 class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInterface
 {
     public string $name        = 'Headphones';
+
     public string $categories  = 'wanted';
+
     public string $description = 'Automatically download accepted Wanted List albums with Headphones';
+
     public string $url         = 'https://github.com/rembo10/headphones/';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360030';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_url;
+
     private $api_key;
 
     /**
@@ -63,11 +70,8 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
         if (!Preference::insert('headphones_api_url', T_('Headphones URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('headphones_api_key', T_('Headphones API key'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -108,7 +112,7 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
             $this->headphones_call('addArtist', ['id' => $wanted->artist_mbid]);
         }
 
-        return ($this->headphones_call('queueAlbum', ['id' => $wanted->mbid]) == 'OK');
+        return ($this->headphones_call('queueAlbum', ['id' => $wanted->mbid]) === 'OK');
     }
 
     /**
@@ -125,15 +129,15 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
 
         $url = $this->api_url . '/api?apikey=' . $this->api_key . '&cmd=' . $command;
         foreach ($params as $key => $value) {
-            $url .= '&' . $key . '=' . urlencode($value);
+            $url .= '&' . $key . '=' . urlencode((string) $value);
         }
 
         debug_event(self::class, 'Headphones api call: ' . $url, 5);
         try {
             // We assume Headphone server is local, don't use proxy here
             $request = Requests::get($url, [], ['timeout' => 600]);
-        } catch (Exception $error) {
-            debug_event(self::class, 'Headphones api http exception: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Headphones api http exception: ' . $exception->getMessage(), 1);
 
             return '';
         }
@@ -150,21 +154,22 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['headphones_api_url'])) || !strlen(trim($data['headphones_api_key']))) {
+        if (!strlen(trim((string) $data['headphones_api_url'])) || !strlen(trim((string) $data['headphones_api_key']))) {
             $data                       = [];
             $data['headphones_api_url'] = Preference::get_by_user(-1, 'headphones_api_url');
             $data['headphones_api_key'] = Preference::get_by_user(-1, 'headphones_api_key');
         }
 
-        if (strlen(trim($data['headphones_api_url']))) {
-            $this->api_url = rtrim(trim($data['headphones_api_url']), '/');
+        if (strlen(trim((string) $data['headphones_api_url'])) !== 0) {
+            $this->api_url = rtrim(trim((string) $data['headphones_api_url']), '/');
         } else {
             debug_event(self::class, 'No Headphones url, auto download skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['headphones_api_key']))) {
-            $this->api_key = trim($data['headphones_api_key']);
+
+        if (strlen(trim((string) $data['headphones_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['headphones_api_key']);
         } else {
             debug_event(self::class, 'No Headphones api key, auto download skipped', 3);
 

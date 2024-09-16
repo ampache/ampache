@@ -45,36 +45,29 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
-        // Switch on the actions
-        switch ($action) {
-            case 'flip_state':
-                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                    debug_event('catalog.ajax', ($user->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
+        if ($action === 'flip_state') {
+            if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+                debug_event('catalog.ajax', ($user->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
 
-                    return;
-                }
-                $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
-                if ($catalog === null) {
-                    break;
-                }
-                $new_enabled = !$catalog->enabled;
-                Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = $new_enabled;
-
-                // Return the new Ajax::button
-                $id = 'button_flip_state_' . $catalog->id;
-                if ($new_enabled) {
-                    $button     = 'unpublished';
-                    $buttontext = T_('Disable');
-                } else {
-                    $button     = 'check_circle';
-                    $buttontext = T_('Enable');
-                }
-                $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
-
-                break;
-            default:
-                break;
+                return;
+            }
+            $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+            if ($catalog === null) {
+                return;
+            }
+            $new_enabled = !$catalog->enabled;
+            Catalog::update_enabled($new_enabled, $catalog->id);
+            $catalog->enabled = $new_enabled;
+            // Return the new Ajax::button
+            $id = 'button_flip_state_' . $catalog->id;
+            if ($new_enabled) {
+                $button     = 'unpublished';
+                $buttontext = T_('Disable');
+            } else {
+                $button     = 'check_circle';
+                $buttontext = T_('Enable');
+            }
+            $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
         } // switch on action;
 
         // We always do this

@@ -35,16 +35,24 @@ use Ampache\Module\Util\Ui;
 class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'RSSView';
+
     public string $categories  = 'home';
+
     public string $description = 'RSS View';
+
     public string $url         = '';
+
     public string $version     = '000002';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $feed_url;
+
     private $maxitems;
+
     private int $order = 0;
 
     /**
@@ -69,11 +77,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
             return false;
         }
 
-        if (!Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -131,9 +135,10 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
                 echo '<div style="float: right;">' . get_datetime((int) strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
-                if (isset($item->image)) {
+                if (property_exists($item, 'image') && $item->image !== null) {
                     echo '<div style="float: left; margin-right: 20px;"><img src="' . $item->image . '" style="width: auto; max-height: 48px;" /></div>';
                 }
+
                 echo '<div>' . $item->description . '</div>';
                 echo '</div>';
                 echo '</td></tr>';
@@ -143,6 +148,7 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
                     break;
                 }
             }
+
             echo '</table></div>';
             Ui::show_box_bottom();
         }
@@ -157,8 +163,8 @@ class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
         $user->set_preferences();
         $data = $user->prefs;
 
-        if (strlen(trim($data['rssview_feed_url']))) {
-            $this->feed_url = trim($data['rssview_feed_url']);
+        if (strlen(trim((string) $data['rssview_feed_url'])) !== 0) {
+            $this->feed_url = trim((string) $data['rssview_feed_url']);
         } else {
             debug_event(self::class, 'No rss feed url, home plugin skipped', 3);
 

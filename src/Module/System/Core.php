@@ -166,15 +166,10 @@ class Core
             debug_event(self::class, "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
         }
 
-        switch ($type) {
-            case 'get':
-                $string = $sid;
-                break;
-            case 'post':
-            default:
-                $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
-                break;
-        } // end switch on type
+        $string = match ($type) {
+            'get' => $sid,
+            default => '<input type="hidden" name="form_validation" value="' . $sid . '" />',
+        }; // end switch on type
 
         return $string;
     }
@@ -353,7 +348,7 @@ class Core
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
             } else {
-                return session_id() === '' ? false : true;
+                return !(session_id() === '');
             }
         }
 

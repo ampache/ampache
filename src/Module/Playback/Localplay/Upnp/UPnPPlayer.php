@@ -272,7 +272,10 @@ class UPnPPlayer
         $currentSongArgs = $this->prepareURIRequest($this->Playlist()->CurrentItem(), "Current") ?? [];
         $response        = $this->Device()->sendRequestToDevice('SetAVTransportURI', $currentSongArgs, 'AVTransport');
 
-        $args     = ['InstanceID' => 0, 'Speed' => 1];
+        $args = [
+            'InstanceID' => 0,
+            'Speed' => 1
+        ];
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
         //!! UPNP subscription work not for all renderers, and works strange
@@ -317,7 +320,10 @@ class UPnPPlayer
         if ($state == 'PLAYING') {
             $response = $this->Device()->instanceOnly('Pause');
         } else {
-            $args     = ['InstanceID' => 0, 'Speed' => 1];
+            $args     = [
+                'InstanceID' => 0,
+                'Speed' => 1
+            ];
             $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
         }
 

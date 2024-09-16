@@ -39,15 +39,22 @@ use Ampache\Repository\UserActivityRepositoryInterface;
 class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Friends Timeline';
+
     public string $categories  = 'home';
+
     public string $description = 'Friends Timeline on homepage';
+
     public string $url         = '';
+
     public string $version     = '000002';
+
     public string $min_ampache = '370040';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+
     private int $order = 0;
 
     /**
@@ -68,11 +75,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
             return false;
         }
 
-        if (!Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -114,7 +117,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
             $user_id = $user->id ?? 0;
-            if ($user_id) {
+            if ($user_id !== 0) {
                 $divString = ($this->order > 0)
                     ? '<div class="ftl" style="order: ' . $this->order . '">'
                     : '<div class="ftl">';
@@ -123,7 +126,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
                     $user_id,
                     (int) $this->maxitems
                 );
-                if (!empty($activities)) {
+                if ($activities !== []) {
                     Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
 
@@ -134,8 +137,10 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
                             new Useractivity($activity_id)
                         );
                     }
+
                     Ui::show_box_bottom();
                 }
+
                 echo '</div>';
             }
         }

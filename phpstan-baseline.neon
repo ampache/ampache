@@ -136,16 +136,6 @@ parameters:
 			path: src/Gui/TalViewInterface.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:\\$counter has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Api\\\\Ajax\\:\\:\\$include_override has no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Ajax.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Api\\:\\:check_parameter\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Api.php
@@ -6541,11 +6531,6 @@ parameters:
 			path: src/Module/Playlist/Search/ArtistSearch.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playlist\\\\Search\\\\ArtistSearch\\:\\:\\$subType has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/ArtistSearch.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\LabelSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/LabelSearch.php
@@ -7873,11 +7858,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
 			count: 2
-			path: src/Module/Util/FileSystem.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\FileSystem\\:\\:\\$base has no type specified\\.$#"
-			count: 1
 			path: src/Module/Util/FileSystem.php
 
 		-
@@ -9281,16 +9261,6 @@ parameters:
 			path: src/Plugin/AmpacheGoogleAnalytics.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$user is never read, only written\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:display_map\\(\\) has parameter \\$points with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleMaps.php
@@ -9592,11 +9562,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:search_track\\(\\) is unused\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 

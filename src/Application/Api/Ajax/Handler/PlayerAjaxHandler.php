@@ -62,7 +62,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                 return;
             case 'broadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
-                if (empty($broadcast_id)) {
+                if ($broadcast_id === '' || $broadcast_id === '0') {
                     $broadcast_id = Broadcast::create(T_('My Broadcast'));
                 }
 
@@ -72,6 +72,7 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }
+
                 break;
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
@@ -80,9 +81,6 @@ final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

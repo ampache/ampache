@@ -30,7 +30,7 @@ use Ampache\Module\System\Core;
 ?>
 <ul>
 <?php
-    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->id ?? 0);
+    $broadcasts = Broadcast::get_broadcasts(Core::get_global('user')?->getId() ?? 0);
 foreach ($broadcasts as $broadcast_id) {
     $broadcast = new Broadcast($broadcast_id);
     $broadcast->format(); ?>

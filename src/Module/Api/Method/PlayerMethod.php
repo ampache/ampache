@@ -67,7 +67,6 @@ final class PlayerMethod
         $object_id = (int)$input['filter'];
         $type      = $input['type'] ?? 'song';
 
-
         // confirm the correct data
         if (!in_array(strtolower($type), ['song', 'podcast_episode', 'video'])) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */

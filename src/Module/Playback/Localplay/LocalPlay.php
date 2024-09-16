@@ -642,16 +642,12 @@ class LocalPlay
      */
     public function get_user_state($state): string
     {
-        switch ($state) {
-            case 'play':
-                return T_('Now Playing');
-            case 'stop':
-                return T_('Stopped');
-            case 'pause':
-                return T_('Paused');
-            default:
-                return T_('Unknown');
-        } // switch on state
+        return match ($state) {
+            'play' => T_('Now Playing'),
+            'stop' => T_('Stopped'),
+            'pause' => T_('Paused'),
+            default => T_('Unknown'),
+        }; // switch on state
     }
 
     /**

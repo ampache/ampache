@@ -191,13 +191,11 @@ class Stream_Url extends MemoryObject
     {
         $urlinfo = self::parse($url);
         $type    = $urlinfo['type'] ?? 'URL-Add';
-        switch ($type) {
-            case 'random':
-                return T_('Random');
-            case 'democratic':
-                return T_('Democratic');
-            default:
-                return $type;
-        }
+
+        return match ($type) {
+            'random' => T_('Random'),
+            'democratic' => T_('Democratic'),
+            default => $type,
+        };
     }
 }

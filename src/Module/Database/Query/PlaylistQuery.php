@@ -65,11 +65,9 @@ final class PlaylistQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`playlist`.`id`";
+    protected string $select = "`playlist`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `playlist` ";
+    protected string $base = "SELECT %%SELECT%% FROM `playlist` ";
 
     /**
      * get_select

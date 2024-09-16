@@ -370,7 +370,6 @@ class Stats
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['data'])) {
-
             return $results['data'];
         }
 
@@ -622,7 +621,7 @@ class Stats
      */
     public static function get_object_history($time, $newest = true): array
     {
-        $user_id = Core::get_global('user')->id ?? 0;
+        $user_id = Core::get_global('user')?->getId() ?? 0;
         $order   = ($newest) ? 'DESC' : 'ASC';
         $sql     = (AmpConfig::get('catalog_disable'))
             ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
@@ -958,26 +957,12 @@ class Stats
      */
     public static function validate_type($type): string
     {
-        switch ($type) {
-            case 'artist':
-            case 'album':
-            case 'album_disk':
-            case 'tag':
-            case 'song':
-            case 'video':
-            case 'playlist':
-            case 'podcast':
-            case 'podcast_episode':
-            case 'live_stream':
-                return $type;
-            case 'album_artist':
-            case 'song_artist':
-                return 'artist';
-            case 'genre':
-                return 'tag';
-            default:
-                return 'song';
-        } // end switch
+        return match ($type) {
+            'artist', 'album', 'album_disk', 'tag', 'song', 'video', 'playlist', 'podcast', 'podcast_episode', 'live_stream' => $type,
+            'album_artist', 'song_artist' => 'artist',
+            'genre' => 'tag',
+            default => 'song',
+        }; // end switch
     }
 
     /**

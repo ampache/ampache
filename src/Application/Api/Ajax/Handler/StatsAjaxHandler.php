@@ -59,7 +59,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             $longitude = (float)($_REQUEST['longitude'] ?? 0);
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if (empty($name)) {
+                            if ($name === null || $name === '' || $name === '0') {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                     if (!empty($name)) {
@@ -67,6 +67,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                                     }
                                 }
                             }
+
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if ($latitude > 0 && $longitude > 0) {
@@ -77,6 +78,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 } else {
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
+
                 break;
             case 'delete_play':
                 Stats::delete((int)$_REQUEST['activity_id']);
@@ -94,6 +96,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
+
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':

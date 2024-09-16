@@ -157,6 +157,7 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
+
                 $localplay = new LocalPlay(AmpConfig::get('localplay_controller', ''));
                 $localplay->connect();
 
@@ -234,10 +235,6 @@ final readonly class LocalPlayAjaxHandler implements AjaxHandlerInterface
                 require_once Ui::find_template('show_localplay_status.inc.php');
                 $results['localplay_status'] = ob_get_contents();
                 ob_end_clean();
-
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

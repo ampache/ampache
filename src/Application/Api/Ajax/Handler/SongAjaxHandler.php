@@ -75,6 +75,7 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                     $button     = 'check_circle';
                     $buttontext = T_('Enable');
                 }
+
                 $results[$id] = Ajax::button('?page=song&action=flip_state&song_id=' . $song->id, $button, $buttontext, 'flip_state_' . $song->id);
                 break;
             case 'shouts':
@@ -91,17 +92,16 @@ final readonly class SongAjaxHandler implements AjaxHandlerInterface
                     /** @var Shoutbox $shout */
                     foreach ($shouts as $shout) {
                         $key  = $shout->getOffset();
-                        $time = (int)$media->time;
+                        $time = $media->time;
                         echo "if (typeof shouts['" . $key . "'] === 'undefined') { shouts['" . $key . "'] = new Array(); }\r\n";
                         echo "shouts['" . $key . "'].push('" . addslashes($this->shoutRenderer->render($shout, false)) . "');\r\n";
                         echo "$('.waveform-shouts').append('<div style=\'position:absolute; width: 3px; height: 3px; background-color: #2E2EFE; top: 15px; left: " . ((($key / $time) * 400) - 1) . "px;\' />');\r\n";
                     }
+
                     echo "</script>\r\n";
                 }
+
                 $results['shouts_data'] = ob_get_clean();
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

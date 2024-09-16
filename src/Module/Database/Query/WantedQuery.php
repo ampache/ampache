@@ -43,11 +43,9 @@ final class WantedQuery implements QueryInterface
         'year',
     ];
 
-    /** @var string */
-    protected $select = "`wanted`.`id`";
+    protected string $select = "`wanted`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `wanted` ";
+    protected string $base = "SELECT %%SELECT%% FROM `wanted` ";
 
     /**
      * get_select

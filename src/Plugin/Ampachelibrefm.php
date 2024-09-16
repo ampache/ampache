@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use SimpleXMLElement;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
@@ -36,20 +37,32 @@ use Ampache\Module\Playback\Scrobble\Scrobbler;
 class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'Libre.FM';
+
     public string $categories  = 'scrobbling';
+
     public string $description = 'Records your played songs to your Libre.FM Account';
+
     public string $url         = '';
+
     public string $version     = '000003';
+
     public string $min_ampache = '360003';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $challenge;
+
     private $api_key;
+
     private $secret;
+
     private $scheme   = 'https';
+
     private $host     = 'libre.fm';
+
     private $api_host = 'libre.fm';
 
     /**
@@ -70,11 +83,8 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         if (!Preference::insert('librefm_challenge', T_('Libre.FM Submit Challenge'), '', AccessLevelEnum::USER->value, 'string', 'internal', $this->name)) {
             return false;
         }
-        if (!Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('librefm_grant_link', T_('Libre.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -105,9 +115,11 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < 2) {
             Preference::rename('librefm_pass', 'librefm_md5_pass');
         }
+
         if ($from_version < (int)$this->version) {
             Preference::delete('librefm_md5_pass');
             Preference::delete('librefm_user');
@@ -127,7 +139,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     public function save_mediaplay(Song $song): bool
     {
         // Only support songs
-        if (get_class($song) != Song::class) {
+        if ($song::class !== Song::class) {
             return false;
         }
 
@@ -178,6 +190,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
             return;
         }
+
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
@@ -185,6 +198,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
 
             return;
         }
+
         debug_event(self::class, 'Sent Love Successfully', 5);
     }
 
@@ -198,11 +212,12 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
     {
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
-        if (!$session_key instanceof \SimpleXMLElement) {
+        if (!$session_key instanceof SimpleXMLElement) {
             debug_event(self::class, 'getSession Failed: ' . $scrobbler->error_msg, 3);
 
             return false;
         }
+
         $this->challenge = $session_key;
 
         // Update the preferences
@@ -224,8 +239,8 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         $data          = $user->prefs;
         $this->user_id = $user->id;
         // check if user have a session key
-        if (strlen(trim($data['librefm_challenge']))) {
-            $this->challenge = trim($data['librefm_challenge']);
+        if (strlen(trim((string) $data['librefm_challenge'])) !== 0) {
+            $this->challenge = trim((string) $data['librefm_challenge']);
         } else {
             debug_event(self::class, 'No session key, not scrobbling (need to grant Ampache to libre.fm)', 4);
 

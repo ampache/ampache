@@ -318,7 +318,6 @@ class Userflag extends database_object
             }
         }
 
-
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";

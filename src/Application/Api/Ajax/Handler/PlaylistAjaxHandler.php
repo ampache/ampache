@@ -57,6 +57,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if ($playlist->isNew()) {
                     break;
                 }
+
                 $playlist->format();
                 if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
@@ -67,7 +68,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
-                $browse = new Browse((int) $browse_id);
+                $browse = new Browse($browse_id);
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist->id);
                 $browse->save_objects($object_ids);
@@ -88,10 +89,12 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                     if (empty($name)) {
                         $name = $user->username . ' - ' . get_datetime(time());
                     }
+
                     $playlist_id = (int)Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }
+
                     $playlist = new Playlist($playlist_id);
                 } else {
                     $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -100,6 +103,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if (!$playlist->has_collaborate()) {
                     break;
                 }
+
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
                 $medias    = [];
@@ -108,7 +112,7 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                 if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
-                    $item_ids = explode(',', $item_id);
+                    $item_ids = explode(',', (string) $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
                         /** @var library_item $libitem */
@@ -135,9 +139,6 @@ final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }
-                break;
-            default:
-                break;
         }
 
         echo (string) xoutput_from_array($results);

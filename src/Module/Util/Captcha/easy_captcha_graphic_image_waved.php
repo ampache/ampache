@@ -40,7 +40,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
      */
     public function jpeg()
     {
-        #-- step by step
+        // step by step
         $this->img = $this->create();
         $this->text();
         //$this->debug_grid();
@@ -50,8 +50,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         return $this->output();
     }
 
-
-    #-- initialize in-memory image with gd library
+    // initialize in-memory image with gd library
 
     /**
      * @return false|resource
@@ -75,8 +74,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         return ($img);
     }
 
-
-    #-- add the real text to it
+    // add the real text to it
     public function text()
     {
         $w    = $this->width;
@@ -98,7 +96,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         );
     }
 
-    #-- to visualize the sinus waves
+    // to visualize the sinus waves
     public function debug_grid()
     {
         for ($x = 0; $x < 250; $x += 10) {
@@ -107,7 +105,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         }
     }
 
-    #-- add lines
+    // add lines
     public function fog()
     {
         $num = rand(10, 25);
@@ -130,11 +128,10 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         imagesetthickness($this->img, 1);
     }
 
-    #-- distortion: wave-transform
+    // distortion: wave-transform
     public function distort()
     {
-
-        #-- init
+        // init
         $single_pixel = (self::CAPTCHA_PIXEL <= 1); // very fast
         $greyscale2x2 = (self::CAPTCHA_PIXEL <= 2); // quicker than exact smooth 2x2 copy
         $width        = $this->width;
@@ -142,25 +139,25 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         $image        = &$this->img;
         $dest         = $this->create();
 
-        #-- URL param ?hires=1 influences used drawing scheme
+        // URL param ?hires=1 influences used drawing scheme
         if (isset($_GET['hires'])) {
             $single_pixel = 0;
         }
 
-        #-- prepare distortion
+        // prepare distortion
         $wave = new easy_captcha_dxy_wave($width, $height);
         // $spike = new easy_captcha_dxy_spike($width, $height);
 
-        #-- generate each new x,y pixel individually from orig $img
+        // generate each new x,y pixel individually from orig $img
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
-                #-- pixel movement
+                // pixel movement
                 list($distortx, $distorty) = $wave->dxy($x, $y); // x- and y- sinus wave
                 // list($qx, $qy) = $spike->dxy($x, $y);
 
-                #-- if not out of bounds
+                // if not out of bounds
                 if (($distortx + $x >= 0) && ($distorty + $y >= 0) && ($distortx + $x < $width) && ($distorty + $y < $height)) {
-                    #-- get source pixel(s), paint dest
+                    // get source pixel(s), paint dest
                     if ($single_pixel) {
                         // single source dot: one-to-one duplicate (unsmooth, hard edges)
                         imagesetpixel($dest, $x, $y, imagecolorat($image, (int)$distortx + $x, (int)$distorty + $y));
@@ -177,12 +174,12 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
             }
         }
 
-        #-- simply overwrite ->img
+        // simply overwrite ->img
         imagedestroy($image);
         $this->img = $dest;
     }
 
-    #-- get 4 pixels from source image, merges BLUE value simply
+    // get 4 pixels from source image, merges BLUE value simply
 
     /**
      * @param $image
@@ -203,7 +200,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         return $cXY;
     }
 
-    #-- smooth pixel reading (with x,y being reals, not integers)
+    // smooth pixel reading (with x,y being reals, not integers)
 
     /**
      * @param $i
@@ -236,7 +233,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
         return [$cXY_R, $cXY_G, $cXY_B];
     }
 
-    #-- imagegetcolor from current ->$img split up into RGB array
+    // imagegetcolor from current ->$img split up into RGB array
 
     /**
      * @param $img
