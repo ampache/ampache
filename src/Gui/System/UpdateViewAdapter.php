@@ -25,36 +25,21 @@ declare(strict_types=1);
 
 namespace Ampache\Gui\System;
 
+use Ampache\Module\System\Update\UpdateHelperInterface;
+use Ampache\Module\System\Update\UpdaterInterface;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\System\Update;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Generator;
 
-final class UpdateViewAdapter implements UpdateViewAdapterInterface
+final readonly class UpdateViewAdapter implements UpdateViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private Update\UpdateHelperInterface $updateHelper;
-
-    private Update\UpdaterInterface $updater;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        Update\UpdateHelperInterface $updateHelper,
-        Update\UpdaterInterface $updater
-    ) {
-        $this->configContainer      = $configContainer;
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->updateHelper         = $updateHelper;
-        $this->updater              = $updater;
+    public function __construct(private ConfigContainerInterface $configContainer, private UpdateInfoRepositoryInterface $updateInfoRepository, private UpdateHelperInterface $updateHelper, private UpdaterInterface $updater)
+    {
     }
 
     public function getHtmlLanguage(): string

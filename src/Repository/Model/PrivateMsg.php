@@ -49,7 +49,6 @@ class PrivateMsg extends database_object implements PrivateMessageInterface
 
     private ?int $creation_date;
 
-
     /**
      * @param int|null $pm_id
      */

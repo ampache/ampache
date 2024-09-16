@@ -137,7 +137,6 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
 
             [$filename, $objectId, $type] = $itemConfig;
 
-
             $art = new Art($objectId, $type, $kind);
             $art->has_db_info();
 

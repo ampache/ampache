@@ -438,7 +438,6 @@ class Rating extends database_object
             }
         }
 
-
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql . " GROUP BY `rating`.`object_id`, `type` ORDER BY `rating` DESC, `date` DESC ";
@@ -541,7 +540,9 @@ class Rating extends database_object
             );
         }
 
-        $ratedText = $rate < 1 ? T_('not rated yet') : sprintf(T_('%s of 5'), $rate);
+        $ratedText = ($rate < 1)
+            ? T_('not rated yet')
+            : sprintf(T_('%s of 5'), $rate);
 
         return sprintf(
             '<span class="star-rating dynamic-star-rating">

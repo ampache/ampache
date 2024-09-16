@@ -34,16 +34,24 @@ use Ampache\Module\Util\Graph;
 class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Hits';
+
     public string $categories  = 'stream_control';
+
     public string $description = 'Control hits per user';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370024';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $hits_days;
+
     private $hits_max;
 
     /**
@@ -63,11 +71,8 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         if (!Preference::insert('stream_control_hits_max', T_('Stream control maximal hits'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return !Preference::insert('stream_control_hits_days', T_('Stream control hits history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -100,6 +105,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         if ($this->hits_max < 0) {
             return true;
         }
+
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             $next_total    = count($media_ids);
@@ -113,6 +119,7 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
 
             return ($next_total <= $this->hits_max);
         }
+
         debug_event('streamhits.plugin', 'Access denied, statistical graph disabled.', 1);
 
         return true;
@@ -127,17 +134,11 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->user_id = $user->id;
-        if ((int)($data['stream_control_hits_max'])) {
-            $this->hits_max = (int)($data['stream_control_hits_max']);
-        } else {
-            $this->hits_max = -1;
-        }
-        if ((int)($data['stream_control_hits_days']) > 0) {
-            $this->hits_days = (int)($data['stream_control_hits_days']);
-        } else {
-            $this->hits_days = 30;
-        }
+        $this->user_id   = $user->id;
+        $this->hits_max  = (int)($data['stream_control_hits_max']) ?: -1;
+        $this->hits_days = ((int)($data['stream_control_hits_days']) > 0)
+            ? (int)($data['stream_control_hits_days'])
+            : 30;
 
         return true;
     }

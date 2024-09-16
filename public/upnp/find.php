@@ -27,10 +27,8 @@ class UPnPFind
         $devices = [];
         flush();
         foreach ($discover as $response) {
-
             $device = new Device();
             if ($device->initByDiscoveryReponse($response)) {
-
                 $device->saveToCache();
 
                 try {
@@ -129,7 +127,9 @@ class UPnPFind
             $tmp = explode(':', trim($line));
 
             $key   = strtoupper(array_shift($tmp));
-            $value = (count($tmp) > 0 ? trim(join(':', $tmp)) : null);
+            $value = (count($tmp) > 0)
+                ? trim(join(':', $tmp))
+                : null;
 
             $result[$key] = $value;
         }

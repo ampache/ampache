@@ -350,8 +350,6 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
     <?php echo T_('Allowed file type'); ?>:
     <?php echo str_replace("|", ", ", AmpConfig::get('catalog_file_pattern')); ?>
 </small>
-
-
 <script>
     FilePond?.create(document.querySelector('input[type="file"].filepond'), {
         server: {

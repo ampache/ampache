@@ -60,11 +60,9 @@ final class LabelQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`label`.`id`";
+    protected string $select = "`label`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `label` ";
+    protected string $base = "SELECT %%SELECT%% FROM `label` ";
 
     /**
      * get_select

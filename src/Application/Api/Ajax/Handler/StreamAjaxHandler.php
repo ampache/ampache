@@ -61,6 +61,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                         if (!AmpConfig::get($key)) {
                             break 2;
                         }
+
                         $new = Core::get_post('type');
                         break;
                     case 'web_player':
@@ -77,7 +78,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     AmpConfig::set('play_type', $new, true);
                 }
 
-                if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
+                if (($new === 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new !== 'localplay')) {
                     $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 }
 
@@ -88,6 +89,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 if (is_array($object_id)) {
                     $object_id = implode(',', $object_id);
                 }
+
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
@@ -96,22 +98,28 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
                     }
+
                     if (array_key_exists('append', $_REQUEST) && !empty($_REQUEST['append'])) {
                         $_SESSION['iframe']['target'] .= '&append=true';
                     }
+
                     if (array_key_exists('playnext', $_REQUEST) && !empty($_REQUEST['playnext'])) {
                         $_SESSION['iframe']['target'] .= '&playnext=true';
                     }
+
                     if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
                     } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
                         unset($_SESSION['iframe']['subtitle']);
                     }
+
                     if (AmpConfig::get('play_type') == 'localplay') {
                         $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
+
                     $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 }
+
                 break;
             case 'basket':
                 // Go ahead and see if we should clear the playlist here or not,
@@ -129,9 +137,6 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';
                 $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

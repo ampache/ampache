@@ -33,22 +33,10 @@ use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
-final class StatsViewAdapter implements StatsViewAdapterInterface
+final readonly class StatsViewAdapter implements StatsViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private VideoRepositoryInterface $videoRepository;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        GuiFactoryInterface $guiFactory,
-        VideoRepositoryInterface $videoRepository
-    ) {
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
-        $this->videoRepository = $videoRepository;
+    public function __construct(private ConfigContainerInterface $configContainer, private GuiFactoryInterface $guiFactory, private VideoRepositoryInterface $videoRepository)
+    {
     }
 
     public function displayVideo(): bool
@@ -63,7 +51,7 @@ final class StatsViewAdapter implements StatsViewAdapterInterface
 
     public function displayAlbum(): bool
     {
-        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+        return ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP));
     }
 
     public function displayAlbumDisk(): bool

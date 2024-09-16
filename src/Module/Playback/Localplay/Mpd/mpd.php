@@ -617,7 +617,9 @@ class mpd
 
             return false;
         }
-        $new_position = $new_position > 0 ? $new_position : 0;
+        $new_position = ($new_position > 0)
+            ? $new_position
+            : 0;
         $new_position = ($new_position < count($this->playlist)) ? $new_position : count($this->playlist);
 
         $response = $this->SendCommand(self::COMMAND_MOVETRACK, [$current_position, $new_position]);

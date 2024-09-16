@@ -46,7 +46,6 @@ $web_path = AmpConfig::get_web_path('/client'); ?>
     <tbody>
         <?php
         foreach ($shouts as $libitem) {
-
             $object = $shoutObjectLoader->loadByShout($libitem);
             $client = $libitem->getUser();
 

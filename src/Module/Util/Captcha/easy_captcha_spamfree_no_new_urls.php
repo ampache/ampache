@@ -31,7 +31,7 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_spamfree_no_new_urls
 {
-    #-- you have to adapt this, to check for newly added URLs only, in Wikis e.g.
+    // you have to adapt this, to check for newly added URLs only, in Wikis e.g.
     #   - for simple comment submission forms, this default however suffices:
     /**
      * @param int $input

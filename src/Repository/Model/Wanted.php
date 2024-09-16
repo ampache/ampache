@@ -447,7 +447,6 @@ class Wanted extends database_object
             $this->f_artist_link = '';
         }
 
-
         $this->f_link = sprintf(
             '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
             AmpConfig::get_web_path('/client'),

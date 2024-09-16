@@ -36,20 +36,32 @@ use Ampache\Module\Playback\Scrobble\Scrobbler;
 class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'Last.FM';
+
     public string $categories  = 'scrobbling';
+
     public string $description = 'Records your played songs to your Last.FM account';
+
     public string $url         = '';
+
     public string $version     = '000005';
+
     public string $min_ampache = '360003';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $challenge;
+
     private $api_key;
+
     private $secret;
+
     private $scheme   = 'http';
+
     private $host     = 'www.last.fm';
+
     private $api_host = 'ws.audioscrobbler.com';
 
     /**
@@ -70,11 +82,8 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
         if (!Preference::insert('lastfm_challenge', T_('Last.FM Submit Challenge'), '', AccessLevelEnum::USER->value, 'string', 'internal', $this->name)) {
             return false;
         }
-        if (!Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('lastfm_grant_link', T_('Last.FM Grant URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -105,9 +114,11 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < 4) {
             Preference::rename('lastfm_pass', 'lastfm_md5_pass');
         }
+
         if ($from_version < (int)$this->version) {
             Preference::delete('lastfm_md5_pass');
             Preference::delete('lastfm_user');
@@ -128,9 +139,10 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
     public function save_mediaplay(Song $song): bool
     {
         // Only support songs
-        if (get_class($song) != Song::class) {
+        if ($song::class !== Song::class) {
             return false;
         }
+
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event('lastfm.plugin', 'Session key missing', 5);
@@ -178,6 +190,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
             return;
         }
+
         // Create our scrobbler and then queue it
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
         if (!empty($song->get_artist_fullname()) && !$scrobbler->love($flagged, $song->get_artist_fullname(), (string)$song->title)) {
@@ -185,6 +198,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
             return;
         }
+
         debug_event('lastfm.plugin', 'Sent Love Successfully', 5);
     }
 
@@ -203,6 +217,7 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
             return false;
         }
+
         $this->challenge = $session_key;
 
         // Update the preferences
@@ -224,8 +239,8 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
         $data          = $user->prefs;
         $this->user_id = $user->id;
         // check if user have a session key
-        if (strlen(trim($data['lastfm_challenge']))) {
-            $this->challenge = trim($data['lastfm_challenge']);
+        if (strlen(trim((string) $data['lastfm_challenge'])) !== 0) {
+            $this->challenge = trim((string) $data['lastfm_challenge']);
         } else {
             debug_event('lastfm.plugin', 'No session key, not scrobbling (need to grant Ampache to last.fm)', 4);
 

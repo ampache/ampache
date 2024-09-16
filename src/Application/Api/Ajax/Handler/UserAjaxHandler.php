@@ -51,28 +51,23 @@ final readonly class UserAjaxHandler implements AjaxHandlerInterface
         $action  = $this->requestParser->getFromRequest('action');
         $user_id = (int)$this->requestParser->getFromRequest('user_id');
 
-        // Switch on the actions
-        switch ($action) {
-            case 'flip_follow':
-                if (
-                    $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
-                    $this->configContainer->isFeatureEnabled('sociable')
-                ) {
-                    $fuser = new User($user_id);
-                    if ($fuser->id > 0 && $user_id !== $user->getId()) {
-                        $this->followToggler->toggle(
-                            $fuser,
-                            $user
-                        );
-                        $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
-                            $fuser,
-                            $user
-                        );
-                    }
+        if ($action === 'flip_follow') {
+            if (
+                $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
+                $this->configContainer->isFeatureEnabled('sociable')
+            ) {
+                $fuser = new User($user_id);
+                if ($fuser->id > 0 && $user_id !== $user->getId()) {
+                    $this->followToggler->toggle(
+                        $fuser,
+                        $user
+                    );
+                    $results['button_follow_' . $user_id] = $this->userFollowStateRenderer->render(
+                        $fuser,
+                        $user
+                    );
                 }
-                break;
-            default:
-                break;
+            }
         } // switch on action;
 
         // We always do this

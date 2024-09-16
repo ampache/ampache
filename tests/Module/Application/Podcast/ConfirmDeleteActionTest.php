@@ -126,7 +126,6 @@ class ConfirmDeleteActionTest extends TestCase
         $this->subject->run($this->request, $this->gatekeeper);
     }
 
-
     public function testRunErrorsIfPodcastWasNotFound(): void
     {
         static::expectException(ObjectNotFoundException::class);

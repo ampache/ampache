@@ -523,7 +523,6 @@ final class VaInfo implements VaInfoInterface
             'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
         ];
 
-
         $order = [];
         foreach ($tagorderMap[$configKey] ?? [] as $source) {
             //debug_event(self::class, "source: " . $source, true, 5);

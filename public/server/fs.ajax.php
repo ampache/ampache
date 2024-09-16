@@ -43,7 +43,9 @@ if (isset($_GET['operation'])) {
     try {
         $fs   = new FileSystem($rootdir);
         $rslt = null;
-        $node = isset($_GET['id']) && $_GET['id'] !== '#' ? $_GET['id'] : '/';
+        $node = (isset($_GET['id']) && $_GET['id'] !== '#')
+            ? $_GET['id']
+            : '/';
         switch (Core::get_get('operation')) {
             case 'get_node':
                 $rslt = $fs->lst($node, (isset($_GET['id']) && $_GET['id'] === '#'));
@@ -61,11 +63,15 @@ if (isset($_GET['operation'])) {
                 $rslt = $fs->remove($node);
                 break;
             case 'move_node':
-                $parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? $_GET['parent'] : '/';
+                $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
+                    ? $_GET['parent']
+                    : '/';
                 $rslt = $fs->move($node, $parn);
                 break;
             case 'copy_node':
-                $parn = isset($_GET['parent']) && $_GET['parent'] !== '#' ? $_GET['parent'] : '/';
+                $parn = (isset($_GET['parent']) && $_GET['parent'] !== '#')
+                    ? $_GET['parent']
+                    : '/';
                 $rslt = $fs->copy($node, $parn);
                 break;
             default:

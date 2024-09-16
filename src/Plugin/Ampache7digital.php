@@ -35,15 +35,22 @@ use Ampache\Module\Util\OAuth\OAuthSignatureMethod_HMAC_SHA1;
 class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterface
 {
     public string $name        = '7digital';
+
     public string $categories  = 'preview';
+
     public string $description = 'Song preview from 7digital';
+
     public string $url         = 'http://www.7digital.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370015';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
+
     private $secret;
 
     /**
@@ -63,11 +70,8 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
         if (Preference::exists('7digital_api_key') && !Preference::insert('7digital_api_key', T_('7digital consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return !(Preference::exists('7digital_secret_api_key') && !Preference::insert('7digital_secret_api_key', T_('7digital secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name));
     }
 
     /**
@@ -104,7 +108,7 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
      */
     public function stream_song_preview(string $file): void
     {
-        if (strpos($file, "7digital") !== false) {
+        if (str_contains($file, "7digital")) {
             $consumer = new OAuthConsumer($this->api_key, $this->secret, null);
             $request  = OAuthRequest::from_consumer_and_token($consumer, null, 'GET', $file);
             $request->sign_request(new OAuthSignatureMethod_HMAC_SHA1(), $consumer, null);
@@ -123,21 +127,22 @@ class Ampache7digital extends AmpachePlugin implements PluginSongPreviewInterfac
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['7digital_api_key'])) || !strlen(trim($data['7digital_secret_api_key']))) {
+        if (!strlen(trim((string) $data['7digital_api_key'])) || !strlen(trim((string) $data['7digital_secret_api_key']))) {
             $data                            = [];
             $data['7digital_api_key']        = Preference::get_by_user(-1, '7digital_api_key');
             $data['7digital_secret_api_key'] = Preference::get_by_user(-1, '7digital_secret_api_key');
         }
 
-        if (strlen(trim($data['7digital_api_key']))) {
-            $this->api_key = trim($data['7digital_api_key']);
+        if (strlen(trim((string) $data['7digital_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['7digital_api_key']);
         } else {
             debug_event(self::class, 'No 7digital api key, song preview plugin skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['7digital_secret_api_key']))) {
-            $this->secret = trim($data['7digital_secret_api_key']);
+
+        if (strlen(trim((string) $data['7digital_secret_api_key'])) !== 0) {
+            $this->secret = trim((string) $data['7digital_secret_api_key']);
         } else {
             debug_event(self::class, 'No 7digital secret, song preview plugin skipped', 3);
 

@@ -72,11 +72,10 @@ final class ControlReplyApplication implements ApplicationInterface
         $soapXML      = '';
         $numRet       = 0;
         $filter       = $upnpRequest['filter'];
-        $sort         = $upnpRequest['sortcriteria'];
         // upnp:class,dc:title are container defaults. Add.
         if ($filter != '*') {
             // The following fields are required defaults
-            $filter = $filter . ',upnp:class,dc:title,res@id,res@protocolInfo';
+            $filter .= ',upnp:class,dc:title,res@id,res@protocolInfo';
         } elseif ($filter == '') {
             $filter = '*';
         }
@@ -123,7 +122,7 @@ final class ControlReplyApplication implements ApplicationInterface
                 debug_event('control-reply', 'Searchcriteria: ' . $upnpRequest['searchcriteria'], 5);
                 debug_event('control-reply', 'Search filter : ' . $filter, 5);
                 $responseType             = 'u:SearchResponse';
-                list($totMatches, $items) = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                [$totMatches, $items]     = Upnp_Api::_callSearch($upnpRequest['searchcriteria'], $filter, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                 break;
             case 'browse':
                 $responseType = 'u:BrowseResponse';
@@ -144,7 +143,7 @@ final class ControlReplyApplication implements ApplicationInterface
                         //$items[] = [];
                         $items[]                  = Upnp_Api::_musicMetadata('');
                         $items[]                  = Upnp_Api::_videoMetadata('');
-                        list($totMatches, $items) = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
+                        [$totMatches, $items]     = Upnp_Api::_slice($items, $upnpRequest['startingindex'], $upnpRequest['requestedcount']);
                         debug_event('control-reply', 'Root items returning' . $items[0] . $items[1], 5);
                         //debug_event('control-reply', 'Root items detail ' . var_export($items, true), 5);
                         //debug_event('control-reply', 'Root items sort   ' . $upnpRequest['sortcriteria'], 5);
@@ -162,7 +161,7 @@ final class ControlReplyApplication implements ApplicationInterface
                      *   [fragment] => anchor
                      * )
                      */
-                    $reqObjectURL = parse_url($upnpRequest['objectid']);
+                    $reqObjectURL = parse_url((string) $upnpRequest['objectid']);
                     debug_event('control-reply', 'ObjectID: ' . $upnpRequest['objectid'], 5);
                     switch ($reqObjectURL['scheme'] ?? '') {
                         case 'amp':
@@ -176,7 +175,7 @@ final class ControlReplyApplication implements ApplicationInterface
                                         $numRet     = 1;
                                     } else {
                                         debug_event('control-reply', 'Listrequest ', 5);
-                                        list($totMatches, $items) = Upnp_Api::_musicChilds(
+                                        [$totMatches, $items] = Upnp_Api::_musicChilds(
                                             $reqObjectURL['path'] ?? '',
                                             $reqObjectURL['query'] ?? '',
                                             $upnpRequest['startingindex'],
@@ -185,31 +184,35 @@ final class ControlReplyApplication implements ApplicationInterface
                                         debug_event('control-reply', 'non-root items sort ' . $upnpRequest['sortcriteria'], 5);
                                         //debug_event('control-reply', 'Listrequest '. (string) $upnpRequest['startingindex'] . ':' . (string) $upnpRequest['requestedcount'] . ':' . (string) $totMatches, 5);
                                     }
+
                                     break;
                                 case 'video':
                                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
                                         $items      = Upnp_Api::_videoMetadata($reqObjectURL['path'] ?? '');
                                         $totMatches = 1;
                                     } else {
-                                        list($totMatches, $items) = Upnp_Api::_videoChilds(
+                                        [$totMatches, $items] = Upnp_Api::_videoChilds(
                                             $reqObjectURL['path'] ?? '',
                                             $reqObjectURL['query'] ?? '',
                                             $upnpRequest['startingindex'],
                                             $upnpRequest['requestedcount']
                                         );
                                     }
+
                                     break;
                             }
+
                             break;
                         default:
                             debug_event('control-reply', 'Unrecognized scheme: ' . ($reqObjectURL['scheme'] ?? ''), 5);
                             break;
                     }
                 }
+
                 break;
         }
 
-        if ($soapXML == "") {
+        if ($soapXML === "") {
             $totMatches = ($totMatches == 0) ? count($items) : $totMatches;
             if ($items == null || $totMatches == 0) {
                 $domDIDL = Upnp_Api::createDIDL('', '');
@@ -220,19 +223,21 @@ final class ControlReplyApplication implements ApplicationInterface
                     $numRet = count($items);
                 }
             }
+
             $xmlDIDL  = $domDIDL->saveXML();
             if ($xmlDIDL) {
-                $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?' . '>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
+                $xmlDIDLs = substr($xmlDIDL, strpos($xmlDIDL, '?>') + 2); // Remove the unnecessary <xml... > tag at the head of the DIDL
                 $domSOAP  = Upnp_Api::createSOAPEnvelope($xmlDIDLs, $numRet, $totMatches, $responseType);
                 $soapXML  = $domSOAP->saveXML();
             }
         }
-        debug_event('control-reply', 'Content: ' . (string) $soapXML, 5);
+
+        debug_event('control-reply', 'Content: ' . $soapXML, 5);
 
         // Set the overall content length in the header correctly, having appended $soapXML
         if ($soapXML) {
             $contentLength = strlen($soapXML);
-            header("Content-Length: $contentLength");
+            header('Content-Length: ' . $contentLength);
 
             //print $soapXML;
             debug_event('control-reply', 'Response: ' . $soapXML, 5);

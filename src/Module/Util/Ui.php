@@ -245,26 +245,14 @@ class Ui implements UiInterface
             $pass++;
         }
 
-        switch ($pass) {
-            case 1:
-                $unit = 'kB';
-                break;
-            case 2:
-                $unit = 'MB';
-                break;
-            case 3:
-                $unit = 'GB';
-                break;
-            case 4:
-                $unit = 'TB';
-                break;
-            case 5:
-                $unit = 'PB';
-                break;
-            default:
-                $unit = 'B';
-                break;
-        }
+        $unit = match ($pass) {
+            1 => 'kB',
+            2 => 'MB',
+            3 => 'GB',
+            4 => 'TB',
+            5 => 'PB',
+            default => 'B',
+        };
 
         return ((string)round($value, $precision)) . ' ' . $unit;
     }
@@ -1384,7 +1372,6 @@ class Ui implements UiInterface
             ]
         );
     }
-
 
     /**
      * This function takes a boolean value and then prints out a friendly text

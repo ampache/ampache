@@ -39,16 +39,24 @@ use Ampache\Module\Util\Ui;
 class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Catalog Favorites';
+
     public string $categories  = 'home';
+
     public string $description = 'Catalog favorites on homepage';
+
     public string $url         = '';
+
     public string $version     = '000003';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+
     private $gridview;
+
     private int $order = 0;
 
     /**
@@ -73,11 +81,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             return false;
         }
 
-        if (!Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -121,7 +125,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
             AmpConfig::get('ratings') &&
-            !empty($userflags)
+            $userflags !== []
         ) {
             $count     = 0;
             $divString = ($this->order > 0)
@@ -133,6 +137,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             if (!$this->gridview) {
                 echo " disablegv";
             }
+
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
@@ -156,6 +161,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                     'nextplay_song_' . $userflag
                                 );
                             }
+
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
@@ -165,9 +171,11 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                                 );
                             }
                         }
+
                         echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
                         echo '</span></td>';
                     }
+
                     echo '<td class=grid_cover>';
                     $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
@@ -185,6 +193,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     $count++;
                 }
             }
+
             echo '</table>';
             Ui::show_box_bottom();
             echo '</div>';

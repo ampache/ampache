@@ -30,30 +30,15 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playlist\PlaylistLoaderInterface;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
 
-final class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapterInterface
+final readonly class NewPlaylistDialogAdapter implements NewPlaylistDialogAdapterInterface
 {
-    private PlaylistLoaderInterface $playlistLoader;
-
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
-
-    private GuiGatekeeperInterface $gatekeeper;
-
-    private string $object_type;
-
-    private string $object_ids;
-
     public function __construct(
-        PlaylistLoaderInterface $playlistLoader,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
-        GuiGatekeeperInterface $gatekeeper,
-        string $object_type,
-        string $object_id
+        private PlaylistLoaderInterface $playlistLoader,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private GuiGatekeeperInterface $gatekeeper,
+        private string $object_type,
+        private string $object_ids
     ) {
-        $this->playlistLoader   = $playlistLoader;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
-        $this->gatekeeper       = $gatekeeper;
-        $this->object_type      = $object_type;
-        $this->object_ids       = $object_id;
     }
 
     /**

@@ -91,7 +91,6 @@ class WebDavFile extends DAV\File
         return $this->libitem->size ?? 0;
     }
 
-
     public function getETag(): string
     {
         return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));

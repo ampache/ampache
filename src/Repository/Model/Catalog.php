@@ -387,7 +387,6 @@ abstract class Catalog extends database_object
             ? new $controller($catalog_id)
             : new $controller();
 
-
         // identify if it's actually enabled
         $sql        = 'SELECT `enabled` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, [$catalog->id]);
@@ -940,9 +939,15 @@ abstract class Catalog extends database_object
         $this->get_fullname();
         $this->get_link();
         $this->get_f_link();
-        $this->f_update = $this->last_update !== 0 ? get_datetime((int)$this->last_update) : T_('Never');
-        $this->f_add    = $this->last_add !== 0 ? get_datetime((int)$this->last_add) : T_('Never');
-        $this->f_clean  = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
+        $this->f_update = ($this->last_update !== 0)
+            ? get_datetime((int)$this->last_update)
+            : T_('Never');
+        $this->f_add = ($this->last_add !== 0)
+            ? get_datetime((int)$this->last_add)
+            : T_('Never');
+        $this->f_clean = ($this->last_clean)
+            ? get_datetime((int)$this->last_clean)
+            : T_('Never');
     }
 
     /**
@@ -1282,7 +1287,11 @@ abstract class Catalog extends database_object
     public static function count_catalog($catalog_id): array
     {
         $catalog = self::create_from_id($catalog_id);
-        $results = ['items' => 0, 'time' => 0, 'size' => 0];
+        $results = [
+            'items' => 0,
+            'time' => 0,
+            'size' => 0
+        ];
         if ($catalog instanceof Catalog) {
             $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
             $params    = $catalog_id ? [$catalog_id] : [];
@@ -1477,7 +1486,6 @@ abstract class Catalog extends database_object
             default:
                 return [];
         }
-
 
         $sort_sql = ';';
         if (!empty($sort)) {
@@ -2025,7 +2033,7 @@ abstract class Catalog extends database_object
             }
         }
 
-        $searches['video'] = $videos == null ? $this->get_video_ids() : $videos;
+        $searches['video'] = $this->get_video_ids();
 
         debug_event(self::class, 'gather_art found ' . count($searches) . ' items missing art', 4);
         // Run through items and get the art!
@@ -3934,9 +3942,7 @@ abstract class Catalog extends database_object
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null) {
-                            $catalog->verify_catalog();
-                        }
+                        $catalog?->verify_catalog();
                     }
                 }
                 break;

@@ -30,11 +30,17 @@ use Ampache\Repository\Model\User;
 class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
     public string $name        = 'Gravatar';
+
     public string $categories  = 'avatar';
+
     public string $description = 'User\'s avatars with Gravatar';
+
     public string $url         = 'https://gravatar.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360040';
+
     public string $max_ampache = '999999';
 
     /**
@@ -78,7 +84,10 @@ class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterfa
     public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = '';
-        if (!empty($user->email)) {
+        if ($user->email !== null &&
+            $user->email !== '' &&
+            $user->email !== '0'
+        ) {
             $url = sprintf(
                 '%s/avatar/%s?s=%d&r=g&d=identicon',
                 $this->url,

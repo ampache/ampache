@@ -30,11 +30,17 @@ use Ampache\Repository\Model\User;
 abstract class AmpachePlugin implements AmpachePluginInterface
 {
     public string $name;
+
     public string $categories;
+
     public string $description;
+
     public string $url;
+
     public string $version;
+
     public string $min_ampache;
+
     public string $max_ampache;
 
     /**

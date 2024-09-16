@@ -29,18 +29,10 @@ use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\Stats\CatalogStatsInterface;
 use Ampache\Repository\Model\Catalog;
 
-final class CatalogDetails implements CatalogDetailsInterface
+final readonly class CatalogDetails implements CatalogDetailsInterface
 {
-    private GuiFactoryInterface $guiFactory;
-
-    private Catalog $catalog;
-
-    public function __construct(
-        GuiFactoryInterface $guiFactory,
-        Catalog $catalog
-    ) {
-        $this->guiFactory = $guiFactory;
-        $this->catalog    = $catalog;
+    public function __construct(private GuiFactoryInterface $guiFactory, private Catalog $catalog)
+    {
     }
 
     public function getName(): string

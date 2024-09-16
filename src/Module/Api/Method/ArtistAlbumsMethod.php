@@ -90,7 +90,7 @@ final class ArtistAlbumsMethod
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
         $typeFilter = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1)
             ? 'album_artist'

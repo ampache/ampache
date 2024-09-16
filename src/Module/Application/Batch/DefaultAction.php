@@ -89,7 +89,6 @@ final readonly class DefaultAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-
         $object_id = (int)$this->requestParser->getFromRequest('id');
         $this->logger->debug(
             'Requested item ' . $object_id,

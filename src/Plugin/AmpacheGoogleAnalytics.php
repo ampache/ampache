@@ -32,15 +32,19 @@ use Ampache\Repository\Model\User;
 class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'GoogleAnalytics';
+
     public string $categories  = 'stats';
+
     public string $description = 'Google Analytics statistics';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370034';
+
     public string $max_ampache = '999999';
 
-    // These are internal settings used by this class, run this->load to fill them out
-    private $user;
     private $tracking_id;
 
     /**
@@ -57,11 +61,7 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
      */
     public function install(): bool
     {
-        if (!Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('googleanalytics_tracking_id', T_('Google Analytics Tracking ID'), '', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -105,17 +105,16 @@ class AmpacheGoogleAnalytics extends AmpachePlugin implements PluginDisplayOnFoo
      */
     public function load(User $user): bool
     {
-        $this->user = $user;
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['googleanalytics_tracking_id']))) {
+        if (trim((string) $data['googleanalytics_tracking_id']) === '') {
             $data                                = [];
             $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
         }
 
-        $this->tracking_id = trim($data['googleanalytics_tracking_id']);
-        if (!strlen($this->tracking_id)) {
+        $this->tracking_id = trim((string) $data['googleanalytics_tracking_id']);
+        if ($this->tracking_id === '') {
             debug_event('googleanalytics.plugin', 'No Tracking ID, user field plugin skipped', 3);
 
             return false;

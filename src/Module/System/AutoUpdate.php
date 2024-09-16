@@ -101,9 +101,8 @@ class AutoUpdate
 
     /**
      * Perform a GitHub request.
-     * @return Object|null
      */
-    public static function github_request(string $action)
+    public static function github_request(string $action): ?object
     {
         try {
             // https is mandatory

@@ -94,9 +94,6 @@ final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterfa
                 $democratic->clear();
 
                 $show_browse = true;
-                break;
-            default:
-                break;
         } // switch on action;
 
         if ($show_browse) {

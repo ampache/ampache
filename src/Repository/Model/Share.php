@@ -198,7 +198,9 @@ class Share extends database_object
 
     public function getLastVisitDateFormatted(): string
     {
-        return $this->lastvisit_date > 0 ? get_datetime($this->lastvisit_date) : '';
+        return ($this->lastvisit_date > 0)
+            ? get_datetime($this->lastvisit_date)
+            : '';
     }
 
     public function getCreationDateFormatted(): string

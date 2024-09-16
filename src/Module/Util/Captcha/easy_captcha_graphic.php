@@ -39,7 +39,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     public $quality;
     public $solution;
 
-    #-- config
+    // config
     /**
      * easy_captcha_graphic constructor.
      * @param $x
@@ -64,8 +64,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         $this->solution = $this->mkpass();
     }
 
-
-    #-- return a single .ttf font filename
+    // return a single .ttf font filename
 
     /**
      * @return mixed
@@ -78,8 +77,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         return $fonts[rand(0, count($fonts) - 1)];
     }
 
-
-    #-- makes string of random letters (for embedding into image)
+    // makes string of random letters (for embedding into image)
 
     /**
      * @return false|string
@@ -101,8 +99,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         return ($string);
     }
 
-
-    #-- return GD color
+    // return GD color
 
     /**
      * @param $a
@@ -129,8 +126,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         return imagecolorallocate($this->img, $r ^ $R, $g ^ $R, $b ^ $R);
     }
 
-
-    #-- generate JPEG output
+    // generate JPEG output
 
     /**
      * @return false|string

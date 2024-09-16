@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-08-20 09:01+1000\n"
+"POT-Creation-Date: 2024-08-28 11:30+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Parviz Homayun <parviz.homayun@gmail.com>, 2021\n"
 "Language-Team: Persian (Iran) (http://app.transifex.com/ampache/ampache/language/fa_IR/)\n"
@@ -181,6 +181,7 @@ msgstr "گشودن/بستن نوار منو کناری"
 #: ../../public/templates/show_denied_permission.inc.php:42
 #: ../../public/templates/show_denied_permission.inc.php:52
 #: ../../public/templates/show_mail_users.inc.php:51
+#: ../../public/templates/show_search_descriptor.inc.php:35
 #: ../../public/templates/show_test_config.inc.php:44
 #: ../../public/templates/show_test_config.inc.php:45
 #: ../../public/templates/show_test.inc.php:36
@@ -277,8 +278,8 @@ msgstr "خانه"
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:122
 #: ../../src/Gui/Song/SongViewAdapter.php:119
 #: ../../src/Module/Shout/ShoutRenderer.php:87
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:136
-#: ../../src/Plugin/AmpachePersonalFavorites.php:137
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:148
+#: ../../src/Plugin/AmpachePersonalFavorites.php:158
 #: ../../src/Repository/Model/Art.php:1424
 msgid "Play"
 msgstr "پخش"
@@ -487,8 +488,8 @@ msgstr "پخش محلی"
 #: ../../public/templates/js_globals.php:62
 #: ../../public/templates/show_playlist.inc.php:131
 #: ../../public/templates/show_search.inc.php:73
-#: ../../src/Plugin/AmpachePersonalFavorites.php:151
-#: ../../src/Plugin/AmpachePersonalFavorites.php:154
+#: ../../src/Plugin/AmpachePersonalFavorites.php:172
+#: ../../src/Plugin/AmpachePersonalFavorites.php:175
 msgid "Random Play"
 msgstr "پخش تصادفی"
 
@@ -760,8 +761,8 @@ msgstr "لغو"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:156
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:134
 #: ../../src/Gui/Song/SongViewAdapter.php:131
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:143
-#: ../../src/Plugin/AmpachePersonalFavorites.php:139
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:155
+#: ../../src/Plugin/AmpachePersonalFavorites.php:160
 msgid "Play next"
 msgstr "پخش بعدی"
 
@@ -790,8 +791,8 @@ msgstr "پخش بعدی"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:168
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:146
 #: ../../src/Gui/Song/SongViewAdapter.php:143
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:151
-#: ../../src/Plugin/AmpachePersonalFavorites.php:145
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:163
+#: ../../src/Plugin/AmpachePersonalFavorites.php:166
 msgid "Play last"
 msgstr "پخش قبلی"
 
@@ -819,8 +820,8 @@ msgstr "پخش قبلی"
 #: ../../src/Gui/AlbumDisk/AlbumDiskViewAdapter.php:180
 #: ../../src/Gui/Playlist/PlaylistViewAdapter.php:158
 #: ../../src/Gui/Song/SongViewAdapter.php:172
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:156
-#: ../../src/Plugin/AmpachePersonalFavorites.php:156
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:168
+#: ../../src/Plugin/AmpachePersonalFavorites.php:177
 msgid "Add to Temporary Playlist"
 msgstr "افزودن به لیست پخش موقّت"
 
@@ -1073,7 +1074,7 @@ msgstr "سطح"
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:140
 #: ../../src/Module/Authorization/AccessLevelEnum.php:64
 #: ../../src/Module/Util/Rss/Type/RecentlyPlayedFeed.php:80
-#: ../../src/Module/Util/Ui.php:1157 ../../src/Plugin/AmpachePaypal.php:101
+#: ../../src/Module/Util/Ui.php:1157 ../../src/Plugin/AmpachePaypal.php:100
 msgid "User"
 msgstr "کاربر"
 
@@ -2555,8 +2556,8 @@ msgstr "ذخیره ترتیب آهنگ"
 #: ../../public/templates/show_artist.inc.php:336
 #: ../../public/templates/show_artist.inc.php:342
 #: ../../public/templates/show_artist.inc.php:351
-#: ../../public/templates/show_index.inc.php:68
-#: ../../public/templates/show_index.inc.php:77
+#: ../../public/templates/show_index.inc.php:70
+#: ../../public/templates/show_index.inc.php:79
 #: ../../public/templates/show_label.inc.php:133
 #: ../../public/templates/show_missing_artist.inc.php:37
 #: ../../public/templates/show_now_playing_row.inc.php:106
@@ -3308,7 +3309,7 @@ msgid "Feed"
 msgstr "خوراک"
 
 #: ../../public/templates/show_edit_podcast_row.inc.php:46
-#: ../../src/Repository/Model/Preference.php:914
+#: ../../src/Repository/Model/Preference.php:923
 msgid "Language"
 msgstr "زبان"
 
@@ -3321,9 +3322,9 @@ msgstr "زبان"
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:462
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:505
 #: ../../src/Module/Playback/Stream_Url.php:196
-#: ../../src/Plugin/AmpacheHomeDashboard.php:75
-#: ../../src/Plugin/AmpacheHomeDashboard.php:155
-#: ../../src/Repository/Model/Preference.php:906
+#: ../../src/Plugin/AmpacheHomeDashboard.php:76
+#: ../../src/Plugin/AmpacheHomeDashboard.php:169
+#: ../../src/Repository/Model/Preference.php:914
 msgid "Random"
 msgstr "تصادفی"
 
@@ -3527,18 +3528,18 @@ msgstr "دارای رتبه برتر"
 #: ../../public/templates/show_form_newest.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:42
 #: ../../public/templates/sidebar.inc.php:77
-#: ../../src/Plugin/AmpacheHomeDashboard.php:79
-#: ../../src/Plugin/AmpacheHomeDashboard.php:170
-#: ../../src/Repository/Model/Preference.php:907
+#: ../../src/Plugin/AmpacheHomeDashboard.php:80
+#: ../../src/Plugin/AmpacheHomeDashboard.php:184
+#: ../../src/Repository/Model/Preference.php:915
 msgid "Newest"
 msgstr "تازه‌ترین"
 
 #: ../../public/templates/show_form_popular.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:85
 #: ../../public/templates/sidebar.inc.php:78
-#: ../../src/Plugin/AmpacheHomeDashboard.php:91
-#: ../../src/Plugin/AmpacheHomeDashboard.php:215
-#: ../../src/Repository/Model/Preference.php:910
+#: ../../src/Plugin/AmpacheHomeDashboard.php:92
+#: ../../src/Plugin/AmpacheHomeDashboard.php:231
+#: ../../src/Repository/Model/Preference.php:918
 msgid "Popular"
 msgstr "محبوب"
 
@@ -3546,9 +3547,9 @@ msgstr "محبوب"
 #: ../../public/templates/show_ip_history.inc.php:41
 #: ../../public/templates/show_mashup.inc.php:57
 #: ../../public/templates/sidebar.inc.php:76
-#: ../../src/Plugin/AmpacheHomeDashboard.php:83
-#: ../../src/Plugin/AmpacheHomeDashboard.php:185
-#: ../../src/Repository/Model/Preference.php:908
+#: ../../src/Plugin/AmpacheHomeDashboard.php:84
+#: ../../src/Plugin/AmpacheHomeDashboard.php:199
+#: ../../src/Repository/Model/Preference.php:916
 msgid "Recent"
 msgstr "به تازگی"
 
@@ -3798,13 +3799,13 @@ msgstr "فایل"
 msgid "Format: opml"
 msgstr ""
 
-#: ../../public/templates/show_index.inc.php:67
+#: ../../public/templates/show_index.inc.php:69
 #: ../../public/templates/show_random_album_disks.inc.php:41
 #: ../../public/templates/show_random_albums.inc.php:41
 msgid "Albums of the Moment"
 msgstr "آلبوم های لحظه"
 
-#: ../../public/templates/show_index.inc.php:76
+#: ../../public/templates/show_index.inc.php:78
 #: ../../public/templates/show_random_videos.inc.php:42
 msgid "Videos of the Moment"
 msgstr "ویدیوهای لحظه"
@@ -4012,7 +4013,7 @@ msgid ""
 msgstr "تنظیمات توصیه شده هنگام استفاده از آمپاچی به عنوان نمای پیشرو برای یک انجمن موسیقی."
 
 #: ../../public/templates/show_install_config.inc.php:147
-#: ../../src/Repository/Model/Preference.php:999
+#: ../../src/Repository/Model/Preference.php:1017
 msgid "Allow Transcoding"
 msgstr "اجازه کدگذاری"
 
@@ -4240,7 +4241,7 @@ msgstr "عامل"
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:544
 #: ../../src/Repository/Model/playlist_object.php:96
 #: ../../src/Repository/Model/playlist_object.php:97
-#: ../../src/Repository/Model/Preference.php:348
+#: ../../src/Repository/Model/Preference.php:354
 #: ../../src/Repository/Model/User.php:1018
 #: ../../src/Repository/Model/Video.php:822
 msgid "Unknown"
@@ -4497,9 +4498,9 @@ msgid "Date Added"
 msgstr "تاریخ اضافه شدن"
 
 #: ../../public/templates/show_mashup.inc.php:71
-#: ../../src/Plugin/AmpacheHomeDashboard.php:87
-#: ../../src/Plugin/AmpacheHomeDashboard.php:200
-#: ../../src/Repository/Model/Preference.php:909
+#: ../../src/Plugin/AmpacheHomeDashboard.php:88
+#: ../../src/Plugin/AmpacheHomeDashboard.php:214
+#: ../../src/Repository/Model/Preference.php:917
 msgid "Trending"
 msgstr "پرطرفدار"
 
@@ -5552,7 +5553,7 @@ msgstr "انواع فهرست وکاتالوگ"
 
 #: ../../public/templates/sidebar_admin.inc.php:104
 #: ../../src/Module/Application/Admin/Modules/ShowPluginsAction.php:61
-#: ../../src/Repository/Model/Plugin.php:377
+#: ../../src/Repository/Model/Plugin.php:376
 msgid "Manage Plugins"
 msgstr "مدیریت پلاگین وافزونه ها"
 
@@ -6485,8 +6486,8 @@ msgstr "آیا مطمئنی؟"
 #. HINT: ACL Name
 #: ../../src/Module/Application/Admin/Access/ShowDeleteRecordAction.php:81
 #, php-format
-msgid "This will permanently delete the ACL \"%s\""
-msgstr "این لیست کنترل دسترسی \"%s\" برای همیشه حذف می شود"
+msgid "This will permanently delete the %s ACL \"%s\""
+msgstr ""
 
 #: ../../src/Module/Application/Admin/Access/UpdateRecordAction.php:118
 msgid "Your Access Control List has been updated"
@@ -6949,8 +6950,8 @@ msgstr "هنرمند و همه فایل ها حذف می شوند"
 #: ../../src/Plugin/AmpacheMusicBrainz.php:97
 #: ../../src/Plugin/AmpacheTheaudiodb.php:75
 #: ../../src/Plugin/AmpacheTheaudiodb.php:105
-#: ../../src/Repository/Model/Preference.php:926
-#: ../../src/Repository/Model/Preference.php:994
+#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Repository/Model/Preference.php:1012
 msgid "Overwrite Artist names that match an mbid"
 msgstr ""
 
@@ -8385,7 +8386,7 @@ msgid "Table engine: %s"
 msgstr "موتور جدول: %s"
 
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:100
-#: ../../src/Repository/Model/Preference.php:911
+#: ../../src/Repository/Model/Preference.php:920
 msgid "HTTPQ Active Instance"
 msgstr "نمونه فعال HTTPQ"
 
@@ -8420,12 +8421,12 @@ msgid "Paused"
 msgstr "مکث کرد"
 
 #: ../../src/Module/Playback/Localplay/Mpd/AmpacheMpd.php:101
-#: ../../src/Repository/Model/Preference.php:927
+#: ../../src/Repository/Model/Preference.php:936
 msgid "MPD Active Instance"
 msgstr "نمونه فعال MPD"
 
 #: ../../src/Module/Playback/Localplay/Upnp/AmpacheUPnP.php:97
-#: ../../src/Repository/Model/Preference.php:1010
+#: ../../src/Repository/Model/Preference.php:1028
 msgid "UPnP Active Instance"
 msgstr "نمونه فعال UPnP"
 
@@ -8434,12 +8435,12 @@ msgid "URL"
 msgstr "آدرس اینترنتی"
 
 #: ../../src/Module/Playback/Localplay/Vlc/AmpacheVlc.php:96
-#: ../../src/Repository/Model/Preference.php:1014
+#: ../../src/Repository/Model/Preference.php:1032
 msgid "VLC Active Instance"
 msgstr "نمونه فعال VLC"
 
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:102
-#: ../../src/Repository/Model/Preference.php:1022
+#: ../../src/Repository/Model/Preference.php:1040
 msgid "XBMC Active Instance"
 msgstr "نمونه فعال XBMC"
 
@@ -8588,7 +8589,7 @@ msgid "There was an error trying to delete \"%s\""
 msgstr "هنگام تلاش برای حذف فایل: \"%s\" خطایی رخ داد"
 
 #: ../../src/Module/System/AutoUpdate.php:371
-#: ../../src/Repository/Model/Plugin.php:375
+#: ../../src/Repository/Model/Plugin.php:374
 msgid "Update available"
 msgstr "به روزرسانی دردسترس است"
 
@@ -8890,12 +8891,12 @@ msgstr ""
 msgid "Enabled"
 msgstr "فعال‌ شد"
 
-#: ../../src/Module/Util/Ui.php:937 ../../src/Module/Util/Ui.php:1354
+#: ../../src/Module/Util/Ui.php:937 ../../src/Module/Util/Ui.php:1391
 msgid "On"
 msgstr "روشن"
 
 #: ../../src/Module/Util/Ui.php:938 ../../src/Module/Util/Ui.php:1055
-#: ../../src/Module/Util/Ui.php:1356
+#: ../../src/Module/Util/Ui.php:1393
 msgid "Off"
 msgstr "خاموش"
 
@@ -9021,12 +9022,12 @@ msgid "Song preview from 7digital"
 msgstr "پیش نمایش آهنگ بوسیله 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:63
-#: ../../src/Repository/Model/Preference.php:828
+#: ../../src/Repository/Model/Preference.php:834
 msgid "7digital consumer key"
 msgstr "کلید مصرف کننده 7digital"
 
 #: ../../src/Plugin/Ampache7digital.php:66
-#: ../../src/Repository/Model/Preference.php:829
+#: ../../src/Repository/Model/Preference.php:835
 msgid "7digital secret"
 msgstr "کلمه عبور 7digital"
 
@@ -9035,27 +9036,27 @@ msgid "Amazon art search"
 msgstr "جستجوی روی جلد آثار آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:66
-#: ../../src/Repository/Model/Preference.php:844
+#: ../../src/Repository/Model/Preference.php:850
 msgid "Amazon base url"
 msgstr "آدرس اینترنتی پایه آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:69
-#: ../../src/Repository/Model/Preference.php:848
+#: ../../src/Repository/Model/Preference.php:854
 msgid "Amazon max results pages"
 msgstr "حداکثر صفحات نتایج آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:72
-#: ../../src/Repository/Model/Preference.php:847
+#: ../../src/Repository/Model/Preference.php:853
 msgid "Amazon Access Key ID"
 msgstr "کلید شناسه دسترسی آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:75
-#: ../../src/Repository/Model/Preference.php:846
+#: ../../src/Repository/Model/Preference.php:852
 msgid "Amazon Secret Access Key"
 msgstr "کلید سری دسترسی آمازون"
 
 #: ../../src/Plugin/AmpacheAmazon.php:78
-#: ../../src/Repository/Model/Preference.php:845
+#: ../../src/Repository/Model/Preference.php:851
 msgid "Amazon associate tag"
 msgstr "برچسب مربوط به آمازون"
 
@@ -9071,22 +9072,43 @@ msgstr ""
 msgid "Bit.ly Group GUID"
 msgstr ""
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:58
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:59
 msgid "Catalog favorites on homepage"
 msgstr "مجموعه وکاتالوگ مورد علاقه روی صفحه اصلی"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:67
-#: ../../src/Repository/Model/Preference.php:869
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:68
+#: ../../src/Repository/Model/Preference.php:875
 msgid "Catalog favorites max items"
 msgstr "حداکثر آیتم های مجموعه وکاتالوگ مورد علاقه"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:70
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:100
-#: ../../src/Repository/Model/Preference.php:868
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:72
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:108
+#: ../../src/Repository/Model/Preference.php:874
 msgid "Catalog favorites grid view display"
 msgstr "نمای نمایش شبکه مجموعه و کاتالوگ موردعلاقه"
 
-#: ../../src/Plugin/AmpacheCatalogFavorites.php:119
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:76
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:109
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:71
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:102
+#: ../../src/Plugin/AmpacheHomeDashboard.php:96
+#: ../../src/Plugin/AmpacheHomeDashboard.php:132
+#: ../../src/Plugin/AmpachePersonalFavorites.php:79
+#: ../../src/Plugin/AmpachePersonalFavorites.php:112
+#: ../../src/Plugin/AmpacheRSSView.php:72
+#: ../../src/Plugin/AmpacheRSSView.php:104
+#: ../../src/Plugin/AmpacheShoutHome.php:69
+#: ../../src/Plugin/AmpacheShoutHome.php:100
+#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:971
+msgid "Plugin CSS order"
+msgstr ""
+
+#: ../../src/Plugin/AmpacheCatalogFavorites.php:131
 msgid "Highlight"
 msgstr "برجسته"
 
@@ -9099,12 +9121,12 @@ msgid "Discogs metadata integration"
 msgstr "ادغام متادیتای Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:64
-#: ../../src/Repository/Model/Preference.php:887
+#: ../../src/Repository/Model/Preference.php:894
 msgid "Discogs consumer key"
 msgstr "کلید مصرف کننده Discogs"
 
 #: ../../src/Plugin/AmpacheDiscogs.php:67
-#: ../../src/Repository/Model/Preference.php:888
+#: ../../src/Repository/Model/Preference.php:895
 msgid "Discogs secret"
 msgstr "گذرواژه Discogs"
 
@@ -9117,20 +9139,20 @@ msgid "Artist photos from Flickr"
 msgstr "عکس های هنرمند از  Flickr"
 
 #: ../../src/Plugin/Ampacheflickr.php:61
-#: ../../src/Repository/Model/Preference.php:890
+#: ../../src/Repository/Model/Preference.php:897
 msgid "Flickr API key"
 msgstr "کلید رابط کاربری برنامه Flickr"
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:56
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:58
 msgid "Friend's Timeline on homepage"
 msgstr "جدول زمانی دوستان در صفحه اصلی"
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:65
-#: ../../src/Repository/Model/Preference.php:892
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:67
+#: ../../src/Repository/Model/Preference.php:899
 msgid "Friends timeline max items"
 msgstr "حداکثر آیتم های جدول زمانی دوستان"
 
-#: ../../src/Plugin/AmpacheFriendsTimeline.php:106
+#: ../../src/Plugin/AmpacheFriendsTimeline.php:127
 msgid "Friends Timeline"
 msgstr "جدول زمانی دوستان"
 
@@ -9139,7 +9161,7 @@ msgid "Google Analytics statistics"
 msgstr "آمار تجزیه و تحلیل گوگل"
 
 #: ../../src/Plugin/AmpacheGoogleAnalytics.php:60
-#: ../../src/Repository/Model/Preference.php:895
+#: ../../src/Repository/Model/Preference.php:903
 msgid "Google Analytics Tracking ID"
 msgstr "شناسه ردیابی تجزیه و تحلیل گوگل"
 
@@ -9148,15 +9170,15 @@ msgid "Show user's location with Google Maps"
 msgstr "نشان دادن مکان کاربر با نقشه های گوگل"
 
 #: ../../src/Plugin/AmpacheGoogleMaps.php:62
-#: ../../src/Repository/Model/Preference.php:894
+#: ../../src/Repository/Model/Preference.php:902
 msgid "Google Maps API key"
 msgstr "کلید رابط کاربری برنامه نقشه های گوگل"
 
-#: ../../src/Plugin/AmpacheGoogleMaps.php:135
+#: ../../src/Plugin/AmpacheGoogleMaps.php:134
 msgid "Hits"
 msgstr "بازدید"
 
-#: ../../src/Plugin/AmpacheGoogleMaps.php:136
+#: ../../src/Plugin/AmpacheGoogleMaps.php:135
 msgid "Last activity"
 msgstr "آخرین فعالیت"
 
@@ -9169,21 +9191,21 @@ msgid "Automatically download accepted Wanted List albums with Headphones"
 msgstr "لیست آلبوم ها را جهت دانلود با هدفون به طور خودکار بارگیری کنید"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:63
-#: ../../src/Repository/Model/Preference.php:897
+#: ../../src/Repository/Model/Preference.php:905
 msgid "Headphones URL"
 msgstr "آدرس اینترنتی هدفون ها"
 
 #: ../../src/Plugin/AmpacheHeadphones.php:66
-#: ../../src/Repository/Model/Preference.php:896
+#: ../../src/Repository/Model/Preference.php:904
 msgid "Headphones API key"
 msgstr "کلید رابط کاربری برنامه هدفون ها"
 
-#: ../../src/Plugin/AmpacheHomeDashboard.php:62
+#: ../../src/Plugin/AmpacheHomeDashboard.php:63
 msgid "Show Album dashboard sections on the homepage"
 msgstr ""
 
-#: ../../src/Plugin/AmpacheHomeDashboard.php:71
-#: ../../src/Repository/Model/Preference.php:905
+#: ../../src/Plugin/AmpacheHomeDashboard.php:72
+#: ../../src/Repository/Model/Preference.php:913
 msgid "Home Dashboard max items"
 msgstr ""
 
@@ -9193,13 +9215,13 @@ msgstr "پخش آهنگ هایی که در حساب last.fm خود دارید"
 
 #: ../../src/Plugin/AmpacheLastfm.php:70
 #: ../../src/Plugin/AmpacheLastfm.php:118
-#: ../../src/Repository/Model/Preference.php:915
+#: ../../src/Repository/Model/Preference.php:924
 msgid "Last.FM Submit Challenge"
 msgstr "چالش ارسال Last.FM"
 
 #: ../../src/Plugin/AmpacheLastfm.php:73
 #: ../../src/Plugin/AmpacheLastfm.php:117
-#: ../../src/Repository/Model/Preference.php:916
+#: ../../src/Repository/Model/Preference.php:925
 msgid "Last.FM Grant URL"
 msgstr "اعطای آدرس اینترنتی Last.FM"
 
@@ -9212,7 +9234,7 @@ msgid "Scrobble songs you play to your Libre.FM Account"
 msgstr "پخش آهنگ هایی که در حساب Libre.FM خود دارید"
 
 #: ../../src/Plugin/Ampachelibrefm.php:70
-#: ../../src/Repository/Model/Preference.php:919
+#: ../../src/Repository/Model/Preference.php:928
 msgid "Libre.FM Submit Challenge"
 msgstr "چالش ارسال Libre.FM"
 
@@ -9226,7 +9248,7 @@ msgid "Scrobble songs you play to your ListenBrainz Account"
 msgstr "پخش آهنگ هایی که در حساب ListenBrainz خود دارید"
 
 #: ../../src/Plugin/Ampachelistenbrainz.php:67
-#: ../../src/Repository/Model/Preference.php:920
+#: ../../src/Repository/Model/Preference.php:929
 msgid "ListenBrainz User Token"
 msgstr "گذرواژه کاربر ListenBrainz"
 
@@ -9248,12 +9270,12 @@ msgid "Matomo statistics"
 msgstr "آمار Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:62
-#: ../../src/Repository/Model/Preference.php:924
+#: ../../src/Repository/Model/Preference.php:933
 msgid "Matomo Site ID"
 msgstr "شناسه سایت Matomo"
 
 #: ../../src/Plugin/AmpacheMatomo.php:65
-#: ../../src/Repository/Model/Preference.php:925
+#: ../../src/Repository/Model/Preference.php:934
 msgid "Matomo URL"
 msgstr "آدرس اینترنتی Matomo"
 
@@ -9266,43 +9288,43 @@ msgid "PayPal donation button on user page"
 msgstr "کلید اهداء با پی پال روی صفحه کاربر"
 
 #: ../../src/Plugin/AmpachePaypal.php:63
-#: ../../src/Repository/Model/Preference.php:932
+#: ../../src/Repository/Model/Preference.php:941
 msgid "PayPal ID"
 msgstr "شناسه پی پال"
 
 #: ../../src/Plugin/AmpachePaypal.php:66
-#: ../../src/Repository/Model/Preference.php:933
+#: ../../src/Repository/Model/Preference.php:942
 msgid "PayPal Currency Code"
 msgstr "کد ارزی پی پال"
 
-#: ../../src/Plugin/AmpachePaypal.php:101
+#: ../../src/Plugin/AmpachePaypal.php:100
 msgid "on"
 msgstr "روشن"
 
-#: ../../src/Plugin/AmpachePaypal.php:115
+#: ../../src/Plugin/AmpachePaypal.php:114
 msgid "PayPal - The safer, easier way to pay online!"
 msgstr "پی پال - روشی ایمن تر، آسان تر برای پرداخت آنلاین!"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:56
+#: ../../src/Plugin/AmpachePersonalFavorites.php:58
 msgid "Personal favorites on homepage"
 msgstr "مورد علاقه شخصی روی صفحه اصلی"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:65
-#: ../../src/Repository/Model/Preference.php:935
+#: ../../src/Plugin/AmpachePersonalFavorites.php:67
+#: ../../src/Repository/Model/Preference.php:944
 msgid "Personal favorites on the homepage"
 msgstr "مورد علاقه شخصی روی صفحه اصلی"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:68
-#: ../../src/Repository/Model/Preference.php:936
+#: ../../src/Plugin/AmpachePersonalFavorites.php:71
+#: ../../src/Repository/Model/Preference.php:945
 msgid "Favorite Playlists"
 msgstr "لیست پخش های موردعلاقه"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:71
-#: ../../src/Repository/Model/Preference.php:937
+#: ../../src/Plugin/AmpachePersonalFavorites.php:75
+#: ../../src/Repository/Model/Preference.php:946
 msgid "Favorite Smartlists"
 msgstr "لیست های هوشمند موردعلاقه"
 
-#: ../../src/Plugin/AmpachePersonalFavorites.php:123
+#: ../../src/Plugin/AmpachePersonalFavorites.php:144
 msgid "Favorite Lists"
 msgstr "لیست های موردعلاقه"
 
@@ -9311,12 +9333,12 @@ msgid "Piwik statistics"
 msgstr "آمار Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:62
-#: ../../src/Repository/Model/Preference.php:938
+#: ../../src/Repository/Model/Preference.php:948
 msgid "Piwik Site ID"
 msgstr "شناسه سایت Piwik"
 
 #: ../../src/Plugin/AmpachePiwik.php:65
-#: ../../src/Repository/Model/Preference.php:939
+#: ../../src/Repository/Model/Preference.php:949
 msgid "Piwik URL"
 msgstr "آدرس اینترنتی Piwik"
 
@@ -9325,49 +9347,49 @@ msgid "Raise the album and artist rating to match the highest song rating"
 msgstr "آلبوم و رتبه هنرمند را برای مطابقت با بالاترین رتبه آهنگ افزایش دهید"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:75
-#: ../../src/Repository/Model/Preference.php:954
+#: ../../src/Repository/Model/Preference.php:964
 msgid "Minimum star rating to match"
 msgstr "حداقل رتبه ستاره برای مطابقت"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:78
 #: ../../src/Plugin/AmpacheRatingMatch.php:136
-#: ../../src/Repository/Model/Preference.php:948
+#: ../../src/Repository/Model/Preference.php:958
 msgid "When you love a track, flag the album and artist"
 msgstr "وقتی آهنگی را دوست دارید ، آلبوم و هنرمند را پرچم گذاری کنید"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:81
 #: ../../src/Plugin/AmpacheRatingMatch.php:139
-#: ../../src/Repository/Model/Preference.php:949
+#: ../../src/Repository/Model/Preference.php:959
 msgid "Match rule for 1 Star ($play,$skip)"
 msgstr "قانون مطابقت برای 1 ستاره  ($play,$skip)"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:84
 #: ../../src/Plugin/AmpacheRatingMatch.php:140
-#: ../../src/Repository/Model/Preference.php:950
+#: ../../src/Repository/Model/Preference.php:960
 msgid "Match rule for 2 Stars"
 msgstr "قانون مطابقت برای 2 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:87
 #: ../../src/Plugin/AmpacheRatingMatch.php:141
-#: ../../src/Repository/Model/Preference.php:951
+#: ../../src/Repository/Model/Preference.php:961
 msgid "Match rule for 3 Stars"
 msgstr "قانون مطابقت برای 3 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:90
 #: ../../src/Plugin/AmpacheRatingMatch.php:142
-#: ../../src/Repository/Model/Preference.php:952
+#: ../../src/Repository/Model/Preference.php:962
 msgid "Match rule for 4 Stars"
 msgstr "قانون مطابقت برای 4 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:93
 #: ../../src/Plugin/AmpacheRatingMatch.php:143
-#: ../../src/Repository/Model/Preference.php:953
+#: ../../src/Repository/Model/Preference.php:963
 msgid "Match rule for 5 Stars"
 msgstr "قانون مطابقت برای 5 ستاره"
 
 #: ../../src/Plugin/AmpacheRatingMatch.php:96
 #: ../../src/Plugin/AmpacheRatingMatch.php:144
-#: ../../src/Repository/Model/Preference.php:947
+#: ../../src/Repository/Model/Preference.php:957
 msgid "Match rule for Flags"
 msgstr "قانون مطابقت برای پرچم ها"
 
@@ -9376,26 +9398,26 @@ msgstr "قانون مطابقت برای پرچم ها"
 msgid "Save ratings to file tags when changed"
 msgstr ""
 
-#: ../../src/Plugin/AmpacheRSSView.php:53
+#: ../../src/Plugin/AmpacheRSSView.php:55
 msgid "RSS View"
 msgstr "مشاهده RSS"
 
-#: ../../src/Plugin/AmpacheRSSView.php:62
-#: ../../src/Repository/Model/Preference.php:955
+#: ../../src/Plugin/AmpacheRSSView.php:64
+#: ../../src/Repository/Model/Preference.php:965
 msgid "RSS Feed URL"
 msgstr "آدرس اینترنتی خوراک RSS"
 
-#: ../../src/Plugin/AmpacheRSSView.php:65
-#: ../../src/Repository/Model/Preference.php:956
+#: ../../src/Plugin/AmpacheRSSView.php:68
+#: ../../src/Repository/Model/Preference.php:966
 msgid "RSS Feed max items"
 msgstr "حداکثر آیتم های خوراک RSS"
 
-#: ../../src/Plugin/AmpacheShoutHome.php:54
+#: ../../src/Plugin/AmpacheShoutHome.php:56
 msgid "Shoutbox on homepage"
 msgstr "شات باکس روی صفحه اصلی"
 
-#: ../../src/Plugin/AmpacheShoutHome.php:63
-#: ../../src/Repository/Model/Preference.php:959
+#: ../../src/Plugin/AmpacheShoutHome.php:65
+#: ../../src/Repository/Model/Preference.php:970
 msgid "Shoutbox on homepage max items"
 msgstr "حداکثر آیتم های شات باکس روی صفحه اصلی"
 
@@ -9404,12 +9426,12 @@ msgid "Control bandwidth per user"
 msgstr "کنترل پهنای باند برای هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:65
-#: ../../src/Repository/Model/Preference.php:986
+#: ../../src/Repository/Model/Preference.php:1004
 msgid "Stream control maximal bandwidth (month)"
 msgstr "حداکثر  پهنای باند کنترل جریان (ماه)"
 
 #: ../../src/Plugin/AmpacheStreamBandwidth.php:68
-#: ../../src/Repository/Model/Preference.php:985
+#: ../../src/Repository/Model/Preference.php:1003
 msgid "Stream control bandwidth history (days)"
 msgstr "تاریخچه کنترل پهنای باند جریان (روز)"
 
@@ -9418,12 +9440,12 @@ msgid "Control hits per user"
 msgstr "کنترل بازدیدهای هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:63
-#: ../../src/Repository/Model/Preference.php:988
+#: ../../src/Repository/Model/Preference.php:1006
 msgid "Stream control maximal hits"
 msgstr "حداکثر بازدیدهای کنترل جریان"
 
 #: ../../src/Plugin/AmpacheStreamHits.php:66
-#: ../../src/Repository/Model/Preference.php:987
+#: ../../src/Repository/Model/Preference.php:1005
 msgid "Stream control hits history (days)"
 msgstr "تاریخچه بازدید های کنترل جریان (روز)"
 
@@ -9432,12 +9454,12 @@ msgid "Control time per user"
 msgstr "کنترل زمان هر کاربر"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:65
-#: ../../src/Repository/Model/Preference.php:990
+#: ../../src/Repository/Model/Preference.php:1008
 msgid "Stream control maximal time (minutes)"
 msgstr "حداکثر زمان کنترل جریان (دقیقه)"
 
 #: ../../src/Plugin/AmpacheStreamTime.php:68
-#: ../../src/Repository/Model/Preference.php:989
+#: ../../src/Repository/Model/Preference.php:1007
 msgid "Stream control time history (days)"
 msgstr "تاریخچه زمان کنترل جریان (روز)"
 
@@ -9446,7 +9468,7 @@ msgid "TheAudioDb metadata integration"
 msgstr "ادغام متادیتای TheAudioDb"
 
 #: ../../src/Plugin/AmpacheTheaudiodb.php:72
-#: ../../src/Repository/Model/Preference.php:993
+#: ../../src/Repository/Model/Preference.php:1011
 msgid "TheAudioDb API key"
 msgstr "کلید رابط کاربری برنامه TheAudioDb"
 
@@ -9459,17 +9481,17 @@ msgid "URL shorteners on shared links with YOURLS"
 msgstr "کوتاه کننده آدرس اینترنتی بر پیوندهای اشتراک گذاشته شده با YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:64
-#: ../../src/Repository/Model/Preference.php:1024
+#: ../../src/Repository/Model/Preference.php:1042
 msgid "YOURLS domain name"
 msgstr "نام دامنه YOURLS"
 
 #: ../../src/Plugin/AmpacheYourls.php:67
-#: ../../src/Repository/Model/Preference.php:1025
+#: ../../src/Repository/Model/Preference.php:1043
 msgid "YOURLS use IDN"
 msgstr "YOURLS استفاده از IDN"
 
 #: ../../src/Plugin/AmpacheYourls.php:70
-#: ../../src/Repository/Model/Preference.php:1023
+#: ../../src/Repository/Model/Preference.php:1041
 msgid "YOURLS API key"
 msgstr "کلید رابط کاربری برنامه YOURLS"
 
@@ -9596,545 +9618,569 @@ msgstr "کدک مورد نیاز است (به عنوان مثال: MP3, OGG...)"
 msgid "Catalog is invalid"
 msgstr "مجموعه وکاتالوگ معتبر نیست"
 
-#: ../../src/Repository/Model/Plugin.php:375
+#: ../../src/Repository/Model/Plugin.php:374
 msgid "You have Plugins that need an update!"
 msgstr ""
 
-#: ../../src/Repository/Model/Plugin.php:377
+#: ../../src/Repository/Model/Plugin.php:376
 msgid "Update Plugins automatically"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:830
+#: ../../src/Repository/Model/Preference.php:836
 msgid "Ajax page load"
 msgstr "بارگذاری صفحه آجکسی"
 
-#: ../../src/Repository/Model/Preference.php:831
+#: ../../src/Repository/Model/Preference.php:837
 msgid "Album - Group multiple disks"
 msgstr "آلبوم - گروه بندی چندین دیسک"
 
-#: ../../src/Repository/Model/Preference.php:832
+#: ../../src/Repository/Model/Preference.php:838
 msgid "Album - Group per release type sort"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:833
+#: ../../src/Repository/Model/Preference.php:839
 msgid "Album - Group per release type"
 msgstr "آلبوم - گروه در هر نوع انتشار"
 
-#: ../../src/Repository/Model/Preference.php:834
+#: ../../src/Repository/Model/Preference.php:840
 msgid "Album - Default sort"
 msgstr "آلبوم - مرتب سازی پیش فرض"
 
-#: ../../src/Repository/Model/Preference.php:835
+#: ../../src/Repository/Model/Preference.php:841
 msgid "Allow Democratic Play"
 msgstr "اجازه پخش آزاد"
 
-#: ../../src/Repository/Model/Preference.php:836
+#: ../../src/Repository/Model/Preference.php:842
 msgid "Allow Localplay Play"
 msgstr "اجازه اجرا پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:837
+#: ../../src/Repository/Model/Preference.php:843
 msgid "Share Recently Played information - Allow access to streaming agent"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر - اجازه دسترسی به عامل پخش کننده"
 
-#: ../../src/Repository/Model/Preference.php:838
+#: ../../src/Repository/Model/Preference.php:844
 msgid "Share Now Playing information"
 msgstr "اشتراک گذاری اطلاعات ترانه درحال پخش"
 
-#: ../../src/Repository/Model/Preference.php:839
+#: ../../src/Repository/Model/Preference.php:845
 msgid "Share Recently Played information"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر"
 
-#: ../../src/Repository/Model/Preference.php:840
+#: ../../src/Repository/Model/Preference.php:846
 msgid ""
 "Share Recently Played information - Allow access to streaming date/time"
 msgstr "اشتراک گذاری اطلاعات ترانه پخش شده اخیر - اجازه دسترسی به تاریخ / زمان پخش"
 
-#: ../../src/Repository/Model/Preference.php:841
+#: ../../src/Repository/Model/Preference.php:847
 msgid "Allow Streaming"
 msgstr "اجازه پخش جریانی"
 
-#: ../../src/Repository/Model/Preference.php:842
+#: ../../src/Repository/Model/Preference.php:848
 msgid "Allow user uploads"
 msgstr "اجازه بارگذاری کاربران"
 
-#: ../../src/Repository/Model/Preference.php:843
+#: ../../src/Repository/Model/Preference.php:849
 msgid "Allow Video Features"
 msgstr "ویژگی های ویدئویی مجاز"
 
-#: ../../src/Repository/Model/Preference.php:849
+#: ../../src/Repository/Model/Preference.php:855
 msgid "Allow Ampache API3 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:850
+#: ../../src/Repository/Model/Preference.php:856
 msgid "Allow Ampache API4 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:851
+#: ../../src/Repository/Model/Preference.php:857
 msgid "Allow Ampache API5 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:852
+#: ../../src/Repository/Model/Preference.php:858
 msgid "Allow Ampache API6 responses"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:853
+#: ../../src/Repository/Model/Preference.php:859
 msgid "Force a specific API response no matter what version you send"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:854
+#: ../../src/Repository/Model/Preference.php:860
 msgid "Hide playlists in Subsonic and API clients that start with this string"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:855
+#: ../../src/Repository/Model/Preference.php:861
 msgid "Hide smartlists that match playlist names in Subsonic and API clients"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:856
+#: ../../src/Repository/Model/Preference.php:862
 msgid "AutoUpdate last check time"
 msgstr "آخرین زمان بررسی بروزرسانی خودکار"
 
-#: ../../src/Repository/Model/Preference.php:857
+#: ../../src/Repository/Model/Preference.php:863
 msgid "AutoUpdate last version from last check is newer"
 msgstr "آخرین نسخه از آخرین بررسی بروزرسانی خودکار جدیدتر است"
 
-#: ../../src/Repository/Model/Preference.php:858
+#: ../../src/Repository/Model/Preference.php:864
 msgid "AutoUpdate last version from last check"
 msgstr "آخرین نسخه از آخرین بررسی بروزرسانی خودکار"
 
-#: ../../src/Repository/Model/Preference.php:859
+#: ../../src/Repository/Model/Preference.php:865
 msgid "Check for Ampache updates automatically"
 msgstr "بررسی بروزرسانی های آمپاچی به طور خودکار"
 
-#: ../../src/Repository/Model/Preference.php:860
+#: ../../src/Repository/Model/Preference.php:866
 msgid "Bit.ly API key"
 msgstr "کلید رابط کاربری برنامه bit.ly"
 
-#: ../../src/Repository/Model/Preference.php:861
+#: ../../src/Repository/Model/Preference.php:867
 msgid "Bit.ly Username"
 msgstr "نام کاربری bit.ly"
 
-#: ../../src/Repository/Model/Preference.php:862
+#: ../../src/Repository/Model/Preference.php:868
 msgid "Only keep the latest media bookmark"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:863
+#: ../../src/Repository/Model/Preference.php:869
 msgid "Broadcast web player by default"
 msgstr "پخش کننده وب به صورت پیش فرض"
 
-#: ../../src/Repository/Model/Preference.php:864
+#: ../../src/Repository/Model/Preference.php:870
 msgid "Show filter box on browse"
 msgstr "نمایش جعبه فیلتر در مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:865
+#: ../../src/Repository/Model/Preference.php:871
 msgid "Web Player browser notifications timeout (seconds)"
 msgstr "تایم اوت (ثانیه) اعلان های پخش کننده وب مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:866
+#: ../../src/Repository/Model/Preference.php:872
 msgid "Web Player browser notifications"
 msgstr "اعلان های پخش کننده وب مرورگر"
 
-#: ../../src/Repository/Model/Preference.php:867
+#: ../../src/Repository/Model/Preference.php:873
 msgid "Check library item at import time and disable duplicates"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:870
+#: ../../src/Repository/Model/Preference.php:877
 msgid "Cache computed SQL data (eg. media hits stats) using a cron"
 msgstr "ذخیره داده های اسکیول محاسبه شده (به عنوان مثال: آمار بازدید رسانه) با استفاده از وظیفه خودکار"
 
-#: ../../src/Repository/Model/Preference.php:871
+#: ../../src/Repository/Model/Preference.php:878
 msgid "Custom blank album default image"
 msgstr "تصویر پیش فرض سفارشی آلبوم خالی"
 
-#: ../../src/Repository/Model/Preference.php:872
+#: ../../src/Repository/Model/Preference.php:879
 msgid "Custom datetime"
 msgstr "زمان وتاریخ سفارشی"
 
-#: ../../src/Repository/Model/Preference.php:873
+#: ../../src/Repository/Model/Preference.php:880
 msgid "Custom URL - Favicon"
 msgstr "آدرس اینترنتی سفارشی - فاویکون"
 
-#: ../../src/Repository/Model/Preference.php:874
+#: ../../src/Repository/Model/Preference.php:881
 msgid "Custom URL - Login page background"
 msgstr "آدرس اینترنتی سفارشی - پس زمینه صفحه ورود"
 
-#: ../../src/Repository/Model/Preference.php:875
+#: ../../src/Repository/Model/Preference.php:882
 msgid "Custom URL - Login page logo"
 msgstr "آدرس اینترنتی سفارشی - لگو صفحه ورود"
 
-#: ../../src/Repository/Model/Preference.php:876
+#: ../../src/Repository/Model/Preference.php:883
 msgid "Custom URL - Logo"
 msgstr "آدرس اینترنتی سفارشی - لگو"
 
-#: ../../src/Repository/Model/Preference.php:877
+#: ../../src/Repository/Model/Preference.php:884
 msgid "Custom URL - Use your avatar for header logo"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:878
+#: ../../src/Repository/Model/Preference.php:885
 msgid "Custom text footer"
 msgstr "متن پاورقی سفارشی"
 
-#: ../../src/Repository/Model/Preference.php:879
+#: ../../src/Repository/Model/Preference.php:886
 msgid "Custom timezone (Override PHP date.timezone)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:880
+#: ../../src/Repository/Model/Preference.php:887
 msgid "Use DAAP backend"
 msgstr "استفاده از بک اند DAAP"
 
-#: ../../src/Repository/Model/Preference.php:881
+#: ../../src/Repository/Model/Preference.php:888
 msgid "DAAP backend password"
 msgstr "گذرواژه بک اند DAAP"
 
-#: ../../src/Repository/Model/Preference.php:882
+#: ../../src/Repository/Model/Preference.php:889
 msgid "Democratic - Clear votes for expired user sessions"
 msgstr "آزاد - پاکسازی آراء برای جلسات منقضی شده کاربر"
 
-#: ../../src/Repository/Model/Preference.php:883
+#: ../../src/Repository/Model/Preference.php:890
 msgid "Democratic - Use smartlists for base playlist"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:884
+#: ../../src/Repository/Model/Preference.php:891
 msgid "Limit direct play to maximum media count"
 msgstr "پخش مستقیم را به حداکثر تعداد رسانه محدود کنید"
 
-#: ../../src/Repository/Model/Preference.php:885
+#: ../../src/Repository/Model/Preference.php:892
 msgid "Custom metadata - Define field list"
 msgstr "متادیتای سفارشی - تعریف لیست فیلدها"
 
-#: ../../src/Repository/Model/Preference.php:886
+#: ../../src/Repository/Model/Preference.php:893
 msgid "Custom metadata - Disable these fields"
 msgstr "متادیتای سفارشی - غیرفعالسازی این فیلدها"
 
-#: ../../src/Repository/Model/Preference.php:889
+#: ../../src/Repository/Model/Preference.php:896
 msgid "Allow Downloads"
 msgstr "اجازه دانلودها"
 
-#: ../../src/Repository/Model/Preference.php:891
+#: ../../src/Repository/Model/Preference.php:898
 msgid "Force HTTP playback regardless of port"
 msgstr "بدون در نظر گرفتن پورت، بازپخش HTTP اجباری"
 
-#: ../../src/Repository/Model/Preference.php:893
+#: ../../src/Repository/Model/Preference.php:901
 msgid "Allow Geolocation"
 msgstr "اجازه مکان یابی جغرافیایی"
 
-#: ../../src/Repository/Model/Preference.php:898
+#: ../../src/Repository/Model/Preference.php:906
 msgid "Hide the Genre column in browse table rows"
 msgstr "پنهان کردن ستون ژانر در مرور ردیف های جدول"
 
-#: ../../src/Repository/Model/Preference.php:899
+#: ../../src/Repository/Model/Preference.php:907
 msgid "Hide the Song Artist column for Albums with one Artist"
 msgstr "پنهان کردن ستون هنرمند آهنگ برای آلبوم ها با یک هنرمند"
 
-#: ../../src/Repository/Model/Preference.php:900
+#: ../../src/Repository/Model/Preference.php:908
 msgid "Show Albums of the Moment"
 msgstr "نمایش آلبوم هایی از لحظات خاص"
 
-#: ../../src/Repository/Model/Preference.php:901
+#: ../../src/Repository/Model/Preference.php:909
 msgid "Show Videos of the Moment"
 msgstr "نمایش ویدیوهایی از لحظات خاص"
 
-#: ../../src/Repository/Model/Preference.php:902
+#: ../../src/Repository/Model/Preference.php:910
 msgid "Show Now Playing"
 msgstr "نمایش در حال پخش"
 
-#: ../../src/Repository/Model/Preference.php:903
+#: ../../src/Repository/Model/Preference.php:911
 msgid "Show Recently Played"
 msgstr "نمایش اخیراً پخش شده"
 
-#: ../../src/Repository/Model/Preference.php:904
+#: ../../src/Repository/Model/Preference.php:912
 msgid "Show all media types in Recently Played"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:912
+#: ../../src/Repository/Model/Preference.php:921
 msgid "Use Dashboard links for the index page header"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:913
+#: ../../src/Repository/Model/Preference.php:922
 msgid "Default webplayer volume"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:917
+#: ../../src/Repository/Model/Preference.php:926
 msgid ""
 "Alphabet browsing by default for following library items (album,artist,...)"
 msgstr "مرور الفبایی به صورت پیش فرض برای آیتم های زیر کتابخانه (آلبوم ، هنرمند ، ...)"
 
-#: ../../src/Repository/Model/Preference.php:918
+#: ../../src/Repository/Model/Preference.php:927
 msgid "Library item context menu"
 msgstr "کتابخانه آیتم منوی زمینه"
 
-#: ../../src/Repository/Model/Preference.php:921
+#: ../../src/Repository/Model/Preference.php:930
 msgid "Localplay Type"
 msgstr "نوع پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:922
+#: ../../src/Repository/Model/Preference.php:931
 msgid "Localplay Access"
 msgstr "دسترسی پخش محلی"
 
-#: ../../src/Repository/Model/Preference.php:923
+#: ../../src/Repository/Model/Preference.php:932
 msgid "Lock Songs"
 msgstr "قفل کردن آهنگ ها"
 
-#: ../../src/Repository/Model/Preference.php:928
+#: ../../src/Repository/Model/Preference.php:937
 msgid "Allow E-mail notifications"
 msgstr "اعلان های ایمیل مجاز"
 
-#: ../../src/Repository/Model/Preference.php:929
+#: ../../src/Repository/Model/Preference.php:938
 msgid "Now Playing filtered per user"
 msgstr "در حال پخش فیلتر شده برای هر کاربر"
 
-#: ../../src/Repository/Model/Preference.php:930
+#: ../../src/Repository/Model/Preference.php:939
 msgid "Offset Limit"
 msgstr "محدودیت افست"
 
-#: ../../src/Repository/Model/Preference.php:931
+#: ../../src/Repository/Model/Preference.php:940
 msgid "Set the amount of items Album/Video of the Moment will display"
 msgstr "تنظیم مقدار زمان آیتم هایی که در آلبوم / ویدیوی لحظه های خاص نمایش داده می شود"
 
-#: ../../src/Repository/Model/Preference.php:934
+#: ../../src/Repository/Model/Preference.php:943
 msgid "API sessions do not expire"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:940
+#: ../../src/Repository/Model/Preference.php:950
 msgid "Playlist Method"
 msgstr "روشهای لیست پخش"
 
-#: ../../src/Repository/Model/Preference.php:941
+#: ../../src/Repository/Model/Preference.php:951
 msgid "Playlist Type"
 msgstr "نوع لیست پخش"
 
-#: ../../src/Repository/Model/Preference.php:942
+#: ../../src/Repository/Model/Preference.php:952
 msgid "Playback Type"
 msgstr "نوع بازپخش"
 
-#: ../../src/Repository/Model/Preference.php:943
+#: ../../src/Repository/Model/Preference.php:953
 msgid "# latest episodes to keep"
 msgstr "# آخرین قسمت سریال برای نگهداری"
 
-#: ../../src/Repository/Model/Preference.php:944
+#: ../../src/Repository/Model/Preference.php:954
 msgid "# episodes to download when new episodes are available"
 msgstr "# سریال ها برای بارگیری در صورت در دسترس بودن قسمت های جدید"
 
-#: ../../src/Repository/Model/Preference.php:945
+#: ../../src/Repository/Model/Preference.php:955
 msgid "Popular Threshold"
 msgstr "آستانه پر بیننده ترین‌ها"
 
-#: ../../src/Repository/Model/Preference.php:946
+#: ../../src/Repository/Model/Preference.php:956
 msgid "Rate Limit"
 msgstr "محدودیت نرخ انتقال"
 
-#: ../../src/Repository/Model/Preference.php:957
+#: ../../src/Repository/Model/Preference.php:968
 msgid "Share links default expiration days (0=never)"
 msgstr "روزهای انقضای پیش فرض پیوندهای به اشتراک گذاری (0 = هرگز)"
 
-#: ../../src/Repository/Model/Preference.php:958
+#: ../../src/Repository/Model/Preference.php:969
 msgid "Allow Share"
 msgstr "اشتراک گذاری مجاز"
 
-#: ../../src/Repository/Model/Preference.php:960
+#: ../../src/Repository/Model/Preference.php:972
 msgid "Show 'Album Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:961
+#: ../../src/Repository/Model/Preference.php:973
 msgid "Show 'Artists' link in the main sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:962
+#: ../../src/Repository/Model/Preference.php:974
 msgid "Show donate button in footer"
 msgstr "نمایش دکمه اهدأ کردن در پائین صفحه"
 
-#: ../../src/Repository/Model/Preference.php:963
+#: ../../src/Repository/Model/Preference.php:975
 msgid "Show the login / registration links in the site header"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:964
+#: ../../src/Repository/Model/Preference.php:976
 msgid "Show License"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:965
+#: ../../src/Repository/Model/Preference.php:977
 msgid "Show lyrics"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:966
+#: ../../src/Repository/Model/Preference.php:978
 msgid "Show Album original year on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:967
+#: ../../src/Repository/Model/Preference.php:979
 msgid "Show # played"
 msgstr "نمایش # پخش شده"
 
-#: ../../src/Repository/Model/Preference.php:968
+#: ../../src/Repository/Model/Preference.php:980
 msgid "Show playlist owner username in titles"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:969
+#: ../../src/Repository/Model/Preference.php:981
 msgid "Show # skipped"
 msgstr "نمایش # رد شده"
 
-#: ../../src/Repository/Model/Preference.php:970
+#: ../../src/Repository/Model/Preference.php:982
 msgid "Show Album subtitle on links (if available)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:971
+#: ../../src/Repository/Model/Preference.php:983
 msgid "Enable access to your personal \"Spotify Wrapped\" from your user page"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:972
+#: ../../src/Repository/Model/Preference.php:984
 msgid "Light sidebar by default"
 msgstr "به طور پیش فرض نوار کناری سبک"
 
-#: ../../src/Repository/Model/Preference.php:973
+#: ../../src/Repository/Model/Preference.php:985
 msgid "Hide the Browse menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:974
+#: ../../src/Repository/Model/Preference.php:986
 msgid "Hide the Dashboard menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:975
+#: ../../src/Repository/Model/Preference.php:987
 msgid "Hide the Information menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:976
+#: ../../src/Repository/Model/Preference.php:988
 msgid "Hide the Playlist menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:977
+#: ../../src/Repository/Model/Preference.php:989
 msgid "Hide the Search menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:978
+#: ../../src/Repository/Model/Preference.php:990
 msgid "Hide sidebar switcher arrows"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:979
+#: ../../src/Repository/Model/Preference.php:991
 msgid "Hide the Video menu in the sidebar"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:980
+#: ../../src/Repository/Model/Preference.php:992
+msgid "Custom CSS Order - Browse"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:993
+msgid "Custom CSS Order - Dashboard"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:994
+msgid "Custom CSS Order - Information"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:995
+msgid "Custom CSS Order - Playlist"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:996
+msgid "Custom CSS Order - Search"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:997
+msgid "Custom CSS Order - Video"
+msgstr ""
+
+#: ../../src/Repository/Model/Preference.php:998
 msgid "Website Title"
 msgstr "عنوان وب سایت"
 
-#: ../../src/Repository/Model/Preference.php:981
+#: ../../src/Repository/Model/Preference.php:999
 msgid "Artist slideshow inactivity time"
 msgstr "زمان بی تحرکی اسلاید شو هنرمند"
 
-#: ../../src/Repository/Model/Preference.php:982
+#: ../../src/Repository/Model/Preference.php:1000
 msgid "Show current song in Web player page title"
 msgstr "نمایش نام آهنگ فعلی در عنوان صفحه پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:983
+#: ../../src/Repository/Model/Preference.php:1001
 msgid "Statistics Day Threshold"
 msgstr "آستانه  آمار روزانه"
 
-#: ../../src/Repository/Model/Preference.php:984
+#: ../../src/Repository/Model/Preference.php:1002
 msgid "Enable URL Rewriting"
 msgstr "خواندن و نوشتن آدرس اینترنتی فعال"
 
-#: ../../src/Repository/Model/Preference.php:991
+#: ../../src/Repository/Model/Preference.php:1009
 msgid ""
 "Force Subsonic streams to download. (Enable scrobble in your client to "
 "record stats)"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:992
+#: ../../src/Repository/Model/Preference.php:1010
 msgid "Use Subsonic backend"
 msgstr "استفاده از بک اند Subsonic"
 
-#: ../../src/Repository/Model/Preference.php:995
+#: ../../src/Repository/Model/Preference.php:1013
 msgid "Theme color"
 msgstr "رنگ تم و قالب"
 
-#: ../../src/Repository/Model/Preference.php:996
+#: ../../src/Repository/Model/Preference.php:1014
 msgid "Theme"
 msgstr "قالب، تم"
 
-#: ../../src/Repository/Model/Preference.php:997
+#: ../../src/Repository/Model/Preference.php:1015
 msgid "Top menu"
 msgstr "منو بالایی"
 
-#: ../../src/Repository/Model/Preference.php:998
+#: ../../src/Repository/Model/Preference.php:1016
 msgid "Transcode Bitrate"
 msgstr "نرخ بیت کدگذاری"
 
-#: ../../src/Repository/Model/Preference.php:1000
+#: ../../src/Repository/Model/Preference.php:1018
 msgid "Fix header position on compatible themes"
 msgstr "تثبیت کردن موقعیت هدر روی تم ها و قالب های سازگار"
 
-#: ../../src/Repository/Model/Preference.php:1001
+#: ../../src/Repository/Model/Preference.php:1019
 msgid "Only add unique items to playlists"
 msgstr "فقط آیتم های منحصر به فرد به لیست پخش اضافه شود"
 
-#: ../../src/Repository/Model/Preference.php:1002
+#: ../../src/Repository/Model/Preference.php:1020
 msgid "Upload Access Level"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:1003
+#: ../../src/Repository/Model/Preference.php:1021
 msgid "Allow users to edit uploaded songs"
 msgstr "ویرایش آهنگ های بارگذاری شده مجاز برای کاربران"
 
-#: ../../src/Repository/Model/Preference.php:1004
+#: ../../src/Repository/Model/Preference.php:1022
 msgid "Allow users to remove uploaded songs"
 msgstr "حذف آهنگ های بارگذاری شده مجاز برای کاربران"
 
-#: ../../src/Repository/Model/Preference.php:1005
+#: ../../src/Repository/Model/Preference.php:1023
 msgid "Rename uploaded file according to catalog pattern"
 msgstr "تغییر نام فایل بارگذاری شده با توجه به الگوی مجموعه وکاتالوگ"
 
-#: ../../src/Repository/Model/Preference.php:1006
+#: ../../src/Repository/Model/Preference.php:1024
 msgid "Destination catalog"
 msgstr "مجموعه وکاتالوگ هدف"
 
-#: ../../src/Repository/Model/Preference.php:1007
+#: ../../src/Repository/Model/Preference.php:1025
 msgid "Post-upload script (current directory = upload target directory)"
 msgstr "اسکریپت پس از بارگذاری (فهرست فعلی = فهرست مقصد بارگذاری)"
 
-#: ../../src/Repository/Model/Preference.php:1008
+#: ../../src/Repository/Model/Preference.php:1026
 msgid "Create a subdirectory per user"
 msgstr "ایجاد یک زیر شاخه برای هر کاربر"
 
-#: ../../src/Repository/Model/Preference.php:1009
+#: ../../src/Repository/Model/Preference.php:1027
 msgid "Consider the user sender as the track's artist"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:1011
+#: ../../src/Repository/Model/Preference.php:1029
 msgid "Use UPnP backend"
 msgstr "استفاده از بک اند UPnP"
 
-#: ../../src/Repository/Model/Preference.php:1012
+#: ../../src/Repository/Model/Preference.php:1030
 msgid "Browse by Original Year for albums (falls back to Year)"
 msgstr "مرور بر اساس سال اصلی آلبوم ها (برمیگردد به سال)"
 
-#: ../../src/Repository/Model/Preference.php:1013
+#: ../../src/Repository/Model/Preference.php:1031
 msgid ""
 "Use an alternative playback action for streaming if you have issues with "
 "playing music"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:1015
+#: ../../src/Repository/Model/Preference.php:1033
 msgid "Use WebDAV backend"
 msgstr "استفاده از بک اند WebDAV"
 
-#: ../../src/Repository/Model/Preference.php:1016
+#: ../../src/Repository/Model/Preference.php:1034
 msgid "Authorize JavaScript decoder (Aurora.js) in Web Player"
 msgstr "اجازه رمزگشایی جاوا اسکریپت (Aurora.js) در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:1017
+#: ../../src/Repository/Model/Preference.php:1035
 msgid "Confirmation when closing current playing window"
 msgstr "تأیید گرفتن هنگام بستن پنجره پخش فعلی"
 
-#: ../../src/Repository/Model/Preference.php:1018
+#: ../../src/Repository/Model/Preference.php:1036
 msgid "Authorize Flash Web Player"
 msgstr "اجازه اجرای فایل فلش در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:1019
+#: ../../src/Repository/Model/Preference.php:1037
 msgid "Authorize HTML5 Web Player"
 msgstr "اجازه اجرای HTML5 در پخش کننده وب"
 
-#: ../../src/Repository/Model/Preference.php:1020
+#: ../../src/Repository/Model/Preference.php:1038
 msgid "Auto-pause between tabs"
 msgstr "مکث خودکار بین برگه ها"
 
-#: ../../src/Repository/Model/Preference.php:1021
+#: ../../src/Repository/Model/Preference.php:1039
 msgid ""
 "Remove tracks before the current playlist item in the webplayer when played"
 msgstr ""
@@ -11591,4 +11637,8 @@ msgstr ""
 
 #: ./untranslated-strings.txt:250
 msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:254
+msgid "sidebar"
 msgstr ""

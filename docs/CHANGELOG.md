@@ -6,7 +6,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 
 ### Added
 
-* Translations 2024-08
+* Translations 2024-09
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
@@ -21,17 +21,22 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Sort by play count (`total_count`) for podcast, podcast_episode and video 
   * Add `country` and `active` sort to label
   * Add `rating` sort to live_stream and video
+  * Add `id` browse to all types
 * Search
   * Added `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
+* Subonic
+  * Add openSubsonic extensions [ampache.org](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
 * CLI
-  * New cli command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
+  * New command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
+  * New command `bin/cli admin:updatePlugins` (Update any plugins that need an update)
+  * Update for missing preferences after CLI DB updates
 * Config version 74
   * Add `npm_binary_path`
   * Remove OpenID config
   * Add `database_engine` to allow you to change from InnoDB if you want to
   * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
   * Enable `user_create_streamtoken` by default
-* Database 700018
+* Database 700020
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
@@ -48,11 +53,14 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Add user Preference `index_dashboard_form` (Use Dashboard links for the index page header)
   * Put sidebar preferences into their own category
   * Add user preferences to order menu sections in the sidebar
+  * Add UI option `api_always_download` Force API streams to download. (Enable scrobble in your client to record stats)
+  * Require unique preference names per-user in `user_preference` table'
 
 ### Changed
 
 * Prefer the name of the artist provided by MusicBrainz plugin
 * Use PHP functions for php8.2+
+* Update rector minimum to php8.2 and extend rector source directories
 * Default to InnoDB on new installs
 * Change URL for user avatar links
 * Move JavaScript out of PHP where possible
@@ -67,6 +75,8 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Use preference names for lookups instead of guessing ID's
 * Skip empty sections when showing a Dashboard (mashup) page
 * Put each plugin class into extended interfaces to ensure functions meet expected requirements
+* Changed CSS logo to HTML
+* Skip stat recording on `cache=1` instead of reclassifying as a download
 
 ### Removed
 
@@ -87,6 +97,10 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Enforce sidebar_light when enabled, ignoring cookie if set
 * Don't create missing tables when they haven't been created for your database version
 * Don't put empty artists into artist links
+* Opensearch not being added for sites with auth
+* Oensearch URL parameters didn't work
+* VLC locallay volume division number incorrect for total volume
+* Latitude and longitude column names in stats page
 
 ## Ampache 6.6.1
 
@@ -111,6 +125,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Stripslashes on input to fix `Don't` becoming `Don\'t` in the SQL
 * Subsonic
   * Always include cover art in search results
+  * Correct output format of array items (e.g. int being cast as string)
 * webplayer
   * Missing variable `playlist_before` in shuffle function
 

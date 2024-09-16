@@ -34,11 +34,17 @@ use WpOrg\Requests\Requests;
 class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Flickr';
+
     public string $categories  = 'slideshow';
+
     public string $description = 'Artist photos from Flickr';
+
     public string $url         = 'http://www.flickr.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360045';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -58,11 +64,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('flickr_api_key', T_('Flickr API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('flickr_api_key', T_('Flickr API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -86,7 +88,6 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
     /**
      * @param string $search
      * @param string $category
-     * @return array
      */
     public function get_photos($search, $category = 'concert'): array
     {
@@ -126,6 +127,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
             if (!empty($image['title'])) {
                 $title .= ' - ' . $image['title'];
             }
+
             $results[] = [
                 'url' => $image['url'],
                 'mime' => 'image/jpeg',
@@ -149,13 +151,13 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['flickr_api_key']))) {
+        if (trim((string) $data['flickr_api_key']) === '') {
             $data                   = [];
             $data['flickr_api_key'] = Preference::get_by_user(-1, 'flickr_api_key');
         }
 
-        if (strlen(trim($data['flickr_api_key']))) {
-            $this->api_key = trim($data['flickr_api_key']);
+        if (strlen(trim((string) $data['flickr_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['flickr_api_key']);
         } else {
             debug_event('flickr.plugin', 'No Flickr api key, photo plugin skipped', 3);
 

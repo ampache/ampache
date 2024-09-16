@@ -63,7 +63,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
         switch ($action) {
             case 'search':
                 $web_path    = AmpConfig::get_web_path('/client');
-                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP));
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
                 $limit       = $_REQUEST['limit'] ?? 5;
@@ -83,6 +83,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $artistid) {
                         $artist    = new Artist($artistid);
                         $results[] = [
@@ -111,6 +112,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumid) {
                         $album     = new Album($albumid);
                         $results[] = [
@@ -139,6 +141,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumdiskid) {
                         $albumdisk = new AlbumDisk($albumdiskid);
                         $results[] = [
@@ -167,6 +170,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($sres as $songid) {
                         $song       = new Song($songid);
@@ -199,6 +203,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $playlistid) {
                         $playlist  = new Playlist($playlistid);
                         $results[] = [
@@ -228,6 +233,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $labelid) {
                         $label = $this->labelRepository->findById($labelid);
 
@@ -280,6 +286,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $user_id) {
                         $user      = new User($user_id);
                         $avatar    = $user->get_avatar();
@@ -302,9 +309,6 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 
                 $_SESSION['iframe']['target'] = AmpConfig::get_web_path('/client') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
                 $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

@@ -36,16 +36,24 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Bandwidth';
+
     public string $categories  = 'stream_control';
+
     public string $description = 'Control bandwidth per user';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370024';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $bandwidth_days;
+
     private $bandwidth_max;
 
     /**
@@ -65,11 +73,8 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         if (!Preference::insert('stream_control_bandwidth_max', T_('Stream control maximal bandwidth (month)'), 1024, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('stream_control_bandwidth_days', T_('Stream control bandwidth history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -102,6 +107,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         if ($this->bandwidth_max < 0) {
             return true;
         }
+
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             // Calculate all media size
@@ -124,6 +130,7 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
 
             return ($next_total <= $max);
         }
+
         debug_event('streambandwidth.plugin', 'Access denied, statistical graph disabled.', 1);
 
         return true;
@@ -138,12 +145,9 @@ class AmpacheStreamBandwidth extends AmpachePlugin implements PluginStreamContro
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->user_id = $user->id;
-        if ((int)($data['stream_control_bandwidth_max'])) {
-            $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']);
-        } else {
-            $this->bandwidth_max = 1024;
-        }
+        $this->user_id       = $user->id;
+        $this->bandwidth_max = (int)($data['stream_control_bandwidth_max']) ?: 1024;
+
         if ((int)($data['stream_control_bandwidth_days']) > 0) {
             $this->bandwidth_days = (int)($data['stream_control_bandwidth_days']);
         } else {

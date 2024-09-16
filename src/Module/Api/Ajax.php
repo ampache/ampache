@@ -39,8 +39,8 @@ use Ampache\Module\Util\Ui;
  */
 class Ajax
 {
-    private static $include_override;
-    private static $counter = 0;
+    private static bool $include_override = false;
+    private static int $counter           = 0;
 
     /**
      * constructor
