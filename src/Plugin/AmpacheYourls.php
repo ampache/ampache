@@ -35,16 +35,24 @@ use WpOrg\Requests\Requests;
 class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
 {
     public string $name        = 'YOURLS';
+
     public string $categories  = 'shortener';
+
     public string $description = 'URL shorteners on shared links with YOURLS';
+
     public string $url         = 'http://yourls.org';
+
     public string $version     = '000002';
+
     public string $min_ampache = '360037';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $yourls_domain;
+
     private $yourls_use_idn;
+
     private $yourls_api_key;
 
     /**
@@ -64,14 +72,12 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
         if (!Preference::insert('yourls_domain', T_('YOURLS domain name'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('yourls_use_idn', T_('YOURLS use IDN'), '0', AccessLevelEnum::MANAGER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('yourls_api_key', T_('YOURLS API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('yourls_api_key', T_('YOURLS API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -121,8 +127,8 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
                 $purl['host'] = idn_to_utf8($purl['host']);
                 $shorturl     = http_build_url($purl);
             }
-        } catch (Exception $error) {
-            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
 
             return null;
         }
@@ -143,21 +149,22 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['yourls_domain'])) || !strlen(trim($data['yourls_api_key']))) {
+        if (!strlen(trim((string) $data['yourls_domain'])) || !strlen(trim((string) $data['yourls_api_key']))) {
             $data                   = [];
             $data['yourls_domain']  = Preference::get_by_user(-1, 'yourls_domain');
             $data['yourls_api_key'] = Preference::get_by_user(-1, 'yourls_api_key');
         }
 
-        if (strlen(trim($data['yourls_domain']))) {
-            $this->yourls_domain = trim($data['yourls_domain']);
+        if (strlen(trim((string) $data['yourls_domain'])) !== 0) {
+            $this->yourls_domain = trim((string) $data['yourls_domain']);
         } else {
             debug_event('yourls.plugin', 'No YOURLS domain, shortener skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['yourls_api_key']))) {
-            $this->yourls_api_key = trim($data['yourls_api_key']);
+
+        if (strlen(trim((string) $data['yourls_api_key'])) !== 0) {
+            $this->yourls_api_key = trim((string) $data['yourls_api_key']);
         } else {
             debug_event('yourls.plugin', 'No YOURLS api key, shortener skipped', 3);
 

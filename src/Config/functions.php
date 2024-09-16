@@ -169,8 +169,12 @@ function get_languages(): array
     while (false !== ($file = readdir($handle))) {
         $full_file = __DIR__ . '/../../locale/' . $file;
 
-        /* Check to see if it's a directory */
-        if (is_dir($full_file) && substr($file, 0, 1) != '.' && $file != 'base') {
+        // Check to see if it's a directory
+        if (
+            is_dir($full_file) &&
+            substr($file, 0, 1) != '.' &&
+            $file != 'base'
+        ) {
             $name = match ($file) {
                 'af_ZA' => 'Afrikaans',
                 'bg_BG' => '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;',
@@ -856,7 +860,7 @@ function show_user_select($name, $selected = '', $style = ''): void
             $select_txt = 'selected="selected"';
         }
         // If they don't have a full name, revert to the username
-        $row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username'];
+        $row['fullname'] = $row['fullname'] ?: $row['username'];
 
         echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
     } // end while users

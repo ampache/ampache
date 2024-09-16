@@ -66,6 +66,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
+
                 debug_event('tag.ajax', 'Deleting tag...', 5);
                 $tag = new Tag($_GET['tag_id']);
                 $tag->delete();
@@ -80,10 +81,6 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 $browse->show_objects($object_ids);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 $browse->store();
-                // Retrieve current objects of type based on combined filters
-                break;
-            default:
-                break;
         } // switch on action;
 
         // We always do this

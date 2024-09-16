@@ -35,15 +35,22 @@ use WpOrg\Requests\Requests;
 class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Discogs';
+
     public string $categories  = 'metadata';
+
     public string $description = 'Discogs metadata integration';
+
     public string $url         = 'http://www.discogs.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $api_key;
+
     private $secret;
 
     /**
@@ -64,11 +71,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
         if (!Preference::insert('discogs_api_key', T_('Discogs consumer key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('discogs_secret_api_key', T_('Discogs secret'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -102,21 +106,22 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['discogs_api_key'])) || !strlen(trim($data['discogs_secret_api_key']))) {
+        if (!strlen(trim((string) $data['discogs_api_key'])) || !strlen(trim((string) $data['discogs_secret_api_key']))) {
             $data                           = [];
             $data['discogs_api_key']        = Preference::get_by_user(-1, 'discogs_api_key');
             $data['discogs_secret_api_key'] = Preference::get_by_user(-1, 'discogs_secret_api_key');
         }
 
-        if (strlen(trim($data['discogs_api_key']))) {
-            $this->api_key = trim($data['discogs_api_key']);
+        if (strlen(trim((string) $data['discogs_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['discogs_api_key']);
         } else {
             debug_event(self::class, 'No Discogs api key, metadata plugin skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['discogs_secret_api_key']))) {
-            $this->secret = trim($data['discogs_secret_api_key']);
+
+        if (strlen(trim((string) $data['discogs_secret_api_key'])) !== 0) {
+            $this->secret = trim((string) $data['discogs_secret_api_key']);
         } else {
             debug_event(self::class, 'No Discogs secret, metadata plugin skipped', 3);
 
@@ -133,7 +138,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
     protected function query_discogs($query)
     {
         $url = 'https://api.discogs.com/' . $query;
-        $url .= (strpos($query, '?') !== false) ? '&' : '?';
+        $url .= (str_contains((string) $query, '?')) ? '&' : '?';
         $url .= 'key=' . $this->api_key . '&secret=' . $this->secret;
         debug_event(self::class, 'Discogs request: ' . $url, 5);
         $request = Requests::get($url);
@@ -147,7 +152,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
      */
     protected function search_artist($artist)
     {
-        $query = "database/search?type=artist&title=" . rawurlencode($artist) . "&per_page=10";
+        $query = "database/search?type=artist&title=" . rawurlencode((string) $artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
@@ -170,7 +175,7 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
      */
     protected function search_album($artist, $album)
     {
-        $query = "database/search?type=master&release_title=" . rawurlencode($album) . "&artist=" . rawurlencode($artist) . "&per_page=10";
+        $query = "database/search?type=master&release_title=" . rawurlencode((string) $album) . "&artist=" . rawurlencode((string) $artist) . "&per_page=10";
 
         return $this->query_discogs($query);
     }
@@ -220,8 +225,8 @@ class AmpacheDiscogs extends AmpachePlugin implements PluginGatherArtsInterface
                     }
                 }
             }
-        } catch (Exception $error) {
-            debug_event(self::class, 'Error getting metadata: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Error getting metadata: ' . $exception->getMessage(), 1);
         }
 
         return $results;

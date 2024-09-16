@@ -39,23 +39,38 @@ use Ampache\Module\System\Dba;
 class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInterface
 {
     public string $name        = 'RatingMatch';
+
     public string $categories  = 'scrobbling';
+
     public string $description = 'Raise the album and artist rating to match the highest song rating';
+
     public string $url         = '';
+
     public string $version     = '000004';
+
     public string $min_ampache = '360003';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $min_stars;
+
     private $match_flags;
+
     private $user;
+
     private $star1_rule;
+
     private $star2_rule;
+
     private $star3_rule;
+
     private $star4_rule;
+
     private $star5_rule;
+
     private $flag_rule;
+
     private $write_tags;
 
     /**
@@ -75,32 +90,36 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         if (!Preference::insert('ratingmatch_stars', T_('Minimum star rating to match'), 0, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::exists('ratingmatch_star1_rule') && !Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::exists('ratingmatch_star2_rule') && !Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::exists('ratingmatch_star3_rule') && !Preference::insert('ratingmatch_star3_rule', T_('Match rule for 3 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::exists('ratingmatch_star4_rule') && !Preference::insert('ratingmatch_star4_rule', T_('Match rule for 4 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::exists('ratingmatch_star5_rule') && !Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
+
         if (!Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
@@ -132,9 +151,11 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < 2) {
             Preference::insert('ratingmatch_flags', T_('When you love a track, flag the album and artist'), 0, AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
+
         if ($from_version < 3) {
             Preference::insert('ratingmatch_star1_rule', T_('Match rule for 1 Star ($play,$skip)'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_star2_rule', T_('Match rule for 2 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
@@ -143,6 +164,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             Preference::insert('ratingmatch_star5_rule', T_('Match rule for 5 Stars'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
             Preference::insert('ratingmatch_flag_rule', T_('Match rule for Flags'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
         }
+
         if ($from_version < 4) {
             Preference::insert('ratingmatch_write_tags', T_('Save ratings to file tags when changed'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
@@ -169,12 +191,14 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                         $rArtist->set_rating($new_rating, $this->user->id);
                     }
                 }
+
                 $rAlbum       = new Rating($song->album, 'album');
                 $rating_album = $rAlbum->get_user_rating($this->user->id);
                 if ($rating_album < $new_rating) {
                     $rAlbum->set_rating($new_rating, $this->user->id);
                 }
             }
+
             if ($rating->type == 'album') { // TODO missing album_disk
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
@@ -182,6 +206,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 if ($rating_album < $new_rating) {
                     $rAlbum->set_rating($new_rating, $this->user->id);
                 }
+
                 if ($album->album_artist) {
                     // rate all the album artists (If there are more than one)
                     foreach (Album::get_parent_array($album->id, $album->album_artist) as $artist_id) {
@@ -194,6 +219,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 }
             }
         }
+
         // write to tags
         if ($this->write_tags) {
             global $dic;
@@ -239,9 +265,10 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public function save_mediaplay(Song $song): bool
     {
         // Only support songs
-        if (get_class($song) != Song::class) {
+        if ($song::class !== Song::class) {
             return false;
         }
+
         // Don't double rate something after it's already been rated before
         $rating = new Rating($song->id, 'song');
         if (($rating->get_user_rating() ?? 0) > 0) {
@@ -263,37 +290,31 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         if ($play_count == 0 && $skip_count == 0) {
             return false;
         }
-        if (!empty($this->star1_rule)) {
-            if ($this->rule_process($this->star1_rule, $play_count, $skip_count)) {
-                $rating->set_rating(1, $this->user->id);
-            }
+
+        if (!empty($this->star1_rule) && $this->rule_process($this->star1_rule, $play_count, $skip_count)) {
+            $rating->set_rating(1, $this->user->id);
         }
-        if (!empty($this->star2_rule)) {
-            if ($this->rule_process($this->star2_rule, $play_count, $skip_count)) {
-                $rating->set_rating(2, $this->user->id);
-            }
+
+        if (!empty($this->star2_rule) && $this->rule_process($this->star2_rule, $play_count, $skip_count)) {
+            $rating->set_rating(2, $this->user->id);
         }
-        if (!empty($this->star3_rule)) {
-            if ($this->rule_process($this->star3_rule, $play_count, $skip_count)) {
-                $rating->set_rating(3, $this->user->id);
-            }
+
+        if (!empty($this->star3_rule) && $this->rule_process($this->star3_rule, $play_count, $skip_count)) {
+            $rating->set_rating(3, $this->user->id);
         }
-        if (!empty($this->star4_rule)) {
-            if ($this->rule_process($this->star4_rule, $play_count, $skip_count)) {
-                $rating->set_rating(4, $this->user->id);
-            }
+
+        if (!empty($this->star4_rule) && $this->rule_process($this->star4_rule, $play_count, $skip_count)) {
+            $rating->set_rating(4, $this->user->id);
         }
-        if (!empty($this->star5_rule)) {
-            if ($this->rule_process($this->star5_rule, $play_count, $skip_count)) {
-                $rating->set_rating(5, $this->user->id);
-            }
+
+        if (!empty($this->star5_rule) && $this->rule_process($this->star5_rule, $play_count, $skip_count)) {
+            $rating->set_rating(5, $this->user->id);
         }
-        if (!empty($this->flag_rule)) {
-            if ($this->rule_process($this->flag_rule, $play_count, $skip_count)) {
-                $flag = new Userflag($song->id, 'song');
-                if (!$flag->get_flag($this->user->id)) {
-                    $flag->set_flag(true, $this->user->id);
-                }
+
+        if (!empty($this->flag_rule) && $this->rule_process($this->flag_rule, $play_count, $skip_count)) {
+            $flag = new Userflag($song->id, 'song');
+            if (!$flag->get_flag($this->user->id)) {
+                $flag->set_flag(true, $this->user->id);
             }
         }
 
@@ -313,25 +334,39 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             case 1:
                 $play = (int) $rule_array[0];
                 // play count only
-                if ($play > 0 && $play_count >= $play) {
+                if (
+                    $play > 0 &&
+                    $play_count >= $play
+                ) {
                     return true;
                 }
+
                 break;
             case 2:
                 $play = (int) $rule_array[0];
                 $skip = (int) $rule_array[1];
                 // play rule and no skip
-                if ($play > 0 && $play_count >= $play && $skip == 0) {
+                if (
+                    (
+                        $play > 0 &&
+                        $play_count >= $play &&
+                        $skip == 0
+                    ) ||
+                    (
+                        $skip > 0 &&
+                        $skip_count >= $skip &&
+                        $play == 0
+                    ) ||
+                    (
+                        $play > 0 &&
+                        $play_count >= $play &&
+                        $skip > 0 &&
+                        $skip_count >= $skip
+                    )
+                ) {
                     return true;
                 }
-                // skip rule and no play
-                if ($skip > 0 && $skip_count >= $skip && $play == 0) {
-                    return true;
-                }
-                // check play and skip
-                if ($play > 0 && $play_count >= $play && $skip > 0 && $skip_count >= $skip) {
-                    return true;
-                }
+
                 break;
         }
 

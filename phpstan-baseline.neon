@@ -9261,16 +9261,6 @@ parameters:
 			path: src/Plugin/AmpacheGoogleAnalytics.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheGoogleAnalytics\\:\\:\\$user is never read, only written\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheGoogleAnalytics.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheGoogleMaps\\:\\:display_map\\(\\) has parameter \\$points with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheGoogleMaps.php
@@ -9572,11 +9562,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:search_track\\(\\) is unused\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 

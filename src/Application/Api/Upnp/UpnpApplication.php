@@ -44,16 +44,18 @@ final class UpnpApplication implements ApplicationInterface
         if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
             $msIP = 1;
             Upnp_Api::sddpSend($msIP);
-        } ?>
+        }
+        ?>
         <!DOCTYPE html>
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>">
         <head>
             <!-- Propelled by Ampache | ampache.org -->
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <?php
-            if (Core::get_get('btnSendAuto') !== '') {
-                echo '<meta http-equiv="refresh" content="1">';
-            } ?>
+           if (Core::get_get('btnSendAuto') !== '') {
+               echo '<meta http-equiv="refresh" content="1">';
+           }
+        ?>
             <title><?php echo T_('Ampache') . " " . T_('UPnP'); ?></title>
             <style media="screen">
                 body {
@@ -81,7 +83,8 @@ final class UpnpApplication implements ApplicationInterface
         <?php
         if (($_GET['btnSend']) || ($_GET['btnSendAuto'])) {
             echo 'SSDP sent at ' . date('H:i:s') . '.';
-        } ?>
+        }
+        ?>
         </body>
         </html><?php
     }

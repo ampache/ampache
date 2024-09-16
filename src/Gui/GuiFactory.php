@@ -63,50 +63,10 @@ use Ampache\Module\Util\ZipHandlerInterface;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 
-final class GuiFactory implements GuiFactoryInterface
+final readonly class GuiFactory implements GuiFactoryInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
-
-    private PlaylistLoaderInterface $playlistLoader;
-
-    private VideoRepositoryInterface $videoRepository;
-
-    private UpdateInfoRepositoryInterface $updateInfoRepository;
-
-    private UpdateHelperInterface $updateHelper;
-
-    private UpdaterInterface $updater;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
-        PlaylistLoaderInterface $playlistLoader,
-        VideoRepositoryInterface $videoRepository,
-        UpdateInfoRepositoryInterface $updateInfoRepository,
-        UpdateHelperInterface $updateHelper,
-        UpdaterInterface $updater
-    ) {
-        $this->configContainer      = $configContainer;
-        $this->modelFactory         = $modelFactory;
-        $this->zipHandler           = $zipHandler;
-        $this->functionChecker      = $functionChecker;
-        $this->ajaxUriRetriever     = $ajaxUriRetriever;
-        $this->playlistLoader       = $playlistLoader;
-        $this->videoRepository      = $videoRepository;
-        $this->updateInfoRepository = $updateInfoRepository;
-        $this->updateHelper         = $updateHelper;
-        $this->updater              = $updater;
+    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private AjaxUriRetrieverInterface $ajaxUriRetriever, private PlaylistLoaderInterface $playlistLoader, private VideoRepositoryInterface $videoRepository, private UpdateInfoRepositoryInterface $updateInfoRepository, private UpdateHelperInterface $updateHelper, private UpdaterInterface $updater)
+    {
     }
 
     public function createSongViewAdapter(

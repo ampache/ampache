@@ -64,6 +64,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
         if (array_key_exists('argument', $_REQUEST)) {
             $argument = scrub_in((string) $_REQUEST['argument']);
         }
+
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
             $argument = ['hide' => explode(',', scrub_in((string)$_REQUEST['hide']))];
@@ -79,21 +80,25 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
                     $browse->set_sort($_REQUEST['sort']);
                 }
+
                 // data set by the fileter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
                     }
+
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
                         $value = (int)($_REQUEST['value'] ?? 0);
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
+
                         $browse->set_filter($_REQUEST['key'], $value);
                     }
                 }
+
                 // filter box Catalog select
                 if (isset($_REQUEST['catalog'])) {
                     $browse->set_catalog($_SESSION['catalog']);
@@ -106,6 +111,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_filter('catalog', null);
                     $_SESSION['catalog'] = null;
                 }
+
                 $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
@@ -147,6 +153,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (!$playlist->has_access()) {
                             return;
                         }
+
                         $playlist->delete();
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
@@ -154,11 +161,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (!$user->has_access(AccessLevelEnum::MANAGER)) {
                             return;
                         }
+
                         $liveStreamId = (int) Core::get_request('id');
                         $liveStream   = $this->liveStreamRepository->findById($liveStreamId);
                         if ($liveStream !== null) {
                             $this->liveStreamRepository->delete($liveStream);
                         }
+
                         $key = 'live_stream_' . $liveStreamId;
                         break;
                     default:
@@ -199,6 +208,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if ($value) {
                             $browse->set_start(0);
                         }
+
                         break;
                     case 'use_alpha':
                         $value = ($value == 'true');
@@ -209,6 +219,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         } else {
                             $browse->set_filter('regex_not_match', '');
                         }
+
                         break;
                     case 'grid_view':
                         /**
@@ -223,6 +234,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
+
                         break;
                     case 'custom':
                         $value = (int)$value;
@@ -232,10 +244,11 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                             $pages = ceil($total / $limit);
 
                             if ($value <= $pages) {
-                                $offset = (int)(($value - 1) * $limit);
+                                $offset = ($value - 1) * $limit;
                                 $browse->set_start($offset);
                             }
                         }
+
                         break;
                 }
 
@@ -252,9 +265,6 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
-                break;
-            default:
-                break;
         } // switch on action;
 
         $browse->store();

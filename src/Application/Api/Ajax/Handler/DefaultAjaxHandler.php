@@ -66,7 +66,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                if ($request_type == 'delete') {
+                if ($request_type === 'delete') {
                     $user->load_playlist();
                     $user->playlist?->delete_track($request_id);
                 } // end switch
@@ -75,7 +75,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'basket':
                 // Handle the users basketcases...
-                $object_type = (empty($request_type))
+                $object_type = ($request_type === '' || $request_type === '0')
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
 
@@ -102,36 +102,43 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             switch ($browse->get_type()) {
                                 case 'album':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
+                                        $songs = array_merge($songs, $this->getSongRepository()->getByAlbum($object_id));
                                     }
+
                                     break;
                                 case 'artist':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, self::getSongRepository()->getAllByArtist($object_id));
+                                        $songs = array_merge($songs, $this->getSongRepository()->getAllByArtist($object_id));
                                     }
+
                                     break;
                                 case 'song':
                                     $songs = $objects;
                                     break;
-                            } // end switch type
-                            if ($request_type == 'browse_set_random') {
+                            }
+
+                            if ($request_type === 'browse_set_random') {
                                 shuffle($songs);
                             }
+
                             foreach ($songs as $object_id) {
                                 $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'album_random':
                             $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'album_disk_random':
                             $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
@@ -139,6 +146,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             foreach ($songs as $song_id) {
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'artist_random':
                             $object    = new Artist($request_id);
@@ -146,6 +154,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             foreach ($songs as $song_id) {
                                 $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'playlist_random':
                             $playlist = new Playlist($request_id);
@@ -153,6 +162,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                             foreach ($items as $item) {
                                 $user->playlist?->add_object($item['object_id'], $item['object_type']);
                             }
+
                             break;
                         case 'clear_all':
                             $user->playlist?->clear();
@@ -174,6 +184,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
                 }
+
                 break;
             case 'set_userflag':
                 /* Setting userflags */
@@ -188,6 +199,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
                 }
+
                 break;
             case 'action_buttons':
                 $rating_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -201,11 +213,9 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                     echo Userflag::show($rating_id, $rating_type);
                     echo "</span>";
                 }
+
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
-                break;
-            default:
-                break;
         } // end switch action
 
         // Go ahead and do the echo
@@ -215,7 +225,7 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
     /**
      * @deprecated Inject by constructor
      */
-    private static function getSongRepository(): SongRepositoryInterface
+    private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;
 

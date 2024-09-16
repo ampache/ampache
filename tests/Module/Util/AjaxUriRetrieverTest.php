@@ -73,10 +73,7 @@ class AjaxUriRetrieverTest extends MockeryTestCase
             ->andReturn($webPath);
 
         static::assertSame(
-            sprintf(
-                '%s',
-                $webPath
-            ),
+            $webPath,
             $this->subject->getAjaxServerUri()
         );
     }

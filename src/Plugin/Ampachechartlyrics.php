@@ -33,11 +33,17 @@ use WpOrg\Requests\Requests;
 class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     public string $name        = 'ChartLyrics';
+
     public string $categories  = 'lyrics';
+
     public string $description = 'Get lyrics from ChartLyrics';
+
     public string $url         = 'http://www.chartlyrics.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360022';
+
     public string $max_ampache = '999999';
 
     /**
@@ -94,17 +100,18 @@ class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterfa
     public function get_lyrics(Song $song): ?array
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
-        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
+        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
-            if ($xml) {
-                if (!empty($xml->Lyric)) {
-                    return [
-                        'text' => nl2br($xml->Lyric),
-                        'url' => $xml->LyricUrl
-                    ];
-                }
+            if (
+                $xml &&
+                !empty($xml->Lyric)
+            ) {
+                return [
+                    'text' => nl2br($xml->Lyric),
+                    'url' => $xml->LyricUrl
+                ];
             }
         }
 

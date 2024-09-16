@@ -30,11 +30,17 @@ use Ampache\Repository\Model\User;
 class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterface
 {
     public string $name        = 'Facebook';
+
     public string $categories  = 'share';
+
     public string $description = 'Facebook share';
+
     public string $url         = 'https://facebook.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370027';
+
     public string $max_ampache = '999999';
 
     /**
@@ -79,9 +85,8 @@ class AmpacheFacebook extends AmpachePlugin implements PluginExternalShareInterf
     {
         unset($text);
         $share = "https://www.facebook.com/sharer/sharer.php";
-        $share .= "?u=" . rawurlencode($url);
 
-        return $share;
+        return $share . ("?u=" . rawurlencode($url));
     }
 
     /**

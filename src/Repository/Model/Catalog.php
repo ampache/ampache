@@ -939,9 +939,15 @@ abstract class Catalog extends database_object
         $this->get_fullname();
         $this->get_link();
         $this->get_f_link();
-        $this->f_update = $this->last_update !== 0 ? get_datetime((int)$this->last_update) : T_('Never');
-        $this->f_add    = $this->last_add !== 0 ? get_datetime((int)$this->last_add) : T_('Never');
-        $this->f_clean  = $this->last_clean ? get_datetime((int)$this->last_clean) : T_('Never');
+        $this->f_update = ($this->last_update !== 0)
+            ? get_datetime((int)$this->last_update)
+            : T_('Never');
+        $this->f_add = ($this->last_add !== 0)
+            ? get_datetime((int)$this->last_add)
+            : T_('Never');
+        $this->f_clean = ($this->last_clean)
+            ? get_datetime((int)$this->last_clean)
+            : T_('Never');
     }
 
     /**

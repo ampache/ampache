@@ -41,11 +41,17 @@ use WpOrg\Requests\Requests;
 class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'TheAudioDb';
+
     public string $categories  = 'metadata';
+
     public string $description = 'TheAudioDb metadata integration';
+
     public string $url         = 'http://www.theaudiodb.com';
+
     public string $version     = '000003';
+
     public string $min_ampache = '370009';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -72,11 +78,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
-        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
-            return false;
-        }
 
-        return true;
+        return Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
@@ -101,6 +104,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < (int)$this->version) {
             Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
@@ -123,13 +127,14 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
             $data['tadb_overwrite_name'] = Preference::get_by_user(-1, 'tadb_overwrite_name');
         }
 
-        if (strlen(trim($data['tadb_api_key']))) {
-            $this->api_key = trim($data['tadb_api_key']);
+        if (strlen(trim((string) $data['tadb_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['tadb_api_key']);
         } else {
             debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', 3);
 
             return false;
         }
+
         $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
 
         return true;
@@ -179,6 +184,7 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $artists = $this->search_artists($media_info['title']);
                     $release = $artists->artists[0] ?? $release;
                 }
+
                 if ($release !== null) {
                     $results['art']        = $release->strArtistThumb ?? null;
                     $results['title']      = $release->strArtist ?? null;
@@ -196,8 +202,8 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $results['title']            = $track->strTrack ?? null;
                 }
             }
-        } catch (Exception $error) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
         }
 
         return $results;
@@ -207,8 +213,6 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
      * get_external_metadata
      * Update an Artist using theAudioDb
      * @param Label|Artist $object
-     * @param string $object_type
-     * @return bool
      */
     public function get_external_metadata($object, string $object_type): bool
     {
@@ -231,11 +235,12 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                     $artists = $this->search_artists($object->get_fullname());
                     $release = $artists->artists[0] ?? $release;
                 }
+
                 if ($release !== null) {
-                    debug_event('theaudiodb.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
+                    debug_event('theaudiodb.plugin', sprintf('Updating %s: ', $object_type) . $object->get_fullname(), 3);
                     $data['name'] = $release->strArtist ?? null;
                     // get the biography based on your locale
-                    $locale          = explode('_', AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
+                    $locale          = explode('_', (string) AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
                     $data['summary'] = match ($locale) {
                         'de' => $release->strBiographyDE ?? null,
                         'fr' => $release->strBiographyFR ?? null,
@@ -267,16 +272,18 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
                         if (isset($object->prefix)) {
                             $object->prefix = $name_check['prefix'];
                         }
+
                         $object->name   = $name_check['name'];
                     }
                 }
             }
-        } catch (Exception $error) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
 
             return false;
         }
-        if (!empty($data)) {
+
+        if ($data !== []) {
             $object->update($data);
         }
 
@@ -348,16 +355,6 @@ class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterfa
     private function get_album($mbid)
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
-    }
-
-    /**
-     * @param string $artist
-     * @param string $title
-     * @return mixed|null
-     */
-    private function search_track($artist, $title)
-    {
-        return $this->api_call('searchtrack.php?s=' . rawurlencode($artist) . '&t=' . rawurlencode($title));
     }
 
     /**

@@ -1055,8 +1055,7 @@ class Video extends database_object implements
      */
     public function remove(): bool
     {
-        $deleted = file_exists($this->file) ? unlink($this->file) : true;
-
+        $deleted = !file_exists($this->file) || unlink($this->file);
         if ($deleted) {
             // keep details about deletions
             $params = [$this->id];
