@@ -1053,7 +1053,6 @@ class Preference extends database_object
                     Dba::write($sql . "(189, 'api_always_download', 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'api');");
                     break;
             }
-            Dba::write($sql);
         }
 
         // delete Ampache 7 preferences that you don't need on db update as well
