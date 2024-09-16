@@ -220,7 +220,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());

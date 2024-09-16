@@ -92,7 +92,7 @@ final class GenreAlbumsMethod
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
         $browse->set_filter('tag', $object_id);
 

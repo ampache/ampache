@@ -370,7 +370,6 @@ class Stats
         $db_results = Dba::read($sql, $params);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['data'])) {
-
             return $results['data'];
         }
 

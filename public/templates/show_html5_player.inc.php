@@ -71,7 +71,6 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
     var currentAudioElement = undefined;
 
     $(document).ready(function(){
-
         if (!isNaN(Cookies.get('jp_volume'))) {
             var jp_volume = Cookies.get('jp_volume');
         } else {

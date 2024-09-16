@@ -398,7 +398,6 @@ class Preference extends database_object
      */
     public static function update_all($preference, $value): bool
     {
-
         $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
         Dba::write($sql, [$value, $preference]);
 

@@ -33,7 +33,6 @@ function PlayerFrame()
     var playnext = false;
     var webplayer = $("#webplayer");
     if (webplayer.is(':visible')) {
-
 <?php if (AmpConfig::get('webplayer_confirmclose')) { ?>
     document.onbeforeunload = null;
 <?php } ?>

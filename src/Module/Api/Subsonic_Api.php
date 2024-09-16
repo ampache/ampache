@@ -171,7 +171,6 @@ class Subsonic_Api
         'year',
     ];
 
-
     /**
      * check_parameter
      * @param array $input

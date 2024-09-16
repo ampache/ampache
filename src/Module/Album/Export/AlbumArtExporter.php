@@ -61,7 +61,6 @@ final class AlbumArtExporter implements AlbumArtExporterInterface
         Catalog $catalog,
         Writer\MetadataWriterInterface $metadataWriter
     ): void {
-
         // Get all of the albums in this catalog
         $albums = $catalog->get_album_ids();
 

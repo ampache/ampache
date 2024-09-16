@@ -294,7 +294,6 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-
             $this->stop();
 
             $clear = $this->_xbmc->Playlist->Clear(
@@ -373,7 +372,6 @@ class AmpacheXbmc extends localplay_controller
                     'play' => $play
                 ]
             );
-
 
             return true;
         } catch (XBMC_RPC_Exception $error) {
@@ -700,7 +698,6 @@ class AmpacheXbmc extends localplay_controller
                 if (empty($xbmc_players)) {
                     $array['state'] = 'stop';
                 }
-
 
                 $currentplay = $this->_xbmc->Player->GetItem(
                     [

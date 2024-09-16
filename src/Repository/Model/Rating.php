@@ -438,7 +438,6 @@ class Rating extends database_object
             }
         }
 
-
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
         return $sql . " GROUP BY `rating`.`object_id`, `type` ORDER BY `rating` DESC, `date` DESC ";
