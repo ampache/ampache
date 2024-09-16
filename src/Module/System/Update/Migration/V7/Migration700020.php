@@ -29,7 +29,9 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Ampache\Repository\Model\User;
 
 /**
- * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
+ * Update `user_preference`.`name` to match `preference`.`name` column
+ * Delete duplicate user_preferences
+ * Require unique preference names per-user in `user_preference` table
  */
 final class Migration700020 extends AbstractMigration
 {
