@@ -144,7 +144,6 @@ final class StatsMethod
                 $limit  = 0;
                 break;
             case 'flagged':
-                debug_event(self::class, 'stats flagged', 4);
                 $results = Userflag::get_latest($type, $user, $limit, $offset);
                 $offset  = 0;
                 $limit   = 0;
