@@ -1385,7 +1385,6 @@ class Ui implements UiInterface
         );
     }
 
-
     /**
      * This function takes a boolean value and then prints out a friendly text
      * message.

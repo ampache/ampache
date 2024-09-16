@@ -66,7 +66,6 @@ $title    = ($album->album_artist !== null)
     ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_artist_link()
     : scrub_out($f_name);
 
-
 $show_direct_play  = AmpConfig::get('directplay');
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $directplay_limit  = AmpConfig::get('direct_play_limit');

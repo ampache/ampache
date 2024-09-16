@@ -65,7 +65,6 @@ final class ShowImportPodcastsAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Import Podcasts'), 'box box_add_podcast');
         $this->ui->show(

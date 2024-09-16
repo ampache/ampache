@@ -387,7 +387,6 @@ abstract class Catalog extends database_object
             ? new $controller($catalog_id)
             : new $controller();
 
-
         // identify if it's actually enabled
         $sql        = 'SELECT `enabled` FROM `catalog` WHERE `id` = ?';
         $db_results = Dba::read($sql, [$catalog->id]);
@@ -1477,7 +1476,6 @@ abstract class Catalog extends database_object
             default:
                 return [];
         }
-
 
         $sort_sql = ';';
         if (!empty($sort)) {

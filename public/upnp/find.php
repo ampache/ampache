@@ -27,10 +27,8 @@ class UPnPFind
         $devices = [];
         flush();
         foreach ($discover as $response) {
-
             $device = new Device();
             if ($device->initByDiscoveryReponse($response)) {
-
                 $device->saveToCache();
 
                 try {

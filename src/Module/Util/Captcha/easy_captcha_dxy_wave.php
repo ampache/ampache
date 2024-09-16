@@ -56,7 +56,7 @@ class easy_captcha_dxy_wave
         $this->slow_y = $this->real_rand(7.5, 15.0);
     }
 
-    #-- calculate source pixel position with overlapping sinus x/y-displacement
+    // calculate source pixel position with overlapping sinus x/y-displacement
 
     /**
      * @param $x
@@ -65,18 +65,18 @@ class easy_captcha_dxy_wave
      */
     public function dxy($x, $y)
     {
-        #-- adapting params
+        // adapting params
         $this->dist_x *= 1.000035;
         $this->dist_y *= 1.000015;
-        #-- dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
+        // dest pixels (with x+y together in each of the sin() calcs you get more deformation, else just yields y-ripple effect)
         $distortx = $this->dist_x * cos(($x / $this->slow_x) - ($y / 1.1 / $this->slow_y));
         $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
 
-        #-- result
+        // result
         return [$distortx, $distorty];
     }
 
-    #-- array of values with random start/end values
+    // array of values with random start/end values
 
     /**
      * @param $max
@@ -96,7 +96,7 @@ class easy_captcha_dxy_wave
         return ($result);
     }
 
-    #-- returns random value in given interval
+    // returns random value in given interval
 
     /**
      * @param $a

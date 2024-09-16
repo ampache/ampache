@@ -46,7 +46,6 @@ class ShowGenerateStreamTokenActionTest extends TestCase
         );
     }
 
-
     public function testHandleRendersConfirmation(): void
     {
         $this->createConfirmationExpectations(
