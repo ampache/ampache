@@ -106,7 +106,9 @@ final class ArtCollector implements ArtCollectorInterface
 
         if ($limit == 0) {
             $search_limit = $this->configContainer->get('art_search_limit');
-            $limit        = is_null($search_limit) ? static::ART_SEARCH_LIMIT : $search_limit;
+            $limit        = (is_null($search_limit))
+                ? self::ART_SEARCH_LIMIT
+                : $search_limit;
         }
 
         if ($type == 'playlist') {

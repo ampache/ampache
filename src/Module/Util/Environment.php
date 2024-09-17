@@ -45,7 +45,7 @@ final class Environment implements EnvironmentInterface
      */
     public function check_php_version(): bool
     {
-        return floatval(phpversion()) >= static::PHP_VERSION;
+        return floatval(phpversion()) >= self::PHP_VERSION;
     }
 
     /**

@@ -79,7 +79,7 @@ final class LastFmCollectorModule implements CollectorModuleInterface
                     $xmldata = $this->lastFmQuery->queryLastFm(
                         sprintf(
                             '%s?method=album.getInfo&artist=%s&album=%s&api_key=%s',
-                            static::API_URL,
+                            self::API_URL,
                             urlencode($data['artist']),
                             urlencode($data['album']),
                             $lastFmApiKey
