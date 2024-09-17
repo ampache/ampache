@@ -1711,7 +1711,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 202, 'sidebar_order_playlist', '30'),
 (-1, 203, 'sidebar_order_search', '40'),
 (-1, 204, 'sidebar_order_information', '60'),
-(-1, 205, 'api_always_download', '0'),;
+(-1, 205, 'api_always_download', '0');
 
 -- --------------------------------------------------------
 
