@@ -1142,7 +1142,6 @@ class Preference extends database_object
                     Dba::write($sql . "(205, 'api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', " . AccessLevelEnum::USER->value . ", 'boolean', 'options', 'api');");
                     break;
                 default:
-                    // todo custom_logo_user, api_always_download Amapche7 prefs i haven't done yet
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
         }

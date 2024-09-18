@@ -2048,8 +2048,8 @@ class Song extends database_object implements
             (
                 empty($additional_params) ||
                 (
-                    strpos($additional_params, '&bitrate=') === false &&
-                    strpos($additional_params, '&format=') === false
+                    !str_contains($additional_params, '&bitrate=') &&
+                    !str_contains($additional_params, '&format=')
                 )
             )
         ) {

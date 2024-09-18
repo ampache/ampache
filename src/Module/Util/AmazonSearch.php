@@ -261,9 +261,7 @@ class AmazonSearch
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
         // urlencode the signed string, replace illegal char
-        $signature = str_replace("%7E", "~", rawurlencode($signature));
-
-        return $signature;
+        return str_replace("%7E", "~", rawurlencode($signature));
     }
 
     /**

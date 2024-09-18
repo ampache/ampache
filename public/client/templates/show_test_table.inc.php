@@ -161,7 +161,7 @@ if (!$environment->check_dependencies_folder()) { ?>
     <td><?php echo T_('Configuration file readability'); ?></td>
     <td><?php echo debug_result(is_readable($configfile), "WARNING"); ?></td>
     <td>
-        <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?> </br>
+        <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?> <br>
         <?php echo T_('If you are installing Ampache for the first time you can ignore this warning and proceed to the installer.'); ?> &nbsp;<a href="install.php"><?php echo T_('Web Installation'); ?></a>
     </td>
 </tr>

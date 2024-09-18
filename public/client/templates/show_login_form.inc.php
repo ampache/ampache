@@ -109,11 +109,11 @@ $_SESSION['login'] = true; ?>
                 echo '</div>';
             }
 if (AmpConfig::get('cookie_disclaimer')) {
-    echo '<div id="cookie_notice>';
+    echo '<div id="cookie_notice">';
     echo T_("Ampache places cookies on your computer to help make this website better.");
-    echo '</br>';
+    echo '<br>';
     echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
-    echo '</br>';
+    echo '<br>';
     echo T_("By logging in you agree to the use of cookies while using this site.");
     echo '</div>';
 }

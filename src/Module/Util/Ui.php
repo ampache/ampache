@@ -796,7 +796,7 @@ class Ui implements UiInterface
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
-            } elseif (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
+            } elseif (str_ends_with($name, '_pass') || str_ends_with($name, '_api_key')) {
                 echo "******";
             } else {
                 echo $value;
@@ -1348,7 +1348,7 @@ class Ui implements UiInterface
                 echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
                 break;
             default:
-                if (preg_match('/_pass$/', $name)) {
+                if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
                     echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';

@@ -243,9 +243,7 @@ function get_languages(): array
     ksort($results);
 
     // Prepend English (US)
-    $results = ["en_US" => "English (US)"] + $results;
-
-    return $results;
+    return ["en_US" => "English (US)"] + $results;
 }
 
 /**

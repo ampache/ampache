@@ -77,9 +77,8 @@ class Scrobbler
             $sig .= $name . $value;
         }
         $sig .= $this->secret;
-        $sig = md5($sig);
 
-        return $sig;
+        return md5($sig);
     }
 
     /**
