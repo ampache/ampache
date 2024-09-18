@@ -51,21 +51,21 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
     public function init(): void
     {
         // Check to make sure the config file exists. If it doesn't then go ahead and
-        if (file_exists(static::CONFIG_FILE_PATH) === false) {
+        if (file_exists(self::CONFIG_FILE_PATH) === false) {
             throw new ConfigFileNotFoundException();
         }
 
         // Make sure the config file is set up and parsable
-        $results = parse_ini_file(static::CONFIG_FILE_PATH);
+        $results = parse_ini_file(self::CONFIG_FILE_PATH);
 
         if ($results === false) {
             throw new ConfigFileNotParsableException();
         }
 
         /** This is the version.... fluff nothing more... */
-        $results['version']            = static::VERSION;
-        $results['int_config_version'] = static::CONFIG_VERSION;
-        $results['structure']          = static::STRUCTURE;
+        $results['version']            = self::VERSION;
+        $results['int_config_version'] = self::CONFIG_VERSION;
+        $results['structure']          = self::STRUCTURE;
         $results['phpversion']         = substr(phpversion(), 0, 3);
 
         $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)

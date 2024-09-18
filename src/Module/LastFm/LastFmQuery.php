@@ -50,7 +50,7 @@ final class LastFmQuery implements LastFmQueryInterface
         $lang    = (string) $this->configContainer->get('lang');
         $resp    = explode('_', $lang);
         $api_key = $this->configContainer->get('lastfm_api_key');
-        $url     = static::API_URL . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
+        $url     = self::API_URL . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
 
         return $this->queryLastFm($url);
     }

@@ -385,10 +385,10 @@ class Democratic extends Tmp_Playlist
      * @param int $object_id
      * @param string $object_type
      */
-    private function _add_vote($object_id, $object_type = 'song'): bool
+    private function _add_vote($object_id, $object_type = 'song'): void
     {
         if (!$this->tmp_playlist) {
-            return false;
+            return;
         }
 
         $className = ObjectTypeToClassNameMapper::map($object_type);
@@ -413,7 +413,6 @@ class Democratic extends Tmp_Playlist
         $sql  = "INSERT INTO user_vote (`user`, `object_id`, `date`, `sid`) VALUES (?, ?, ?, ?)";
         Dba::write($sql, [Core::get_global('user')?->getId(), $results['id'], $time, session_id()]);
 
-        return true;
     }
 
     /**

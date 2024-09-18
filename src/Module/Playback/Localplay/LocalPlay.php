@@ -665,8 +665,6 @@ class LocalPlay
         // Hacky fix for when we were unable to find an artist/album (or one wasn't provided)
         $track_name = ltrim(ltrim((string)$track_name, ' - '), ' - ');
 
-        $track_name = "[" . $status['track'] . "] - " . $track_name;
-
-        return $track_name;
+        return "[" . $status['track'] . "] - " . $track_name;
     }
 }

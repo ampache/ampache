@@ -59,7 +59,7 @@ class Plugin
      * has_info
      * @param string $cname
      */
-    private function has_info($cname): bool
+    private function has_info($cname): void
     {
         $controller = PluginEnum::LIST[strtolower($cname)] ?? null;
         if ($controller === null) {
@@ -67,13 +67,13 @@ class Plugin
             $this->_plugin = null;
             $this->name    = null;
 
-            return false;
+            return;
         }
 
         $this->_plugin = new $controller();
         $this->name    = $cname;
 
-        return $this->is_valid();
+        $this->is_valid();
     }
 
     /**

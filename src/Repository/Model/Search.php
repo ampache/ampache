@@ -1774,7 +1774,7 @@ class Search extends playlist_object
     public function create(): ?string
     {
         $user = Core::get_global('user');
-        if (!$user instanceof $user) {
+        if (!$user instanceof User) {
             return null;
         }
 
