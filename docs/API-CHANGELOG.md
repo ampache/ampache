@@ -1,5 +1,19 @@
 # API CHANGELOG
 
+## API 6.6.2
+
+### Added
+
+* API6
+  * Add `stats` parameter to stream and download methods (If false disable stat recording when playing the object)
+  * Respect `api_always_download` in stream and download methods
+  * Add sorting to stats calls
+
+### Fixed
+
+* ALL
+  * index: Artist index not showing albums
+
 ## API 6.6.1
 
 This release keeps parity between Ampache7 releases by backporting the updated code.
@@ -10,6 +24,10 @@ This release keeps parity between Ampache7 releases by backporting the updated c
   * Add maximum ID properties to `handshake` and `ping` (with auth) responses for media types
     * `max_song`, `max_album`, `max_artist`, `max_video`, `max_podcast`, `max_podcast_episode`
   * flag: add `date` as a parameter (set the time for your flag)
+
+### Changed
+
+* lost_password: deny access in simple_user_mode
 
 ## API 6.6.0
 

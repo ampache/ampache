@@ -17,9 +17,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Jul 17, 2024 at 09:35 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- Host: 192.168.1.9
+-- Generation Time: Sep 18, 2024 at 06:47 AM
+-- Server version: 11.4.3-MariaDB-1
 -- PHP Version: 8.2.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -900,7 +900,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1011,19 +1011,19 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (161, 'use_original_year', '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse'),
 (162, 'hide_single_artist', '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse'),
 (163, 'hide_genres', '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse'),
-(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic'),
-(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', NULL),
-(166, 'api_enable_4', '1', 'Allow Ampache API4 responses', 25, 'boolean', 'options', NULL),
-(167, 'api_enable_5', '1', 'Allow Ampache API5 responses', 25, 'boolean', 'options', NULL),
-(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', NULL),
+(164, 'subsonic_always_download', '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api'),
+(165, 'api_enable_3', '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'api'),
+(166, 'api_enable_4', '1', 'Allow Ampache API4 responses', 25, 'boolean', 'options', 'api'),
+(167, 'api_enable_5', '1', 'Allow Ampache API5 responses', 25, 'boolean', 'options', 'api'),
+(168, 'api_force_version', '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'api'),
 (169, 'show_playlist_username', '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse'),
-(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', NULL),
-(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', NULL),
+(170, 'api_hidden_playlists', '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', 'api'),
+(171, 'api_hide_dupe_searches', '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', 'api'),
 (172, 'show_album_artist', '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
 (173, 'show_artist', '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme'),
 (175, 'demo_use_search', '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', NULL),
 (176, 'webplayer_removeplayed', '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player'),
-(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', NULL),
+(177, 'api_enable_6', '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', 'api'),
 (178, 'upload_access_level', '25', 'Upload Access Level', 100, 'special', 'system', 'upload'),
 (179, 'show_subtitle', '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse'),
 (180, 'show_original_year', '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse'),
@@ -1034,7 +1034,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (185, 'jp_volume', '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player'),
 (186, 'perpetual_api_session', '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend'),
 (187, 'home_recently_played_all', '0', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home'),
-(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy');
+(188, 'show_wrapped', '0', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy'),
+(189, 'api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api');
 
 -- --------------------------------------------------------
 
@@ -1484,7 +1485,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '600075'),
+('db_version', '600076'),
 ('Plugin_Last.FM', '000005');
 
 -- --------------------------------------------------------
@@ -1767,7 +1768,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES
 (-1, 185, '0.8'),
 (-1, 186, '0'),
 (-1, 187, '0'),
-(-1, 188, '0');
+(-1, 188, '0'),
+(-1, 189, '0');
 
 -- --------------------------------------------------------
 
