@@ -195,9 +195,8 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
             + (imagecolorat($image, $xaxis, $yaxis + 1) & 0xFF)
             + (imagecolorat($image, $xaxis + 1, $yaxis) & 0xFF)
             + (imagecolorat($image, $xaxis + 1, $yaxis + 1) & 0xFF);
-        $cXY = (int)($cXY / 4);
 
-        return $cXY;
+        return (int)($cXY / 4);
     }
 
     // smooth pixel reading (with x,y being reals, not integers)

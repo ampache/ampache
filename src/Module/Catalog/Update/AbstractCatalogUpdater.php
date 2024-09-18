@@ -33,8 +33,7 @@ abstract class AbstractCatalogUpdater
         $string = strip_tags($string);
         $string = html_entity_decode($string);
         $string = (string)preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
-        $string = trim($string);
 
-        return $string;
+        return trim($string);
     }
 }

@@ -224,7 +224,7 @@ class Horde_Browser
              * agent strings. */
             if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
                 $this->_mobile = true;
-            } elseif (preg_match('|Tablet|', $agent)) {
+            } elseif (str_contains($agent, 'Tablet')) {
                 $this->_mobile = true;
                 $this->_tablet = true;
             }

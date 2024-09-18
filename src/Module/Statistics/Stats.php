@@ -982,11 +982,9 @@ class Stats
 
         // add playlists to mashup browsing
         if ($type == 'playlist') {
-            $sql = ($catalog_filter && $user !== null)
+            return ($catalog_filter && $user !== null)
                 ? "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` WHERE" . Catalog::get_user_filter($type, $user->getId()) . "GROUP BY `playlist`.`id` ORDER BY `real_atime` DESC "
                 : "SELECT `playlist`.`id`, MAX(`playlist`.`last_update`) AS `real_atime` FROM `playlist` GROUP BY `playlist`.`id` ORDER BY `real_atime` DESC ";
-
-            return $sql;
         }
         $base_type   = 'song';
         $filter_type = $type;

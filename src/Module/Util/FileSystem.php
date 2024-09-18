@@ -60,9 +60,8 @@ class FileSystem
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
-        $fs_id = $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
 
-        return $fs_id;
+        return $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
     }
 
     /**

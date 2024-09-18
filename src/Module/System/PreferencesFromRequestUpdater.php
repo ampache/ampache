@@ -93,10 +93,10 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     break;
             }
 
-            if (preg_match('/_pass$/', $name)) {
+            if (str_ends_with($name, '_pass')) {
                 if ($value == '******') {
                     unset($_REQUEST[$name]);
-                } elseif (preg_match('/md5_pass$/', $name)) {
+                } elseif (str_ends_with($name, 'md5_pass')) {
                     $value = md5((string) $value);
                 }
             }

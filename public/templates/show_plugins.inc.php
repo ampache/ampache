@@ -55,7 +55,7 @@ $web_path = AmpConfig::get_web_path(); ?>
                 $action = "<a href=\"" . $web_path . "/admin/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Deactivate') . "</a>";
                 if ($installed_version < $plugin->_plugin->version) {
-                    $action .= '</br><a href="' . $web_path .
+                    $action .= '<br><a href="' . $web_path .
                     '/admin/modules.php?action=upgrade_plugin&plugin=' .
                     scrub_out($plugin_name) . '">' . T_('Upgrade') . '</a>';
                 }
