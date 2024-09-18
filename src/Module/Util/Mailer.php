@@ -109,7 +109,7 @@ final class Mailer implements MailerInterface
      */
     public function isMailEnabled(): bool
     {
-        return static::is_mail_enabled();
+        return self::is_mail_enabled();
     }
 
     /**

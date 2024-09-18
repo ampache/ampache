@@ -99,7 +99,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Don't put empty artists into artist links
 * Opensearch not being added for sites with auth
 * Oensearch URL parameters didn't work
-* VLC locallay volume division number incorrect for total volume
+* VLC localplay volume division number incorrect for total volume
 * Latitude and longitude column names in stats page
 
 ## Ampache 6.6.1
