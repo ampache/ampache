@@ -224,8 +224,9 @@ class Query
      * set_filter
      * This saves the filter data we pass it from the ObjectQuery FILTERS array
      * @param string $key
+     * @param mixed $value
      */
-    public function set_filter($key, mixed $value): bool
+    public function set_filter($key, $value): bool
     {
         switch ($key) {
             case 'access':
@@ -1187,8 +1188,9 @@ class Query
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
      * @param string $filter
+     * @param mixed $value
      */
-    private function _sql_filter($filter, mixed $value): string
+    private function _sql_filter($filter, $value): string
     {
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);
