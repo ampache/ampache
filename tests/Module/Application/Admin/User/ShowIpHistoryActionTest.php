@@ -170,7 +170,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
                     'workingUser' => $user,
                     'history' => $history,
                     'showAll' => false,
-                    'webPath' => $webPath,
+                    'adminPath' => $webPath,
                 ]
             )
             ->once();
@@ -241,7 +241,7 @@ class ShowIpHistoryActionTest extends MockeryTestCase
                     'workingUser' => $user,
                     'history' => $history,
                     'showAll' => true,
-                    'webPath' => $webPath,
+                    'adminPath' => $webPath,
                 ]
             )
             ->once();

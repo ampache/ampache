@@ -68,7 +68,7 @@ final class ShowCreateAction implements ApplicationActionInterface
             'show_edit_license.inc.php',
             [
                 'license' => $this->licenseRepository->prototype(),
-                'webPath' => $this->configContainer->getWebPath(),
+                'adminPath' => $this->configContainer->getWebPath('/admin'),
             ]
         );
         $this->ui->showBoxBottom();

@@ -9357,7 +9357,7 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$results has no value type specified in iterable type array\\.$#"
-			count: 10
+			count: 8
 			path: src/Plugin/AmpacheMusicBrainz.php
 
 		-
