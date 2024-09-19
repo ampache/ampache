@@ -424,8 +424,8 @@ function check_config_writable(): bool
  */
 function check_htaccess_rest_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/client/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/client/rest/')));
+    return ((file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/rest/.htaccess') && is_writeable(__DIR__ . '/../../public/rest/')));
 }
 
 /**
@@ -433,8 +433,8 @@ function check_htaccess_rest_writable(): bool
  */
 function check_htaccess_play_writable(): bool
 {
-    return ((file_exists(__DIR__ . '/../../public/client/play/.htaccess') && is_writeable(__DIR__ . '/../../public/client/play/.htaccess')) ||
-        (!file_exists(__DIR__ . '/../../public/client/play/.htaccess') && is_writeable(__DIR__ . '/../../public/client/play/')));
+    return ((file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/.htaccess')) ||
+        (!file_exists(__DIR__ . '/../../public/play/.htaccess') && is_writeable(__DIR__ . '/../../public/play/')));
 }
 
 /**
