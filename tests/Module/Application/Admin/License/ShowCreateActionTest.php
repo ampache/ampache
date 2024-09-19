@@ -108,7 +108,7 @@ class ShowCreateActionTest extends MockeryTestCase
                 'show_edit_license.inc.php',
                 [
                     'license' => $license,
-                    'webPath' => $webPath,
+                    'adminPath' => $webPath,
                 ]
             )
             ->once();

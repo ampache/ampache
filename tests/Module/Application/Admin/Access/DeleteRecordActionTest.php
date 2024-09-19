@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
@@ -32,6 +33,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\AccessRepositoryInterface;
+use Mockery\MockInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -41,6 +43,8 @@ class DeleteRecordActionTest extends TestCase
     private UiInterface&MockObject $ui;
 
     private AccessRepositoryInterface&MockObject $accessRepository;
+
+    private ConfigContainerInterface&MockObject $configContainer;
 
     private RequestParserInterface&MockObject $requestParser;
 
@@ -55,10 +59,12 @@ class DeleteRecordActionTest extends TestCase
         $this->ui               = $this->createMock(UiInterface::class);
         $this->requestParser    = $this->createMock(RequestParserInterface::class);
         $this->accessRepository = $this->createMock(AccessRepositoryInterface::class);
+        $this->configContainer  = $this->createMock(ConfigContainerInterface::class);
 
         $this->subject = new DeleteRecordAction(
             $this->ui,
             $this->accessRepository,
+            $this->configContainer,
             $this->requestParser
         );
 
@@ -124,7 +130,7 @@ class DeleteRecordActionTest extends TestCase
             ->with(
                 'No Problem',
                 'Your Access List entry has been removed',
-                'admin/access.php',
+                '/access.php',
             );
         $this->ui->expects(static::once())
             ->method('showQueryStats');
