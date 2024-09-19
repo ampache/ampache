@@ -725,7 +725,7 @@ class Ui implements UiInterface
         $form_name = 'confirmation',
         $visible = true
     ): void {
-        $webPath = $this->configContainer->getWebPath('/client');
+        $webPath = $this->configContainer->getWebPath();
 
         if (substr_count($next_url, $webPath)) {
             $path = $next_url;
