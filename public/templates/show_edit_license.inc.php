@@ -26,10 +26,10 @@ declare(strict_types=0);
 use Ampache\Repository\Model\License;
 
 /** @var License $license */
-/** @var string $webPath */
+/** @var string $adminPath */
 
 ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo $webPath; ?>/admin/license.php?action=edit">
+<form method="post" enctype="multipart/form-data" action="<?php echo $adminPath; ?>/license.php?action=edit">
 <input type="hidden" name="license_id" value="<?php echo $license->getId(); ?>" />
 <table class="tabledata">
 <tr>

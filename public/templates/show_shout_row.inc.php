@@ -41,9 +41,10 @@ use Ampache\Repository\Model\User;
     <td class="cel_date"><?php echo get_datetime($libitem->getDate()); ?></td>
     <td class="cel_action">
         <a href="<?php echo $web_path; ?>/admin/shout.php?action=show_edit&shout_id=<?php echo $libitem->getId(); ?>">
+        <a href="<?php echo $admin_path; ?>/shout.php?action=show_edit&shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
-        <a href="<?php echo $web_path; ?>/admin/shout.php?action=delete&shout_id=<?php echo $libitem->getId(); ?>">
+        <a href="<?php echo $admin_path; ?>/shout.php?action=delete&shout_id=<?php echo $libitem->getId(); ?>">
             <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
         </a>
     </td>
