@@ -577,7 +577,7 @@ function debug_event($type, $message, $level, $username = ''): bool
 function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get_web_path('/client') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
+        $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
         if ($options) {
             $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
         }
