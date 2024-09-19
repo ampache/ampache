@@ -28,7 +28,8 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 
 /** @var list<string> $controllers */
 
-$web_path = AmpConfig::get_web_path('/client'); ?>
+$web_path   = AmpConfig::get_web_path('/client');
+$admin_path = AmpConfig::get_web_path('/admin'); ?>
 <!-- Plugin we've found -->
 <table class="tabledata striped-rows">
     <thead>
@@ -58,7 +59,7 @@ $web_path = AmpConfig::get_web_path('/client'); ?>
             <td class="cel_name"><?php echo scrub_out($localplay->f_name); ?></td>
             <td class="cel_description"><?php echo scrub_out($localplay->f_description); ?></td>
             <td class="cel_version"><?php echo scrub_out($localplay->f_version); ?></td>
-            <td class="cel_action"><a href="<?php echo $web_path; ?>/admin/modules.php?action=<?php echo $action; ?>&type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
+            <td class="cel_action"><a href="<?php echo $admin_path; ?>/modules.php?action=<?php echo $action; ?>&type=<?php echo urlencode($controller); ?>"><?php echo $action_txt; ?></a></td>
         </tr>
         <?php
         } if (!count($controllers)) { ?>
