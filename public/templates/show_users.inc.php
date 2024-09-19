@@ -35,7 +35,8 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$web_path = AmpConfig::get_web_path();
+$web_path   = AmpConfig::get_web_path();
+$admin_path = AmpConfig::get_web_path('/admin');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
