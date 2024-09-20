@@ -338,6 +338,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'delete_play':
                 if (
+                    check_http_referer() === true &&
                     $user instanceof User &&
                     Access::check('interface', 100, $user->id) &&
                     isset($_REQUEST['activity_id'])
