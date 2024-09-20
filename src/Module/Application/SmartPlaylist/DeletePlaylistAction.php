@@ -57,23 +57,25 @@ final class DeletePlaylistAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
-        if ($playlistId !== null) {
-            $playlist = $this->modelFactory->createSearch((int) $playlistId);
-            // Check rights
-            if ($playlist->has_access()) {
-                $playlist->delete();
+        if (check_http_referer()) {
+            $playlistId = $request->getQueryParams()['playlist_id'] ?? null;
+            if ($playlistId !== null) {
+                $playlist = $this->modelFactory->createSearch((int)$playlistId);
+                // Check rights
+                if ($playlist->has_access()) {
+                    $playlist->delete();
 
-                // Go elsewhere
-                return $this->responseFactory
-                    ->createResponse(StatusCode::FOUND)
-                    ->withHeader(
-                        'Location',
-                        sprintf(
-                            '%s/browse.php?action=smartplaylist',
-                            $this->configContainer->getWebPath('/client')
-                        )
-                    );
+                    // Go elsewhere
+                    return $this->responseFactory
+                        ->createResponse(StatusCode::FOUND)
+                        ->withHeader(
+                            'Location',
+                            sprintf(
+                                '%s/browse.php?action=smartplaylist',
+                                $this->configContainer->getWebPath('/client')
+                            )
+                        );
+                }
             }
         }
 

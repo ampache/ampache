@@ -136,6 +136,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->set_type($type);
                 break;
             case 'delete_object':
+                if (check_http_referer() === false) {
+                    return;
+                }
                 switch ($_REQUEST['type']) {
                     case 'playlist':
                         // Check the perms we need to on this
