@@ -26,6 +26,9 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
 use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
@@ -81,7 +84,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_play':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
@@ -100,7 +107,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
