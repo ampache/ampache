@@ -302,7 +302,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                 case 'artist':
                     /** @var Artist $object */
                     $placeFormed = $results->{'area'}->{'name'} ?? $object->placeformed;
-                    $data = [
+                    $data        = [
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
                         'summary' => $object->summary,
