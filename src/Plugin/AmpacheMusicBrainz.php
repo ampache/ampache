@@ -301,9 +301,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
                     break;
                 case 'artist':
                     /** @var Artist $object */
-                    $placeFormed = (isset($results->{'area'}->{'name'}) && isset($results->{'country'}))
-                        ? $results->{'area'}->{'name'} . ', ' . $results->{'country'}
-                        : $results->{'area'}->{'name'} ?? $object->placeformed;
+                    $placeFormed = $results->{'area'}->{'name'} ?? $object->placeformed;
                     $data = [
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
