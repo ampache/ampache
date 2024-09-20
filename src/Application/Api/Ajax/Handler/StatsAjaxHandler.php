@@ -84,7 +84,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_play':
-                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                if (
+                    check_http_referer() === true &&
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
                     isset($_REQUEST['activity_id'])
                 ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
@@ -107,7 +109,9 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
-                if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                if (
+                    check_http_referer() === true &&
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
                     isset($_REQUEST['activity_id'])
                 ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
