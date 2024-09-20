@@ -96,7 +96,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         } catch (AlbumDeletionException) {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_('Couldn\'t delete this Album.'),
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Album')),
                 $this->configContainer->getWebPath('/client')
             );
         }

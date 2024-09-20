@@ -90,7 +90,8 @@ final class DeleteCatalogAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_("There was an error deleting this Catalog"),
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog')),
                 $next_url
             );
         }
