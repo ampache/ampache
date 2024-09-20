@@ -296,6 +296,13 @@ function check_http_referer(): bool
 {
     $referer  = Core::get_server('HTTP_REFERER');
     $web_path = AmpConfig::get_web_path();
+    if (
+        empty($referer) &&
+        empty($web_path)
+    ) {
+        // cli / tests
+        return true;
+    }
 
     return strpos($referer, $web_path);
 }
