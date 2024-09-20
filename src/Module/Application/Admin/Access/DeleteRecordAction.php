@@ -67,6 +67,7 @@ final class DeleteRecordAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
+            check_http_referer() === false ||
             $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             $this->requestParser->verifyForm('delete_access') === false
         ) {
