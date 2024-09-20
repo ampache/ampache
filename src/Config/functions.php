@@ -304,7 +304,7 @@ function check_http_referer(): bool
         return true;
     }
 
-    return strpos($referer, $web_path);
+    return strpos($referer, $web_path) !== false;
 }
 
 /**
