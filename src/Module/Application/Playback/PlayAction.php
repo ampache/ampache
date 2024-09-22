@@ -919,7 +919,7 @@ final class PlayAction implements ApplicationActionInterface
             );
             $transcode_to = $transcode_settings['format'];
             if (isset($troptions['bitrate'])) {
-                $maxbitrate = $troptions['bitrate'];
+                $maxbitrate = $troptions['bitrate'] / 1024;
             } else {
                 $maxbitrate = (empty($transcode_settings))
                     ? $media->bitrate / 1024
