@@ -4,6 +4,8 @@
 
 ### Added
 
+* Check the user is admin when deleting activities
+* Verify http_referer before delete actions
 * Database 600076
   * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
 * CLI
@@ -15,12 +17,15 @@
 ### Changed
 
 * Play URLs `cache=1` will bypass stat recording instead of converting to download
+* When updating artist data from MusicBrainz just use the current area name
 
 ### Fixed
 
 * Browse trim for sort could leave a `,`
 * Song `has_info` had extra select columns
 * Some tests were broken
+* Missing close on cookie disclaimer div id
+* content-length calculation for transcode
 
 ## Ampache 6.6.1
 
