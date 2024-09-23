@@ -279,7 +279,7 @@ class Preference extends database_object
      * Return a preference for specific user identifier
      * @param int $user_id
      * @param string $pref_name
-     * @return int|string
+     * @return int|string|null
      *
      * @see User::getPreferenceValue()
      */
