@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## Ampache 6.6.2
+
+### Added
+
+* Database 600076
+  * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
+* CLI
+  * admin:updateDatabase: set and fix up preferences on update
+* Browse
+  * Podcast sort by `total_count`
+  * Label sort by `active` status
+
+### Changed
+
+* Play URLs `cache=1` will bypass stat recording instead of converting to download
+
+### Fixed
+
+* Browse trim for sort could leave a `,`
+* Song `has_info` had extra select columns
+* Some tests were broken
+
 ## Ampache 6.6.1
 
 ### Fixed
@@ -23,6 +45,7 @@
   * Stripslashes on input to fix `Don't` becoming `Don\'t` in the SQL
 * Subsonic
   * Always include cover art in search results
+  * Correct output format of array items (e.g. int being cast as string)
 * webplayer
   * Missing variable `playlist_before` in shuffle function
 
@@ -101,7 +124,7 @@ This release has made greater use of browses reducing reliance on customizing mi
   * Add indexes to `object_count`
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
   * Add `last_count` to the `playlist` table
-  * Use InnoDb for all tables by default on new installs
+  * Use InnoDB for all tables by default on new installs
 
 ### Changed
 

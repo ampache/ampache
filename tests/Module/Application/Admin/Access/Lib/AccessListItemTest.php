@@ -98,12 +98,16 @@ class AccessListItemTest extends MockeryTestCase
         $user->fullname = $userFullName;
         $user->username = $userName;
 
-        $this->access->user = (string)$userId;
+        $this->access->user = $userId;
 
         $this->modelFactory->shouldReceive('createUser')
             ->with($userId)
             ->once()
             ->andReturn($user);
+
+        $user->shouldReceive('getFullDisplayName')
+            ->once()
+            ->andReturn(sprintf('%s (%s)', $userFullName, $userName));
 
         $this->assertSame(
             sprintf('%s (%s)', $userFullName, $userName),

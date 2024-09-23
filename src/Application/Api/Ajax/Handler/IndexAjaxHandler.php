@@ -337,7 +337,12 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'delete_play':
-                if (isset($_REQUEST['activity_id'])) {
+                if (
+                    check_http_referer() === true &&
+                    $user instanceof User &&
+                    Access::check('interface', 100, $user->id) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
                 }
                 ob_start();

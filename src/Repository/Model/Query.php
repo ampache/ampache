@@ -73,6 +73,7 @@ use Ampache\Module\System\Dba;
 class Query
 {
     private const SORT_ORDER = [
+        'active' => 'ASC',
         'last_count' => 'ASC',
         'last_update' => 'ASC',
         'limit' => 'ASC',
@@ -85,43 +86,37 @@ class Query
         'year' => 'ASC',
     ];
 
-    /**
-     * @var int|string $id
-     */
+    /** @var int|string $id */
     public $id;
 
-    /**
-     * @var int $catalog
-     */
+    /** @var int $catalog */
     public $catalog;
 
     /** @var int|null $user_id */
     public $user_id = null;
 
-    /**
-     * @var array $_state
-     */
-    protected $_state = array(
-        'album_artist' => false, // Used by $browse->set_type() to filter artists
+    /** @var array $_state */
+    protected $_state = [
+        'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,
-        'filter' => array(),
+        'filter' => [],
         'grid_view' => true,
-        'group' => array(),
+        'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
         'mashup' => null,
         'offset' => 0,
-        'select' => array(),
+        'select' => [],
         'show_header' => true,
         'simple' => false,
-        'song_artist' => null, // Used by $browse->set_type() to filter artists
-        'sort' => array(
+        'song_artist' => null, // Used by $browse->set_type() to filter artists to song artist only
+        'sort' => [
             'name' => null,
             'order' => null,
-        ),
+        ],
         'start' => 0,
         'static' => false,
         'threshold' => '',
@@ -132,13 +127,13 @@ class Query
         'use_alpha' => false,
         'use_filters' => true, // Used by $browse to hide the filter box in the sidebar
         'use_pages' => false,
-    );
+    ];
 
     /** @var array $_cache */
     protected $_cache;
 
     /** @var QueryInterface|null $queryType */
-    private $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
+    private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
 
     /**
      * constructor
@@ -146,8 +141,10 @@ class Query
      * @param int|null $query_id
      * @param bool $cached
      */
-    public function __construct($query_id = 0, $cached = true)
-    {
+    public function __construct(
+        $query_id = 0,
+        $cached = true
+    ) {
         $sid = session_id();
 
         if (!$cached) {
@@ -155,7 +152,8 @@ class Query
 
             return;
         }
-        $this->user_id = (!empty(Core::get_global('user')))
+
+        $this->user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : null;
 
@@ -165,24 +163,25 @@ class Query
 
         if ($query_id === 0) {
             $this->reset();
-            $data = self::_serialize($this->_state);
+            $data = $this->_serialize($this->_state);
 
             $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
-            Dba::write($sql, array($sid, $data));
+            Dba::write($sql, [$sid, $data]);
             $insert_id = Dba::insert_id();
             if (!$insert_id) {
                 return;
             }
+
             $this->id = (int)$insert_id;
 
             return;
         } else {
             $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
-            $db_results = Dba::read($sql, array($query_id, $sid));
+            $db_results = Dba::read($sql, [$query_id, $sid]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
-                $this->_state = (array)self::_unserialize($results['data']);
+                $this->_state = (array)$this->_unserialize($results['data']);
                 // queryType isn't set by restoring state
                 $this->set_type($this->_state['type']);
 
@@ -210,7 +209,7 @@ class Query
      * sets by collapsing ranges.
      * @param array $data
      */
-    private static function _serialize($data): string
+    private function _serialize($data): string
     {
         return json_encode($data) ?: '';
     }
@@ -222,7 +221,7 @@ class Query
      * @param string $data
      * @return mixed
      */
-    private static function _unserialize($data)
+    private function _unserialize($data)
     {
         return json_decode((string)$data, true);
     }
@@ -236,17 +235,6 @@ class Query
     public function set_filter($key, $value): bool
     {
         switch ($key) {
-            case 'gather_type':
-            case 'gather_types':
-            case 'hidden':
-            case 'hide_dupe_smartlist':
-            case 'not_like':
-            case 'object_type':
-            case 'smartlist':
-            case 'song_artist':
-            case 'user_catalog':
-                $this->_state['filter'][$key] = $value;
-                break;
             case 'access':
             case 'add_gt':
             case 'add_lt':
@@ -293,15 +281,18 @@ class Query
                 if ($this->is_static_content()) {
                     return false;
                 }
+
                 $this->_state['filter'][$key] = $value;
                 if ($key == 'regex_match') {
                     unset($this->_state['filter']['regex_not_match']);
                 }
+
                 if ($key == 'regex_not_match') {
                     unset($this->_state['filter']['regex_match']);
                 }
                 break;
             case 'playlist_type':
+                // 0 = your user only, 1 = public or your user (User is found using GLOBAL)
                 if (isset($this->_state['filter']['playlist_type'])) {
                     $this->_state['filter'][$key] = ($this->_state['filter'][$key] == 1) ? 0 : 1;
                 } else {
@@ -310,19 +301,30 @@ class Query
                 break;
             case 'genre':
             case 'tag':
+                // array values
                 if (is_array($value)) {
                     $this->_state['filter'][$key] = $value;
                 } elseif (is_numeric($value)) {
-                    $this->_state['filter'][$key] = array($value);
+                    $this->_state['filter'][$key] = [$value];
                 } else {
-                    $this->_state['filter'][$key] = array();
+                    $this->_state['filter'][$key] = [];
                 }
                 break;
             default:
-                debug_event(self::class, 'IGNORED set_filter ' . $this->get_type() . ': ' . $key, 5);
+                // you might be trying to set an invalid filter that doesn't exist
+                $type = (!empty($this->get_type()))
+                    ? $this->get_type()
+                    : 'NO_TYPE';
 
-                return false;
-        } // end switch
+                // warn about weird filters
+                if (!in_array($key, self::get_allowed_filters($type))) {
+                    debug_event(self::class, 'set_filter: UNKNOWN FILTER ' . $type . ': ' . $key, 5);
+                }
+
+                // string / unfiltered
+                $this->_state['filter'][$key] = $value;
+                break;
+        }
 
         // ensure joins are set on $this->_state
         $this->_get_filter_sql();
@@ -341,15 +343,15 @@ class Query
     public function reset(): void
     {
         $this->_state['base']   = null;
-        $this->_state['select'] = array();
-        $this->_state['join']   = array();
-        $this->_state['filter'] = array();
+        $this->_state['select'] = [];
+        $this->_state['join']   = [];
+        $this->_state['filter'] = [];
         $this->_state['having'] = '';
         $this->_state['total']  = null;
-        $this->_state['sort']   = array(
+        $this->_state['sort']   = [
             'name' => null,
             'order' => null,
-        );
+        ];
         $this->set_static_content(false);
         $this->set_is_simple(false);
         $this->set_start(0);
@@ -362,7 +364,7 @@ class Query
      */
     public function get_filter(string $key): ?string
     {
-        return (isset($this->_state['filter'][$key])) ? $this->_state['filter'][$key] : null;
+        return $this->_state['filter'][$key] ?? null;
     }
 
     /**
@@ -659,7 +661,7 @@ class Query
         }
 
         // Joins may change because of the new sort so don't keep the old ones
-        $this->_state['join'] = array();
+        $this->_state['join'] = [];
 
         // ensure joins are reset on $this->_state
         $this->_get_filter_sql();
@@ -679,10 +681,10 @@ class Query
                 : 'ASC';
         }
 
-        $this->_state['sort'] = array(
+        $this->_state['sort'] = [
             'name' => $sort,
             'order' => $order,
-        );
+        ];
 
         $this->_resort_objects();
     }
@@ -748,7 +750,7 @@ class Query
      */
     public function set_join($type, $table, $source, $dest, $priority): void
     {
-        $this->_state['join'][$priority][$table] = "$type JOIN $table ON $source = $dest";
+        $this->_state['join'][$priority][$table] = sprintf('%s JOIN %s ON %s = %s', $type, $table, $source, $dest);
     }
 
     /**
@@ -762,9 +764,16 @@ class Query
      * @param string $dest2
      * @param int $priority
      */
-    public function set_join_and($type, $table, $source1, $dest1, $source2, $dest2, $priority): void
-    {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2";
+    public function set_join_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $priority
+    ): void {
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2);
     }
 
     /**
@@ -780,9 +789,18 @@ class Query
      * @param string $dest3
      * @param int $priority
      */
-    public function set_join_and_and($type, $table, $source1, $dest1, $source2, $dest2, $source3, $dest3, $priority): void
-    {
-        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . " JOIN $table ON $source1 = $dest1 AND $source2 = $dest2 AND $source3 = $dest3";
+    public function set_join_and_and(
+        $type,
+        $table,
+        $source1,
+        $dest1,
+        $source2,
+        $dest2,
+        $source3,
+        $dest3,
+        $priority
+    ): void {
+        $this->_state['join'][$priority][$table] = strtoupper((string)$type) . sprintf(' JOIN %s ON %s = %s AND %s = %s AND %s = %s', $table, $source1, $dest1, $source2, $dest2, $source3, $dest3);
     }
 
     /**
@@ -812,7 +830,6 @@ class Query
      * This sets the start point for our show functions
      * We need to store this in the session so that it can be pulled
      * back, if they hit the back button
-     * @param int $start
      */
     public function set_start(int $start): void
     {
@@ -872,7 +889,7 @@ class Query
 
         if (!$this->is_simple()) {
             $sql        = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `sid` = ? AND `id` = ?';
-            $db_results = Dba::read($sql, array(session_id(), $this->id));
+            $db_results = Dba::read($sql, [session_id(), $this->id]);
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('data', $results) && !empty($results['data'])) {
@@ -887,7 +904,7 @@ class Query
                 return $this->_cache;
             }
 
-            return array();
+            return [];
         }
 
         return $this->get_objects();
@@ -906,19 +923,19 @@ class Query
         //debug_event(self::class, 'get_objects query: ' . $sql, 5);
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
         }
 
         $results  = $this->_post_process($results);
-        $filtered = array();
+        $filtered = [];
         foreach ($results as $data) {
             // Make sure that this object passes the logic filter
-            if (array_key_exists('id', $data) && $this->_logic_filter($data['id'])) {
+            if (array_key_exists('id', $data)) {
                 $filtered[] = $data['id'];
             }
-        } // end while
+        }
 
         // Save what we've found and then return it
         $this->save_objects($filtered);
@@ -969,7 +986,7 @@ class Query
      */
     private function _get_select(): string
     {
-        return implode(", ", $this->_state['select'] ?? array());
+        return implode(", ", $this->_state['select'] ?? []);
     }
 
     /**
@@ -999,10 +1016,12 @@ class Query
             $sql .= $this->_sql_filter($key, $value);
         }
 
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+        $dis = '';
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             // Add catalog enabled filter
             $dis = Catalog::get_enable_filter($type, '`' . $type . '`.`id`');
         }
+
         $catalog_filter = AmpConfig::get('catalog_filter');
         if ($catalog_filter && $this->user_id > 0) {
             // Add catalog user filter
@@ -1031,14 +1050,14 @@ class Query
                     break;
             }
         }
-        if (!empty($dis)) {
+
+        if ($dis !== '' && $dis !== '0') {
             $sql .= $dis . " AND ";
         }
 
-        $sql = rtrim((string)$sql, " AND ") . " ";
-        $sql = rtrim((string)$sql, "WHERE ") . " ";
+        $sql = rtrim($sql, " AND ") . " ";
 
-        return $sql;
+        return rtrim($sql, "WHERE ") . " ";
     }
 
     /**
@@ -1055,10 +1074,9 @@ class Query
 
         $sql .= $this->_sql_sort($this->_state['sort']['name'], $this->_state['sort']['order']);
 
-        $sql = rtrim((string)$sql, 'ORDER BY ');
-        $sql = rtrim((string)$sql, ', ');
+        $sql = rtrim($sql, 'ORDER BY ');
 
-        return $sql;
+        return rtrim($sql, ', ');
     }
 
     /**
@@ -1098,8 +1116,8 @@ class Query
         foreach ($this->_state['join'] as $joins) {
             foreach ($joins as $join) {
                 $sql .= $join . ' ';
-            } // end foreach joins at this level
-        } // end foreach of this level of joins
+            }
+        }
 
         return $sql;
     }
@@ -1184,24 +1202,24 @@ class Query
     {
         $tags = $this->_state['filter']['tag'] ?? '';
 
-        if (!is_array($tags) || sizeof($tags) < 2) {
+        if (!is_array($tags) || count($tags) < 2) {
             return $data;
         }
 
-        $tag_count = sizeof($tags);
-        $count     = array();
+        $tag_count = count($tags);
+        $count     = [];
 
         foreach ($data as $row) {
-            $count[$row['id']]++;
+            ++$count[$row['id']];
         }
 
-        $results = array();
+        $results = [];
 
         foreach ($count as $key => $value) {
             if ($value >= $tag_count) {
-                $results[] = array('id' => $key);
+                $results[] = ['id' => $key];
             }
-        } // end foreach
+        }
 
         return $results;
     }
@@ -1224,21 +1242,6 @@ class Query
         }
 
         return $this->queryType->get_sql_filter($this, $filter, $value);
-    }
-
-    /**
-     * _logic_filter
-     * This runs the filters that we can't easily apply
-     * to the sql so they have to be done after the fact
-     * these should be limited as they are often intensive and
-     * require additional queries per object... :(
-     *
-     * @param int $object_id
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    private function _logic_filter($object_id): bool
-    {
-        return true; // TODO, this must be old so probably not needed
     }
 
     /**
@@ -1297,7 +1300,7 @@ class Query
                 $sql = "`video`.`time`";
                 break;
             case 'rating':
-                $sql = "`rating`.`rating` $order, `rating`.`id`";
+                $sql = sprintf('`rating`.`rating` %s, `rating`.`id`', $order);
                 $this->set_join_and_and('LEFT', "`rating`", "`rating`.`object_id`", "`video`.`id`", "`rating`.`object_type`", "'video'", "`rating`.`user`", (string)$this->user_id, 100);
                 break;
             case 'release_date':
@@ -1317,7 +1320,11 @@ class Query
                 break;
         }
 
-        if (!($sql === '' || $sql === '0') && $table != 'video') {
+        if (
+            $sql !== '' &&
+            $sql !== '0' &&
+            $table != 'video'
+        ) {
             $this->set_join('LEFT', '`video`', '`' . $table . '`.`id`', '`video`.`id`', 50);
         }
 
@@ -1343,17 +1350,19 @@ class Query
             $objects = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if (!count($objects) || !is_array($objects)) {
+            if ($objects === [] || !is_array($objects)) {
                 return false;
             }
+
             $type      = $this->get_type();
-            $where_sql = "WHERE `$type`.`id` IN (";
+            $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
             foreach ($objects as $object_id) {
                 $object_id = Dba::escape($object_id);
-                $where_sql .= "'$object_id',";
+                $where_sql .= sprintf('\'%s\',', $object_id);
             }
-            $where_sql = rtrim((string)$where_sql, ', ');
+
+            $where_sql = rtrim($where_sql, ', ');
 
             $where_sql .= ")";
 
@@ -1368,8 +1377,8 @@ class Query
             $group_sql .= ", " . preg_replace('/(ASC,|DESC,|,|RAND\(\))$/', '', $sql_sort);
 
             // Clean her up
-            $order_sql = rtrim((string)$order_sql, "ORDER BY ");
-            $order_sql = rtrim((string)$order_sql, ",");
+            $order_sql = rtrim($order_sql, "ORDER BY ");
+            $order_sql = rtrim($order_sql, ",");
 
             $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
@@ -1377,7 +1386,7 @@ class Query
         $db_results = Dba::read($sql);
         //debug_event(self::class, "_resort_objects: " . $sql, 5);
 
-        $results = array();
+        $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1395,10 +1404,10 @@ class Query
     {
         $browse_id = $this->id;
         if ($browse_id != 'nocache') {
-            $data = self::_serialize($this->_state);
+            $data = $this->_serialize($this->_state);
 
             $sql = 'UPDATE `tmp_browse` SET `data` = ? WHERE `sid` = ? AND `id` = ?';
-            Dba::write($sql, array($data, session_id(), $browse_id));
+            Dba::write($sql, [$data, session_id(), $browse_id]);
         }
     }
 
@@ -1420,10 +1429,10 @@ class Query
             $this->set_total(count($object_ids));
             $browse_id = $this->id;
             if ($browse_id != 'nocache') {
-                $data = self::_serialize($this->_cache);
+                $data = $this->_serialize($this->_cache);
 
                 $sql = 'UPDATE `tmp_browse` SET `object_data` = ? WHERE `sid` = ? AND `id` = ?';
-                Dba::write($sql, array($data, session_id(), $browse_id));
+                Dba::write($sql, [$data, session_id(), $browse_id]);
             }
         }
 
@@ -1439,9 +1448,8 @@ class Query
         if (!empty($this->_state['extended_key_name'])) {
             $key .= '_' . $this->_state['extended_key_name'];
         }
-        $key .= '_' . $this->id;
 
-        return $key;
+        return $key . ('_' . $this->id);
     }
 
     /**
