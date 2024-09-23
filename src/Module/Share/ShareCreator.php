@@ -120,10 +120,9 @@ final class ShareCreator implements ShareCreatorInterface
         ];
         Dba::write($sql, $params);
 
-        $share_id = (int)
-        Dba::insert_id();
+        $share_id = (int)Dba::insert_id();
 
-        $url = Share::get_url((int)$share_id, $secret);
+        $url = Share::get_url($share_id, $secret);
         // Get a shortener url if any available
         foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
