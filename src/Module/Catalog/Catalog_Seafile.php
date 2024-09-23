@@ -611,10 +611,9 @@ class Catalog_Seafile extends Catalog
      * check_remote_song
      *
      * checks to see if a remote song exists in the database or not
-     * if it find a song it returns the UID
-     * @param $file
+     * if it finds a song it returns the ID
      */
-    public function check_remote_song($file): ?int
+    public function check_remote_song(string $file): ?int
     {
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$file]);

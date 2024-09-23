@@ -13,7 +13,9 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Added rated songs to user Wrapped pages
 * Show ratings on live_stream pages
 * User option to show dashboard links on the index instead of browse links
-* Use number for preference text boxes when the preference is numeric
+* Use number for preference input text boxes when the preference value is numeric
+* Check the user is admin when deleting activities
+* Verify http_referer before delete actions
 * Plugins
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
@@ -77,10 +79,12 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Put each plugin class into extended interfaces to ensure functions meet expected requirements
 * Changed CSS logo to HTML
 * Skip stat recording on `cache=1` instead of reclassifying as a download
+* Convert catalog row actions to a form to fix client branch
+* When updating artist data from MusicBrainz just use the current area name
 
 ### Removed
 
-* Support for PHP < 8.2
+* Support for PHP greater than 8.2
 * Unused stream actions
 * Old composer files
 * Unused PNG icons
@@ -101,6 +105,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Oensearch URL parameters didn't work
 * VLC localplay volume division number incorrect for total volume
 * Latitude and longitude column names in stats page
+* Cookie disclaimer missing closing " on div id
 
 ## Ampache 6.6.1
 
