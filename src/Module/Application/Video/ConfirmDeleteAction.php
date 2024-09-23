@@ -78,7 +78,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_('Couldn\'t delete this Video.'),
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Video')),
                 $this->configContainer->getWebPath()
             );
         }

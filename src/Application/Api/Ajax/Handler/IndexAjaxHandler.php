@@ -337,7 +337,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'delete_play':
-                if (isset($_REQUEST['activity_id'])) {
+                if (
+                    check_http_referer() === true &&
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
                 }
 
