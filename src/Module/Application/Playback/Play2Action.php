@@ -945,7 +945,7 @@ final class Play2Action implements ApplicationActionInterface
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
             if (isset($troptions['bitrate'])) {
-                $maxbitrate = $troptions['bitrate'];
+                $maxbitrate = $troptions['bitrate'] / 1024;
             } else {
                 $maxbitrate = (empty($transcode_settings))
                     ? $media->bitrate / 1024
