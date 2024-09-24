@@ -106,7 +106,7 @@ final class PlaylistImporter
                         $found = true;
                     } else {
                         // Not found in absolute path, create it from relative path
-                        $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
+                        $file = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $file;
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {

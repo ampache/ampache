@@ -598,11 +598,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param string $option
-     * @param string $value
+     * save_cookie_params
      */
-    public function save_cookie_params($option, $value): void
+    public function save_cookie_params(string $option, string $value): void
     {
         if ($this->get_type() !== '' && $this->get_type() !== '0') {
             $remember_length = time() + 31536000;
@@ -618,10 +616,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $use_filters
+     * set_use_filters
      */
-    public function set_use_filters($use_filters): void
+    public function set_use_filters(bool $use_filters): void
     {
         $this->_state['use_filters'] = $use_filters;
     }
@@ -635,11 +632,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $use_pages
-     * @param bool $savecookie
+     * set_use_pages
      */
-    public function set_use_pages($use_pages, $savecookie = true): void
+    public function set_use_pages(bool $use_pages, bool $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
@@ -657,10 +652,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $mashup
+     * set_mashup
      */
-    public function set_mashup($mashup): void
+    public function set_mashup(bool $mashup): void
     {
         $this->_state['mashup'] = $mashup;
     }
@@ -674,19 +668,17 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $album_artist
+     * set_album_artist
      */
-    public function set_album_artist($album_artist): void
+    public function set_album_artist(bool $album_artist): void
     {
         $this->_state['album_artist'] = $album_artist;
     }
 
     /**
-     *
-     * @param bool $song_artist
+     * set_song_artist
      */
-    public function set_song_artist($song_artist): void
+    public function set_song_artist(bool $song_artist): void
     {
         $this->_state['song_artist'] = $song_artist;
     }
@@ -708,11 +700,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $grid_view
-     * @param bool $savecookie
+     * set_grid_view
      */
-    public function set_grid_view($grid_view, $savecookie = true): void
+    public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
@@ -730,11 +720,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $use_alpha
-     * @param bool $savecookie
+     * set_use_alpha
      */
-    public function set_use_alpha($use_alpha, $savecookie = true): void
+    public function set_use_alpha(bool $use_alpha, bool $savecookie = true): void
     {
         if ($savecookie) {
             $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
@@ -769,10 +757,9 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param bool $show_header
+     * set_show_header
      */
-    public function set_show_header($show_header): void
+    public function set_show_header(bool $show_header): void
     {
         $this->_state['show_header'] = $show_header;
     }
@@ -794,19 +781,17 @@ class Browse extends Query
     }
 
     /**
-     *
-     * @param string $threshold
+     * set_threshold
      */
-    public function set_threshold($threshold): void
+    public function set_threshold(string $threshold): void
     {
         $this->_state['threshold'] = $threshold;
     }
 
     /**
-     *
-     * @param string $title
+     * set_title
      */
-    public function set_title($title): void
+    public function set_title(string $title): void
     {
         $this->_state['title'] = $title;
     }

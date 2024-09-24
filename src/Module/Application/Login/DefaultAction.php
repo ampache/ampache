@@ -273,7 +273,6 @@ final class DefaultAction implements ApplicationActionInterface
             // This allows stealing passwords validated by external means such as LDAP
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTH_PASSWORD_SAVE) &&
-                isset($auth) &&
                 $auth['success'] &&
                 isset($password) &&
                 $user instanceof User

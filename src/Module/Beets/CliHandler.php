@@ -142,10 +142,9 @@ class CliHandler extends Handler
     }
 
     /**
-     *
-     * @param string $item
+     * itemIsComlete
      */
-    protected function itemIsComlete($item): bool
+    protected function itemIsComlete(string $item): bool
     {
         $offset   = strlen($this->itemEnd);
         $position = (strlen($item) > $offset)
@@ -185,8 +184,8 @@ class CliHandler extends Handler
     }
 
     /**
-     *
-     * @return array
+     * getFields
+     * @return string[]
      */
     protected function getFields(): array
     {

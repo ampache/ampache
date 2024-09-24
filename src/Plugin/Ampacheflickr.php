@@ -134,7 +134,7 @@ class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
                 'title' => $title
             ];
 
-            if ($limit && count($results) >= $limit) {
+            if (count($results) >= $limit) {
                 break;
             }
         }

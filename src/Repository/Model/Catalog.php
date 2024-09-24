@@ -1393,12 +1393,12 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_videos
      * @param int[]|null $catalogs
      * @param string $type
      * @return Video[]
      */
-    public static function get_videos($catalogs = null, $type = ''): array
+    public static function get_videos($catalogs = null, string $type = ''): array
     {
         if (!$catalogs) {
             $catalogs = self::get_catalogs();
@@ -1802,7 +1802,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
+     * get_podcasts
      * @param int[]|null $catalogs
      * @return Podcast[]
      */
@@ -1857,11 +1857,10 @@ abstract class Catalog extends database_object
     }
 
     /**
-     *
-     * @param int $count
+     * get_newest_podcasts
      * @return Podcast_Episode[]
      */
-    public static function get_newest_podcasts($count): array
+    public static function get_newest_podcasts(int $count): array
     {
         $catalogs = self::get_catalogs('podcast');
         $results  = [];
@@ -3496,11 +3495,8 @@ abstract class Catalog extends database_object
      * Split items by configurable delimiter
      * Return first item as string = default
      * Return all items as array if doTrim = false passed as optional parameter
-     * @param string|null $string
-     * @param bool $doTrim
-     * @return string|array
      */
-    public static function trim_slashed_list($string, $doTrim = true)
+    public static function trim_slashed_list(? string $string): string
     {
         $delimiters = self::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
@@ -3511,11 +3507,7 @@ abstract class Catalog extends database_object
 
         $items = array_map('trim', $items);
 
-        if (isset($items[0]) && $doTrim) {
-            return $items[0];
-        }
-
-        return $items;
+        return (string)$items[0];
     }
 
     /**

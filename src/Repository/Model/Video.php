@@ -814,7 +814,7 @@ class Video extends database_object implements
     {
         $subtitles = [];
         $pinfo     = pathinfo($this->file);
-        $filter    = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
+        $filter    = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
 
         foreach (glob($filter) as $srt) {
             $psrt      = explode('.', $srt);
@@ -827,7 +827,7 @@ class Video extends database_object implements
                 }
             }
 
-            $subtitles[] = ['file' => $pinfo['dirname'] . DIRECTORY_SEPARATOR . $srt, 'lang_code' => $lang_code, 'lang_name' => $lang_name];
+            $subtitles[] = ['file' => ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $srt, 'lang_code' => $lang_code, 'lang_name' => $lang_name];
         }
 
         return $subtitles;
@@ -1038,7 +1038,7 @@ class Video extends database_object implements
         $subtitle = '';
         if ($lang_code == '__' || $this->get_language_name($lang_code)) {
             $pinfo    = pathinfo($this->file);
-            $subtitle = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'];
+            $subtitle = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $pinfo['filename'];
             if ($lang_code != '__') {
                 $subtitle .= '.' . $lang_code;
             }

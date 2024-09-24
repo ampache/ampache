@@ -56,7 +56,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
     {
         $data = Stream::get_now_playing();
 
-        $format     = (string) (AmpConfig::get('rss_format') ?? '%t - %a - %A');
+        $format     = (string)AmpConfig::get('rss_format', '%t - %a - %A');
         $string_map = [
             '%t' => 'title',
             '%a' => 'artist',

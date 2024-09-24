@@ -69,10 +69,8 @@ final class FunctionChecker implements FunctionCheckerInterface
                 /** @var User $user */
                 $user = Core::get_global('user');
 
-                if (!$user) {
-                    return false;
-                }
                 if (
+                    $user instanceof User &&
                     $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) === true &&
                     $user->has_access(AccessLevelEnum::GUEST)
                 ) {
