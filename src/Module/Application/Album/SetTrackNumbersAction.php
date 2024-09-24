@@ -79,7 +79,9 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         if (isset($_GET['order'])) {
             $songs = explode(';', Core::get_get('order'));
-            $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
+            $track = (filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT))
+                ? ((int)filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
+                : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, (int) $song_id);

@@ -56,11 +56,6 @@ parameters:
 			path: src/Config/Init/Init.php
 
 		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Config/Init/InitializationHandlerConfig.php
-
-		-
 			message: "#^Function apache_request_headers\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Config/functions.php
@@ -4076,11 +4071,6 @@ parameters:
 			path: src/Module/Application/Admin/Catalog/AbstractCatalogAction.php
 
 		-
-			message: "#^Binary operation \"\\+\" between non\\-falsy\\-string and 1 results in an error\\.$#"
-			count: 1
-			path: src/Module/Application/Album/SetTrackNumbersAction.php
-
-		-
 			message: "#^Comparison operation \"\\=\\=\" between \\(array\\<int, string\\>\\|string\\) and int\\|string results in an error\\.$#"
 			count: 1
 			path: src/Module/Application/Image/AbstractShowAction.php
@@ -4089,11 +4079,6 @@ parameters:
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Module/Application/Installation/DefaultAction.php
-
-		-
-			message: "#^Variable \\$auth in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: src/Module/Application/Login/DefaultAction.php
 
 		-
 			message: "#^Parameter \\#1 \\$action_index of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:run_custom_play_action\\(\\) expects int, string given\\.$#"
@@ -4491,11 +4476,6 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Authorization/Check/FunctionChecker.php
-
-		-
 			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
@@ -4549,11 +4529,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:\\$songs type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:getFields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Beets/CliHandler.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\CliHandler\\:\\:iterateItems\\(\\) has parameter \\$handle with no type specified\\.$#"
@@ -4971,11 +4946,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/Catalog/PlaylistImporter.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SeafileAdapter\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SeafileAdapter.php
@@ -5169,11 +5139,6 @@ parameters:
 			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_serverUrl has no type specified\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Module/Catalog/Update/UpdateCatalog.php
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
@@ -5417,11 +5382,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:volume\\(\\) has parameter \\$volume with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
-
-		-
-			message: "#^Offset 'file' does not exist on string\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php
 
@@ -6091,21 +6051,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:\\$password has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Vlc\\\\VlcPlayer\\:\\:\\$port has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Vlc/VlcPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Xbmc\\\\AmpacheXbmc\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php
@@ -6371,11 +6316,6 @@ parameters:
 			path: src/Module/Playback/Stream.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:\\$session has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
@@ -6481,11 +6421,6 @@ parameters:
 			path: src/Module/Playlist/Search/AlbumSearch.php
 
 		-
-			message: "#^Ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Module/Playlist/Search/AlbumSearch.php
-
-		-
 			message: "#^Call to function array_key_exists\\(\\) with 'count' and array\\{album\\?\\: true, catalog\\: bool, image\\?\\: true, song\\?\\: true, catalog_map\\: mixed\\} will always evaluate to false\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/ArtistSearch.php
@@ -6539,11 +6474,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Playlist\\\\Search\\\\VideoSearch\\:\\:getSql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playlist/Search/VideoSearch.php
-
-		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 1
-			path: src/Module/Song/SongSorter.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Song\\\\Tag\\\\SongTagWriter\\:\\:check_for_duplicate\\(\\) has parameter \\$apic_typeid with no type specified\\.$#"
@@ -8686,11 +8616,6 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_clean_type\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_cleanup_asf\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
@@ -8771,12 +8696,7 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_detect_encoding\\(\\) has parameter \\$mb_order with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_detect_encoding\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:_detect_encoding\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -9061,32 +8981,7 @@ parameters:
 			path: src/Module/Util/VaInfoInterface.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:findValues\\(\\) has parameter \\$byte1 with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:findValues\\(\\) has parameter \\$byte2 with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:html2rgb\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\Waveform\\:\\:\\$id has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Waveform.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
 
@@ -9541,11 +9436,6 @@ parameters:
 			path: src/Plugin/AmpacheTheaudiodb.php
 
 		-
-			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
-			count: 2
-			path: src/Plugin/AmpacheYourls.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheYourls\\:\\:\\$yourls_api_key has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheYourls.php
@@ -9564,11 +9454,6 @@ parameters:
 			message: "#^Method Ampache\\\\Plugin\\\\Ampachechartlyrics\\:\\:get_lyrics\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/Ampachechartlyrics.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Plugin/Ampacheflickr.php
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\Ampacheflickr\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -9801,21 +9686,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:add_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:add_artist_map\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:add_artist_map\\(\\) has parameter \\$object_type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:construct_from_array\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
@@ -9832,11 +9702,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_display\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_fullname_by_id\\(\\) has parameter \\$artist_id with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
@@ -9862,26 +9727,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:get_name_array_by_id\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:remove_artist_map\\(\\) has parameter \\$artist_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:remove_artist_map\\(\\) has parameter \\$object_id with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:remove_artist_map\\(\\) has parameter \\$object_type with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Artist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Artist.php
 
@@ -10047,11 +9892,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:trim_featuring\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Catalog.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:trim_slashed_list\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Catalog.php
 
@@ -10691,11 +10531,6 @@ parameters:
 			path: src/Repository/Model/Share.php
 
 		-
-			message: "#^Default value of the parameter \\#4 \\$uid \\(false\\) of method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:play_url\\(\\) is incompatible with type int\\|string\\.$#"
-			count: 1
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song\\:\\:_get_ext_info\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -10801,11 +10636,6 @@ parameters:
 			path: src/Repository/Model/Song.php
 
 		-
-			message: "#^Parameter \\#2 \\$mbid of static method Ampache\\\\Repository\\\\Model\\\\Artist\\:\\:check\\(\\) expects string, array\\|string given\\.$#"
-			count: 2
-			path: src/Repository/Model/Song.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song\\:\\:\\$albumartists type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song.php
@@ -10832,11 +10662,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_childrens\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:get_song_previews\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -11198,11 +11023,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Video\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Video.php
-
-		-
-			message: "#^Offset 'dirname' does not exist on array\\{dirname\\?\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
-			count: 3
 			path: src/Repository/Model/Video.php
 
 		-

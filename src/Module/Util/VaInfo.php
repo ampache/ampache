@@ -270,8 +270,8 @@ final class VaInfo implements VaInfoInterface
      *
      * Takes an array of tags and attempts to automatically detect their
      * encoding.
-     * @param $tags
-     * @param $mb_order
+     * @param array|string $tags
+     * @param string $mb_order
      */
     private static function _detect_encoding($tags, $mb_order): string
     {
@@ -702,16 +702,18 @@ final class VaInfo implements VaInfoInterface
     /**
      * parse_mbid
      * Get the first valid mbid. (if it's valid)
-     * @param string|array $mbid
+     * @param string|array|null $mbid
      */
     public static function parse_mbid($mbid): ?string
     {
         if (empty($mbid)) {
             return null;
         }
+
         if (is_array($mbid)) {
             $mbid = implode(";", $mbid);
         }
+
         if (preg_match(self::MBID_REGEX, $mbid, $matches)) {
             return (string)$matches[0];
         }
@@ -1001,7 +1003,7 @@ final class VaInfo implements VaInfoInterface
     /**
      * _clean_type
      * This standardizes the type that we are given into a recognized type.
-     * @param $type
+     * @param string $type
      */
     private function _clean_type($type): string
     {
@@ -1872,7 +1874,7 @@ final class VaInfo implements VaInfoInterface
             // Iterate over what we found
             foreach ($matches as $key => $value) {
                 $new_key = self::translate_pattern_code($elements['0'][$key]);
-                if ($new_key !== false) {
+                if (!empty($new_key)) {
                     $results[$new_key] = $value;
                 }
             }
@@ -1911,7 +1913,7 @@ final class VaInfo implements VaInfoInterface
     }
 
     /**
-     *
+     * parseGenres
      * @param array|string $data
      * @return array
      * @throws Exception
@@ -1931,16 +1933,16 @@ final class VaInfo implements VaInfoInterface
             }
         }
         if (is_string($data) && !empty($data)) {
-            $result = self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data)), false);
+            $filter_str = (string)str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $data));
+            $result     = self::splitSlashedlist($filter_str, false);
         }
 
         return $result;
     }
 
     /**
-     *
+     * parseArtists
      * @param array|string $data
-     * @return array
      */
     private function parseArtists($data): array
     {
@@ -1975,6 +1977,7 @@ final class VaInfo implements VaInfoInterface
      */
     public function splitSlashedlist($data, $doTrim = true)
     {
+        //debug_event(self::class, "splitSlashedlist: " . print_r($data, true), 5);
         $delimiters = $this->configContainer->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         if (!empty($data) && !empty($delimiters)) {
             $pattern = '~[\s]?(' . $delimiters . ')[\s]?~';
@@ -1995,11 +1998,9 @@ final class VaInfo implements VaInfoInterface
     /**
      * translate_pattern_code
      * This just contains a keyed array which it checks against to give you the
-     * 'tag' name that said pattern code corresponds to. It returns false if nothing
-     * is found.
-     * @return string|false
+     * 'tag' name that said pattern code corresponds to. It returns false if nothing is found.
      */
-    private static function translate_pattern_code(string $code)
+    private static function translate_pattern_code(string $code): ?string
     {
         $code_array = [
             '%a' => 'artist',
@@ -2024,7 +2025,7 @@ final class VaInfo implements VaInfoInterface
             return $code_array[$code];
         }
 
-        return false;
+        return null;
     }
 
     /**

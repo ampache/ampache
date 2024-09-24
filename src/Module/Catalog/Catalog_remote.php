@@ -304,7 +304,7 @@ class Catalog_remote extends Catalog
         $total      = $remote_catalog_info->songs;
         $songsadded = 0;
 
-        while ($total > $current) {
+        while (count($total) > $current) {
             $start = $current;
             $current += $step;
             try {

@@ -84,7 +84,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     *
+     * prepare_media
      * @param Song|Podcast_Episode|Video $media
      * @return array{
      *   file_path: string,
@@ -324,11 +324,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     *
-     * @param string $path
-     * @return int
+     * getIdFromPath
      */
-    protected function getIdFromPath($path): int
+    protected function getIdFromPath(string $path): int
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
         $db_results = Dba::read($sql, [$path]);

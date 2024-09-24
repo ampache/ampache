@@ -447,6 +447,12 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; DEFAULT: 400
 ;waveform_width = 400
 
+; Waveform draw flat
+; Don't print flat values on the canvas if not necessary
+; NOTE: This was hardcoded to true and doesn't 'seem' to do anything
+; DEFAULT: "true"
+;waveform_flat = "false"
+
 ; Temporary Directory Path
 ; If Waveform is enabled this must be set to tell
 ; Ampache which directory to save the temporary file to.

@@ -123,9 +123,14 @@ class AmpacheYourls extends AmpachePlugin implements PluginShortenerInterface
             if ($this->yourls_use_idn) {
                 // WARNING: idn_to_utf8 requires php-idn module.
                 // WARNING: http_build_url requires php-pecl-http module.
-                $purl         = parse_url($shorturl);
-                $purl['host'] = idn_to_utf8($purl['host']);
-                $shorturl     = http_build_url($purl);
+                $purl = parse_url($shorturl);
+                if (
+                    is_array($purl) &&
+                    array_key_exists('host', $purl)
+                ) {
+                    $purl['host'] = (string)idn_to_utf8($purl['host']);
+                    $shorturl     = http_build_url($purl);
+                }
             }
         } catch (Exception $exception) {
             debug_event('yourls.plugin', 'YOURLS api http exception: ' . $exception->getMessage(), 1);
