@@ -74,8 +74,7 @@ class Broadcast_Server implements MessageComponentInterface
     }
 
     /**
-     *
-     * @param ConnectionInterface $conn
+     * onOpen
      */
     public function onOpen(ConnectionInterface $conn): void
     {

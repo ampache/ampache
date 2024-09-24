@@ -40,7 +40,6 @@ final readonly class AlbumDiskRepository implements AlbumDiskRepositoryInterface
 
     /**
      * Returns the disks for an album
-     *
      * @return list<AlbumDisk>
      */
     public function getByAlbum(Album $album): array

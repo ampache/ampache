@@ -32,23 +32,20 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
  */
 class VlcPlayer
 {
-    public $host;
-    public $port;
-    public $password;
+    public string $host;
+    public int $port;
+    public string $password;
 
     /**
      * VlcPlayer
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
-     * @param string $host
-     * @param string $password
-     * @param int $port
      */
     public function __construct(
-        $host = 'localhost',
-        $password = '',
-        $port = 8080
+        string $host = 'localhost',
+        string $password = '',
+        int $port = 8080
     ) {
         $this->host     = $host;
         $this->port     = $port;

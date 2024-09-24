@@ -280,7 +280,7 @@ class Stream
         }
 
         $argst = AmpConfig::get('encode_args_' . $target);
-        if (!$args) {
+        if (!$argst) {
             debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 
             return [];

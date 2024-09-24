@@ -363,7 +363,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
         // trim everything
         $newPath = rtrim(trim((string)$newPath), "/");
 
-        if ($newPath === null || !is_dir($newPath)) {
+        if (!is_dir((string)$newPath)) {
             $interactor->error(
                 T_('The new path is invalid'),
                 true

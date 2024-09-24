@@ -1214,8 +1214,29 @@ class Song extends database_object implements
                 case 'label':
                 case 'language':
                 case 'comment':
+                case 'publisher':
+                case 'bitrate':
+                case 'rate':
+                case 'mode':
+                case 'size':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
+                        /**
+                         * @see self::update_year()
+                         * @see self::update_title()
+                         * @see self::update_track()
+                         * @see self::update_mbid()
+                         * @see self::update_license()
+                         * @see self::update_composer()
+                         * @see self::update_label()
+                         * @see self::update_language()
+                         * @see self::update_comment()
+                         * @see self::update_publisher()
+                         * @see self::update_bitrate()
+                         * @see self::update_rate()
+                         * @see self::update_mode()
+                         * @see self::update_size()
+                         */
                         $function = 'update_' . $key;
                         self::$function($value, $this->id);
                         $this->$key = $value;
@@ -2003,7 +2024,7 @@ class Song extends database_object implements
      * @param string $additional_params
      * @param string $player
      * @param bool $local
-     * @param int|string $uid
+     * @param int|string|false $uid
      * @param null|string $streamToken
      */
     public function play_url($additional_params = '', $player = '', $local = false, $uid = false, $streamToken = null): string
