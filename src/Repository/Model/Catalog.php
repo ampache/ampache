@@ -3496,7 +3496,7 @@ abstract class Catalog extends database_object
      * Return first item as string = default
      * Return all items as array if doTrim = false passed as optional parameter
      */
-    public static function trim_slashed_list(? string $string): string
+    public static function trim_slashed_list(?string $string): string
     {
         $delimiters = self::getConfigContainer()->get(ConfigurationKeyEnum::ADDITIONAL_DELIMITERS);
         $pattern    = '~[\s]?(' . $delimiters . ')[\s]?~';
