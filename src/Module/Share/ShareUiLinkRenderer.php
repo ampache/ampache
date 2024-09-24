@@ -114,7 +114,7 @@ final readonly class ShareUiLinkRenderer implements ShareUiLinkRendererInterface
                 $object_type->value,
                 $object_id,
                 Ui::get_icon(
-                    'share_' . strtolower((string)$plugin_name),
+                    'share_' . strtolower($plugin_name),
                     $plugin_name
                 )
             );
