@@ -1475,7 +1475,7 @@ class User extends database_object
     /**
      * Returns the value of a certain user-preference
      *
-     * @return int|string
+     * @return int|string|null
      */
     public function getPreferenceValue(string $preferenceName)
     {

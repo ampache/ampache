@@ -279,17 +279,17 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']    = explode(' ', html_entity_decode($song['genre']));
                                 $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                 if ($this->check_remote_song($data)) {
-                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $data['path'], 5);
+                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $song['path'], 5);
                                 } else {
                                     $data['catalog'] = $this->catalog_id;
                                     debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5);
-                                    $song_Id = Song::insert($data);
-                                    if (!$song_Id) {
+                                    $song_id = Song::insert($data);
+                                    if (!$song_id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
                                         /* HINT: filename (file path) */
                                         AmpError::add('general', T_('Unable to insert song - %s'), $song['path']);
                                     } elseif ($song['coverArt']) {
-                                        $this->insertArt($song, $song_Id);
+                                        $this->insertArt($song, $song_id);
                                     }
                                     $songsadded++;
                                 }
@@ -329,7 +329,7 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $data
-     * @param $song_Id
+     * @param int|null $song_Id
      */
     public function insertArt($data, $song_Id): bool
     {
@@ -346,7 +346,10 @@ class Catalog_subsonic extends Catalog
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
 
-        return $art->insert($image);
+        return (
+            is_string($image) &&
+            $art->insert($image)
+        );
     }
 
     /**

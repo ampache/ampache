@@ -4676,11 +4676,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_Seafile.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:check_remote_song\\(\\) has parameter \\$file with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_Seafile.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_Seafile\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_Seafile.php
@@ -4972,21 +4967,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:insertArt\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:insertArt\\(\\) has parameter \\$song_Id with no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Offset 'path' does not exist on array\\{artist\\: string, album\\: string, title\\: string, comment\\?\\: string, year\\: mixed, bitrate\\: \\(float\\|int\\), size\\: mixed, time\\: mixed, \\.\\.\\.\\}\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Parameter \\#1 \\$source of method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:insert\\(\\) expects string, array\\|bool\\|object\\|string given\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
 
@@ -5466,17 +5446,7 @@ parameters:
 			path: src/Module/Playback/Localplay/HttpQ/HttpQPlayer.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:add\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:current_instance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 
@@ -5507,11 +5477,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:volume_set\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
 

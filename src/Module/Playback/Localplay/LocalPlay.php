@@ -231,7 +231,7 @@ class LocalPlay
 
     /**
      * add
-     * @param $object
+     * @param mixed $object
      */
     public function add($object): bool
     {
@@ -266,9 +266,10 @@ class LocalPlay
      */
     public function repeat(bool $state): bool
     {
-        $data = ($this->_player instanceof localplay_controller)
-            ? $this->_player->repeat($state)
-            : false;
+        $data = (
+            $this->_player instanceof localplay_controller &&
+            $this->_player->repeat($state)
+        );
 
         if (!$data) {
             debug_event(self::class, "Error Unable to set Repeat to $state", 1);
@@ -281,13 +282,13 @@ class LocalPlay
      * random
      * This turns on the random feature of a Localplay method
      * It takes a 0/1 value
-     * @param bool $state
      */
     public function random(bool $state): bool
     {
-        $data = ($this->_player instanceof localplay_controller)
-            ? $this->_player->random($state)
-            : false;
+        $data = (
+            $this->_player instanceof localplay_controller &&
+            $this->_player->random($state)
+        );
 
         if (!$data) {
             debug_event(self::class, "Error Unable to set Random to $state", 1);
@@ -342,7 +343,7 @@ class LocalPlay
      * This isn't a required function, it sets the volume to a specified value
      * as passed in the variable it is a 0 - 100 scale the controller is
      * responsible for adjusting the scale if necessary
-     * @param $value
+     * @param float $value
      */
     public function volume_set($value): bool
     {
@@ -513,16 +514,16 @@ class LocalPlay
      * current_instance
      * This returns the UID of the current Instance
      */
-    public function current_instance()
+    public function current_instance(): ?int
     {
         $data = ($this->_player instanceof localplay_controller)
             ? $this->_player->get_instance()
             : [];
         if (array_key_exists('id', $data)) {
-            return $data['id'];
+            return (int)$data['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**

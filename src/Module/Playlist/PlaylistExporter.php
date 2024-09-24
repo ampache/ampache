@@ -120,23 +120,23 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $name = (string)$item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
-            $name       = (string) preg_replace('/[:]/', '.', $name);
-            $name       = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-            $filename   = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
-            $medias     = $item->get_medias();
-            $pl         = new Stream_Playlist($userId);
-            $pl->title  = $item->get_fullname();
-            $media_path = ($urltype == 'web')
+            $name            = (string) preg_replace('/[:]/', '.', $name);
+            $name            = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+            $filename        = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
+            $medias          = $item->get_medias();
+            $playlist        = new Stream_Playlist($userId);
+            $playlist->title = $item->get_fullname();
+            $media_path      = ($urltype == 'web')
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {
                 $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
                 if ($url !== null) {
-                    $pl->urls[] = $url;
+                    $playlist->urls[] = $url;
                 }
             }
 
-            $plstr = $pl->{'get_' . $ext . '_string'}();
+            $plstr = $playlist->{'get_' . $ext . '_string'}();
             if (file_put_contents($filename, $plstr) === false) {
                 $interactor->error(
                     sprintf(T_('There was a problem creating the playlist file "%s"'), $filename),
