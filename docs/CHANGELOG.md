@@ -38,6 +38,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Add `database_engine` to allow you to change from InnoDB if you want to
   * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
   * Enable `user_create_streamtoken` by default
+  * Add option `waveform_drawflat` that was previously hardcoded
 * Database 700020
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
@@ -80,7 +81,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Changed CSS logo to HTML
 * Skip stat recording on `cache=1` instead of reclassifying as a download
 * Convert catalog row actions to a form to fix client branch
-* When updating artist data from MusicBrainz just use the current area name
+* When updating artist from MusicBrainz use begin area name and fall back to current area instead of using both
 
 ### Removed
 
