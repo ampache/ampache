@@ -962,7 +962,7 @@ class Catalog_local extends Catalog
                 if (!empty($song->file) && !is_file($fullpath) && $song->file != $fullpath && strlen($fullpath)) {
                     debug_event(self::class, 'Destin: ' . $fullpath, 5);
                     $info      = pathinfo($fullpath);
-                    $directory = $info['dirname'] ?? '';
+                    $directory = ($info['dirname'] ?? '');
                     $file      = $info['basename'];
 
                     if (!Core::is_readable($directory)) {

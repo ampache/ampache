@@ -67,8 +67,6 @@ use RuntimeException;
  */
 class Waveform
 {
-    public $id;
-
     /**
      * Get a song or podcast_episode waveform.
      * @param Song|Podcast_Episode $media
@@ -233,11 +231,9 @@ class Waveform
 
     /**
      * findValues
-     * @param $byte1
-     * @param $byte2
      * @return float|int
      */
-    protected static function findValues($byte1, $byte2)
+    protected static function findValues(string $byte1, string $byte2)
     {
         $byte1 = hexdec(bin2hex($byte1));
         $byte2 = hexdec(bin2hex($byte2));
@@ -284,10 +280,10 @@ class Waveform
         }
 
         $detail     = 5;
-        $width      = AmpConfig::get('waveform_width', 400);
-        $height     = AmpConfig::get('waveform_height', 32);
-        $foreground = AmpConfig::get('waveform_color', '#FF0000');
-        $draw_flat  = AmpConfig::get('waveform_drawflat', true);
+        $width      = (int)AmpConfig::get('waveform_width', 400);
+        $height     = (int)AmpConfig::get('waveform_height', 32);
+        $foreground = (string)AmpConfig::get('waveform_color', '#FF0000');
+        $draw_flat  = (bool)AmpConfig::get('waveform_drawflat', true);
 
         // generate foreground color
         list($red, $green, $blue) = self::html2rgb($foreground);
@@ -352,7 +348,7 @@ class Waveform
 
                 // get number of bytes depending on bitrate
                 for ($count = 0; $count < $byte; $count++) {
-                    $bytes[$count] = fgetc($handle);
+                    $bytes[$count] = (string)fgetc($handle);
                 }
 
                 switch ($byte) {

@@ -221,7 +221,7 @@ final class SongSorter implements SongSorterInterface
     ): bool {
         $old_dir   = dirname((string)$song->file);
         $info      = pathinfo($fullname);
-        $directory = $info['dirname'];
+        $directory = ($info['dirname'] ?? '');
         $file      = $info['basename'];
         $data      = preg_split("/[\/\\\]/", $directory);
         $path      = '';

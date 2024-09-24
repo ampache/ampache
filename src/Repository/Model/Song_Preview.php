@@ -454,9 +454,10 @@ class Song_Preview extends database_object implements Media, playable_item
     }
 
     /**
-     * @param string $album_mbid
+     * get_song_previews
+     * @return Song_Preview[]
      */
-    public static function get_song_previews($album_mbid): array
+    public static function get_song_previews(string $album_mbid): array
     {
         $songs = [];
 

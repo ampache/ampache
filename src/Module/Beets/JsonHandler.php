@@ -143,11 +143,9 @@ class JsonHandler extends Handler
     }
 
     /**
-     *
-     * @param string $char
-     * @param string $string
+     * countChar
      */
-    public function countChar($char, $string): int
+    public function countChar(string $char, string $string): int
     {
         return substr_count($string, $char);
     }

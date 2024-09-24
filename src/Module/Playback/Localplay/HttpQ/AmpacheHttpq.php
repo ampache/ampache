@@ -469,7 +469,7 @@ class AmpacheHttpq extends localplay_controller
                     break;
                 default:
                     // If we don't know it, look up by filename
-                    $filename          = Dba::escape($entry['file']);
+                    $filename          = Dba::escape($url_data['file']);
                     $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
                     $libraryItemLoader = $this->getLibraryItemLoader();
 

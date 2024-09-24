@@ -370,8 +370,12 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Get item fullname by the artist id.
      */
-    public static function get_fullname_by_id($artist_id): string
+    public static function get_fullname_by_id(?int $artist_id = 0): string
     {
+        if ($artist_id === 0) {
+            return '';
+        }
+
         $sql        = "SELECT LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, [$artist_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
@@ -383,9 +387,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Get item prefix, basename and name by the artist id.
-     * @param int|string|null $artist_id
      */
-    public static function get_name_array_by_id($artist_id): array
+    public static function get_name_array_by_id(?int $artist_id = 0): array
     {
         if ($artist_id === 0) {
             return [
@@ -581,7 +584,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      *
      * Checks for an existing artist; if none exists, insert one.
      * @param string $name
-     * @param string $mbid
+     * @param string|null $mbid
      * @param bool $readonly
      */
     public static function check($name, $mbid = '', $readonly = false): ?int
@@ -590,8 +593,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         $trimmed   = Catalog::trim_prefix(trim((string)$name));
         $name      = $trimmed['string'];
         $prefix    = $trimmed['prefix'];
-        // If Ampache support multiple artists per song one day, we should also handle other artists here
-        $trimmed = Catalog::trim_featuring($name);
+        $trimmed   = Catalog::trim_featuring($name);
         if ($name !== $trimmed[0]) {
             debug_event(self::class, "check artist: cut {" . $name . "} to {" . $trimmed[0] . "}", 4);
         }
@@ -750,7 +752,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Add artist map for a single item
      */
-    public static function add_artist_map($artist_id, $object_type, $object_id): void
+    public static function add_artist_map(?int $artist_id, string $object_type, int $object_id): void
     {
         if ((int)$artist_id > 0 && (int)$object_id > 0) {
             debug_event(self::class, "add_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
@@ -762,7 +764,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * Delete the artist map for a single item
      */
-    public static function remove_artist_map($artist_id, $object_type, $object_id): void
+    public static function remove_artist_map(int $artist_id, string $object_type, int $object_id): void
     {
         if ((int)$artist_id > 0 && (int)$object_id > 0) {
             debug_event(self::class, "remove_artist_map artist_id {" . $artist_id . sprintf('} %s {', $object_type) . $object_id . "}", 5);
@@ -775,11 +777,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * get_artist_map
      *
      * This returns an ids of artists that have songs/albums mapped
-     * @param string $object_type
-     * @param int $object_id
      * @return int[]
      */
-    public static function get_artist_map($object_type, $object_id): array
+    public static function get_artist_map(string $object_type, int $object_id): array
     {
         $results    = [];
         $sql        = "SELECT `artist_id` AS `artist_id` FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
@@ -795,11 +795,9 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      * update_name_from_mbid
      *
      * Refresh your atist name using external data based on the mbid
-     * @param string $new_name
-     * @param string $mbid
      * @return array{prefix: ?string,name: string}
      */
-    public static function update_name_from_mbid($new_name, $mbid): array
+    public static function update_name_from_mbid(string $new_name, string $mbid): array
     {
         $trimmed = Catalog::trim_prefix(trim((string)$new_name));
         $name    = $trimmed['string'];
@@ -820,6 +818,17 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     /**
      * update
      * This takes a key'd array of data and updates the current artist
+     * @param array{
+     *      name?: string,
+     *      mbid?: string|null,
+     *      summary?: string|null,
+     *      placeformed?: string|null,
+     *      yearformed?: int|null,
+     *      overwrite_childs?: string,
+     *      add_to_childs?: string,
+     *      edit_tags?: string,
+     *      edit_labels?: string
+     *  } $data
      */
     public function update(array $data): int
     {
@@ -896,7 +905,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if (isset($data['edit_tags'])) {
             $this->getArtistTagUpdater()->updateTags(
                 $this,
-                $data['edit_tags'],
+                (string)$data['edit_tags'],
                 $override_childs,
                 $add_to_childs,
                 true
@@ -916,7 +925,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     /**
      * Update artist information.
-     * @param string $summary
+     * @param string|null $summary
      * @param null|string $placeformed
      * @param null|int $yearformed
      * @param bool $manual
