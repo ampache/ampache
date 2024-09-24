@@ -392,6 +392,25 @@ if (!function_exists('getallheaders')) {
 }
 
 /**
+ * check_http_referer
+ * Check the http referer based on the server web_path
+ */
+function check_http_referer(): bool
+{
+    $referer  = Core::get_server('HTTP_REFERER');
+    $web_path = (string)AmpConfig::get('web_path', '');
+    if (
+        empty($referer) &&
+        empty($web_path)
+    ) {
+        // cli / tests
+        return true;
+    }
+
+    return strpos($referer, $web_path) !== false;
+}
+
+/**
  * get_current_path
  */
 function get_current_path(): string

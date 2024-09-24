@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
@@ -88,7 +89,14 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 }
                 break;
             case 'delete_play':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (
+                    check_http_referer() === true &&
+                    $user instanceof User &&
+                    Access::check('interface', 100, $user->id) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
@@ -106,7 +114,14 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (
+                    check_http_referer() === true &&
+                    $user instanceof User &&
+                    Access::check('interface', 100, $user->id) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
