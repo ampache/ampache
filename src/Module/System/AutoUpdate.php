@@ -342,6 +342,21 @@ class AutoUpdate
     }
 
     /**
+     * Reset and clear information about impending updates for git installs
+     */
+    public static function clear_status(): void
+    {
+        $time = time();
+        // reset the update status
+        Preference::update_all('autoupdate_lastversion', null);
+        AmpConfig::set('autoupdate_lastversion', null, true);
+        Preference::update_all('autoupdate_lastversion_new', 0);
+        AmpConfig::set('autoupdate_lastversion_new', false, true);
+        Preference::update_all('autoupdate_lastcheck', $time);
+        AmpConfig::set('autoupdate_lastcheck', (string)$time, true);
+    }
+
+    /**
      * Display new version information and update link if possible.
      */
     public static function show_new_version(): void
@@ -380,6 +395,7 @@ class AutoUpdate
         }
         if (self::is_git_repository()) {
             echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
         }
         echo '</div>';
     }
