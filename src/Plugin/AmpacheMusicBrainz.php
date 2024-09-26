@@ -322,7 +322,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                     break;
                 case 'artist':
                     /** @var Artist $object */
-                    $placeFormed = $results->{'area'}->{'name'} ?? $object->placeformed;
+                    $placeFormed = $results->{'begin-area'}->{'name'} ?? $results->{'area'}->{'name'} ?? $object->placeformed;
                     $data = array(
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
