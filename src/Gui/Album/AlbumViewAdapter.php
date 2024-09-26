@@ -218,7 +218,10 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function isEditable(): bool
     {
-        return ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->album->get_user_owner());
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+            $this->gatekeeper->getUserId() == $this->album->get_user_owner()
+        );
     }
 
     public function getEditButtonTitle(): string

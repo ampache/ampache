@@ -71,8 +71,8 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
         </ul>
     </div>
     <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
-    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?>.</div>
-    <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?>.</div>
+    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
+    <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
 <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
     <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
 } ?>

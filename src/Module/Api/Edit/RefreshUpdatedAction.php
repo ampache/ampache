@@ -105,7 +105,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
-        $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+        $show_ratings = User::is_registered() && AmpConfig::get('ratings');
         /**
          * @todo Every editable item type will need some sort of special handling here
          */

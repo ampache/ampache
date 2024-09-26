@@ -113,6 +113,7 @@ return [
     WebPlayer\ShowEmbeddedAction::class => autowire(WebPlayer\ShowEmbeddedAction::class),
     Index\ShowAction::class => autowire(Index\ShowAction::class),
     Utility\ShowAction::class => autowire(Utility\ShowAction::class),
+    Update\ClearAction::class => autowire(Update\ClearAction::class),
     Update\ShowAction::class => autowire(Update\ShowAction::class),
     Update\UpdateAction::class => autowire(Update\UpdateAction::class),
     Update\UpdatePluginsAction::class => autowire(Update\UpdatePluginsAction::class),

@@ -63,7 +63,7 @@ if (empty($object_ids) && isset($democratic->base_playlist)) {
         ? new Search($democratic->base_playlist)
         : new Playlist($democratic->base_playlist); ?>
 <tr>
-    <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
+    <td><?php echo T_('Playing from base playlist'); ?></a></td>
 </tr>
 <?php
 } else { ?>
