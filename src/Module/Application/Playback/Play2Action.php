@@ -949,7 +949,7 @@ final class Play2Action implements ApplicationActionInterface
             $stream_rate = 0;
             if (isset($troptions['bitrate'])) {
                 $stream_rate = $troptions['bitrate'] / 1024;
-            } else if(!empty($transcode_settings)) {
+            } elseif (!empty($transcode_settings)) {
                 $stream_rate = Stream::get_max_bitrate($media, $transcode_settings);
             }
 

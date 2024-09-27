@@ -927,7 +927,7 @@ final class PlayAction implements ApplicationActionInterface
             if (isset($troptions['bitrate'])) {
                 // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
                 $stream_rate = $troptions['bitrate'] / 1024;
-            } else if(!empty($transcode_settings)) {
+            } elseif (!empty($transcode_settings)) {
                 $stream_rate = Stream::get_max_bitrate($media, $transcode_settings);
             }
 
