@@ -58,12 +58,15 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): bool {
         if (!defined('NO_SESSION')) {
-            /* If we are running a demo, quick while you still can! */
+            /* If we are running a demo, quit while you still can! */
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
                 (
                     $this->configContainer->isAuthenticationEnabled() &&
-                    $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false
+                    $gatekeeper->mayAccess(
+                        AccessTypeEnum::INTERFACE,
+                        AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
+                    ) === false
                 )
             ) {
                 throw new AccessDeniedException();
