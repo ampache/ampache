@@ -124,7 +124,7 @@ class License extends BaseModel
     /**
      * Sets the order
      */
-    public function setOrder(int $value): License
+    public function setOrder(?int $value): License
     {
         $this->order = $value;
 
@@ -134,9 +134,9 @@ class License extends BaseModel
     /**
      * Returns the order
      */
-    public function getOrder(): int
+    public function getOrder(): ?int
     {
-        return (int) $this->order;
+        return $this->order;
     }
     /**
      * Persists the object

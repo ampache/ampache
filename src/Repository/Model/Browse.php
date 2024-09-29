@@ -468,7 +468,6 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_broadcasts.inc.php');
                 break;
             case 'license':
-                $this->
                 $box_title = $this->get_title(T_('Media Licenses'));
                 $box_req   = Ui::find_template('show_manage_license.inc.php');
                 break;
