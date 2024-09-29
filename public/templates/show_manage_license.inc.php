@@ -45,6 +45,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_order"><?php echo T_('Order'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -67,6 +68,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
         <tr class="th-bottom">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_order"><?php echo T_('Order'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>

@@ -49,6 +49,7 @@ final class LicenseQuery implements QueryInterface
         'title',
         'name',
         'external_link',
+        'order'
     ];
 
     protected string $select = "`license`.`id`";
@@ -156,6 +157,7 @@ final class LicenseQuery implements QueryInterface
                 break;
             case 'id':
             case 'external_link':
+            case 'order':
                 $sql = "`license`.`$field`";
                 break;
             default:

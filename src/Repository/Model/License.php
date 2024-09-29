@@ -41,8 +41,11 @@ class License extends BaseModel
     /** @var string|null Descriptive text */
     private ?string $description = null;
 
-    /** @var string|null Lint to the license page */
+    /** @var string|null Link to the license page */
     private ?string $external_link = null;
+
+    /** @var int|null Item order on the license page */
+    private ?int $order = null;
 
     public function __construct(private readonly LicenseRepositoryInterface $licenseRepository)
     {
@@ -118,6 +121,23 @@ class License extends BaseModel
         return scrub_out($this->name);
     }
 
+    /**
+     * Sets the order
+     */
+    public function setOrder(int $value): License
+    {
+        $this->order = $value;
+
+        return $this;
+    }
+
+    /**
+     * Returns the order
+     */
+    public function getOrder(): int
+    {
+        return (int) $this->order;
+    }
     /**
      * Persists the object
      */
