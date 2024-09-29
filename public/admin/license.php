@@ -39,6 +39,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         ShowAction::REQUEST_KEY => ShowAction::class,
+        ShowHiddenAction::REQUEST_KEY => ShowHiddenAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,
