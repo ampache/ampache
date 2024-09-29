@@ -137,8 +137,8 @@ final class LicenseQuery implements QueryInterface
                 break;
             case 'hidden':
                 $filter_sql = ($value)
-                    ? " `license`.`order` != 0 AND "
-                    : " `license`.`order` = 0 AND ";
+                    ? " `license`.`order` = 0 AND "
+                    : " `license`.`order` != 0 AND ";
                 break;
         }
 
