@@ -42,11 +42,11 @@ use Ampache\Repository\Model\License;
 </tr>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('External Link'); ?></td>
-    <td><input type="text" name="external_link" value="<?php echo $license->getExternalLink(); ?>" /></td>
+    <td><input type="text" name="external_link" maxlength="4" value="<?php echo $license->getExternalLink(); ?>" /></td>
 </tr>
     <tr>
         <td class="edit_dialog_content_header"><?php echo T_('Order'); ?></td>
-        <td><input type="text" name="order" value="<?php echo $license->getOrder(); ?>" /></td>
+        <td><input type="number" name="order" value="<?php echo $license->getOrder(); ?>" /></td>
     </tr>
 <tr>
     <td><input type="submit" value="<?php echo T_('Confirm'); ?>" /></td>

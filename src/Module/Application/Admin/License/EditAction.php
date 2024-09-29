@@ -70,8 +70,8 @@ final class EditAction implements ApplicationActionInterface
         $licenseId   = (int) ($data['license_id'] ?? 0);
         $name        = (string) ($data['name'] ?? '');
         $description = (string) ($data['description'] ?? '');
-        $order       = (isset($data['description']))
-            ? (int)$data['description']
+        $order       = (isset($data['order']) && is_numeric($data['order']))
+            ? (int)$data['order']
             : null;
 
         $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);
