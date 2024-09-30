@@ -66,7 +66,7 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
         // Make sure they are a 'power' user or the object owner
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false &&
             $gatekeeper->getUserId() !== $song->get_user_owner()
         ) {
             throw new AccessDeniedException();
