@@ -27,8 +27,13 @@ namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,14 +41,18 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'update_from_tags';
 
+    private ModelFactoryInterface $modelFactory;
+
     private ConfigContainerInterface $configContainer;
 
     private UiInterface $ui;
 
     public function __construct(
+        ModelFactoryInterface $modelFactory,
         ConfigContainerInterface $configContainer,
         UiInterface $ui
     ) {
+        $this->modelFactory    = $modelFactory;
         $this->configContainer = $configContainer;
         $this->ui              = $ui;
     }
@@ -51,6 +60,18 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $artistId = (int) ($request->getQueryParams()['artist'] ?? 0);
+        $artist   = $this->modelFactory->createArtist($artistId);
+        if ($artist->isNew()) {
+            throw new ObjectNotFoundException($artistId);
+        }
+
+        // Make sure they are a 'power' user or the object owner
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false ||
+            $gatekeeper->getUserId() !== $artist->get_user_owner()
+        ) {
+            throw new AccessDeniedException();
+        }
 
         $this->ui->showHeader();
         $this->ui->show(
