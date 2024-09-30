@@ -28,6 +28,7 @@ use Ampache\Module\Application\Admin\License\EditAction;
 use Ampache\Module\Application\Admin\License\ShowAction;
 use Ampache\Module\Application\Admin\License\ShowCreateAction;
 use Ampache\Module\Application\Admin\License\ShowEditAction;
+use Ampache\Module\Application\Admin\License\ShowHiddenAction;
 use Ampache\Module\Application\ApplicationRunner;
 use Nyholm\Psr7Server\ServerRequestCreatorInterface;
 use Psr\Container\ContainerInterface;
@@ -39,6 +40,7 @@ $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
         ShowAction::REQUEST_KEY => ShowAction::class,
+        ShowHiddenAction::REQUEST_KEY => ShowHiddenAction::class,
         DeleteAction::REQUEST_KEY => DeleteAction::class,
         ShowCreateAction::REQUEST_KEY => ShowCreateAction::class,
         ShowEditAction::REQUEST_KEY => ShowEditAction::class,

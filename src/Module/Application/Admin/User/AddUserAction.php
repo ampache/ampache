@@ -107,9 +107,20 @@ final class AddUserAction extends AbstractUserAction
             AmpError::add('username', T_('That Username already exists'));
         }
 
-        // Check the mail for correct address formation.
-        if (!Mailer::validate_address($email)) {
+        // Check the mail for correct address formation and if it already exists
+        if (
+            !Mailer::validate_address($email) ||
+            $this->userRepository->idByEmail($email) > 0
+        ) {
             AmpError::add('email', T_('You entered an invalid e-mail address'));
+        }
+
+        /* Attempt to create the user if there wasn't a validation error */
+        if (!AmpError::occurred()) {
+            $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $catalog_filter_group, $state, $city);
+            if ($user_id < 1) {
+                AmpError::add('general', T_("The new User was not created"));
+            }
         }
 
         /* If we've got an error then show add form! */
@@ -120,12 +131,6 @@ final class AddUserAction extends AbstractUserAction
             $this->ui->showFooter();
 
             return null;
-        }
-
-        /* Attempt to create the user */
-        $user_id = User::create($username, $fullname, $email, $website, $pass1, $access, $catalog_filter_group, $state, $city);
-        if ($user_id < 1) {
-            AmpError::add('general', T_("The new User was not created"));
         }
 
         $user = $this->modelFactory->createUser($user_id);

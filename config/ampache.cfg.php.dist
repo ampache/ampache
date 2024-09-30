@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 74
+config_version = 75
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -219,6 +219,15 @@ access_control = "true"
 ; disabled.
 ; DEFAULT: "true"
 require_session = "true"
+
+; Webplayer Access Level
+; Set a minimum access level required to access the webplayer.
+; When a user does not meet the access requirements then you
+; are blocked from using the webplayer.
+; NOTE: This setting is ignored if you disable use_auth
+; POSSIBLE VALUES: guest, user, content_manager, manager, admin
+; DEFAULT: "user"
+webplayer_level = "user"
 
 ; Require LocalNet Session
 ; If this is set to true then Ampache will require that a valid session
@@ -488,9 +497,8 @@ use_auth = "true"
 ; Default Auth Level
 ; If use_auth is set to false then this option is used
 ; to determine the permission level of the 'default' users
-; default is administrator. This setting only takes affect
-; if use_auth is false
-; POSSIBLE VALUES: user, admin, manager, guest
+; NOTE: This setting only takes affect if use_auth is false
+; POSSIBLE VALUES: guest, user, content_manager, manager, admin
 ; DEFAULT: guest
 default_auth_level = "guest"
 

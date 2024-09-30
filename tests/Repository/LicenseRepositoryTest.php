@@ -60,7 +60,7 @@ class LicenseRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id`, `name` FROM `license` ORDER BY `name`')
+            ->with('SELECT `id`, `name` FROM `license`;')
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
@@ -145,6 +145,7 @@ class LicenseRepositoryTest extends TestCase
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-link';
+        $order        = 1;
 
         $license->expects(static::once())
             ->method('getName')
@@ -156,17 +157,21 @@ class LicenseRepositoryTest extends TestCase
             ->method('getExternalLink')
             ->willReturn($externalLink);
         $license->expects(static::once())
+            ->method('getOrder')
+            ->willReturn($order);
+        $license->expects(static::once())
             ->method('isNew')
             ->willReturn(true);
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                'INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES (?, ?, ?, ?)',
                 [
                     $name,
                     $description,
-                    $externalLink
+                    $externalLink,
+                    $order
                 ]
             );
         $this->connection->expects(static::once())
@@ -187,6 +192,7 @@ class LicenseRepositoryTest extends TestCase
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-link';
+        $order        = 1;
 
         $license->expects(static::once())
             ->method('getName')
@@ -198,6 +204,9 @@ class LicenseRepositoryTest extends TestCase
             ->method('getExternalLink')
             ->willReturn($externalLink);
         $license->expects(static::once())
+            ->method('getOrder')
+            ->willReturn($order);
+        $license->expects(static::once())
             ->method('isNew')
             ->willReturn(false);
         $license->expects(static::once())
@@ -207,11 +216,12 @@ class LicenseRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ?, `order` = ? WHERE `id` = ?',
                 [
                     $name,
                     $description,
                     $externalLink,
+                    $order,
                     $licenseId
                 ]
             );
