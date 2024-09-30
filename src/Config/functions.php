@@ -832,7 +832,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` WHERE `order` != 0 ORDER BY `order`";
     $db_results = Dba::read($sql);
 
     while ($row = Dba::fetch_assoc($db_results)) {

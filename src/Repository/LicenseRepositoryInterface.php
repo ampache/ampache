@@ -36,7 +36,7 @@ interface LicenseRepositoryInterface extends BaseRepositoryInterface
      *
      * @return Traversable<int, string>
      */
-    public function getList(): Traversable;
+    public function getList($show_hidden = true): Traversable;
 
     /**
      * Searches for the License by name and external link

@@ -48,9 +48,11 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
      *
      * @return Generator<int, string>
      */
-    public function getList(): Generator
+    public function getList($show_hidden = true): Generator
     {
-        $result = $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` != 0 ORDER BY `order`');
+        $result = ($show_hidden)
+            ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
+            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` = 0;');
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield (int) $row['id'] => (string) $row['name'];
@@ -117,7 +119,8 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
                 [
                     $license->getName(),
                     $license->getDescription(),
-                    $license->getExternalLink()
+                    $license->getExternalLink(),
+                    $license->getOrder(),
                 ]
             );
 

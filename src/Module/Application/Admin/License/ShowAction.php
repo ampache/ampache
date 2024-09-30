@@ -74,6 +74,7 @@ final class ShowAction implements ApplicationActionInterface
                 )
             )
         );
+
         $browse->store();
 
         $this->ui->showQueryStats();
