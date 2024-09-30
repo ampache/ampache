@@ -2,12 +2,17 @@
 
 ## Ampache 6.6.2
 
+In this release we've found a few people missing preferences.
+
+Use the cli updater to make sure you're up to date. (`php bin/cli admin:updateDatabase -e`)
+
 ### Added
 
 * Check the user is admin when deleting activities
 * Verify http_referer before delete actions
 * Database 600076
   * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
+  * Ad more downgrades for Ampache7 users looking to roll back
 * CLI
   * admin:updateDatabase: set and fix up preferences on update
 * Browse
@@ -17,7 +22,8 @@
 ### Changed
 
 * Play URLs `cache=1` will bypass stat recording instead of converting to download
-* When updating artist data from MusicBrainz just use the current area name
+* When updating artist data from MusicBrainz use `begin-area` name and fallback to `area`
+* Allow guest users access to the webplayer
 
 ### Fixed
 
@@ -26,6 +32,8 @@
 * Some tests were broken
 * Missing close on cookie disclaimer div id
 * content-length calculation for transcode
+* Admin creating a user with a duplicate email wasn't notified
+* Remove `mixed` parameter typing so we don't break php7.4
 
 ## Ampache 6.6.1
 
