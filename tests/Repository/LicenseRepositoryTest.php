@@ -60,7 +60,7 @@ class LicenseRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id`, `name` FROM `license`')
+            ->with('SELECT `id`, `name` FROM `license`;')
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
