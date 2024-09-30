@@ -145,6 +145,7 @@ class LicenseRepositoryTest extends TestCase
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-link';
+        $order        = 1;
 
         $license->expects(static::once())
             ->method('getName')
@@ -156,6 +157,9 @@ class LicenseRepositoryTest extends TestCase
             ->method('getExternalLink')
             ->willReturn($externalLink);
         $license->expects(static::once())
+            ->method('getOrder')
+            ->willReturn($order);
+        $license->expects(static::once())
             ->method('isNew')
             ->willReturn(true);
 
@@ -166,7 +170,8 @@ class LicenseRepositoryTest extends TestCase
                 [
                     $name,
                     $description,
-                    $externalLink
+                    $externalLink,
+                    $order
                 ]
             );
         $this->connection->expects(static::once())
@@ -187,6 +192,7 @@ class LicenseRepositoryTest extends TestCase
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-link';
+        $order        = 1;
 
         $license->expects(static::once())
             ->method('getName')
@@ -197,6 +203,9 @@ class LicenseRepositoryTest extends TestCase
         $license->expects(static::once())
             ->method('getExternalLink')
             ->willReturn($externalLink);
+        $license->expects(static::once())
+            ->method('getOrder')
+            ->willReturn($order);
         $license->expects(static::once())
             ->method('isNew')
             ->willReturn(false);
@@ -212,6 +221,7 @@ class LicenseRepositoryTest extends TestCase
                     $name,
                     $description,
                     $externalLink,
+                    $order,
                     $licenseId
                 ]
             );
