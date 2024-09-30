@@ -52,7 +52,7 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
     {
         $result = ($show_hidden)
             ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
-            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` = 0;');
+            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` != 0;');
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield (int) $row['id'] => (string) $row['name'];
