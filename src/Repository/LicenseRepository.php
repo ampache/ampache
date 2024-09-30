@@ -113,7 +113,7 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
 
         if ($license->isNew()) {
             $this->connection->query(
-                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                'INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES (?, ?, ?, ?)',
                 [
                     $license->getName(),
                     $license->getDescription(),
@@ -124,11 +124,12 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
             $result = $this->connection->getLastInsertedId();
         } else {
             $this->connection->query(
-                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ?, `order` = ? WHERE `id` = ?',
                 [
                     $license->getName(),
                     $license->getDescription(),
                     $license->getExternalLink(),
+                    $license->getOrder(),
                     $license->getId()
                 ]
             );
