@@ -60,7 +60,7 @@ class LicenseRepositoryTest extends TestCase
 
         $this->connection->expects(static::once())
             ->method('query')
-            ->with('SELECT `id`, `name` FROM `license` ORDER BY `order`')
+            ->with('SELECT `id`, `name` FROM `license`')
             ->willReturn($result);
 
         $result->expects(static::exactly(2))
@@ -162,7 +162,7 @@ class LicenseRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                'INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES (?, ?, ?, ?)',
                 [
                     $name,
                     $description,
@@ -207,7 +207,7 @@ class LicenseRepositoryTest extends TestCase
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
-                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ?, `order` = ? WHERE `id` = ?',
                 [
                     $name,
                     $description,
