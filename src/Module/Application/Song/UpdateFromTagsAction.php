@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Song;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -57,14 +58,20 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Make sure they are a 'power' user at least
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
+        $song   = $this->modelFactory->createSong($songId);
+        if ($song->isNew()) {
+            throw new ObjectNotFoundException($songId);
+        }
+
+        // Make sure they are a 'power' user or the object owner
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false ||
+            $gatekeeper->getUserId() !== $song->get_user_owner()
+        ) {
             throw new AccessDeniedException();
         }
 
-        $songId = (int) ($request->getQueryParams()['song_id'] ?? 0);
-
-        $song = $this->modelFactory->createSong($songId);
         $song->format();
 
         $this->ui->showHeader();
