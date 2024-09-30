@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types=0);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -25,38 +25,33 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\License;
 
-use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Repository\LicenseRepositoryInterface;
+use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
-use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
-use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
-use Ampache\Repository\LicenseRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * Actually updates or creates a license
- */
-final class EditAction implements ApplicationActionInterface
+final class ShowHiddenAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'edit';
+    public const REQUEST_KEY = 'show_hidden';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
-
+    private ModelFactoryInterface $modelFactory;
     private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
         UiInterface $ui,
-        ConfigContainerInterface $configContainer,
+        ModelFactoryInterface $modelFactory,
         LicenseRepositoryInterface $licenseRepository
     ) {
         $this->ui                = $ui;
-        $this->configContainer   = $configContainer;
+        $this->modelFactory      = $modelFactory;
         $this->licenseRepository = $licenseRepository;
     }
 
@@ -66,42 +61,21 @@ final class EditAction implements ApplicationActionInterface
             throw new AccessDeniedException();
         }
 
-        $data        = (array)$request->getParsedBody();
-        $licenseId   = (int) ($data['license_id'] ?? 0);
-        $name        = (string) ($data['name'] ?? '');
-        $description = (string) ($data['description'] ?? '');
-        $order       = (isset($data['order']) && is_numeric($data['order']))
-            ? (int)$data['order']
-            : null;
-
-        $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);
-
-        if ($licenseId > 0) {
-            $license = $this->licenseRepository->findById($licenseId);
-
-            if ($license === null) {
-                throw new ObjectNotFoundException($licenseId);
-            }
-
-            $text = T_('The License has been updated');
-        } else {
-            $license = $this->licenseRepository->prototype();
-
-            $text = T_('A new License has been created');
-        }
-
-        $license->setName($name)
-            ->setDescription($description)
-            ->setExternalLink($url)
-            ->setOrder($order)
-            ->save();
-
         $this->ui->showHeader();
-        $this->ui->showConfirmation(
-            T_('No Problem'),
-            $text,
-            sprintf('%s/license.php', $this->configContainer->getWebPath('/admin'))
+
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type('license_hidden');
+        $browse->set_simple_browse(true);
+        $browse->set_sort('order');
+        $browse->show_objects(
+            array_keys(
+                iterator_to_array(
+                    $this->licenseRepository->getList()
+                )
+            )
         );
+        $browse->store();
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 

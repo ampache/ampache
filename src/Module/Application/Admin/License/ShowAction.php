@@ -66,6 +66,7 @@ final class ShowAction implements ApplicationActionInterface
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('license');
         $browse->set_simple_browse(true);
+        $browse->set_sort('order');
         $browse->show_objects(
             array_keys(
                 iterator_to_array(
@@ -73,6 +74,7 @@ final class ShowAction implements ApplicationActionInterface
                 )
             )
         );
+
         $browse->store();
 
         $this->ui->showQueryStats();

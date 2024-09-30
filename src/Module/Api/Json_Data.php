@@ -911,11 +911,12 @@ class Json_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
-            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-            $playlist_name = $playlist->get_fullname();
-            $playlist_user = $playlist->username;
-            $playlist_type = $playlist->type;
-            $last_update   = $playlist->last_update;
+            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $playlist_name     = $playlist->get_fullname();
+            $playlist_user     = $playlist->user;
+            $playlist_username = $playlist->username;
+            $playlist_type     = $playlist->type;
+            $last_update       = $playlist->last_update;
 
             if ($songs) {
                 $items          = [];
@@ -944,7 +945,11 @@ class Json_Data
             $JSON[] = [
                 "id" => (string)$playlist_id,
                 "name" => $playlist_name,
-                "owner" => $playlist_user,
+                "owner" => $playlist_username,
+                "user" => [
+                    "id" => (string)$playlist_user,
+                    "username" => $playlist_username
+                ],
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
