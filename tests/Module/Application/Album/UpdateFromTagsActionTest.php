@@ -68,6 +68,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $album      = $this->mock(Album::class);
 
         $albumId = 666;
+        $userId  = 24;
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -88,6 +89,16 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
             ->andReturnFalse();
+
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $album->shouldReceive('get_user_owner')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
 
         $this->subject->run($request, $gatekeeper);
     }
@@ -122,16 +133,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
             ->andReturnTrue();
-
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $album->shouldReceive('get_user_owner')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()

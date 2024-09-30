@@ -91,16 +91,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->once()
             ->andReturnTrue();
 
-        $gatekeeper->shouldReceive('getUserId')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
-        $artist->shouldReceive('get_user_owner')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($userId);
-
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()
             ->once();
