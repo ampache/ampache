@@ -335,6 +335,13 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
         </div>
     </td>
 </tr>
+<tr>
+    <td style="font-size: 20px;"><?php echo T_('WARNING'); ?></td>
+    <td>
+        <?php echo T_('The music license you choose gives away rights in an irrevocable manner to the audience.'); ?></br>
+        <?php echo T_("Read the text of the license you choose carefully with the 'View License' link."); ?>
+    </td>
+</tr>
 <?php } ?>
 </table>
 

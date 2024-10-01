@@ -1147,7 +1147,7 @@ class User extends database_object
                     $row['name']  = $zero_results[$key]['name'];
                 }
 
-                $sql = "INSERT INTO user_preference (`user`, `preference`, `name`, `value`) VALUES (?, ?, ?, ?)";
+                $sql = "INSERT IGNORE INTO user_preference (`user`, `preference`, `name`, `value`) VALUES (?, ?, ?, ?)";
                 Dba::write($sql, [$user_id, $key, $row['name'], $row['value']]);
             }
         } // while preferences

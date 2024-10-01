@@ -5661,11 +5661,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$debugging has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/mpd.php
-
-		-
 			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\mpd\\:\\:\\$err_str has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Mpd/mpd.php
@@ -6171,11 +6166,6 @@ parameters:
 			path: src/Module/Playback/Localplay/localplay_controller.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:__construct\\(\\) has parameter \\$api_key with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:call_url\\(\\) has parameter \\$vars with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
@@ -6312,11 +6302,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:validate_bitrate\\(\\) has parameter \\$bitrate with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Stream.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Stream\\:\\:\\$session has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Stream.php
 
@@ -8846,82 +8831,22 @@ parameters:
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_broken has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_pathinfo type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_dir_pattern has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_raw type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_file_encoding has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$gatherTypes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_file_pattern has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_forcedSize has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_getID3 has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_pathinfo has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$_raw has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$encoding has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$encodingId3v1 has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$encodingId3v2 has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$filename has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$gatherTypes has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$islocal has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$tags has no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/VaInfo.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$type has no type specified\\.$#"
+			message: "#^Property Ampache\\\\Module\\\\Util\\\\VaInfo\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/VaInfo.php
 
@@ -9151,11 +9076,6 @@ parameters:
 			path: src/Plugin/AmpacheLastfm.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$challenge has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
@@ -9167,11 +9087,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$scheme has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheLastfm.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheLastfm\\:\\:\\$secret has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheLastfm.php
 
@@ -11129,3 +11044,4 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\playlist_object\\:\\:get_keywords\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/playlist_object.php
+

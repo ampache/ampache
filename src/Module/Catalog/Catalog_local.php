@@ -662,11 +662,11 @@ class Catalog_local extends Catalog
 
         $verify_by_time = ($tableName !== 'podcast_episode' && AmpConfig::get('catalog_verify_by_time', false));
         $sql            = match ($tableName) {
-            'album' => "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = ?) GROUP BY `song`.`album` ORDER BY `min_update_time` DESC LIMIT $count, $chunk_size",
-            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = ? AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
+            'album' => "SELECT `song`.`album` AS `id`, MIN(`song`.`file`) AS `file`, MIN(`song`.`update_time`) AS `min_update_time` FROM `song` WHERE `song`.`album` IN (SELECT `song`.`album` FROM `song` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`catalog` = " . ((int)$this->catalog_id) . ") GROUP BY `song`.`album` ORDER BY `min_update_time` DESC LIMIT $count, $chunk_size",
+            'podcast_episode' => "SELECT `podcast_episode`.`id`, `podcast_episode`.`file` FROM `podcast_episode` LEFT JOIN `catalog` ON `podcast_episode`.`catalog` = `catalog`.`id` WHERE `podcast_episode`.`catalog` = " . ((int)$this->catalog_id) . " AND `podcast_episode`.`file` IS NOT NULL ORDER BY `podcast_episode`.`podcast`, `podcast_episode`.`pubdate` DESC LIMIT $count, $chunk_size",
             default => ($verify_by_time)
-                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`update_time` LIMIT $count, $chunk_size"
-                : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = ? ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
+                ? "SELECT `$tableName`.`id`, `$tableName`.`file`, `$tableName`.`update_time` AS `min_update_time` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . ((int)$this->catalog_id) . " AND (`$tableName`.`update_time` IS NULL OR `$tableName`.`update_time` < `catalog`.`last_update`) ORDER BY `$tableName`.`file` DESC LIMIT $count, $chunk_size"
+                : "SELECT `$tableName`.`id`, `$tableName`.`file` FROM `$tableName` LEFT JOIN `catalog` ON `$tableName`.`catalog` = `catalog`.`id` WHERE `$tableName`.`catalog` = " . ((int)$this->catalog_id) . " ORDER BY `$tableName`.`file` LIMIT $count, $chunk_size",
         };
         $db_results = Dba::read($sql, [$this->catalog_id]);
         $className  = ObjectTypeToClassNameMapper::map($tableName);
@@ -694,9 +694,22 @@ class Catalog_local extends Catalog
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
                 continue;
             }
+
             $file_time = filemtime($row['file']);
+            if ($file_time === false) {
+                debug_event('local.catalog', 'Unable to get filemtime for ' . $row['file'], 3);
+                continue;
+            }
+
             // check the modification time on the file to see if it's worth checking the tags.
-            if ($verify_by_time && ($this->last_update > $file_time || (array_key_exists('min_update_time', $row) && (int)$row['min_update_time'] > $file_time))) {
+            if (
+                $verify_by_time &&
+                (
+                    $this->last_update > $file_time ||
+                    (int)($row['min_update_time'] ?? 0) > $file_time
+                )
+            ) {
+                //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                 continue;
             }
 
