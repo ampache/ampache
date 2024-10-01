@@ -48,7 +48,7 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
      *
      * @return Generator<int, string>
      */
-    public function getList($show_hidden = true): Generator
+    public function getList(bool $show_hidden = true): Generator
     {
         $result = ($show_hidden)
             ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
