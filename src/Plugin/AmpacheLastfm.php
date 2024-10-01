@@ -54,9 +54,9 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
 
     private $challenge;
 
-    private $api_key;
+    private ?string $api_key;
 
-    private $secret;
+    private ?string $secret;
 
     private $scheme   = 'http';
 
@@ -138,6 +138,10 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
      */
     public function save_mediaplay(Song $song): bool
     {
+        if (!$this->api_key) {
+            return false;
+        }
+
         // Only support songs
         if ($song::class !== Song::class) {
             return false;
@@ -184,6 +188,10 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
      */
     public function set_flag($song, $flagged): void
     {
+        if (!$this->api_key) {
+            return;
+        }
+
         // Make sure there's actually a session before we keep going
         if (!$this->challenge) {
             debug_event('lastfm.plugin', 'Session key missing', 5);
@@ -210,6 +218,10 @@ class AmpacheLastfm extends AmpachePlugin implements PluginSaveMediaplayInterfac
      */
     public function get_session($token): bool
     {
+        if (!$this->api_key) {
+            return false;
+        }
+
         $scrobbler   = new Scrobbler($this->api_key, $this->scheme, $this->api_host, '', $this->secret);
         $session_key = $scrobbler->get_session_key($token);
         if (!$session_key) {

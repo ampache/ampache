@@ -903,10 +903,10 @@ a.jp-shuffle-off:hover {
 }
 
 #webplayer-minimize {
-    bottom: 0;
+    bottom: 2px;
     display: none;
     font-size: 0.67em;
-    left: 0;
+    left: 3px;
     position: fixed;
     text-align: left;
     z-index: 10000;

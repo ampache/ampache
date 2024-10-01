@@ -198,8 +198,11 @@ class mpd
 
     private $_command_queue; // The list of commands for bulk command sending
 
+    /** @property callable|null $_debug_callback */
     private $_debug_callback = null; // Optional callback to be run on debug
-    public $debugging        = false;
+
+    public bool $debugging        = false;
+
     private $current_track_id;
 
     /**

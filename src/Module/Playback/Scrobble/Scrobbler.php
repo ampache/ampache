@@ -41,11 +41,11 @@ class Scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param $api_key
-     * @param string $scheme
-     * @param string $host
-     * @param string $challenge
-     * @param string $secret
+     * @param string $api_key
+     * @param string|null $scheme
+     * @param string|null $host
+     * @param string|null $challenge
+     * @param string|null $secret
      */
     public function __construct(
         $api_key,
