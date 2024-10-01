@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -18,37 +20,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-namespace Ampache\Repository;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Repository\Model\License;
-use Traversable;
+use Ampache\Module\System\Dba;
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * @extends BaseRepositoryInterface<License>
+ * Add `order` column to license table
+ * Set `order` column to match the current `id` of the license
  */
-interface LicenseRepositoryInterface extends BaseRepositoryInterface
+final class Migration700021 extends AbstractMigration
 {
-    /**
-     * Returns a list of licenses accessible by the current user.
-     *
-     * @return Traversable<int, string>
-     */
-    public function getList($show_hidden = true): Traversable;
+    protected array $changelog = [
+        'Add `order` column to license table',
+        'Set `order` column to match the current `id` of the license',
+    ];
 
-    /**
-     * Searches for the License by name and external link
-     */
-    public function find(string $searchValue): ?int;
+    public function migrate(): void
+    {
+        Dba::write("ALTER TABLE `license` DROP COLUMN `order`;");
+        $this->updateDatabase("ALTER TABLE `license` ADD COLUMN `order` SMALLINT(4) UNSIGNED NULL AFTER `external_link`;");
 
-    /**
-     * Persists the item in the database
-     *
-     * If the item is new, it will be created. Otherwise, an update will happen
-     *
-     * @return null|non-negative-int
-     */
-    public function persist(License $license): ?int;
+        $this->updateDatabase("UPDATE `license` SET `order` = `id` WHERE `order` IS NULL;");
+
+    }
 }

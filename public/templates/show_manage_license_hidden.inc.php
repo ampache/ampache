@@ -39,7 +39,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
             <a href="<?php echo $admin_path; ?>/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
         </li>
         <li>
-            <a href="<?php echo $admin_path; ?>/license.php?action=show_hidden"><?php echo T_('Hidden'); ?></a>
+            <a href="<?php echo $admin_path; ?>/license.php"><?php echo T_('Media Licenses'); ?></a>
         </li>
     </ul>
 </div>

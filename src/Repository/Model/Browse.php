@@ -56,6 +56,7 @@ class Browse extends Query
         'follower',
         'label',
         'license',
+        'license_hidden',
         'live_stream',
         'playlist',
         'playlist_localplay',
@@ -469,6 +470,10 @@ class Browse extends Query
             case 'license':
                 $box_title = $this->get_title(T_('Media Licenses'));
                 $box_req   = Ui::find_template('show_manage_license.inc.php');
+                break;
+            case 'license_hidden':
+                $box_title = $this->get_title(T_('Media Licenses'));
+                $box_req   = Ui::find_template('show_manage_license_hidden.inc.php');
                 break;
             case 'label':
                 $box_title = $this->get_title(T_('Labels'));

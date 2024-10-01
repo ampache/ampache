@@ -456,6 +456,7 @@ class Query
             case 'label':
                 return LabelQuery::FILTERS;
             case 'license':
+            case 'license_hidden':
                 return LicenseQuery::FILTERS;
             case 'live_stream':
                 return LiveStreamQuery::FILTERS;
@@ -533,6 +534,7 @@ class Query
                 $this->queryType = new LabelQuery();
                 break;
             case 'license':
+            case 'license_hidden':
                 $this->queryType = new LicenseQuery();
                 break;
             case 'live_stream':
@@ -932,10 +934,10 @@ class Query
             $this->_state['select'] = [$this->queryType->get_select()];
 
             // tag state should be set as they aren't really separate objects
-            if ($this->get_type() === 'tag_hidden') {
+            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
                 $this->set_filter('hidden', 1);
             }
-            if ($this->get_type() === 'tag') {
+            if (in_array($this->get_type(), ['license', 'tag'])) {
                 $this->set_filter('hidden', 0);
             }
 

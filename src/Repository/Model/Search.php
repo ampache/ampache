@@ -728,7 +728,7 @@ class Search extends playlist_object
         $this->_add_type_date('updated', T_('Updated'), $t_file_data);
         if (AmpConfig::get('licensing')) {
             $licenses = iterator_to_array(
-                $this->getLicenseRepository()->getList()
+                $this->getLicenseRepository()->getList(false)
             );
             $this->_add_type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
         }

@@ -90,6 +90,7 @@ class EditActionTest extends MockeryTestCase
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-external-link';
+        $order        = null;
 
         $this->licenseRepository->shouldReceive('findById')
             ->with($licenseId)
@@ -107,6 +108,10 @@ class EditActionTest extends MockeryTestCase
         $license->expects(static::once())
             ->method('setExternalLink')
             ->with($externalLink)
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setOrder')
+            ->with($order)
             ->willReturnSelf();
         $license->expects(static::once())
             ->method('save');
@@ -231,6 +236,10 @@ class EditActionTest extends MockeryTestCase
         $license->expects(static::once())
             ->method('setExternalLink')
             ->with('')
+            ->willReturnSelf();
+        $license->expects(static::once())
+            ->method('setOrder')
+            ->with(null)
             ->willReturnSelf();
         $license->expects(static::once())
             ->method('save');

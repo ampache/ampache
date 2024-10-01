@@ -23,11 +23,10 @@ declare(strict_types=0);
  *
  */
 
-namespace Ampache\Module\Application\Album;
+namespace Ampache\Module\Application\Admin\License;
 
-use Ampache\Config\ConfigContainerInterface;
-use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -37,60 +36,46 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UpdateDiskFromTagsAction implements ApplicationActionInterface
+final class ShowHiddenAction implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'update_disk_from_tags';
-
-    private ModelFactoryInterface $modelFactory;
+    public const REQUEST_KEY = 'show_hidden';
 
     private UiInterface $ui;
 
-    private ConfigContainerInterface $configContainer;
+    private ModelFactoryInterface $modelFactory;
+    private LicenseRepositoryInterface $licenseRepository;
 
     public function __construct(
-        ModelFactoryInterface $modelFactory,
         UiInterface $ui,
-        ConfigContainerInterface $configContainer
+        ModelFactoryInterface $modelFactory,
+        LicenseRepositoryInterface $licenseRepository
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
+        $this->ui                = $ui;
+        $this->modelFactory      = $modelFactory;
+        $this->licenseRepository = $licenseRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
-        $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
-        if ($albumDisk->isNew()) {
-            throw new ObjectNotFoundException($albumDiskId);
-        }
-
-        // Make sure they are a 'power' user or the object owner
-        if (
-            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
-            $gatekeeper->getUserId() !== $albumDisk->get_user_owner()
-        ) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
-        $albumDisk->format();
-
         $this->ui->showHeader();
-        $this->ui->showBoxTop(T_('Starting Update from Tags'), 'box box_update_items');
-        $this->ui->show(
-            'show_update_items.inc.php',
-            [
-                'object_id' => $albumDiskId,
-                'catalog_id' => $albumDisk->getCatalogId(),
-                'type' => 'album_disk',
-                'target_url' => sprintf(
-                    '%s/albums.php?action=show_disk&album_disk=%d',
-                    $this->configContainer->getWebPath(),
-                    $albumDiskId
+
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type('license_hidden');
+        $browse->set_simple_browse(true);
+        $browse->set_sort('order');
+        $browse->show_objects(
+            array_keys(
+                iterator_to_array(
+                    $this->licenseRepository->getList()
                 )
-            ]
+            )
         );
-        $this->ui->showBoxBottom();
+        $browse->store();
+
         $this->ui->showQueryStats();
         $this->ui->showFooter();
 
