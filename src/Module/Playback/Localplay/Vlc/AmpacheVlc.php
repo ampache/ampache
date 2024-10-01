@@ -324,7 +324,7 @@ class AmpacheVlc extends localplay_controller
         //playlist id
         $listtracks = $this->get();
         foreach($listtracks as $track) {
-            if($track['id'] == $song) {
+            if ($track['id'] == $song) {
                 if ($this->_vlc->skip($track['vlid']) === null) {
                     return false;
                 }
@@ -574,7 +574,7 @@ class AmpacheVlc extends localplay_controller
         $array['random']       = $arrayholder['root']['random']['value'];
 
         //api version 1
-        if(array_key_exists('meta-information', $arrayholder['root']['information'])) {
+        if (array_key_exists('meta-information', $arrayholder['root']['information'])) {
             $ampurl  = htmlspecialchars_decode(
                 $arrayholder['root']['information']['meta-information']['title']['value'],
                 ENT_NOQUOTES
@@ -583,7 +583,7 @@ class AmpacheVlc extends localplay_controller
             $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
 
             foreach($listtracks as $track) {
-                if($track['oid'] == $oid) {
+                if ($track['oid'] == $oid) {
                     $array['track'] = $track['track'];
                     break;
                 }
@@ -591,12 +591,12 @@ class AmpacheVlc extends localplay_controller
         }
 
         //api version 3
-        if(array_key_exists('currentplid', $arrayholder['root'])) {
+        if (array_key_exists('currentplid', $arrayholder['root'])) {
             $numtrack = 0 ;
             $numtrack = (int)$arrayholder['root']['currentplid']['value'];
 
             foreach($listtracks as $track) {
-                if($track['vlid'] == $numtrack) {
+                if ($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
                     $oid            = $track['oid'];
                     break;
@@ -604,7 +604,7 @@ class AmpacheVlc extends localplay_controller
             }
         }
 
-        if(!empty($oid)) {
+        if (!empty($oid)) {
             $song = new Song($oid);
             if ($song->isNew()) {
                 // if not a known format

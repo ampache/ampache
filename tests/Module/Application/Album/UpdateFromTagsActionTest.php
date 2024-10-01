@@ -65,11 +65,40 @@ class UpdateFromTagsActionTest extends MockeryTestCase
 
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $album      = $this->mock(Album::class);
+
+        $albumId = 666;
+        $userId  = 24;
+
+        $request->shouldReceive('getQueryParams')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['album_id' => (string) $albumId]);
+
+        $this->modelFactory->shouldReceive('createAlbum')
+            ->with($albumId)
+            ->once()
+            ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
             ->once()
             ->andReturnFalse();
+
+        $gatekeeper->shouldReceive('getUserId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($userId);
+
+        $album->shouldReceive('get_user_owner')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
 
         $this->subject->run($request, $gatekeeper);
     }
@@ -81,13 +110,9 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $album      = $this->mock(Album::class);
 
         $albumId   = 666;
+        $userId    = 24;
         $catalogId = 42;
         $webPath   = 'some-web-path';
-
-        $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
-            ->once()
-            ->andReturnTrue();
 
         $request->shouldReceive('getQueryParams')
             ->withNoArgs()
@@ -98,6 +123,16 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->with($albumId)
             ->once()
             ->andReturn($album);
+
+        $album->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
 
         $this->configContainer->shouldReceive('getWebPath')
             ->withNoArgs()

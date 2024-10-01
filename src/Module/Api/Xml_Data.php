@@ -1101,11 +1101,12 @@ class Xml_Data
                 $md5   = null;
             }
 
-            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-            $playlist_name = $playlist->get_fullname();
-            $playlist_user = $playlist->username;
-            $playlist_type = $playlist->type;
-            $last_update   = $playlist->last_update;
+            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $playlist_name     = $playlist->get_fullname();
+            $playlist_user     = $playlist->user;
+            $playlist_username = $playlist->username;
+            $playlist_type     = $playlist->type;
+            $last_update       = $playlist->last_update;
 
             $rating          = new Rating($playlist->id, $object_type);
             $user_rating     = $rating->get_user_rating($user->getId());
@@ -1114,7 +1115,7 @@ class Xml_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . ($has_access ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . ($has_collaborate ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<md5>" . (string)$md5 . "</md5>\n\t<last_update>" . (string)$last_update . "</last_update>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . (string)$playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . ($has_access ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . ($has_collaborate ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<md5>" . (string)$md5 . "</md5>\n\t<last_update>" . (string)$last_update . "</last_update>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);

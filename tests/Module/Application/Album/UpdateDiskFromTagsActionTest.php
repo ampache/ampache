@@ -81,6 +81,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
         $albumDisk  = $this->createMock(AlbumDisk::class);
 
         $albumDiskId = 666;
+        $userId      = 24;
         $webPath     = 'some-web-path';
         $catalogId   = 123;
 
@@ -97,6 +98,15 @@ class UpdateDiskFromTagsActionTest extends TestCase
             ->method('createAlbumDisk')
             ->with($albumDiskId)
             ->willReturn($albumDisk);
+
+        $albumDisk->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        $gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->willReturn(true);
 
         $albumDisk->expects(static::once())
             ->method('format');

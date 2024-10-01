@@ -909,7 +909,7 @@ final class PlayAction implements ApplicationActionInterface
             }
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-        if ($transcode && ($media->bitrate > 0 && $media->time > 0)) {
+        if ($transcode) {
             // Content-length guessing if required by the player.
             // Otherwise it shouldn't be used as we are not really sure about final length when transcoding
             $transcode_settings = Stream::get_transcode_settings_for_media(
@@ -920,33 +920,30 @@ final class PlayAction implements ApplicationActionInterface
                 $troptions
             );
             $transcode_to = $transcode_settings['format'];
+
+            // At this point, the bitrate has already been decided inside Stream::start_transcode
+            // so we just try to emulate that logic here
+            $stream_rate = 0;
             if (isset($troptions['bitrate'])) {
-                $maxbitrate = $troptions['bitrate'] / 1024;
-            } else {
-                $maxbitrate = (empty($transcode_settings))
-                    ? $media->bitrate / 1024
-                    : Stream::get_max_bitrate($media, $transcode_settings);
+                // note that the bitrate transcode option is stored as metric bits i.e. kilobits*1000 instead of kilobits*1024
+                $stream_rate = $troptions['bitrate'] / 1024;
+            } elseif (!empty($transcode_settings)) {
+                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings);
             }
-            $mediaTime    = $media->time ?? 0;
-            if ($this->requestParser->getFromRequest('content_length') == 'required') {
-                if ($mediaTime > 0 && $maxbitrate > 0) {
-                    $stream_size = (int)(($mediaTime * $maxbitrate * 1024) / 8);
+
+            // We always guess MP3 content length even when not required, since that codec calculates properly
+            if ($this->requestParser->getFromRequest('content_length') == 'required' || $transcode_to == 'mp3') {
+                if ($media->time > 0 && $stream_rate > 0) {
+                    $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
                 } else {
                     $this->logger->debug(
-                        'Bad media duration / Max bitrate. Content-length calculation skipped.',
+                        'Bad media duration / stream bitrate. Content-length calculation skipped.',
                         [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                     );
                     $stream_size = 0;
                 }
-            } elseif ($transcode_to == 'mp3') {
-                // mp3 seems to be the only codec that calculates properly
-                $stream_rate = ($maxbitrate < floor($media->bitrate / 1024))
-                    ? $maxbitrate
-                    : (int)floor($media->bitrate / 1024);
-                $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
             } else {
                 $stream_size = 0;
-                $maxbitrate  = 0;
             }
         } else {
             $stream_size = $streamConfiguration['file_size'];

@@ -24,13 +24,18 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
+use Ampache\Repository\Model\User;
 
 /** @var Artist $libitem */
-?>
+
+$current_user = Core::get_global('user');
+$has_access   = $current_user instanceof User && Access::check('interface', 50, $current_user->getId());
+$is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_artist_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -41,10 +46,10 @@ use Ampache\Module\Authorization\Access;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
-                    <?php if (Access::check('interface', 50)) { ?>
+                    <?php if ($has_access || $is_owner) { ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php } else {
-                        echo $libitem->mbid;
+                        echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                     } ?>
                 </td>
             </tr>

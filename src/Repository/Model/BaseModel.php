@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 
 abstract class BaseModel implements ModelInterface
 {
-    /** @var int Primary key*/
     protected int $id = 0;
 
     /**

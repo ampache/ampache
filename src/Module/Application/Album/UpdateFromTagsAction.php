@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -57,14 +58,20 @@ final class UpdateFromTagsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Make sure they are a 'power' user at least
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
+        $album   = $this->modelFactory->createAlbum($albumId);
+        if ($album->isNew()) {
+            throw new ObjectNotFoundException($albumId);
+        }
+
+        // Make sure they are a 'power' user or the object owner
+        if (
+            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false &&
+            $gatekeeper->getUserId() !== $album->get_user_owner()
+        ) {
             throw new AccessDeniedException();
         }
 
-        $albumId = (int) ($request->getQueryParams()['album_id'] ?? 0);
-
-        $album = $this->modelFactory->createAlbum($albumId);
         $album->format();
 
         $this->ui->showHeader();

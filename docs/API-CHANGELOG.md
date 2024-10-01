@@ -8,6 +8,7 @@
   * Add `stats` parameter to stream and download methods (If false disable stat recording when playing the object)
   * Respect `api_always_download` in stream and download methods
   * Add sorting to stats calls
+  * add `user` object to playlist responses (owner of the playlist)
 
 ### Fixed
 

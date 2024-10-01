@@ -67,7 +67,7 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
                 (
                     $this->configContainer->isAuthenticationEnabled() &&
-                    $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
+                    $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_GUEST) === false
                 )
             ) {
                 throw new AccessDeniedException();
