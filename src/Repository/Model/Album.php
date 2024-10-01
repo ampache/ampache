@@ -977,6 +977,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $this->year           = $year;
         $this->mbid_group     = $mbid_group;
         $this->release_type   = $release_type;
+        $this->release_status = $release_status;
         $this->name           = $name;
         $this->mbid           = $mbid;
         $this->album_artist   = $album_artist;
