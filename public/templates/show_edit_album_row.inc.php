@@ -23,14 +23,19 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\User;
 
 /** @var Album $libitem */
-$has_content_manager = Access::check('interface', 50) ?>
+
+$current_user = Core::get_global('user');
+$has_access   = $current_user instanceof User && Access::check('interface', 75, $current_user->getId());
+$is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -42,7 +47,7 @@ $has_content_manager = Access::check('interface', 50) ?>
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist'); ?></td>
                 <td>
                     <?php
-                        if ($has_content_manager) {
+                        if ($has_access) {
                             show_artist_select('album_artist', (int)$libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
@@ -66,7 +71,7 @@ $has_content_manager = Access::check('interface', 50) ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
-                    <?php if ($has_content_manager) { ?>
+                    <?php if ($has_access || $is_owner) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
                     } else {
@@ -77,7 +82,7 @@ $has_content_manager = Access::check('interface', 50) ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID'); ?></td>
                 <td>
-                <?php if ($has_content_manager) { ?>
+                <?php if ($has_access || $is_owner) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
                 } else {
