@@ -24,6 +24,7 @@ Use the cli updater to make sure you're up to date. (`php bin/cli admin:updateDa
 * Play URLs `cache=1` will bypass stat recording instead of converting to download
 * When updating artist data from MusicBrainz use `begin-area` name and fallback to `area`
 * Allow guest users access to the webplayer
+* Allow upload user to edit mbid fields on objects they own
 
 ### Fixed
 
@@ -34,6 +35,8 @@ Use the cli updater to make sure you're up to date. (`php bin/cli admin:updateDa
 * content-length calculation for transcode
 * Admin creating a user with a duplicate email wasn't notified
 * Remove `mixed` parameter typing so we don't break php7.4
+* Upload owner could not use `update_from_tags`
+* Upload owner was not sending item values to the update functions
 
 ## Ampache 6.6.1
 
