@@ -42,7 +42,7 @@ use Ampache\Repository\Model\User;
 
 class Stream
 {
-    private static string $session;
+    private static string $session = '';
 
     /**
      * set_session
