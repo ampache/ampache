@@ -1035,6 +1035,10 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 self::update_field('release_type', $release_type, $this->id);
             }
 
+            if ($release_type != $this->release_status) {
+                self::update_field('release_status', $release_status, $this->id);
+            }
+
             if ($original_year !== $this->original_year) {
                 self::update_field('original_year', $original_year, $this->id);
             }
