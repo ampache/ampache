@@ -709,7 +709,7 @@ class Catalog_local extends Catalog
                     (int)($row['min_update_time'] ?? 0) > $file_time
                 )
             ) {
-                debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
+                //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                 continue;
             }
 
