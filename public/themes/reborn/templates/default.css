@@ -368,7 +368,7 @@ div#autoupdate > span {
 #rightbar-minimize {
     position: absolute;
     top: 44px;
-    right: 7px;
+    right: 12px;
 }
 
 #rightbar-minimize .material-symbol-dock_to_left {
