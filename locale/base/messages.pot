@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-10-01 21:14+1000\n"
+"POT-Creation-Date: 2024-10-02 08:34+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -395,7 +395,7 @@ msgstr ""
 #: ../../public/templates/header.inc.php:71
 #: ../../public/templates/js_globals.php:60
 #: ../../public/templates/show_add_upload.inc.php:39
-#: ../../public/templates/show_add_upload.inc.php:390
+#: ../../public/templates/show_add_upload.inc.php:397
 #: ../../public/templates/show_album_disk.inc.php:213
 #: ../../public/templates/show_album_group_disks.inc.php:217
 #: ../../public/templates/show_album.inc.php:226
@@ -460,7 +460,7 @@ msgid "Show/Hide Playlist"
 msgstr ""
 
 #: ../../public/templates/header.inc.php:224
-#: ../../public/templates/show_add_upload.inc.php:373
+#: ../../public/templates/show_add_upload.inc.php:380
 msgid "Loading"
 msgstr ""
 
@@ -740,7 +740,7 @@ msgid "Save"
 msgstr ""
 
 #: ../../public/templates/js_globals.php:88
-#: ../../public/templates/show_add_upload.inc.php:387
+#: ../../public/templates/show_add_upload.inc.php:394
 #: ../../public/templates/show_confirmation.inc.php:46
 #: ../../public/templates/show_get_art.inc.php:144
 msgid "Cancel"
@@ -1979,152 +1979,173 @@ msgstr ""
 msgid "Music License"
 msgstr ""
 
+#: ../../public/templates/show_add_upload.inc.php:339
+#: ../../public/templates/show_test_table.inc.php:44
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:80
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:71
+#: ../../src/Module/Cli/SortFilesCommand.php:72
+#: ../../src/Module/Cli/UpdateDbCommand.php:96
+msgid "WARNING"
+msgstr ""
+
 #: ../../public/templates/show_add_upload.inc.php:341
-msgid "Files"
+msgid ""
+"The music license you choose gives away rights in an irrevocable manner to "
+"the audience."
+msgstr ""
+
+#: ../../public/templates/show_add_upload.inc.php:342
+msgid ""
+"Read the text of the license you choose carefully with the 'View License' "
+"link."
 msgstr ""
 
 #: ../../public/templates/show_add_upload.inc.php:348
+msgid "Files"
+msgstr ""
+
+#: ../../public/templates/show_add_upload.inc.php:355
 msgid "Max upload size"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:350
+#: ../../public/templates/show_add_upload.inc.php:357
 msgid "Allowed file type"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:369
+#: ../../public/templates/show_add_upload.inc.php:376
 msgid ""
 "Drag & Drop your files or <span class=\\\"filepond--label-action\\\"> Browse "
 "</span>"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:370
+#: ../../public/templates/show_add_upload.inc.php:377
 msgid "Field contains invalid files"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:371
+#: ../../public/templates/show_add_upload.inc.php:378
 msgid "Waiting for size"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:372
+#: ../../public/templates/show_add_upload.inc.php:379
 msgid "Size not available"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:374
+#: ../../public/templates/show_add_upload.inc.php:381
 msgid "Error during load"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:375
+#: ../../public/templates/show_add_upload.inc.php:382
 msgid "Uploading"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:376
+#: ../../public/templates/show_add_upload.inc.php:383
 msgid "Upload complete"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:377
+#: ../../public/templates/show_add_upload.inc.php:384
 msgid "Upload cancelled"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:378
+#: ../../public/templates/show_add_upload.inc.php:385
 msgid "Error during upload"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:379
+#: ../../public/templates/show_add_upload.inc.php:386
 msgid "Error during revert"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:380
+#: ../../public/templates/show_add_upload.inc.php:387
 msgid "Error during remove"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:381
+#: ../../public/templates/show_add_upload.inc.php:388
 msgid "tap to cancel"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:382
+#: ../../public/templates/show_add_upload.inc.php:389
 msgid "tap to retry"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:383
+#: ../../public/templates/show_add_upload.inc.php:390
 msgid "tap to undo"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:384
+#: ../../public/templates/show_add_upload.inc.php:391
 #: ../../src/Module/Application/SearchData/ShowAction.php:75
 #: ../../src/Repository/Model/Wanted.php:309
 msgid "Remove"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:385
+#: ../../public/templates/show_add_upload.inc.php:392
 msgid "Abort"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:386
-#: ../../public/templates/show_add_upload.inc.php:389
+#: ../../public/templates/show_add_upload.inc.php:393
+#: ../../public/templates/show_add_upload.inc.php:396
 msgid "Retry"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:388
+#: ../../public/templates/show_add_upload.inc.php:395
 msgid "Undo"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:391
+#: ../../public/templates/show_add_upload.inc.php:398
 msgid "File is too large"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:392
+#: ../../public/templates/show_add_upload.inc.php:399
 msgid "Maximum file size is {filesize}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:393
+#: ../../public/templates/show_add_upload.inc.php:400
 msgid "Maximum total size exceeded"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:394
+#: ../../public/templates/show_add_upload.inc.php:401
 msgid "Maximum total file size is {filesize}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:395
+#: ../../public/templates/show_add_upload.inc.php:402
 msgid "File of invalid type"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:396
+#: ../../public/templates/show_add_upload.inc.php:403
 msgid "Expects {allButLastType} or {lastType}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:397
+#: ../../public/templates/show_add_upload.inc.php:404
 msgid "Image type not supported"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:398
+#: ../../public/templates/show_add_upload.inc.php:405
 msgid "Image is too small"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:399
+#: ../../public/templates/show_add_upload.inc.php:406
 msgid "Image is too big"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:400
+#: ../../public/templates/show_add_upload.inc.php:407
 msgid "Minimum size is {minWidth} × {minHeight}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:401
+#: ../../public/templates/show_add_upload.inc.php:408
 msgid "Maximum size is {maxWidth} × {maxHeight}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:402
+#: ../../public/templates/show_add_upload.inc.php:409
 msgid "Resolution is too low"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:403
+#: ../../public/templates/show_add_upload.inc.php:410
 msgid "Resolution is too high"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:404
+#: ../../public/templates/show_add_upload.inc.php:411
 msgid "Minimum resolution is {minResolution}"
 msgstr ""
 
-#: ../../public/templates/show_add_upload.inc.php:405
+#: ../../public/templates/show_add_upload.inc.php:412
 msgid "Maximum resolution is {maxResolution}"
 msgstr ""
 
@@ -5075,14 +5096,6 @@ msgstr ""
 #: ../../public/templates/show_test_table.inc.php:44
 #: ../../src/Config/functions.php:471
 msgid "OK"
-msgstr ""
-
-#: ../../public/templates/show_test_table.inc.php:44
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:80
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:71
-#: ../../src/Module/Cli/SortFilesCommand.php:72
-#: ../../src/Module/Cli/UpdateDbCommand.php:96
-msgid "WARNING"
 msgstr ""
 
 #: ../../public/templates/show_test_table.inc.php:59
