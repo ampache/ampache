@@ -32,7 +32,8 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 
 /** @var Album $libitem */
-?>
+
+$has_content_manager = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER); ?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -44,14 +45,14 @@ use Ampache\Module\Api\Ajax;
                 <td class="edit_dialog_content_header"><?php echo T_('Album Artist'); ?></td>
                 <td>
                     <?php
-                        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+                        if ($has_content_manager) {
                             show_artist_select('album_artist', (int)$libitem->album_artist, true, $libitem->id, true); ?>
                     <div id="album_artist_select_album_<?php echo $libitem->id; ?>">
                         <?php echo Ajax::observe('album_artist_select_' . $libitem->id, 'change', 'check_inline_song_edit("album_artist", ' . $libitem->id . ')'); ?>
                     </div>
                     <?php
                         } else {
-                            echo scrub_out($libitem->get_artist_fullname());
+                            echo '<input type="hidden" name="album_artist" value="' . (int)$libitem->album_artist . '"/>' . scrub_out($libitem->get_artist_fullname());
                         } ?>
                 </td>
             </tr>
@@ -68,22 +69,22 @@ use Ampache\Module\Api\Ajax;
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
-                    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
+                    <?php if ($has_content_manager) { ?>
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php
                     } else {
-                        echo $libitem->mbid;
+                        echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                     } ?>
                 </td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz Release Group ID'); ?></td>
                 <td>
-                <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
+                <?php if ($has_content_manager) { ?>
                     <input type="text" name="mbid_group" value="<?php echo $libitem->mbid_group; ?>" />
                 <?php
                 } else {
-                    echo $libitem->mbid_group;
+                    echo '<input type="hidden" name="mbid_group" value="' . $libitem->mbid_group . '"/>' . $libitem->mbid_group;
                 } ?>
                 </td>
             </tr>

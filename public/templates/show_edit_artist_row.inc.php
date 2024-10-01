@@ -46,7 +46,7 @@ use Ampache\Module\Authorization\Access;
                     <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                     <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                     <?php } else {
-                        echo $libitem->mbid;
+                        echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                     } ?>
                 </td>
             </tr>

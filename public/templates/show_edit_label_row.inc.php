@@ -44,7 +44,7 @@ use Ampache\Module\Authorization\Access;
                         <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                         <?php
                     } else {
-                        echo $libitem->mbid;
+                        echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                     } ?>
                 </td>
             </tr>
