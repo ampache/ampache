@@ -665,391 +665,391 @@ class Preference extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event(self::class, 'Insert preference: ' . $row['item'], 2);
-            $sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            $pref_sql = "INSERT IGNORE INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             switch ($row['item']) {
                 case 'download':
-                    Dba::write($sql, [1, T_('download'), '1', 'Allow Downloads', 100, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, [1, 'download', '1', T_('Allow Downloads'), 100, 'boolean', 'options', 'feature']);
                     break;
                 case 'popular_threshold':
-                    Dba::write($sql, [4, T_('popular_threshold'), '10', 'Popular Threshold', 25, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, [4, 'popular_threshold', '10', T_('Popular Threshold'), 25, 'integer', 'interface', 'query']);
                     break;
                 case 'transcode_bitrate':
-                    Dba::write($sql, [19, T_('transcode_bitrate'), '128', 'Transcode Bitrate', 25, 'string', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, [19, 'transcode_bitrate', '128', T_('Transcode Bitrate'), 25, 'string', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
-                    Dba::write($sql, [22, T_('site_title'), 'Ampache :: For the Love of Music', 'Website Title', 100, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music', 'Website Title'), 100, 'string', 'interface', 'custom']);
                     break;
                 case 'lock_songs':
-                    Dba::write($sql, [23, T_('lock_songs'), '0', 'Lock Songs', 100, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, [23, 'lock_songs', '0', T_('Lock Songs'), 100, 'boolean', 'system', null]);
                     break;
                 case 'force_http_play':
-                    Dba::write($sql, [24, T_('force_http_play'), '0', 'Force HTTP playback regardless of port', 100, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, [24, 'force_http_play', '0', T_('Force HTTP playback regardless of port'), 100, 'boolean', 'system', null]);
                     break;
                 case 'play_type':
-                    Dba::write($sql, [29, T_('play_type'), 'web_player', 'Playback Type', 25, 'special', 'streaming', null]);
+                    Dba::write($pref_sql, [29, 'play_type', 'web_player', T_('Playback Type'), 25, 'special', 'streaming', null]);
                     break;
                 case 'lang':
-                    Dba::write($sql, [31, T_('lang'), 'en_US', 'Language', 100, 'special', 'interface', null]);
+                    Dba::write($pref_sql, [31, 'lang', 'en_US', T_('Language'), 100, 'special', 'interface', null]);
                     break;
                 case 'playlist_type':
-                    Dba::write($sql, [32, T_('playlist_type'), 'm3u', 'Playlist Type', 100, 'special', 'playlist', null]);
+                    Dba::write($pref_sql, [32, 'playlist_type', 'm3u', T_('Playlist Type'), 100, 'special', 'playlist', null]);
                     break;
                 case 'theme_name':
-                    Dba::write($sql, [33, T_('theme_name'), 'reborn', 'Theme', 0, 'special', 'interface', 'theme']);
+                    Dba::write($pref_sql, [33, 'theme_name', 'reborn', T_('Theme'), 0, 'special', 'interface', 'theme']);
                     break;
                 case 'localplay_level':
-                    Dba::write($sql, [40, T_('localplay_level'), '0', 'Localplay Access', 100, 'special', 'options', 'localplay']);
+                    Dba::write($pref_sql, [40, 'localplay_level', '0', T_('Localplay Access'), 100, 'special', 'options', 'localplay']);
                     break;
                 case 'localplay_controller':
-                    Dba::write($sql, [41, T_('localplay_controller'), '0', 'Localplay Type', 100, 'special', 'options', 'localplay']);
+                    Dba::write($pref_sql, [41, 'localplay_controller', '0', T_('Localplay Type'), 100, 'special', 'options', 'localplay']);
                     break;
                 case 'allow_stream_playback':
-                    Dba::write($sql, [44, T_('allow_stream_playback'), '1', 'Allow Streaming', 100, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, [44, 'allow_stream_playback', '1', T_('Allow Streaming'), 100, 'boolean', 'options', 'feature']);
                     break;
                 case 'allow_democratic_playback':
-                    Dba::write($sql, [45, T_('allow_democratic_playback'), '0', 'Allow Democratic Play', 100, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, [45, 'allow_democratic_playback', '0', T_('Allow Democratic Play'), 100, 'boolean', 'options', 'feature']);
                     break;
                 case 'allow_localplay_playback':
-                    Dba::write($sql, [46, T_('allow_localplay_playback'), '0', 'Allow Localplay Play', 100, 'boolean', 'options', 'localplay']);
+                    Dba::write($pref_sql, [46, 'allow_localplay_playback', '0', T_('Allow Localplay Play'), 100, 'boolean', 'options', 'localplay']);
                     break;
                 case 'stats_threshold':
-                    Dba::write($sql, [47, T_('stats_threshold'), '7', 'Statistics Day Threshold', 25, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, [47, 'stats_threshold', '7', T_('Statistics Day Threshold'), 25, 'integer', 'interface', 'query']);
                     break;
                 case 'offset_limit':
-                    Dba::write($sql, [51, T_('offset_limit'), '50', 'Offset Limit', 0, 'integer', 'interface', 'query']);
+                    Dba::write($pref_sql, [51, 'offset_limit', '50', T_('Offset Limit'), 0, 'integer', 'interface', 'query']);
                     break;
                 case 'rate_limit':
-                    Dba::write($sql, [52, T_('rate_limit'), '8192', 'Rate Limit', 100, 'integer', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, [52, 'rate_limit', '8192', T_('Rate Limit'), 100, 'integer', 'streaming', 'transcoding']);
                     break;
                 case 'playlist_method':
-                    Dba::write($sql, [53, T_('playlist_method'), 'default', 'Playlist Method', 0, 'string', 'playlist', null]);
+                    Dba::write($pref_sql, [53, 'playlist_method', 'default', T_('Playlist Method'), 0, 'string', 'playlist', null]);
                     break;
                 case 'transcode':
-                    Dba::write($sql, [55, T_('transcode'), 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding']);
+                    Dba::write($pref_sql, [55, 'transcode', 'default', T_('Allow Transcoding'), 25, 'string', 'streaming', 'transcoding']);
                     break;
                 case 'show_lyrics':
-                    Dba::write($sql, [69, T_('show_lyrics'), '0', 'Show lyrics', 0, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, [69, 'show_lyrics', '0', T_('Show lyrics'), 0, 'boolean', 'interface', 'player']);
                     break;
                 case 'mpd_active':
-                    Dba::write($sql, [70, T_('mpd_active'), '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd']);
+                    Dba::write($pref_sql, [70, 'mpd_active', '0', T_('MPD Active Instance'), 25, 'integer', 'internal', 'mpd']);
                     break;
                 case 'httpq_active':
-                    Dba::write($sql, [71, T_('httpq_active'), '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq']);
+                    Dba::write($pref_sql, [71, 'httpq_active', '0', T_('httpQ Active Instance'), 25, 'integer', 'internal', 'httpq']);
                     break;
                 case 'lastfm_grant_link':
-                    Dba::write($sql, [77, T_('lastfm_grant_link'), '', 'Last.FM Grant URL', 25, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, [77, 'lastfm_grant_link', '', T_('Last.FM Grant URL'), 25, 'string', 'internal', 'lastfm']);
                     break;
                 case 'lastfm_challenge':
-                    Dba::write($sql, [78, T_('lastfm_challenge'), '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'lastfm']);
+                    Dba::write($pref_sql, [78, 'lastfm_challenge', '', T_('Last.FM Submit Challenge'), 25, 'string', 'internal', 'lastfm']);
                     break;
                 case 'now_playing_per_user':
-                    Dba::write($sql, [82, T_('now_playing_per_user'), '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home']);
+                    Dba::write($pref_sql, [82, 'now_playing_per_user', '1', T_('Now Playing filtered per user'), 50, 'boolean', 'interface', 'home']);
                     break;
                 case 'album_sort':
-                    Dba::write($sql, [83, T_('album_sort'), '0', 'Album - Default sort', 25, 'string', 'interface', 'library']);
+                    Dba::write($pref_sql, [83, 'album_sort', '0', T_('Album - Default sort'), 25, 'string', 'interface', 'library']);
                     break;
                 case 'show_played_times':
-                    Dba::write($sql, [84, T_('show_played_times'), '0', 'Show # played', 25, 'string', 'interface', 'browse']);
+                    Dba::write($pref_sql, [84, 'show_played_times', '0', T_('Show # played'), 25, 'string', 'interface', 'browse']);
                     break;
                 case 'song_page_title':
-                    Dba::write($sql, [85, T_('song_page_title'), '1', 'Show current song in Web player page title', 25, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, [85, 'song_page_title', '1', T_('Show current song in Web player page title'), 25, 'boolean', 'interface', 'player']);
                     break;
                 case 'subsonic_backend':
-                    Dba::write($sql, [86, T_('subsonic_backend'), '1', 'Use Subsonic backend', 100, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, [86, 'subsonic_backend', '1', T_('Use Subsonic backend'), 100, 'boolean', 'system', 'backend']);
                     break;
                 case 'webplayer_flash':
-                    Dba::write($sql, [88, T_('webplayer_flash'), '1', 'Authorize Flash Web Player', 25, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, [88, 'webplayer_flash', '1', T_('Authorize Flash Web Player'), 25, 'boolean', 'streaming', 'player']);
                     break;
                 case 'webplayer_html5':
-                    Dba::write($sql, [89, T_('webplayer_html5'), '1', 'Authorize HTML5 Web Player', 25, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, [89, 'webplayer_html5', '1', T_('Authorize HTML5 Web Player'), 25, 'boolean', 'streaming', 'player']);
                     break;
                 case 'allow_personal_info_now':
-                    Dba::write($sql, [90, T_('allow_personal_info_now'), '1', 'Share Now Playing information', 25, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [90, 'allow_personal_info_now', '1', T_('Share Now Playing information'), 25, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_recent':
-                    Dba::write($sql, [91, T_('allow_personal_info_recent'), '1', 'Share Recently Played information', 25, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [91, 'allow_personal_info_recent', '1', T_('Share Recently Played information'), 25, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_time':
-                    Dba::write($sql, [92, T_('allow_personal_info_time'), '1', 'Share Recently Played information - Allow access to streaming date/time', 25, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [92, 'allow_personal_info_time', '1', T_('Share Recently Played information - Allow access to streaming date/time'), 25, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'allow_personal_info_agent':
-                    Dba::write($sql, [93, T_('allow_personal_info_agent'), '1', 'Share Recently Played information - Allow access to streaming agent', 25, 'boolean', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [93, 'allow_personal_info_agent', '1', T_('Share Recently Played information - Allow access to streaming agent'), 25, 'boolean', 'interface', 'privacy']);
                     break;
                 case 'ui_fixed':
-                    Dba::write($sql, [94, T_('ui_fixed'), '0', 'Fix header position on compatible themes', 25, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, [94, 'ui_fixed', '0', T_('Fix header position on compatible themes'), 25, 'boolean', 'interface', 'theme']);
                     break;
                 case 'autoupdate':
-                    Dba::write($sql, [95, T_('autoupdate'), '1', 'Check for Ampache updates automatically', 100, 'boolean', 'system', 'update']);
+                    Dba::write($pref_sql, [95, 'autoupdate', '1', T_('Check for Ampache updates automatically'), 100, 'boolean', 'system', 'update']);
                     break;
                 case 'autoupdate_lastcheck':
-                    Dba::write($sql, [96, T_('autoupdate_lastcheck'), '', 'AutoUpdate last check time', 25, 'string', 'internal', 'update']);
+                    Dba::write($pref_sql, [96, 'autoupdate_lastcheck', '', T_('AutoUpdate last check time'), 25, 'string', 'internal', 'update']);
                     break;
                 case 'autoupdate_lastversion':
-                    Dba::write($sql, [97, T_('autoupdate_lastversion'), '', 'AutoUpdate last version from last check', 25, 'string', 'internal', 'update']);
+                    Dba::write($pref_sql, [97, 'autoupdate_lastversion', '', T_('AutoUpdate last version from last check'), 25, 'string', 'internal', 'update']);
                     break;
                 case 'autoupdate_lastversion_new':
-                    Dba::write($sql, [98, T_('autoupdate_lastversion_new'), '', 'AutoUpdate last version from last check is newer', 25, 'boolean', 'internal', 'update']);
+                    Dba::write($pref_sql, [98, 'autoupdate_lastversion_new', '', T_('AutoUpdate last version from last check is newer'), 25, 'boolean', 'internal', 'update']);
                     break;
                 case 'webplayer_confirmclose':
-                    Dba::write($sql, [99, T_('webplayer_confirmclose'), '0', 'Confirmation when closing current playing window', 25, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, [99, 'webplayer_confirmclose', '0', T_('Confirmation when closing current playing window'), 25, 'boolean', 'interface', 'player']);
                     break;
                 case 'webplayer_pausetabs':
-                    Dba::write($sql, [100, T_('webplayer_pausetabs'), '1', 'Auto-pause between tabs', 25, 'boolean', 'interface', 'player']);
+                    Dba::write($pref_sql, [100, 'webplayer_pausetabs', '1', T_('Auto-pause between tabs'), 25, 'boolean', 'interface', 'player']);
                     break;
                 case 'stream_beautiful_url':
-                    Dba::write($sql, [101, T_('stream_beautiful_url'), '0', 'Enable URL Rewriting', 100, 'boolean', 'streaming', null]);
+                    Dba::write($pref_sql, [101, 'stream_beautiful_url', '0', T_('Enable URL Rewriting'), 100, 'boolean', 'streaming', null]);
                     break;
                 case 'share':
-                    Dba::write($sql, [102, T_('share'), '0', 'Allow Share', 100, 'boolean', 'options', 'feature']);
+                    Dba::write($pref_sql, [102, 'share', '0', T_('Allow Share'), 100, 'boolean', 'options', 'feature']);
                     break;
                 case 'share_expire':
-                    Dba::write($sql, [103, T_('share_expire'), '7', 'Share links default expiration days (0=never)', 100, 'integer', 'system', 'share']);
+                    Dba::write($pref_sql, [103, 'share_expire', '7', T_('Share links default expiration days (0=never)'), 100, 'integer', 'system', 'share']);
                     break;
                 case 'slideshow_time':
-                    Dba::write($sql, [104, T_('slideshow_time'), '0', 'Artist slideshow inactivity time', 25, 'integer', 'interface', 'player']);
+                    Dba::write($pref_sql, [104, 'slideshow_time', '0', T_('Artist slideshow inactivity time'), 25, 'integer', 'interface', 'player']);
                     break;
                 case 'broadcast_by_default':
-                    Dba::write($sql, [105, T_('broadcast_by_default'), '0', 'Broadcast web player by default', 25, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, [105, 'broadcast_by_default', '0', T_('Broadcast web player by default'), 25, 'boolean', 'streaming', 'player']);
                     break;
                 case 'album_group':
-                    Dba::write($sql, [108, T_('album_group'), '1', 'Album - Group multiple disks', 25, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, [108, 'album_group', '1', T_('Album - Group multiple disks'), 25, 'boolean', 'interface', 'library']);
                     break;
                 case 'topmenu':
-                    Dba::write($sql, [109, T_('topmenu'), '0', 'Top menu', 25, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, [109, 'topmenu', '0', T_('Top menu'), 25, 'boolean', 'interface', 'theme']);
                     break;
                 case 'demo_clear_sessions':
-                    Dba::write($sql, [110, T_('demo_clear_sessions'), '0', 'Democratic - Clear votes for expired user sessions', 25, 'boolean', 'playlist', null]);
+                    Dba::write($pref_sql, [110, 'demo_clear_sessions', '0', T_('Democratic - Clear votes for expired user sessions'), 25, 'boolean', 'playlist', null]);
                     break;
                 case 'show_donate':
-                    Dba::write($sql, [111, T_('show_donate'), '1', 'Show donate button in footer', 25, 'boolean', 'interface', null]);
+                    Dba::write($pref_sql, [111, 'show_donate', '1', T_('Show donate button in footer'), 25, 'boolean', 'interface', null]);
                     break;
                 case 'upload_catalog':
-                    Dba::write($sql, [112, T_('upload_catalog'), '-1', 'Destination catalog', 100, 'integer', 'options', 'upload']);
+                    Dba::write($pref_sql, [112, 'upload_catalog', '-1', T_('Destination catalog'), 100, 'integer', 'options', 'upload']);
                     break;
                 case 'allow_upload':
-                    Dba::write($sql, [113, T_('allow_upload'), '0', 'Allow user uploads', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [113, 'allow_upload', '0', T_('Allow user uploads'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_subdir':
-                    Dba::write($sql, [114, T_('upload_subdir'), '1', 'Create a subdirectory per user', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [114, 'upload_subdir', '1', T_('Create a subdirectory per user'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_user_artist':
-                    Dba::write($sql, [115, T_('upload_user_artist'), '0', 'Consider the user sender as the track\'s artist', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [115, 'upload_user_artist', '0', T_('Consider the user sender as the track\'s artist'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'upload_script':
-                    Dba::write($sql, [116, T_('upload_script'), '', 'Post-upload script (current directory = upload target directory)', 100, 'string', 'system', 'upload']);
+                    Dba::write($pref_sql, [116, 'upload_script', '', T_('Post-upload script (current directory = upload target directory)'), 100, 'string', 'system', 'upload']);
                     break;
                 case 'upload_allow_edit':
-                    Dba::write($sql, [117, T_('upload_allow_edit'), '1', 'Allow users to edit uploaded songs', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [117, 'upload_allow_edit', '1', T_('Allow users to edit uploaded songs'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'daap_backend':
-                    Dba::write($sql, [118, T_('daap_backend'), '0', 'Use DAAP backend', 100, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, [118, 'daap_backend', '0', T_('Use DAAP backend'), 100, 'boolean', 'system', 'backend']);
                     break;
                 case 'daap_pass':
-                    Dba::write($sql, [119, T_('daap_pass'), '', 'DAAP backend password', 100, 'string', 'system', 'backend']);
+                    Dba::write($pref_sql, [119, 'daap_pass', '', T_('DAAP backend password'), 100, 'string', 'system', 'backend']);
                     break;
                 case 'upnp_backend':
-                    Dba::write($sql, [120, T_('upnp_backend'), '0', 'Use UPnP backend', 100, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, [120, 'upnp_backend', '0', T_('Use UPnP backend'), 100, 'boolean', 'system', 'backend']);
                     break;
                 case 'allow_video':
-                    Dba::write($sql, [121, T_('allow_video'), '0', 'Allow Video Features', 75, 'integer', 'options', 'feature']);
+                    Dba::write($pref_sql, [121, 'allow_video', '0', T_('Allow Video Features'), 75, 'integer', 'options', 'feature']);
                     break;
                 case 'album_release_type':
-                    Dba::write($sql, [122, T_('album_release_type'), '1', 'Album - Group per release type', 25, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, [122, 'album_release_type', '1', T_('Album - Group per release type'), 25, 'boolean', 'interface', 'library']);
                     break;
                 case 'ajax_load':
-                    Dba::write($sql, [123, T_('ajax_load'), '1', 'Ajax page load', 25, 'boolean', 'interface', null]);
+                    Dba::write($pref_sql, [123, 'ajax_load', '1', T_('Ajax page load'), 25, 'boolean', 'interface', null]);
                     break;
                 case 'direct_play_limit':
-                    Dba::write($sql, [124, T_('direct_play_limit'), '0', 'Limit direct play to maximum media count', 25, 'integer', 'interface', 'player']);
+                    Dba::write($pref_sql, [124, 'direct_play_limit', '0', T_('Limit direct play to maximum media count'), 25, 'integer', 'interface', 'player']);
                     break;
                 case 'home_moment_albums':
-                    Dba::write($sql, [125, T_('home_moment_albums'), '1', 'Show Albums of the Moment', 25, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, [125, 'home_moment_albums', '1', T_('Show Albums of the Moment'), 25, 'integer', 'interface', 'home']);
                     break;
                 case 'home_moment_videos':
-                    Dba::write($sql, [126, T_('home_moment_videos'), '0', 'Show Videos of the Moment', 25, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, [126, 'home_moment_videos', '0', T_('Show Videos of the Moment'), 25, 'integer', 'interface', 'home']);
                     break;
                 case 'home_recently_played':
-                    Dba::write($sql, [127, T_('home_recently_played'), '1', 'Show Recently Played', 25, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, [127, 'home_recently_played', '1', T_('Show Recently Played'), 25, 'integer', 'interface', 'home']);
                     break;
                 case 'home_now_playing':
-                    Dba::write($sql, [128, T_('home_now_playing'), '1', 'Show Now Playing', 25, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, [128, 'home_now_playing', '1', T_('Show Now Playing'), 25, 'integer', 'interface', 'home']);
                     break;
                 case 'custom_logo':
-                    Dba::write($sql, [129, T_('custom_logo'), '', 'Custom URL - Logo', 25, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [129, 'custom_logo', '', T_('Custom URL - Logo'), 25, 'string', 'interface', 'custom']);
                     break;
                 case 'album_release_type_sort':
-                    Dba::write($sql, [130, T_('album_release_type_sort'), 'album,ep,live,single', 'Album - Group per release type sort', 25, 'string', 'interface', 'library']);
+                    Dba::write($pref_sql, [130, 'album_release_type_sort', 'album,ep,live,single', T_('Album - Group per release type sort'), 25, 'string', 'interface', 'library']);
                     break;
                 case 'browser_notify':
-                    Dba::write($sql, [131, T_('browser_notify'), '1', 'Web Player browser notifications', 25, 'integer', 'interface', 'notification']);
+                    Dba::write($pref_sql, [131, 'browser_notify', '1', T_('Web Player browser notifications'), 25, 'integer', 'interface', 'notification']);
                     break;
                 case 'browser_notify_timeout':
-                    Dba::write($sql, [132, T_('browser_notify_timeout'), '10', 'Web Player browser notifications timeout (seconds)', 25, 'integer', 'interface', 'notification']);
+                    Dba::write($pref_sql, [132, 'browser_notify_timeout', '10', T_('Web Player browser notifications timeout (seconds)'), 25, 'integer', 'interface', 'notification']);
                     break;
                 case 'geolocation':
-                    Dba::write($sql, [133, T_('geolocation'), '0', 'Allow Geolocation', 25, 'integer', 'options', 'feature']);
+                    Dba::write($pref_sql, [133, 'geolocation', '0', T_('Allow Geolocation'), 25, 'integer', 'options', 'feature']);
                     break;
                 case 'webplayer_aurora':
-                    Dba::write($sql, [134, T_('webplayer_aurora'), '1', 'Authorize JavaScript decoder (Aurora.js) in Web Player', 25, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, [134, 'webplayer_aurora', '1', T_('Authorize JavaScript decoder (Aurora.js) in Web Player'), 25, 'boolean', 'streaming', 'player']);
                     break;
                 case 'upload_allow_remove':
-                    Dba::write($sql, [135, T_('upload_allow_remove'), '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [135, 'upload_allow_remove', '1', T_('Allow users to remove uploaded songs'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'custom_login_logo':
-                    Dba::write($sql, [136, T_('custom_login_logo'), '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [136, 'custom_login_logo', '', T_('Custom URL - Login page logo'), 75, 'string', 'interface', 'custom']);
                     break;
                 case 'custom_favicon':
-                    Dba::write($sql, [137, T_('custom_favicon'), '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [137, 'custom_favicon', '', T_('Custom URL - Favicon'), 75, 'string', 'interface', 'custom']);
                     break;
                 case 'custom_text_footer':
-                    Dba::write($sql, [138, T_('custom_text_footer'), '', 'Custom text footer', 75, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [138, 'custom_text_footer', '', T_('Custom text footer'), 75, 'string', 'interface', 'custom']);
                     break;
                 case 'webdav_backend':
-                    Dba::write($sql, [139, T_('webdav_backend'), '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, [139, 'webdav_backend', '0', T_('Use WebDAV backend'), 100, 'boolean', 'system', 'backend']);
                     break;
                 case 'notify_email':
-                    Dba::write($sql, [140, T_('notify_email'), '0', 'Allow E-mail notifications', 25, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, [140, 'notify_email', '0', T_('Allow E-mail notifications'), 25, 'boolean', 'options', null]);
                     break;
                 case 'theme_color':
-                    Dba::write($sql, [141, T_('theme_color'), 'dark', 'Theme color', 0, 'special', 'interface', 'theme']);
+                    Dba::write($pref_sql, [141, 'theme_color', 'dark', T_('Theme color'), 0, 'special', 'interface', 'theme']);
                     break;
                 case 'disabled_custom_metadata_fields':
-                    Dba::write($sql, [142, T_('disabled_custom_metadata_fields'), '', 'Custom metadata - Disable these fields', 100, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, [142, 'disabled_custom_metadata_fields', '', T_('Custom metadata - Disable these fields'), 100, 'string', 'system', 'metadata']);
                     break;
                 case 'disabled_custom_metadata_fields_input':
-                    Dba::write($sql, [143, T_('disabled_custom_metadata_fields_input'), '', 'Custom metadata - Define field list', 100, 'string', 'system', 'metadata']);
+                    Dba::write($pref_sql, [143, 'disabled_custom_metadata_fields_input', '', T_('Custom metadata - Define field list'), 100, 'string', 'system', 'metadata']);
                     break;
                 case 'podcast_keep':
-                    Dba::write($sql, [144, T_('podcast_keep'), '0', '# latest episodes to keep', 100, 'integer', 'system', 'podcast']);
+                    Dba::write($pref_sql, [144, 'podcast_keep', '0', T_('# latest episodes to keep'), 100, 'integer', 'system', 'podcast']);
                     break;
                 case 'podcast_new_download':
-                    Dba::write($sql, [145, T_('podcast_new_download'), '0', '# episodes to download when new episodes are available', 100, 'integer', 'system', 'podcast']);
+                    Dba::write($pref_sql, [145, 'podcast_new_download', '0', T_('# episodes to download when new episodes are available'), 100, 'integer', 'system', 'podcast']);
                     break;
                 case 'libitem_contextmenu':
-                    Dba::write($sql, [146, T_('libitem_contextmenu'), '1', 'Library item context menu', 0, 'boolean', 'interface', 'library']);
+                    Dba::write($pref_sql, [146, 'libitem_contextmenu', '1', T_('Library item context menu'), 0, 'boolean', 'interface', 'library']);
                     break;
                 case 'upload_catalog_pattern':
-                    Dba::write($sql, [147, T_('upload_catalog_pattern'), '0', 'Rename uploaded file according to catalog pattern', 100, 'boolean', 'system', 'upload']);
+                    Dba::write($pref_sql, [147, 'upload_catalog_pattern', '0', T_('Rename uploaded file according to catalog pattern'), 100, 'boolean', 'system', 'upload']);
                     break;
                 case 'catalog_check_duplicate':
-                    Dba::write($sql, [148, T_('catalog_check_duplicate'), '0', 'Check library item at import time and disable duplicates', 100, 'boolean', 'system', 'catalog']);
+                    Dba::write($pref_sql, [148, 'catalog_check_duplicate', '0', T_('Check library item at import time and disable duplicates'), 100, 'boolean', 'system', 'catalog']);
                     break;
                 case 'browse_filter':
-                    Dba::write($sql, [149, T_('browse_filter'), '0', 'Show filter box on browse', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [149, 'browse_filter', '0', T_('Show filter box on browse'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'sidebar_light':
-                    Dba::write($sql, [150, T_('sidebar_light'), '0', 'Light sidebar by default', 25, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, [150, 'sidebar_light', '0', T_('Light sidebar by default'), 25, 'boolean', 'interface', 'theme']);
                     break;
                 case 'custom_blankalbum':
-                    Dba::write($sql, [151, T_('custom_blankalbum'), '', 'Custom blank album default image', 75, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [151, 'custom_blankalbum', '', T_('Custom blank album default image'), 75, 'string', 'interface', 'custom']);
                     break;
                 case 'libitem_browse_alpha':
-                    Dba::write($sql, [153, T_('libitem_browse_alpha'), '', 'Alphabet browsing by default for following library items (album,artist,...)', 75, 'string', 'interface', 'browse']);
+                    Dba::write($pref_sql, [153, 'libitem_browse_alpha', '', T_('Alphabet browsing by default for following library items (album,artist,...)'), 75, 'string', 'interface', 'browse']);
                     break;
                 case 'show_skipped_times':
-                    Dba::write($sql, [154, T_('show_skipped_times'), '0', 'Show # skipped', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [154, 'show_skipped_times', '0', T_('Show # skipped'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'custom_datetime':
-                    Dba::write($sql, [155, T_('custom_datetime'), '', 'Custom datetime', 25, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [155, 'custom_datetime', '', T_('Custom datetime'), 25, 'string', 'interface', 'custom']);
                     break;
                 case 'cron_cache':
-                    Dba::write($sql, [156, T_('cron_cache'), '0', 'Cache computed SQL data (eg. media hits stats) using a cron', 100, 'boolean', 'system', 'catalog']);
+                    Dba::write($pref_sql, [156, 'cron_cache', '0', T_('Cache computed SQL data (eg. media hits stats) using a cron'), 100, 'boolean', 'system', 'catalog']);
                     break;
                 case 'unique_playlist':
-                    Dba::write($sql, [157, T_('unique_playlist'), '0', 'Only add unique items to playlists', 25, 'boolean', 'playlist', null]);
+                    Dba::write($pref_sql, [157, 'unique_playlist', '0', T_('Only add unique items to playlists'), 25, 'boolean', 'playlist', null]);
                     break;
                 case 'of_the_moment':
-                    Dba::write($sql, [158, T_('of_the_moment'), '6', 'Set the amount of items Album/Video of the Moment will display', 25, 'integer', 'interface', 'home']);
+                    Dba::write($pref_sql, [158, 'of_the_moment', '6', T_('Set the amount of items Album/Video of the Moment will display'), 25, 'integer', 'interface', 'home']);
                     break;
                 case 'custom_login_background':
-                    Dba::write($sql, [159, T_('custom_login_background'), '', 'Custom URL - Login page background', 75, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [159, 'custom_login_background', '', T_('Custom URL - Login page background'), 75, 'string', 'interface', 'custom']);
                     break;
                 case 'show_license':
-                    Dba::write($sql, [160, T_('show_license'), '1', 'Show License', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [160, 'show_license', '1', T_('Show License'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'use_original_year':
-                    Dba::write($sql, [161, T_('use_original_year'), '0', 'Browse by Original Year for albums (falls back to Year)', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [161, 'use_original_year', '0', T_('Browse by Original Year for albums (falls back to Year)'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'hide_single_artist':
-                    Dba::write($sql, [162, T_('hide_single_artist'), '0', 'Hide the Song Artist column for Albums with one Artist', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [162, 'hide_single_artist', '0', T_('Hide the Song Artist column for Albums with one Artist'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'hide_genres':
-                    Dba::write($sql, [163, T_('hide_genres'), '0', 'Hide the Genre column in browse table rows', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [163, 'hide_genres', '0', T_('Hide the Genre column in browse table rows'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'subsonic_always_download':
-                    Dba::write($sql, [164, T_('subsonic_always_download'), '0', 'Force Subsonic streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'subsonic']);
+                    Dba::write($pref_sql, [164, 'subsonic_always_download', '0', T_('Force Subsonic streams to download. (Enable scrobble in your client to record stats)'), 25, 'boolean', 'options', 'subsonic']);
                     break;
                 case 'api_enable_3':
-                    Dba::write($sql, [165, T_('api_enable_3'), '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, [165, 'api_enable_3', '1', T_('Allow Ampache API3 responses'), 25, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_4':
-                    Dba::write($sql, [166, T_('api_enable_4'), '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, [166, 'api_enable_4', '1', T_('Allow Ampache API3 responses'), 25, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_enable_5':
-                    Dba::write($sql, [167, T_('api_enable_5'), '1', 'Allow Ampache API3 responses', 25, 'boolean', 'options', 'ampache']);
+                    Dba::write($pref_sql, [167, 'api_enable_5', '1', T_('Allow Ampache API3 responses'), 25, 'boolean', 'options', 'ampache']);
                     break;
                 case 'api_force_version':
-                    Dba::write($sql, [168, T_('api_force_version'), '0', 'Force a specific API response no matter what version you send', 25, 'special', 'options', 'ampache']);
+                    Dba::write($pref_sql, [168, 'api_force_version', '0', T_('Force a specific API response no matter what version you send'), 25, 'special', 'options', 'ampache']);
                     break;
                 case 'show_playlist_username':
-                    Dba::write($sql, [169, T_('show_playlist_username'), '1', 'Show playlist owner username in titles', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [169, 'show_playlist_username', '1', T_('Show playlist owner username in titles'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'api_hidden_playlists':
-                    Dba::write($sql, [170, T_('api_hidden_playlists'), '', 'Hide playlists in Subsonic and API clients that start with this string', 25, 'string', 'options', null]);
+                    Dba::write($pref_sql, [170, 'api_hidden_playlists', '', T_('Hide playlists in Subsonic and API clients that start with this string'), 25, 'string', 'options', null]);
                     break;
                 case 'api_hide_dupe_searches':
-                    Dba::write($sql, [171, T_('api_hide_dupe_searches'), '0', 'Hide smartlists that match playlist names in Subsonic and API clients', 25, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, [171, 'api_hide_dupe_searches', '0', T_('Hide smartlists that match playlist names in Subsonic and API clients'), 25, 'boolean', 'options', null]);
                     break;
                 case 'show_album_artist':
-                    Dba::write($sql, [172, T_('show_album_artist'), '1', 'Show \'Album Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, [172, 'show_album_artist', '1', T_('Show \'Album Artists\' link in the main sidebar'), 25, 'boolean', 'interface', 'theme']);
                     break;
                 case 'show_artist':
-                    Dba::write($sql, [173, T_('show_artist'), '0', 'Show \'Artists\' link in the main sidebar', 25, 'boolean', 'interface', 'theme']);
+                    Dba::write($pref_sql, [173, 'show_artist', '0', T_('Show \'Artists\' link in the main sidebar'), 25, 'boolean', 'interface', 'theme']);
                     break;
                 case 'demo_use_search':
-                    Dba::write($sql, [175, T_('demo_use_search'), '0', 'Democratic - Use smartlists for base playlist', 100, 'boolean', 'system', null]);
+                    Dba::write($pref_sql, [175, 'demo_use_search', '0', T_('Democratic - Use smartlists for base playlist'), 100, 'boolean', 'system', null]);
                     break;
                 case 'webplayer_removeplayed':
-                    Dba::write($sql, [176, T_('webplayer_removeplayed'), '0', 'Remove tracks before the current playlist item in the webplayer when played', 25, 'special', 'streaming', 'player']);
+                    Dba::write($pref_sql, [176, 'webplayer_removeplayed', '0', T_('Remove tracks before the current playlist item in the webplayer when played'), 25, 'special', 'streaming', 'player']);
                     break;
                 case 'api_enable_6':
-                    Dba::write($sql, [177, T_('api_enable_6'), '1', 'Allow Ampache API6 responses', 25, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, [177, 'api_enable_6', '1', T_('Allow Ampache API6 responses'), 25, 'boolean', 'options', null]);
                     break;
                 case 'upload_access_level':
-                    Dba::write($sql, [178, T_('upload_access_level'), '25', 'Upload Access Level', 100, 'special', 'system', 'upload']);
+                    Dba::write($pref_sql, [178, 'upload_access_level', '25', T_('Upload Access Level'), 100, 'special', 'system', 'upload']);
                     break;
                 case 'show_subtitle':
-                    Dba::write($sql, [179, T_('show_subtitle'), '1', 'Show Album subtitle on links (if available)', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [179, 'show_subtitle', '1', T_('Show Album subtitle on links (if available)'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'show_original_year':
-                    Dba::write($sql, [180, T_('show_original_year'), '1', 'Show Album original year on links (if available)', 25, 'boolean', 'interface', 'browse']);
+                    Dba::write($pref_sql, [180, 'show_original_year', '1', T_('Show Album original year on links (if available)'), 25, 'boolean', 'interface', 'browse']);
                     break;
                 case 'show_header_login':
-                    Dba::write($sql, [181, T_('show_header_login'), '1', 'Show the login / registration links in the site header', 100, 'boolean', 'system', 'interface']);
+                    Dba::write($pref_sql, [181, 'show_header_login', '1', T_('Show the login / registration links in the site header'), 100, 'boolean', 'system', 'interface']);
                     break;
                 case 'use_play2':
-                    Dba::write($sql, [182, T_('use_play2'), '0', 'Use an alternative playback action for streaming if you have issues with playing music', 25, 'boolean', 'streaming', 'player']);
+                    Dba::write($pref_sql, [182, 'use_play2', '0', T_('Use an alternative playback action for streaming if you have issues with playing music'), 25, 'boolean', 'streaming', 'player']);
                     break;
                 case 'custom_timezone':
-                    Dba::write($sql, [183, T_('custom_timezone'), '', 'Custom timezone (Override PHP date.timezone)', 25, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [183, 'custom_timezone', '', T_('Custom timezone (Override PHP date.timezone)'), 25, 'string', 'interface', 'custom']);
                     break;
                 case 'bookmark_latest':
-                    Dba::write($sql, [184, T_('bookmark_latest'), '0', 'Only keep the latest media bookmark', 25, 'boolean', 'options', null]);
+                    Dba::write($pref_sql, [184, 'bookmark_latest', '0', T_('Only keep the latest media bookmark'), 25, 'boolean', 'options', null]);
                     break;
                 case 'jp_volume':
-                    Dba::write($sql, [185, T_('jp_volume'), '0.8', 'Default webplayer volume', 25, 'special', 'streaming', 'player']);
+                    Dba::write($pref_sql, [185, 'jp_volume', '0.8', T_('Default webplayer volume'), 25, 'special', 'streaming', 'player']);
                     break;
                 case 'perpetual_api_session':
-                    Dba::write($sql, [186, T_('perpetual_api_session'), '0', 'API sessions do not expire', 100, 'boolean', 'system', 'backend']);
+                    Dba::write($pref_sql, [186, 'perpetual_api_session', '0', T_('API sessions do not expire'), 100, 'boolean', 'system', 'backend']);
                     break;
                 case 'home_recently_played_all':
-                    Dba::write($sql, [187, T_('home_recently_played_all'), '1', 'Show all media types in Recently Played', 25, 'bool', 'interface', 'home']);
+                    Dba::write($pref_sql, [187, 'home_recently_played_all', '1', T_('Show all media types in Recently Played'), 25, 'bool', 'interface', 'home']);
                     break;
                 case 'show_wrapped':
-                    Dba::write($sql, [188, T_('show_wrapped'), '1', 'Enable access to your personal \"Spotify Wrapped\" from your user page', 25, 'bool', 'interface', 'privacy']);
+                    Dba::write($pref_sql, [188, 'show_wrapped', '1', T_('Enable access to your personal \"Spotify Wrapped\" from your user page'), 25, 'bool', 'interface', 'privacy']);
                     break;
                 case 'api_always_download':
-                    Dba::write($sql, [189, T_('api_always_download'), 'Force API streams to download. (Enable scrobble in your client to record stats)', '0', 25, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)', '0'), 25, 'boolean', 'options', 'api']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
