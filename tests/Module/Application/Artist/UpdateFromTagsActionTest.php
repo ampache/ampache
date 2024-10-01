@@ -27,6 +27,8 @@ namespace Ampache\Module\Application\Artist;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
@@ -35,27 +37,27 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UpdateFromTagsActionTest extends MockeryTestCase
 {
+    /** @var ModelFactoryInterface|MockInterface|null */
+    private MockInterface $modelFactory;
+
     /** @var ConfigContainerInterface|MockInterface|null */
     private MockInterface $configContainer;
 
     /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
-    /** @var ModelFactoryInterface|MockInterface|null */
-    private MockInterface $modelFactory;
-
     private ?UpdateFromTagsAction $subject;
 
     protected function setUp(): void
     {
+        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
-        $this->modelFactory    = $this->mock(ModelFactoryInterface::class);
 
         $this->subject = new UpdateFromTagsAction(
+            $this->modelFactory,
             $this->configContainer,
-            $this->ui,
-            $this->modelFactory
+            $this->ui
         );
     }
 
@@ -63,14 +65,31 @@ class UpdateFromTagsActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
+        $artist     = $this->mock(Artist::class);
 
         $artistId = 666;
+        $userId   = 24;
         $webPath  = 'some-web-path';
 
         $request->shouldReceive('getQueryPArams')
             ->withNoArgs()
             ->once()
             ->andReturn(['artist' => (string) $artistId]);
+
+        $this->modelFactory->shouldReceive('createArtist')
+            ->with($artistId)
+            ->once()
+            ->andReturn($artist);
+
+        $artist->shouldReceive('isNew')
+            ->withNoArgs()
+            ->once()
+            ->andReturnFalse();
+
+        $gatekeeper->shouldReceive('mayAccess')
+            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->once()
+            ->andReturnTrue();
 
         $this->ui->shouldReceive('showHeader')
             ->withNoArgs()

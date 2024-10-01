@@ -103,7 +103,9 @@ final class Session implements SessionInterface
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? User::access_name_to_level($defaultAuthLevel) : '5';
+            $auth['access']       = ($defaultAuthLevel)
+                ? User::access_name_to_level($defaultAuthLevel)
+                : 5;
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);
@@ -121,7 +123,7 @@ final class Session implements SessionInterface
                     $GLOBALS['user']->id       = -1;
                     $GLOBALS['user']->username = $auth['username'];
                     $GLOBALS['user']->fullname = $auth['fullname'];
-                    $GLOBALS['user']->access   = (int)$auth['access'];
+                    $GLOBALS['user']->access   = $auth['access'];
                 }
                 $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : false;
                 if (!$user_id && !$isDemoMode) {

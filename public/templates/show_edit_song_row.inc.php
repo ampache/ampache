@@ -27,10 +27,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Metadata\MetadataManagerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
+use Ampache\Repository\Model\User;
 
 /** @var Song $libitem */
 
@@ -38,7 +40,10 @@ global $dic;
 $metadataManager = $dic->get(MetadataManagerInterface::class);
 
 /** @var Song $libitem */
-?>
+
+$current_user = Core::get_global('user');
+$has_access   = $current_user instanceof User && Access::check('interface', 75, $current_user->getId());
+$is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -47,7 +52,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface', 75)) { ?>
+                if ($has_access || $is_owner) { ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
                     <td>
@@ -85,7 +90,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                             <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                         <?php
                         } else {
-                            echo $libitem->mbid;
+                            echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                         } ?>
                 </td>
             </tr>

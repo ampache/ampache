@@ -1384,7 +1384,7 @@ class Upnp_Api
         unset($filter);
 
         // NB filtering is handled in creation of the DIDL now
-        //if( strpos( $filter, 'upnp:album' ) ){
+        //if ( strpos( $filter, 'upnp:album' ) ){
         //    return 'album';
         //}
         return 'song';

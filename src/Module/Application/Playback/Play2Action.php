@@ -944,18 +944,20 @@ final class Play2Action implements ApplicationActionInterface
         }
         //$this->logger->debug('troptions ' . print_r($troptions, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         if ($transcode) {
+            // At this point, the bitrate has already been decided inside Stream::start_transcode
+            // so we just try to emulate that logic here
+            $stream_rate = 0;
             if (isset($troptions['bitrate'])) {
-                $maxbitrate = $troptions['bitrate'];
-            } else {
-                $maxbitrate = (empty($transcode_settings))
-                    ? $media->bitrate / 1024
-                    : Stream::get_max_bitrate($media, $transcode_settings);
+                $stream_rate = $troptions['bitrate'] / 1024;
+            } elseif (!empty($transcode_settings)) {
+                $stream_rate = Stream::get_max_bitrate($media, $transcode_settings);
             }
-            if ($media->time > 0 && $maxbitrate > 0) {
-                $stream_size = (int)(($media->time * $maxbitrate * 1024) / 8);
+
+            if ($media->time > 0 && $stream_rate > 0) {
+                $stream_size = (int)(($media->time * $stream_rate * 1024) / 8);
             } else {
                 $this->logger->debug(
-                    'Bad media duration / Max bitrate. Content-length calculation skipped.',
+                    'Bad media duration / stream bitrate. Content-length calculation skipped.',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
                 );
                 $stream_size = 0;
