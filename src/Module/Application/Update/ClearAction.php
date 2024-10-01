@@ -26,19 +26,15 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Update;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Gui\GuiFactoryInterface;
-use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AutoUpdate;
-use Ampache\Module\System\Update;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use Teapot\StatusCode;
 
 final class ClearAction implements ApplicationActionInterface
@@ -50,12 +46,8 @@ final class ClearAction implements ApplicationActionInterface
     private ConfigContainerInterface $configContainer;
 
     public function __construct(
-        TalFactoryInterface $talFactory,
-        GuiFactoryInterface $guiFactory,
         ResponseFactoryInterface $responseFactory,
         ConfigContainerInterface $configContainer,
-        StreamFactoryInterface $streamFactory,
-        Update\UpdaterInterface $updater
     ) {
         $this->responseFactory = $responseFactory;
         $this->configContainer = $configContainer;

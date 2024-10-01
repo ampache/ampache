@@ -109,24 +109,25 @@ final class VaInfo implements VaInfoInterface
 
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
-    public $encoding      = '';
-    public $encodingId3v1 = '';
-    public $encodingId3v2 = '';
-    public $filename      = '';
-    public $type          = '';
-    public $tags          = [];
-    public $gatherTypes   = [];
-    public $islocal;
+    public string $encoding      = '';
+    public string $encodingId3v1 = '';
+    public string $encodingId3v2 = '';
+    public string $filename      = '';
+    public string $type          = '';
+    public array $tags           = [];
+    public array $gatherTypes    = [];
+    public bool $islocal;
 
-    protected $_raw           = [];
-    protected $_getID3        = null;
-    protected $_forcedSize    = 0;
-    protected $_file_encoding = '';
-    protected $_file_pattern  = '';
-    protected $_dir_pattern   = '';
+    protected array $_raw            = [];
+    protected ?getID3 $_getID3       = null;
+    protected int $_forcedSize       = 0;
+    protected string $_file_encoding = '';
+    protected string $_file_pattern  = '';
+    protected string $_dir_pattern   = '';
 
-    private $_broken = false;
-    private $_pathinfo;
+    private bool $_broken = false;
+
+    private string|array $_pathinfo;
 
     private UserRepositoryInterface $userRepository;
 
@@ -175,8 +176,8 @@ final class VaInfo implements VaInfoInterface
 
         // FIXME: This looks ugly and probably wrong
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-            $this->_pathinfo = str_replace('%3A', ':', urlencode($this->filename));
-            $this->_pathinfo = pathinfo(str_replace('%5C', '\\', $this->_pathinfo));
+            $urlEncodedFile  = (string)str_replace('%3A', ':', urlencode($this->filename));
+            $this->_pathinfo = pathinfo(str_replace('%5C', '\\', $urlEncodedFile));
         } else {
             $this->_pathinfo = pathinfo(str_replace('%2F', '/', urlencode($this->filename)));
         }
@@ -332,7 +333,11 @@ final class VaInfo implements VaInfoInterface
         }
         $enabled_sources = (array)$this->get_metadata_order();
 
-        if (in_array('getid3', $enabled_sources) && $this->islocal) {
+        if (
+            in_array('getid3', $enabled_sources) &&
+            $this->islocal &&
+            $this->_getID3
+        ) {
             try {
                 $this->_raw = $this->_getID3->analyze(Core::conv_lc_file($this->filename));
             } catch (Exception $error) {
@@ -491,7 +496,9 @@ final class VaInfo implements VaInfoInterface
     {
         // Get the Raw file information
         try {
-            $this->_raw = $this->_getID3->analyze($this->filename);
+            $this->_raw = ($this->_getID3)
+                ? $this->_getID3->analyze($this->filename)
+                : [];
 
             return $this->_raw;
         } catch (Exception $error) {
@@ -938,7 +945,9 @@ final class VaInfo implements VaInfoInterface
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => self::class]);
         $parsed          = [];
-        $parsed['title'] = urldecode($this->_pathinfo['filename']);
+        $parsed['title'] = (isset($this->_pathinfo['filename']))
+            ? urldecode($this->_pathinfo['filename'])
+            : '';
         if (array_key_exists('audio', $tags)) {
             $parsed['mode'] = $tags['audio']['bitrate_mode'] ?? 'vbr';
             if ($parsed['mode'] == 'con') {
