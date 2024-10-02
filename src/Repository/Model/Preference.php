@@ -728,7 +728,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [19, 'transcode_bitrate', '128', T_('Transcode Bitrate'), AccessLevelEnum::USER->value,'string', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
-                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music', 'Website Title'), AccessLevelEnum::ADMIN->value,'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music'), 'Website Title', AccessLevelEnum::ADMIN->value,'string', 'interface', 'custom']);
                     break;
                 case 'lock_songs':
                     Dba::write($pref_sql, [23, 'lock_songs', '0', T_('Lock Songs'), AccessLevelEnum::ADMIN->value,'boolean', 'system', null]);
@@ -1145,7 +1145,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [204, 'sidebar_order_information', '60', T_('Custom CSS Order - Information'), AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'api_always_download':
-                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)', '0'), AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
@@ -1419,7 +1419,11 @@ class Preference extends database_object
      */
     public static function clear_from_session(): void
     {
-        if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
+        if (
+            isset($_SESSION) &&
+            array_key_exists('userdata', $_SESSION) &&
+            array_key_exists('preferences', $_SESSION['userdata'])
+        ) {
             unset($_SESSION['userdata']['preferences']);
         }
     }
