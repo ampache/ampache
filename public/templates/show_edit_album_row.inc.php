@@ -100,7 +100,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Comment'); ?></td>
-                <td><input type="text" name="subtitle" value="<?php echo $libitem->version; ?>" /></td>
+                <td><input type="text" name="version" value="<?php echo $libitem->version; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number'); ?></td>

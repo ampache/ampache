@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Ampache 6.6.3
+
+### Fixed
+
+* Translating incorrect values for default preferences
+* User uploads
+  * Don't delete the album_artist from the post array when updating
+  * Update process not updating album `version` or `release_status`
+* Order of catalog verify by update_time may ruin the order when updating
+
 ## Ampache 6.6.2
 
 In this release we've found a few people missing preferences.
