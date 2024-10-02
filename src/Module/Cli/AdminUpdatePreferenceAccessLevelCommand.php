@@ -52,7 +52,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
         if (!$interactor) {
             return;
         }
-        $level = $this->values()['level'] === false;
+        $level = $this->values()['level'];
 
         if (Preference::set_level($level)) {
             $interactor->ok(
