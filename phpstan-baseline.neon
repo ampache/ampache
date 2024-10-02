@@ -5172,6 +5172,16 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
+			count: 1
+			path: src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php
+
+		-
+			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
 			count: 3
 			path: src/Module/Cli/ArtCleanupCommand.php
 
