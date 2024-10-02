@@ -69,7 +69,7 @@ foreach ($preferences['prefs'] as $pref) {
         $lastsubcat = $pref['subcategory'];
         $fsubcat    = $lastsubcat;
         if (!empty($fsubcat)) { ?>
-                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)); ?></h5></td></tr>
+                <tr><td colspan="4"><h4><?php echo ucwords(T_($fsubcat)); ?></h4></td></tr>
                 <?php
         }
     } ?>
