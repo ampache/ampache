@@ -84,7 +84,7 @@ Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
         <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_album_name); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
+        <a href="https://www.duckduckgo.com/?q=<?php echo rawurlencode($f_name); ?>" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
         <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
         <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_album_name); ?>%22+%22<?php echo rawurlencode($f_name); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
         <a href="https://bandcamp.com/search?q=<?php echo rawurlencode($f_album_name); ?>+<?php echo rawurlencode($f_name); ?>&item_type=a" target="_blank"><?php echo Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')); ?></a>
