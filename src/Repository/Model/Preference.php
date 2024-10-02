@@ -677,7 +677,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [19, 'transcode_bitrate', '128', T_('Transcode Bitrate'), 25, 'string', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
-                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music', 'Website Title'), 100, 'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music'), 'Website Title', 100, 'string', 'interface', 'custom']);
                     break;
                 case 'lock_songs':
                     Dba::write($pref_sql, [23, 'lock_songs', '0', T_('Lock Songs'), 100, 'boolean', 'system', null]);
@@ -1049,7 +1049,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [188, 'show_wrapped', '1', T_('Enable access to your personal \"Spotify Wrapped\" from your user page'), 25, 'bool', 'interface', 'privacy']);
                     break;
                 case 'api_always_download':
-                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)', '0'), 25, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', 25, 'boolean', 'options', 'api']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
