@@ -105,6 +105,12 @@ final class ConfigurationKeyEnum
     public const DOWNLOAD                              = 'download';
     public const ENABLE_CUSTOM_METADATA                = 'enable_custom_metadata';
     public const EXTERNAL_AUTO_UPDATE                  = 'external_auto_update';
+    public const EXTERNAL_LINKS_GOOGLE                 = 'external_links_google';
+    public const EXTERNAL_LINKS_DUCKDUCKGO             = 'external_links_duckduckgo';
+    public const EXTERNAL_LINKS_WIKIPEDIA              = 'external_links_wikipedia';
+    public const EXTERNAL_LINKS_LASTFM                 = 'external_links_lastfm';
+    public const EXTERNAL_LINKS_BANDCAMP               = 'external_links_bandcamp';
+    public const EXTERNAL_LINKS_MUSICBRAINZ            = 'external_links_musicbrainz';
     public const FILE_ZIP_COMMENT                      = 'file_zip_comment';
     public const FORCE_HTTP_PLAY                       = 'force_http_play';
     public const GEOLOCATION                           = 'geolocation';

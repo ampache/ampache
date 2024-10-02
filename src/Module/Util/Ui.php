@@ -844,6 +844,12 @@ class Ui implements UiInterface
             case 'direct_link':
             case 'display_menu':
             case 'download':
+            case 'external_links_google':
+            case 'external_links_duckduckgo':
+            case 'external_links_wikipedia':
+            case 'external_links_lastfm':
+            case 'external_links_bandcamp':
+            case 'external_links_musicbrainz':
             case 'force_http_play':
             case 'geolocation':
             case 'hide_genres':

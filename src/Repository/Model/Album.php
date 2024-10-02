@@ -1007,12 +1007,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
                 self::update_field('name', $new_name, $this->id);
                 self::update_field('prefix', $aPrefix, $this->id);
-            }
 
-            if ($album_artist !== $this->album_artist) {
-                self::update_field('album_artist', $album_artist, $this->id);
-                self::add_album_map($this->id, 'album', (int)$album_artist);
-                self::remove_album_map($this->id, 'album', (int)$this->album_artist);
+                $this->name   = $new_name;
+                $this->prefix = $aPrefix;
             }
 
             if ($year !== $this->year) {
@@ -1029,6 +1026,12 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
             if ($mbid_group != $this->mbid_group) {
                 self::update_field('mbid_group', $mbid_group, $this->id);
+            }
+
+            if ($album_artist !== $this->album_artist) {
+                self::update_field('album_artist', $album_artist, $this->id);
+                self::add_album_map($this->id, 'album', (int)$album_artist);
+                self::remove_album_map($this->id, 'album', (int)$this->album_artist);
             }
 
             if ($release_type != $this->release_type) {
@@ -1057,11 +1060,11 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         }
 
         $this->year           = $year;
-        $this->mbid_group     = $mbid_group;
-        $this->release_type   = $release_type;
-        $this->name           = $name;
         $this->mbid           = $mbid;
+        $this->mbid_group     = $mbid_group;
         $this->album_artist   = $album_artist;
+        $this->release_type   = $release_type;
+        $this->release_status = $release_status;
         $this->original_year  = $original_year;
         $this->barcode        = $barcode;
         $this->catalog_number = $catalog_number;
