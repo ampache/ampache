@@ -728,7 +728,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [19, 'transcode_bitrate', '128', T_('Transcode Bitrate'), AccessLevelEnum::USER->value,'string', 'streaming', 'transcoding']);
                     break;
                 case 'site_title':
-                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music', 'Website Title'), AccessLevelEnum::ADMIN->value,'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [22, 'site_title', T_('Ampache :: For the Love of Music'), 'Website Title', AccessLevelEnum::ADMIN->value,'string', 'interface', 'custom']);
                     break;
                 case 'lock_songs':
                     Dba::write($pref_sql, [23, 'lock_songs', '0', T_('Lock Songs'), AccessLevelEnum::ADMIN->value,'boolean', 'system', null]);
@@ -1145,7 +1145,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [204, 'sidebar_order_information', '60', T_('Custom CSS Order - Information'), AccessLevelEnum::USER->value, 'integer', 'interface', 'sidebar']);
                     break;
                 case 'api_always_download':
-                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)', '0'), AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
+                    Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
@@ -1413,13 +1413,103 @@ class Preference extends database_object
     }
 
     /**
+     * set_level
+     * Set access level to change preferences, usefull for locked down sites and for resetting to the default values
+     * @param string $level
+     */
+    public static function set_level($level = 'default'): bool
+    {
+        switch ($level) {
+            case 'guest':
+                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::GUEST->value]) !== false;
+            case 'user':
+                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::USER->value]) !== false;
+            case 'content_manager':
+                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::CONTENT_MANAGER->value]) !== false;
+            case 'manager':
+                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::MANAGER->value]) !== false;
+            case 'admin':
+                return Dba::write('UPDATE `preference` SET `level` = ?;', [AccessLevelEnum::ADMIN->value]) !== false;
+            case 'default':
+                return (
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ('libitem_contextmenu', 'show_lyrics', 'theme_color', 'theme_name');",
+                        [AccessLevelEnum::DEFAULT->value]
+                    ) !== false &&
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ('offset_limit', 'playlist_method');",
+                        [AccessLevelEnum::GUEST->value]
+                    ) !== false &&
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
+                        "'ajax_load', 'album_group', 'album_release_type', 'album_release_type_sort', 'album_sort'," .
+                        " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent'" .
+                        " 'allow_personal_info_time', 'api_always_download', 'api_enable_3', 'api_enable_4'" .
+                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'api_hidden_playlists'" .
+                        " 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new'" .
+                        " 'autoupdate_lastversion', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'" .
+                        " 'browser_notify_timeout', 'browser_notify', 'custom_datetime', 'custom_logo_user'" .
+                        " 'custom_logo', 'custom_timezone', 'demo_clear_sessions', 'direct_play_limit'" .
+                        " 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_albums', 'home_moment_videos'" .
+                        " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active'" .
+                        " 'index_dashboard_form', 'jp_volume', 'lastfm_challenge', 'lastfm_grant_link', 'mpd_active'" .
+                        " 'notify_email', 'of_the_moment', 'play_type', 'popular_threshold', 'show_album_artist'" .
+                        " 'show_artist', 'show_donate', 'show_license', 'show_original_year', 'show_played_times'" .
+                        " 'show_playlist_username', 'show_skipped_times', 'show_subtitle', 'show_wrapped'" .
+                        " 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'" .
+                        " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video'" .
+                        " 'sidebar_light', 'sidebar_order_browse', 'sidebar_order_dashboard', 'sidebar_order_information'" .
+                        " 'sidebar_order_playlist', 'sidebar_order_search', 'sidebar_order_video', 'slideshow_time'" .
+                        " 'song_page_title', 'subsonic_always_download', 'topmenu', 'transcode_bitrate', 'transcode'" .
+                        " 'ui_fixed', 'unique_playlist', 'use_original_year', 'use_play2', 'webplayer_aurora'" .
+                        " 'webplayer_confirmclose', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs'" .
+                        " 'webplayer_removeplayed'" .
+                        ");",
+                        [AccessLevelEnum::USER->value]
+                    ) !== false &&
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN ('now_playing_per_user');",
+                        [AccessLevelEnum::CONTENT_MANAGER->value]
+                    ) !== false &&
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
+                        "'allow_video', 'custom_blankalbum', 'custom_blankmovie', 'custom_favicon'" .
+                        " 'custom_login_background', 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'" .
+                        ");",
+                        [AccessLevelEnum::MANAGER->value]
+                    ) !== false &&
+                    Dba::write(
+                        "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
+                        "'allow_democratic_playback', 'allow_localplay_playback', 'allow_stream_playback', 'allow_upload'" .
+                        " 'autoupdate', 'catalog_check_duplicate', 'cron_cache', 'daap_backend', 'daap_pass'" .
+                        " 'demo_use_search', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'" .
+                        " 'download', 'force_http_play', 'lang', 'localplay_controller', 'localplay_level', 'lock_songs'" .
+                        " 'perpetual_api_session', 'playlist_type', 'podcast_keep', 'podcast_new_download', 'rate_limit'" .
+                        " 'share_expire', 'share', 'show_header_login', 'site_title', 'stream_beautiful_url'" .
+                        " 'subsonic_backend', 'upload_access_level', 'upload_allow_edit', 'upload_allow_remove'" .
+                        " 'upload_catalog_pattern', 'upload_catalog', 'upload_script', 'upload_subdir', 'upload_user_artist'" .
+                        " 'upnp_backend', 'webdav_backend'" .
+                        ");",
+                        [AccessLevelEnum::ADMIN->value]
+                    ) !== false
+                );
+        }
+
+        return false;
+    }
+
+    /**
      * clear_from_session
      * This clears the users preferences, this is done whenever modifications are made to the preferences
      * or the admin resets something
      */
     public static function clear_from_session(): void
     {
-        if (isset($_SESSION) && array_key_exists('userdata', $_SESSION) && array_key_exists('preferences', $_SESSION['userdata'])) {
+        if (
+            isset($_SESSION) &&
+            array_key_exists('userdata', $_SESSION) &&
+            array_key_exists('preferences', $_SESSION['userdata'])
+        ) {
             unset($_SESSION['userdata']['preferences']);
         }
     }
