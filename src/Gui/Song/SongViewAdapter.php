@@ -371,13 +371,23 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
-            "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
-            "&nbsp;<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-        if ($this->song->mbid) {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
-        } else {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+        $songprops[T_('Links')]         = "";
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
+            $songprops[T_('Links')] .= "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
+        }
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_DUCKDUCKGO)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode((string)$this->song->f_artist) . "+" . rawurlencode((string)$this->song->f_name) . "\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+        }
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_LASTFM)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+        }
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_BANDCAMP)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string)$this->song->f_artist) . "+" . rawurlencode((string)$this->song->f_name) . "&item_type=t\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+        }
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_MUSICBRAINZ)) {
+            $songprops[T_('Links')] .= ($this->song->mbid)
+                ? "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>"
+                : "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
         }
 
         $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');

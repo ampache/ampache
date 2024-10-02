@@ -80,19 +80,31 @@ if ($directplay_limit > 0) {
 
 <div class="item_right_info">
     <div class="external_links">
-        <a href="https://www.google.com/search?q=%22<?php echo rawurlencode((string) $albumDisk->get_artist_fullname()); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode((string) $albumDisk->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="https://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($simple); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="https://www.last.fm/search?q=%22<?php echo rawurlencode((string) $albumDisk->f_artist_name); ?>%22+%22<?php echo rawurlencode($simple); ?>%22&type=album" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-    <?php if ($albumDisk->mbid) { ?>
-        <a href="https://musicbrainz.org/release/<?php echo $albumDisk->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
-    <?php } else { ?>
-        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($simple); ?>%22&type=release" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
-    <?php } ?>
+<?php if (AmpConfig::get('external_links_google')) {
+    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string) $albumDisk->get_artist_fullname()) . "%22+%22" . rawurlencode($simple) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_duckduckgo')) {
+    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode((string) $albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_wikipedia')) {
+    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . rawurlencode($simple) . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_lastfm')) {
+    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string) $albumDisk->f_artist_name) . "%22+%22" . rawurlencode($simple) . "%22&type=album\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_bandcamp')) {
+    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_musicbrainz')) {
+    if ($albumDisk->mbid) {
+        echo "<a href=\"https://musicbrainz.org/release/" . $albumDisk->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    } else {
+        echo "<a href=\"https://musicbrainz.org/search?query=%22" . rawurlencode($simple) . "%22&type=release\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    }
+} ?>
     </div>
-    <?php
-        $name = '[' . scrub_out($albumDisk->f_artist_name) . '] ' . scrub_out($f_name);
-$thumb        = Ui::is_grid_view('album') ? 32 : 11;
+<?php $name = '[' . scrub_out($albumDisk->f_artist_name) . '] ' . scrub_out($f_name);
+$thumb      = Ui::is_grid_view('album') ? 32 : 11;
 Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
