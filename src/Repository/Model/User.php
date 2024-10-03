@@ -1492,6 +1492,17 @@ class User extends database_object
     }
 
     /**
+     * garbage_collection
+     *
+     * This cleans out users that have not activated in the last 30 days
+     */
+    public static function garbage_collection(): void
+    {
+        $sql = "DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));";
+        Dba::write($sql);
+    }
+
+    /**
      * @deprecated Inject dependency
      */
     private function getUserKeyGenerator(): UserKeyGeneratorInterface
