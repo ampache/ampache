@@ -1498,8 +1498,10 @@ class User extends database_object
      */
     public static function garbage_collection(): void
     {
-        $sql = "DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));";
-        Dba::write($sql);
+        // activated accounts can log in but might not have cleared validation
+        Dba::write("UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;");
+        // delete accounts not activated after 30 days
+        Dba::write("DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));");
     }
 
     /**
