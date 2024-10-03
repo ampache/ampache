@@ -39,7 +39,7 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->option(
                 '-l|--level',
-                T_('Access Level') . " ('default' | 'guest' | 'user' | 'content_manager' | 'manager' | 'admin')",
+                T_('Access Level') . " ('default', 'guest', 'user', 'content_manager', 'manager', 'admin')",
                 'strval',
                 ''
             )
