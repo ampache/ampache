@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-10-03 15:51+1000\n"
+"POT-Creation-Date: 2024-10-03 16:09+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -217,6 +217,7 @@ msgstr ""
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:80
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:173
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:91
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:92
 #: ../../src/Repository/Model/Catalog.php:2318
 msgid "Error"
 msgstr ""
@@ -5897,6 +5898,8 @@ msgstr ""
 #: ../../src/Module/Api/Api4.php:192
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:66
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:86
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:67
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:87
 msgid "Missing mandatory parameter"
 msgstr ""
 
@@ -7592,6 +7595,7 @@ msgstr[1] ""
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:193
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:77
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:80
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:81
 #: ../../src/Repository/Model/Catalog.php:2316
 #: ../../src/Repository/Model/Search.php:728
 msgid "Updated"
@@ -7900,6 +7904,7 @@ msgstr ""
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:53
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:39
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:39
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:39
 #: ../../src/Module/Cli/HtaccessCommand.php:48
 msgid "Execute the update"
 msgstr ""
@@ -7911,12 +7916,14 @@ msgstr ""
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:71
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:62
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:61
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:62
 msgid "Running in Test Mode. Use -e|--execute to update"
 msgstr ""
 
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:75
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:66
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:71
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:72
 #: ../../src/Module/Cli/UpdateDbCommand.php:91
 msgid "No changes have been made"
 msgstr ""
@@ -8001,7 +8008,21 @@ msgstr ""
 
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:37
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:46
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:47
 msgid "Update Preference Access Level"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:37
+msgid "Update preference values for users"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:40
+#: ../../src/Module/Cli/ExportPlaylistCommand.php:44
+msgid "User ID"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:43
+msgid "Config Preset"
 msgstr ""
 
 #: ../../src/Module/Cli/ArtCleanupCommand.php:43
@@ -8144,10 +8165,6 @@ msgstr ""
 
 #: ../../src/Module/Cli/ExportPlaylistCommand.php:39
 msgid "Export Playlists"
-msgstr ""
-
-#: ../../src/Module/Cli/ExportPlaylistCommand.php:44
-msgid "User ID"
 msgstr ""
 
 #: ../../src/Module/Cli/ExportPlaylistCommand.php:45
