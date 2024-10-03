@@ -213,23 +213,6 @@ switch ($var_name) {
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Config Preset'); ?></td>
-            <td>
-                <select name="preset">
-                    <option value=""></option>
-                    <option value="democratic"><?php echo T_('Democratic'); ?></option>
-                    <option value="localplay"><?php echo T_('Localplay'); ?></option>
-                    <option value="flash"><?php echo T_('Flash'); ?></option>
-                    <option value="stream"><?php echo T_('Stream'); ?></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo T_('Prevent Preset Override'); ?></td>
-            <td><input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
-            </td>
-        </tr>
-        <tr>
             <td><?php echo T_('Clear Stats'); ?></td>
             <td><input type="checkbox" value="1" name="reset_stats" /></td>
         </tr>
