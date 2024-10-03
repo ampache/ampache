@@ -1488,7 +1488,7 @@ class User extends database_object
             $this->getUserKeyGenerator()->generateRssToken($this);
         }
 
-        return $this->rsstoken;
+        return (string)$this->rsstoken;
     }
 
     /**
