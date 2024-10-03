@@ -36,11 +36,12 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
     {
         parent::__construct('admin:updatePreferenceAccessLevel', T_('Update Preference Access Level'));
         $this
+            ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->option(
                 '-l|--level',
                 T_('Access Level') . " ('default' | 'guest' | 'user' | 'content_manager' | 'manager' | 'admin')",
                 'strval',
-                'default'
+                ''
             )
             ->usage('<bold>  admin:updatePreferenceAccessLevel --level admin</end> <comment> ## ' . T_('Update Preference Access Level') . '<eol/>');
     }
@@ -52,18 +53,45 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
         if (!$interactor) {
             return;
         }
-        $level = $this->values()['level'];
+        $dryRun = $this->values()['execute'] === false;
+        $level  = $this->values()['level'];
 
-        if (Preference::set_level($level)) {
+        if ($dryRun === true) {
+            $interactor->info(
+                "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
+                true
+            );
+            if ($level === '') {
+                $interactor->warn(
+                    "\n" . T_('Missing mandatory parameter') . ' -l|--level',
+                    true
+                );
+            }
             $interactor->ok(
-                "\n" . T_('Updated'),
+                "\n" . T_('No changes have been made'),
                 true
             );
         } else {
-            $interactor->error(
-                "\n" . T_('Error'),
-                true
-            );
+            if (
+                $level &&
+                Preference::set_level($level)
+            ) {
+                $interactor->ok(
+                    "\n" . T_('Updated'),
+                    true
+                );
+            } else {
+                if ($level === '') {
+                    $interactor->warn(
+                        "\n" . T_('Missing mandatory parameter') . ' -l|--level',
+                        true
+                    );
+                }
+                $interactor->error(
+                    "\n" . T_('Error'),
+                    true
+                );
+            }
         }
     }
 }
