@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\User\Tracking\UserTrackerInterface;
@@ -82,7 +83,7 @@ final class Handshake3Method
         $user_id = -1;
         // Grab the correct userid
         if (!$username) {
-            $client   = static::getUserRepository()->findByApiKey(trim($passphrase));
+            $client   = self::getUserRepository()->findByApiKey(trim($passphrase));
             $username = false;
         } else {
             $client = User::get_from_username($username);
@@ -98,7 +99,7 @@ final class Handshake3Method
         global $dic;
         $networkAccessChecker = $dic->get(NetworkCheckerInterface::class);
 
-        if ($user_id > 0 && $networkAccessChecker->check(AccessLevelEnum::TYPE_API, $user_id, AccessLevelEnum::LEVEL_GUEST)) {
+        if ($user_id > 0 && $networkAccessChecker->check(AccessTypeEnum::API, $user_id, AccessLevelEnum::GUEST)) {
             // Authentication with user/password, we still need to check the password
             if ($username) {
                 // If the timestamp isn't within 30 minutes sucks to be them
@@ -114,7 +115,7 @@ final class Handshake3Method
                 }
 
                 // Now we're sure that there is an ACL line that matches this user or ALL USERS, pull the user's password and then see what we come out with
-                $realpwd = static::getUserRepository()->retrievePasswordFromUser($client->getId());
+                $realpwd = self::getUserRepository()->retrievePasswordFromUser($client->getId());
 
                 if (!$realpwd) {
                     debug_event(self::class, 'Unable to find user with userid of ' . $user_id, 1);
@@ -155,13 +156,13 @@ final class Handshake3Method
                     Session::destroy($data['apikey']);
                     $token = Session::create($data);
                 } else {
-                    Session::extend($data['apikey'], 'api');
+                    Session::extend($data['apikey'], AccessTypeEnum::API->value);
                     $token = $data['apikey'];
                 }
 
                 // We're about to start. Record this user's IP.
                 if (AmpConfig::get('track_user_ip')) {
-                    static::getUserTracker()->trackIpAddress($client);
+                    self::getUserTracker()->trackIpAddress($client, 'handshake');
                 }
 
                 debug_event(self::class, 'Login Success, passphrase matched', 1);

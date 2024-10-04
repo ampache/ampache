@@ -29,7 +29,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
 final class AccessDeniedException extends ApiMethodException
 {
-    /** @var int */
+    /** @var int $code */
     protected $code = ErrorCodeEnum::ACCESS_DENIED;
 
     protected string $type = 'system';

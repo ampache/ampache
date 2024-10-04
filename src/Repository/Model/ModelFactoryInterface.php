@@ -91,10 +91,6 @@ interface ModelFactoryInterface
         int $privateMessageId
     ): PrivateMessageInterface;
 
-    public function createTvShow(
-        int $tvShowId
-    ): TvShow;
-
     public function createDemocratic(
         int $democraticId
     ): Democratic;

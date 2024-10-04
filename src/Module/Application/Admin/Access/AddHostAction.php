@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessListManagerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Exception\AclItemDuplicationException;
 use Ampache\Module\Authorization\Exception\InvalidEndIpException;
 use Ampache\Module\Authorization\Exception\InvalidIpRangeException;
@@ -76,7 +77,7 @@ final class AddHostAction implements ApplicationActionInterface
     {
         // Make sure we've got a valid form submission
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             !$this->requestParser->verifyForm('add_acl')
         ) {
             throw new AccessDeniedException();
@@ -94,21 +95,21 @@ final class AddHostAction implements ApplicationActionInterface
                 $endIp,
                 $data['name'] ?? '',
                 (int)($data['user'] ?? -1),
-                (int)($data['level'] ?? 0),
-                $data['type'] ?? '',
-                $data['addtype'] ?? ''
+                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                AccessTypeEnum::from($data['type'] ?? 'stream'),
+                AccessTypeEnum::from($data['addtype'] ?? 'stream')
             );
-        } catch (InvalidIpRangeException $e) {
+        } catch (InvalidIpRangeException) {
             AmpError::add('start', T_('IP Address version mismatch'));
             AmpError::add('end', T_('IP Address version mismatch'));
-        } catch (InvalidStartIpException $e) {
+        } catch (InvalidStartIpException) {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (InvalidEndIpException $e) {
+        } catch (InvalidEndIpException) {
             AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (AclItemDuplicationException $e) {
+        } catch (AclItemDuplicationException) {
             $this->logger->critical(
                 'Error: An ACL entry equal to the created one already exists. Not adding duplicate: ' . $startIp . ' - ' . $endIp,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             AmpError::add('general', T_('Duplicate ACL entry defined'));
@@ -119,8 +120,8 @@ final class AddHostAction implements ApplicationActionInterface
                 T_('No Problem'),
                 T_('Your new Access Control List(s) have been created'),
                 sprintf(
-                    '%s/admin/access.php',
-                    $this->configContainer->getWebPath()
+                    '%s/access.php',
+                    $this->configContainer->getWebPath('/admin')
                 )
             );
         } else {

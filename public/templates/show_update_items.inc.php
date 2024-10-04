@@ -36,7 +36,7 @@ $return_id = Catalog::update_single_item($type, $object_id)['object_id'];
 //The target URL has changed so it needs to be updated
 if ($object_id != $return_id) {
     $object_id  = $return_id;
-    $target_url = AmpConfig::get('web_path') . '/' . $type . 's.php?action=show&' . $type . '=' . $object_id;
+    $target_url = AmpConfig::get_web_path() . '/' . $type . 's.php?action=show&' . $type . '=' . $object_id;
 } ?>
 <br />
 <strong><?php echo T_('Update from tags complete'); ?></strong>&nbsp;&nbsp;

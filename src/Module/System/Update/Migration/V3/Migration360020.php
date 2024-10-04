@@ -57,13 +57,13 @@ final class Migration360020 extends AbstractMigration
             }
         }
 
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `catalog` DROP COLUMN `path`, DROP COLUMN `remote_username`, DROP COLUMN `remote_password`",
             "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)",
             "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }
@@ -72,10 +72,12 @@ final class Migration360020 extends AbstractMigration
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Generator {
-        yield 'catalog_local' => "CREATE TABLE IF NOT EXISTS `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-
-        yield 'catalog_remote' => "CREATE TABLE IF NOT EXISTS `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` varchar(255) COLLATE $collation NOT NULL, `username` varchar(255) COLLATE $collation NOT NULL, `password` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        if ($build > 360020) {
+            yield 'catalog_local' => "CREATE TABLE IF NOT EXISTS `catalog_local` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `path` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'catalog_remote' => "CREATE TABLE IF NOT EXISTS `catalog_remote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` varchar(255) COLLATE $collation NOT NULL, `username` varchar(255) COLLATE $collation NOT NULL, `password` varchar(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
     }
 }

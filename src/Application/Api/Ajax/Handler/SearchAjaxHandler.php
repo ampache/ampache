@@ -28,6 +28,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -42,50 +44,38 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
 
-final class SearchAjaxHandler implements AjaxHandlerInterface
+final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private MissingArtistFinderInterface $missingArtistFinder;
-
-    private LabelRepositoryInterface $labelRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        MissingArtistFinderInterface $missingArtistFinder,
-        LabelRepositoryInterface $labelRepository
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private MissingArtistFinderInterface $missingArtistFinder,
+        private LabelRepositoryInterface $labelRepository
     ) {
-        $this->requestParser       = $requestParser;
-        $this->configContainer     = $configContainer;
-        $this->missingArtistFinder = $missingArtistFinder;
-        $this->labelRepository     = $labelRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
         switch ($action) {
             case 'search':
-                $web_path    = AmpConfig::get('web_path');
-                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+                $web_path    = AmpConfig::get_web_path();
+                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP));
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
                 $limit       = $_REQUEST['limit'] ?? 5;
 
                 if ($target == 'anywhere' || $target == 'artist') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'artist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -93,27 +83,28 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $artistid) {
                         $artist    = new Artist($artistid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Artists'),
                             'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
                             'image' => (string)Art::url($artist->id, 'artist', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' && $album_group) || $target == 'album') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'album',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -121,27 +112,28 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumid) {
                         $album     = new Album($albumid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_artist_fullname()),
                             'image' => (string)Art::url($album->id, 'album', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' && !$album_group) || $target == 'album_disk') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'album_disk',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -149,27 +141,28 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumdiskid) {
                         $albumdisk = new AlbumDisk($albumdiskid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
                             'rels' => scrub_out($albumdisk->get_artist_fullname()),
                             'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if ($target == 'anywhere' || $target == 'title') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'song',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -177,31 +170,32 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($sres as $songid) {
                         $song       = new Song($songid);
                         $has_art    = Art::has_db($song->id, 'song');
                         $art_object = ($show_song_art && $has_art) ? $song->id : $song->album;
                         $art_type   = ($show_song_art && $has_art) ? 'song' : 'album';
-                        $results[]  = array(
+                        $results[]  = [
                             'type' => T_('Songs'),
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_artist_fullname()),
                             'image' => (string)Art::url($art_object, $art_type, null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if ($target == 'anywhere' || $target == 'playlist') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'playlist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -209,27 +203,28 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $playlistid) {
                         $playlist  = new Playlist($playlistid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Playlists'),
                             'link' => $web_path . '/playlist.php?action=show&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
                             'value' => $playlist->get_fullname(),
                             'rels' => '',
                             'image' => '',
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' || $target == 'label') && AmpConfig::get('label')) {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'label',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
 
                     // Limit not reached, new search with another operator
@@ -238,18 +233,19 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $labelid) {
                         $label = $this->labelRepository->findById($labelid);
 
                         if ($label !== null) {
-                            $results[] = array(
+                            $results[] = [
                                 'type' => T_('Labels'),
                                 'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
                                 'label' => $label->name,
                                 'value' => $label->name,
                                 'rels' => '',
                                 'image' => (string)Art::url($label->getId(), 'label', null, 10),
-                            );
+                            ];
                         }
                     }
                 }
@@ -258,14 +254,14 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     $sres  = $this->missingArtistFinder->find($search);
                     $count = 0;
                     foreach ($sres as $artist) {
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Missing Artists'),
                             'link' => $web_path . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
                             'label' => scrub_out($artist['name']),
                             'value' => scrub_out($artist['name']),
                             'rels' => '',
                             'image' => '',
-                        );
+                        ];
                         $count++;
 
                         if ($count >= $limit) {
@@ -275,13 +271,13 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($target == 'user' && AmpConfig::get('sociable')) {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'user',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'username',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
 
                     // Limit not reached, new search with another operator
@@ -290,34 +286,29 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $user_id) {
                         $user      = new User($user_id);
                         $avatar    = $user->get_avatar();
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Users'),
                             'link' => '',
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
                             'image' => $avatar['url'] ?? '',
-                        );
+                        ];
                     }
                 }
 
                 break;
             case 'search_random':
-                if (!Access::check('interface', 75)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
-
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
+                $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 
         // We always do this

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Module\Util\Ui;
 
+/** @var string $configfile */
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

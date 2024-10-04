@@ -67,11 +67,9 @@ final class SmartplaylistQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`search`.`id`";
+    protected string $select = "`search`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `search` ";
+    protected string $base = "SELECT %%SELECT%% FROM `search` ";
 
     /**
      * get_select

@@ -74,18 +74,16 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         }
         $this->logger->debug(
             "gather_musicbrainz Album MBID: " . $data['mb_albumid'],
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        $includes = array(
-            'url-rels'
-        );
+        $includes = ['url-rels'];
         try {
             $release = $this->musicBrainz->lookup('release', $data['mb_albumid'], $includes);
         } catch (Exception $error) {
             $this->logger->warning(
                 "gather_musicbrainz exception: " . $error,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return $images;
@@ -96,7 +94,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
         if ($asin) {
             $this->logger->debug(
                 "gather_musicbrainz Found ASIN: " . $asin,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $base_urls = [
@@ -112,7 +110,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
 
                 $this->logger->debug(
                     "gather_musicbrainz Evaluating Amazon URL: " . $url,
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 $request = Requests::get($url, [], Core::requests_options());
@@ -121,7 +119,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
 
                     $this->logger->debug(
                         "gather_musicbrainz Amazon URL added: " . $url,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $images[] = [
                         'url' => $url,
@@ -195,19 +193,19 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
             'imguri' => '$matches[1]',
             'releaseuri' => '',
         ];
-        foreach ($release->relations ?? array() as $ar) {
+        foreach ($release->relations ?? [] as $ar) {
             $arurl = $ar->url->resource;
 
             $this->logger->debug(
                 "gather_musicbrainz Found URL AR: " . $arurl,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             foreach ($coverartsites as $casite) {
                 if (strpos($arurl, $casite['domain']) !== false) {
                     $this->logger->debug(
                         "gather_musicbrainz Matched coverart site: " . $casite['name'],
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     if (preg_match($casite['regexp'], $arurl, $matches)) {
@@ -216,7 +214,7 @@ final class MusicbrainzCollectorModule implements CollectorModuleInterface
 
                         $this->logger->debug(
                             "gather_musicbrainz Generated URL added: " . $url,
-                            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                            [LegacyLogger::CONTEXT_TYPE => self::class]
                         );
 
                         $images[] = [

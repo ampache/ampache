@@ -30,6 +30,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -61,7 +62,7 @@ final class EditAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
@@ -69,6 +70,9 @@ final class EditAction implements ApplicationActionInterface
         $licenseId   = (int) ($data['license_id'] ?? 0);
         $name        = (string) ($data['name'] ?? '');
         $description = (string) ($data['description'] ?? '');
+        $order       = (isset($data['order']) && is_numeric($data['order']))
+            ? (int)$data['order']
+            : null;
 
         $url = (string) filter_var($data['external_link'] ?? '', FILTER_SANITIZE_URL);
 
@@ -89,13 +93,14 @@ final class EditAction implements ApplicationActionInterface
         $license->setName($name)
             ->setDescription($description)
             ->setExternalLink($url)
+            ->setOrder($order)
             ->save();
 
         $this->ui->showHeader();
         $this->ui->showConfirmation(
             T_('No Problem'),
             $text,
-            sprintf('%s/admin/license.php', $this->configContainer->getWebPath())
+            sprintf('%s/license.php', $this->configContainer->getWebPath('/admin'))
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -60,18 +61,15 @@ final class ShowImportPodcastsAction implements ApplicationActionInterface
             return null;
         }
 
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
-
 
         $this->ui->showHeader();
         $this->ui->showBoxTop(T_('Import Podcasts'), 'box box_add_podcast');
         $this->ui->show(
             'show_import_podcasts.inc.php',
-            [
-                'catalogId' => 0,
-            ]
+            ['catalogId' => 0]
         );
         $this->ui->showBoxBottom();
         $this->ui->showQueryStats();

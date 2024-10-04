@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Module\System\Core;
@@ -45,7 +46,11 @@ final class ArtSizeCalculationCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
 
         $interactor->white(
             T_('Started art size calculation'),
@@ -61,7 +66,7 @@ final class ArtSizeCalculationCommand extends Command
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $source = Art::get_from_source(array('file' => $folder . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
+                $source = Art::get_from_source(['file' => $folder . 'art-' . $row['size'] . '.jpg'], $row['object_type']);
             } else {
                 $source = $row['image'];
             }

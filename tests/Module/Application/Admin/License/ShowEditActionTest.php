@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\License;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\LicenseRepositoryInterface;
 use Ampache\Repository\Model\License;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -69,7 +70,7 @@ class ShowEditActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -89,7 +90,7 @@ class ShowEditActionTest extends MockeryTestCase
         $webPath   = 'some-path';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -118,7 +119,7 @@ class ShowEditActionTest extends MockeryTestCase
                 'show_edit_license.inc.php',
                 [
                     'license' => $license,
-                    'webPath' => $webPath,
+                    'adminPath' => $webPath,
                 ]
             )
             ->once();
@@ -147,7 +148,7 @@ class ShowEditActionTest extends MockeryTestCase
         static::expectException(ObjectNotFoundException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 

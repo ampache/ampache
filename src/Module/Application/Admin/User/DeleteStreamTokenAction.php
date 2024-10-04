@@ -68,7 +68,10 @@ final class DeleteStreamTokenAction extends AbstractUserAction
             return null;
         }
 
-        if ($this->requestParser->verifyForm('delete_streamtoken') === false) {
+        if (
+            check_http_referer() === false ||
+            $this->requestParser->verifyForm('delete_streamtoken') === false
+        ) {
             throw new AccessDeniedException();
         }
 

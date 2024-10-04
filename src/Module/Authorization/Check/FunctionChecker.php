@@ -27,6 +27,7 @@ namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -50,16 +51,16 @@ final class FunctionChecker implements FunctionCheckerInterface
     /**
      * This checks if specific functionality is enabled.
      */
-    public function check(string $type): bool
+    public function check(AccessFunctionEnum $function): bool
     {
-        switch ($type) {
-            case AccessLevelEnum::FUNCTION_DOWNLOAD:
+        switch ($function) {
+            case AccessFunctionEnum::FUNCTION_DOWNLOAD:
                 return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
-            case AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD:
+            case AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD:
                 if (!function_exists('gzcompress')) {
                     $this->logger->warning(
                         'ZLIB extension not loaded, batch download disabled',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     return false;
@@ -68,12 +69,10 @@ final class FunctionChecker implements FunctionCheckerInterface
                 /** @var User $user */
                 $user = Core::get_global('user');
 
-                if (!$user) {
-                    return false;
-                }
                 if (
+                    $user instanceof User &&
                     $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) === true &&
-                    $user->has_access(AccessLevelEnum::LEVEL_GUEST)
+                    $user->has_access(AccessLevelEnum::GUEST)
                 ) {
                     return $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DOWNLOAD);
                 }

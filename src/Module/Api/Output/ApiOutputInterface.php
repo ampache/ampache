@@ -103,7 +103,6 @@ interface ApiOutputInterface
         int $offset = 0
     );
 
-
     /**
      * This generates a standard JSON Success message
      * nothing fancy here...

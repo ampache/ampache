@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-/** @var array $wartists */
+/** @var list<array{mbid: string, name: string}> $wartists */
 
 Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
@@ -38,7 +38,7 @@ Ui::show_box_top(T_('Missing Artists'), 'info-box'); ?>
     <tbody>
         <?php
         if (!empty($wartists)) {
-            $web_path = (string)AmpConfig::get('web_path', '');
+            $web_path = AmpConfig::get_web_path();
             foreach ($wartists as $libitem) { ?>
         <tr id="wartist_<?php echo $libitem['mbid']; ?>">
             <td class="cel_artist">

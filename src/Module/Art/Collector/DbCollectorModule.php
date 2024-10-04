@@ -38,9 +38,7 @@ final class DbCollectorModule implements CollectorModuleInterface
         array $data = []
     ): array {
         if ($art->has_db_info()) {
-            return [
-                'db' => true
-            ];
+            return ['db' => true];
         }
 
         return [];

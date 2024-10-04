@@ -38,24 +38,18 @@ use PDO;
  *
  * Table: `ip_history`
  */
-final class IpHistoryRepository implements IpHistoryRepositoryInterface
+final readonly class IpHistoryRepository implements IpHistoryRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Generator<array{ip: string, date: DateTimeInterface}>
+     * @return Generator<array{ip: string, date: DateTimeImmutable, agent: string, action: string}>
      */
     public function getHistory(
         User $user,
@@ -70,7 +64,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
 
         $result = $this->connection->query(
             sprintf(
-                'SELECT `ip`, `date`, `agent` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
+                'SELECT `ip`, `date`, `agent`, `action` FROM `ip_history` WHERE `user` = ? %s GROUP BY `ip`, `date`, `agent` ORDER BY `date` DESC',
                 $where_sql,
             ),
             $params
@@ -81,6 +75,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
                 'ip' => (string) inet_ntop($row['ip']),
                 'date' => new DateTimeImmutable(sprintf('@%d', $row['date'])),
                 'agent' => $row['agent'],
+                'action' => $row['action'],
             ];
         }
     }
@@ -92,9 +87,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $result = $this->connection->fetchOne(
             'SELECT `ip` FROM `ip_history` WHERE `user` = ? ORDER BY `date` DESC LIMIT 1',
-            [
-                $user->getId(),
-            ]
+            [$user->getId()]
         );
 
         if ($result !== false) {
@@ -111,9 +104,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `ip_history` WHERE `date` < `date` - ?',
-            [
-                86400 * (int) $this->configContainer->get('user_ip_cardinality')
-            ]
+            [86400 * (int) $this->configContainer->get('user_ip_cardinality')]
         );
     }
 
@@ -124,19 +115,21 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
         User $user,
         string $ipAddress,
         string $userAgent,
-        DateTimeInterface $date
+        DateTimeInterface $date,
+        string $action
     ): void {
         if ($ipAddress !== '') {
             $ipAddress = inet_pton($ipAddress);
         }
 
         $this->connection->query(
-            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`) VALUES (?, ?, ?, ?)',
+            'INSERT INTO `ip_history` (`ip`, `user`, `date`, `agent`, `action`) VALUES (?, ?, ?, ?, ?)',
             [
                 $ipAddress,
                 $user->getId(),
                 $date->getTimestamp(),
-                $userAgent
+                $userAgent,
+                $action
             ]
         );
     }

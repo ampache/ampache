@@ -108,7 +108,7 @@ final class IndexMethod
             $browse->set_type($type);
         }
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
         if ($type === 'catalog') {
             $browse->set_filter('user', $user->getId());

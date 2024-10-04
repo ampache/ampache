@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\PrivateMessageInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
@@ -68,7 +69,7 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -83,7 +84,7 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -105,7 +106,7 @@ class ShowActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -142,7 +143,7 @@ class ShowActionTest extends MockeryTestCase
         $message    = $this->mock(PrivateMessageInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
         $gatekeeper->shouldReceive('getUserId')
@@ -187,7 +188,7 @@ class ShowActionTest extends MockeryTestCase
         $message    = $this->mock(PrivateMessageInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
         $gatekeeper->shouldReceive('getUserId')

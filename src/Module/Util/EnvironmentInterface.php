@@ -115,6 +115,8 @@ interface EnvironmentInterface
 
     public function check_dependencies_folder(): bool;
 
+    public function isDevJS(string $entry): bool;
+
     public function isCli(): bool;
 
     public function isSsl(): bool;

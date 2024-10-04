@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\Access;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\Access;
@@ -71,7 +72,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -84,7 +85,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -116,9 +117,10 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
         $accessId   = 666;
         $accessName = 'some-name';
+        $accessType = 'some-type';
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 
@@ -140,7 +142,11 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
             ->with(
                 'Are You Sure?',
                 /* HINT: ACL Name */
-                sprintf('This will permanently delete the ACL "%s"', $accessName),
+                sprintf(
+                    'This will permanently delete the %s ACL "%s"',
+                    $accessType,
+                    $accessName
+                ),
                 sprintf('admin/access.php?action=delete_record&access_id=%d', $accessId),
                 1,
                 'delete_access'
@@ -159,6 +165,7 @@ class ShowDeleteRecordActionTest extends MockeryTestCase
 
         $access->id   = $accessId;
         $access->name = $accessName;
+        $access->type = $accessType;
 
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)

@@ -31,14 +31,10 @@ use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 
-final class ArtistRepository implements ArtistRepositoryInterface
+final readonly class ArtistRepository implements ArtistRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -62,15 +58,15 @@ final class ArtistRepository implements ArtistRepositoryInterface
         int $userId,
         ?int $count = 1
     ): array {
-        $results = array();
+        $results = [];
         $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $userId > 0) {
-            $sql .= "AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = 'artist' AND `rating`.`rating` <= $rating_filter AND `rating`.`user` = " . $userId . ") ";
+            $sql .= sprintf('AND `artist_map`.`artist_id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <= %d AND `rating`.`user` = ', $rating_filter) . $userId . ") ";
         }
 
-        $sql .= "ORDER BY RAND() LIMIT " . (string)$count;
+        $sql .= "ORDER BY RAND() LIMIT " . $count;
         $db_results = Dba::read($sql);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -91,7 +87,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
         $this->connection->query('DELETE FROM `artist_map` WHERE `artist_id` NOT IN (SELECT `id` FROM `artist`);');
 
         // delete the artists
-        $this->connection->query('DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `clip`.`artist` AS `artist_id` FROM `clip` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);');
+        $this->connection->query('DELETE FROM `artist` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `artist` LEFT JOIN (SELECT DISTINCT `song`.`artist` AS `artist_id` FROM `song` UNION SELECT DISTINCT `album`.`album_artist` AS `artist_id` FROM `album` UNION SELECT DISTINCT `wanted`.`artist` AS `artist_id` FROM `wanted` UNION SELECT DISTINCT `artist_id` FROM `artist_map`) AS `artist_map` ON `artist_map`.`artist_id` = `artist`.`id` WHERE `artist_map`.`artist_id` IS NULL) AS `null_artist`);');
     }
 
     /**

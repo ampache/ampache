@@ -68,7 +68,7 @@ final class TimelineMethod
 
         if (!empty($username)) {
             if (Preference::get_by_user($user->id, 'allow_personal_info_recent')) {
-                $results = static::getUseractivityRepository()->getActivities(
+                $results = self::getUseractivityRepository()->getActivities(
                     $user->getId(),
                     $limit,
                     $since

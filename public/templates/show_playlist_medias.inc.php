@@ -25,11 +25,14 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\User;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
+
+global $dic;
+$libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 
 /** @var Browse $browse */
 /** @var Playlist $playlist */
@@ -38,7 +41,7 @@ use Ampache\Module\Util\Ui;
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
 $playlist_id  = $playlist->id ?? '';
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $seconds      = $browse->duration;
 $duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
@@ -73,17 +76,17 @@ $count     = 1; ?>
                 if (!is_array($object)) {
                     $object = (array) $object;
                 }
-                $object_type = $object['object_type'];
-                if (InterfaceImplementationChecker::is_library_item($object_type)) {
-                    $className = ObjectTypeToClassNameMapper::map($object_type);
-                    /** @var Ampache\Repository\Model\library_item $libitem */
-                    $libitem = new $className($object['object_id']);
-                    if ($libitem->isNew()) {
-                        continue;
-                    }
-                    if (method_exists($libitem, 'format')) {
-                        $libitem->format();
-                    }
+                $libtype = (is_string($object['object_type']))
+                    ? LibraryItemEnum::tryFrom($object['object_type'])
+                    : $object['object_type'];
+                $libitem = $libraryItemLoader->load(
+                    $libtype,
+                    $object['object_id'],
+                );
+                if ($libitem !== null) {
+                    $libitem->format();
+
+                    $object_type    = $libtype?->value;
                     $playlist_track = (int)($object['track'] ?? $count); ?>
                     <tr id="track_<?php echo($object['track_id'] ?? $count); ?>">
                         <?php require Ui::find_template('show_playlist_media_row.inc.php'); ?>

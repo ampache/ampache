@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -40,7 +41,7 @@ final class Migration370009 extends AbstractMigration
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `video` ADD COLUMN `release_date` date NULL AFTER `enabled`, ADD COLUMN `played` tinyint(1) unsigned DEFAULT '0' NOT NULL AFTER `enabled`",
             "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `season_number` int(11) unsigned NOT NULL, `tvshow` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
@@ -48,24 +49,30 @@ final class Migration370009 extends AbstractMigration
             "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) unsigned NOT NULL, `location` varchar(256) NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }
 
-        $this->updatePreferences('allow_video', 'Allow video features', '1', 75, 'integer', 'options');
+        $this->updatePreferences('allow_video', 'Allow video features', '1', AccessLevelEnum::MANAGER->value, 'integer', 'options');
     }
 
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Generator {
-        yield 'tvshow' => "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        yield 'tvshow_season' => "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `season_number` int(11) UNSIGNED NOT NULL, `tvshow` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        yield 'tvshow_episode' => "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `season` int(11) UNSIGNED NOT NULL, `episode_number` int(11) UNSIGNED NOT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        yield 'movie' => "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        yield 'personal_video' => "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) UNSIGNED NOT NULL, `location` varchar(256) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
-        yield 'clip' => "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) UNSIGNED NOT NULL, `artist` int(11) DEFAULT NULL, `song` int(11) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        if (
+            $build > 370009 &&
+            $build < 700011
+        ) {
+            yield 'tvshow' => "CREATE TABLE IF NOT EXISTS `tvshow` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'tvshow_season' => "CREATE TABLE IF NOT EXISTS `tvshow_season` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `season_number` int(11) UNSIGNED NOT NULL, `tvshow` int(11) UNSIGNED NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'tvshow_episode' => "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `season` int(11) UNSIGNED NOT NULL, `episode_number` int(11) UNSIGNED NOT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'movie' => "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) UNSIGNED NOT NULL, `original_name` varchar(80) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, `year` int(11) UNSIGNED DEFAULT NULL, `prefix` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'personal_video' => "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) UNSIGNED NOT NULL, `location` varchar(256) COLLATE $collation DEFAULT NULL, `summary` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+            yield 'clip' => "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) UNSIGNED NOT NULL, `artist` int(11) DEFAULT NULL, `song` int(11) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
     }
 }

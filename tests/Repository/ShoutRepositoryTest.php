@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use DateTime;
 use PDO;
@@ -44,22 +45,26 @@ class ShoutRepositoryTest extends TestCase
 
     private LoggerInterface&MockObject $logger;
 
+    private UserRepositoryInterface&MockObject $userRepository;
+
     private ShoutRepository $subject;
 
     protected function setUp(): void
     {
-        $this->connection   = $this->createMock(DatabaseConnectionInterface::class);
-        $this->logger       = $this->createMock(LoggerInterface::class);
+        $this->connection     = $this->createMock(DatabaseConnectionInterface::class);
+        $this->logger         = $this->createMock(LoggerInterface::class);
+        $this->userRepository = $this->createMock(UserRepositoryInterface::class);
 
         $this->subject = new ShoutRepository(
             $this->connection,
+            $this->userRepository,
             $this->logger,
         );
     }
 
     public function testGetByYieldsData(): void
     {
-        $objectType = 'some-object-type';
+        $objectType = LibraryItemEnum::SONG;
         $objectId   = 42;
 
         $shoutBox  = $this->createMock(Shoutbox::class);
@@ -69,13 +74,20 @@ class ShoutRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT * FROM `user_shout` WHERE `object_type` = ? AND `object_id` = ? ORDER BY `sticky`, `date` DESC',
-                [$objectType, $objectId]
+                [$objectType->value, $objectId]
             )
             ->willReturn($statement);
 
         $statement->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
+            ->with(
+                PDO::FETCH_CLASS,
+                Shoutbox::class,
+                [
+                    $this->subject,
+                    $this->userRepository,
+                ]
+            );
         $statement->expects(static::exactly(2))
             ->method('fetch')
             ->willReturn($shoutBox, false);
@@ -102,7 +114,7 @@ class ShoutRepositoryTest extends TestCase
 
         $result->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn(false);
@@ -129,7 +141,7 @@ class ShoutRepositoryTest extends TestCase
 
         $result->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
+            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject, $this->userRepository]);
         $result->expects(static::once())
             ->method('fetch')
             ->willReturn($shout);
@@ -229,7 +241,7 @@ class ShoutRepositoryTest extends TestCase
         $text       = 'some-text';
         $sticky     = true;
         $objectId   = 123;
-        $objectType = 'snafu';
+        $objectType = LibraryItemEnum::ART;
         $offset     = 567;
 
         $shout->expects(static::once())
@@ -267,7 +279,7 @@ class ShoutRepositoryTest extends TestCase
                     $text,
                     (int) $sticky,
                     $objectId,
-                    $objectType,
+                    $objectType->value,
                     $offset
                 ]
             );
@@ -291,7 +303,7 @@ class ShoutRepositoryTest extends TestCase
         $text       = 'some-text';
         $sticky     = true;
         $objectId   = 123;
-        $objectType = 'snafu';
+        $objectType = LibraryItemEnum::TAG_HIDDEN;
         $offset     = 567;
 
         $shout->expects(static::once())
@@ -332,7 +344,7 @@ class ShoutRepositoryTest extends TestCase
                     $text,
                     (int) $sticky,
                     $objectId,
-                    $objectType,
+                    $objectType->value,
                     $offset,
                     $shoutId
                 ]
@@ -383,14 +395,28 @@ class ShoutRepositoryTest extends TestCase
 
         $result1->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
+            ->with(
+                PDO::FETCH_CLASS,
+                Shoutbox::class,
+                [
+                    $this->subject,
+                    $this->userRepository,
+                ]
+            );
         $result1->expects(static::once())
             ->method('fetch')
             ->willReturn($shout1, false);
 
         $result2->expects(static::once())
             ->method('setFetchMode')
-            ->with(PDO::FETCH_CLASS, Shoutbox::class, [$this->subject]);
+            ->with(
+                PDO::FETCH_CLASS,
+                Shoutbox::class,
+                [
+                    $this->subject,
+                    $this->userRepository,
+                ]
+            );
         $result2->expects(static::exactly(2))
             ->method('fetch')
             ->willReturn($shout2, false);
@@ -422,7 +448,7 @@ class ShoutRepositoryTest extends TestCase
         $this->runFindByIdTrait(
             'user_shout',
             Shoutbox::class,
-            [$this->subject]
+            [$this->subject, $this->userRepository]
         );
     }
 }

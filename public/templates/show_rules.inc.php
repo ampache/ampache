@@ -42,7 +42,7 @@ if (isset($playlist)) {
     $logic_operator = Core::get_request('operator');
 }
 $logic_operator = strtolower((string)$logic_operator);
-$web_path       = AmpConfig::get('web_path'); ?>
+$web_path       = AmpConfig::get_web_path(); ?>
 <script src="<?php echo $web_path; ?>/lib/javascript/search.js"></script>
 <script src="<?php echo $web_path; ?>/lib/javascript/search-data.php?type=<?php echo $currentType; ?>"></script>
 
@@ -65,7 +65,7 @@ $web_path       = AmpConfig::get('web_path'); ?>
     <tr id="rules_addrowbutton">
         <td>
             <a id="addrowbutton" href="javascript:void(0)">
-                <?php echo Ui::get_icon('add'); ?>
+                <?php echo Ui::get_material_symbol('add_circle'); ?>
             <?php echo T_('Add Another Rule'); ?>
             </a>
             <script>$('#addrowbutton').on('click', SearchRow.add);</script>

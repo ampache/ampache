@@ -32,9 +32,8 @@ abstract class AbstractCatalogUpdater
         $string = str_replace('<br />', "\n", $string);
         $string = strip_tags($string);
         $string = html_entity_decode($string);
-        $string = preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
-        $string = trim($string);
+        $string = (string)preg_replace("/[\r\n]+[\s\t]*[\r\n]+/", "\n", $string);
 
-        return $string;
+        return trim($string);
     }
 }

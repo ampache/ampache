@@ -87,11 +87,9 @@ final class AlbumQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`album`.`id`";
+    protected string $select = "`album`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% AS `id` FROM `album` ";
+    protected string $base = "SELECT %%SELECT%% AS `id` FROM `album` ";
 
     /**
      * get_select

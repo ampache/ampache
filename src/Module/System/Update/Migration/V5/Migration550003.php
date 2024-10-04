@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration550003 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('demo_use_search', 'Democratic - Use smartlists for base playlist', '0', 25, 'boolean', 'playlist');
+        $this->updatePreferences('demo_use_search', 'Democratic - Use smartlists for base playlist', '0', AccessLevelEnum::USER->value, 'boolean', 'playlist');
     }
 }

@@ -144,13 +144,14 @@ class UpdaterTest extends TestCase
             ->method('runTableCheck')
             ->with(
                 static::isType('iterable'),
-                true
+                true,
+                600000
             )
             ->willReturn(new ArrayIterator([$table]));
 
         static::assertSame(
             $table,
-            $this->subject->checkTables(true)->current()
+            $this->subject->checkTables(true, 600000)->current()
         );
     }
 }

@@ -41,6 +41,7 @@ final class LicenseQuery implements QueryInterface
         'starts_with',
         'not_starts_with',
         'not_like',
+        'hidden',
     ];
 
     /** @var string[] $sorts */
@@ -49,13 +50,12 @@ final class LicenseQuery implements QueryInterface
         'title',
         'name',
         'external_link',
+        'order',
     ];
 
-    /** @var string */
-    protected $select = "`license`.`id`";
+    protected string $select = "`license`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `license` ";
+    protected string $base = "SELECT %%SELECT%% FROM `license` ";
 
     /**
      * get_select
@@ -135,6 +135,11 @@ final class LicenseQuery implements QueryInterface
             case 'not_starts_with':
                 $filter_sql = " `license`.`name` NOT LIKE '" . Dba::escape($value) . "%' AND ";
                 break;
+            case 'hidden':
+                $filter_sql = ($value)
+                    ? " `license`.`order` = 0 AND "
+                    : " `license`.`order` != 0 AND ";
+                break;
         }
 
         return $filter_sql;
@@ -158,6 +163,7 @@ final class LicenseQuery implements QueryInterface
                 break;
             case 'id':
             case 'external_link':
+            case 'order':
                 $sql = "`license`.`$field`";
                 break;
             default:

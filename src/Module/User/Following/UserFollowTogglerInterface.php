@@ -23,7 +23,15 @@
 
 namespace Ampache\Module\User\Following;
 
+use Ampache\Repository\Model\User;
+
 interface UserFollowTogglerInterface
 {
-    public function toggle(int $userId, int $followingUserId): void;
+    /**
+     * Let a user (un)follow another user
+     */
+    public function toggle(
+        User $user,
+        User $followingUser
+    ): void;
 }

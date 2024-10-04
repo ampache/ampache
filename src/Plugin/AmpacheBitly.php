@@ -25,24 +25,32 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheBitly implements AmpachePluginInterface
+class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 {
     public string $name        = 'Bit.ly';
+
     public string $categories  = 'shortener';
+
     public string $description = 'URL shorteners on shared links with Bit.ly';
+
     public string $url         = 'http://bitly.com';
+
     public string $version     = '000003';
+
     public string $min_ampache = '360037';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $bitly_token;
+
     private $bitly_group_guid;
 
     /**
@@ -59,15 +67,11 @@ class AmpacheBitly implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('bitly_token', T_('Bit.ly Token'), '', 75, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('bitly_token', T_('Bit.ly Token'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        if (!Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', 75, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('bitly_group_guid', T_('Bit.ly Group GUID'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -100,10 +104,9 @@ class AmpacheBitly implements AmpachePluginInterface
     }
 
     /**
-     * @param string $url
-     * @return string|false
+     *shortener
      */
-    public function shortener($url)
+    public function shortener(string $url): ?string
     {
         if (empty($this->bitly_token) || empty($this->bitly_group_guid)) {
             debug_event('bitly.plugin', 'Bit.ly Token or Group GUID missing', 3);
@@ -111,14 +114,14 @@ class AmpacheBitly implements AmpachePluginInterface
             return '';
         }
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Bearer ' . $this->bitly_token,
             'Content-Type' => 'application/json'
-        );
-        $data = array(
+        ];
+        $data = [
             'group_guid' => $this->bitly_group_guid,
             'long_url' => $url,
-        );
+        ];
         $apiurl = 'https://api-ssl.bitly.com/v4/shorten';
 
         try {
@@ -141,39 +144,39 @@ class AmpacheBitly implements AmpachePluginInterface
                 return $result->link;
             }
 
-            return false;
-        } catch (Exception $error) {
-            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $error->getMessage(), 1);
+            return null;
+        } catch (Exception $exception) {
+            debug_event('bitly.plugin', 'Bit.ly api http exception: ' . $exception->getMessage(), 1);
 
-            return false;
+            return null;
         }
     }
 
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['bitly_token'])) || !strlen(trim($data['bitly_group_guid']))) {
-            $data                     = array();
+        if (!strlen(trim((string) $data['bitly_token'])) || !strlen(trim((string) $data['bitly_group_guid']))) {
+            $data                     = [];
             $data['bitly_token']      = Preference::get_by_user(-1, 'bitly_token');
             $data['bitly_group_guid'] = Preference::get_by_user(-1, 'bitly_group_guid');
         }
 
-        if (strlen(trim($data['bitly_token']))) {
-            $this->bitly_token = trim($data['bitly_token']);
+        if (strlen(trim((string) $data['bitly_token'])) !== 0) {
+            $this->bitly_token = trim((string) $data['bitly_token']);
         } else {
             debug_event('bitly.plugin', 'No Bit.ly Token, shortener skipped', 3);
 
             return false;
         }
-        if (strlen(trim($data['bitly_group_guid']))) {
-            $this->bitly_group_guid = trim($data['bitly_group_guid']);
+
+        if (strlen(trim((string) $data['bitly_group_guid'])) !== 0) {
+            $this->bitly_group_guid = trim((string) $data['bitly_group_guid']);
         } else {
             debug_event('bitly.plugin', 'No Bit.ly Group GUID, shortener skipped', 3);
 

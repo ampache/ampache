@@ -115,7 +115,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'SELECT `podcast_episode`.`id` FROM `podcast_episode` WHERE `podcast_episode`.`podcast` = ? AND `podcast_episode`.`state` = ? ORDER BY `podcast_episode`.`pubdate` DESC',
-                [$podcastId, $stateFilter],
+                [$podcastId, $stateFilter->value],
             )
             ->willReturn($result);
 
@@ -264,7 +264,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
                 [
                     $podcastId,
                     $lastSyncDate->getTimestamp(),
-                    PodcastEpisodeStateEnum::PENDING
+                    PodcastEpisodeStateEnum::PENDING->value
                 ]
             )
             ->willReturn($result);
@@ -326,7 +326,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
                 [
                     $podcastId,
                     $lastSyncDate->getTimestamp(),
-                    PodcastEpisodeStateEnum::PENDING
+                    PodcastEpisodeStateEnum::PENDING->value
                 ]
             )
             ->willReturn($result);
@@ -375,7 +375,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
     {
         $episode = $this->createMock(Podcast_Episode::class);
 
-        $state     = 'some-state';
+        $state     = PodcastEpisodeStateEnum::PENDING;
         $episodeId = 666;
 
         $episode->expects(static::once())
@@ -386,7 +386,7 @@ class PodcastEpisodeRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'UPDATE `podcast_episode` SET `state` = ? WHERE `id` = ?',
-                [$state, $episodeId]
+                [$state->value, $episodeId]
             );
 
         $this->subject->updateState($episode, $state);

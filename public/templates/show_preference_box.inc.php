@@ -28,13 +28,15 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\UiInterface;
 
 /** @var UiInterface $ui */
 /** @var array<string, mixed> $preferences */
 
 $is_system = ($preferences['title'] === 'System');
-$is_admin  = (Access::check('interface', 100) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')); ?>
+$is_admin  = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) && (array_key_exists('action', $_REQUEST) && $_REQUEST['action'] == 'admin')); ?>
 <h4><?php echo T_($preferences['title']); ?></h4>
 <table class="tabledata striped-rows">
 <colgroup>
@@ -67,14 +69,14 @@ foreach ($preferences['prefs'] as $pref) {
         $lastsubcat = $pref['subcategory'];
         $fsubcat    = $lastsubcat;
         if (!empty($fsubcat)) { ?>
-                <tr><td colspan="4"><h5><?php echo ucwords(T_($fsubcat)); ?></h5></td></tr>
+                <tr><td colspan="4"><h4><?php echo ucwords(T_($fsubcat)); ?></h4></td></tr>
                 <?php
         }
     } ?>
         <tr>
             <td class="cel_preference"><?php echo T_($pref['description']); ?></td>
             <td class="cel_value">
-                <?php echo $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
+                <?php $ui->createPreferenceInput($pref['name'], $pref['value']); ?>
             </td>
             <?php if ($is_admin) {
                 if (!$is_system) { ?>

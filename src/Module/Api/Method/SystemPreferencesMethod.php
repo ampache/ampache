@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Xml_Data;
@@ -46,7 +48,7 @@ final class SystemPreferencesMethod
      */
     public static function system_preferences(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $results = ['preference' => self::getPreferenceRepository()->getAll()];

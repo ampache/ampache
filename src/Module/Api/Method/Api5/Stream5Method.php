@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api5;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Random;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -49,7 +50,7 @@ final class Stream5Method
      *
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song', 'podcast_episode', 'search', 'playlist', 'podcast'
-     * bitrate = (integer) max bitrate for transcoding // Song only
+     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb) // Song only
      * format  = (string) 'mp3', 'ogg', etc use 'raw' to skip transcoding // Song only
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
@@ -87,19 +88,19 @@ final class Stream5Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast_episode' || $type == 'podcast') {
             $media = new Podcast_Episode($object_id);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'search' || $type == 'playlist') {
             $song_id = Random::get_single_song($type, $user, $object_id);
             $media   = new Song($song_id);
-            $url     = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url     = $media->play_url($params, AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

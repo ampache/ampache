@@ -48,7 +48,7 @@ final class Flag4Method
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      */
@@ -71,7 +71,7 @@ final class Flag4Method
             $user_id = $user->id;
         }
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
             Api4::message('error', T_('Incorrect object type') . ' ' . $type, '401', $input['api_format']);
 
             return false;

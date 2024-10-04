@@ -29,8 +29,11 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
 /**
@@ -60,12 +63,12 @@ final class LocalplayMethod
             return false;
         }
         // localplay is actually meant to be behind permissions
-        $level = AmpConfig::get('localplay_level', 100);
-        if (!Api::check_access('localplay', $level, $user->id, self::ACTION, $input['api_format'])) {
+        $level = AccessLevelEnum::from((int) AmpConfig::get('localplay_level', AccessLevelEnum::ADMIN->value));
+        if (!Api::check_access(AccessTypeEnum::LOCALPLAY, $level, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         // Load their Localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
             Api::error('Unable to connect to localplay controller', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'account', $input['api_format']);
 
@@ -78,8 +81,9 @@ final class LocalplayMethod
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = $input['type'] ? (string) $input['type'] : 'Song';
-                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+
+                if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api::error('Enable: video', ErrorCodeEnum::ACCESS_DENIED, self::ACTION, 'system', $input['api_format']);
 
                     return false;

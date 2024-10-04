@@ -34,7 +34,7 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
     {
         if (strlen($password) && strlen($username)) {
             $sql        = 'SELECT `password` FROM `user` WHERE `username` = ?';
-            $db_results = Dba::read($sql, array($username));
+            $db_results = Dba::read($sql, [$username]);
 
             if ($row = Dba::fetch_assoc($db_results)) {
                 // Use SHA2 now... cooking with fire.
@@ -67,15 +67,15 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
             }
             // subsonic password fallback for auth with apikey
             $sub_sql = 'SELECT `apikey` FROM `user` WHERE `username` = ?';
-            $results = Dba::read($sub_sql, array($username));
+            $results = Dba::read($sub_sql, [$username]);
             $row     = Dba::fetch_assoc($results);
             $api_key = $row['apikey'] ?? '';
             if ($password == $api_key) {
-                return array(
+                return [
                     'success' => true,
                     'type' => 'mysql',
                     'username' => $username
-                );
+                ];
             }
         }
 

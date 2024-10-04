@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Module\System\Dba;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\VaInfo;
@@ -51,7 +52,11 @@ final class PrintTagsCommand extends Command
     public function execute(
         string $filename
     ): void {
-        $interactor = $this->app()->io();
+        /* @var Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
 
         $interactor->info(
             sprintf(T_('Reading File: "%s"'), $filename),
@@ -59,8 +64,8 @@ final class PrintTagsCommand extends Command
         );
 
         /* Attempt to figure out what catalog it comes from */
-        $sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE '%" . Dba::escape($filename) . "'";
-        $db_results = Dba::read($sql);
+        $sql        = "SELECT `catalog`.`id` FROM `song` INNER JOIN `catalog` ON `song`.`catalog`=`catalog`.`id` WHERE `song`.`file` LIKE ?;";
+        $db_results = Dba::read($sql, ['%' . $filename]);
         $row        = Dba::fetch_assoc($db_results);
         $catalog    = Catalog::create_from_id($row['id']);
         if ($catalog === null) {
@@ -79,7 +84,10 @@ final class PrintTagsCommand extends Command
             (string) $file_pattern
         );
 
-        if ($dir_pattern !== '' || $file_pattern !== '') {
+        if (
+            $dir_pattern !== '' ||
+            $file_pattern !== ''
+        ) {
             /* HINT: %1 $dir_pattern (e.g. %A/%Y %a), %2 $file_pattern (e.g. %d - %t) */
             $interactor->info(
                 sprintf(T_('Using: %1$s AND %2$s for file pattern matching'), $dir_pattern, $file_pattern),

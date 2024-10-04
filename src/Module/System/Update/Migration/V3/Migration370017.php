@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,9 +36,9 @@ final class Migration370017 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('home_moment_albums', 'Show Albums of the moment at home page', '1', 25, 'integer', 'interface');
-        $this->updatePreferences('home_moment_videos', 'Show Videos of the moment at home page', '1', 25, 'integer', 'interface');
-        $this->updatePreferences('home_now_playing', 'Show Now Playing at home page', '1', 25, 'integer', 'interface');
-        $this->updatePreferences('custom_logo', 'Custom logo url', '', 25, 'string', 'interface');
+        $this->updatePreferences('home_moment_albums', 'Show Albums of the moment at home page', '1', AccessLevelEnum::USER->value, 'integer', 'interface');
+        $this->updatePreferences('home_moment_videos', 'Show Videos of the moment at home page', '1', AccessLevelEnum::USER->value, 'integer', 'interface');
+        $this->updatePreferences('home_now_playing', 'Show Now Playing at home page', '1', AccessLevelEnum::USER->value, 'integer', 'interface');
+        $this->updatePreferences('custom_logo', 'Custom logo url', '', AccessLevelEnum::USER->value, 'string', 'interface');
     }
 }

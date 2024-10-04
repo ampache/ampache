@@ -48,7 +48,7 @@ final class ShowVideoAction implements ApplicationActionInterface
     {
         $this->ui->showHeader();
 
-        $video = Video::create_from_id(filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
+        $video = Video::create_from_id((int)filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS));
         $video->format();
 
         $this->ui->show(

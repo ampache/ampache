@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -78,7 +79,7 @@ final class ShowDiskAction implements ApplicationActionInterface
         if ($albumDisk->isNew()) {
             $this->logger->warning(
                 'Requested an album_disk that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {
@@ -91,6 +92,7 @@ final class ShowDiskAction implements ApplicationActionInterface
                         $gatekeeper,
                         $albumDisk
                     ),
+                    'user' => $gatekeeper->getUser()
                 ]
             );
         }
@@ -107,7 +109,7 @@ final class ShowDiskAction implements ApplicationActionInterface
         AlbumDisk $albumDisk
     ): bool {
         if (
-            $this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            $this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
         ) {
             return true;
         }

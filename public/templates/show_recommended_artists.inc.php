@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -88,7 +90,7 @@ foreach ($object_ids as $artist_id) {
     }
     $libitem->format(true, $limit_threshold);
     $show_direct_play  = $show_direct_play_cfg;
-    $show_playlist_add = Access::check('interface', 25);
+    $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     if ($directplay_limit > 0) {
         $show_playlist_add = ($libitem->song_count <= $directplay_limit);
         if ($show_direct_play) {
@@ -100,7 +102,7 @@ foreach ($object_ids as $artist_id) {
         </tr>
         <?php
 }
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 /* Foreach through every missing artist that has been passed to us */
 foreach ($missing_objects as $missing) { ?>
         <tr id="missing_artist_<?php echo $missing['mbid']; ?>">

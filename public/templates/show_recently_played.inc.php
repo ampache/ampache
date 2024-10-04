@@ -26,24 +26,25 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-/** @var array $data */
-
-global $dic;
+/** @var list<array{user: int, object_type: string, object_id: int, agent: string, user_recent: int, user_time: int, date?: null|int, activity_id: int}> $data */
+/** @var User $user */
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('recently_played', $user_id) : '';
+$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = (string)AmpConfig::get('web_path', '');
-$is_admin  = Access::check('interface', 100);
+$web_path  = AmpConfig::get_web_path();
+$is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
@@ -119,12 +120,12 @@ foreach ($data as $row) {
                     <span class="cel_play_content">&nbsp;</span>
                     <div class="cel_play_hover">
                         <?php if (AmpConfig::get('directplay')) { ?>
-                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play', T_('Play'), 'play_song_' . $count . '_' . $song->id); ?>
+                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id, 'play_circle', T_('Play'), 'play_song_' . $count . '_' . $song->id); ?>
                             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_song_' . $count . '_' . $song->id); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $count . '_' . $song->id); ?>
                             <?php } ?>
                             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'play_add', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $song->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_song_' . $count . '_' . $song->id); ?>
                             <?php } ?>
                         <?php } ?>
                     </div>
@@ -132,9 +133,9 @@ foreach ($data as $row) {
                 <td class="cel_song"><?php echo $song->get_f_link(); ?></td>
                 <td class="cel_add">
                 <span class="cel_item_add">
-                    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
+                    <?php echo Ajax::button('?action=basket&type=song&id=' . $song->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $count . '_' . $song->id); ?>
                     <a id="<?php echo 'add_playlist_' . $count . '_' . $song->id; ?>" onclick="showPlaylistDialog(event, 'song', '<?php echo $song->id; ?>')">
-                        <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+                        <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
                     </a>
                 </span>
                 </td>
@@ -152,12 +153,12 @@ foreach ($data as $row) {
                 <?php if ($is_admin) { ?>
                     <td class="cel_agent">
                     <?php if (!empty($agent)) {
-                        echo Ui::get_icon('info', $agent); ?>
+                        echo Ui::get_material_symbol('info', $agent); ?>
                         </td>
                     <?php
                     } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'delete', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
@@ -193,17 +194,9 @@ foreach ($data as $row) {
 <div id="recent_more">
     <?php
 $user_id_a = '';
-if (isset($user_id) && !empty($user_id)) {
+if (!empty($user_id)) {
     $user_id_a = "&user_id=" . scrub_out($user_id);
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
 </div>
-<script>
-    $(document).ready(function () {
-        $("a[rel^='prettyPhoto']").prettyPhoto({
-            social_tools: false,
-            deeplinking: false
-        });
-    });
-</script>
 <?php Ui::show_box_bottom(); ?>

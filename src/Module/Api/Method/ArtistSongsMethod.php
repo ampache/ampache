@@ -74,7 +74,7 @@ final class ArtistSongsMethod
             $browse->set_sort('object_count', 'DESC');
             $type = 'top50';
         } else {
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
             $type = 'artist';
         }
 

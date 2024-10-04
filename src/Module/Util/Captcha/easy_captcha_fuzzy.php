@@ -31,14 +31,14 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_fuzzy extends easy_captcha
 {
-    #-- ratio of letters that may differ between solution and real password
+    // ratio of letters that may differ between solution and real password
     public $fuzzy = easy_captcha::CAPTCHA_FUZZY;
 
-    #-- compare
+    // compare
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
@@ -48,7 +48,7 @@ class easy_captcha_fuzzy extends easy_captcha
             $diff    = levenshtein($pw, $input);
             $maxdiff = strlen($pw) * (1 - $this->fuzzy);
 
-            return ($pw == $input) || ($diff <= $maxdiff);  // either matches, or allows around 2 divergent letters
+            return ($pw == $input) || ($diff <= $maxdiff); // either matches, or allows around 2 divergent letters
         }
 
         return false;

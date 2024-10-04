@@ -25,19 +25,21 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Repository\LicenseRepositoryInterface;
-use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
-
-/** @var list<int> $object_ids */
 
 global $dic;
 $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+/** @var list<int> $object_ids */
+
+$admin_path = AmpConfig::get_web_path('/admin'); ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo $web_path; ?>/admin/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
+            <a href="<?php echo $admin_path; ?>/license.php?action=show_create"><?php echo T_('Create License'); ?></a>
+        </li>
+        <li>
+            <a href="<?php echo $admin_path; ?>/license.php?action=show_hidden"><?php echo T_('Hidden'); ?></a>
         </li>
     </ul>
 </div>
@@ -46,6 +48,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <tr class="th-top">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_order"><?php echo T_('Order'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>
@@ -68,6 +71,7 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <tr class="th-bottom">
             <th class="cel_name"><?php echo T_('Name'); ?></th>
             <th class="cel_description"><?php echo T_('Description'); ?></th>
+            <th class="cel_order"><?php echo T_('Order'); ?></th>
             <th class="cel_action"><?php echo T_('Action'); ?></th>
         </tr>
     </tfoot>

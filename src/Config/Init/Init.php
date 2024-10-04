@@ -54,26 +54,26 @@ final class Init
     public function init(): void
     {
         $redirectionUrl = null;
-        $e              = null;
+        $error          = null;
 
         try {
             foreach ($this->initializationHandler as $initializationHandler) {
                 $initializationHandler->init();
             }
-        } catch (ConfigFileNotFoundException $e) {
+        } catch (ConfigFileNotFoundException $error) {
             $redirectionUrl = 'install.php';
-        } catch (ConfigFileNotParsableException $e) {
+        } catch (ConfigFileNotParsableException $error) {
             $redirectionUrl = 'test.php?action=config';
-        } catch (EnvironmentNotSuitableException | GetTextNotAvailableException $e) {
+        } catch (EnvironmentNotSuitableException | GetTextNotAvailableException $error) {
             $redirectionUrl = 'test.php';
-        } catch (DatabaseOutdatedException $e) {
+        } catch (DatabaseOutdatedException $error) {
             $redirectionUrl = 'update.php';
         } finally {
-            if ($e == null) {
+            if ($error == null) {
                 return;
             }
             if ($this->environment->isCli()) {
-                throw $e;
+                throw $error;
             }
             $this->redirect((string)$redirectionUrl);
         }

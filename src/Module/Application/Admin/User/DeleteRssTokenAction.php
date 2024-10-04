@@ -68,7 +68,10 @@ final class DeleteRssTokenAction extends AbstractUserAction
             return null;
         }
 
-        if ($this->requestParser->verifyForm('delete_rsstoken') === false) {
+        if (
+            check_http_referer() === false ||
+            $this->requestParser->verifyForm('delete_rsstoken') === false
+        ) {
             throw new AccessDeniedException();
         }
 

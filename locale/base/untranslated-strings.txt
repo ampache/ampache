@@ -191,10 +191,6 @@ msgstr ""
 msgid "Matomo"
 msgstr ""
 
-#: ./untranslated-strings.txt:140
-msgid "Omdb"
-msgstr ""
-
 #: ./untranslated-strings.txt:141
 msgid "Paypal"
 msgstr ""
@@ -235,14 +231,26 @@ msgstr ""
 msgid "TheAudioDb"
 msgstr ""
 
-#: ./untranslated-strings.txt:151
-msgid "Tvdb"
-msgstr ""
-
 #: ./untranslated-strings.txt:152
 msgid "Twitter"
 msgstr ""
 
 #: ./untranslated-strings.txt:153
 msgid "YOURLS"
+msgstr ""
+
+#: ./untranslated-strings.txt:154
+msgid "handshake"
+msgstr ""
+
+#: ./untranslated-strings.txt:155
+msgid "ping"
+msgstr ""
+
+#: ./untranslated-strings.txt:250
+msgid "Home Dashboard"
+msgstr ""
+
+#: ./untranslated-strings.txt:254
+msgid "sidebar"
 msgstr ""

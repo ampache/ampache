@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600039 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('custom_timezone', 'Custom timezone (Override PHP date.timezone)', '', 25, 'string', 'interface', 'custom');
+        $this->updatePreferences('custom_timezone', 'Custom timezone (Override PHP date.timezone)', '', AccessLevelEnum::USER->value, 'string', 'interface', 'custom');
     }
 }

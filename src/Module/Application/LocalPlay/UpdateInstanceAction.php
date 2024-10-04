@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -58,13 +59,13 @@ final class UpdateInstanceAction extends AbstractLocalPlayAction
         GuiGatekeeperInterface $gatekeeper
     ): ?ResponseInterface {
         // This requires 75 or better!
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_LOCALPLAY, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
         // Setup the object
         $localplay = new LocalPlay($this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_CONTROLLER));
-        $localplay->update_instance($_REQUEST['instance'], $_POST);
+        $localplay->update_instance((int)$_REQUEST['instance'], $_POST);
 
         return $this->responseFactory
             ->createResponse(StatusCode::FOUND)

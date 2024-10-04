@@ -69,7 +69,7 @@ class AlbumSongsMethod
         $browse = Api::getBrowse($user);
         $browse->set_type('song');
 
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['album_disk','ASC']);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['album_disk', 'ASC']);
 
         $browse->set_filter('album', $object_id);
 

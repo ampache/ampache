@@ -26,6 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
@@ -35,20 +36,20 @@ Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 <div id="information_actions">
 <ul>
-<?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
+<?php if (in_array($search_type, ['song', 'album', 'artist'])) { ?>
     <li>
-        <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
+        <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'new_window', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
     </li>
     <li>
-        <?php echo Ajax::button_with_text('?action=basket&type=browse_set_random&browse_id=' . $browse->id, 'random', T_('Random to Temporary Playlist'), 'add_search_results_random'); ?>
+        <?php echo Ajax::button_with_text('?action=basket&type=browse_set_random&browse_id=' . $browse->id, 'shuffle', T_('Random to Temporary Playlist'), 'add_search_results_random'); ?>
     </li>
 <?php }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable($search_type)) { ?>
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable($search_type)) { ?>
 <li>
-    <a class="nohtml" href="<?php echo AmpConfig::get('web_path'); ?>/batch.php?action=browse&type=<?php echo scrub_out($search_type); ?>&browse_id=<?php echo $browse->id; ?>">
-        <?php echo Ui::get_icon('batch_download', T_('Batch download')); ?>
+    <a class="nohtml" href="<?php echo AmpConfig::get_web_path(); ?>/batch.php?action=browse&type=<?php echo scrub_out($search_type); ?>&browse_id=<?php echo $browse->id; ?>">
+        <?php echo Ui::get_material_symbol('folder_zip', T_('Batch download')); ?>
         <?php echo T_('Batch download'); ?>
     </a>
 </li>

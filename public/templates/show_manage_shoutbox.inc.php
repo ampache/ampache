@@ -26,13 +26,13 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Repository\Model\Shoutbox;
-use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Ui;
 
 /** @var ShoutObjectLoaderInterface $shoutObjectLoader */
 /** @var list<Shoutbox> $shouts */
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path   = AmpConfig::get_web_path();
+$admin_path = AmpConfig::get_web_path('/admin'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
@@ -47,11 +47,16 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
     <tbody>
         <?php
         foreach ($shouts as $libitem) {
-
             $object = $shoutObjectLoader->loadByShout($libitem);
-            $client = new User($libitem->getUserId());
+            $client = $libitem->getUser();
 
-            require Ui::find_template('show_shout_row.inc.php'); ?>
+            if (
+                $client !== null &&
+                $object !== null
+            ) {
+                require Ui::find_template('show_shout_row.inc.php');
+            }
+            ?>
         <?php
         } ?>
         <?php if ($shouts === []) { ?>

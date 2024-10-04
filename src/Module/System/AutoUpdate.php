@@ -101,10 +101,8 @@ class AutoUpdate
 
     /**
      * Perform a GitHub request.
-     * @param string $action
-     * @return Object|null
      */
-    public static function github_request($action)
+    public static function github_request(string $action): ?object
     {
         try {
             // https is mandatory
@@ -150,9 +148,8 @@ class AutoUpdate
 
     /**
      * Get latest available version from GitHub.
-     * @param bool $force
      */
-    public static function get_latest_version($force = false): string
+    public static function get_latest_version(?bool $force = false): string
     {
         $lastversion = (string) AmpConfig::get('autoupdate_lastversion');
 
@@ -183,12 +180,15 @@ class AutoUpdate
             } else {
                 $commits = self::github_request('/commits/' . $git_branch);
             }
-            if (!empty($commits)) {
+            if (
+                !empty($commits) &&
+                isset($commits->sha)
+            ) {
                 $lastversion = $commits->sha;
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', $available);
+                Preference::update_all('autoupdate_lastversion_new', (int)$available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -206,7 +206,7 @@ class AutoUpdate
                 Preference::update_all('autoupdate_lastversion', $lastversion);
                 AmpConfig::set('autoupdate_lastversion', $lastversion, true);
                 $available = self::is_update_available(true);
-                Preference::update_all('autoupdate_lastversion_new', $available);
+                Preference::update_all('autoupdate_lastversion_new', (int)$available);
                 AmpConfig::set('autoupdate_lastversion_new', $available, true);
 
                 return $lastversion;
@@ -266,9 +266,8 @@ class AutoUpdate
 
     /**
      * Check if an update is available.
-     * @param bool $force
      */
-    public static function is_update_available($force = false): bool
+    public static function is_update_available(?bool $force = false): bool
     {
         if (
             $force === false ||
@@ -333,13 +332,28 @@ class AutoUpdate
      */
     public static function show_ampache_message(): void
     {
-        if (self::is_develop()) {
-            echo '<div id="autoupdate">';
-            echo '<span>' . T_("WARNING") . '</span>';
-            echo ' (Ampache Develop is about to go through a major change!)<br />';
-            echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
-            echo '</div>';
-        }
+        //if (self::is_develop()) {
+        //    echo '<div id="autoupdate">';
+        //    echo '<span>' . T_("WARNING") . '</span>';
+        //    echo ' (Ampache Develop is about to go through a major change!)<br />';
+        //    echo '<a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes' . '" target="_blank">' . T_('View changes') . '</a><br /> ';
+        //    echo '</div>';
+        //}
+    }
+
+    /**
+     * Reset and clear information about impending updates for git installs
+     */
+    public static function clear_status(): void
+    {
+        $time = time();
+        // reset the update status
+        Preference::update_all('autoupdate_lastversion', null);
+        AmpConfig::set('autoupdate_lastversion', null, true);
+        Preference::update_all('autoupdate_lastversion_new', 0);
+        AmpConfig::set('autoupdate_lastversion_new', false, true);
+        Preference::update_all('autoupdate_lastcheck', $time);
+        AmpConfig::set('autoupdate_lastcheck', (string)$time, true);
     }
 
     /**
@@ -372,7 +386,7 @@ class AutoUpdate
 
         echo '<div id="autoupdate">';
         echo '<span>' . T_('Update available') . '</span>';
-        echo ' (' . $latest . ').<br />';
+        echo ' (' . $latest . ')<br />';
         echo '<a href="https://github.com/ampache/ampache/' . ($develop_check ? 'compare/' . $current . '...' . $latest : 'blob/' . $changelog . '/docs/CHANGELOG.md') . '" target="_blank">' . T_('View changes') . '</a> ';
         if ($develop_check) {
             echo ' | <a href="https://github.com/ampache/ampache/archive/' . $zip_name . '.zip' . '" target="_blank">' . T_('Download') . '</a>';
@@ -380,16 +394,16 @@ class AutoUpdate
             echo ' | <a href="' . self::get_zip_url() . '" target="_blank">' . T_('Download') . '</a>';
         }
         if (self::is_git_repository()) {
-            echo ' | <a class="nohtml" href="' . AmpConfig::get('web_path') . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=update"> <b>' . T_('Update') . '</b></a>';
+            echo ' | <a class="nohtml" href="' . AmpConfig::get_web_path() . '/update.php?type=sources&action=clear">' . T_('Ignore') . '</a>';
         }
         echo '</div>';
     }
 
     /**
      * Update local git repository.
-     * @param bool $api
      */
-    public static function update_files($api = false): void
+    public static function update_files(?bool $api = false): void
     {
         $cmd        = 'git pull https://github.com/ampache/ampache.git';
         $git_branch = self::is_force_git_branch();
@@ -414,7 +428,7 @@ class AutoUpdate
             // reset the update status
             Preference::update_all('autoupdate_lastversion', $commit);
             AmpConfig::set('autoupdate_lastversion', $commit, true);
-            Preference::update_all('autoupdate_lastversion_new', false);
+            Preference::update_all('autoupdate_lastversion_new', 0);
             AmpConfig::set('autoupdate_lastversion_new', false, true);
         }
     }
@@ -427,17 +441,32 @@ class AutoUpdate
         bool $api = false
     ): void {
         $cmdComposer = sprintf(
-            '%s install --no-dev --prefer-source --no-interaction',
-            $config->getComposerBinaryPath()
+            '%s install %s',
+            $config->getComposerBinaryPath(),
+            $config->getComposerParameters()
+        );
+
+        $cmdNpm = sprintf(
+            '%s install',
+            $config->getNpmBinaryPath()
+        );
+
+        $cmdNpmBuild = sprintf(
+            '%s run build',
+            $config->getNpmBinaryPath()
         );
 
         if (!$api) {
             echo T_('Updating dependencies with `' . $cmdComposer . '` ...') . '<br />';
+            echo T_('Updating dependencies with `' . $cmdNpm . '` ...') . '<br />';
+            echo T_('Updating npm build with `' . $cmdNpmBuild . '` ...') . '<br />';
         }
 
         ob_flush();
         chdir(__DIR__ . '/../../../');
         exec($cmdComposer);
+        exec($cmdNpm);
+        exec($cmdNpmBuild);
         if (!$api) {
             echo T_('Done') . '<br />';
         }

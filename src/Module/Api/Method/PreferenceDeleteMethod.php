@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -51,7 +53,7 @@ final class PreferenceDeleteMethod
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $pref_name  = (string)($input['filter'] ?? '');
@@ -62,7 +64,7 @@ final class PreferenceDeleteMethod
             return false;
         }
         // Might be a good idea to not delete system preferences
-        if (in_array($pref_name, Preference::SYSTEM_LIST)) {
+        if (in_array($pref_name, array_merge(Preference::SYSTEM_LIST, Preference::PLUGIN_LIST))) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api::error(sprintf('Bad Request: %s', $pref_name), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'filter', $input['api_format']);
 

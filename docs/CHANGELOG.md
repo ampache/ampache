@@ -1,5 +1,113 @@
 # CHANGELOG
 
+## Ampache 7.0.0
+
+Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
+
+### Added
+
+* Translations 2024-09
+* npm java package management
+* Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
+* Restore composer.lock
+* Added rated songs to user Wrapped pages
+* Show ratings on live_stream pages
+* User option to show dashboard links on the index instead of browse links
+* Use number for preference input text boxes when the preference value is numeric
+* Check the user is admin when deleting activities
+* Verify http_referer before delete actions
+* Plugins
+  * Home Dashboard: show album dashboard sections on the index
+  * Preferences for sorting display_home plugins using CSS order
+* Browse
+  * Sort by play count (`total_count`) for podcast, podcast_episode and video 
+  * Add `country` and `active` sort to label
+  * Add `rating` sort to live_stream and video
+  * Add `id` browse to all types
+* Search
+  * Added `waveform` to song search. (Must not enable `album_art_store_disk` to return data)
+* Subonic
+  * Add openSubsonic extensions [ampache.org](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
+* CLI
+  * New command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
+  * New command `bin/cli admin:updatePlugins` (Update any plugins that need an update)
+  * Update for missing preferences after CLI DB updates
+* Config version 74
+  * Add `npm_binary_path`
+  * Remove OpenID config
+  * Add `database_engine` to allow you to change from InnoDB if you want to
+  * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
+  * Enable `user_create_streamtoken` by default
+  * Add option `waveform_drawflat` that was previously hardcoded
+* Database 700020
+  * Add user preferences to show/hide menus in the sidebar and the switcher arrows
+  * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
+  * Convert the remaining MyISAM tables to InnoDB
+  * Drop and recreate `tmp_browse` to allow InnoDB conversion
+  * Add a `last_count` to playlist table to speed up access requests
+  * Add `collaborate` to the playlist table to allow other users to add songs to the list
+  * Create `user_playlist_map` table to allow browse access to playlists with collaborators
+  * Convert system preference `upload_catalog` into a user preference
+  * Convert `clip`, `tvshow`, `movie` and `personal_video` catalogs to `video`
+  * Remove `clip`,`movie`, `personal_video`, `tvshow`, `tvshow_episode` and `tvshow_season` tables
+  * Add user preference `Custom URL - Use your avatar for header logo` this allows you to override custom header logos with your avatar
+  * Add `action` column to `ip_history` table
+  * Add `name` to `user_preference` table
+  * Add user Preference `index_dashboard_form` (Use Dashboard links for the index page header)
+  * Put sidebar preferences into their own category
+  * Add user preferences to order menu sections in the sidebar
+  * Add UI option `api_always_download` Force API streams to download. (Enable scrobble in your client to record stats)
+  * Require unique preference names per-user in `user_preference` table'
+
+### Changed
+
+* Prefer the name of the artist provided by MusicBrainz plugin
+* Use PHP functions for php8.2+
+* Update rector minimum to php8.2 and extend rector source directories
+* Default to InnoDB on new installs
+* Change URL for user avatar links
+* Move JavaScript out of PHP where possible
+* Convert string access names and int user access levels to enums
+* Update the upload file browser
+* Update gettext/gettext to v5
+* Default to RandomAction on stream.php
+* Reborn theme CSS updates after switching to Material icons
+* Update code style to convert long form arrays (`array()`) to short form (`[]`)
+* Pull prettyphoto from GitHub (`lachlan-00/prettyphoto`) using npm instead of merging into the project
+* Only allow Video catalogs instead of the different subtypes
+* Use preference names for lookups instead of guessing ID's
+* Skip empty sections when showing a Dashboard (mashup) page
+* Put each plugin class into extended interfaces to ensure functions meet expected requirements
+* Changed CSS logo to HTML
+* Skip stat recording on `cache=1` instead of reclassifying as a download
+* Convert catalog row actions to a form to fix client branch
+* When updating artist from MusicBrainz use begin area name and fall back to current area instead of using both
+
+### Removed
+
+* Support for PHP greater than 8.2
+* Unused stream actions
+* Old composer files
+* Unused PNG icons
+* Non-music Video features have been removed. You can no longer add catalogs for these video types
+  * Movies
+  * TV Shows
+  * Personal Videos
+* Plugins
+  * Omdb (Movie Database lookup)
+  * Tvdb (TV Database lookup)
+
+### Fixed
+
+* Enforce sidebar_light when enabled, ignoring cookie if set
+* Don't create missing tables when they haven't been created for your database version
+* Don't put empty artists into artist links
+* Opensearch not being added for sites with auth
+* Oensearch URL parameters didn't work
+* VLC localplay volume division number incorrect for total volume
+* Latitude and longitude column names in stats page
+* Cookie disclaimer missing closing " on div id
+
 ## Ampache 6.6.1
 
 ### Fixed
@@ -23,8 +131,19 @@
   * Stripslashes on input to fix `Don't` becoming `Don\'t` in the SQL
 * Subsonic
   * Always include cover art in search results
+  * Correct output format of array items (e.g. int being cast as string)
 * webplayer
   * Missing variable `playlist_before` in shuffle function
+
+## Ampache 6.6.0
+
+Another version bump due to additions in API6 related to playlists
+
+Users can now share a playlist with specific users and keep the list private from everyone else
+
+You can downgrade from Ampache7 if you try it out and have issues using the cli
+
+### Added
 
 ## Ampache 6.6.0
 
@@ -101,7 +220,7 @@ This release has made greater use of browses reducing reliance on customizing mi
   * Add indexes to `object_count`
   * Drop and recreate `tmp_browse` to allow InnoDB conversion
   * Add `last_count` to the `playlist` table
-  * Use InnoDb for all tables by default on new installs
+  * Use InnoDB for all tables by default on new installs
 
 ### Changed
 

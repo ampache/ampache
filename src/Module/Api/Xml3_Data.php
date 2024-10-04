@@ -5,7 +5,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Shoutbox;
@@ -225,12 +226,9 @@ class Xml3_Data
     /**
      * keyed_array
      *
-     * This will build an xml document from a key'd array,
-     *
-     * @param array $array
-     * @param bool $callback
+     * This will build an xml document from a key'd array
      */
-    public static function keyed_array($array, $callback = ''): string
+    public static function keyed_array(array $array, ?bool $callback = false): string
     {
         $string = '';
 
@@ -245,7 +243,7 @@ class Xml3_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, 1);
+                $value = self::keyed_array($value, true);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
@@ -327,18 +325,18 @@ class Xml3_Data
             $tag_string  = self::tags_string($artist->tags);
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
             } else {
                 $albums = (AmpConfig::get('album_group'))
                     ? $artist->album_count
                     : $artist->album_disk_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, '', false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -384,7 +382,7 @@ class Xml3_Data
             $user_rating = $rating->get_user_rating($user->getId());
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $string .= "<album id=\"" . $album->id . "\">\n\t<name><![CDATA[" . $album->name . "]]></name>\n";
 
@@ -394,7 +392,7 @@ class Xml3_Data
 
             // Handle includes
             if ($include && in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;
             }
@@ -477,7 +475,7 @@ class Xml3_Data
             $art_url               = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime              = $song->mime;
             $songBitrate           = $song->bitrate;
-            $play_url              = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url              = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
@@ -524,7 +522,7 @@ class Xml3_Data
             }
             $video->format();
 
-            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url('', 'api') . "]]></url>\n</video>\n";
+            $string .= "<video id=\"" . $video->id . "\">\n\t<title><![CDATA[" . $video->title . "]]></title>\n\t<name><![CDATA[" . $video->title . "]]></name>\n\t<mime><![CDATA[" . $video->mime . "]]></mime>\n\t<resolution>" . $video->f_resolution . "</resolution>\n\t<size>" . $video->size . "</size>\n" . self::tags_string($video->tags) . "\t<url><![CDATA[" . $video->play_url('', AccessTypeEnum::API->value) . "]]></url>\n</video>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
@@ -563,7 +561,7 @@ class Xml3_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $art_url     = Art::url($song->album, 'album', $_REQUEST['auth'] ?? '');
             $songMime    = $song->mime;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url    = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
 
             $string .= "<song id=\"" . $song->id . "\">\n\t<title><![CDATA[" . $song->title . "]]></title>\n\t<name><![CDATA[" . $song->title . "]]></name>\n"
                 . "\t<artist id=\"" . $song->artist . "\"><![CDATA[" . $song->get_artist_fullname() . "]]></artist>\n"
@@ -607,6 +605,7 @@ class Xml3_Data
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
+            $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         }
         $string .= "</users>\n";
 
@@ -626,9 +625,9 @@ class Xml3_Data
 
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user  = new User($shout->getUserId());
+            $user = $shout->getUser();
             $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
-            if ($user->isNew() === false) {
+            if ($user !== null) {
                 $string .= "\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>";
             }
             $string .= "\t</shout>n";
@@ -672,7 +671,7 @@ class Xml3_Data
     {
         switch (self::$type) {
             case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . ($title ?? T_("Ampache XSPF Playlist")) . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get('web_path') . "</info>\n<trackList>\n";
+                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . ($title ?? T_("Ampache XSPF Playlist")) . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get_web_path() . "</info>\n<trackList>\n";
                 break;
             case 'itunes':
                 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";

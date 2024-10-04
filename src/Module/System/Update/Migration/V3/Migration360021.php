@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -37,6 +38,6 @@ final class Migration360021 extends AbstractMigration
     {
         $this->updateDatabase("ALTER TABLE `now_playing` ADD COLUMN `insertion` INT (11) AFTER `expire`");
 
-        $this->updatePreferences('song_page_title', 'Show current song in Web player page title', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('song_page_title', 'Show current song in Web player page title', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

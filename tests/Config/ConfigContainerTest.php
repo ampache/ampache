@@ -257,6 +257,14 @@ class ConfigContainerTest extends MockeryTestCase
         );
     }
 
+    public function testGetNpmBinaryPathReturnsDefault(): void
+    {
+        $this->assertSame(
+            'npm',
+            $this->createSubject([])->getNpmBinaryPath()
+        );
+    }
+
     public function testGetComposerBinaryPathReturnsValue(): void
     {
         $value = 'some-value';
@@ -266,6 +274,18 @@ class ConfigContainerTest extends MockeryTestCase
             $this->createSubject([
                 ConfigurationKeyEnum::COMPOSER_BINARY_PATH => $value
             ])->getComposerBinaryPath()
+        );
+    }
+
+    public function testGetNpmBinaryPathReturnsValue(): void
+    {
+        $value = 'some-value';
+
+        $this->assertSame(
+            $value,
+            $this->createSubject([
+                ConfigurationKeyEnum::NPM_BINARY_PATH => $value
+            ])->getNpmBinaryPath()
         );
     }
 

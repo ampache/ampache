@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
@@ -122,7 +123,7 @@ class Json_Data
             ]
         ];
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -141,7 +142,7 @@ class Json_Data
             $message[$title] = $data;
         }
 
-        return json_encode($message, JSON_PRETTY_PRINT);
+        return json_encode($message, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -440,7 +441,7 @@ class Json_Data
         } // end foreach
         $output["list"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -483,7 +484,7 @@ class Json_Data
         } // end foreach
         $output["browse"] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -526,7 +527,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -569,7 +570,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -623,7 +624,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -672,7 +673,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -715,14 +716,14 @@ class Json_Data
             $flag        = new Userflag($artist_id, 'artist');
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
             $albums = (in_array("albums", $include))
-                ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
+                ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false)
                 : [];
             $songs = (in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false)
+                ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false)
                 : [];
 
             $JSON[] = [
@@ -755,7 +756,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -803,7 +804,7 @@ class Json_Data
                 : $album->year;
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
 
             $objArray = [];
 
@@ -832,7 +833,7 @@ class Json_Data
 
             // Handle includes
             $songs = ($include && in_array("songs", $include))
-                ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false)
+                ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false)
                 : [];
 
             $objArray['time']          = (int)$album->total_duration;
@@ -859,7 +860,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -910,11 +911,12 @@ class Json_Data
                 $object_type    = 'playlist';
                 $playitem_total = $playlist->get_media_count('song');
             }
-            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-            $playlist_name = $playlist->get_fullname();
-            $playlist_user = $playlist->username;
-            $playlist_type = $playlist->type;
-            $last_update   = $playlist->last_update;
+            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $playlist_name     = $playlist->get_fullname();
+            $playlist_user     = $playlist->user;
+            $playlist_username = $playlist->username;
+            $playlist_type     = $playlist->type;
+            $last_update       = $playlist->last_update;
 
             if ($songs) {
                 $items          = [];
@@ -943,7 +945,11 @@ class Json_Data
             $JSON[] = [
                 "id" => (string)$playlist_id,
                 "name" => $playlist_name,
-                "owner" => $playlist_user,
+                "owner" => $playlist_username,
+                "user" => [
+                    "id" => (string)$playlist_user,
+                    "username" => $playlist_username
+                ],
                 "items" => $items,
                 "type" => $playlist_type,
                 "art" => $art_url,
@@ -965,7 +971,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1031,7 +1037,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1082,8 +1088,12 @@ class Json_Data
                 "creation_date" => $bookmark_creation_date,
                 "update_date" => $bookmark_update_date
             ];
-            if ($include) {
-                $user = User::get_from_username($bookmark_username);
+
+            $user = User::get_from_username($bookmark_username);
+            if (
+                $include &&
+                $user !== null
+            ) {
                 switch ($bookmark_object_type) {
                     case 'song':
                         $JSON[$count]['song'] = self::songs([(int)$bookmark_object_id], $user, false, false);
@@ -1104,7 +1114,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1163,7 +1173,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1247,7 +1257,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1299,7 +1309,7 @@ class Json_Data
                 "author_full" => $episode->getAuthor(),
                 "website" => $episode->getWebsite(),
                 "pubdate" => $episode->getPubDate()->format(DATE_ATOM),
-                "state" => $episode->getStateDescription(),
+                "state" => $episode->getState()->toDescription(),
                 "filelength" => $episode->f_time_h,
                 "filesize" => $episode->getSizeFormatted(),
                 "filename" => $episode->getFileName(),
@@ -1312,7 +1322,7 @@ class Json_Data
                 "mode" => $episode->mode,
                 "channels" => $episode->channels,
                 "public_url" => $episode->get_link(),
-                "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $episode->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "has_art" => $episode->has_art(),
@@ -1332,7 +1342,7 @@ class Json_Data
             $output = $JSON[0] ?? [];
         }
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1375,7 +1385,7 @@ class Json_Data
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
-            $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url     = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = [];
@@ -1484,7 +1494,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1530,7 +1540,7 @@ class Json_Data
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->tags),
                 "time" => (int)$video->time,
-                "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
+                "url" => $video->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "has_art" => $video->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
@@ -1547,7 +1557,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1586,7 +1596,7 @@ class Json_Data
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
-            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
+            $play_url    = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
             $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
@@ -1623,7 +1633,7 @@ class Json_Data
         } // end foreach
         $output = ($object) ? ["song" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1672,7 +1682,7 @@ class Json_Data
         }
         $output = ($object) ? ["user" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1710,7 +1720,7 @@ class Json_Data
                 $output = $JSON[0] ?? [];
             }
 
-            return json_encode($output, JSON_PRETTY_PRINT);
+            return json_encode($output, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -1740,7 +1750,7 @@ class Json_Data
 
             $JSON[] = [
                 'id' => (string) $media->getId(),
-                'type' => (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)),
+                'type' => $media->getMediaType()->value,
                 'client' => $now_playing['agent'],
                 'expire' => (int) $now_playing['expire'],
                 'user' => [
@@ -1751,7 +1761,7 @@ class Json_Data
         }
         $output = ["now_playing" => $JSON];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1767,7 +1777,7 @@ class Json_Data
         $JSON = [];
 
         foreach ($shouts as $shout) {
-            $user = new User($shout->getUserId());
+            $user = $shout->getUser();
 
             $JSON[] = [
                 'id' => (string) $shout->getId(),
@@ -1776,14 +1786,14 @@ class Json_Data
                 'object_type' => $shout->getObjectType(),
                 'object_id' => $shout->getObjectId(),
                 'user' => [
-                    'id' => (string) $user->getId(),
-                    'username' => $user->getUsername()
+                    'id' => (string) ($user?->getId() ?? 0),
+                    'username' => $user?->getUsername() ?? '',
                 ]
             ];
         }
         $output = ($object) ? ["shout" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1815,7 +1825,7 @@ class Json_Data
         }
         $output = ($object) ? ["activity" => $JSON] : $JSON[0] ?? [];
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1885,7 +1895,7 @@ class Json_Data
         }
         $output["deleted_" . $object_type] = $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

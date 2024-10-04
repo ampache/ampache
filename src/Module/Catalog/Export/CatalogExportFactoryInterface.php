@@ -30,5 +30,5 @@ interface CatalogExportFactoryInterface
     /**
      * Returns the exporter class based on the export type
      */
-    public function createFromExportType(string $exportType): CatalogExporterInterface;
+    public function createFromExportType(CatalogExportTypeEnum $type): CatalogExporterInterface;
 }
