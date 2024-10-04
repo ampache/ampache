@@ -96,7 +96,7 @@ final class UserEditMethod
 
         $fullname             = $input['fullname'] ?? null;
         $email                = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website              = $input['website'] ?? null;
+        $website              = filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null;
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
         $disable              = $input['disable'] ?? null;

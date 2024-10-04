@@ -284,7 +284,7 @@ class Label extends database_object implements library_item
         $address  = $data['address'] ?? null;
         $country  = $data['country'] ?? null;
         $email    = $data['email'] ?? null;
-        $website  = $data['website'] ?? null;
+        $website  = filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null;
         $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";

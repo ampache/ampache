@@ -144,7 +144,7 @@ final class EditObjectAction extends AbstractEditAction
             if (filter_var($feedUrl, FILTER_VALIDATE_URL)) {
                 $libitem->setTitle($_POST['title'] ?? $libitem->getTitle())
                     ->setFeedUrl($feedUrl)
-                    ->setWebsite($_POST['website'] ?? $libitem->getWebsite())
+                    ->setWebsite(filter_var(urldecode($_POST['website']), FILTER_VALIDATE_URL) ?: $libitem->getWebsite())
                     ->setDescription($_POST['description'] ?? $libitem->getDescription())
                     ->setLanguage($_POST['language'] ?? $libitem->getLanguage())
                     ->setGenerator($_POST['generator'] ?? $libitem->getGenerator())

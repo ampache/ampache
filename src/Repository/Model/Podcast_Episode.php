@@ -455,7 +455,7 @@ class Podcast_Episode extends database_object implements
     public function update(array $data): int
     {
         $title    = $data['title'] ?? $this->title;
-        $website  = $data['website'] ?? null;
+        $website  = filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null;
         $category = $data['category'] ?? null;
         /** @var string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
