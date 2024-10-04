@@ -52,11 +52,15 @@ $albumString  = $is_group
     ? 'album'
     : 'album_disk';
 // hide columns you don't always need
-$hide_artist  = in_array('cel_artist', $hide_columns);
-$hide_album   = in_array('cel_album', $hide_columns);
-$hide_year    = in_array('cel_year', $hide_columns);
-$hide_drag    = in_array('cel_drag', $hide_columns);
-$show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+$hide_artist   = in_array('cel_artist', $hide_columns);
+$hide_album    = in_array('cel_album', $hide_columns);
+$hide_year     = in_array('cel_year', $hide_columns);
+$hide_drag     = in_array('cel_drag', $hide_columns);
+$show_license  = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+$show_track    = !empty($argument) && $is_table;
+$cel_play_text = ($show_track)
+    ? Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id)
+    : '';
 //mashup and grid view need different css
 $cel_song    = ($is_table) ? "cel_song" : 'grid_song';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
@@ -71,7 +75,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
-            <th class="cel_play essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id); ?></th>
+            <th class="cel_play essential"><?php $cel_play_text; ?></th>
             <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'song_sort_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
             <?php if (!$hide_artist) {
@@ -150,7 +154,7 @@ foreach ($object_ids as $song_id) {
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_ALBUM_GROUP', $is_group)
-                        ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                        ->setContext('IS_SHOW_TRACK', $show_track)
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)
