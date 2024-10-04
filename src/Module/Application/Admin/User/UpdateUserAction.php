@@ -85,7 +85,7 @@ final class UpdateUserAction extends AbstractUserAction
         $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in(htmlspecialchars($body['website'] ?? '', ENT_NOQUOTES));
+        $website              = filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null;
         $access               = (int) ($body['access'] ?? 0);
         $catalog_filter_group = (int) ($body['catalog_filter_group'] ?? 0);
         $pass1                = Core::get_post('password_1');
