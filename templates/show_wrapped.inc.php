@@ -95,14 +95,14 @@ if (!empty($object_ids)) {
     Ui::show_box_bottom();
 }
 
-$objects = Rating::get_latest('song', $user, -1, 0, $startTime, $endTime);
+$object_ids = Rating::get_latest('song', $user, -1, 0, $startTime, $endTime);
 if (!empty($object_ids)) {
     Ui::show_box_top(T_('Ratings'));
     $browse = new Browse();
     $browse->set_type('song');
     $browse->set_title('');
     $browse->set_use_filters(false);
-    $browse->show_objects($objects);
+    $browse->show_objects($object_ids);
     $browse->store();
     Ui::show_box_bottom();
 }

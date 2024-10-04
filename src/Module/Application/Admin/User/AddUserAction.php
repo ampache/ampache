@@ -86,7 +86,9 @@ final class AddUserAction extends AbstractUserAction
         $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in(htmlspecialchars($body['website'] ?? '', ENT_NOQUOTES));
+        $website              = (isset($input['website']))
+            ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $access               = AccessLevelEnum::tryFrom((int) ($body['access'] ?? 0)) ?? AccessLevelEnum::USER;
         $catalog_filter_group = (int) scrub_in(htmlspecialchars($body['catalog_filter_group'] ?? '', ENT_NOQUOTES));
         $pass1                = Core::get_post('password_1');

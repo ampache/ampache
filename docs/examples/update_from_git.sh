@@ -37,6 +37,9 @@ php bin/cli admin:updatePlugins -e
 ### Clean up your garbage data
 php bin/cli run:updateCatalog -t
 
+### Run a public site? you can forcibly set all preferences to admin and stop users changing things
+#php bin/cli admin:updatePreferenceAccessLevel -e -l admin
+
 ### You don't always need to do this but some people might want to keep composer packages updated here
 ### You might want the dev packages as well so you can remove '--no-dev' to install those
 #composer install --no-dev --prefer-source --no-interaction

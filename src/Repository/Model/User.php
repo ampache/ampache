@@ -630,8 +630,11 @@ class User extends database_object
      */
     public function update_website($new_website): void
     {
-        $new_website = rtrim((string)$new_website, "/");
-        $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
+        $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
+        $new_website = is_string($new_website)
+            ? rtrim((string)$new_website, "/")
+            : null;
+        $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
         debug_event(self::class, 'Updating website', 4);
 
@@ -1488,7 +1491,20 @@ class User extends database_object
             $this->getUserKeyGenerator()->generateRssToken($this);
         }
 
-        return $this->rsstoken;
+        return (string)$this->rsstoken;
+    }
+
+    /**
+     * garbage_collection
+     *
+     * This cleans out users that have not activated in the last 30 days
+     */
+    public static function garbage_collection(): void
+    {
+        // activated accounts can log in but might not have cleared validation
+        Dba::write("UPDATE `user` SET `validation` = NULL WHERE `last_seen` > 0;");
+        // delete accounts not activated after 30 days
+        Dba::write("DELETE FROM `user` WHERE (`last_seen` = 0 OR `validation` IS NOT NULL) AND `create_date` < UNIX_TIMESTAMP(DATE_ADD(NOW(), INTERVAL -1 MONTH));");
     }
 
     /**
