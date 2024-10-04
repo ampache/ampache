@@ -114,6 +114,14 @@ final class UpdateUserAction extends AbstractUserAction
             AmpError::add('email', T_('You entered an invalid e-mail address'));
         }
 
+        // Check the website for a valid site.
+        if (
+            (isset($body['website']) && strlen($body['website']) > 6) &&
+            $website === null
+        ) {
+            AmpError::add('website', T_('Error'));
+        }
+
         /* If we've got an error then show edit form! */
         if (AmpError::occurred()) {
             require_once Ui::find_template('show_edit_user.inc.php');
