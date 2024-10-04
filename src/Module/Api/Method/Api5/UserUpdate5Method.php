@@ -71,7 +71,9 @@ final class UserUpdate5Method
         $password   = $input['password'] ?? null;
         $fullname   = $input['fullname'] ?? null;
         $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null;
+        $website    = (isset($input['website']))
+            ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
         $disable    = $input['disable'] ?? null;
