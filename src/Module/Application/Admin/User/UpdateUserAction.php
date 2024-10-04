@@ -97,12 +97,12 @@ final class UpdateUserAction extends AbstractUserAction
         $fullname_public      = isset($_POST['fullname_public']);
 
         /* Setup the temp user */
-        $user = $this->modelFactory->createUser($user_id);
+        $client = $this->modelFactory->createUser($user_id);
 
         /* Verify Input */
         if (empty($username)) {
             AmpError::add('username', T_("A Username is required"));
-        } elseif ($username != $user->username && $this->userRepository->idByUsername($username) > 0) {
+        } elseif ($username != $client->username && $this->userRepository->idByUsername($username) > 0) {
             AmpError::add('username', T_("That Username already exists"));
         }
         if ($pass1 !== $pass2 && !empty($pass1)) {
@@ -112,6 +112,14 @@ final class UpdateUserAction extends AbstractUserAction
         // Check the mail for correct address formation.
         if (!Mailer::validate_address($email)) {
             AmpError::add('email', T_('You entered an invalid e-mail address'));
+        }
+
+        // Check the website for a valid site.
+        if (
+            (isset($body['website']) && strlen($body['website']) > 6) &&
+            $website === null
+        ) {
+            AmpError::add('website', T_('Error'));
         }
 
         /* If we've got an error then show edit form! */
@@ -124,37 +132,37 @@ final class UpdateUserAction extends AbstractUserAction
             return null;
         }
 
-        if ($access != $user->access) {
-            $user->update_access($access);
+        if ($access != $client->access) {
+            $client->update_access($access);
         }
-        if ($catalog_filter_group != $user->catalog_filter_group) {
-            $user->update_catalog_filter_group($catalog_filter_group);
+        if ($catalog_filter_group != $client->catalog_filter_group) {
+            $client->update_catalog_filter_group($catalog_filter_group);
         }
-        if ($email != $user->email) {
-            $user->update_email($email);
+        if ($email != $client->email) {
+            $client->update_email($email);
         }
-        if ($website != $user->website) {
-            $user->update_website($website);
+        if ($website != $client->website) {
+            $client->update_website($website);
         }
-        if ($username != $user->username) {
-            $user->update_username($username);
+        if ($clientname != $client->username) {
+            $client->update_username($username);
         }
-        if ($fullname != $user->fullname) {
-            $user->update_fullname($fullname);
+        if ($fullname != $client->fullname) {
+            $client->update_fullname($fullname);
         }
-        if ($fullname_public != $user->fullname_public) {
-            $user->update_fullname_public($fullname_public);
+        if ($fullname_public != $client->fullname_public) {
+            $client->update_fullname_public($fullname_public);
         }
         if ($pass1 == $pass2 && strlen($pass1)) {
-            $user->update_password($pass1);
+            $client->update_password($pass1);
         }
-        if ($state != $user->state) {
-            $user->update_state($state);
+        if ($state != $client->state) {
+            $client->update_state($state);
         }
-        if ($city != $user->city) {
-            $user->update_city($city);
+        if ($city != $client->city) {
+            $client->update_city($city);
         }
-        if (!$user->upload_avatar()) {
+        if (!$client->upload_avatar()) {
             $mindimension = sprintf(
                 '%dx%d',
                 (int) $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_MIN_WIDTH),
@@ -178,7 +186,7 @@ final class UpdateUserAction extends AbstractUserAction
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
-                sprintf(T_('%s (%s) updated'), scrub_out($user->username), scrub_out($user->fullname)),
+                sprintf(T_('%s (%s) updated'), scrub_out($client->username), scrub_out($client->fullname)),
                 sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
             );
         }
