@@ -81,7 +81,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
-                // data set by the fileter box (browse_filters.inc.php)
+                // data set by the filter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
