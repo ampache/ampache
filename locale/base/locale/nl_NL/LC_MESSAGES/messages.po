@@ -11548,9 +11548,6 @@ msgstr "Catalogus tijd"
 msgid "Total Users"
 msgstr "Totale gebruikers"
 
-#: ./untranslated-strings.txt:22
-msgid "httpQ Active Instance"
-msgstr ""
 
 #: ./untranslated-strings.txt:26
 msgid "Show current song in Web Player page title"
