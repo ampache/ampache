@@ -42,7 +42,7 @@ final class AdminUpdatePluginsCommand extends Command
 
     public function execute(): void
     {
-        /* @var Application|Interactor $interactor */
+        /** @var Application|Interactor $interactor */
         $interactor = $this->app()?->io();
         if (!$interactor) {
             return;

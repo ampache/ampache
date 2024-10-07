@@ -44,7 +44,7 @@ final class CacheProcessCommand extends Command
 
     public function execute(): void
     {
-        /* @var Interactor $interactor */
+        /** @var Interactor $interactor */
         $interactor = $this->app()?->io();
         if (!$interactor) {
             return;

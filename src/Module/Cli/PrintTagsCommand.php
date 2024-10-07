@@ -52,7 +52,7 @@ final class PrintTagsCommand extends Command
     public function execute(
         string $filename
     ): void {
-        /* @var Interactor $interactor */
+        /** @var Interactor $interactor */
         $interactor = $this->app()?->io();
         if (!$interactor) {
             return;
