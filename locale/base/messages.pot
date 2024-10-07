@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-10-08 08:28+1000\n"
+"POT-Creation-Date: 2024-10-08 08:57+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6068,6 +6068,7 @@ msgid "File not found"
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api4/CatalogFile4Method.php:90
+#: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:72
 #: ../../src/Module/Application/Podcast/CreateAction.php:88
 #: ../../src/Module/Application/Podcast/ImportPodcastsAction.php:107
 msgid "Catalog not found"
@@ -6229,12 +6230,19 @@ msgstr ""
 msgid "Track ID not found in playlist"
 msgstr ""
 
-#: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:72
-msgid "Failed: Catalog not found"
-msgstr ""
-
 #: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:83
-msgid "Failed: podcast was not created."
+#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:141
+#: ../../src/Module/Api/Method/Api5/PlaylistCreate5Method.php:65
+#: ../../src/Module/Api/Method/Api5/PlaylistEdit5Method.php:119
+#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:73
+#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:84
+#: ../../src/Module/Api/Method/Api5/PreferenceEdit5Method.php:76
+#: ../../src/Module/Api/Method/Api5/Scrobble5Method.php:86
+#: ../../src/Module/Api/Method/Api5/ShareCreate5Method.php:130
+#: ../../src/Module/Api/Method/Api5/SystemUpdate5Method.php:65
+#: ../../src/Module/Api/Method/Api5/UrlToSong5Method.php:60
+#: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:105
+msgid "Bad Request"
 msgstr ""
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376)
@@ -6354,20 +6362,6 @@ msgstr ""
 #: ../../src/Module/Api/Method/Api5/Localplay5Method.php:72
 #: ../../src/Module/Api/Method/Api5/LocalplaySongs5Method.php:60
 msgid "Unable to connect to localplay controller"
-msgstr ""
-
-#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:141
-#: ../../src/Module/Api/Method/Api5/PlaylistCreate5Method.php:65
-#: ../../src/Module/Api/Method/Api5/PlaylistEdit5Method.php:119
-#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:73
-#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:84
-#: ../../src/Module/Api/Method/Api5/PreferenceEdit5Method.php:76
-#: ../../src/Module/Api/Method/Api5/Scrobble5Method.php:86
-#: ../../src/Module/Api/Method/Api5/ShareCreate5Method.php:130
-#: ../../src/Module/Api/Method/Api5/SystemUpdate5Method.php:65
-#: ../../src/Module/Api/Method/Api5/UrlToSong5Method.php:60
-#: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:105
-msgid "Bad Request"
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api5/Playlist5Method.php:71
