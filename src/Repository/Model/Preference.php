@@ -785,7 +785,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [70, 'mpd_active', '0', T_('MPD Active Instance'), AccessLevelEnum::USER->value,'integer', 'internal', 'mpd']);
                     break;
                 case 'httpq_active':
-                    Dba::write($pref_sql, [71, 'httpq_active', '0', T_('httpQ Active Instance'), AccessLevelEnum::USER->value,'integer', 'internal', 'httpq']);
+                    Dba::write($pref_sql, [71, 'httpq_active', '0', T_('HTTPQ Active Instance'), AccessLevelEnum::USER->value,'integer', 'internal', 'httpq']);
                     break;
                 case 'lastfm_grant_link':
                     Dba::write($pref_sql, [77, 'lastfm_grant_link', '', T_('Last.FM Grant URL'), AccessLevelEnum::USER->value,'string', 'internal', 'lastfm']);
