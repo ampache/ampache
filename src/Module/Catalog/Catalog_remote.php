@@ -245,6 +245,10 @@ class Catalog_remote extends Catalog
             );
         } catch (Exception $error) {
             debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
+            if (defined('CLI')) {
+                echo T_('Failed to connect to the remote server') . "\n";
+            }
+
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', $error->getMessage());
                 echo AmpError::display('general');
@@ -256,6 +260,10 @@ class Catalog_remote extends Catalog
 
         if ($remote_handle->state() != 'CONNECTED') {
             debug_event('remote.catalog', 'API client failed to connect', 1);
+            if (defined('CLI')) {
+                echo T_('Failed to connect to the remote server') . "\n";
+            }
+
             if (defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                 AmpError::add('general', T_('Failed to connect to the remote server'));
                 echo AmpError::display('general');
