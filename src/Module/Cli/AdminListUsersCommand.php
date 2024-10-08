@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
+use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
+use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\UserRepositoryInterface;
 
 final class AdminListUsersCommand extends Command
@@ -40,6 +42,7 @@ final class AdminListUsersCommand extends Command
         $this->userRepository = $userRepository;
 
         $this
+            ->option('-u|--user', T_('User ID'), 'intval', 0)
             ->argument('[username]', T_('Username'))
             ->usage('<bold>  admin:listUsers some-user</end> <comment> ## ' . T_('Find a User with the name `some-user`') . '</end><eol/>');
     }
@@ -47,11 +50,21 @@ final class AdminListUsersCommand extends Command
     public function execute(
         ?string $username
     ): void {
+        /** @var Application|Interactor $interactor */
+        $interactor = $this->app()?->io();
+        if (!$interactor) {
+            return;
+        }
+
         $interactor = $this->io();
+        $user_id    = $this->values()['user'];
         $users      = $this->userRepository->getValidArray();
 
         foreach ($users as $userId => $userName) {
-            if ($username === $userName) {
+            if (
+                $user_id === $userId ||
+                $username === $userName
+            ) {
                 $interactor->ok(
                     sprintf(
                         T_('%s (%d)'),
@@ -61,7 +74,10 @@ final class AdminListUsersCommand extends Command
                     true
                 );
                 return;
-            } elseif (empty($username)) {
+            } elseif (
+                empty($username) &&
+                $user_id === 0
+            ) {
                 $interactor->ok(
                     sprintf(
                         T_('%s (%d)'),
