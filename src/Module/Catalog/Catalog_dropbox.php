@@ -263,11 +263,11 @@ class Catalog_dropbox extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
         $songsadded = $this->update_remote_catalog();
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
