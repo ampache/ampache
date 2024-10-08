@@ -1606,7 +1606,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 93, 'allow_personal_info_agent', '1'),
 (-1, 94, 'ui_fixed', '0'),
 (-1, 95, 'autoupdate', '1'),
-(-1, 96, 'autoupdate_lastcheck', '1726106728'),
+(-1, 96, 'autoupdate_lastcheck', ''),
 (-1, 97, 'autoupdate_lastversion', ''),
 (-1, 98, 'autoupdate_lastversion_new', ''),
 (-1, 99, 'webplayer_confirmclose', '0'),

@@ -73,6 +73,7 @@ final class AdminListUsersCommand extends Command
                     ),
                     true
                 );
+
                 return;
             } elseif (
                 empty($username) &&
