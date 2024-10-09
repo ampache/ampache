@@ -350,7 +350,7 @@ class Preference extends database_object
      * update_all
      * This takes a preference id and a value and updates all users with the new info
      * @param int|string $preference
-     * @param string $value
+     * @param string|int|bool $value
      */
     public static function update_all($preference, $value): bool
     {

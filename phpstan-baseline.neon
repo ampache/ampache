@@ -301,7 +301,7 @@ parameters:
 			path: src/Module/Api/ApiHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', string\\} given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\{'Ampache\\\\\\\\Module\\\\\\\\Api\\\\\\\\Daap_Api', non\\-falsy\\-string\\} given\\.$#"
 			count: 1
 			path: src/Module/Api/DaapApiApplication.php
 
@@ -971,11 +971,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -1072,11 +1067,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -2936,7 +2926,7 @@ parameters:
 			path: src/Module/Api/Method/LocalplaySongsMethod.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LostPasswordMethod\\:\\:handshake\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\LostPasswordMethod\\:\\:lost_password\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Method/LostPasswordMethod.php
 
@@ -3004,6 +2994,11 @@ parameters:
 			message: "#^Parameter \\#1 \\(array\\|string\\) of echo cannot be converted to string\\.$#"
 			count: 1
 			path: src/Module/Api/Method/PlaylistGenerateMethod.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistHashMethod\\:\\:playlist_hash\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Method/PlaylistHashMethod.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Method\\\\PlaylistMethod\\:\\:playlist\\(\\) has parameter \\$input with no value type specified in iterable type array\\.$#"
@@ -4701,11 +4696,6 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:now_playing\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:object_array\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -4732,11 +4722,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of static method Ampache\\\\Module\\\\Util\\\\ObjectTypeToClassNameMapper\\:\\:reverseMap\\(\\) expects string, class\\-string\\|false given\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -4881,7 +4866,7 @@ parameters:
 			path: src/Module/Application/Playback/Play2Action.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/Play2Action.php
 
@@ -4896,7 +4881,7 @@ parameters:
 			path: src/Module/Application/Playback/PlayAction.php
 
 		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
+			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
 			count: 1
 			path: src/Module/Application/Playback/PlayAction.php
 
@@ -8681,8 +8666,8 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Parameter \\#1 \\$length of function random_bytes expects int\\<1, max\\>, int given\\.$#"
-			count: 1
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 2
 			path: src/Module/System/Core.php
 
 		-
@@ -8696,7 +8681,7 @@ parameters:
 			path: src/Module/System/Core.php
 
 		-
-			message: "#^Parameter \\#5 \\$length of function file_get_contents expects int\\<0, max\\>\\|null, int given\\.$#"
+			message: "#^Result of \\|\\| is always false\\.$#"
 			count: 1
 			path: src/Module/System/Core.php
 
@@ -8841,21 +8826,6 @@ parameters:
 			path: src/Module/System/InstallationHelper.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fclose expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fread expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function fwrite expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function substr expects string, string\\|null given\\.$#"
 			count: 2
 			path: src/Module/System/InstallationHelper.php
@@ -8863,11 +8833,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$user_id of static method Ampache\\\\Repository\\\\Model\\\\User\\:\\:fix_preferences\\(\\) expects int, string given\\.$#"
 			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
-			count: 2
 			path: src/Module/System/InstallationHelper.php
 
 		-
@@ -9611,11 +9576,6 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
 
 		-
-			message: "#^Parameter \\#1 \\$image of function imagefilledrectangle expects GdImage, GdImage\\|false given\\.$#"
-			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
-
-		-
 			message: "#^Parameter \\#1 \\$min of function rand expects int, float\\|int given\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_disturbed.php
@@ -9657,11 +9617,6 @@ parameters:
 
 		-
 			message: "#^Elseif condition is always true\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Captcha\\\\easy_captcha_graphic_image_waved\\:\\:create\\(\\) should return resource\\|false but returns GdImage\\|false\\.$#"
 			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
@@ -9741,18 +9696,8 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#1 \\$image of function imageantialias expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
 			message: "#^Parameter \\#1 \\$image of function imagecolorallocate expects GdImage, resource\\|false given\\.$#"
 			count: 2
-			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagefilledrectangle expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
@@ -9761,7 +9706,7 @@ parameters:
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
 		-
-			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#4 \\$color of function imagesetpixel expects int, int\\<0, max\\>\\|false given\\.$#"
 			count: 3
 			path: src/Module/Util/Captcha/easy_captcha_graphic_image_waved.php
 
@@ -11491,12 +11436,12 @@ parameters:
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Parameter \\#4 \\$color of function imagefill expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#4 \\$color of function imagefill expects int, int\\<0, max\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
 
 		-
-			message: "#^Parameter \\#6 \\$color of function imageline expects int, int\\|false given\\.$#"
+			message: "#^Parameter \\#6 \\$color of function imageline expects int, int\\<0, max\\>\\|false given\\.$#"
 			count: 1
 			path: src/Module/Util/Waveform.php
 
@@ -12421,36 +12366,6 @@ parameters:
 			path: src/Repository/Model/Art.php
 
 		-
-			message: "#^Parameter \\#1 \\$dst_image of function imagecopyresampled expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagedestroy expects GdImage, GdImage\\|false given\\.$#"
-			count: 2
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagegif expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagejpeg expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagepng expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#1 \\$image of function imagewebp expects GdImage, GdImage\\|false given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function scrub_out expects string\\|null, int given\\.$#"
 			count: 2
 			path: src/Repository/Model/Art.php
@@ -12462,11 +12377,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$type of static method Ampache\\\\Repository\\\\Model\\\\Art\\:\\:is_valid_type\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Repository/Model/Art.php
-
-		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<0, max\\>, int given\\.$#"
 			count: 1
 			path: src/Repository/Model/Art.php
 
@@ -13257,11 +13167,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Playlist\\:\\:add_songs\\(\\) has parameter \\$song_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Playlist.php
 
@@ -14381,11 +14286,6 @@ parameters:
 			path: src/Repository/Model/User.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getUserRepository\\(\\) through static\\:\\:\\.$#"
-			count: 5
-			path: src/Repository/Model/User.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:add_items\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
@@ -14578,11 +14478,6 @@ parameters:
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:\\$songs type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Repository/Model/Wanted.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Repository\\\\Model\\\\Wanted\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Repository/Model/Wanted.php
 
 		-

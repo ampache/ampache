@@ -298,11 +298,19 @@ final class InstallationHelper implements InstallationHelperInterface
         } // end if we are creating a user
 
         if ($create_tables) {
-            $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
-            $pieces   = $this->split_sql($query);
-            $p_count  = count($pieces);
-            $errors   = array();
+            $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
+            $sql_handle = fopen($sql_file, 'r');
+            $length     = Core::get_filesize($sql_file);
+            if (!$sql_handle || $length <= 0) {
+                AmpError::add('general', T_('Unable to read the SQL file'));
+
+                return false;
+            }
+
+            $query   = fread($sql_handle, $length);
+            $pieces  = $this->split_sql($query);
+            $p_count = count($pieces);
+            $errors  = array();
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
                 if (!empty($pieces[$count]) && $pieces[$count] != '#') {
@@ -635,7 +643,14 @@ final class InstallationHelper implements InstallationHelperInterface
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
-        fwrite($handle, $new_data, strlen((string) $new_data));
+        $length = strlen((string) $new_data);
+        if (!$handle || $length <= 0) {
+            AmpError::add('general', T_('Unable to read the SQL file'));
+
+            return false;
+        }
+
+        fwrite($handle, $new_data, $length);
         fclose($handle);
 
         return true;
@@ -653,7 +668,11 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, Core::get_filesize($distfile));
+        $length   = Core::get_filesize($distfile);
+        if (!$handle || $length <= 0) {
+            return '';
+        }
+        $dist = fread($handle, $length);
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);

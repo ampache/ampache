@@ -86,8 +86,8 @@ final class AddUserAction extends AbstractUserAction
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website              = (isset($body['website']))
-            ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: null
-            : null;
+            ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: ''
+            : '';
         $access               = (int) scrub_in(htmlspecialchars($body['access'] ?? '', ENT_NOQUOTES));
         $catalog_filter_group = (int) scrub_in(htmlspecialchars($body['catalog_filter_group'] ?? '', ENT_NOQUOTES));
         $pass1                = Core::get_post('password_1');

@@ -86,8 +86,8 @@ final class UpdateUserAction extends AbstractUserAction
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
         $website              = (isset($body['website']))
-            ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: null
-            : null;
+            ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: ''
+            : '';
         $access               = (int) ($body['access'] ?? 0);
         $catalog_filter_group = (int) ($body['catalog_filter_group'] ?? 0);
         $pass1                = Core::get_post('password_1');
@@ -116,8 +116,8 @@ final class UpdateUserAction extends AbstractUserAction
 
         // Check the website for a valid site.
         if (
-            (isset($body['website']) && strlen($body['website']) > 6) &&
-            $website === null
+            (isset($body['website']) && strlen($body['website']) < 6) &&
+            $website === ''
         ) {
             AmpError::add('website', T_('Error'));
         }
