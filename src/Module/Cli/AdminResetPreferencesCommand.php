@@ -34,7 +34,7 @@ final class AdminResetPreferencesCommand extends Command
 {
     public function __construct()
     {
-        parent::__construct('admin:updatePreferenceValue', T_('Reset preference values for users'));
+        parent::__construct('admin:resetPreferences', T_('Reset preference values for users'));
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->option(
@@ -44,7 +44,7 @@ final class AdminResetPreferencesCommand extends Command
                 ''
             )
             ->argument('<username>', T_('Username'))
-            ->usage('<bold>  admin:updatePreferenceValue some-user --preset default</end> <comment> ## ' . T_('Reset preferences for some-user to default values') . '<eol/>');
+            ->usage('<bold>  admin:resetPreferences some-user --preset default</end> <comment> ## ' . T_('Reset preferences for some-user to default values') . '<eol/>');
     }
 
     public function execute(
