@@ -53,12 +53,11 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName
     ): void {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $values     = $this->values();
         $dryRun     = $values['execute'] === false;
 

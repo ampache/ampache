@@ -51,11 +51,11 @@ final class AdminUpdateConfigFileCommand extends Command
 
     public function execute(): void
     {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
+
+        $interactor = $this->io();
         $dryRun     = $this->values()['execute'] === false;
         $outOfDate  = $this->configContainer->get('int_config_version') > $this->configContainer->get('config_version');
 

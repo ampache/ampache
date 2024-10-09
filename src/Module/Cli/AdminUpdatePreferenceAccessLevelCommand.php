@@ -48,13 +48,13 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
 
     public function execute(): void
     {
-        /** @var Application|Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
-        $dryRun = $this->values()['execute'] === false;
-        $level  = $this->values()['level'];
+
+        $interactor = $this->io();
+        $dryRun     = $this->values()['execute'] === false;
+        $level      = $this->values()['level'];
 
         if ($dryRun === true) {
             $interactor->info(

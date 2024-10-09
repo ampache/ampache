@@ -52,12 +52,11 @@ final class PrintTagsCommand extends Command
     public function execute(
         string $filename
     ): void {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $interactor->info(
             sprintf(T_('Reading File: "%s"'), $filename),
             true

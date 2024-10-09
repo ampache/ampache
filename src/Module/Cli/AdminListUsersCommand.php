@@ -50,9 +50,7 @@ final class AdminListUsersCommand extends Command
     public function execute(
         ?string $username
     ): void {
-        /** @var Application|Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 

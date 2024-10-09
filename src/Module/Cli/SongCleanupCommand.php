@@ -47,14 +47,13 @@ final class SongCleanupCommand extends Command
 
     public function execute(): void
     {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
-        $delete = $this->values()['delete'];
-        $result = $this->songFilesystemCleanup->cleanup($delete === false);
+        $interactor = $this->io();
+        $delete     = $this->values()['delete'];
+        $result     = $this->songFilesystemCleanup->cleanup($delete === false);
 
         if ($delete === false) {
             $interactor->green(

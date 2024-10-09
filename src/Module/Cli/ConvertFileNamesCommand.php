@@ -48,12 +48,11 @@ final class ConvertFileNamesCommand extends Command
 
     public function execute(): void
     {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $values     = $this->values();
 
         if (!function_exists('iconv')) {

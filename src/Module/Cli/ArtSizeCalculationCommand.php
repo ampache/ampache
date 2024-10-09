@@ -46,12 +46,11 @@ final class ArtSizeCalculationCommand extends Command
 
     public function execute(): void
     {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $interactor->white(
             T_('Started art size calculation'),
             true

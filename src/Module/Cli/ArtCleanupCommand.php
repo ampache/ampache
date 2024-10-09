@@ -48,12 +48,11 @@ final class ArtCleanupCommand extends Command
 
     public function execute(): void
     {
-        /** @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $interactor->info(
             'This file cleans the image table for items that don\'t fit into set dimensions',
             true

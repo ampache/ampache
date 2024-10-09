@@ -48,15 +48,14 @@ final class AdminResetPreferencesCommand extends Command
     }
 
     public function execute(
-        $username
+        string $username
     ): void {
-        /** @var Application|Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
-        $dryRun  = $this->values()['execute'] === false;
-        $preset  = $this->values()['preset'];
+        $interactor = $this->io();
+        $dryRun     = $this->values()['execute'] === false;
+        $preset     = $this->values()['preset'];
 
         if ($dryRun === true) {
             $interactor->info(
