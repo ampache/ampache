@@ -721,7 +721,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return '';
         }
 
-        $dist = fread($handle, Core::get_filesize($distfile));
+        $dist = fread($handle, $length);
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);
