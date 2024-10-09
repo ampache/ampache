@@ -1517,23 +1517,23 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hidden_playlists', 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
+                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
                         " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
-                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'unique_playlist', 'upload_script') AND `user` = ?;",
+                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
                     ) !== false &&
                     Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'," .
+                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter'," .
                         " 'catalog_check_duplicate', 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions'," .
                         " 'demo_use_search', 'direct_play_limit', 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos'," .
                         " 'httpq_active', 'index_dashboard_form', 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session'," .
                         " 'share', 'show_album_artist', 'show_lyrics', 'show_played_times', 'show_playlist_username', 'show_skipped_times'," .
                         " 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information', 'sidebar_hide_playlist'," .
                         " 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url'," .
-                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend'," .
+                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend'," .
                         " 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
                     ) !== false &&
@@ -1541,7 +1541,7 @@ class Preference extends database_object
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback'," .
                         " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time'," .
-                        " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_force_version'," .
+                        " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6'," .
                         " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums'," .
                         " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user'," .
                         " 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login', 'show_license', 'show_original_year'," .
@@ -1577,22 +1577,22 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hide_dupe_searches', 'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
+                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
                         " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
-                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'unique_playlist', 'upload_script') AND `user` = ?;",
+                        " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
                     ) !== false &&
                     Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate'," .
+                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate'," .
                         " 'cron_cache', 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download'," .
                         " 'force_http_play', 'geolocation', 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'httpq_active', 'index_dashboard_form', 'lock_songs'," .
                         " 'mpd_active', 'notify_email', 'perpetual_api_session', 'share', 'show_album_artist', 'show_lyrics', 'show_played_times'," .
                         " 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'," .
                         " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time'," .
-                        " 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'upload_catalog_pattern', 'upload_user_artist'," .
+                        " 'stream_beautiful_url', 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist'," .
                         " 'upnp_backend', 'use_original_year', 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed'," .
                         " 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
@@ -1601,7 +1601,7 @@ class Preference extends database_object
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3'," .
-                        " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_force_version', 'autoupdate', 'browser_notify'," .
+                        " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify'," .
                         " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played'," .
                         " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login'," .
                         " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove'," .
@@ -1636,22 +1636,22 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hide_dupe_searches', 'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_blankmovie'," .
+                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_blankmovie'," .
                         " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone'," .
                         " 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha'," .
-                        " 'unique_playlist', 'upload_script') AND `user` = ?;",
+                        " 'upload_script') AND `user` = ?;",
                         [$user->getId()]
                     ) !== false &&
                     Dba::write("UPDATE `user_preference` SET `value` = '0.8' WHERE `name` IN ('jp_volume') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '0' WHERE `name` IN (" .
-                        "'album_sort', 'allow_upload', 'allow_video', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache'," .
+                        "'album_sort', 'allow_upload', 'allow_video', 'api_force_version', 'api_hide_dupe_searches', 'bookmark_latest', 'broadcast_by_default', 'browse_filter', 'catalog_check_duplicate', 'cron_cache'," .
                         " 'custom_logo_user', 'daap_backend', 'demo_clear_sessions', 'demo_use_search', 'direct_play_limit', 'download', 'force_http_play', 'geolocation'," .
                         " 'hide_genres', 'hide_single_artist', 'home_moment_videos', 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'httpq_active', 'index_dashboard_form'," .
                         " 'lock_songs', 'mpd_active', 'notify_email', 'perpetual_api_session', 'show_album_artist', 'show_lyrics', 'show_played_times'," .
                         " 'show_playlist_username', 'show_skipped_times', 'show_wrapped', 'sidebar_hide_browse', 'sidebar_hide_dashboard', 'sidebar_hide_information'," .
                         " 'sidebar_hide_playlist', 'sidebar_hide_search', 'sidebar_hide_switcher', 'sidebar_hide_video', 'sidebar_light', 'slideshow_time', 'stream_beautiful_url'," .
-                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year'," .
+                        " 'subsonic_always_download', 'topmenu', 'ui_fixed', 'unique_playlist', 'upload_catalog_pattern', 'upload_user_artist', 'upnp_backend', 'use_original_year'," .
                         " 'use_play2', 'webdav_backend', 'webplayer_confirmclose', 'webplayer_removeplayed', 'api_always_download') AND `user` = ?;",
                         [$user->getId()]
                     ) !== false &&
@@ -1659,7 +1659,7 @@ class Preference extends database_object
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4'," .
-                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
+                        " 'api_enable_5', 'api_enable_6', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
                         " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate'," .
                         " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit'," .
                         " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
