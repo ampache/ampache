@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Cache\ObjectCacheInterface;
 
 final class ComputeCacheCommand extends Command

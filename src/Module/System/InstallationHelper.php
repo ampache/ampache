@@ -333,13 +333,14 @@ final class InstallationHelper implements InstallationHelperInterface
         if ($create_tables) {
             $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
             $sql_handle = fopen($sql_file, 'r');
-            if (!$sql_handle) {
+            $length     = Core::get_filesize($sql_file);
+            if (!$sql_handle || $length <= 0) {
                 AmpError::add('general', T_('Unable to open ampache.sql'));
 
                 return false;
             }
 
-            $query = fread($sql_handle, Core::get_filesize($sql_file));
+            $query = fread($sql_handle, $length);
             if (!$query) {
                 AmpError::add('general', T_('Unable to open ampache.sql'));
 
@@ -688,14 +689,16 @@ final class InstallationHelper implements InstallationHelperInterface
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
+        $length = strlen((string) $new_data);
         if (
             empty($new_data) ||
-            !$handle
+            !$handle ||
+            $length <= 0
         ) {
             return false;
         }
 
-        fwrite($handle, $new_data, strlen((string) $new_data));
+        fwrite($handle, $new_data, $length);
         fclose($handle);
 
         return true;
@@ -713,7 +716,8 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        if (!$handle) {
+        $length   = Core::get_filesize($distfile);
+        if (!$handle || $length <= 0) {
             return '';
         }
 

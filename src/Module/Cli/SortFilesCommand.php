@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
-use Ahc\Cli\IO\Interactor;
 use Ahc\Cli\Input\Command;
 use Ampache\Module\Song\SongSorterInterface;
 

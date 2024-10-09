@@ -25,9 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
-use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
-use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Preference;
 
 final class AdminUpdatePreferenceAccessLevelCommand extends Command
