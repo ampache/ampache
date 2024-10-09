@@ -1678,7 +1678,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 167, 'api_enable_5', '1'),
 (-1, 168, 'api_force_version', '1'),
 (-1, 169, 'show_playlist_username', '0'),
-(-1, 170, 'api_hidden_playlists', '1'),
+(-1, 170, 'api_hidden_playlists', ''),
 (-1, 171, 'api_hide_dupe_searches', ''),
 (-1, 172, 'show_album_artist', '0'),
 (-1, 173, 'show_artist', '1'),

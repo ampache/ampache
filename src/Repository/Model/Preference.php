@@ -1517,7 +1517,7 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
+                        "'api_hidden_playlists', 'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
                         " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
                         " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'unique_playlist', 'upload_script') AND `user` = ?;",
@@ -1542,7 +1542,7 @@ class Preference extends database_object
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback'," .
                         " 'allow_personal_info_agent', 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time'," .
                         " 'allow_stream_playback', 'api_enable_3', 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_force_version'," .
-                        " 'api_hidden_playlists', 'autoupdate', 'browser_notify', 'download', 'home_moment_albums'," .
+                        " 'autoupdate', 'browser_notify', 'download', 'home_moment_albums'," .
                         " 'home_now_playing', 'home_recently_played_all', 'home_recently_played', 'libitem_contextmenu', 'now_playing_per_user'," .
                         " 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login', 'show_license', 'show_original_year'," .
                         " 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove', 'upload_subdir'," .
@@ -1577,7 +1577,7 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
+                        "'api_hide_dupe_searches', 'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
                         " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
                         " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'unique_playlist', 'upload_script') AND `user` = ?;",
@@ -1601,7 +1601,7 @@ class Preference extends database_object
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3'," .
-                        " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_force_version', 'api_hidden_playlists', 'autoupdate', 'browser_notify'," .
+                        " 'api_enable_4', 'api_enable_5', 'api_enable_6', 'api_force_version', 'autoupdate', 'browser_notify'," .
                         " 'home_moment_albums', 'home_now_playing', 'home_recently_played_all', 'home_recently_played'," .
                         " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'show_artist', 'show_donate', 'show_header_login'," .
                         " 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit', 'upload_allow_remove'," .
@@ -1636,7 +1636,7 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hide_dupe_searches', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_blankmovie'," .
+                        "'api_hide_dupe_searches', 'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_blankmovie'," .
                         " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone'," .
                         " 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha'," .
                         " 'unique_playlist', 'upload_script') AND `user` = ?;",
@@ -1659,7 +1659,7 @@ class Preference extends database_object
                         "UPDATE `user_preference` SET `value` = '1' WHERE `name` IN (" .
                         "'ajax_load', 'album_group', 'album_release_type', 'allow_democratic_playback', 'allow_localplay_playback', 'allow_personal_info_agent'," .
                         " 'allow_personal_info_now', 'allow_personal_info_recent', 'allow_personal_info_time', 'allow_stream_playback', 'api_enable_3', 'api_enable_4'," .
-                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'api_hidden_playlists', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
+                        " 'api_enable_5', 'api_enable_6', 'api_force_version', 'autoupdate', 'browser_notify', 'home_moment_albums'," .
                         " 'libitem_contextmenu', 'now_playing_per_user', 'podcast_new_download', 'share', 'show_artist', 'show_donate'," .
                         " 'show_header_login', 'show_license', 'show_original_year', 'show_subtitle', 'song_page_title', 'subsonic_backend', 'upload_allow_edit'," .
                         " 'upload_allow_remove', 'upload_subdir', 'webplayer_aurora', 'webplayer_flash', 'webplayer_html5', 'webplayer_pausetabs') AND `user` = ?;",
