@@ -1634,7 +1634,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 123, 'ajax_load', '1'),
 (-1, 124, 'direct_play_limit', '0'),
 (-1, 125, 'home_moment_albums', '1'),
-(-1, 126, 'home_moment_videos', '1'),
+(-1, 126, 'home_moment_videos', '0'),
 (-1, 127, 'home_recently_played', '1'),
 (-1, 128, 'home_now_playing', '1'),
 (-1, 129, 'custom_logo', ''),
