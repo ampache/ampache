@@ -188,7 +188,7 @@ class Ui implements UiInterface
      */
     public static function check_ticker(): bool
     {
-        if (defined('SSE_OUTPUT') || defined('API')) {
+        if (defined('SSE_OUTPUT') || defined('CLI') || defined('API')) {
             return false;
         }
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {

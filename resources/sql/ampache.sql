@@ -17,10 +17,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.9
--- Generation Time: Sep 12, 2024 at 02:09 AM
--- Server version: 11.4.3-MariaDB-1
--- PHP Version: 8.2.21
+-- Host: 192.168.1.20
+-- Generation Time: Oct 09, 2024 at 03:36 AM
+-- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- PHP Version: 8.2.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -551,6 +551,7 @@ CREATE TABLE IF NOT EXISTS `license` (
   `name` varchar(80) DEFAULT NULL,
   `description` varchar(256) DEFAULT NULL,
   `external_link` varchar(256) DEFAULT NULL,
+  `order` smallint(4) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -558,21 +559,21 @@ CREATE TABLE IF NOT EXISTS `license` (
 -- Dumping data for table `license`
 --
 
-INSERT INTO `license` (`id`, `name`, `description`, `external_link`) VALUES
-(1, '0 - default', NULL, ''),
-(2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/'),
-(3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/'),
-(4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/'),
-(5, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/'),
-(6, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/'),
-(7, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/'),
-(8, 'Licence Art Libre', NULL, 'http://artlibre.org/licence/lal/'),
-(9, 'Yellow OpenMusic', NULL, 'http://openmusic.linuxtag.org/yellow.html'),
-(10, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html'),
-(11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html'),
-(12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL'),
-(13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html'),
-(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm');
+INSERT INTO `license` (`id`, `name`, `description`, `external_link`, `order`) VALUES
+(1, '0 - default', NULL, '', 1),
+(2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/', 2),
+(3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/', 3),
+(4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/', 4),
+(5, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/', 5),
+(6, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/', 6),
+(7, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/', 7),
+(8, 'Licence Art Libre', NULL, 'http://artlibre.org/licence/lal/', 8),
+(9, 'Yellow OpenMusic', NULL, 'http://openmusic.linuxtag.org/yellow.html', 9),
+(10, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html', 10),
+(11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html', 11),
+(12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL', 12),
+(13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html', 13),
+(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14);
 
 -- --------------------------------------------------------
 
@@ -857,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -886,7 +887,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (55, 'transcode', 'default', 'Allow Transcoding', 25, 'string', 'streaming', 'transcoding'),
 (69, 'show_lyrics', '0', 'Show lyrics', 0, 'boolean', 'interface', 'player'),
 (70, 'mpd_active', '0', 'MPD Active Instance', 25, 'integer', 'internal', 'mpd'),
-(71, 'httpq_active', '0', 'httpQ Active Instance', 25, 'integer', 'internal', 'httpq'),
+(71, 'httpq_active', '0', 'HTTPQ Active Instance', 25, 'integer', 'internal', 'httpq'),
 (77, 'lastfm_grant_link', '', 'Last.FM Grant URL', 25, 'string', 'plugins', 'last.fm'),
 (78, 'lastfm_challenge', '', 'Last.FM Submit Challenge', 25, 'string', 'internal', 'last.fm'),
 (82, 'now_playing_per_user', '1', 'Now Playing filtered per user', 50, 'boolean', 'interface', 'home'),
@@ -1007,7 +1008,20 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (202, 'sidebar_order_playlist', '30', 'Custom CSS Order - Playlist', 25, 'integer', 'interface', 'sidebar'),
 (203, 'sidebar_order_search', '40', 'Custom CSS Order - Search', 25, 'integer', 'interface', 'sidebar'),
 (204, 'sidebar_order_information', '60', 'Custom CSS Order - Information', 25, 'integer', 'interface', 'sidebar'),
-(205, 'api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api');
+(205, 'api_always_download', '0', 'Force API streams to download. (Enable scrobble in your client to record stats)', 25, 'boolean', 'options', 'api'),
+(206, 'external_links_google', '1', 'Show Google search icon on library items', 25, 'boolean', 'interface', 'library'),
+(207, 'external_links_duckduckgo', '1', 'Show DuckDuckGo search icon on library items', 25, 'boolean', 'interface', 'library'),
+(208, 'external_links_wikipedia', '1', 'Show Wikipedia search icon on library items', 25, 'boolean', 'interface', 'library'),
+(209, 'external_links_lastfm', '1', 'Show Last.fm search icon on library items', 25, 'boolean', 'interface', 'library'),
+(210, 'external_links_bandcamp', '1', 'Show Bandcamp search icon on library items', 25, 'boolean', 'interface', 'library'),
+(211, 'external_links_musicbrainz', '1', 'Show MusicBrainz search icon on library items', 25, 'boolean', 'interface', 'library'),
+(212, 'homedash_max_items', '6', 'Home Dashboard max items', 25, 'integer', 'plugins', 'home dashboard'),
+(213, 'homedash_random', '1', 'Random', 25, 'boolean', 'plugins', 'home dashboard'),
+(214, 'homedash_newest', '0', 'Newest', 25, 'boolean', 'plugins', 'home dashboard'),
+(215, 'homedash_recent', '0', 'Recent', 25, 'boolean', 'plugins', 'home dashboard'),
+(216, 'homedash_trending', '1', 'Trending', 25, 'boolean', 'plugins', 'home dashboard'),
+(217, 'homedash_popular', '0', 'Popular', 25, 'boolean', 'plugins', 'home dashboard'),
+(218, 'homedash_order', '0', 'Plugin CSS order', 25, 'integer', 'plugins', 'home dashboard');
 
 -- --------------------------------------------------------
 
@@ -1411,8 +1425,9 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '700020'),
-('Plugin_Last.FM', '000005');
+('db_version', '700022'),
+('Plugin_Last.FM', '000005'),
+('Plugin_Home Dashboard', '2');
 
 -- --------------------------------------------------------
 
@@ -1606,7 +1621,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 93, 'allow_personal_info_agent', '1'),
 (-1, 94, 'ui_fixed', '0'),
 (-1, 95, 'autoupdate', '1'),
-(-1, 96, 'autoupdate_lastcheck', '1726106728'),
+(-1, 96, 'autoupdate_lastcheck', ''),
 (-1, 97, 'autoupdate_lastversion', ''),
 (-1, 98, 'autoupdate_lastversion_new', ''),
 (-1, 99, 'webplayer_confirmclose', '0'),
@@ -1633,8 +1648,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 122, 'album_release_type', '1'),
 (-1, 123, 'ajax_load', '1'),
 (-1, 124, 'direct_play_limit', '0'),
-(-1, 125, 'home_moment_albums', '1'),
-(-1, 126, 'home_moment_videos', '1'),
+(-1, 125, 'home_moment_albums', '0'),
+(-1, 126, 'home_moment_videos', '0'),
 (-1, 127, 'home_recently_played', '1'),
 (-1, 128, 'home_now_playing', '1'),
 (-1, 129, 'custom_logo', ''),
@@ -1676,10 +1691,10 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 165, 'api_enable_3', '1'),
 (-1, 166, 'api_enable_4', '1'),
 (-1, 167, 'api_enable_5', '1'),
-(-1, 168, 'api_force_version', '1'),
+(-1, 168, 'api_force_version', '0'),
 (-1, 169, 'show_playlist_username', '0'),
-(-1, 170, 'api_hidden_playlists', '1'),
-(-1, 171, 'api_hide_dupe_searches', ''),
+(-1, 170, 'api_hidden_playlists', ''),
+(-1, 171, 'api_hide_dupe_searches', '0'),
 (-1, 172, 'show_album_artist', '0'),
 (-1, 173, 'show_artist', '1'),
 (-1, 175, 'demo_use_search', '0'),
@@ -1711,7 +1726,20 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 202, 'sidebar_order_playlist', '30'),
 (-1, 203, 'sidebar_order_search', '40'),
 (-1, 204, 'sidebar_order_information', '60'),
-(-1, 205, 'api_always_download', '0');
+(-1, 205, 'api_always_download', '0'),
+(-1, 206, 'external_links_google', '1'),
+(-1, 207, 'external_links_duckduckgo', '1'),
+(-1, 208, 'external_links_wikipedia', '1'),
+(-1, 209, 'external_links_lastfm', '1'),
+(-1, 210, 'external_links_bandcamp', '1'),
+(-1, 211, 'external_links_musicbrainz', '1'),
+(-1, 212, 'homedash_max_items', '6'),
+(-1, 213, 'homedash_random', '1'),
+(-1, 214, 'homedash_newest', '0'),
+(-1, 215, 'homedash_recent', '0'),
+(-1, 216, 'homedash_trending', '1'),
+(-1, 217, 'homedash_popular', '0'),
+(-1, 218, 'homedash_order', '0');
 
 -- --------------------------------------------------------
 
