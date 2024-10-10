@@ -487,7 +487,10 @@ class User extends database_object
      */
     public function update(array $data): ?int
     {
-        if (empty($data['username'])) {
+        if (
+            empty($data['username']) &&
+            in_array(strtolower($data['username']), [strtolower(T_('System')), 'system'])
+        ) {
             AmpError::add('username', T_('Username is required'));
         }
 
@@ -889,6 +892,7 @@ class User extends database_object
     ): int {
         // don't try to overwrite users that already exist
         if (
+            in_array(strtolower($username), [strtolower(T_('System')), 'system']) ||
             self::getUserRepository()->idByUsername($username) > 0 ||
             self::getUserRepository()->idByEmail($email) > 0
         ) {

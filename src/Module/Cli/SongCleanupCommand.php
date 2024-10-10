@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ahc\Cli\IO\Interactor;
 use Ampache\Module\Song\SongFilesystemCleanupInterface;
 
 final class SongCleanupCommand extends Command
@@ -47,14 +46,13 @@ final class SongCleanupCommand extends Command
 
     public function execute(): void
     {
-        /* @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
-        $delete = $this->values()['delete'];
-        $result = $this->songFilesystemCleanup->cleanup($delete === false);
+        $interactor = $this->io();
+        $delete     = $this->values()['delete'];
+        $result     = $this->songFilesystemCleanup->cleanup($delete === false);
 
         if ($delete === false) {
             $interactor->green(

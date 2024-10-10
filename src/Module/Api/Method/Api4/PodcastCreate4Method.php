@@ -69,7 +69,7 @@ final class PodcastCreate4Method
         $catalog = Catalog::create_from_id((int) ($input['catalog'] ?? 0));
 
         if ($catalog === null) {
-            Api4::message('error', T_('Failed: Catalog not found'), '401', $input['api_format']);
+            Api4::message('error', T_('Catalog not found'), '401', $input['api_format']);
 
             return false;
         }
@@ -80,7 +80,7 @@ final class PodcastCreate4Method
                 $catalog
             );
         } catch (PodcastCreationException) {
-            Api4::message('error', T_('Failed: podcast was not created.'), '401', $input['api_format']);
+            Api4::message('error', T_('Bad Request'), '401', $input['api_format']);
 
             return false;
         }

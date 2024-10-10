@@ -786,16 +786,14 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
         $results[] = $row;
     }
 
-    if ($allow_none) {
-        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
-    }
-
     if (
         empty($results) &&
         !empty($gather_types)
     ) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $gather_types) . "</option>\n";
+        echo "\t<option value=\"-1\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $gather_types) . "</option>\n";
+    } elseif ($allow_none) {
+        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
 
     foreach ($results as $row) {

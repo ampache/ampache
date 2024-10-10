@@ -506,7 +506,7 @@ class Catalog_local extends Catalog
         $this->songs_to_gather  = [];
         $this->videos_to_gather = [];
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
@@ -553,7 +553,7 @@ class Catalog_local extends Catalog
             if (($this->count) > 0 && $options['gather_art']) {
                 debug_event(self::class, 'gather_art after adding', 4);
                 $catalog_id = $this->catalog_id;
-                if (!defined('SSE_OUTPUT') && !defined('API')) {
+                if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                     require Ui::find_template('show_gather_art.inc.php');
                     flush();
                 }
@@ -579,7 +579,7 @@ class Catalog_local extends Catalog
             $rate = T_('N/A');
         }
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
             Ui::update_text(
                 T_('Catalog Updated'),

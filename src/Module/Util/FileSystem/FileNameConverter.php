@@ -78,7 +78,7 @@ final class FileNameConverter implements FileNameConverterInterface
         string $path,
         bool $force
     ): bool {
-        /* @var string $source_encoding */
+        /** @var string $source_encoding */
         $source_encoding = iconv_get_encoding('output_encoding') ?: 'UTF-8';
         if (!is_string($source_encoding)) {
             return false;

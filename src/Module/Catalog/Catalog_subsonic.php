@@ -210,11 +210,11 @@ class Catalog_subsonic extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
         $songsadded = $this->update_remote_catalog();
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
