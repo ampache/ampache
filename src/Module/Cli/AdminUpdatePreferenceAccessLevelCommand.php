@@ -25,9 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Cli;
 
-use Ahc\Cli\Application;
 use Ahc\Cli\Input\Command;
-use Ahc\Cli\IO\Interactor;
 use Ampache\Repository\Model\Preference;
 
 final class AdminUpdatePreferenceAccessLevelCommand extends Command
@@ -48,13 +46,13 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
 
     public function execute(): void
     {
-        /* @var Application|Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
-        $dryRun = $this->values()['execute'] === false;
-        $level  = $this->values()['level'];
+
+        $interactor = $this->io();
+        $dryRun     = $this->values()['execute'] === false;
+        $level      = $this->values()['level'];
 
         if ($dryRun === true) {
             $interactor->info(

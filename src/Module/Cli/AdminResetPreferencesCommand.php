@@ -26,53 +26,68 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 
-final class AdminUpdatePluginsCommand extends Command
+final class AdminResetPreferencesCommand extends Command
 {
     public function __construct()
     {
-        parent::__construct('admin:updatePlugins', T_('Update Plugins automatically'));
+        parent::__construct('admin:resetPreferences', T_('Reset preference values for users'));
         $this
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
-            ->usage('<bold>  admin:updatePlugins</end> <comment> ## ' . T_('Update Plugins automatically') . '<eol/>');
+            ->option(
+                '-p|--preset',
+                T_('Config Preset') . " ('default', 'minimalist', 'community')",
+                'strval',
+                ''
+            )
+            ->argument('<username>', T_('Username'))
+            ->usage('<bold>  admin:resetPreferences some-user --preset default</end> <comment> ## ' . T_('Reset preferences for some-user to default values') . '<eol/>');
     }
 
-    public function execute(): void
-    {
+    public function execute(
+        string $username
+    ): void {
         if ($this->app() === null) {
             return;
         }
-
         $interactor = $this->io();
         $dryRun     = $this->values()['execute'] === false;
-        $outOfDate  = Plugin::is_update_available();
-
-        if ($outOfDate) {
-            $interactor->warn(
-                "\n" . T_('Update available'),
-                true
-            );
-        }
+        $preset     = $this->values()['preset'];
 
         if ($dryRun === true) {
             $interactor->info(
                 "\n" . T_('Running in Test Mode. Use -e|--execute to update'),
                 true
             );
+            if ($preset === '') {
+                $interactor->warn(
+                    "\n" . T_('Missing mandatory parameter') . ' -p|--preset',
+                    true
+                );
+            }
             $interactor->ok(
                 "\n" . T_('No changes have been made'),
                 true
             );
-        } elseif ($outOfDate) {
-            $interactor->warn(
-                "\n" . "***" . T_("WARNING") . "*** " . T_("Running in Write Mode. Make sure you've tested first!"),
-                true
-            );
-
-            if (Plugin::update_all()) {
+        } else {
+            if (
+                $preset &&
+                Preference::set_preset($username, $preset)
+            ) {
                 $interactor->ok(
                     "\n" . T_('Updated'),
+                    true
+                );
+            } else {
+                if ($preset === '') {
+                    $interactor->warn(
+                        "\n" . T_('Missing mandatory parameter') . ' -p|--preset',
+                        true
+                    );
+                }
+                $interactor->error(
+                    "\n" . T_('Error'),
                     true
                 );
             }

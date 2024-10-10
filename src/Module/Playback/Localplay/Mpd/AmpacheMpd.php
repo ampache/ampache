@@ -471,7 +471,7 @@ class AmpacheMpd extends localplay_controller
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
                         $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        /* @var Song|Live_Stream $media */
+                        /** @var Song|Live_Stream $media */
                         $media = new $className($row['id']);
                         $media->format();
                         switch ($row['type']) {

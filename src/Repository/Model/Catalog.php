@@ -3390,7 +3390,7 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'Starting clean on ' . $this->name, 5);
 
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_clean_catalog.inc.php');
             ob_flush();
             flush();
@@ -3404,7 +3404,7 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'clean finished, ' . $dead_total . ' removed from ' . $this->name, 4);
 
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
         }
 
@@ -3412,7 +3412,7 @@ abstract class Catalog extends database_object
             T_("Catalog Cleaned"),
             sprintf(nT_("%d file removed.", "%d files removed.", $dead_total), $dead_total)
         );
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -3427,7 +3427,7 @@ abstract class Catalog extends database_object
      */
     public function verify_catalog(): bool
     {
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_verify_catalog.inc.php');
             ob_flush();
             flush();
@@ -3437,7 +3437,7 @@ abstract class Catalog extends database_object
 
         debug_event(self::class, 'verify finished, ' . $verified . ' updated', 4);
 
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top();
         }
 
@@ -3445,7 +3445,7 @@ abstract class Catalog extends database_object
             T_("Catalog Verified"),
             sprintf(nT_('%d file updated.', '%d files updated.', $verified), $verified)
         );
-        if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -3908,7 +3908,7 @@ abstract class Catalog extends database_object
                         }
                     }
 
-                    if (!defined('SSE_OUTPUT') && !defined('CLI')) {
+                    if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
                         echo AmpError::display('catalog_add');
                     }
 

@@ -113,7 +113,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
     {
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             return;
         }
         if ($ignoreTicker || Ui::check_ticker()) {
@@ -136,12 +136,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function add_to_catalog($options = null): int
     {
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
         /** @var Handler $parser */
@@ -152,7 +152,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 

@@ -284,8 +284,8 @@ class Label extends database_object implements library_item
         $address  = $data['address'] ?? null;
         $country  = $data['country'] ?? null;
         $email    = $data['email'] ?? null;
-        $website  = (isset($input['website']))
-            ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
+        $website  = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
         $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
 

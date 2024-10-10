@@ -5141,106 +5141,6 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/AdminUpdateConfigFileCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/AdminUpdatePluginsCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/AdminUpdatePluginsCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/AdminUpdatePluginsCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 3
-			path: src/Module/Cli/ArtCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ArtCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ArtCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:white\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/ArtSizeCalculationCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/BroadcastCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:white\\(\\)\\.$#"
-			count: 3
-			path: src/Module/Cli/BroadcastCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/CacheProcessCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/ComputeCacheCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ConvertFileNamesCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Util\\\\FileSystem\\\\FileNameConverterInterface\\:\\:convert\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ConvertFileNamesCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/CronProcessCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/CronProcessCommand.php
-
-		-
 			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
 			count: 1
 			path: src/Module/Cli/ExportAlbumArtCommand.php
@@ -5261,21 +5161,6 @@ parameters:
 			path: src/Module/Cli/ExportAlbumArtCommand.php
 
 		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportArtCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/ExportArtCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Art\\\\Export\\\\ArtExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportArtCommand.php
-
-		-
 			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
 			count: 1
 			path: src/Module/Cli/ExportPlaylistCommand.php
@@ -5286,69 +5171,9 @@ parameters:
 			path: src/Module/Cli/ExportPlaylistCommand.php
 
 		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:eol\\(\\)\\.$#"
-			count: 3
-			path: src/Module/Cli/PrintTagsCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 5
-			path: src/Module/Cli/PrintTagsCommand.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
 			count: 1
 			path: src/Module/Cli/RunWebsocketCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ShowVersionCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:green\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SongCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:red\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SongCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:white\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SongCleanupCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SortFilesCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/SortFilesCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Song\\\\SongSorterInterface\\:\\:sort\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/SortFilesCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 5
-			path: src/Module/Cli/UpdateDbCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:ok\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/UpdateDbCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:warn\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/UpdateDbCommand.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\HttpQ\\\\AmpacheHttpq\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -5449,11 +5274,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\LocalPlay\\:\\:update_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/LocalPlay.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:format\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Mpd/AmpacheMpd.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Mpd\\\\AmpacheMpd\\:\\:add_instance\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -6658,11 +6478,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\InstallationHelper\\:\\:split_sql\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/System/InstallationHelper.php
-
-		-
-			message: "#^Parameter \\#2 \\$length of function fread expects int\\<1, max\\>, int given\\.$#"
-			count: 2
 			path: src/Module/System/InstallationHelper.php
 
 		-
@@ -10774,11 +10589,6 @@ parameters:
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:\\$items has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:getRssToken\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Repository/Model/User.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User\\:\\:get_avatar\\(\\) return type has no value type specified in iterable type array\\.$#"

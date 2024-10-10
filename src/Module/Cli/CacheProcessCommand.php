@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace Ampache\Module\Cli;
 
 use Ahc\Cli\Input\Command;
-use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Repository\Model\Catalog;
 
@@ -44,12 +43,11 @@ final class CacheProcessCommand extends Command
 
     public function execute(): void
     {
-        /* @var Interactor $interactor */
-        $interactor = $this->app()?->io();
-        if (!$interactor) {
+        if ($this->app() === null) {
             return;
         }
 
+        $interactor = $this->io();
         $interactor->info(
             T_('Start cache process'),
             true
