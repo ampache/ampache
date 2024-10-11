@@ -1500,7 +1500,7 @@ class Preference extends database_object
 
     /**
      * set_preset
-     * Set user preferences to configured preset values ('default', 'minimalist', 'community')
+     * Set user preferences to configured preset values ('system', 'default', 'minimalist', 'community')
      * @param string $username
      * @param string $preset
      */

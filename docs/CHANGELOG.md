@@ -41,7 +41,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Update for missing preferences after CLI DB updates
   * New command `bin/cli admin:updatePreferenceAccessLevel` force preference access level ('default', 'guest', 'user', 'content_manager', 'manager', 'admin')
   * New command `bin/cli admin:listUsers` list all the active users for your site `username (id)`
-  * New command `bin/cli admin:resetPreferences` Reset preference values for users ('default', 'minimalist', 'community')
+  * New command `bin/cli admin:resetPreferences` Reset preference values for users ('system', 'default', 'minimalist', 'community')
 * Config version 75
   * Add `npm_binary_path`
   * Remove OpenID config
@@ -102,7 +102,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 ### Removed
 
 * Support for PHP greater than 8.2
-* Unused stream acti ('default', 'minimalist', 'community')ons
+* Unused stream actions
 * Old composer files
 * Unused PNG icons
 * Non-music Video features have been removed. You can no longer add catalogs for these video types
