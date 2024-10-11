@@ -97,11 +97,11 @@ $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); 
             <td><?php echo T_('User Access Level'); ?></td>
             <td>
                 <?php $user_access = 'on_' . (string)$client->access;
-$on_5                           = '';
-$on_25                          = '';
-$on_50                          = '';
-$on_75                          = '';
-$on_100                         = '';
+$on_5                              = '';
+$on_25                             = '';
+$on_50                             = '';
+$on_75                             = '';
+$on_100                            = '';
 switch ($user_access) {
     case 'on_5':
         $on_5 = 'selected="selected"';
