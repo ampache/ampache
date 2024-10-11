@@ -19,7 +19,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Add option to clear update notifications which will also reset the check timer
 * Allow hiding licenses like genres
 * Show a warning on upload license selection
-* Show bandcamp search icon on object pages
+* Show Bandcamp search icon on object pages
 * Garbage collect unactivated users after 30 days
 * Remove validation token on user activation
 * Show error on user add/update when the website is invalid (empty values are ignored)
@@ -126,6 +126,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * UpdateUser action didn't send you back with a valid user on error
 * Don't show HTML errors in cli
 * Don't show duplicate items in upload_catalog select when you don't have a music catalog
+* User config presets didn't do anything, now they match the cli `admin:resetPreferences` command
 
 ## Ampache 6.6.3
 
