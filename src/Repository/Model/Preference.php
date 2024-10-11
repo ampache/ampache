@@ -1520,7 +1520,7 @@ class Preference extends database_object
                 $db_results   = Dba::read($sql);
 
                 while ($row = Dba::fetch_assoc($db_results)) {
-                    $pref_sql = "UPDATE `user_preference` SET `value` = ? `user` = ? AND `name` = ?;";
+                    $pref_sql = "UPDATE `user_preference` SET `value` = ? WHERE `user` = ? AND `name` = ?;";
                     if (Dba::write($pref_sql, [$row['value'], $user->getId(), $row['name']]) === false) {
                         return false;
                     }
