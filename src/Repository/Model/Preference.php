@@ -1512,6 +1512,18 @@ class Preference extends database_object
         }
 
         switch ($preset) {
+            case 'system':
+                // Get current system preferences
+                $sql          = "SELECT `value`, `name` FROM `user_preference` WHERE `user` = -1;";
+                $db_results   = Dba::read($sql);
+
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $pref_sql = "UPDATE `user_preference` SET `value` = ? `user` = ? AND `name` = ?;";
+                    if (Dba::write($pref_sql, [$row['value'], $user->getId(), $row['name']]) === false) {
+                        return false;
+                    }
+                }
+                return true;
             case 'default':
                 return (
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&

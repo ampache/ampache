@@ -218,6 +218,7 @@ switch ($user_access) {
             <td>
                 <select name="preset">
                     <option value=""></option>preset
+                    <option value="system"><?php echo T_('System'); ?></option>
                     <option value="default"><?php echo T_('Default'); ?></option>
                     <option value="minimalist"><?php echo T_('Minimalist'); ?></option>
                     <option value="community"><?php echo T_('Community'); ?></option>

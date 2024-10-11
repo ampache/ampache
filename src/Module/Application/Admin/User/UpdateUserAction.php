@@ -174,7 +174,7 @@ final class UpdateUserAction extends AbstractUserAction
         // reset preferences if allowed
         if (
             $prevent_override === 0 &&
-            in_array($preset, ['default', 'minimalist', 'community'])
+            in_array($preset, ['system', 'default', 'minimalist', 'community'])
         ) {
             Preference::set_preset($client->getUsername(), $preset);
         }
