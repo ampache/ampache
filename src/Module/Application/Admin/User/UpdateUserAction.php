@@ -35,6 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -98,6 +99,13 @@ final class UpdateUserAction extends AbstractUserAction
 
         /* Setup the temp user */
         $client = $this->modelFactory->createUser($user_id);
+
+        // option to reset user preferences to default
+        $preset = (string)($body['preset'] ?? '');
+        // you must explicitly disable the option on the edit page to reset user preferences admin can't be changed
+        $prevent_override = ($client->access === 100)
+            ? 1
+            : (int)($body['prevent_override'] ?? 1);
 
         /* Verify Input */
         if (empty($username)) {
@@ -183,6 +191,12 @@ final class UpdateUserAction extends AbstractUserAction
                 ),
                 sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
             );
+            if (
+                !$prevent_override &&
+                in_array($preset, ['default', 'minimalist', 'community'])
+            ) {
+                Preference::set_preset($client->getUsername(), $preset);
+            }
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
