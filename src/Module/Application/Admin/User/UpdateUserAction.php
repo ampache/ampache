@@ -171,6 +171,13 @@ final class UpdateUserAction extends AbstractUserAction
         if ($city != $client->city) {
             $client->update_city($city);
         }
+        // reset preferences if allowed
+        if (
+            $prevent_override === 0 &&
+            in_array($preset, ['default', 'minimalist', 'community'])
+        ) {
+            Preference::set_preset($client->getUsername(), $preset);
+        }
         if (!$client->upload_avatar()) {
             $mindimension = sprintf(
                 '%dx%d',
@@ -192,12 +199,6 @@ final class UpdateUserAction extends AbstractUserAction
                 ),
                 sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
             );
-            if (
-                !$prevent_override &&
-                in_array($preset, ['default', 'minimalist', 'community'])
-            ) {
-                Preference::set_preset($client->getUsername(), $preset);
-            }
         } else {
             $this->ui->showConfirmation(
                 T_('No Problem'),
