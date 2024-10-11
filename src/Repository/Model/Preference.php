@@ -1500,7 +1500,7 @@ class Preference extends database_object
 
     /**
      * set_preset
-     * Set user preferences to configured preset values ('default', 'minimalist', 'community')
+     * Set user preferences to configured preset values ('system', 'default', 'minimalist', 'community')
      * @param string $username
      * @param string $preset
      */
@@ -1511,7 +1511,22 @@ class Preference extends database_object
             return false;
         }
 
+        debug_event(self::class, 'Apply preference preset ' . $preset . ' to: ' . $username, 3);
+
         switch ($preset) {
+            case 'system':
+                // Get current system preferences
+                $sql          = "SELECT `value`, `name` FROM `user_preference` WHERE `user` = -1;";
+                $db_results   = Dba::read($sql);
+
+                while ($row = Dba::fetch_assoc($db_results)) {
+                    $pref_sql = "UPDATE `user_preference` SET `value` = ? WHERE `user` = ? AND `name` = ?;";
+                    if (Dba::write($pref_sql, [$row['value'], $user->getId(), $row['name']]) === false) {
+                        return false;
+                    }
+                }
+
+                return true;
             case 'default':
                 return (
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&

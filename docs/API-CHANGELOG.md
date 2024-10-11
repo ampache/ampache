@@ -1,5 +1,9 @@
 # API CHANGELOG
 
+## API 6.6.3
+
+**NO CHANGE**
+
 ## API 6.6.2
 
 ### Added
@@ -7,6 +11,13 @@
 * API6
   * Add `stats` parameter to stream and download methods (If false disable stat recording when playing the object)
   * Respect `api_always_download` in stream and download methods
+  * Add sorting to stats calls
+  * add `user` object to playlist responses (owner of the playlist)
+
+### Fixed
+
+* ALL
+  * index: Artist index not showing albums
 
 ## API 6.6.1
 

@@ -35,6 +35,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -99,6 +100,13 @@ final class UpdateUserAction extends AbstractUserAction
         /* Setup the temp user */
         $client = $this->modelFactory->createUser($user_id);
 
+        // option to reset user preferences to default
+        $preset = (string)($body['preset'] ?? '');
+        // you must explicitly disable the option on the edit page to reset user preferences admin can't be changed
+        $prevent_override = ($client->access === 100)
+            ? 1
+            : (int)($body['prevent_override'] ?? 0);
+
         /* Verify Input */
         if (empty($username)) {
             AmpError::add('username', T_("A Username is required"));
@@ -116,7 +124,8 @@ final class UpdateUserAction extends AbstractUserAction
 
         // Check the website for a valid site.
         if (
-            (isset($body['website']) && strlen($body['website']) < 6) &&
+            isset($body['website']) &&
+            strlen($body['website']) > 6 &&
             $website === ''
         ) {
             AmpError::add('website', T_('Error'));
@@ -161,6 +170,13 @@ final class UpdateUserAction extends AbstractUserAction
         }
         if ($city != $client->city) {
             $client->update_city($city);
+        }
+        // reset preferences if allowed
+        if (
+            $prevent_override === 0 &&
+            in_array($preset, ['system', 'default', 'minimalist', 'community'])
+        ) {
+            Preference::set_preset($client->getUsername(), $preset);
         }
         if (!$client->upload_avatar()) {
             $mindimension = sprintf(
