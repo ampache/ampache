@@ -6,7 +6,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 
 ### Added
 
-* Translations 2024-09
+* Translations 2024-10
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
 * Restore composer.lock
@@ -16,6 +16,13 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Use number for preference input text boxes when the preference value is numeric
 * Check the user is admin when deleting activities
 * Verify http_referer before delete actions
+* Add option to clear update notifications which will also reset the check timer
+* Allow hiding licenses like genres
+* Show a warning on upload license selection
+* Show Bandcamp search icon on object pages
+* Garbage collect unactivated users after 30 days
+* Remove validation token on user activation
+* Show error on user add/update when the website is invalid (empty values are ignored)
 * Plugins
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
@@ -32,14 +39,18 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * New command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
   * New command `bin/cli admin:updatePlugins` (Update any plugins that need an update)
   * Update for missing preferences after CLI DB updates
-* Config version 74
+  * New command `bin/cli admin:updatePreferenceAccessLevel` force preference access level ('default', 'guest', 'user', 'content_manager', 'manager', 'admin')
+  * New command `bin/cli admin:listUsers` list all the active users for your site `username (id)`
+  * New command `bin/cli admin:resetPreferences` Reset preference values for users ('system', 'default', 'minimalist', 'community')
+* Config version 75
   * Add `npm_binary_path`
   * Remove OpenID config
   * Add `database_engine` to allow you to change from InnoDB if you want to
-  * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer comands
+  * Add `composer_no_dev` which allows you to remove `--no-dev` from the composer commands
   * Enable `user_create_streamtoken` by default
   * Add option `waveform_drawflat` that was previously hardcoded
-* Database 700020
+  * Add `webplayer_level` allow setting a minimum permission level for the webplayer (default user)
+* Database 700022
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
@@ -58,6 +69,8 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Add user preferences to order menu sections in the sidebar
   * Add UI option `api_always_download` Force API streams to download. (Enable scrobble in your client to record stats)
   * Require unique preference names per-user in `user_preference` table'
+  * Add `order` column to `license` table to allow sorting and hiding licenses
+  * Add options to allow hiding different search links
 
 ### Changed
 
@@ -82,6 +95,9 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Skip stat recording on `cache=1` instead of reclassifying as a download
 * Convert catalog row actions to a form to fix client branch
 * When updating artist from MusicBrainz use begin area name and fall back to current area instead of using both
+* Don't show track sort on non track pages
+* Validate URLs on save
+* Block users creating a user called System (including translation into site language)
 
 ### Removed
 
@@ -103,10 +119,62 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Don't create missing tables when they haven't been created for your database version
 * Don't put empty artists into artist links
 * Opensearch not being added for sites with auth
-* Oensearch URL parameters didn't work
+* Opensearch URL parameters didn't work
 * VLC localplay volume division number incorrect for total volume
 * Latitude and longitude column names in stats page
 * Cookie disclaimer missing closing " on div id
+* UpdateUser action didn't send you back with a valid user on error
+* Don't show HTML errors in cli
+* Don't show duplicate items in upload_catalog select when you don't have a music catalog
+* User config presets didn't do anything, now they match the cli `admin:resetPreferences` command
+
+## Ampache 6.6.3
+
+### Fixed
+
+* Translating incorrect values for default preferences
+* User uploads
+  * Don't delete the album_artist from the post array when updating
+  * Update process not updating album `version` or `release_status`
+* Order of catalog verify by update_time may ruin the order when updating
+
+## Ampache 6.6.2
+
+In this release we've found a few people missing preferences.
+
+Use the cli updater to make sure you're up to date. (`php bin/cli admin:updateDatabase -e`)
+
+### Added
+
+* Check the user is admin when deleting activities
+* Verify http_referer before delete actions
+* Database 600076
+  * Add ui option ('api_always_download') Force API streams to download. (Enable scrobble in your client to record stats)
+  * Ad more downgrades for Ampache7 users looking to roll back
+* CLI
+  * admin:updateDatabase: set and fix up preferences on update
+* Browse
+  * Podcast sort by `total_count`
+  * Label sort by `active` status
+
+### Changed
+
+* Play URLs `cache=1` will bypass stat recording instead of converting to download
+* When updating artist data from MusicBrainz use `begin-area` name and fallback to `area`
+* Allow guest users access to the webplayer
+* Allow upload user to edit mbid fields on objects they own
+
+### Fixed
+
+* Browse trim for sort could leave a `,`
+* Song `has_info` had extra select columns
+* Some tests were broken
+* Missing close on cookie disclaimer div id
+* content-length calculation for transcode
+* Admin creating a user with a duplicate email wasn't notified
+* Remove `mixed` parameter typing so we don't break php7.4
+* Upload owner could not use `update_from_tags`
+* Upload owner was not sending item values to the update functions
 
 ## Ampache 6.6.1
 
@@ -134,16 +202,6 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Correct output format of array items (e.g. int being cast as string)
 * webplayer
   * Missing variable `playlist_before` in shuffle function
-
-## Ampache 6.6.0
-
-Another version bump due to additions in API6 related to playlists
-
-Users can now share a playlist with specific users and keep the list private from everyone else
-
-You can downgrade from Ampache7 if you try it out and have issues using the cli
-
-### Added
 
 ## Ampache 6.6.0
 

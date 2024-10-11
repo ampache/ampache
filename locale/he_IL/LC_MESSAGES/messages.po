@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-10-03 16:09+1000\n"
+"POT-Creation-Date: 2024-10-08 08:57+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Dotan Mazor, 2021\n"
 "Language-Team: Hebrew (Israel) (http://app.transifex.com/ampache/ampache/language/he_IL/)\n"
@@ -216,10 +216,11 @@ msgstr "בשביל המוסיקה"
 #: ../../public/templates/error_page.inc.php:59
 #: ../../public/templates/test_error_page.inc.php:57
 #: ../../src/Config/functions.php:471
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:122
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:92
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:80
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:173
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:91
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:92
 #: ../../src/Repository/Model/Catalog.php:2318
 msgid "Error"
 msgstr "שגיאה"
@@ -373,8 +374,8 @@ msgstr "רשימות השמעה"
 #: ../../public/templates/show_recommended_artists.inc.php:66
 #: ../../public/templates/show_recommended_artists.inc.php:129
 #: ../../public/templates/show_similar_songs.inc.php:72
-#: ../../public/templates/show_songs.inc.php:94
-#: ../../public/templates/show_songs.inc.php:187
+#: ../../public/templates/show_songs.inc.php:98
+#: ../../public/templates/show_songs.inc.php:191
 #: ../../public/templates/show_top_tracks.inc.php:72
 #: ../../public/templates/show_videos.inc.php:60
 #: ../../public/templates/show_videos.inc.php:100
@@ -605,8 +606,8 @@ msgstr "עיון"
 #: ../../public/templates/show_recently_skipped.inc.php:174
 #: ../../public/templates/show_similar_songs.inc.php:66
 #: ../../public/templates/show_song_previews.inc.php:35
-#: ../../public/templates/show_songs.inc.php:84
-#: ../../public/templates/show_songs.inc.php:184
+#: ../../public/templates/show_songs.inc.php:88
+#: ../../public/templates/show_songs.inc.php:188
 #: ../../public/templates/show_tagcloud_hidden.inc.php:37
 #: ../../public/templates/show_tagcloud.inc.php:38
 #: ../../public/templates/show_top_tracks.inc.php:66
@@ -1084,7 +1085,7 @@ msgstr "רמה"
 #: ../../public/templates/show_preference_box.inc.php:110
 #: ../../public/templates/show_shared_objects.inc.php:38
 #: ../../public/templates/show_wanted_albums.inc.php:43
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:145
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:147
 #: ../../src/Module/Authorization/AccessLevelEnum.php:64
 #: ../../src/Module/Util/Rss/Type/RecentlyPlayedFeed.php:79
 #: ../../src/Module/Util/Ui.php:1156 ../../src/Plugin/AmpachePaypal.php:105
@@ -1141,7 +1142,7 @@ msgstr "סוג"
 #: ../../public/templates/show_pvmsgs.inc.php:94
 #: ../../public/templates/show_recommended_artists.inc.php:72
 #: ../../public/templates/show_recommended_artists.inc.php:134
-#: ../../public/templates/show_songs.inc.php:122
+#: ../../public/templates/show_songs.inc.php:126
 #: ../../public/templates/show_users.inc.php:71
 #: ../../public/templates/show_users.inc.php:108
 #: ../../public/templates/show_video.inc.php:82
@@ -1466,8 +1467,8 @@ msgstr ""
 #: ../../public/templates/show_edit_catalog.inc.php:47
 #: ../../public/templates/show_similar_songs.inc.php:60
 #: ../../public/templates/show_song_previews.inc.php:33
-#: ../../public/templates/show_songs.inc.php:75
-#: ../../public/templates/show_songs.inc.php:178
+#: ../../public/templates/show_songs.inc.php:79
+#: ../../public/templates/show_songs.inc.php:182
 #: ../../public/templates/show_top_tracks.inc.php:60
 #: ../../src/Repository/Model/Search.php:794
 #: ../../src/Repository/Model/Search.php:874
@@ -1491,7 +1492,7 @@ msgstr "כותרת השיר"
 #: ../../public/templates/show_recently_skipped.inc.php:54
 #: ../../public/templates/show_recently_skipped.inc.php:175
 #: ../../public/templates/show_similar_songs.inc.php:69
-#: ../../public/templates/show_songs.inc.php:89
+#: ../../public/templates/show_songs.inc.php:93
 #: ../../public/templates/show_top_tracks.inc.php:69
 #: ../../public/templates/show_wanted_albums.inc.php:42
 #: ../../src/Gui/Song/SongViewAdapter.php:371
@@ -2209,7 +2210,7 @@ msgstr "רמת גישה של משתמש"
 #: ../../public/templates/show_add_user.inc.php:77
 #: ../../public/templates/show_edit_user.inc.php:123
 #: ../../public/templates/show_preference_box.inc.php:109
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:142
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:144
 #: ../../src/Module/Authorization/AccessLevelEnum.php:65
 #: ../../src/Module/Shout/ShoutRenderer.php:112
 msgid "Guest"
@@ -2219,7 +2220,7 @@ msgstr "אורח"
 #: ../../public/templates/show_edit_democratic.inc.php:58
 #: ../../public/templates/show_edit_user.inc.php:125
 #: ../../public/templates/show_preference_box.inc.php:111
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:148
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:150
 #: ../../src/Module/Authorization/AccessLevelEnum.php:63
 #: ../../src/Module/Util/Ui.php:1157
 msgid "Content Manager"
@@ -2229,7 +2230,7 @@ msgstr "מנהל תוכן"
 #: ../../public/templates/show_edit_democratic.inc.php:59
 #: ../../public/templates/show_edit_user.inc.php:126
 #: ../../public/templates/show_preference_box.inc.php:112
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:151
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:153
 #: ../../src/Module/Authorization/AccessLevelEnum.php:62
 #: ../../src/Module/Util/Ui.php:1158
 msgid "Catalog Manager"
@@ -2243,7 +2244,7 @@ msgstr "מנהל קטלוגים"
 #: ../../public/templates/show_mail_users.inc.php:41
 #: ../../public/templates/show_preference_box.inc.php:113
 #: ../../public/templates/sidebar.inc.php:117
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:154
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:156
 #: ../../src/Module/Authorization/AccessLevelEnum.php:61
 #: ../../src/Module/Util/Ui.php:1159
 msgid "Admin"
@@ -2322,8 +2323,8 @@ msgstr "חיפוש ב Musicbrainz ..."
 #: ../../public/templates/show_podcasts.inc.php:47
 #: ../../public/templates/show_recommended_artists.inc.php:62
 #: ../../public/templates/show_similar_songs.inc.php:76
-#: ../../public/templates/show_songs.inc.php:105
-#: ../../public/templates/show_songs.inc.php:194
+#: ../../public/templates/show_songs.inc.php:109
+#: ../../public/templates/show_songs.inc.php:198
 #: ../../public/templates/show_top_tracks.inc.php:76
 #: ../../public/templates/show_user.inc.php:137
 #: ../../public/templates/show_video.inc.php:149
@@ -2543,8 +2544,8 @@ msgstr "שירים"
 #: ../../public/templates/show_recommended_artists.inc.php:132
 #: ../../public/templates/show_searches.inc.php:63
 #: ../../public/templates/show_similar_songs.inc.php:82
-#: ../../public/templates/show_songs.inc.php:115
-#: ../../public/templates/show_songs.inc.php:200
+#: ../../public/templates/show_songs.inc.php:119
+#: ../../public/templates/show_songs.inc.php:204
 #: ../../public/templates/show_top_tracks.inc.php:82
 #: ../../public/templates/show_video.inc.php:69
 #: ../../public/templates/show_videos.inc.php:63
@@ -2704,8 +2705,8 @@ msgstr "שירים דומים"
 #: ../../public/templates/show_recently_skipped.inc.php:52
 #: ../../public/templates/show_recently_skipped.inc.php:173
 #: ../../public/templates/show_similar_songs.inc.php:63
-#: ../../public/templates/show_songs.inc.php:79
-#: ../../public/templates/show_songs.inc.php:181
+#: ../../public/templates/show_songs.inc.php:83
+#: ../../public/templates/show_songs.inc.php:185
 #: ../../public/templates/show_top_tracks.inc.php:63
 #: ../../src/Gui/Song/SongViewAdapter.php:358
 #: ../../src/Repository/Model/Browse.php:386
@@ -2725,8 +2726,8 @@ msgstr "אמן השיר"
 #: ../../public/templates/show_recommended_artists.inc.php:60
 #: ../../public/templates/show_recommended_artists.inc.php:127
 #: ../../public/templates/show_similar_songs.inc.php:74
-#: ../../public/templates/show_songs.inc.php:97
-#: ../../public/templates/show_songs.inc.php:189
+#: ../../public/templates/show_songs.inc.php:101
+#: ../../public/templates/show_songs.inc.php:193
 #: ../../public/templates/show_top_tracks.inc.php:74
 #: ../../public/templates/show_videos.inc.php:55
 #: ../../public/templates/show_videos.inc.php:95
@@ -2744,7 +2745,7 @@ msgstr "בחירת תמונת אלבום חדשה"
 
 #: ../../public/templates/show_arts.inc.php:72
 #: ../../public/templates/show_ip_history.inc.php:73
-#: ../../src/Repository/Model/User.php:1034
+#: ../../src/Repository/Model/User.php:1037
 msgid "Invalid"
 msgstr "לא תקין"
 
@@ -4280,7 +4281,7 @@ msgstr ""
 #: ../../src/Repository/Model/playlist_object.php:98
 #: ../../src/Repository/Model/playlist_object.php:101
 #: ../../src/Repository/Model/Preference.php:375
-#: ../../src/Repository/Model/User.php:1018
+#: ../../src/Repository/Model/User.php:1021
 #: ../../src/Repository/Model/Video.php:822
 msgid "Unknown"
 msgstr "לא ידוע"
@@ -4443,7 +4444,7 @@ msgstr "עצמך"
 #: ../../src/Module/Api/Edit/ShowEditObjectAction.php:72
 #: ../../src/Module/System/Update/Migration/V5/Migration500013.php:67
 #: ../../src/Module/System/Update/Migration/V5/Migration500013.php:68
-#: ../../src/Repository/Model/User.php:1280
+#: ../../src/Repository/Model/User.php:1283
 msgid "System"
 msgstr "מערכת"
 
@@ -5040,8 +5041,8 @@ msgid "Shared by"
 msgstr "משותף על ידי"
 
 #: ../../public/templates/show_similar_songs.inc.php:79
-#: ../../public/templates/show_songs.inc.php:110
-#: ../../public/templates/show_songs.inc.php:197
+#: ../../public/templates/show_songs.inc.php:114
+#: ../../public/templates/show_songs.inc.php:201
 #: ../../public/templates/show_top_tracks.inc.php:79
 #: ../../public/templates/show_user.inc.php:138
 #: ../../src/Gui/Song/SongViewAdapter.php:449
@@ -5049,13 +5050,13 @@ msgid "Skipped"
 msgstr ""
 
 #: ../../public/templates/show_similar_songs.inc.php:133
-#: ../../public/templates/show_songs.inc.php:171
+#: ../../public/templates/show_songs.inc.php:175
 #: ../../public/templates/show_top_tracks.inc.php:133
 msgid "No song found"
 msgstr "לא נמצאו שירים"
 
-#: ../../public/templates/show_songs.inc.php:100
-#: ../../public/templates/show_songs.inc.php:191
+#: ../../public/templates/show_songs.inc.php:104
+#: ../../public/templates/show_songs.inc.php:195
 msgid "License"
 msgstr "רישיון שימוש"
 
@@ -5065,7 +5066,7 @@ msgid "Do you really want to delete this Tag?"
 msgstr "האם באמת למחוק את התגית הזו?"
 
 #: ../../public/templates/show_tagcloud.inc.php:92
-#: ../../src/Repository/Model/User.php:1036
+#: ../../src/Repository/Model/User.php:1039
 msgid "Not Enough Data"
 msgstr "אין מספיק מידע"
 
@@ -5385,7 +5386,7 @@ msgstr "מפתח האימות שבו נעשה שימוש אינו נכון"
 #: ../../src/Repository/Model/Catalog.php:944
 #: ../../src/Repository/Model/Catalog.php:947
 #: ../../src/Repository/Model/Catalog.php:950
-#: ../../src/Repository/Model/User.php:1012
+#: ../../src/Repository/Model/User.php:1015
 msgid "Never"
 msgstr "אף פעם"
 
@@ -5913,10 +5914,10 @@ msgid "Art files written: %d"
 msgstr "כל הקבצים נכתבו אל: %d"
 
 #: ../../src/Module/Api/Api4.php:192
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:67
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:87
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:66
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:86
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:67
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:87
 msgid "Missing mandatory parameter"
 msgstr ""
 
@@ -5968,9 +5969,9 @@ msgstr ""
 #: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:95
 #: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:101
 #: ../../src/Module/Api/Method/Api5/UserDelete5Method.php:69
-#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:84
-#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:91
-#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:130
+#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:86
+#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:93
+#: ../../src/Module/Api/Method/Api5/UserUpdate5Method.php:132
 #: ../../src/Module/Api/Method/PodcastDeleteMethod.php:102
 #: ../../src/Module/Api/Method/PodcastEpisodesMethod.php:106
 #, php-format
@@ -6085,6 +6086,7 @@ msgid "File not found"
 msgstr ""
 
 #: ../../src/Module/Api/Method/Api4/CatalogFile4Method.php:90
+#: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:72
 #: ../../src/Module/Application/Podcast/CreateAction.php:88
 #: ../../src/Module/Application/Podcast/ImportPodcastsAction.php:107
 msgid "Catalog not found"
@@ -6246,13 +6248,20 @@ msgstr ""
 msgid "Track ID not found in playlist"
 msgstr ""
 
-#: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:72
-msgid "Failed: Catalog not found"
-msgstr ""
-
 #: ../../src/Module/Api/Method/Api4/PodcastCreate4Method.php:83
-msgid "Failed: podcast was not created."
-msgstr ""
+#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:141
+#: ../../src/Module/Api/Method/Api5/PlaylistCreate5Method.php:65
+#: ../../src/Module/Api/Method/Api5/PlaylistEdit5Method.php:119
+#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:73
+#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:84
+#: ../../src/Module/Api/Method/Api5/PreferenceEdit5Method.php:76
+#: ../../src/Module/Api/Method/Api5/Scrobble5Method.php:86
+#: ../../src/Module/Api/Method/Api5/ShareCreate5Method.php:130
+#: ../../src/Module/Api/Method/Api5/SystemUpdate5Method.php:65
+#: ../../src/Module/Api/Method/Api5/UrlToSong5Method.php:60
+#: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:105
+msgid "Bad Request"
+msgstr "בקשה שגויה"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song
 #. title", 1298376)
@@ -6374,20 +6383,6 @@ msgstr ""
 msgid "Unable to connect to localplay controller"
 msgstr ""
 
-#: ../../src/Module/Api/Method/Api5/Localplay5Method.php:141
-#: ../../src/Module/Api/Method/Api5/PlaylistCreate5Method.php:65
-#: ../../src/Module/Api/Method/Api5/PlaylistEdit5Method.php:119
-#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:73
-#: ../../src/Module/Api/Method/Api5/PodcastCreate5Method.php:84
-#: ../../src/Module/Api/Method/Api5/PreferenceEdit5Method.php:76
-#: ../../src/Module/Api/Method/Api5/Scrobble5Method.php:86
-#: ../../src/Module/Api/Method/Api5/ShareCreate5Method.php:130
-#: ../../src/Module/Api/Method/Api5/SystemUpdate5Method.php:65
-#: ../../src/Module/Api/Method/Api5/UrlToSong5Method.php:60
-#: ../../src/Module/Api/Method/Api5/UserCreate5Method.php:105
-msgid "Bad Request"
-msgstr "בקשה שגויה"
-
 #: ../../src/Module/Api/Method/Api5/Playlist5Method.php:71
 #: ../../src/Module/Api/Method/Api5/PlaylistAddSong5Method.php:60
 #: ../../src/Module/Api/Method/Api5/PlaylistDelete5Method.php:57
@@ -6477,7 +6472,7 @@ msgstr "הוגדרה רשימת בקרת גישה כפולה"
 #: ../../src/Module/Application/Admin/User/GenerateApiKeyAction.php:91
 #: ../../src/Module/Application/Admin/User/GenerateRssTokenAction.php:91
 #: ../../src/Module/Application/Admin/User/GenerateStreamTokenAction.php:91
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:178
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:188
 #: ../../src/Module/Application/Album/ConfirmDeleteAction.php:92
 #: ../../src/Module/Application/Art/ClearArtAction.php:73
 #: ../../src/Module/Application/Art/FindArtAction.php:118
@@ -6599,7 +6594,7 @@ msgstr "הקטלוג נמחק"
 #: ../../src/Module/Application/Admin/Modules/InstallPluginAction.php:98
 #: ../../src/Module/Application/Admin/User/ConfirmDeleteAction.php:95
 #: ../../src/Module/Application/Admin/User/ConfirmDisableAction.php:96
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:167
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:177
 #: ../../src/Module/Application/Album/ConfirmDeleteAction.php:98
 #: ../../src/Module/Application/Art/FindArtAction.php:124
 #: ../../src/Module/Application/Artist/ConfirmDeleteAction.php:98
@@ -6825,37 +6820,37 @@ msgid ""
 "currently configured charset"
 msgstr ""
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:98
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:107
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:100
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:109
 msgid "Your Passwords don't match"
 msgstr "הססמאות אינן תואמות"
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:102
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:102
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:104
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:104
 msgid "A Username is required"
 msgstr "דרוש שם משתמש"
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:107
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:104
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:109
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:106
 #: ../../src/Module/Application/Register/AddUserAction.php:163
 msgid "That Username already exists"
 msgstr "שם המשתמש כבר קיים"
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:115
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:112
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:117
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:114
 msgid "You entered an invalid e-mail address"
 msgstr "הוכנסה כתובת מייל שאינה תקינה"
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:122
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:124
 msgid "The new User was not created"
 msgstr "המשתמש החדש לא נוצר"
 
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:158
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:160
 msgid "New User Added"
 msgstr "נוסף משתמש חדש"
 
 #. HINT: %1 Username, %2 Access (Guest, User, Admin)
-#: ../../src/Module/Application/Admin/User/AddUserAction.php:160
+#: ../../src/Module/Application/Admin/User/AddUserAction.php:162
 #, php-format
 msgid "%1$s has been created with an access level of %2$s"
 msgstr "%1$s נוצר עם רמת גישה של %2$s"
@@ -6941,14 +6936,14 @@ msgstr ""
 msgid "%s IP History"
 msgstr ""
 
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:170
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:180
 #, php-format
 msgid ""
 "Please check your image is within the minimum %1$s and maximum %2$s "
 "dimensions"
 msgstr "נא לבדוק שהתמונה היא בגודל של לפחות %1$s ולכל היותר %2$s"
 
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:179
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:189
 #, php-format
 msgid "%s (%s) updated"
 msgstr "%s (%s) עודכן"
@@ -7612,12 +7607,12 @@ msgstr[2] "%s שירים נמצאו"
 
 #: ../../src/Module/Catalog/Catalog_remote.php:379
 #: ../../src/Module/Catalog/Catalog_subsonic.php:306
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:81
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:86
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:133
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:193
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:77
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:80
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:81
 #: ../../src/Repository/Model/Catalog.php:2316
 #: ../../src/Repository/Model/Search.php:728
 msgid "Updated"
@@ -7920,37 +7915,51 @@ msgstr ""
 msgid "User creation failed"
 msgstr "יצירת משתמש נכשלה"
 
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:43
-msgid "Update the Ampache config file"
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:37
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:47
+msgid "Reset preference values for users"
 msgstr ""
 
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:39
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:48
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:53
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:39
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:39
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:39
 #: ../../src/Module/Cli/HtaccessCommand.php:48
 msgid "Execute the update"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:40
+#: ../../src/Module/Cli/ExportPlaylistCommand.php:44
+msgid "User ID"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:43
+msgid "Config Preset"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:62
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:71
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:62
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:61
+msgid "Running in Test Mode. Use -e|--execute to update"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:72
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:75
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:66
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:71
+#: ../../src/Module/Cli/UpdateDbCommand.php:91
+msgid "No changes have been made"
+msgstr "לא בוצעו שינויים"
+
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:43
+msgid "Update the Ampache config file"
 msgstr ""
 
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:49
 msgid "Update the config file"
 msgstr ""
-
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:71
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:62
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:61
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:62
-msgid "Running in Test Mode. Use -e|--execute to update"
-msgstr ""
-
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:75
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:66
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:71
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:72
-#: ../../src/Module/Cli/UpdateDbCommand.php:91
-msgid "No changes have been made"
-msgstr "לא בוצעו שינויים"
 
 #: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:80
 #: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:71
@@ -8032,21 +8041,7 @@ msgstr "יש עדכון זמין"
 
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:37
 #: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:46
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:47
 msgid "Update Preference Access Level"
-msgstr ""
-
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:37
-msgid "Update preference values for users"
-msgstr ""
-
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:40
-#: ../../src/Module/Cli/ExportPlaylistCommand.php:44
-msgid "User ID"
-msgstr ""
-
-#: ../../src/Module/Cli/AdminUpdatePreferenceValueCommand.php:43
-msgid "Config Preset"
 msgstr ""
 
 #: ../../src/Module/Cli/ArtCleanupCommand.php:43
@@ -8481,6 +8476,7 @@ msgid "Table engine: %s"
 msgstr ""
 
 #: ../../src/Module/Playback/Localplay/HttpQ/AmpacheHttpq.php:100
+#: ../../src/Repository/Model/Preference.php:788
 #: ../../src/Repository/Model/Preference.php:1260
 msgid "HTTPQ Active Instance"
 msgstr ""
@@ -9817,10 +9813,6 @@ msgstr ""
 msgid "Show lyrics"
 msgstr ""
 
-#: ../../src/Repository/Model/Preference.php:788
-msgid "httpQ Active Instance"
-msgstr ""
-
 #: ../../src/Repository/Model/Preference.php:797
 #: ../../src/Repository/Model/Preference.php:1278
 msgid "Now Playing filtered per user"
@@ -10913,7 +10905,7 @@ msgstr ""
 msgid "Username is required"
 msgstr ""
 
-#: ../../src/Repository/Model/User.php:1300
+#: ../../src/Repository/Model/User.php:1303
 msgid "User avatar"
 msgstr "תמונת משתמש"
 
@@ -11676,7 +11668,6 @@ msgstr ""
 #: ./untranslated-strings.txt:15
 msgid "Total Users"
 msgstr ""
-
 
 #: ./untranslated-strings.txt:26
 msgid "Show current song in Web Player page title"

@@ -37,7 +37,7 @@ final class AdminResetPreferencesCommand extends Command
             ->option('-e|--execute', T_('Execute the update'), 'boolval', false)
             ->option(
                 '-p|--preset',
-                T_('Config Preset') . " ('default', 'minimalist', 'community')",
+                T_('Config Preset') . " ('system', 'default', 'minimalist', 'community')",
                 'strval',
                 ''
             )
