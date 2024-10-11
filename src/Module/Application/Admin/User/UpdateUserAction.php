@@ -124,7 +124,8 @@ final class UpdateUserAction extends AbstractUserAction
 
         // Check the website for a valid site.
         if (
-            (isset($body['website']) && strlen($body['website']) < 6) &&
+            isset($body['website']) &&
+            strlen($body['website']) > 6 &&
             $website === ''
         ) {
             AmpError::add('website', T_('Error'));
