@@ -212,7 +212,7 @@ switch ($user_access) {
                 </span>
             </td>
         </tr>
-        <?php if (!$access100) { ?>
+        <?php if ($user_access !== 100) { ?>
         <tr>
             <td><?php echo T_('Config Preset'); ?></td>
             <td>
