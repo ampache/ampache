@@ -226,7 +226,7 @@ switch ($user_access) {
         </tr>
         <tr>
             <td><?php echo T_('Prevent Preset Override'); ?></td>
-            <td><input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
+            <td><input type="checkbox" checked="checked" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
             </td>
         </tr>
         <?php } ?>
