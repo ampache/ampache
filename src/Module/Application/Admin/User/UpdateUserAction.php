@@ -105,7 +105,7 @@ final class UpdateUserAction extends AbstractUserAction
         // you must explicitly disable the option on the edit page to reset user preferences admin can't be changed
         $prevent_override = ($client->access === 100)
             ? 1
-            : (int)($body['prevent_override'] ?? 1);
+            : (int)($body['prevent_override'] ?? 0);
 
         /* Verify Input */
         if (empty($username)) {
