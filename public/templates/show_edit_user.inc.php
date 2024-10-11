@@ -214,7 +214,10 @@ switch ($user_access) {
         </tr>
         <?php if ($user_access !== 100) { ?>
         <tr>
-            <td><?php echo T_('Config Preset'); ?></td>
+            <td>
+                <?php echo T_('Config Preset'); ?><br>
+                <span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
+            </td>
             <td>
                 <select name="preset">
                     <option value=""></option>preset
@@ -226,9 +229,7 @@ switch ($user_access) {
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Prevent Preset Override'); ?></td>
-            <td><input type="checkbox" checked="checked" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
-            </td>
+            <td><?php echo T_('Config Preset'); ?>&nbsp;<span class="information">(<?php echo T_('This affects all non-admin accounts'); ?>)</span></td>
         </tr>
         <?php } ?>
         <tr>
