@@ -1511,6 +1511,8 @@ class Preference extends database_object
             return false;
         }
 
+        debug_event(self::class, 'Apply preference preset ' . $preset . ' to: ' . $username, 3);
+
         switch ($preset) {
             case 'system':
                 // Get current system preferences
