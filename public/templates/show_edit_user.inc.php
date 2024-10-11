@@ -96,13 +96,13 @@ $access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); 
         <tr>
             <td><?php echo T_('User Access Level'); ?></td>
             <td>
-                <?php $var_name = 'on_' . (string)$client->access;
-$on_5                           = '';
-$on_25                          = '';
-$on_50                          = '';
-$on_75                          = '';
-$on_100                         = '';
-switch ($var_name) {
+                <?php $user_access = 'on_' . (string)$client->access;
+$on_5                              = '';
+$on_25                             = '';
+$on_50                             = '';
+$on_75                             = '';
+$on_100                            = '';
+switch ($user_access) {
     case 'on_5':
         $on_5 = 'selected="selected"';
         break;
@@ -212,6 +212,25 @@ switch ($var_name) {
                 </span>
             </td>
         </tr>
+        <?php if ($user_access !== 100) { ?>
+        <tr>
+            <td><?php echo T_('Config Preset'); ?></td>
+            <td>
+                <select name="preset">
+                    <option value=""></option>preset
+                    <option value="system"><?php echo T_('System'); ?></option>
+                    <option value="default"><?php echo T_('Default'); ?></option>
+                    <option value="minimalist"><?php echo T_('Minimalist'); ?></option>
+                    <option value="community"><?php echo T_('Community'); ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo T_('Prevent Preset Override'); ?></td>
+            <td><input type="checkbox" checked="checked" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
+            </td>
+        </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('Clear Stats'); ?></td>
             <td><input type="checkbox" value="1" name="reset_stats" /></td>
