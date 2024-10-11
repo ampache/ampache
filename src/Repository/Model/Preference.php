@@ -1525,6 +1525,7 @@ class Preference extends database_object
                         return false;
                     }
                 }
+
                 return true;
             case 'default':
                 return (
