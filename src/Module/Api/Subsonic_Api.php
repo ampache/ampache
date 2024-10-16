@@ -2990,46 +2990,70 @@ class Subsonic_Api
      */
     public static function saveplayqueue($input, $user): void
     {
-        $current = (string)($input['current'] ?? '0');
-        $media   = Subsonic_Xml_Data::_getAmpacheObject((string)$current);
-        if ($media === null || $media->isNew()) {
-            $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
-        } else {
+        $id_list  = $input['id'] ?? '';
+        $current  = (string)($input['current'] ?? '');
+        $position = (array_key_exists('position', $input))
+            ? (int)(((int)$input['position']) / 1000)
+            : 0;
+        $client    = scrub_in((string) ($input['c'] ?? 'Subsonic'));
+        $user_id   = $user->id;
+        $time      = time();
+        $playQueue = new User_Playlist($user_id, $client);
+        if (empty($id_list)) {
             $response = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
-            $position = (array_key_exists('position', $input))
-                ? (int)(((int)$input['position']) / 1000)
-                : 0;
-            $client         = scrub_in((string) ($input['c'] ?? 'Subsonic'));
-            $user_id        = $user->id;
-            $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
-            $time           = time();
-            // wait a few seconds before smashing out play times
-            if ($playqueue_time < ($time - 2)) {
-                $previous = Stats::get_last_play($user_id, $client);
-                $type     = Subsonic_Xml_Data::_getAmpacheType($current);
-                // long pauses might cause your now_playing to hide
-                Stream::garbage_collection();
-                Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
+            $playQueue->clear();
+        } else {
+            $media = (!empty($current))
+                ? Subsonic_Xml_Data::_getAmpacheObject($current)
+                : null;
+            if ($media === null || $media->isNew()) {
+                $response = Subsonic_Xml_Data::addError(Subsonic_Xml_Data::SSERROR_DATA_NOTFOUND, 'saveplayqueue');
+            } else {
+                $response       = Subsonic_Xml_Data::addSubsonicResponse('saveplayqueue');
+                $playqueue_time = (int)User::get_user_data($user->id, 'playqueue_time', 0)['playqueue_time'];
+                // wait a few seconds before smashing out play times
+                if ($playqueue_time < ($time - 2)) {
+                    $previous = Stats::get_last_play($user_id, $client);
+                    $type     = Subsonic_Xml_Data::_getAmpacheType($current);
+                    // long pauses might cause your now_playing to hide
+                    Stream::garbage_collection();
+                    Stream::insert_now_playing((int)$media->id, (int)$user_id, ((int)$media->time - $position), (string)$user->username, $type, ($time - $position));
 
-                if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
-                    $time_diff = $time - $previous['date'];
-                    $old_play  = $time_diff > $media->time * 5;
-                    // shift the start time if it's an old play or has been pause/played
-                    if ($position >= 1 || $old_play) {
-                        Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
-                    }
-                    // track has just started. repeated plays aren't called by scrobble so make sure we call this too
-                    if (($position < 1 && $time_diff > 5) && !$old_play) {
-                        $media->set_played((int)$user_id, $client, [], $time);
+                    if (array_key_exists('object_id', $previous) && $previous['object_id'] == $media->id) {
+                        $time_diff = $time - $previous['date'];
+                        $old_play  = $time_diff > $media->time * 5;
+                        // shift the start time if it's an old play or has been pause/played
+                        if ($position >= 1 || $old_play) {
+                            Stats::shift_last_play($user_id, $client, $previous['date'], ($time - $position));
+                        }
+                        // track has just started. repeated plays aren't called by scrobble so make sure we call this too
+                        if (($position < 1 && $time_diff > 5) && !$old_play) {
+                            $media->set_played((int)$user_id, $client, [], $time);
+                        }
                     }
                 }
-                $playQueue = new User_Playlist($user_id, $client);
-                $sub_ids   = (is_array($input['id']))
-                    ? $input['id']
-                    : [$input['id']];
-                $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
-                $playQueue->set_items($playlist, $type, $media->id, $position, $time);
             }
+
+            $sub_ids = (is_array($id_list))
+                ? $id_list
+                : [$id_list];
+            $playlist = Subsonic_Xml_Data::_getAmpacheIdArrays($sub_ids);
+
+            // clear the old list
+            $playQueue->clear();
+            // set the new items
+            $playQueue->add_items($playlist, $time);
+
+            if (
+                isset($type) &&
+                isset($media->id)
+            ) {
+                $playQueue->set_current_object($type, $media->id, $time);
+            }
+
+            // subsonic cares about queue dates so set them (and set them together)
+            User::set_user_data($user_id, 'playqueue_time', $time);
+            User::set_user_data($user_id, 'playqueue_client', $client);
         }
 
         self::_apiOutput($input, $response);
