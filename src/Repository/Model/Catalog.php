@@ -459,7 +459,7 @@ abstract class Catalog extends database_object
     /**
      * Get item f_link.
      */
-    public function get_f_link(): ?string
+    public function get_f_link(): string
     {
         // don't do anything if it's formatted
         if ($this->f_link === null) {

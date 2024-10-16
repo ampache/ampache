@@ -640,6 +640,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return $this->get_f_artist_link();
+    }
+
+    /**
      * Get item album_artists array
      * @return int[]
      */

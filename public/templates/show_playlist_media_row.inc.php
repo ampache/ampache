@@ -47,7 +47,13 @@ use Ampache\Module\Util\Ui;
 /** @var bool $show_ratings */
 
 // Don't show disabled medias to normal users
-if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
+if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+    $thumb = ($browse->is_grid_view())
+        ? 3
+        : 11;
+    $link = (!empty($libitem->get_f_parent_link()))
+        ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
+        : $libitem->get_f_link(); ?>
 <td class="cel_play">
     <span class="cel_play_content"><?php echo '<b>' . $playlist_track . '</b>'; ?></span>
     <div class="cel_play_hover">
@@ -65,11 +71,10 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 </td>
 <td class="<?php echo $cel_cover; ?>">
 <div style="max-width: 80px;">
-    <?php $thumb = ($browse->is_grid_view()) ? 3 : 11;
-    $libitem->display_art($thumb); ?>
+    <?php $libitem->display_art($thumb); ?>
 </div>
 </td>
-<td class="cel_title"><?php echo $libitem->get_f_link(); ?></td>
+<td class="cel_title"><?php echo $link; ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
