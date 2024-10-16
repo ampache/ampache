@@ -124,15 +124,15 @@ final class AlbumsMethod implements MethodInterface
 
         ob_end_clean();
 
+        $output->setOffset($input['limit'] ?? 0);
+        $output->setLimit($input['offset'] ?? 0);
+        $output->setCount($browse->get_total());
+
         /** @var string $result */
         $result = $output->albums(
             $results,
             $include,
-            $user,
-            true,
-            true,
-            (int)($input['limit'] ?? 0),
-            (int)($input['offset'] ?? 0)
+            $user
         );
 
         return $response->withBody(
