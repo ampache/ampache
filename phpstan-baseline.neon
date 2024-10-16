@@ -466,11 +466,6 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:albums\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) has parameter \\$artists with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
@@ -486,27 +481,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:artists\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:catalogs\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:democratic\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:error\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -521,17 +496,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:licenses\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:playlists\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -541,17 +506,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcast_episodes\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcasts\\(\\) has parameter \\$podcasts with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:podcasts\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -561,37 +516,12 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:shares\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:shouts\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:songs\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:success\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:tags\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:tags\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -606,37 +536,7 @@ parameters:
 			path: src/Module/Api/Json4_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:timeline\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:user\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:users\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:videos\\(\\) has parameter \\$videos with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:videos\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Module/Api/Json4_Data.php
 
@@ -651,11 +551,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:albums\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -666,47 +561,12 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:artists\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:bookmarks\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:catalogs\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:deleted\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:deleted\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:democratic\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:empty\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:error\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -721,11 +581,6 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:genres\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
@@ -736,27 +591,7 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:labels\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:licenses\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:live_streams\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:playlists\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -766,32 +601,7 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcast_episodes\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:podcasts\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:shares\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:shouts\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:songs\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json5_Data.php
 
@@ -801,52 +611,12 @@ parameters:
 			path: src/Module/Api/Json5_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:success\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:timeline\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:user\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:users\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:videos\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Json5_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:albums\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -861,27 +631,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:artists\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:bookmarks\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:browses\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:browses\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:catalogs\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -891,22 +641,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:deleted\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:democratic\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:democratic\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:error\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -926,11 +661,6 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:genres\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:indexes\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
@@ -946,32 +676,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:labels\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:licenses\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:lists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:lists\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:live_streams\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:now_playing\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -986,17 +691,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:playlists\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcast_episodes\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcast_episodes\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1006,27 +701,7 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcasts\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:shares\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:shouts\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:songs\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:songs\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
@@ -1036,63 +711,13 @@ parameters:
 			path: src/Module/Api/Json_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:success\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:timeline\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:user\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:users\\(\\) should return array\\|string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Module/Api/Json_Data.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) should return array\\|string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:podcast_episodes\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Json_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Json_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Json_Data.php
 
 		-
@@ -4401,11 +4026,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Default value of the parameter \\#2 \\$callback \\(string\\) of method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) is incompatible with type bool\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:_header\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Xml3_Data.php
@@ -4496,21 +4116,6 @@ parameters:
 			path: src/Module/Api/Xml3_Data.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of static method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:keyed_array\\(\\) expects bool, int given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml3_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml3_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml3_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml4_Data.php
@@ -4576,16 +4181,6 @@ parameters:
 			path: src/Module/Api/Xml4_Data.php
 
 		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 3
-			path: src/Module/Api/Xml4_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml4_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Module/Api/Xml4_Data.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:albums\\(\\) has parameter \\$include with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml5_Data.php
@@ -4638,16 +4233,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml5_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml5_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Xml5_Data.php
 
 		-
@@ -4706,7 +4291,7 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:playlists\\(\\) has parameter \\$playlists with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:playlists\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
 
@@ -4723,31 +4308,6 @@ parameters:
 		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:success\\(\\) has parameter \\$return_data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:podcast_episodes\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:songs\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Parameter \\#2 \\$user of static method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:videos\\(\\) expects Ampache\\\\Repository\\\\Model\\\\User, Ampache\\\\Repository\\\\Model\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getAlbumRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Module/Api/Xml_Data.php
-
-		-
-			message: "#^Unsafe call to private method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:getSongRepository\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Module/Api/Xml_Data.php
 
 		-
