@@ -188,13 +188,15 @@ class User_Playlist extends database_object
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
         $values = [];
         foreach ($data as $row) {
-            $sql .= '(?, ?, ?, ?, ?, ?),';
-            $values[] = $time;
-            $values[] = $this->client;
-            $values[] = $this->user;
-            $values[] = $row['object_type'];
-            $values[] = $row['object_id'];
-            $values[] = $row['track'];
+            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
+                $sql .= '(?, ?, ?, ?, ?, ?),';
+                $values[] = $time;
+                $values[] = $this->client;
+                $values[] = $this->user;
+                $values[] = $row['object_type'];
+                $values[] = $row['object_id'];
+                $values[] = $row['track'];
+            }
         }
 
         // remove last comma
