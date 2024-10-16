@@ -71,12 +71,15 @@ final readonly class UserActivityRenderer implements UserActivityRendererInterfa
             'rating' => T_('rated'),
             default => T_('did something on'),
         };
+        $link = (!empty($libitem->get_f_parent_link()))
+            ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
+            : $libitem->get_f_link();
 
         return sprintf(
             '<div>%s %s %s</div>',
             get_datetime($useractivity->activity_date),
             $descr,
-            $libitem->get_f_link()
+            $link
         );
     }
 }
