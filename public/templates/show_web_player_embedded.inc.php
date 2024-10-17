@@ -24,7 +24,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
-
 ?>
 <script>
 function PlayerFrame()

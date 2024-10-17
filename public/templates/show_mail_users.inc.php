@@ -26,7 +26,6 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
-
 ?>
 
 <?php Ui::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>

@@ -24,7 +24,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Util\Ui;
-
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

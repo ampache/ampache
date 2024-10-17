@@ -24,7 +24,6 @@ declare(strict_types=0);
  */
 
 use Ampache\Module\Api\Ajax;
-
 ?>
 <div id="localplay-control">
 <?php echo Ajax::button('?page=localplay&action=command&command=prev', 'skip_previous', T_('Previous'), 'localplay_control_previous'); ?>

@@ -27,7 +27,6 @@ use Ampache\Repository\Model\License;
 
 /** @var License $license */
 /** @var string $adminPath */
-
 ?>
 <form method="post" enctype="multipart/form-data" action="<?php echo $adminPath; ?>/license.php?action=edit">
 <input type="hidden" name="license_id" value="<?php echo $license->getId(); ?>" />
