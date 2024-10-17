@@ -105,10 +105,8 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     </a>
     <?php
     }
-    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
-        if (AmpConfig::get('share')) {
-            echo Share::display_ui($object_type, $libitem->getId(), false);
-        }
+    if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
+        echo Share::display_ui($object_type, $libitem->getId(), false);
     }
     if (isset($playlist) && $playlist->has_collaborate()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', T_('Delete'), 'track_del_' . $object['track_id']); ?>

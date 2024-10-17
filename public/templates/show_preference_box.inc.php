@@ -42,12 +42,10 @@ $is_admin  = (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &
 <colgroup>
   <col id="col_preference" />
   <col id="col_value" />
-    <?php if ($is_admin) {
-        if (!$is_system) { ?>
+    <?php if ($is_admin && !$is_system) { ?>
   <col id="col_applytoall" />
   <col id="col_level" />
-    <?php }
-        } ?>
+    <?php } ?>
 </colgroup>
 <thead>
     <tr class="th-top">
