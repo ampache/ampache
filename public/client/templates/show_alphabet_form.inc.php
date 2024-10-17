@@ -28,7 +28,6 @@ use Ampache\Config\AmpConfig;
 /** @var string $action */
 /** @var string $text */
 /** @var string $match */
-
 ?>
 <form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get_web_path('/client') . "/$action"; ?>" enctype="multipart/form-data">
     <label for="match" accesskey="S"><?php echo $text; ?></label>

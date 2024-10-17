@@ -395,10 +395,11 @@ function check_config_values($conf): bool
     if (!isset($conf['session_cookiesecure'])) {
         return false;
     }
-    if (isset($conf['debug'])) {
-        if (!isset($conf['log_path'])) {
-            return false;
-        }
+    if (
+        isset($conf['debug']) &&
+        !isset($conf['log_path'])
+    ) {
+        return false;
     }
 
     return true;
@@ -957,8 +958,8 @@ function show_table_render($render = false, $force = false): void
     if ($force || !defined('TABLE_RENDERED')) {
         if (!defined('TABLE_RENDERED')) {
             define('TABLE_RENDERED', 1);
-        } ?>
-        <?php if ($render) { ?>
+        }
+        if ($render) { ?>
             <script>
                 $(document).ready(function () {
                     sortPlaylistRender();
@@ -1115,10 +1116,12 @@ function canEditArtist(
     Artist $artist,
     int $userId
 ): bool {
-    if (AmpConfig::get('upload_allow_edit')) {
-        if ($artist->user !== null && $userId == $artist->user) {
-            return true;
-        }
+    if (
+        AmpConfig::get('upload_allow_edit') &&
+        $artist->user !== null &&
+        $userId == $artist->user
+    ) {
+        return true;
     }
 
     global $dic;

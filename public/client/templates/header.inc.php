@@ -72,7 +72,6 @@ $t_upload    = T_('Upload');
 $albumString = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
-
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $htmllang; ?>" lang="<?php echo $htmllang; ?>" dir="<?php echo is_rtl($site_lang) ? 'rtl' : 'ltr'; ?>">
@@ -98,7 +97,7 @@ $albumString = (AmpConfig::get('album_group'))
         <?php if ($site_ajax) {
             $iframed = true;
             require_once Ui::find_template('show_html5_player_headers.inc.php');
-        }?>
+        } ?>
     </head>
     <body id="main-page">
         <div id="aslideshow">

@@ -64,7 +64,7 @@ if (!empty($tab)) {
         $template = (AmpConfig::get('simple_user_mode') && !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) ? 'show_account_simple.inc.php' : 'show_account.inc.php';
         require Ui::find_template($template);
     }
-}?>
+} ?>
 </form>
 
 <?php Ui::show_box_bottom(); ?>

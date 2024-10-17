@@ -305,6 +305,14 @@ class Podcast_Episode extends database_object implements
         return $this->link_formatted;
     }
 
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return $this->getPodcastLink();
+    }
+
     public function getPodcastName(): string
     {
         if ($this->podcast_name === null) {

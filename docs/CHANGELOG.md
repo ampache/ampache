@@ -36,7 +36,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Subonic
   * Add openSubsonic extensions [ampache.org](https://ampache.org/api/subsonic/#opensubsonic-api-extension)
 * CLI
-  * New command `bin/cli run:updateConfigFile` (Update the config file to the latest version if available)
+  * New command `bin/cli admin:updateConfigFile` (Update the config file to the latest version if available)
   * New command `bin/cli admin:updatePlugins` (Update any plugins that need an update)
   * Update for missing preferences after CLI DB updates
   * New command `bin/cli admin:updatePreferenceAccessLevel` force preference access level ('default', 'guest', 'user', 'content_manager', 'manager', 'admin')

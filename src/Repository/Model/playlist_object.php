@@ -252,6 +252,14 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Get item type (public / private).
      */
     public function get_f_type(): string

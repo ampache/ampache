@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=0);
+declare(strict_types=1);
 
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
@@ -20,12 +20,18 @@ declare(strict_types=0);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
  */
 
-use Ampache\Module\Api\Ajax;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-/** @var string $type */ ?>
+use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-<?php Ajax::start_container($type, 'browse_content'); ?>
-<?php Ajax::end_container(); ?>
+final class Migration700023 extends AbstractMigration
+{
+    protected array $changelog = ['Add user preferences to Show extended links for playlist media.'];
+
+    public function migrate(): void
+    {
+        $this->updatePreferences('extended_playlist_links', 'Show extended links for playlist media', '0', 25, 'boolean', 'playlist');
+    }
+}

@@ -61,6 +61,11 @@ interface playable_item
     public function get_f_link(): string;
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string;
+
+    /**
      * @return null|array{object_type: LibraryItemEnum, object_id: int}
      */
     public function get_parent(): ?array;

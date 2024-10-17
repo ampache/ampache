@@ -138,11 +138,13 @@ final class PlayerMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count(count($results));
                 echo Json_Data::now_playing($results);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count(count($results));
                 echo Xml_Data::now_playing($results);
         }
 
