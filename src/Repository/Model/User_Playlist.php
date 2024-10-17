@@ -188,43 +188,21 @@ class User_Playlist extends database_object
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
         $values = [];
         foreach ($data as $row) {
-            $sql .= '(?, ?, ?, ?, ?, ?),';
-            $values[] = $time;
-            $values[] = $this->client;
-            $values[] = $this->user;
-            $values[] = $row['object_type'];
-            $values[] = $row['object_id'];
-            $values[] = $row['track'];
+            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
+                $sql .= '(?, ?, ?, ?, ?, ?),';
+                $values[] = $time;
+                $values[] = $this->client;
+                $values[] = $this->user;
+                $values[] = $row['object_type'];
+                $values[] = $row['object_id'];
+                $values[] = $row['track'];
+            }
         }
 
         // remove last comma
         $sql = substr($sql, 0, -1) . ';';
 
         return Dba::write($sql, $values);
-    }
-
-    /**
-     * set_items
-     * This function resets the User_Playlist while optionally setting the update client and time for that user
-     * @param array $playlist
-     * @param string $current_type
-     * @param int $current_id
-     * @param int $current_time
-     * @param int $time
-     */
-    public function set_items($playlist, $current_type, $current_id, $current_time, $time): void
-    {
-        if (!empty($playlist)) {
-            // clear the old list
-            $this->clear();
-            // set the new items
-            $this->add_items($playlist, $time);
-            $this->set_current_object($current_type, $current_id, $current_time);
-
-            // subsonic cares about queue dates so set them (and set them together)
-            User::set_user_data($this->user, 'playqueue_time', $time);
-            User::set_user_data($this->user, 'playqueue_client', $this->client);
-        }
     }
 
     /**

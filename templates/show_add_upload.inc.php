@@ -48,31 +48,31 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 <div class="upload-actions">
     <button onclick="UUTCreateNode()">
         <?php echo Ui::get_material_symbol('folder'); ?>
-        <?php echo T_("New folder");?>
+        <?php echo T_("New folder"); ?>
     </button>
     <button onclick="UUTRenameNode()">
         <?php echo Ui::get_material_symbol('edit'); ?>
-        <?php echo T_("Rename");?>
+        <?php echo T_("Rename"); ?>
     </button>
     <button onclick="UUTDeleteNode()">
         <?php echo Ui::get_material_symbol('close'); ?>
-        <?php echo T_("Delete");?>
+        <?php echo T_("Delete"); ?>
     </button>
     <button onclick="UUTReload()">
         <?php echo Ui::get_material_symbol('refresh'); ?>
-        <?php echo T_("Reload");?>
+        <?php echo T_("Reload"); ?>
     </button>
     <button onclick="UUTCut()">
         <?php echo Ui::get_material_symbol('cut'); ?>
-        <?php echo T_("Cut");?>
+        <?php echo T_("Cut"); ?>
     </button>
     <button onclick="UUTCopy()">
         <?php echo Ui::get_material_symbol('folder_copy'); ?>
-        <?php echo T_("Copy");?>
+        <?php echo T_("Copy"); ?>
     </button>
     <button onclick="UUTPaste()">
         <?php echo Ui::get_material_symbol('content_paste'); ?>
-        <?php echo T_("Paste");?>
+        <?php echo T_("Paste"); ?>
     </button>
 </div>
 

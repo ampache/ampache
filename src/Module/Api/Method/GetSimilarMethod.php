@@ -88,6 +88,7 @@ final class GetSimilarMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Json_Data::artists($results, [], $user);
@@ -99,6 +100,7 @@ final class GetSimilarMethod
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count(count($results));
                 switch ($type) {
                     case 'artist':
                         echo Xml_Data::artists($results, [], $user);

@@ -28,9 +28,10 @@ Ampache Subsonic support is being extended to support these changes
 * Support [HTTP form POST](https://opensubsonic.netlify.app/docs/extensions/formpost/)
 * Tentatively supported [Transcode Offset](https://opensubsonic.netlify.app/docs/extensions/transcodeoffset/) (Parameter is supported but untested)
 
-### Endpoint extenstion
+### Endpoint extension
 
-* Edit [search3](https://opensubsonic.netlify.app/docs/endpoints/search3/) to allow empty query argument
+* Edit [search3](https://opensubsonic.netlify.app/docs/endpoints/search3/) to allow empty `query` argument
+* Edit [savePlayQueue](https://opensubsonic.netlify.app/docs/endpoints/saveplayqueue/) to allow empty `id` argument
 * Add [getOpenSubsonicExtensions](https://opensubsonic.netlify.app/docs/endpoints/getopensubsonicextensions/)
 
 ### Partially implemented

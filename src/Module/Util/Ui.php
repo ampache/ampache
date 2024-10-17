@@ -844,6 +844,7 @@ class Ui implements UiInterface
             case 'direct_link':
             case 'display_menu':
             case 'download':
+            case 'extended_playlist_links':
             case 'external_links_google':
             case 'external_links_duckduckgo':
             case 'external_links_wikipedia':

@@ -350,6 +350,14 @@ class Video extends database_object implements
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
      * get_f_artist_link
      */
     public function get_f_artist_link(): ?string
