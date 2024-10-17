@@ -51,7 +51,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     $thumb = ($browse->is_grid_view())
         ? 3
         : 11;
-    $link = (!empty($libitem->get_f_parent_link()))
+    $link = (AmpConfig::get('extended_playlist_links', false) && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>
 <td class="cel_play">

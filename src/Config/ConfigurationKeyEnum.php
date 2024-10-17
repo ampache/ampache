@@ -105,6 +105,7 @@ final class ConfigurationKeyEnum
     public const DOWNLOAD                              = 'download';
     public const ENABLE_CUSTOM_METADATA                = 'enable_custom_metadata';
     public const EXTERNAL_AUTO_UPDATE                  = 'external_auto_update';
+    public const $EXTENDED_PLAYLIST_LINKS              = 'extended_playlist_links';
     public const EXTERNAL_LINKS_GOOGLE                 = 'external_links_google';
     public const EXTERNAL_LINKS_DUCKDUCKGO             = 'external_links_duckduckgo';
     public const EXTERNAL_LINKS_WIKIPEDIA              = 'external_links_wikipedia';
