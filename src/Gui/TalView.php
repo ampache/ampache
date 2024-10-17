@@ -34,22 +34,10 @@ use PhpTal\PhpTalInterface;
  */
 final class TalView implements TalViewInterface
 {
-    private TalFactoryInterface $talFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private GuiFactoryInterface $guiFactory;
-
     private ?PhpTalInterface $engine = null;
 
-    public function __construct(
-        TalFactoryInterface $talFactory,
-        ConfigContainerInterface $configContainer,
-        GuiFactoryInterface $guiFactory
-    ) {
-        $this->talFactory      = $talFactory;
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
+    public function __construct(private readonly TalFactoryInterface $talFactory, private readonly ConfigContainerInterface $configContainer, private readonly GuiFactoryInterface $guiFactory)
+    {
     }
 
     public function render(): string

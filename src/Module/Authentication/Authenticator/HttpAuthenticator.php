@@ -32,7 +32,7 @@ final class HttpAuthenticator implements AuthenticatorInterface
     public function auth(string $username, string $password): array
     {
         unset($password);
-        $results = array();
+        $results = [];
         if (Core::get_server('REMOTE_USER') == $username || Core::get_server('HTTP_REMOTE_USER') == $username) {
             $results['success']  = true;
             $results['type']     = 'http';

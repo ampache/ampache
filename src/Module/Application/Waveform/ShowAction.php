@@ -85,6 +85,7 @@ final class ShowAction implements ApplicationActionInterface
             $object_type = 'song';
             $object      = new Song($object_id);
         }
+
         $waveform = Waveform::get($object, $object_type);
 
         if (!$waveform) {

@@ -43,8 +43,11 @@ final class CacheProcessCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->info(
             T_('Start cache process'),
             true

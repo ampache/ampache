@@ -30,8 +30,8 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -40,14 +40,12 @@ final class PlayItemAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'play_item';
 
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer,
+        private readonly LibraryItemLoaderInterface $libraryItemLoader,
     ) {
         parent::__construct($logger, $configContainer);
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -55,14 +53,23 @@ final class PlayItemAction extends AbstractStreamAction
         if ($this->preCheck($gatekeeper) === false) {
             return null;
         }
-        $objectType = $_REQUEST['object_type'] ?? '';
-        $objectIds  = explode(',', Core::get_get('object_id'));
-        $mediaIds   = [];
-        if (InterfaceImplementationChecker::is_playable_item($objectType)) {
-            foreach ($objectIds as $object_id) {
-                $className = ObjectTypeToClassNameMapper::map($objectType);
-                $item      = new $className($object_id);
-                $mediaIds  = array_merge($mediaIds, $item->get_medias());
+
+        $objectType = LibraryItemEnum::tryFrom($_REQUEST['object_type'] ?? '');
+        if ($objectType === null) {
+            return null;
+        }
+
+        $objectIds = explode(',', Core::get_get('object_id'));
+        $mediaIds  = [];
+
+        foreach ($objectIds as $object_id) {
+            $item = $this->libraryItemLoader->load(
+                $objectType,
+                (int) $object_id,
+            );
+
+            if ($item !== null) {
+                $mediaIds = array_merge($mediaIds, $item->get_medias());
 
                 if (array_key_exists('custom_play_action', $_REQUEST)) {
                     foreach ($mediaIds as $mediaId) {
@@ -71,11 +78,15 @@ final class PlayItemAction extends AbstractStreamAction
                         }
                     }
                 }
+                $user = $gatekeeper->getUser();
                 // record this as a 'play' to help show usage and history for playlists and streams
-                if (!empty($mediaIds) && in_array($objectType, array('playlist', 'live_stream'))) {
-                    $user   = Core::get_global('user');
+                if (
+                    $user !== null &&
+                    $mediaIds !== [] &&
+                    in_array($objectType, [LibraryItemEnum::PLAYLIST, LibraryItemEnum::LIVE_STREAM])
+                ) {
                     $client = $_REQUEST['client'] ?? substr(Core::get_server('HTTP_USER_AGENT'), 0, 254);
-                    Stats::insert($objectType, $object_id, $user->id, $client, [], 'stream', time());
+                    Stats::insert($objectType->value, (int)$object_id, $user->getId(), $client, [], 'stream', time());
                 }
             }
         }

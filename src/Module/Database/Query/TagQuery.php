@@ -59,11 +59,9 @@ final class TagQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`tag`.`id`";
+    protected string $select = "`tag`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `tag` ";
+    protected string $base = "SELECT %%SELECT%% FROM `tag` ";
 
     /**
      * get_select

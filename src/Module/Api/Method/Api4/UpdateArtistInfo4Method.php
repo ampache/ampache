@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -51,7 +53,7 @@ final class UpdateArtistInfo4Method
         if (!Api4::check_parameter($input, ['id'], self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'update_artist_info', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_artist_info', $input['api_format'])) {
             return false;
         }
         $object = (int) $input['id'];

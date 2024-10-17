@@ -56,10 +56,7 @@ final class CatalogLoader implements CatalogLoaderInterface
         ?string $filterType = null,
         ?User $user = null
     ): array {
-        $userId = null;
-        if ($user !== null) {
-            $userId = $user->getId();
-        }
+        $userId = $user?->getId();
 
         if ($filterType === null) {
             $filterType = '';

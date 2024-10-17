@@ -74,9 +74,9 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::RAW_WEB_PATH] ?? '';
     }
 
-    public function getWebPath(): string
+    public function getWebPath(?string $suffix = ''): string
     {
-        return $this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '';
+        return ($this->configuration[ConfigurationKeyEnum::WEB_PATH] ?? '') . $suffix;
     }
 
     /**
@@ -106,11 +106,28 @@ final class ConfigContainer implements ConfigContainerInterface
         return $this->configuration[ConfigurationKeyEnum::COMPOSER_BINARY_PATH] ?? 'composer';
     }
 
+    public function getComposerParameters(): string
+    {
+        return ($this->configuration[ConfigurationKeyEnum::COMPOSER_NO_DEV] ?? false)
+            ? '--no-dev --prefer-source --no-interaction'
+            : '--prefer-source --no-interaction';
+    }
+
+    public function getNpmBinaryPath(): string
+    {
+        return $this->configuration[ConfigurationKeyEnum::NPM_BINARY_PATH] ?? 'npm';
+    }
+
     public function isFeatureEnabled(string $feature): bool
     {
         $value = $this->configuration[$feature] ?? false;
 
-        return $value === 'true' || $value === true || $value === 1 || $value === '1';
+        return (
+            $value === 'true' ||
+            $value === true ||
+            $value === 1 ||
+            $value === '1'
+        );
     }
 
     public function getThemePath(): string

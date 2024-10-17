@@ -61,7 +61,7 @@ class AlbumSongs4Method
 
         if (isset($album->id)) {
             // songs for all disks
-            $results = static::getAlbumRepository()->getSongs($album->id);
+            $results = self::getAlbumRepository()->getSongs($album->id);
         }
         if (!empty($results)) {
             switch ($input['api_format']) {

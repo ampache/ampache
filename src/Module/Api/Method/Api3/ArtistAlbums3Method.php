@@ -43,7 +43,7 @@ final class ArtistAlbums3Method
         $artist  = new Artist($input['filter']);
         $results = [];
         if (isset($artist->id)) {
-            $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 
         // Set the offset

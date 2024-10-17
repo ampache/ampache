@@ -36,7 +36,11 @@ use Ampache\Repository\Model\User;
 
 final class PlaylistExporter implements PlaylistExporterInterface
 {
-    public const VALID_FILE_EXTENSIONS = ['m3u', 'xspf', 'pls'];
+    public const VALID_FILE_EXTENSIONS = [
+        'm3u',
+        'xspf',
+        'pls',
+    ];
 
     public function export(
         Interactor $interactor,
@@ -60,7 +64,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
         switch ($type) {
             case 'albums':
                 $ids   = Catalog::get_albums();
-                $items = array();
+                $items = [];
                 foreach ($ids as $albumid) {
                     $items[] = new Album($albumid);
                 }
@@ -76,9 +80,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array($playlistId);
+                    $ids = [$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id)
                         ? new Search((int)$playlist_id, 'song', $user)
@@ -98,9 +102,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array((int)$playlistId);
+                    $ids = [(int)$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
                     if ($playlist->isNew() === false) {
@@ -116,23 +120,23 @@ final class PlaylistExporter implements PlaylistExporterInterface
             $name = (string)$item->get_fullname();
             // We don't know about file system encoding / specificity
             // For now, we only keep simple characters to be sure it will work everywhere
-            $name       = (string) preg_replace('/[:]/', '.', $name);
-            $name       = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
-            $filename   = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
-            $medias     = $item->get_medias();
-            $pl         = new Stream_Playlist($userId);
-            $pl->title  = $item->get_fullname();
-            $media_path = ($urltype == 'web')
+            $name            = (string) preg_replace('/[:]/', '.', $name);
+            $name            = (string) preg_replace('/[^a-zA-Z0-9. -]/', '', $name);
+            $filename        = $dirname . DIRECTORY_SEPARATOR . $item->id . '. ' . $name . '.' . $ext;
+            $medias          = $item->get_medias();
+            $playlist        = new Stream_Playlist($userId);
+            $playlist->title = $item->get_fullname();
+            $media_path      = ($urltype == 'web')
                 ? ''
                 : $dirname;
             foreach ($medias as $media) {
                 $url = Stream_Playlist::media_to_url($media, $media_path, $urltype, $user);
                 if ($url !== null) {
-                    $pl->urls[] = $url;
+                    $playlist->urls[] = $url;
                 }
             }
 
-            $plstr = $pl->{'get_' . $ext . '_string'}();
+            $plstr = $playlist->{'get_' . $ext . '_string'}();
             if (file_put_contents($filename, $plstr) === false) {
                 $interactor->error(
                     sprintf(T_('There was a problem creating the playlist file "%s"'), $filename),

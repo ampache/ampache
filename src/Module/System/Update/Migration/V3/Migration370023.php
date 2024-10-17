@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370023 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', '1', 25, 'boolean', 'streaming');
+        $this->updatePreferences('webplayer_aurora', 'Authorize JavaScript decoder (Aurora.js) in Web Player(s)', '1', AccessLevelEnum::USER->value, 'boolean', 'streaming');
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370016 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('direct_play_limit', 'Limit direct play to maximum media count', '0', 25, 'integer', 'interface');
+        $this->updatePreferences('direct_play_limit', 'Limit direct play to maximum media count', '0', AccessLevelEnum::USER->value, 'integer', 'interface');
     }
 }

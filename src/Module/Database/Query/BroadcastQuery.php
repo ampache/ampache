@@ -41,11 +41,9 @@ final class BroadcastQuery implements QueryInterface
         'listeners',
     ];
 
-    /** @var string */
-    protected $select = "`broadcast`.`id`";
+    protected string $select = "`broadcast`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `broadcast` ";
+    protected string $base = "SELECT %%SELECT%% FROM `broadcast` ";
 
     /**
      * get_select

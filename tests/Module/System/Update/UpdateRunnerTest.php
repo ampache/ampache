@@ -96,7 +96,11 @@ class UpdateRunnerTest extends TestCase
 
         static::assertSame(
             $tableName,
-            $this->subject->runTableCheck($updates)->current()
+            $this->subject->runTableCheck(
+                $updates,
+                false,
+                600000
+            )->current()
         );
     }
 
@@ -120,7 +124,11 @@ class UpdateRunnerTest extends TestCase
             ->with(sprintf('DESCRIBE `%s`', $tableName));
 
         static::assertNull(
-            $this->subject->runTableCheck($updates, true)->current(),
+            $this->subject->runTableCheck(
+                $updates,
+                true,
+                600000
+            )->current(),
         );
     }
 }

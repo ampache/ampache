@@ -56,10 +56,10 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
      */
     public function build_signature($request, $consumer, $token): string
     {
-        $key_parts = array(
+        $key_parts = [
             $consumer->secret,
             ($token) ? $token->secret : ""
-        );
+        ];
 
         $key_parts            = OAuthUtil::urlencode_rfc3986($key_parts);
         $key                  = implode('&', $key_parts);

@@ -35,13 +35,20 @@ final class Migration600012 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `song_artist` and `album_artist` maps to catalog_map',
-        'This is a duplicate of `update_550004` But may have been skipped depending on your site\'s version history'
+        'This is a duplicate of `update_550004` But may have been skipped depending on your site\'s version history',
     ];
 
     public function migrate(): void
     {
         // delete bad maps if they exist
-        $tables = ['song', 'album', 'video', 'podcast', 'podcast_episode', 'live_stream'];
+        $tables = [
+            'song',
+            'album',
+            'video',
+            'podcast',
+            'podcast_episode',
+            'live_stream'
+        ];
         foreach ($tables as $type) {
             $this->updateDatabase("DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;");
         }

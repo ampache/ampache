@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 use Generator;
 
@@ -41,14 +42,14 @@ final class Migration370004 extends AbstractMigration
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', 100, 'integer', 'system');
-        $this->updatePreferences('allow_upload', 'Allow users to upload media', '0', 75, 'boolean', 'options');
-        $this->updatePreferences('upload_subdir', 'Upload: create a subdirectory per user (recommended)', '1', 100, 'boolean', 'system');
-        $this->updatePreferences('upload_user_artist', 'Upload: consider the user sender as the track\'s artist', '0', 100, 'boolean', 'system');
-        $this->updatePreferences('upload_script', 'Upload: run the following script after upload (current directory = upload target directory)', '', 100, 'string', 'system');
-        $this->updatePreferences('upload_allow_edit', 'Upload: allow users to edit uploaded songs', '1', 100, 'boolean', 'system');
+        $this->updatePreferences('upload_catalog', 'Uploads catalog destination', '-1', AccessLevelEnum::ADMIN->value, 'integer', 'system');
+        $this->updatePreferences('allow_upload', 'Allow users to upload media', '0', AccessLevelEnum::MANAGER->value, 'boolean', 'options');
+        $this->updatePreferences('upload_subdir', 'Upload: create a subdirectory per user (recommended)', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('upload_user_artist', 'Upload: consider the user sender as the track\'s artist', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('upload_script', 'Upload: run the following script after upload (current directory = upload target directory)', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
+        $this->updatePreferences('upload_allow_edit', 'Upload: allow users to edit uploaded songs', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
 
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `artist` ADD COLUMN `user` int(11) NULL AFTER `last_update`",
             "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `description` varchar(256) NULL, `external_link` varchar(256) NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('0 - default', '')",
@@ -66,7 +67,7 @@ final class Migration370004 extends AbstractMigration
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('FMPL', 'http://www.fmpl.org/fmpl.html')",
             "INSERT INTO `license` (`name`, `external_link`) VALUES ('C Reaction', 'http://morne.free.fr/Necktar7/creaction.htm')",
             "ALTER TABLE `song` ADD COLUMN `user_upload` int(11) NULL AFTER `addition_time`, ADD COLUMN `license` int(11) NULL AFTER `user_upload`"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }
@@ -75,8 +76,11 @@ final class Migration370004 extends AbstractMigration
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Generator {
-        yield 'license' => "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `description` varchar(256) COLLATE $collation DEFAULT NULL, `external_link` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=15 DEFAULT CHARSET=$charset COLLATE=$collation;";
+        if ($build > 370004) {
+            yield 'license' => "CREATE TABLE IF NOT EXISTS `license` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `name` varchar(80) COLLATE $collation DEFAULT NULL, `description` varchar(256) COLLATE $collation DEFAULT NULL, `external_link` varchar(256) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=$engine AUTO_INCREMENT=15 DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
     }
 }

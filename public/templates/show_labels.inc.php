@@ -24,29 +24,29 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\LabelRepositoryInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
-/** @var Browse $browse */
-/** @var list<int> $object_ids */
-
 global $dic;
 $labelRepository = $dic->get(LabelRepositoryInterface::class);
 
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
 $thcount  = 7;
 $is_table = $browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
-<?php if (Access::check('interface', 50) || AmpConfig::get('upload_allow_edit')) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/labels.php?action=show_add_label">
-                <?php echo Ui::get_icon('add', T_('Add')); ?>
+            <a href="<?php echo AmpConfig::get_web_path(); ?>/labels.php?action=show_add_label">
+                <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
                 <?php echo T_('Create Label'); ?>
             </a>
         </li>
@@ -63,8 +63,8 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
             <th class="cel_label essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=name', T_('Label'), 'label_sort_name'); ?></th>
             <th class="cel_category essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=category', T_('Category'), 'label_sort_category'); ?></th>
             <th class="cel_artists optional"><?php echo T_('Artists'); ?></th>
-            <th class="cel_country optional"><?php echo T_('Country'); ?></th>
-            <th class="cel_status optional"><?php echo T_('Status'); ?></th>
+            <th class="cel_country optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=country', T_('Country'), 'label_sort_country'); ?></th>
+            <th class="cel_status optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=label&sort=active', T_('Status'), 'label_sort_active'); ?></th>
             <th class="cel_action essential"><?php echo T_('Action'); ?></th>
         </tr>
     </thead>

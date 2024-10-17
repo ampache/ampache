@@ -58,17 +58,17 @@ final class FullServiceAction extends AbstractCatalogAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
-        $options = array(
+        $options = [
             'gather_art' => true,
             'parse_playlist' => true
-        );
+        ];
 
         catalog_worker('full_service', $catalogIds, $options);
 
         $this->ui->showConfirmation(
             T_('Catalog update process has started'),
             '',
-            sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
+            sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
             0,
             'confirmation',
             false

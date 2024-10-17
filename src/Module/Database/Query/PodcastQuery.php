@@ -64,11 +64,9 @@ final class PodcastQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`podcast`.`id`";
+    protected string $select = "`podcast`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `podcast` ";
+    protected string $base = "SELECT %%SELECT%% FROM `podcast` ";
 
     /**
      * get_select

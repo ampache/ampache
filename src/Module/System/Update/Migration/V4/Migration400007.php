@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -34,12 +35,12 @@ final class Migration400007 extends AbstractMigration
 {
     protected array $changelog = [
         'Add ui option for skip_count display',
-        'Add ui option for displaying dates in a custom format'
+        'Add ui option for displaying dates in a custom format',
     ];
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_skipped_times', 'Show # skipped', '0', 25, 'boolean', 'interface', 'library');
-        $this->updatePreferences('custom_datetime', 'Custom datetime', '', 25, 'string', 'interface', 'custom');
+        $this->updatePreferences('show_skipped_times', 'Show # skipped', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library');
+        $this->updatePreferences('custom_datetime', 'Custom datetime', '', AccessLevelEnum::USER->value, 'string', 'interface', 'custom');
     }
 }

@@ -44,13 +44,13 @@ class SeafileAdapter
      */
     public static function request_api_key($server_uri, $username, $password)
     {
-        $options = array(
-            'http' => array(
+        $options = [
+            'http' => [
                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                 'method' => 'POST',
-                'content' => http_build_query(array('username' => $username, 'password' => $password))
-            )
-        );
+                'content' => http_build_query(['username' => $username, 'password' => $password])
+            ]
+        ];
 
         $result = file_get_contents($server_uri . '/api2/auth-token/', false, stream_context_create($options));
 
@@ -63,9 +63,7 @@ class SeafileAdapter
         return $token->token;
     }
 
-    /////////////////////////
     // instance
-    /////////////////////////
 
     private $server;
     private $api_key;
@@ -84,13 +82,17 @@ class SeafileAdapter
      * @param $call_delay
      * @param $api_key
      */
-    public function __construct($server_uri, $library_name, $call_delay, $api_key)
-    {
+    public function __construct(
+        $server_uri,
+        $library_name,
+        $call_delay,
+        $api_key
+    ) {
         $this->server          = $server_uri;
         $this->library_name    = $library_name;
         $this->api_key         = $api_key;
         $this->call_delay      = $call_delay;
-        $this->directory_cache = array();
+        $this->directory_cache = [];
     }
 
     // do we have all the info we need?
@@ -100,7 +102,12 @@ class SeafileAdapter
      */
     public function ready(): bool
     {
-        return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
+        return (
+            $this->server != null &&
+            $this->api_key != null &&
+            $this->library_name != null &&
+            $this->call_delay != null
+        );
     }
 
     // create API client object & find library
@@ -120,21 +127,21 @@ class SeafileAdapter
             return false;
         }
 
-        $client = new Client([
-            'base_uri' => $this->server,
-            'debug' => false,
-            'delay' => $this->call_delay,
-            'headers' => [
-                'Authorization' => 'Token ' . $this->api_key
+        $client = new Client(
+            [
+                'base_uri' => $this->server,
+                'debug' => false,
+                'delay' => $this->call_delay,
+                'headers' => ['Authorization' => 'Token ' . $this->api_key]
             ]
-        ]);
+        );
 
-        $this->client = array(
+        $this->client = [
             'Libraries' => new Library($client),
             'Directories' => new Directory($client),
             'Files' => new File($client),
             'Client' => $client
-        );
+        ];
 
         // Get Library
         $libraries = $this->throttle_check(function () {
@@ -146,10 +153,13 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(
-                T_('Could not find the Seafile library called "%s", no media was updated'),
-                $this->library_name
-            ));
+            AmpError::add(
+                'general',
+                sprintf(
+                    T_('Could not find the Seafile library called "%s", no media was updated'),
+                    $this->library_name
+                )
+            );
 
             return false;
         }
@@ -209,10 +219,10 @@ class SeafileAdapter
     {
         $split = explode('|', $file_path);
 
-        return array(
+        return [
             'path' => $split[1],
             'filename' => $split[2]
-        );
+        ];
     }
 
     /**
@@ -326,9 +336,10 @@ class SeafileAdapter
 
         $tempfile = fopen($tempfilename, 'wb');
 
-        fwrite($tempfile, $response->getBody());
-
-        fclose($tempfile);
+        if ($tempfile) {
+            fwrite($tempfile, $response->getBody());
+            fclose($tempfile);
+        }
 
         return $tempfilename;
     }

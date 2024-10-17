@@ -35,7 +35,7 @@ final class Migration530011 extends AbstractMigration
 {
     protected array $changelog = [
         'Compact some `user` columns',
-        'enum `object_count`.`count_type`'
+        'enum `object_count`.`count_type`',
     ];
 
     public function migrate(): void

@@ -46,11 +46,9 @@ final class ShareQuery implements QueryInterface
         'expire',
     ];
 
-    /** @var string */
-    protected $select = "`share`.`id`";
+    protected string $select = "`share`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `share` ";
+    protected string $base = "SELECT %%SELECT%% FROM `share` ";
 
     /**
      * get_select

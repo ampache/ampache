@@ -83,9 +83,7 @@ final class AddFilterAction extends AbstractFilterAction
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_add_filter.inc.php',
-                [
-                    'filter_name' => $filter_name
-                ]
+                ['filter_name' => $filter_name]
             );
 
             $this->ui->showQueryStats();
@@ -113,7 +111,7 @@ final class AddFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('New Filter Added'),
             sprintf(T_('%1$s has been created'), $filter_name),
-            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
+            sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
         );
 
         $this->ui->showQueryStats();

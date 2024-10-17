@@ -30,7 +30,7 @@ use Ampache\Module\Util\Ui;
 ?>
 
 <?php Ui::show_box_top(T_('E-mail Users'), 'box box_mail_users'); ?>
-<form name="mail" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/mail.php?action=send_mail" enctype="multipart/form-data">
+<form name="mail" method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/mail.php?action=send_mail" enctype="multipart/form-data">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Mail to'); ?>:</td>

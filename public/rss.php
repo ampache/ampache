@@ -35,8 +35,6 @@ define('NO_SESSION', '1');
 
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        ShowAction::REQUEST_KEY => ShowAction::class,
-    ],
+    [ShowAction::REQUEST_KEY => ShowAction::class],
     ShowAction::REQUEST_KEY
 );

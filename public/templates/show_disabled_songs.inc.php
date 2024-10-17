@@ -24,11 +24,12 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Repository\Model\Song;
 
-/** @var Ampache\Repository\Model\Song[] $songs */
+/** @var Iterator<Song> $songs */
 ?>
 <br />
-<form name="songs" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/admin/catalog.php" enctype="multipart/form-data" style="Display:inline">
+<form name="songs" method="post" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/catalog.php" enctype="multipart/form-data" style="Display:inline">
     <table class="tabledata striped-rows">
         <thead>
             <tr class="th-top">
@@ -41,19 +42,19 @@ use Ampache\Config\AmpConfig;
             </tr>
         </thead>
         <tbody>
+        <?php if (!$songs->valid()) { ?>
+            <tr>
+                <td colspan="6" style="text-align: center"><span class="error"><?php echo T_('No records found'); ?></span></td>
+            </tr>
+        <?php } ?>
             <?php foreach ($songs as $song) { ?>
                 <tr>
-                    <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->id; ?>" /></td>
-                    <td class="cel_song"><?php echo scrub_out($song->title); ?></td>
+                    <td class="cel_select"><input type="checkbox" name="song[]" value="<?php echo $song->getId(); ?>" /></td>
+                    <td class="cel_song"><?php echo scrub_out($song->get_fullname()); ?></td>
                     <td class="cel_album"><?php echo scrub_out($song->get_album_fullname()); ?></td>
                     <td class="cel_artist"><?php echo scrub_out($song->get_artist_fullname()); ?></td>
-                    <td class="cel_filename"><?php echo scrub_out($song->file); ?></td>
-                    <td class="cel_additiontime"><?php echo get_datetime((int) $song->addition_time); ?></td>
-                </tr>
-            <?php } ?>
-            <?php if (!count($songs)) { ?>
-                <tr>
-                    <td colspan="6"><span class="error"><?php echo T_('No records found'); ?></span></td>
+                    <td class="cel_filename"><?php echo scrub_out($song->getFile()); ?></td>
+                    <td class="cel_additiontime"><?php echo get_datetime($song->getAdditionTime()); ?></td>
                 </tr>
             <?php } ?>
         </tbody>

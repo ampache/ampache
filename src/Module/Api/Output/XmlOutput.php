@@ -52,6 +52,11 @@ final class XmlOutput implements ApiOutputInterface
         Xml_Data::set_limit($limit);
     }
 
+    public function setCount(int $count): void
+    {
+        Xml_Data::set_count($count);
+    }
+
     /**
      * Generate an empty api result
      */
@@ -116,8 +121,6 @@ final class XmlOutput implements ApiOutputInterface
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param int $limit
-     * @param int $offset
      *
      * @return string
      */
@@ -126,13 +129,8 @@ final class XmlOutput implements ApiOutputInterface
         array $include,
         User $user,
         bool $encode = true,
-        bool $asObject = true,
-        int $limit = 0,
-        int $offset = 0
+        bool $asObject = true
     ): string {
-        Xml_Data::set_offset($offset);
-        Xml_Data::set_limit($limit);
-
         return Xml_Data::albums($albums, $include, $user, $encode);
     }
 

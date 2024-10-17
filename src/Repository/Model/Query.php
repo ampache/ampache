@@ -31,14 +31,11 @@ use Ampache\Module\Database\Query\AlbumQuery;
 use Ampache\Module\Database\Query\ArtistQuery;
 use Ampache\Module\Database\Query\BroadcastQuery;
 use Ampache\Module\Database\Query\CatalogQuery;
-use Ampache\Module\Database\Query\ClipQuery;
 use Ampache\Module\Database\Query\DemocraticQuery;
 use Ampache\Module\Database\Query\FollowerQuery;
 use Ampache\Module\Database\Query\LabelQuery;
 use Ampache\Module\Database\Query\LicenseQuery;
 use Ampache\Module\Database\Query\LiveStreamQuery;
-use Ampache\Module\Database\Query\MovieQuery;
-use Ampache\Module\Database\Query\PersonalVideoQuery;
 use Ampache\Module\Database\Query\PlaylistLocalplayQuery;
 use Ampache\Module\Database\Query\PlaylistMediaQuery;
 use Ampache\Module\Database\Query\PlaylistQuery;
@@ -53,9 +50,6 @@ use Ampache\Module\Database\Query\SmartplaylistQuery;
 use Ampache\Module\Database\Query\SongPreviewQuery;
 use Ampache\Module\Database\Query\SongQuery;
 use Ampache\Module\Database\Query\TagQuery;
-use Ampache\Module\Database\Query\TvshowEpisodeQuery;
-use Ampache\Module\Database\Query\TvshowQuery;
-use Ampache\Module\Database\Query\TvshowSeasonQuery;
 use Ampache\Module\Database\Query\UserQuery;
 use Ampache\Module\Database\Query\VideoQuery;
 use Ampache\Module\Database\Query\WantedQuery;
@@ -230,8 +224,9 @@ class Query
      * set_filter
      * This saves the filter data we pass it from the ObjectQuery FILTERS array
      * @param string $key
+     * @param mixed $value
      */
-    public function set_filter($key, mixed $value): bool
+    public function set_filter($key, $value): bool
     {
         switch ($key) {
             case 'access':
@@ -454,8 +449,6 @@ class Query
                 return BroadcastQuery::FILTERS;
             case 'catalog':
                 return CatalogQuery::FILTERS;
-            case 'clip':
-                return ClipQuery::FILTERS;
             case 'democratic':
                 return DemocraticQuery::FILTERS;
             case 'follower':
@@ -463,13 +456,10 @@ class Query
             case 'label':
                 return LabelQuery::FILTERS;
             case 'license':
+            case 'license_hidden':
                 return LicenseQuery::FILTERS;
             case 'live_stream':
                 return LiveStreamQuery::FILTERS;
-            case 'movie':
-                return MovieQuery::FILTERS;
-            case 'personal_video':
-                return PersonalVideoQuery::FILTERS;
             case 'playlist_localplay':
                 return PlaylistLocalplayQuery::FILTERS;
             case 'playlist_media':
@@ -497,12 +487,6 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 return TagQuery::FILTERS;
-            case 'tvshow_episode':
-                return TvshowEpisodeQuery::FILTERS;
-            case 'tvshow_season':
-                return TvshowSeasonQuery::FILTERS;
-            case 'tvshow':
-                return TvshowQuery::FILTERS;
             case 'user':
                 return UserQuery::FILTERS;
             case 'video':
@@ -540,9 +524,6 @@ class Query
             case 'catalog':
                 $this->queryType = new CatalogQuery();
                 break;
-            case 'clip':
-                $this->queryType = new ClipQuery();
-                break;
             case 'democratic':
                 $this->queryType = new DemocraticQuery();
                 break;
@@ -553,16 +534,11 @@ class Query
                 $this->queryType = new LabelQuery();
                 break;
             case 'license':
+            case 'license_hidden':
                 $this->queryType = new LicenseQuery();
                 break;
             case 'live_stream':
                 $this->queryType = new LiveStreamQuery();
-                break;
-            case 'movie':
-                $this->queryType = new MovieQuery();
-                break;
-            case 'personal_video':
-                $this->queryType = new PersonalVideoQuery();
                 break;
             case 'playlist_localplay':
                 $this->queryType = new PlaylistLocalplayQuery();
@@ -604,15 +580,6 @@ class Query
             case 'tag_hidden':
             case 'tag':
                 $this->queryType = new TagQuery();
-                break;
-            case 'tvshow_episode':
-                $this->queryType = new TvshowEpisodeQuery();
-                break;
-            case 'tvshow_season':
-                $this->queryType = new TvshowSeasonQuery();
-                break;
-            case 'tvshow':
-                $this->queryType = new TvshowQuery();
                 break;
             case 'user':
                 $this->queryType = new UserQuery();
@@ -967,10 +934,10 @@ class Query
             $this->_state['select'] = [$this->queryType->get_select()];
 
             // tag state should be set as they aren't really separate objects
-            if ($this->get_type() === 'tag_hidden') {
+            if (in_array($this->get_type(), ['license_hidden', 'tag_hidden'])) {
                 $this->set_filter('hidden', 1);
             }
-            if ($this->get_type() === 'tag') {
+            if (in_array($this->get_type(), ['license', 'tag'])) {
                 $this->set_filter('hidden', 0);
             }
 
@@ -1028,11 +995,8 @@ class Query
                 case 'album_disk':
                 case 'album':
                 case 'artist':
-                case 'clip':
                 case 'label':
                 case 'live_stream':
-                case 'movie':
-                case 'personal_video':
                 case 'playlist':
                 case 'podcast_episode':
                 case 'podcast':
@@ -1041,9 +1005,6 @@ class Query
                 case 'song_artist':
                 case 'song':
                 case 'tag':
-                case 'tvshow_episode':
-                case 'tvshow_season':
-                case 'tvshow':
                 case 'video':
                     $dis = Catalog::get_user_filter($type, $this->user_id);
                     break;
@@ -1229,8 +1190,9 @@ class Query
      * to filter by this name on this type returns the appropriate sql
      * if not returns nothing
      * @param string $filter
+     * @param mixed $value
      */
-    private function _sql_filter($filter, mixed $value): string
+    private function _sql_filter($filter, $value): string
     {
         if ($this->queryType === null) {
             $this->set_type($this->_state['type']);

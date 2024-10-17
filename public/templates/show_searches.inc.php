@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Search;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -31,13 +33,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */ ?>
+/** @var list<int> $object_ids */ ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 25)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <li>
-            <a href="<?php echo AmpConfig::get('web_path'); ?>/search.php?type=song">
-                <?php echo Ui::get_icon('add', T_('Add')); ?>
+            <a href="<?php echo AmpConfig::get_web_path(); ?>/search.php?type=song">
+                <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
                 <?php echo T_('Add Smart Playlist'); ?>
             </a>
         </li>
@@ -67,7 +69,7 @@ use Ampache\Repository\Model\User;
     <tbody>
 <?php foreach ($object_ids as $playlist_id) {
     $libitem = new Search($playlist_id, 'song');
-    if ($libitem->isNew() || (!$libitem->has_access() and $libitem->type === 'private')) {
+    if ($libitem->isNew() || (!$libitem->has_access() && $libitem->type === 'private')) {
         continue;
     }
     $libitem->format(); ?>

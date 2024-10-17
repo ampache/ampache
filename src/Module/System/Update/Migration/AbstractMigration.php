@@ -83,12 +83,10 @@ abstract class AbstractMigration implements MigrationInterface
      */
     protected function updateDatabase(string $sql, array $params = []): void
     {
-        if ($this->interactor !== null) {
-            $this->interactor->info(
-                $sql . ' ' . json_encode($params),
-                true
-            );
-        }
+        $this->interactor?->info(
+            $sql . ' ' . json_encode($params),
+            true
+        );
         $this->connection->query($sql, $params);
 
     }
@@ -109,13 +107,11 @@ abstract class AbstractMigration implements MigrationInterface
     ): void {
         Preference::insert($name, $description, $default, $level, $type, $category, $subcategory, true);
 
-        if ($this->interactor !== null) {
-            $this->interactor->info(
-                /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-                sprintf(T_('Updated: %s'), $name),
-                true
-            );
-        }
+        $this->interactor?->info(
+            /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
+            sprintf(T_('Updated: %s'), $name),
+            true
+        );
     }
 
     /**
@@ -126,7 +122,8 @@ abstract class AbstractMigration implements MigrationInterface
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Traversable {
         return new ArrayIterator();
     }

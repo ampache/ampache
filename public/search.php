@@ -24,7 +24,6 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
-use Ampache\Module\Application\Search\DescriptorAction;
 use Ampache\Module\Application\Search\SaveAsSmartPlaylistAction;
 use Ampache\Module\Application\Search\SaveAsPlaylistAction;
 use Ampache\Module\Application\Search\SearchAction;
@@ -41,7 +40,6 @@ $dic->get(ApplicationRunner::class)->run(
         SearchAction::REQUEST_KEY => SearchAction::class,
         SaveAsSmartPlaylistAction::REQUEST_KEY => SaveAsSmartPlaylistAction::class,
         SaveAsPlaylistAction::REQUEST_KEY => SaveAsPlaylistAction::class,
-        DescriptorAction::REQUEST_KEY => DescriptorAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
     ],
     ShowAction::REQUEST_KEY

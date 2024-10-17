@@ -23,10 +23,12 @@
 
 namespace Ampache\Module\Authorization\Check;
 
+use Ampache\Module\Authorization\AccessFunctionEnum;
+
 interface FunctionCheckerInterface
 {
     /**
      * This checks if specific functionality is enabled.
      */
-    public function check(string $type): bool;
+    public function check(AccessFunctionEnum $function): bool;
 }

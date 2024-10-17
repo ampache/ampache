@@ -30,6 +30,14 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 /** @var AccessListItemInterface $access */
+/** @var bool $level_5 */
+/** @var bool $level_25 */
+/** @var bool $level_50 */
+/** @var bool $level_75 */
+/** @var string $sl_stream */
+/** @var string $sl_interface */
+/** @var string $sl_network */
+/** @var string $sl_rpc */
 
 Ui::show_box_top(T_('Edit Access Control List')); ?>
 <?php echo AmpError::display('general');
@@ -37,7 +45,7 @@ $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All'); ?>
-<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/admin/access.php?action=update_record&access_id=<?php echo($access->getId()); ?>">
+<form name="edit_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/access.php?action=update_record&access_id=<?php echo($access->getId()); ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Name') . ':'; ?></td>

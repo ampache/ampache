@@ -25,24 +25,35 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-class AmpacheRSSView implements AmpachePluginInterface
+class AmpacheRSSView extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'RSSView';
+
     public string $categories  = 'home';
+
     public string $description = 'RSS View';
+
     public string $url         = '';
-    public string $version     = '000001';
+
+    public string $version     = '000002';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $feed_url;
+
     private $maxitems;
+
+    private int $order = 0;
 
     /**
      * Constructor
@@ -58,14 +69,15 @@ class AmpacheRSSView implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', 25, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('rssview_feed_url', T_('RSS Feed URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        if (!Preference::insert('rssview_max_items', T_('RSS Feed max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -76,7 +88,8 @@ class AmpacheRSSView implements AmpachePluginInterface
     {
         return (
             Preference::delete('rssview_feed_url') &&
-            Preference::delete('rssview_max_items')
+            Preference::delete('rssview_max_items') &&
+            Preference::delete('rssview_order')
         );
     }
 
@@ -86,6 +99,15 @@ class AmpacheRSSView implements AmpachePluginInterface
      */
     public function upgrade(): bool
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('rssview_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
         return true;
     }
 
@@ -101,8 +123,11 @@ class AmpacheRSSView implements AmpachePluginInterface
             : false;
         if ($xml && $xml->channel) {
             Ui::show_box_top($xml->channel->title);
-            $count = 0;
-            echo '<div class="home_plugin"><table class="tabledata striped-rows">';
+            $count     = 0;
+            $divString = ($this->order > 0)
+                ? '<div class="home_plugin" style="order: ' . $this->order . '"><table class="tabledata striped-rows">'
+                : '<div class="home_plugin"><table class="tabledata striped-rows">';
+            echo $divString;
             foreach ($xml->channel->item as $item) {
                 echo '<tr><td>';
                 echo '<div>';
@@ -110,9 +135,10 @@ class AmpacheRSSView implements AmpachePluginInterface
                 echo '<div style="float: right;">' . get_datetime((int) strtotime($item->pubDate), 'short', 'short', "m/d/Y H:i") . '</div>';
                 echo '</div><br />';
                 echo '<div style="margin-left: 30px;">';
-                if (isset($item->image)) {
+                if (property_exists($item, 'image') && $item->image !== null) {
                     echo '<div style="float: left; margin-right: 20px;"><img src="' . $item->image . '" style="width: auto; max-height: 48px;" /></div>';
                 }
+
                 echo '<div>' . $item->description . '</div>';
                 echo '</div>';
                 echo '</td></tr>';
@@ -122,6 +148,7 @@ class AmpacheRSSView implements AmpachePluginInterface
                     break;
                 }
             }
+
             echo '</table></div>';
             Ui::show_box_bottom();
         }
@@ -130,21 +157,22 @@ class AmpacheRSSView implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
 
-        if (strlen(trim($data['rssview_feed_url']))) {
-            $this->feed_url = trim($data['rssview_feed_url']);
+        if (strlen(trim((string) $data['rssview_feed_url'])) !== 0) {
+            $this->feed_url = trim((string) $data['rssview_feed_url']);
         } else {
             debug_event(self::class, 'No rss feed url, home plugin skipped', 3);
 
             return false;
         }
+
         $this->maxitems = (int)($data['rssview_max_items']);
+        $this->order    = (int)($data['rssview_order'] ?? 0);
 
         return true;
     }

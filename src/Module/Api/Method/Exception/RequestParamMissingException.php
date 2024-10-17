@@ -29,6 +29,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
 final class RequestParamMissingException extends ApiMethodException
 {
+    /** @var int $code */
     protected $code = ErrorCodeEnum::BAD_REQUEST;
 
     protected string $type = 'system';

@@ -28,9 +28,8 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
 /** @var int $catalogId */
-
 ?>
-<form name="podcast" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=import_podcasts">
+<form name="podcast" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path(); ?>/podcast.php?action=import_podcasts">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('File'); ?> (<?php echo T_('Format: opml') ?>)</td>
@@ -42,7 +41,7 @@ use Ampache\Module\System\Core;
         <tr>
             <td><?php echo T_('Catalog'); ?></td>
             <td>
-                <?php show_catalog_select('catalog', $catalogId, '', false, 'podcast'); ?>
+                <?php show_catalog_select('catalog', $catalogId, '', false, 'podcast', 'local'); ?>
                 <?php echo AmpError::display('catalog'); ?>
             </td>
         </tr>

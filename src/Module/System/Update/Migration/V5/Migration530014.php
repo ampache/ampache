@@ -34,7 +34,7 @@ final class Migration530014 extends AbstractMigration
 {
     protected array $changelog = [
         'Delete `object_count` duplicates',
-        'Use a smaller unique index on `object_count`'
+        'Use a smaller unique index on `object_count`',
     ];
 
     public function migrate(): void

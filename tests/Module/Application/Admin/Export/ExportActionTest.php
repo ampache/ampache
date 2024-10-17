@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\Export;
 
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Exception\CatalogLoadingException;
@@ -70,7 +71,7 @@ class ExportActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -85,7 +86,7 @@ class ExportActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->catalogLoader->expects(static::once())
@@ -122,14 +123,14 @@ class ExportActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->willReturn(true);
 
         $this->request->expects(static::once())
             ->method('getParsedBody')
             ->willReturn([
                 'export_catalog' => (string) $catalogId,
-                'export_format' => $exportFormat,
+                'export_format' => $exportFormat->value,
             ]);
 
         $this->catalogLoader->expects(static::once())

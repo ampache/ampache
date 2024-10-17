@@ -54,7 +54,7 @@ final class PrivateMessageAction implements ApplicationActionInterface
         session_start();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(static::REQUEST_KEY);
+        $browse->set_type(self::REQUEST_KEY);
         $browse->set_simple_browse(true);
         $browse->set_sort('creation_date', 'DESC');
 
@@ -65,9 +65,9 @@ final class PrivateMessageAction implements ApplicationActionInterface
 
         $folder = $_REQUEST['folder'] ?? null;
         if ($folder === 'sent') {
-            $browse->set_filter('user', Core::get_global('user')->id);
+            $browse->set_filter('user', Core::get_global('user')?->getId());
         } else {
-            $browse->set_filter('to_user', Core::get_global('user')->id);
+            $browse->set_filter('to_user', Core::get_global('user')?->getId());
         }
         $browse->update_browse_from_session();
         $browse->show_objects();

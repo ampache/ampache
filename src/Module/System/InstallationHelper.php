@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Horde_Browser;
@@ -40,9 +41,9 @@ final class InstallationHelper implements InstallationHelperInterface
     private function split_sql($sql): array
     {
         $sql       = trim((string) $sql);
-        $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
-        $buffer    = array();
-        $ret       = array();
+        $sql       = (string)preg_replace("/\n--[^\n]*\n/", "\n", $sql);
+        $buffer    = [];
+        $ret       = [];
         $in_string = false;
         for ($count = 0; $count < strlen((string) $sql) - 1; $count++) {
             if ($sql[$count] == ";" && !$in_string) {
@@ -52,7 +53,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             if ($in_string && ($sql[$count] == $in_string) && $buffer[1] != "\\") {
                 $in_string = false;
-            } elseif (!$in_string && ($sql[$count] == '"' || $sql[$count] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+            } elseif (
+                !$in_string &&
+                (
+                    $sql[$count] == '"' ||
+                    $sql[$count] == "'"
+                ) &&
+                (
+                    !isset($buffer[0]) ||
+                    $buffer[0] != "\\"
+                )
+            ) {
                 $in_string = $sql[$count];
             }
             if (isset($buffer[1])) {
@@ -68,12 +79,10 @@ final class InstallationHelper implements InstallationHelperInterface
     }
 
     /**
-     * this function checks to see if we actually
-     * still need to install ampache. This function is
-     * very important, we don't want to reinstall over top of an existing install
-     * @param $configfile
+     * this function checks to see if we actually still need to install Ampache.
+     * This function is very important, we don't want to reinstall over top of an existing install
      */
-    public function install_check_status($configfile): bool
+    public function install_check_status(string $configfile): bool
     {
         /**
          * Check and see if the config file exists
@@ -89,6 +98,12 @@ final class InstallationHelper implements InstallationHelperInterface
          * if they don't then they're cool
          */
         $results = parse_ini_file($configfile);
+        if (!$results) {
+            AmpError::add('general', T_("Invalid configuration settings"));
+
+            return false;
+        }
+
         AmpConfig::set_by_array($results, true);
 
         if (!Dba::check_database()) {
@@ -99,7 +114,6 @@ final class InstallationHelper implements InstallationHelperInterface
 
         $sql        = 'SELECT * FROM `user`';
         $db_results = Dba::read($sql);
-
         if (!$db_results) {
             AmpError::add('general', T_('Unable to query the database, check your Ampache config'));
 
@@ -108,11 +122,11 @@ final class InstallationHelper implements InstallationHelperInterface
 
         if (!Dba::num_rows($db_results)) {
             return true;
-        } else {
-            AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
-
-            return false;
         }
+
+        AmpError::add('general', T_('Existing database was detected, unable to continue the installation'));
+
+        return false;
     }
 
     /**
@@ -135,8 +149,8 @@ final class InstallationHelper implements InstallationHelperInterface
             $file .= '.dist';
         }
         $valid     = true;
-        $htaccess  = file_get_contents($file);
-        $new_lines = array();
+        $htaccess  = (string)file_get_contents($file);
+        $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {
             $parts   = explode(' ', (string) $line);
@@ -178,6 +192,12 @@ final class InstallationHelper implements InstallationHelperInterface
     public function install_rewrite_rules($file, $web_path, $download): bool
     {
         $final = $this->install_check_rewrite_rules($file, $web_path, true);
+        if (empty($final)) {
+            AmpError::add('general', T_('Config file is not writable'));
+
+            return false;
+        }
+
         if (!$download) {
             if (!file_put_contents($file, $final)) {
                 AmpError::add('general', T_('Failed to write config file'));
@@ -186,7 +206,7 @@ final class InstallationHelper implements InstallationHelperInterface
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders(basename($file), 'text/plain', false, (string)strlen((string) $final));
 
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
@@ -211,8 +231,15 @@ final class InstallationHelper implements InstallationHelperInterface
      * @param string $charset
      * @param string $collation
      */
-    public function install_insert_db($db_user = null, $db_pass = null, $create_db = true, $overwrite = false, $create_tables = true, $charset = 'utf8mb4', $collation = 'utf8mb4_unicode_ci'): bool
-    {
+    public function install_insert_db(
+        $db_user = null,
+        $db_pass = null,
+        $create_db = true,
+        $overwrite = false,
+        $create_tables = true,
+        $charset = 'utf8mb4',
+        $collation = 'utf8mb4_unicode_ci'
+    ): bool {
         $database = (string) AmpConfig::get('database_name');
         // Make sure that the database name is valid
         preg_match('/([^\d\w\_\-])/', $database, $matches);
@@ -263,14 +290,17 @@ final class InstallationHelper implements InstallationHelperInterface
             }
             $sql_user .= " IDENTIFIED BY '" . Dba::escape($db_pass) . "'";
             if (!Dba::write($sql_user)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 user, %2 database, %3 host, %4 error message */
-                    T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
-                    $db_user,
-                    $database,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 user, %2 database, %3 host, %4 error message */
+                        T_('Unable to create the user "%1$s" with permissions to "%2$s" on "%3$s": %4$s'),
+                        $db_user,
+                        $database,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
                 // this user might exist but we don't always care
                 if (!$overwrite) {
                     return false;
@@ -284,30 +314,47 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql_grant .= " WITH GRANT OPTION";
 
             if (!Dba::write($sql_grant)) {
-                AmpError::add('general', sprintf(
-                    /* HINT: %1 database, %2 user, %3 host, %4 error message */
-                    T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
-                    $database,
-                    $db_user,
-                    $db_host,
-                    Dba::error()
-                ));
+                AmpError::add(
+                    'general',
+                    sprintf(
+                        /* HINT: %1 database, %2 user, %3 host, %4 error message */
+                        T_('Unable to grant permissions to "%1$s" for the user "%2$s" on "%3$s": %4$s'),
+                        $database,
+                        $db_user,
+                        $db_host,
+                        Dba::error()
+                    )
+                );
 
                 return false;
             }
         } // end if we are creating a user
 
         if ($create_tables) {
-            $sql_file = __DIR__ . '/../../../resources/sql/ampache.sql';
-            $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
-            $pieces   = $this->split_sql($query);
-            $p_count  = count($pieces);
-            $errors   = array();
+            $sql_file   = __DIR__ . '/../../../resources/sql/ampache.sql';
+            $sql_handle = fopen($sql_file, 'r');
+            $length     = Core::get_filesize($sql_file);
+            if (!$sql_handle || $length <= 0) {
+                AmpError::add('general', T_('Unable to open ampache.sql'));
+
+                return false;
+            }
+
+            $query = fread($sql_handle, $length);
+            if (!$query) {
+                AmpError::add('general', T_('Unable to open ampache.sql'));
+
+                return false;
+            }
+
+            $pieces  = $this->split_sql($query);
+            $p_count = count($pieces);
+            $errors  = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
                 if (!empty($pieces[$count]) && $pieces[$count] != '#') {
                     if (!Dba::write($pieces[$count])) {
-                        $errors[] = array(Dba::error(), $pieces[$count]);
+                        $errors[] = [Dba::error(), $pieces[$count]];
                     }
                 }
             }
@@ -317,7 +364,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql = "ALTER DATABASE `" . $database . "` DEFAULT CHARACTER SET $charset COLLATE " . $collation;
             Dba::write($sql);
             // if you've set a custom collation we need to change it
-            $tables = array("access_list", "album", "artist", "bookmark", "broadcast", "cache_object_count", "cache_object_count_run", "catalog", "catalog_local", "catalog_remote", "channel", "clip", "daap_session", "democratic", "image", "ip_history", "label", "label_asso", "license", "live_stream", "localplay_httpq", "localplay_mpd", "metadata", "metadata_field", "movie", "now_playing", "object_count", "personal_video", "player_control", "playlist", "playlist_data", "podcast", "podcast_episode", "preference", "rating", "recommendation", "recommendation_item", "search", "session", "session_remember", "session_stream", "share", "song", "song_data", "song_preview", "stream_playlist", "tag", "tag_map", "tag_merge", "tmp_browse", "tmp_playlist", "tmp_playlist_data", "tvshow", "tvshow_episode", "tvshow_season", "update_info", "user", "user_activity", "user_catalog", "user_flag", "user_follower", "user_preference", "user_pvmsg", "user_shout", "user_vote", "video", "wanted");
+            $tables = ["access_list", "album", "artist", "bookmark", "broadcast", "cache_object_count", "cache_object_count_run", "catalog", "catalog_local", "catalog_remote", "channel", "daap_session", "democratic", "image", "ip_history", "label", "label_asso", "license", "live_stream", "localplay_httpq", "localplay_mpd", "metadata", "metadata_field", "now_playing", "object_count", "player_control", "playlist", "playlist_data", "podcast", "podcast_episode", "preference", "rating", "recommendation", "recommendation_item", "search", "session", "session_remember", "session_stream", "share", "song", "song_data", "song_preview", "stream_playlist", "tag", "tag_map", "tag_merge", "tmp_browse", "tmp_playlist", "tmp_playlist_data", "update_info", "user", "user_activity", "user_catalog", "user_flag", "user_follower", "user_preference", "user_pvmsg", "user_shout", "user_vote", "video", "wanted"];
             foreach ($tables as $table_name) {
                 $sql = "ALTER TABLE `" . $table_name . "` CHARACTER SET $charset COLLATE " . $collation;
                 Dba::write($sql);
@@ -326,11 +373,10 @@ final class InstallationHelper implements InstallationHelperInterface
 
         // If they've picked something other than English update default preferences
         if (AmpConfig::get('lang', 'en_US') != 'en_US') {
-            // FIXME: 31? I hate magic.
-            $sql = 'UPDATE `preference` SET `value` = ? WHERE `id` = 31';
-            Dba::write($sql, array(AmpConfig::get('lang', 'en_US')));
-            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = 31';
-            Dba::write($sql, array(AmpConfig::get('lang', 'en_US')));
+            $sql = 'UPDATE `preference` SET `value` = ? WHERE `name` = \'lang\';';
+            Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
+            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `name` = \'lang\';';
+            Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
         }
 
         return true;
@@ -364,6 +410,11 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         $final = $this->generate_config($params);
+        if (empty($final)) {
+            AmpError::add('general', T_('Config file is not writable'));
+
+            return false;
+        }
 
         // Make sure the directory is writable OR the empty config file is
         if (!$download) {
@@ -371,20 +422,19 @@ final class InstallationHelper implements InstallationHelperInterface
                 AmpError::add('general', T_('Config file is not writable'));
 
                 return false;
-            } else {
+            } elseif (!file_put_contents($config_file, $final)) {
                 // Given that $final is > 0, we can ignore lazy comparison problems
-                if (!file_put_contents($config_file, $final)) {
-                    AmpError::add('general', T_('Failed writing config file'));
+                AmpError::add('general', T_('Failed writing config file'));
 
-                    return false;
-                }
+                return false;
             }
         } else {
             $browser = new Horde_Browser();
-            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, strlen((string) $final));
+            $headers = $browser->getDownloadHeaders('ampache.cfg.php', 'text/plain', false, (string)strlen($final));
             foreach ($headers as $headerName => $value) {
                 header(sprintf('%s: %s', $headerName, $value));
             }
+
             echo $final;
 
             return false;
@@ -427,7 +477,7 @@ final class InstallationHelper implements InstallationHelperInterface
             return false;
         }
 
-        $user_id = User::create($username, 'Administrator', '', '', $password, 100);
+        $user_id = User::create($username, 'Administrator', '', '', $password, AccessLevelEnum::ADMIN);
         if ($user_id < 1) {
             /* HINT: Database error message */
             AmpError::add('general', sprintf(T_('Administrative user creation failed: %s'), Dba::error()));
@@ -436,7 +486,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
 
         // Fix the system user preferences
-        User::fix_preferences('-1');
+        User::fix_preferences(-1);
 
         return true;
     }
@@ -453,11 +503,11 @@ final class InstallationHelper implements InstallationHelperInterface
         $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
         $process        = proc_open(
             "$whereIsCommand $command",
-            array(
-                0 => array("pipe", "r"), // STDIN
-                1 => array("pipe", "w"), // STDOUT
-                2 => array("pipe", "w"), // STDERR
-            ),
+            [
+                0 => ["pipe", "r"], // STDIN
+                1 => ["pipe", "w"], // STDOUT
+                2 => ["pipe", "w"], // STDERR
+            ],
             $pipes
         );
 
@@ -480,7 +530,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_get_transcode_modes(): array
     {
-        $modes = array();
+        $modes = [];
 
         if ($this->command_exists('ffmpeg')) {
             $modes[] = 'ffmpeg';
@@ -497,7 +547,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_transcode_mode($mode)
     {
-        $trconfig = array(
+        $trconfig = [
             'encode_target' => 'mp3',
             'encode_video_target' => 'webm',
             'transcode_m4a' => 'required',
@@ -508,7 +558,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'transcode_avi' => 'allowed',
             'transcode_mpg' => 'allowed',
             'transcode_mkv' => 'allowed',
-        );
+        ];
         if ($mode == 'ffmpeg' || $mode == 'avconv') {
             $trconfig['transcode_cmd']          = $mode;
             $trconfig['transcode_input']        = '-i %FILE%';
@@ -524,7 +574,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_use_case($case)
     {
-        $trconfig = array(
+        $trconfig = [
             'use_auth' => 'true',
             'ratings' => 'true',
             'sociable' => 'true',
@@ -534,15 +584,15 @@ final class InstallationHelper implements InstallationHelperInterface
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
             'share' => 'false'
-        );
+        ];
 
-        $dbconfig = array(
+        $dbconfig = [
             'download' => '1',
             'share' => '0',
             'allow_video' => '0',
             'home_now_playing' => '1',
             'home_recently_played' => '1'
-        );
+        ];
 
         switch ($case) {
             case 'minimalist':
@@ -592,13 +642,13 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_backends(array $backends)
     {
-        $dbconfig = array(
+        $dbconfig = [
             'subsonic_backend' => '0',
             'daap_backend' => '0',
             'upnp_backend' => '0',
             'webdav_backend' => '0',
             'stream_beautiful_url' => '0'
-        );
+        ];
 
         foreach ($backends as $backend) {
             switch ($backend) {
@@ -628,14 +678,27 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function write_config(string $current_file_path): bool
     {
-        if (!is_writeable($current_file_path)) {
+        if (
+            !is_writeable($current_file_path) ||
+            !parse_ini_file($current_file_path)
+        ) {
             return false;
         }
+
         $new_data = $this->generate_config(parse_ini_file($current_file_path));
 
         // Start writing into the current config file
         $handle = fopen($current_file_path, 'w+');
-        fwrite($handle, $new_data, strlen((string) $new_data));
+        $length = strlen((string) $new_data);
+        if (
+            empty($new_data) ||
+            !$handle ||
+            $length <= 0
+        ) {
+            return false;
+        }
+
+        fwrite($handle, $new_data, $length);
         fclose($handle);
 
         return true;
@@ -653,7 +716,12 @@ final class InstallationHelper implements InstallationHelperInterface
         // Start building the new config file
         $distfile = __DIR__ . '/../../../config/ampache.cfg.php.dist';
         $handle   = fopen($distfile, 'r');
-        $dist     = fread($handle, Core::get_filesize($distfile));
+        $length   = Core::get_filesize($distfile);
+        if (!$handle || $length <= 0) {
+            return '';
+        }
+
+        $dist = fread($handle, $length);
         fclose($handle);
 
         $data  = explode("\n", (string) $dist);
@@ -673,7 +741,7 @@ final class InstallationHelper implements InstallationHelperInterface
                     $line = $key . ' = ' . $this->escape_ini($value);
                 } elseif ($key == 'secret_key' && !isset($current[$key])) {
                     $secret_key = Core::gen_secure_token(31);
-                    if ($secret_key !== false) {
+                    if ($secret_key !== null) {
                         $line = $key . ' = "' . $this->escape_ini($secret_key) . '"';
                     }
                 } elseif (isset($current[$key])) {

@@ -103,6 +103,7 @@ final class AdvancedSearchMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count(count($results));
                 switch ($type) {
                     case 'album':
                         echo Json_Data::albums($results, [], $user);
@@ -142,6 +143,7 @@ final class AdvancedSearchMethod
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count(count($results));
                 switch ($type) {
                     case 'album':
                         echo Xml_Data::albums($results, [], $user);

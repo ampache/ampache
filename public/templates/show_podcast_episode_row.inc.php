@@ -24,6 +24,9 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Rating;
@@ -42,19 +45,19 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_time */
 /** @var string $cel_counter */
 
-$web_path = AmpConfig::get('web_path');
+$web_path = AmpConfig::get_web_path();
 ?>
 <td class="cel_play">
     <span class="cel_play_content">&nbsp;</span>
     <div class="cel_play_hover">
     <?php
         if (AmpConfig::get('directplay') && !empty($libitem->file)) {
-            echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id, 'play', T_('Play'), 'play_podcast_episode_' . $libitem->id);
+            echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id, 'play_circle', T_('Play'), 'play_podcast_episode_' . $libitem->id);
             if (Stream_Playlist::check_autoplay_next()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_podcast_episode_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_podcast_episode_' . $libitem->id);
             }
             if (Stream_Playlist::check_autoplay_append()) {
-                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&append=true', 'play_add', T_('Play last'), 'addplay_podcast_episode_' . $libitem->id);
+                echo Ajax::button('?page=stream&action=directplay&object_type=podcast_episode&object_id=' . $libitem->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_podcast_episode_' . $libitem->id);
             }
         } ?>
     </div>
@@ -72,10 +75,10 @@ if ($is_mashup) {
 <td class="cel_add">
     <span class="cel_item_add">
 <?php
-    echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'add', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
-if (Access::check('interface', 25)) { ?>
+    echo Ajax::button('?action=basket&type=podcast_episode&id=' . $libitem->id, 'new_window', T_('Add to Temporary Playlist'), 'add_' . $libitem->id);
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <a id="<?php echo 'add_playlist_' . $libitem->id; ?>" onclick="showPlaylistDialog(event, 'podcast_episode', '<?php echo $libitem->id; ?>')">
-            <?php echo Ui::get_icon('playlist_add', T_('Add to playlist')); ?>
+            <?php echo Ui::get_material_symbol('playlist_add', T_('Add to playlist')); ?>
         </a>
     <?php } ?>
     </span>
@@ -88,7 +91,7 @@ if (Access::check('interface', 25)) { ?>
     <td class="<?php echo $cel_counter; ?> optional"><?php echo $libitem->total_count; ?></td>
     <?php } ?>
 <td class="cel_pubdate optional"><?php echo $libitem->getPubDate()->format(DATE_ATOM); ?></td>
-<td class="cel_state optional"><?php echo $libitem->getStateDescription(); ?></td>
+<td class="cel_state optional"><?php echo $libitem->getState()->toDescription(); ?></td>
 <?php
 if ($show_ratings) { ?>
         <td class="cel_ratings">
@@ -103,22 +106,22 @@ if ($show_ratings) { ?>
         </td>
     <?php } ?>
 <td class="cel_action">
-    <?php if (Access::check_function('download') && !empty($libitem->file)) { ?>
-            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
+    <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD) && !empty($libitem->file)) { ?>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&podcast_episode_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
 <?php
-if (Access::check('interface', 50)) { ?>
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
     <span id="button_sync_<?php echo $libitem->id; ?>">
-        <?php echo Ajax::button('?page=podcast&action=sync&podcast_episode_id=' . $libitem->id, 'file_refresh', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
+        <?php echo Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $libitem->id, 'sync', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
     <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_')">
-        <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+        <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
     </a>
     <?php
 }
 if (Catalog::can_remove($libitem)) { ?>
     <a id="<?php echo 'delete_podcast_episode_' . $libitem->id; ?>" href="<?php echo $web_path; ?>/podcast_episode.php?action=delete&podcast_episode_id=<?php echo $libitem->id; ?>">
-        <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+        <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
     </a>
     <?php } ?>
 </td>

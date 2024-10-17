@@ -29,7 +29,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Compose Message'), 'box box_add_pvmsg'); ?>
-<form name="label" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/pvmsg.php?action=add_message">
+<form name="label" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/pvmsg.php?action=add_message">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Recipient'); ?></td>

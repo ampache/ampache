@@ -26,10 +26,9 @@ declare(strict_types=0);
 use Ampache\Repository\Model\License;
 
 /** @var License $license */
-/** @var string $webPath */
-
+/** @var string $adminPath */
 ?>
-<form method="post" enctype="multipart/form-data" action="<?php echo $webPath; ?>/admin/license.php?action=edit">
+<form method="post" enctype="multipart/form-data" action="<?php echo $adminPath; ?>/license.php?action=edit">
 <input type="hidden" name="license_id" value="<?php echo $license->getId(); ?>" />
 <table class="tabledata">
 <tr>
@@ -42,8 +41,12 @@ use Ampache\Repository\Model\License;
 </tr>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('External Link'); ?></td>
-    <td><input type="text" name="external_link" value="<?php echo $license->getExternalLink(); ?>" /></td>
+    <td><input type="text" name="external_link" maxlength="250" value="<?php echo $license->getExternalLink(); ?>" /></td>
 </tr>
+    <tr>
+        <td class="edit_dialog_content_header"><?php echo T_('Order'); ?></td>
+        <td><input type="number" name="order" min="0" maxlength="4" value="<?php echo $license->getOrder(); ?>" /></td>
+    </tr>
 <tr>
     <td><input type="submit" value="<?php echo T_('Confirm'); ?>" /></td>
 </tr>

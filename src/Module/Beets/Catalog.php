@@ -41,29 +41,24 @@ use Ampache\Repository\Model\Video;
  */
 abstract class Catalog extends \Ampache\Repository\Model\Catalog
 {
-    /**
-     * Added Songs counter
-     * @var int
-     */
-    protected $addedSongs = 0;
+    protected string $version;
+    protected string $type;
+    protected string $description;
 
-    /**
-     * Verified Songs counter
-     * @var int
-     */
-    protected $verifiedSongs = 0;
+    /** Added Songs counter */
+    protected int $addedSongs = 0;
+
+    /** Verified Songs counter */
+    protected int $verifiedSongs = 0;
 
     /**
      * Array of all songs
      * @var array
      */
-    protected $songs = array();
+    protected $songs = [];
 
-    /**
-     * command which provides the list of all songs
-     * @var string $listCommand
-     */
-    protected $listCommand;
+    /** command which provides the list of all songs */
+    protected string $listCommand;
 
     /**
      * Counter used for cleaning actions
@@ -89,7 +84,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     *
+     * prepare_media
      * @param Song|Podcast_Episode|Video $media
      * @return array{
      *   file_path: string,
@@ -118,7 +113,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function updateUi($prefix, $count, $song = null, $ignoreTicker = false): void
     {
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             return;
         }
         if ($ignoreTicker || Ui::check_ticker()) {
@@ -131,6 +126,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
 
     /**
      * Get the parser class like CliHandler or JsonHandler
+     * @return CliHandler|JsonHandler
      */
     abstract protected function getParser();
 
@@ -140,22 +136,23 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function add_to_catalog($options = null): int
     {
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             require Ui::find_template('show_adds_catalog.inc.php');
             flush();
         }
         set_time_limit(0);
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Beets Update'));
         }
         /** @var Handler $parser */
         $parser = $this->getParser();
+        /** @see self::addSong() */
         $parser->setHandler($this, 'addSong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'added', 0));
         $this->updateUi('add', $this->addedSongs, null, true);
         $this->update_last_add();
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -191,22 +188,23 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     /**
      * Add the song to the DB
      * @param array $song
-     * @return int|false
      */
-    protected function insertSong($song)
+    protected function insertSong($song): ?int
     {
         $inserted = Song::insert($song);
         if ($inserted) {
             debug_event(self::class, 'Adding song ' . $song['file'], 5);
-        } else {
-            debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
-            /* HINT: filename (file path) */
-            AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
-            echo AmpError::display('general');
-        }
-        flush();
+            flush();
 
-        return $inserted;
+            return $inserted;
+        }
+
+        debug_event(self::class, 'Insert failed for ' . $song['file'], 1);
+        /* HINT: filename (file path) */
+        AmpError::add('general', T_('Unable to add Song - %s'), $song['file']);
+        echo AmpError::display('general');
+
+        return null;
     }
 
     /**
@@ -220,6 +218,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         $date = time();
         /** @var Handler $parser */
         $parser = $this->getParser();
+        /** @see self::verifySong() */
         $parser->setHandler($this, 'verifySong');
         $parser->start($parser->getTimedCommand($this->listCommand, 'mtime', $this->last_update));
         $this->updateUi('verify', $this->verifiedSongs, null, true);
@@ -256,6 +255,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
         /** @var Handler $parser */
         $parser      = $this->getParser();
         $this->songs = $this->getAllSongfiles();
+        /** @see self::removeFromDeleteList() */
         $parser->setHandler($this, 'removeFromDeleteList');
         $parser->start($this->listCommand);
         $count = count($this->songs);
@@ -278,7 +278,7 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -324,14 +324,12 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     }
 
     /**
-     *
-     * @param string $path
-     * @return int
+     * getIdFromPath
      */
-    protected function getIdFromPath($path): int
+    protected function getIdFromPath(string $path): int
     {
         $sql        = "SELECT `id` FROM `song` WHERE `file` = ?";
-        $db_results = Dba::read($sql, array($path));
+        $db_results = Dba::read($sql, [$path]);
         $row        = Dba::fetch_row($db_results);
         if (empty($row)) {
             return 0;
@@ -347,9 +345,9 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     public function getAllSongfiles(): array
     {
         $sql        = "SELECT `id`, `file` FROM `song` WHERE `catalog` = ?";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
-        $files = array();
+        $files = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $files[$row['id']] = $row['file'];
         }
@@ -363,11 +361,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
      */
     protected function getVirtualSongPath($song): string
     {
-        return implode('/', array(
+        return implode('/', [
             $song['artist'],
             $song['album'],
             $song['title'],
-        ));
+        ]);
     }
 
     /**

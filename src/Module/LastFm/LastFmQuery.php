@@ -50,7 +50,7 @@ final class LastFmQuery implements LastFmQueryInterface
         $lang    = (string) $this->configContainer->get('lang');
         $resp    = explode('_', $lang);
         $api_key = $this->configContainer->get('lastfm_api_key');
-        $url     = static::API_URL . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
+        $url     = self::API_URL . $method . '&api_key=' . $api_key . '&' . $query . '&lang=' . $resp[0];
 
         return $this->queryLastFm($url);
     }
@@ -60,7 +60,7 @@ final class LastFmQuery implements LastFmQueryInterface
      */
     public function queryLastFm(string $url): SimpleXMLElement
     {
-        debug_event(__CLASS__, 'search url : ' . $url, 5);
+        debug_event(self::class, 'search url : ' . $url, 5);
 
         $request = Requests::get($url, [], Core::requests_options());
 

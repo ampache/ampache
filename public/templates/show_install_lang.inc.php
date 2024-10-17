@@ -25,6 +25,9 @@ declare(strict_types=0);
 
 use Ampache\Module\System\AmpError;
 
+/** @var string $web_path */
+/** @var string $htmllang */
+
 require __DIR__ . '/install_header.inc.php'; ?>
         <!-- Main jumbotron for a primary marketing message or call to action -->
         <br><br>

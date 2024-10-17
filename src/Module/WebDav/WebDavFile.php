@@ -28,7 +28,6 @@ namespace Ampache\Module\WebDav;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Sabre\DAV;
 
 /**
@@ -45,9 +44,13 @@ class WebDavFile extends DAV\File
 
     public function getName(): string
     {
-        $nameinfo = pathinfo($this->libitem->file);
+        if (isset($this->libitem->file)) {
+            $nameinfo = pathinfo($this->libitem->file);
 
-        return htmlentities($nameinfo['filename'] . '.' . $nameinfo['extension']);
+            return htmlentities($nameinfo['filename'] . '.' . ($nameinfo['extension'] ?? ''));
+        }
+
+        return '';
     }
 
     /**
@@ -57,9 +60,13 @@ class WebDavFile extends DAV\File
     {
         //debug_event(self::class, 'File get ' . $this->libitem->file, 5);
         // Only media associated to a local catalog is supported
-        if ($this->libitem->catalog) {
+        if (isset($this->libitem->catalog)) {
             $catalog = Catalog::create_from_id($this->libitem->catalog);
-            if ($catalog !== null && $catalog->get_type() === 'local') {
+            if (
+                $catalog !== null &&
+                $catalog->get_type() === 'local' &&
+                isset($this->libitem->file)
+            ) {
                 $filepointer = fopen(Core::conv_lc_file($this->libitem->file), 'r');
 
                 if (!is_resource($filepointer)) {
@@ -81,12 +88,11 @@ class WebDavFile extends DAV\File
 
     public function getSize(): int
     {
-        return $this->libitem->size;
+        return $this->libitem->size ?? 0;
     }
-
 
     public function getETag(): string
     {
-        return md5(ObjectTypeToClassNameMapper::reverseMap(get_class($this->libitem)) . "_" . $this->libitem->id . "_" . $this->libitem->update_time);
+        return md5($this->libitem->getMediaType()->value . "_" . ($this->libitem->id ?? 0) . "_" . ($this->libitem->update_time ?? time()));
     }
 }

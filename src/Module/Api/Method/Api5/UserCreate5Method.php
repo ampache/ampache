@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -53,20 +55,31 @@ final class UserCreate5Method
      */
     public static function user_create(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, ['username', 'password', 'email'], self::ACTION)) {
             return false;
         }
-        $username             = $input['username'];
-        $fullname             = $input['fullname'] ?? $username;
-        $email                = urldecode($input['email']);
-        $password             = $input['password'];
-        $disable              = (bool)($input['disable'] ?? false);
-        $access               = 25;
-        $catalog_filter_group = 0;
-        $user_id              = User::create($username, $fullname, $email, '', $password, $access, $catalog_filter_group, '', '', $disable, true);
+        $username = $input['username'];
+        $fullname = $input['fullname'] ?? $username;
+        $email    = urldecode($input['email']);
+        $password = $input['password'];
+        $disable  = (bool)($input['disable'] ?? false);
+
+        $user_id = User::create(
+            $username,
+            $fullname,
+            $email,
+            '',
+            $password,
+            AccessLevelEnum::USER,
+            0,
+            '',
+            '',
+            $disable,
+            true
+        );
 
         if ($user_id > 0) {
             Api5::message('successfully created: ' . $username, $input['api_format']);

@@ -30,11 +30,13 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -61,7 +63,7 @@ final class SendMailAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();
@@ -88,7 +90,12 @@ final class SendMailAction implements ApplicationActionInterface
             if ($this->requestParser->getFromRequest('from') == 'system') {
                 $mailer->set_default_sender();
             } else {
-                $mailer->setSender(Core::get_global('user')->email, Core::get_global('user')->fullname);
+                $user = Core::get_global('user');
+                if ($user instanceof User) {
+                    $mailer->setSender((string)$user->email, (string)$user->get_fullname());
+                } else {
+                    $mailer->set_default_sender();
+                }
             }
 
             if ($mailer->send_to_group($this->requestParser->getFromRequest('to'))) {
@@ -100,8 +107,8 @@ final class SendMailAction implements ApplicationActionInterface
             }
 
             $url = sprintf(
-                '%s/admin/mail.php',
-                $this->configContainer->getWebPath()
+                '%s/mail.php',
+                $this->configContainer->getWebPath('/admin')
             );
             $this->ui->showConfirmation($title, $body, $url);
         }

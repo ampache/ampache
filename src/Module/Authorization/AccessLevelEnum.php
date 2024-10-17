@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -24,30 +26,44 @@
 namespace Ampache\Module\Authorization;
 
 /**
- * Contains all known access levels and access types
+ * Contains all known access levels
  */
-final class AccessLevelEnum
+enum AccessLevelEnum: int
 {
-    public const TYPE_INTERFACE = 'interface';
-    public const TYPE_LOCALPLAY = 'localplay';
-    public const TYPE_API       = 'rpc';
-    public const TYPE_NETWORK   = 'network';
-    public const TYPE_STREAM    = 'stream';
+    case DEFAULT         = 0;
+    case GUEST           = 5;
+    case USER            = 25;
+    case CONTENT_MANAGER = 50;
+    case MANAGER         = 75;
+    case ADMIN           = 100;
 
-    public const CONFIGURABLE_TYPE_LIST = [
-        self::TYPE_API,
-        self::TYPE_INTERFACE,
-        self::TYPE_NETWORK,
-        self::TYPE_STREAM,
-    ];
+    /**
+     * This takes the access-level text representation and returns the level
+     */
+    public static function fromTextual(string $name): AccessLevelEnum
+    {
+        return match ($name) {
+            'admin' => AccessLevelEnum::ADMIN,
+            'user' => AccessLevelEnum::USER,
+            'manager' => AccessLevelEnum::MANAGER,
+            'content_manager' => AccessLevelEnum::CONTENT_MANAGER,
+            'guest' => AccessLevelEnum::GUEST,
+            default => AccessLevelEnum::DEFAULT,
+        };
+    }
 
-    public const LEVEL_DEFAULT         = 0;
-    public const LEVEL_GUEST           = 5;
-    public const LEVEL_USER            = 25;
-    public const LEVEL_CONTENT_MANAGER = 50;
-    public const LEVEL_MANAGER         = 75;
-    public const LEVEL_ADMIN           = 100;
-
-    public const FUNCTION_DOWNLOAD       = 'download';
-    public const FUNCTION_BATCH_DOWNLOAD = 'batch_download';
+    /**
+     * Returns the translated description for an access-level
+     */
+    public function toDescription(): string
+    {
+        return match ($this) {
+            AccessLevelEnum::ADMIN => T_('Admin'),
+            AccessLevelEnum::MANAGER => T_('Catalog Manager'),
+            AccessLevelEnum::CONTENT_MANAGER => T_('Content Manager'),
+            AccessLevelEnum::USER => T_('User'),
+            AccessLevelEnum::GUEST => T_('Guest'),
+            default => T_('Unknown'),
+        };
+    }
 }

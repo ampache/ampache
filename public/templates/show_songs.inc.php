@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -40,7 +42,7 @@ use Ampache\Module\Util\Ui;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
@@ -50,11 +52,15 @@ $albumString  = $is_group
     ? 'album'
     : 'album_disk';
 // hide columns you don't always need
-$hide_artist  = in_array('cel_artist', $hide_columns);
-$hide_album   = in_array('cel_album', $hide_columns);
-$hide_year    = in_array('cel_year', $hide_columns);
-$hide_drag    = in_array('cel_drag', $hide_columns);
-$show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+$hide_artist   = in_array('cel_artist', $hide_columns);
+$hide_album    = in_array('cel_album', $hide_columns);
+$hide_year     = in_array('cel_year', $hide_columns);
+$hide_drag     = in_array('cel_drag', $hide_columns);
+$show_license  = AmpConfig::get('licensing') && AmpConfig::get('show_license');
+$show_track    = !empty($argument) && $is_table;
+$cel_play_text = ($show_track)
+    ? Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id)
+    : '';
 //mashup and grid view need different css
 $cel_song    = ($is_table) ? "cel_song" : 'grid_song';
 $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
@@ -69,22 +75,22 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
-            <th class="cel_play essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'sort_song_track' . $browse->id); ?></th>
-            <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
+            <th class="cel_play essential"><?php echo $cel_play_text; ?></th>
+            <th class="<?php echo $cel_song; ?> essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'song_sort_title' . $browse->id); ?></th>
             <th class="cel_add essential"></th>
             <?php if (!$hide_artist) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
+            <th class="<?php echo $cel_artist; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'song_sort_artist' . $browse->id); ?></th>
             <?php
             } ?>
             <?php if (!$hide_album) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $albumString . $argument_param, T_('Album'), 'sort_song_' . $albumString . $browse->id); ?></th>
+            <th class="<?php echo $cel_album; ?> essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=' . $albumString . $argument_param, T_('Album'), 'song_sort_' . $albumString . $browse->id); ?></th>
             <?php
             } ?>
             <?php if (!$hide_year) {
                 ++$thcount; ?>
-            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'sort_song_year'); ?></th>
+            <th class="cel_year"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=year', T_('Year'), 'song_sort_year'); ?></th>
             <?php
             } ?>
             <?php if (!$hide_genres) {
@@ -92,7 +98,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
                 <th class="<?php echo $cel_tags; ?> optional"><?php echo T_('Genres'); ?></th>
             <?php
             } ?>
-            <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
+            <th class="<?php echo $cel_time; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'song_sort_time' . $browse->id); ?></th>
             <?php if ($show_license) {
                 ++$thcount; ?>
             <th class="<?php echo $cel_license; ?> optional"><?php echo T_('License'); ?></th>
@@ -100,12 +106,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
             <?php if (AmpConfig::get('show_played_times')) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'sort_song_total_count' . $browse->id); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count' . $argument_param, T_('Played'), 'song_sort_total_count' . $browse->id); ?></th>
             <?php
             } ?>
             <?php if (AmpConfig::get('show_skipped_times')) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('Skipped'), 'sort_song_total_skip' . $browse->id); ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_skip' . $argument_param, T_('Skipped'), 'song_sort_total_skip' . $browse->id); ?></th>
             <?php
             } ?>
             <?php if ($show_ratings) {
@@ -139,7 +145,7 @@ foreach ($object_ids as $song_id) {
     }
     $libitem->format(); ?>
             <tr id="song_<?php echo $libitem->id; ?>">
-                <?php if ($libitem->enabled || Access::check('interface', 50)) {
+                <?php if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
                     $content = $talFactory->createTalView()
                         ->setContext('USER_IS_REGISTERED', User::is_registered())
                         ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
@@ -148,7 +154,7 @@ foreach ($object_ids as $song_id) {
                         ->setContext('ARGUMENT_PARAM', $argument_param)
                         ->setContext('IS_TABLE_VIEW', $is_table)
                         ->setContext('IS_ALBUM_GROUP', $is_group)
-                        ->setContext('IS_SHOW_TRACK', (!empty($argument) && $is_table))
+                        ->setContext('IS_SHOW_TRACK', $show_track)
                         ->setContext('IS_SHOW_LICENSE', $show_license)
                         ->setContext('IS_HIDE_GENRE', $hide_genres)
                         ->setContext('IS_HIDE_ARTIST', $hide_artist)
@@ -172,19 +178,19 @@ foreach ($object_ids as $song_id) {
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <th class="cel_play"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'sort_song_track' . $browse->id); ?></th>
-            <th class="<?php echo $cel_song; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'sort_song_title' . $browse->id); ?></th>
+            <th class="cel_play"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=track' . $argument_param, '#', 'song_sort_track' . $browse->id); ?></th>
+            <th class="<?php echo $cel_song; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=title' . $argument_param, T_('Song Title'), 'song_sort_title' . $browse->id); ?></th>
             <th class="cel_add"></th>
             <?php if (!$hide_artist) { ?>
-            <th class="<?php echo $cel_artist; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'sort_song_artist' . $browse->id); ?></th>
+            <th class="<?php echo $cel_artist; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=artist' . $argument_param, T_('Song Artist'), 'song_sort_artist' . $browse->id); ?></th>
             <?php } ?>
             <?php if (!$hide_album) { ?>
-                <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'sort_song_album' . $browse->id); ?></th>
+                <th class="<?php echo $cel_album; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album' . $argument_param, T_('Album'), 'song_sort_album' . $browse->id); ?></th>
             <?php } ?>
             <?php if (!$hide_genres) { ?>
             <th class="<?php echo $cel_tags; ?>"><?php echo T_('Genres'); ?></th>
             <?php } ?>
-            <th class="<?php echo $cel_time; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'sort_song_time' . $browse->id); ?></th>
+            <th class="<?php echo $cel_time; ?>"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=time' . $argument_param, T_('Time'), 'song_sort_time' . $browse->id); ?></th>
             <?php if ($show_license) { ?>
             <th class="<?php echo $cel_license; ?>"><?php echo T_('License'); ?></th>
             <?php } ?>

@@ -67,8 +67,6 @@ use RuntimeException;
  */
 class Waveform
 {
-    public $id;
-
     /**
      * Get a song or podcast_episode waveform.
      * @param Song|Podcast_Episode $media
@@ -111,7 +109,11 @@ class Waveform
 
                                 $transcode_settings = $media->get_transcode_settings($transcode_to);
                                 $transcoder         = Stream::start_transcode($media, $transcode_settings);
-                                $filepointer        = $transcoder['handle'];
+                                if (!is_array($transcoder)) {
+                                    return null;
+                                }
+
+                                $filepointer = $transcoder['handle'];
                                 if (!is_resource($filepointer)) {
                                     debug_event(self::class, "Failed to open " . $media->file . " for waveform.", 3);
 
@@ -220,17 +222,18 @@ class Waveform
     public static function save_to_file($object_id, $object_type, $waveform)
     {
         $file = self::get_filepath($object_id, $object_type);
+        if (!$file) {
+            return false;
+        }
 
         return file_put_contents($file, $waveform);
     }
 
     /**
      * findValues
-     * @param $byte1
-     * @param $byte2
      * @return float|int
      */
-    protected static function findValues($byte1, $byte2)
+    protected static function findValues(string $byte1, string $byte2)
     {
         $byte1 = hexdec(bin2hex($byte1));
         $byte2 = hexdec(bin2hex($byte2));
@@ -248,11 +251,11 @@ class Waveform
     {
         $input = ($input[0] == "#") ? substr($input, 1, 6) : substr($input, 0, 6);
 
-        return array(
+        return [
             hexdec(substr($input, 0, 2)),
             hexdec(substr($input, 2, 2)),
             hexdec(substr($input, 4, 2))
-        );
+        ];
     }
 
     /**
@@ -271,36 +274,42 @@ class Waveform
         global $dic;
 
         if (!$dic->get(EnvironmentInterface::class)->check_php_gd()) {
-            debug_event(__CLASS__, 'GD extension must be loaded', 1);
+            debug_event(self::class, 'GD extension must be loaded', 1);
 
             return null;
         }
 
         $detail     = 5;
-        $width      = AmpConfig::get('waveform_width') ?? 400;
-        $height     = AmpConfig::get('waveform_height') ?? 32;
-        $foreground = AmpConfig::get('waveform_color') ?? '#FF0000';
-        $draw_flat  = true;
+        $width      = (int)AmpConfig::get('waveform_width', 400);
+        $height     = (int)AmpConfig::get('waveform_height', 32);
+        $foreground = (string)AmpConfig::get('waveform_color', '#FF0000');
+        $draw_flat  = (bool)AmpConfig::get('waveform_drawflat', true);
 
         // generate foreground color
         list($red, $green, $blue) = self::html2rgb($foreground);
 
         $handle = fopen($filename, "r");
+        if ($handle === false) {
+            debug_event(self::class, 'Cannot open filename.', 1);
+
+            return null;
+        }
+
         // wav file header retrieval
-        $heading   = array();
+        $heading   = [];
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
         $heading[] = fread($handle, 4);
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 4));
-        $heading[] = bin2hex(fread($handle, 2));
-        $heading[] = bin2hex(fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 2));
+        $heading[] = bin2hex((string)fread($handle, 2));
         $heading[] = fread($handle, 4);
-        $heading[] = bin2hex(fread($handle, 4));
+        $heading[] = bin2hex((string)fread($handle, 4));
 
         // wav bitrate
         $peek = hexdec(substr($heading[10], 0, 2));
@@ -331,15 +340,15 @@ class Waveform
         // fill background of image
         // transparent background specified
         imagesavealpha($img, true);
-        $transparentColor = imagecolorallocatealpha($img, 0, 0, 0, 127);
+        $transparentColor = (int)imagecolorallocatealpha($img, 0, 0, 0, 127);
         imagefill($img, 0, 0, $transparentColor);
         while (!feof($handle) && $data_point < $data_size) {
             if ($data_point++ % $detail == 0) {
-                $bytes = array();
+                $bytes = [];
 
                 // get number of bytes depending on bitrate
                 for ($count = 0; $count < $byte; $count++) {
-                    $bytes[$count] = fgetc($handle);
+                    $bytes[$count] = (string)fgetc($handle);
                 }
 
                 switch ($byte) {
@@ -349,12 +358,12 @@ class Waveform
                         break;
                     case 2:
                         // get value for 16-bit wav
-                        if (ord($bytes[1]) & 128) {
+                        if (ord((string)$bytes[1]) & 128) {
                             $temp = 0;
                         } else {
                             $temp = 128;
                         }
-                        $temp = chr((ord($bytes[1]) & 127) + $temp);
+                        $temp = chr((ord((string)$bytes[1]) & 127) + $temp);
                         $data = floor(self::findValues($bytes[0], $temp) / 256);
                         break;
                     default:
@@ -380,7 +389,7 @@ class Waveform
                         $height - $value, // x2
                         (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
                         $height - ($height - $value),
-                        imagecolorallocate($img, (int)$red, (int)$green, (int)$blue)
+                        (int)imagecolorallocate($img, (int)$red, (int)$green, (int)$blue)
                     );
                 }
             } else {
@@ -414,7 +423,7 @@ class Waveform
         $imgdata = ob_get_contents();
         ob_clean();
 
-        return $imgdata;
+        return $imgdata ?: null;
     }
 
     /**
@@ -430,6 +439,6 @@ class Waveform
             ? "UPDATE `podcast_episode` SET `waveform` = ? WHERE `id` = ?"
             : "UPDATE `song_data` SET `waveform` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($waveform, $object_id));
+        return Dba::write($sql, [$waveform, $object_id]);
     }
 }

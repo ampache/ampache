@@ -29,9 +29,9 @@ class captcha
 {
     public static function solved(): bool
     {
-        $c = new easy_captcha();
+        $captcha = new easy_captcha();
 
-        return $c->solved();
+        return $captcha->solved();
     }
 
     /**

@@ -66,12 +66,14 @@ final class Democratic4Method
                     Api4::message('error', T_('Media object invalid or not specified'), '400', $input['api_format']);
                     break;
                 }
-                $democratic->add_vote([
+                $democratic->add_vote(
                     [
-                        'object_type' => $type,
-                        'object_id' => $media->id
+                        [
+                            'object_type' => $type,
+                            'object_id' => $media->id
+                        ]
                     ]
-                ]);
+                );
 
                 // If everything was ok
                 $results = [
@@ -125,9 +127,7 @@ final class Democratic4Method
                 break;
             case 'play':
                 $url     = $democratic->play_url($user);
-                $results = [
-                    'url' => $url
-                ];
+                $results = ['url' => $url];
                 switch ($input['api_format']) {
                     case 'json':
                         echo json_encode($results, JSON_PRETTY_PRINT);

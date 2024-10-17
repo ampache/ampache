@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\User;
@@ -37,7 +39,7 @@ use Ampache\Repository\PodcastRepositoryInterface;
 /** @var list<int> $object_ids */
 /** @var PodcastRepositoryInterface $podcastRepository */
 
-$webPath      = AmpConfig::get('web_path');
+$webPath      = AmpConfig::get_web_path();
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
@@ -50,23 +52,23 @@ $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <div id="information_actions">
     <ul>
-        <?php if (Access::check('interface', 75)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=show_create">
-                <?php echo Ui::get_icon('add', T_('Add')); ?>
+                <?php echo Ui::get_material_symbol('add_circle', T_('Add')); ?>
                 <?php echo T_('Subscribe to Podcast'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=show_import_podcasts">
-                <?php echo Ui::get_icon('upload', T_('Import')); ?>
+                <?php echo Ui::get_material_symbol('upload', T_('Import')); ?>
                 <?php echo T_('Import'); ?>
             </a>
         </li>
         <?php } ?>
         <li>
             <a href="<?php echo $webPath; ?>/podcast.php?action=export_podcasts" target="_blank">
-                <?php echo Ui::get_icon('download', T_('Export')); ?>
+                <?php echo Ui::get_material_symbol('download', T_('Export')); ?>
                 <?php echo T_('Export'); ?>
             </a>
         </li>
@@ -85,7 +87,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             <th class="cel_episodes optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=episodes', T_('Episodes'), 'podcast_sort_episodes'); ?></th>
             <?php if (AmpConfig::get('show_played_times')) {
                 ++$thcount; ?>
-            <th class="<?php echo $cel_counter; ?> optional"><?php echo $count_text; ?></th>
+            <th class="<?php echo $cel_counter; ?> optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'podcast_sort_total_count' . $browse->id); ?></th>
                 <?php
             } ?>
             <?php if ($show_ratings) {
