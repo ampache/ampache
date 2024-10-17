@@ -173,7 +173,10 @@ class Plugin
         /* Make sure it's within the version confines */
         $db_version = $this->get_ampache_db_version();
 
-        if ($db_version < $this->_plugin->min_ampache) {
+        if (
+            empty($db_version) ||
+            $db_version < $this->_plugin->min_ampache
+        ) {
             return false;
         }
 
@@ -340,7 +343,7 @@ class Plugin
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
 
-        return (string)$results['value'];
+        return (string)($results['value'] ?? '');
     }
 
     /**

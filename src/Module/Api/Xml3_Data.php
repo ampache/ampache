@@ -605,7 +605,6 @@ class Xml3_Data
             if ($user->isNew() === false) {
                 $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
             }
-            $string .= "\t<username><![CDATA[" . $user->username . "]]></username>\n";
         }
         $string .= "</users>\n";
 

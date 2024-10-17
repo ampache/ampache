@@ -243,6 +243,14 @@ class Broadcast extends database_object implements library_item
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
      * get_parent
      * Return parent `object_type`, `object_id`; null otherwise.
      */

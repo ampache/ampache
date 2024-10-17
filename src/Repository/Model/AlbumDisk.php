@@ -384,6 +384,14 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return $this->get_f_artist_link();
+    }
+
+    /**
      * getYear
      */
     public function getYear(): string

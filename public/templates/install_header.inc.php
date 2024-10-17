@@ -26,7 +26,6 @@ declare(strict_types=0);
 /** @var string $charset */
 /** @var string $lang */
 $htmllang = str_replace("_", "-", $lang);
-
 ?>
 <?php if (!defined('INSTALL')) {
     return false;

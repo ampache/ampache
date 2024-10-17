@@ -28,7 +28,6 @@ use Ampache\Module\System\AmpError;
 use Ampache\Module\System\Core;
 
 /** @var int $catalogId */
-
 ?>
 <form name="podcast" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path(); ?>/podcast.php?action=import_podcasts">
     <table class="tabledata">
