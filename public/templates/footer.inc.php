@@ -26,6 +26,7 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
+
 ?>
                 </div>
                 <div style="clear:both;">

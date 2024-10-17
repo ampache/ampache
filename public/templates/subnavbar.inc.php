@@ -29,6 +29,7 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+
 ?>
 <ul class="subnavside">
 <?php

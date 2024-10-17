@@ -26,6 +26,7 @@ declare(strict_types=0);
 /** @var Song_Preview $libitem */
 
 use Ampache\Repository\Model\Song_Preview;
+
 ?>
 <td class="cel_song"><?php echo $libitem->title; ?></td>
 <td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>

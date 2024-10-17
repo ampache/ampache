@@ -49,13 +49,12 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
 foreach ($filters as $filter) {
     $num_users    = Catalog::filter_user_count($filter['id']);
     $num_catalogs = Catalog::filter_catalog_count($filter['id']);
-    //debug_event(self::class, "Values:  fname:$filter_name, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5); ?>
+    //debug_event(self::class, "Values:  fname:$filter_name, fid:$filter_id, nu:$num_users, nc:num_catalogs", 5);
+    ?>
         <tr id="<?php echo scrub_out($filter['name']); ?>">
             <?php require Ui::find_template('show_filter_row.inc.php'); ?>
         </tr>
-<?php
-}
-?>
+<?php } ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">

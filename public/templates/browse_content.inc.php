@@ -25,7 +25,7 @@ declare(strict_types=0);
 
 use Ampache\Module\Api\Ajax;
 
-/** @var string $type */
+/** @var string $type */ ?>
 
-Ajax::start_container($type, 'browse_content');
-Ajax::end_container(); ?>
+<?php Ajax::start_container($type, 'browse_content'); ?>
+<?php Ajax::end_container(); ?>
