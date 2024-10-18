@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration380008 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('browse_filter', 'Show filter box on browse', '0', 25, 'boolean', 'interface', 'library');
-        $this->updatePreferences('sidebar_light', 'Light sidebar by default', '0', 25, 'boolean', 'interface', 'theme');
+        $this->updatePreferences('browse_filter', 'Show filter box on browse', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'library');
+        $this->updatePreferences('sidebar_light', 'Light sidebar by default', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'theme');
     }
 }

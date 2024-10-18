@@ -36,22 +36,13 @@ final class PlaylistRandomAction extends AbstractStreamAction
 {
     public const REQUEST_KEY = 'playlist_random';
 
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
+        private readonly RequestParserInterface $requestParser,
+        private readonly ModelFactoryInterface $modelFactory,
         LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer
     ) {
         parent::__construct($logger, $configContainer);
-        $this->requestParser   = $requestParser;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

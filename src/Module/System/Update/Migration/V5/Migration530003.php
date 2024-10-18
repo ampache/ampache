@@ -35,7 +35,7 @@ final class Migration530003 extends AbstractMigration
 {
     protected array $changelog = [
         'Drop id column from catalog_map table',
-        'Alter `catalog_map` object_type charset and collation'
+        'Alter `catalog_map` object_type charset and collation',
     ];
 
     public function migrate(): void

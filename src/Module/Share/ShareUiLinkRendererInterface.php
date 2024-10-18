@@ -23,10 +23,12 @@
 
 namespace Ampache\Module\Share;
 
+use Ampache\Repository\Model\LibraryItemEnum;
+
 interface ShareUiLinkRendererInterface
 {
     public function render(
-        string $object_type,
+        LibraryItemEnum $object_type,
         int $object_id
     ): string;
 }

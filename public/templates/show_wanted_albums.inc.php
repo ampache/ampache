@@ -28,20 +28,19 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\WantedRepositoryInterface;
 
-/** @var Browse $browse */
-/** @var list<int> $object_ids */
-
 global $dic;
 $wantedRepository = $dic->get(WantedRepositoryInterface::class);
 
+/** @var Browse $browse */
+/** @var list<int> $object_ids */
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="wanted">
     <thead>
         <tr class="th-top">
-            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=name', T_('Album'), 'sort_wanted_album'); ?></th>
-            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=artist', T_('Artist'), 'sort_wanted_artist'); ?></th>
-            <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=year', T_('Year'), 'sort_wanted_year'); ?></th>
-            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=user', T_('User'), 'sort_wanted_user'); ?></th>
+            <th class="cel_album essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=name', T_('Album'), 'wanted_sort_album'); ?></th>
+            <th class="cel_artist essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=artist', T_('Artist'), 'wanted_sort_artist'); ?></th>
+            <th class="cel_year optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=year', T_('Year'), 'wanted_sort_year'); ?></th>
+            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=wanted&sort=user', T_('User'), 'wanted_sort_user'); ?></th>
             <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>

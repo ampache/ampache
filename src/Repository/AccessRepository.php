@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -36,18 +38,12 @@ use Generator;
  *
  * Table: `access_list`
  */
-final class AccessRepository implements AccessRepositoryInterface
+final readonly class AccessRepository implements AccessRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        ModelFactoryInterface $modelFactory
+        private DatabaseConnectionInterface $connection,
+        private ModelFactoryInterface $modelFactory
     ) {
-        $this->connection   = $connection;
-        $this->modelFactory = $modelFactory;
     }
 
     /**
@@ -69,13 +65,13 @@ final class AccessRepository implements AccessRepositoryInterface
      */
     public function findByIp(
         string $userIp,
-        int $level,
-        string $type,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
         ?int $userId
     ): bool {
         $sql = 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ?';
 
-        $params = [inet_pton($userIp), inet_pton($userIp), $level, $type];
+        $params = [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value];
 
         if (
             $userId !== null &&
@@ -113,12 +109,12 @@ final class AccessRepository implements AccessRepositoryInterface
     public function exists(
         string $inAddrStart,
         string $inAddrEnd,
-        string $type,
+        AccessTypeEnum $type,
         int $userId
     ): bool {
         $result = (int) $this->connection->fetchOne(
             'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-            [$inAddrStart, $inAddrEnd, $type, $userId]
+            [$inAddrStart, $inAddrEnd, $type->value, $userId]
         );
 
         return $result > 0;
@@ -131,20 +127,18 @@ final class AccessRepository implements AccessRepositoryInterface
      * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
-     * @param string $type Access type
      */
     public function create(
         string $startIp,
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void {
         $this->connection->query(
             'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
-            [$name, $level, $startIp, $endIp, $userId, $type]
+            [$name, $level->value, $startIp, $endIp, $userId, $type->value]
         );
     }
 
@@ -156,8 +150,6 @@ final class AccessRepository implements AccessRepositoryInterface
      * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
-     * @param string $type Access type
      */
     public function update(
         int $accessId,
@@ -165,12 +157,12 @@ final class AccessRepository implements AccessRepositoryInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void {
         $this->connection->query(
             'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
-            [$startIp, $endIp, $level, $userId, $name, $type, $accessId]
+            [$startIp, $endIp, $level->value, $userId, $name, $type->value, $accessId]
         );
     }
 }

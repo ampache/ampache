@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -62,14 +64,14 @@ final class RecordPlay4Method
                 : User::get_from_username((string)$input['user']);
         }
         // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
+        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
             Api4::message('error', T_('User_id not found'), '404', $input['api_format']);
 
             return false;
         }
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api4::check_access('interface', 100, $user->id, 'record_play', $input['api_format'])) {
+        if ($play_user->id !== $user->id && !Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'record_play', $input['api_format'])) {
             return false;
         }
         ob_end_clean();

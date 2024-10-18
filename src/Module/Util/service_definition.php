@@ -27,9 +27,8 @@ namespace Ampache\Module\Util;
 
 use Ampache\Module\Util\FileSystem\FileNameConverter;
 use Ampache\Module\Util\FileSystem\FileNameConverterInterface;
-use Ampache\Module\Util\Rss\AmpacheRss;
-use Ampache\Module\Util\Rss\AmpacheRssInterface;
-use Ampache\Module\Util\Rss\RssPodcastBuilder;
+use Ampache\Module\Util\Rss\RssFeedTypeFactory;
+use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
 use Ampache\Module\Util\WebFetcher\WebFetcher;
 use Ampache\Module\Util\WebFetcher\WebFetcherInterface;
 
@@ -46,10 +45,6 @@ return [
     UiInterface::class => autowire(Ui::class),
     Mailer::class => autowire(),
     UtilityFactoryInterface::class => autowire(UtilityFactory::class),
-    AmpacheRssInterface::class => autowire(AmpacheRss::class)
-        ->constructorParameter(
-            'rssPodcastBuilder',
-            autowire(RssPodcastBuilder::class)
-        ),
     WebFetcherInterface::class => autowire(WebFetcher::class),
+    RssFeedTypeFactoryInterface::class => autowire(RssFeedTypeFactory::class),
 ];

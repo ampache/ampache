@@ -95,9 +95,7 @@ final class ShowAddUserAction implements ApplicationActionInterface
 
         $this->ui->show(
             'show_user_registration.inc.php',
-            [
-                'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
-            ]
+            ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
         );
 
         return null;

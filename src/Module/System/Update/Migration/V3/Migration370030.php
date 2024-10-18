@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration370030 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('upload_allow_remove', 'Upload: allow users to remove uploaded songs', '1', 100, 'boolean', 'system');
+        $this->updatePreferences('upload_allow_remove', 'Upload: allow users to remove uploaded songs', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
     }
 }

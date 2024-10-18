@@ -26,24 +26,34 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Util\Graph;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-class AmpacheStreamTime implements AmpachePluginInterface
+class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInterface
 {
     public string $name        = 'Stream Time';
+
     public string $categories  = 'stream_control';
+
     public string $description = 'Control time per user';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370024';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user_id;
+
     private $time_days;
+
     private $time_max;
 
     /**
@@ -60,14 +70,11 @@ class AmpacheStreamTime implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, 50, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-        if (!Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, 50, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('stream_control_time_max', T_('Stream control maximal time (minutes)'), -1, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        return Preference::insert('stream_control_time_days', T_('Stream control time history (days)'), 30, AccessLevelEnum::CONTENT_MANAGER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -93,22 +100,23 @@ class AmpacheStreamTime implements AmpachePluginInterface
 
     /**
      * Check stream control
-     * @param array $media_ids
      */
-    public function stream_control($media_ids): bool
+    public function stream_control(array $media_ids): bool
     {
         // No check if unlimited bandwidth (= -1)
         if ($this->time_max < 0) {
             return true;
         }
+
         // if using free software only you can't use this plugin
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             // Calculate all media time
             $next_total = 0;
             foreach ($media_ids as $media_id) {
                 $className = ObjectTypeToClassNameMapper::map($media_id['object_type']);
-                $media     = new $className($media_id['object_id']);
-                $next_total += $media->time;
+                /** @var Media $media */
+                $media = new $className($media_id['object_id']);
+                $next_total += $media->time ?? 0;
             }
 
             $graph         = new Graph();
@@ -122,6 +130,7 @@ class AmpacheStreamTime implements AmpachePluginInterface
 
             return ($next_total <= $max);
         }
+
         debug_event('streamtime.plugin', 'Access denied, statistical graph disabled.', 1);
 
         return true;
@@ -130,24 +139,17 @@ class AmpacheStreamTime implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
 
-        $this->user_id = $user->id;
-        if ((int)($data['stream_control_time_max'])) {
-            $this->time_max = (int)($data['stream_control_time_max']);
-        } else {
-            $this->time_max = 1024;
-        }
-        if ((int)($data['stream_control_time_days']) > 0) {
-            $this->time_days = (int)($data['stream_control_time_days']);
-        } else {
-            $this->time_days = 30;
-        }
+        $this->user_id   = $user->id;
+        $this->time_max  = (int)($data['stream_control_time_max']) ?: 1024;
+        $this->time_days = ((int)($data['stream_control_time_days']) > 0)
+            ? (int)($data['stream_control_time_days'])
+            : 30;
 
         return true;
     }

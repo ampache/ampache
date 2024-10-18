@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\User\Authorization\UserKeyGeneratorInterface;
 use Ampache\Repository\Model\Preference;
@@ -67,7 +69,7 @@ final class UserEditMethod
      */
     public static function user_edit(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, ['username'], self::ACTION)) {
@@ -94,7 +96,9 @@ final class UserEditMethod
 
         $fullname             = $input['fullname'] ?? null;
         $email                = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website              = $input['website'] ?? null;
+        $website              = (isset($input['website']))
+            ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $state                = $input['state'] ?? null;
         $city                 = $input['city'] ?? null;
         $disable              = $input['disable'] ?? null;
@@ -125,7 +129,7 @@ final class UserEditMethod
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = static::getUserStateToggler();
+            $userStateToggler = self::getUserStateToggler();
             if ((int)$user->disabled === 0 && $disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ((int)$user->disabled === 1 && $disable === '0') {
@@ -141,10 +145,10 @@ final class UserEditMethod
                 $update_user->update_fullname_public($fullname_public);
             }
             if ($reset_apikey) {
-                static::getUserKeyGenerator()->generateApikey($update_user);
+                self::getUserKeyGenerator()->generateApikey($update_user);
             }
             if ($reset_streamtoken) {
-                static::getUserKeyGenerator()->generateStreamToken($update_user);
+                self::getUserKeyGenerator()->generateStreamToken($update_user);
             }
             if ($clear_stats) {
                 Stats::clear($user_id);

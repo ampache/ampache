@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Podcast\Exception\FeedNotLoadableException;
 use Ampache\Module\Podcast\Exception\InvalidCatalogException;
@@ -73,7 +74,7 @@ final class CreateAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
             !$this->requestParser->verifyForm('add_podcast')
         ) {
@@ -91,11 +92,11 @@ final class CreateAction implements ApplicationActionInterface
                     $data['feed'] ?? '',
                     $catalog
                 );
-            } catch (InvalidFeedUrlException $e) {
+            } catch (InvalidFeedUrlException) {
                 AmpError::add('feed', T_('Feed URL is invalid'));
-            } catch (InvalidCatalogException $e) {
+            } catch (InvalidCatalogException) {
                 AmpError::add('catalog', T_('Wrong target Catalog type'));
-            } catch (FeedNotLoadableException $e) {
+            } catch (FeedNotLoadableException) {
                 AmpError::add('feed', T_('Can not read the feed'));
             }
         }

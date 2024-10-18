@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -72,7 +73,7 @@ final class UpdateRecordAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             !$this->requestParser->verifyForm('edit_acl')
         ) {
             throw new AccessDeniedException();
@@ -89,15 +90,15 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 $data['end'] ?? '',
                 $data['name'] ?? '',
                 (int)($data['user'] ?? -1),
-                (int)($data['level'] ?? 0),
-                $data['type'] ?? ''
+                AccessLevelEnum::from((int)($data['level'] ?? 0)),
+                AccessTypeEnum::from($data['type'] ?? 'stream')
             );
-        } catch (InvalidIpRangeException $e) {
+        } catch (InvalidIpRangeException) {
             AmpError::add('start', T_('IP Address version mismatch'));
             AmpError::add('end', T_('IP Address version mismatch'));
-        } catch (InvalidStartIpException $e) {
+        } catch (InvalidStartIpException) {
             AmpError::add('start', T_('An Invalid IPv4 / IPv6 Address was entered'));
-        } catch (InvalidEndIpException $e) {
+        } catch (InvalidEndIpException) {
             AmpError::add('end', T_('An Invalid IPv4 / IPv6 Address was entered'));
         }
 
@@ -116,8 +117,8 @@ final class UpdateRecordAction implements ApplicationActionInterface
                 T_('No Problem'),
                 T_('Your Access Control List has been updated'),
                 sprintf(
-                    '%s/admin/access.php',
-                    $this->configContainer->getWebPath()
+                    '%s/access.php',
+                    $this->configContainer->getWebPath('/admin')
                 )
             );
         }

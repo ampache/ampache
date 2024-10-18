@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Shout;
 
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 
 interface ShoutObjectLoaderInterface
@@ -34,7 +35,7 @@ interface ShoutObjectLoaderInterface
      * get_object
      * This takes a type and an ID and returns a created object
      */
-    public function loadByObjectType(string $type, int $object_id): ?library_item;
+    public function loadByObjectType(LibraryItemEnum $type, int $object_id): ?library_item;
 
     /**
      * Loads the object the shout is linked to

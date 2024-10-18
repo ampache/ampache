@@ -45,7 +45,7 @@ final class Localplay3Method
     {
         unset($user);
         // Load their localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
             echo Xml3_Data::error(405, T_('Invalid Request'));
 
@@ -72,13 +72,8 @@ final class Localplay3Method
                 return false;
         } // end switch on command
 
-        $results = [
-            'localplay' => [
-                'command' => [
-                    $input['command'] => $result
-                ]
-            ]
-        ];
+        $results = ['localplay' => ['command' => [$input['command'] => $result]]];
+
         echo Xml3_Data::keyed_array($results);
 
         return true;

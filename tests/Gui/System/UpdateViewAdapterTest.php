@@ -139,10 +139,10 @@ class UpdateViewAdapterTest extends MockeryTestCase
 
     public function testGetWebPathReturnsValue(): void
     {
-        $webPath = 'some-web-path';
+        $webPath = '';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with('')
             ->once()
             ->andReturn($webPath);
 

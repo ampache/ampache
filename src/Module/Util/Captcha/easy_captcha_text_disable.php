@@ -35,7 +35,7 @@ class easy_captcha_text_disable extends easy_captcha
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {

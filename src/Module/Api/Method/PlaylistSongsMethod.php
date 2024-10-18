@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\User;
@@ -90,7 +91,7 @@ final class PlaylistSongsMethod
         }
         $results = [];
         foreach ($items as $object) {
-            if ($object['object_type'] == 'song') {
+            if ($object['object_type'] === LibraryItemEnum::SONG) {
                 $results[] = $object['object_id'];
             }
         } // end foreach
@@ -100,11 +101,13 @@ final class PlaylistSongsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count(count($results));
                 echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count(count($results));
                 echo Xml_Data::songs($results, $user);
         }
 

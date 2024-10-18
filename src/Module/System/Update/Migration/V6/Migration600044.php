@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600044 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('perpetual_api_session', 'API sessions do not expire', '0', 100, 'boolean', 'system', 'backend');
+        $this->updatePreferences('perpetual_api_session', 'API sessions do not expire', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'backend');
     }
 }

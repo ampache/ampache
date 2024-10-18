@@ -28,12 +28,10 @@ use Exception;
 interface InstallationHelperInterface
 {
     /**
-     * this function checks to see if we actually
-     * still need to install ampache. This function is
-     * very important, we don't want to reinstall over top of an existing install
-     * @param $configfile
+     * this function checks to see if we actually still need to install Ampache.
+     * This function is very important, we don't want to reinstall over top of an existing install
      */
-    public function install_check_status($configfile): bool;
+    public function install_check_status(string $configfile): bool;
 
     /**
      * install_check_server_apache

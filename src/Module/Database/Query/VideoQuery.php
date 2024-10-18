@@ -73,11 +73,9 @@ final class VideoQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`video`.`id`";
+    protected string $select = "`video`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `video` ";
+    protected string $base = "SELECT %%SELECT%% FROM `video` ";
 
     /**
      * get_select

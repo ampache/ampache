@@ -77,7 +77,7 @@ final class UpdateFromMusicBrainzAction implements ApplicationActionInterface
             $this->ui->showContinue(
                 T_('No Problem'),
                 T_('Artist information updated using MusicBrainz'),
-                $this->configContainer->get('web_path') . "/artists.php?action=show&artist=" . $artistId
+                $this->configContainer->getWebPath() . "/artists.php?action=show&artist=" . $artistId
             );
         }
         $this->ui->showQueryStats();

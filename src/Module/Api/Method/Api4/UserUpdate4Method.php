@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api4;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -58,7 +60,7 @@ final class UserUpdate4Method
      */
     public static function user_update(array $input, User $user): bool
     {
-        if (!Api4::check_access('interface', 100, $user->id, 'user_update', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, 'user_update', $input['api_format'])) {
             return false;
         }
         if (!Api4::check_parameter($input, ['username'], 'user_update')) {
@@ -82,7 +84,9 @@ final class UserUpdate4Method
 
         $fullname   = $input['fullname'] ?? null;
         $email      = (array_key_exists('email', $input)) ? urldecode($input['email']) : null;
-        $website    = $input['website'] ?? null;
+        $website    = (isset($input['website']))
+            ? filter_var(urldecode($input['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $state      = $input['state'] ?? null;
         $city       = $input['city'] ?? null;
         $disable    = $input['disable'] ?? null;
@@ -108,7 +112,7 @@ final class UserUpdate4Method
             if ($city) {
                 $update_user->update_city($city);
             }
-            $userStateToggler = static::getUserStateToggler();
+            $userStateToggler = self::getUserStateToggler();
             if ($disable === '1') {
                 $userStateToggler->disable($update_user);
             } elseif ($disable === '0') {

@@ -29,10 +29,11 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
+use Ampache\Repository\UserRepositoryInterface;
 use DateTimeInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +48,7 @@ class ShoutCreatorTest extends TestCase
 
     private UtilityFactoryInterface&MockObject $utilityFactory;
 
-    private ModelFactoryInterface&MockObject $modelFactory;
+    private UserRepositoryInterface&MockObject $userRepository;
 
     private ShoutCreator $subject;
 
@@ -57,14 +58,14 @@ class ShoutCreatorTest extends TestCase
         $this->configContainer    = $this->createMock(ConfigContainerInterface::class);
         $this->shoutRepository    = $this->createMock(ShoutRepositoryInterface::class);
         $this->utilityFactory     = $this->createMock(UtilityFactoryInterface::class);
-        $this->modelFactory       = $this->createMock(ModelFactoryInterface::class);
+        $this->userRepository     = $this->createMock(UserRepositoryInterface::class);
 
         $this->subject = new ShoutCreator(
             $this->userActivityPoster,
             $this->configContainer,
             $this->shoutRepository,
             $this->utilityFactory,
-            $this->modelFactory
+            $this->userRepository,
         );
     }
 
@@ -74,7 +75,7 @@ class ShoutCreatorTest extends TestCase
         $libItem = $this->createMock(library_item::class);
         $shout   = $this->createMock(Shoutbox::class);
 
-        $objectType = 'some-type';
+        $objectType = LibraryItemEnum::SONG;
         $text       = '<div>some-text</div>';
         $isSticky   = false;
         $offset     = 666;
@@ -129,7 +130,7 @@ class ShoutCreatorTest extends TestCase
             ->with(
                 $userId,
                 'shout',
-                $objectType,
+                $objectType->value,
                 $objectId,
                 self::callback(static fn (int $value): bool => $value <= time())
             );

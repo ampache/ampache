@@ -67,7 +67,7 @@ if (!empty($users)) {
                     <?php echo T_('Collaborate'); ?><br />
                 </td>
                 <td>
-<?php $ids = explode(',', $libitem->collaborate);
+<?php $ids = explode(',', (string)$libitem->collaborate);
 $options   = [];
 $users     = User::getValidArray();
 if (!empty($users)) {

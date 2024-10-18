@@ -44,7 +44,7 @@ final class DefaultAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'default';
 
-    private InstallationHelperInterface $installationHelper;
+    public InstallationHelperInterface $installationHelper;
 
     private EnvironmentInterface $environment;
 
@@ -84,17 +84,23 @@ final class DefaultAction implements ApplicationActionInterface
         $port       = scrub_in((string) ($_REQUEST['local_port'] ?? ''));
         $skip_admin = isset($_REQUEST['skip_admin']);
 
-        AmpConfig::set_by_array(array(
-            'web_path' => $web_path,
-            'database_name' => $database,
-            'database_hostname' => $hostname,
-            'database_port' => $port
-        ), true);
+        AmpConfig::set_by_array(
+            [
+                'web_path' => $web_path,
+                'database_name' => $database,
+                'database_hostname' => $hostname,
+                'database_port' => $port
+            ],
+            true
+        );
         if (!$skip_admin) {
-            AmpConfig::set_by_array(array(
-                'database_username' => $username,
-                'database_password' => $password
-            ), true);
+            AmpConfig::set_by_array(
+                [
+                    'database_username' => $username,
+                    'database_password' => $password
+                ],
+                true
+            );
         }
 
         if (array_key_exists('transcode_template', $_REQUEST)) {
@@ -201,7 +207,7 @@ final class DefaultAction implements ApplicationActionInterface
 
                     $created_config = true;
                     if ($write_htaccess_rest || $download_htaccess_rest || $all) {
-                        $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
+                        $created_config = $this->installationHelper->install_rewrite_rules($htaccess_rest_file, Core::get_post('web_path'), $download_htaccess_rest);
                     }
                     if ($write_htaccess_play || $download_htaccess_play || $all) {
                         $created_config = $created_config && $this->installationHelper->install_rewrite_rules($htaccess_play_file, Core::get_post('web_path'), $download_htaccess_play);
@@ -221,7 +227,11 @@ final class DefaultAction implements ApplicationActionInterface
                 }
 
                 /* Make sure we've got a valid config file */
-                if (!check_config_values($results) || !$created_config) {
+                if (
+                    !$results ||
+                    !check_config_values($results) ||
+                    !$created_config
+                ) {
                     AmpError::add('general', T_('Configuration files were either not found or unreadable'));
                     require_once Ui::find_template('show_install_config.inc.php');
                     break;
@@ -235,7 +245,7 @@ final class DefaultAction implements ApplicationActionInterface
                 }
                 break;
             case 'create_account':
-                $results = parse_ini_file($configfile);
+                $results = parse_ini_file($configfile) ?: [];
                 AmpConfig::set_by_array($results, true);
 
                 $password2 = $_REQUEST['local_pass2'];

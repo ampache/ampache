@@ -29,9 +29,7 @@ use Ampache\Repository\Model\Preference;
 
 final class Migration600053 extends AbstractMigration
 {
-    protected array $changelog = [
-        'Remove Flattr plugin (Service has been discontinued)'
-    ];
+    protected array $changelog = ['Remove Flattr plugin (Service has been discontinued)'];
 
     public function migrate(): void
     {

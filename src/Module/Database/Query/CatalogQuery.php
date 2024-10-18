@@ -67,11 +67,9 @@ final class CatalogQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`catalog`.`id`";
+    protected string $select = "`catalog`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `catalog` ";
+    protected string $base = "SELECT %%SELECT%% FROM `catalog` ";
 
     /**
      * get_select

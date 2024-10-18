@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,8 +36,8 @@ final class Migration380010 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('custom_blankalbum', 'Custom blank album default image', '', 75, 'string', 'interface', 'custom');
-        $this->updatePreferences('custom_blankmovie', 'Custom blank video default image', '', 75, 'string', 'interface', 'custom');
-        $this->updatePreferences('libitem_browse_alpha', 'Alphabet browsing by default for following library items (album,artist,...)', '', 75, 'string', 'interface', 'library');
+        $this->updatePreferences('custom_blankalbum', 'Custom blank album default image', '', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'custom');
+        $this->updatePreferences('custom_blankmovie', 'Custom blank video default image', '', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'custom');
+        $this->updatePreferences('libitem_browse_alpha', 'Alphabet browsing by default for following library items (album,artist,...)', '', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'library');
     }
 }

@@ -32,7 +32,7 @@ use Ampache\Module\Util\Ui;
 /** @var string $feed */
 
 Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
-<form name="podcast" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/podcast.php?action=create">
+<form name="podcast" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/podcast.php?action=create">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Podcast Feed URL'); ?></td>
@@ -43,7 +43,7 @@ Ui::show_box_top(T_('Subscribe to Podcast'), 'box box_add_podcast'); ?>
 <tr>
     <td><?php echo T_('Catalog'); ?></td>
     <td>
-        <?php show_catalog_select('catalog', $catalog_id, '', false, 'podcast'); ?>
+        <?php show_catalog_select('catalog', $catalog_id, '', false, 'podcast', 'local'); ?>
         <?php echo AmpError::display('catalog'); ?>
     </td>
 </tr>

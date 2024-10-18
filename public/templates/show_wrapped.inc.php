@@ -25,11 +25,13 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Browse;
+use Ampache\Repository\Model\Rating;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 
 /** @var int $endTime */
 /** @var int $startTime */
-/** @var int $user_id */
+/** @var User $user */
 /** @var string $year */
 
 $threshold      = AmpConfig::get('stats_threshold', 7);
@@ -38,46 +40,69 @@ $catalog_filter = AmpConfig::get('catalog_filter'); ?>
 <h3 class="box-title"><?php echo T_('Ampache Wrapped') . '&nbsp;(' . $year . ')'; ?></h3>
 <dl class="media_details">
     <dt><?php echo T_('Songs Played'); ?></dt>
-    <dd><?php echo Stats::get_object_data('song_count', $startTime, $endTime, $user_id); ?></dd>
+    <dd><?php echo Stats::get_object_data('song_count', $startTime, $endTime, $user); ?></dd>
     <dt><?php echo T_('Minutes Played'); ?></dt>
-    <dd><?php echo Stats::get_object_data('song_minutes', $startTime, $endTime, $user_id); ?></dd>
+    <dd><?php echo Stats::get_object_data('song_minutes', $startTime, $endTime, $user); ?></dd>
 </dl>
 <?php
-Ui::show_box_top(T_('Artists'));
-$object_ids = Stats::get_top('artist', $limit, $threshold, 0, $user_id, false, $startTime, $endTime);
-$browse     = new Browse();
-$browse->set_type('artist');
-$browse->set_use_filters(false);
-$browse->set_show_header(false);
-$browse->set_grid_view(false, false);
-$browse->set_mashup(true);
-$browse->show_objects($object_ids);
-Ui::show_box_bottom();
-Ui::show_box_top(T_('Albums'));
-$object_ids = Stats::get_top('album', $limit, $threshold, 0, $user_id, false, $startTime, $endTime);
-$browse     = new Browse();
-$browse->set_type('album');
-$browse->set_use_filters(false);
-$browse->set_show_header(false);
-$browse->set_grid_view(false, false);
-$browse->set_mashup(true);
-$browse->show_objects($object_ids);
-Ui::show_box_bottom();
-Ui::show_box_top(T_('Songs'));
-$object_ids = Stats::get_top('song', $limit, $threshold, 0, $user_id, false, $startTime, $endTime);
-$browse     = new Browse();
-$browse->set_type('song');
-$browse->set_use_filters(false);
-$browse->set_show_header(false);
-$browse->set_mashup(true);
-$browse->show_objects($object_ids);
-Ui::show_box_bottom();
-Ui::show_box_top(T_('Favorites'));
-$object_ids = Userflag::get_latest('song', $user_id, -1, 0, $startTime, $endTime);
-$browse     = new Browse();
-$browse->set_type('song');
-$browse->set_use_filters(false);
-$browse->set_show_header(false);
-$browse->set_mashup(true);
-$browse->show_objects($object_ids);
-Ui::show_box_bottom();
+$object_ids = Stats::get_top('artist', $limit, $threshold, 0, $user, false, $startTime, $endTime);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Artists'));
+    $browse = new Browse();
+    $browse->set_type('artist');
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_grid_view(false, false);
+    $browse->set_mashup(true);
+    $browse->show_objects($object_ids);
+    Ui::show_box_bottom();
+}
+
+$object_ids = Stats::get_top('album', $limit, $threshold, 0, $user, false, $startTime, $endTime);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Albums'));
+    $browse = new Browse();
+    $browse->set_type('album');
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_grid_view(false, false);
+    $browse->set_mashup(true);
+    $browse->show_objects($object_ids);
+    Ui::show_box_bottom();
+}
+
+$object_ids = Stats::get_top('song', $limit, $threshold, 0, $user, false, $startTime, $endTime);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Songs'));
+    $browse = new Browse();
+    $browse->set_type('song');
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_mashup(true);
+    $browse->show_objects($object_ids);
+    Ui::show_box_bottom();
+}
+
+$object_ids = Userflag::get_latest('song', $user, -1, 0, $startTime, $endTime);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Favorites'));
+    $browse = new Browse();
+    $browse->set_type('song');
+    $browse->set_use_filters(false);
+    $browse->set_show_header(false);
+    $browse->set_mashup(true);
+    $browse->show_objects($object_ids);
+    Ui::show_box_bottom();
+}
+
+$object_ids = Rating::get_latest('song', $user, -1, 0, $startTime, $endTime);
+if (!empty($object_ids)) {
+    Ui::show_box_top(T_('Ratings'));
+    $browse = new Browse();
+    $browse->set_type('song');
+    $browse->set_title('');
+    $browse->set_use_filters(false);
+    $browse->show_objects($object_ids);
+    $browse->store();
+    Ui::show_box_bottom();
+}

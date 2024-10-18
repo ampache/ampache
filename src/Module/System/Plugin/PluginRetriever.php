@@ -36,12 +36,10 @@ final class PluginRetriever implements PluginRetrieverInterface
     /**
      * Yields all loadable plugin of a certain type
      *
-     * @todo migrate to php8+ enums
-     *
      * @return Generator<Plugin>
      */
     public function retrieveByType(
-        string $pluginType,
+        PluginTypeEnum $pluginType,
         User $user
     ): Generator {
         foreach (Plugin::get_plugins($pluginType) as $plugin_name) {

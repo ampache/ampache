@@ -1,0 +1,87 @@
+/* ----------------------------
+    File upload page
+   ----------------------------- */
+#uploadtree {
+    max-height: 250px;
+    margin: 0.5em 0;
+    overscroll-behavior: contain;
+}
+
+.filepond {
+    margin: 0.5em 0;
+}
+
+.upload-actions {
+    margin-bottom: 2em;
+}
+
+.upload-actions button {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    padding: 4px 8px 5px;
+    font-size: 14px;
+}
+.uut-icon {
+    background-color: currentColor;
+    -webkit-mask-size: 16px;
+    mask-size: 16px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+.uut-warning {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/warning.svg");
+    mask-image: url("../../../lib/components/material-symbols/warning.svg");
+}
+.uut-help {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/help.svg");
+    mask-image: url("../../../lib/components/material-symbols/help.svg");
+}
+.uut-chevron-down {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/expand_more.svg");
+    mask-image: url("../../../lib/components/material-symbols/expand_more.svg");
+}
+.uut-chevron-right {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/chevron_right.svg");
+    mask-image: url("../../../lib/components/material-symbols/chevron_right.svg");
+}
+.uut-check-box {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/check_box.svg");
+    mask-image: url("../../../lib/components/material-symbols/check_box.svg");
+}
+.uut-check-box-blank {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/check_box_blank.svg");
+    mask-image: url("../../../lib/components/material-symbols/check_box_blank.svg");
+}
+.uut-indeterminate-check-box {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/indeterminate_check_box.svg");
+    mask-image: url("../../../lib/components/material-symbols/indeterminate_check_box.svg");
+}
+.uut-radio-button-checked {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/radio_button_checked.svg");
+    mask-image: url("../../../lib/components/material-symbols/radio_button_checked.svg");
+}
+.uut-radio-button {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/radio_button.svg");
+    mask-image: url("../../../lib/components/material-symbols/radio_button.svg");
+}
+.uut-radio-button-partial {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/radio_button_partial.svg");
+    mask-image: url("../../../lib/components/material-symbols/radio_button_partial.svg");
+}
+.uut-folder {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/folder.svg");
+    mask-image: url("../../../lib/components/material-symbols/folder.svg");
+}
+.uut-folder-open {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/folder_open.svg");
+    mask-image: url("../../../lib/components/material-symbols/folder_open.svg");
+}
+.uut-folder-special {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/folder_special.svg");
+    mask-image: url("../../../lib/components/material-symbols/folder_special.svg");
+}
+.uut-description {
+    -webkit-mask-image: url("../../../lib/components/material-symbols/description.svg");
+    mask-image: url("../../../lib/components/material-symbols/description.svg");
+}

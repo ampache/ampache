@@ -71,7 +71,7 @@ final class LastShoutsMethod
             : null;
 
         $results = iterator_to_array(
-            static::getShoutRepository()->getTop($limit, $username)
+            self::getShoutRepository()->getTop($limit, $username)
         );
 
         if (empty($results)) {

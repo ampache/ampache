@@ -60,7 +60,7 @@ final class EnableDisabledAction extends AbstractCatalogAction
             return null;
         }
 
-        $songs = $_REQUEST['song'] ?? array();
+        $songs = $_REQUEST['song'] ?? [];
         if (count($songs)) {
             foreach ($songs as $song_id) {
                 Song::update_enabled(true, $song_id);
@@ -69,7 +69,7 @@ final class EnableDisabledAction extends AbstractCatalogAction
         } else {
             $body = T_("You didn't select any disabled Songs");
         }
-        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('Finished Processing Disabled Songs');
         $this->ui->showConfirmation($title, $body, $url);
 

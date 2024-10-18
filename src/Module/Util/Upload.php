@@ -26,7 +26,10 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -45,7 +48,10 @@ class Upload
         ob_start();
         define('CLI', true);
 
-        $can_upload = Access::check('interface', AmpConfig::get('upload_access_level', 25));
+        $can_upload = Access::check(
+            AccessTypeEnum::INTERFACE,
+            AccessLevelEnum::from((int) AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value))
+        );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
         if ($catalog !== null) {
@@ -72,8 +78,8 @@ class Upload
                 // run upload script if set
                 self::upload_script($targetdir, $targetfile);
 
-                $options                = array();
-                $options['user_upload'] = Core::get_global('user')->id;
+                $options                = [];
+                $options['user_upload'] = Core::get_global('user')?->getId();
                 if (isset($_POST['license'])) {
                     $options['license'] = Core::get_post('license');
                 }
@@ -83,7 +89,7 @@ class Upload
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
-                    $artist_id = self::check_artist(Core::get_request('artist_name'), Core::get_global('user')->id);
+                    $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
                     if (!$artist_id) {
                         return self::rerror($targetfile);
                     }
@@ -185,7 +191,7 @@ class Upload
         $user_access = $user->access ?? -1;
 
         return AmpConfig::get('allow_upload') &&
-            $user_access >= AmpConfig::get('upload_access_level', 25);
+            $user_access >= AmpConfig::get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL, AccessLevelEnum::USER->value);
     }
 
     /**
@@ -334,13 +340,17 @@ class Upload
             }
         }
         if ($username === null) {
-            $username = Core::get_global('user')->username;
+            $username = Core::get_global('user')?->username;
         }
 
         $rootdir = "";
         if ($catalog !== null && $catalog->id) {
-            $rootdir = realpath($catalog->get_path());
-            if (!empty($rootdir)) {
+            $pathname = realpath($catalog->get_path());
+            if (
+                is_string($pathname) &&
+                !empty($pathname)
+            ) {
+                $rootdir = $pathname;
                 if (AmpConfig::get('upload_subdir')) {
                     $rootdir .= DIRECTORY_SEPARATOR . $username;
                     if (!Core::is_readable($rootdir)) {

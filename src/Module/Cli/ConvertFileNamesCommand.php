@@ -47,7 +47,11 @@ final class ConvertFileNamesCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
+
+        $interactor = $this->io();
         $values     = $this->values();
 
         if (!function_exists('iconv')) {

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api4;
@@ -47,7 +48,7 @@ final class Stream4Method
      *
      * id      = (string) $song_id|$podcast_episode_id
      * type    = (string) 'song'|'podcast'
-     * bitrate = (integer) max bitrate for transcoding
+     * bitrate = (integer) max bitrate for transcoding in bytes (e.g 192000=192Kb)
      * format  = (string) 'mp3'|'ogg', etc use 'raw' to skip transcoding SONG ONLY
      * offset  = (integer) time offset in seconds
      * length  = (integer) 0,1
@@ -83,14 +84,14 @@ final class Stream4Method
         $url = '';
         if ($type == 'song') {
             $media = new Song($fileid);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if ($type == 'podcast') {
             $media = new Podcast_Episode($fileid);
-            $url   = $media->play_url($params, 'api', false, $user->id, $user->streamtoken);
+            $url   = $media->play_url($params, AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
         }
         if (!empty($url)) {
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
             header('Location: ' . str_replace(':443/play', '/play', $url));
 
             return true;

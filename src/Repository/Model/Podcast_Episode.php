@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Repository\Model;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
@@ -48,35 +50,63 @@ class Podcast_Episode extends database_object implements
     protected const DB_TABLENAME = 'podcast_episode';
 
     public int $id = 0;
-    public ?string $title;
-    public ?string $guid;
+
+    public ?string $title = null;
+
+    public ?string $guid = null;
+
     public int $podcast;
-    public ?string $state;
-    public ?string $file;
-    public ?string $source;
+
+    public ?string $state = null;
+
+    public ?string $file = null;
+
+    public ?string $source = null;
+
     public int $size;
+
     public int $time;
-    public ?string $website;
-    public ?string $description;
-    public ?string $author;
-    public ?string $category;
+
+    public ?string $website = null;
+
+    public ?string $description = null;
+
+    public ?string $author = null;
+
+    public ?string $category = null;
+
     public bool $played;
+
     public bool $enabled;
+
     public int $pubdate;
+
     public int $addition_time;
+
     public int $total_count;
+
     public int $total_skip;
+
     public int $catalog;
+
     public int $bitrate;
+
     public int $rate;
-    public ?string $mode;
-    public ?int $channels;
-    public ?string $waveform;
+
+    public ?string $mode = null;
+
+    public ?int $channels = null;
+
+    public ?string $waveform = null;
 
     public $type;
+
     public $mime;
+
     public $f_name;
+
     public $f_time;
+
     public $f_time_h;
 
     private ?string $link = null;
@@ -102,15 +132,21 @@ class Podcast_Episode extends database_object implements
         }
 
         $info = $this->get_info($episode_id, static::DB_TABLENAME);
-        if (empty($info)) {
+        if ($info === []) {
             return;
         }
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
+
         $this->id = $episode_id;
-        if (!empty($this->file)) {
-            $this->type    = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
+        if (
+            $this->file !== null &&
+            $this->file !== '' &&
+            $this->file !== '0'
+        ) {
+            $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
@@ -137,18 +173,20 @@ class Podcast_Episode extends database_object implements
     /**
      * format
      * this function takes the object and formats some values
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         if ($this->isNew()) {
             return;
         }
 
         // format the file
-        if (!empty($this->file)) {
-            $this->type    = strtolower((string)pathinfo($this->file, PATHINFO_EXTENSION));
+        if (
+            $this->file !== null &&
+            $this->file !== '' &&
+            $this->file !== '0'
+        ) {
+            $this->type    = strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
             $this->mime    = Song::type_to_mime($this->type);
             $this->enabled = true;
         }
@@ -160,10 +198,6 @@ class Podcast_Episode extends database_object implements
         $hour           = sprintf("%02d", floor($min / 60));
         $min_h          = sprintf("%02d", ($min % 60));
         $this->f_time_h = $hour . ":" . $min_h . ":" . $sec;
-
-        if (AmpConfig::get('show_played_times')) {
-            $this->total_count = (int) $this->total_count;
-        }
     }
 
     public function getCategory(): string
@@ -191,23 +225,9 @@ class Podcast_Episode extends database_object implements
         return new DateTime('@' . $this->pubdate);
     }
 
-    public function getStateDescription(): string
+    public function getState(): PodcastEpisodeStateEnum
     {
-        switch ($this->state) {
-            case PodcastEpisodeStateEnum::SKIPPED:
-                $state = T_('skipped');
-                break;
-            case PodcastEpisodeStateEnum::PENDING:
-                $state = T_('pending');
-                break;
-            case PodcastEpisodeStateEnum::COMPLETED:
-                $state = T_('completed');
-                break;
-            default:
-                $state = '';
-        }
-
-        return $state;
+        return PodcastEpisodeStateEnum::tryFrom((string) $this->state) ?? PodcastEpisodeStateEnum::PENDING;
     }
 
     public function getSizeFormatted(): string
@@ -229,23 +249,21 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        $keywords            = array();
-        $keywords['podcast'] = array(
-            'important' => true,
-            'label' => T_('Podcast'),
-            'value' => $this->getPodcastName()
-        );
-        $keywords['title'] = array(
-            'important' => true,
-            'label' => T_('Title'),
-            'value' => $this->get_fullname()
-        );
-
-        return $keywords;
+        return [
+            'podcast' => [
+                'important' => true,
+                'label' => T_('Podcast'),
+                'value' => $this->getPodcastName()
+            ],
+            'title' => [
+                'important' => true,
+                'label' => T_('Title'),
+                'value' => $this->get_fullname()
+            ]
+        ];
     }
 
     /**
@@ -253,7 +271,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_fullname(): ?string
     {
-        if (!isset($this->f_name)) {
+        if ($this->f_name === null) {
             $this->f_name = $this->title;
         }
 
@@ -267,7 +285,7 @@ class Podcast_Episode extends database_object implements
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $this->id;
         }
 
@@ -287,15 +305,19 @@ class Podcast_Episode extends database_object implements
         return $this->link_formatted;
     }
 
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return $this->getPodcastLink();
+    }
+
     public function getPodcastName(): string
     {
         if ($this->podcast_name === null) {
-            $podcast         = $this->getPodcastRepository()->findById($this->podcast);
-            if ($podcast === null) {
-                $this->podcast_name = '';
-            } else {
-                $this->podcast_name = (string) $podcast->get_fullname();
-            }
+            $podcast            = $this->getPodcastRepository()->findById($this->podcast);
+            $this->podcast_name = (string)$podcast?->get_fullname();
         }
 
         return $this->podcast_name;
@@ -305,11 +327,7 @@ class Podcast_Episode extends database_object implements
     {
         if ($this->podcast_link === null) {
             $podcast              = $this->getPodcastRepository()->findById($this->podcast);
-            if ($podcast === null) {
-                $this->podcast_link = '';
-            } else {
-                $this->podcast_link = $podcast->get_f_link();
-            }
+            $this->podcast_link   = (string)$podcast?->get_f_link();
         }
 
         return $this->podcast_link;
@@ -340,56 +358,45 @@ class Podcast_Episode extends database_object implements
     }
 
     /**
-     * get_parent
-     * Return parent `object_type`, `object_id`; null otherwise.
+     * @return array{object_type: LibraryItemEnum, object_id: int}
      */
-    public function get_parent(): ?array
+    public function get_parent(): array
     {
-        return array(
-            'object_type' => 'podcast',
+        return [
+            'object_type' => LibraryItemEnum::PODCAST,
             'object_id' => $this->podcast
-        );
+        ];
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'podcast_episode') {
-            $medias[] = array(
-                'object_type' => 'podcast_episode',
-                'object_id' => $this->id
-            );
+            $medias[] = ['object_type' => LibraryItemEnum::PODCAST_EPISODE, 'object_id' => $this->id];
         }
 
         return $medias;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return null;
@@ -452,12 +459,13 @@ class Podcast_Episode extends database_object implements
     /**
      * update
      * This takes a key'd array of data and updates the current podcast episode
-     * @param array $data
      */
     public function update(array $data): int
     {
         $title    = $data['title'] ?? $this->title;
-        $website  = $data['website'] ?? null;
+        $website  = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $category = $data['category'] ?? null;
         /** @var string $description */
         $description = (isset($data['description'])) ? scrub_in(Dba::check_length((string)$data['description'], 4096)) : null;
@@ -465,7 +473,7 @@ class Podcast_Episode extends database_object implements
         $author   = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
-        Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));
+        Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);
 
         $this->title       = $title;
         $this->website     = $website;
@@ -491,6 +499,7 @@ class Podcast_Episode extends database_object implements
         if (!$this->check_play_history($user_id, $agent, $date)) {
             return false;
         }
+
         if (Stats::insert('podcast_episode', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             Stats::insert('podcast', $this->podcast, $user_id, $agent, $location, 'stream', $date);
         }
@@ -527,24 +536,22 @@ class Podcast_Episode extends database_object implements
      * It takes a field, value podcast_episode_id and level. first and foremost it checks the level
      * against Core::get_global('user') to make sure they are allowed to update this record
      * it then updates it and sets $this->{$field} to the new value
-     * @param string $field
      * @param string|int $value
-     * @param int $episode_id
      */
     private static function _update_item(string $field, $value, int $episode_id): void
     {
         /* Check them Rights! */
-        if (!Access::check('interface', 25)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return;
         }
 
         /* Can't update to blank */
-        if (!strlen(trim((string)$value))) {
+        if (trim((string)$value) === '') {
             return;
         }
 
-        $sql = "UPDATE `podcast_episode` SET `$field` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $episode_id));
+        $sql = sprintf('UPDATE `podcast_episode` SET `%s` = ? WHERE `id` = ?', $field);
+        Dba::write($sql, [$value, $episode_id]);
     }
 
     /**
@@ -560,9 +567,8 @@ class Podcast_Episode extends database_object implements
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
@@ -572,7 +578,7 @@ class Podcast_Episode extends database_object implements
      */
     public function getYear(): string
     {
-        return date("Y", (int)$this->pubdate) ?: '';
+        return date("Y", $this->pubdate) ?: '';
     }
 
     /**
@@ -591,10 +597,12 @@ class Podcast_Episode extends database_object implements
         if ($this->isNew()) {
             return '';
         }
+
         if (!$uid) {
             // No user in the case of upnp. Set to 0 instead. required to fix database insertion errors
-            $uid = Core::get_global('user')->id ?? 0;
+            $uid = Core::get_global('user')?->getId() ?? 0;
         }
+
         // set no use when using auth
         if (!AmpConfig::get('use_auth') && !AmpConfig::get('require_session')) {
             $uid = -1;
@@ -603,13 +611,14 @@ class Podcast_Episode extends database_object implements
         $media_name = $this->get_stream_name() . "." . $this->type;
         $media_name = preg_replace("/[^a-zA-Z0-9\. ]+/", "-", $media_name);
         $media_name = (AmpConfig::get('stream_beautiful_url'))
-            ? urlencode($media_name)
-            : rawurlencode($media_name);
+            ? urlencode((string) $media_name)
+            : rawurlencode((string) $media_name);
 
-        $url = Stream::get_base_url($local, $streamToken) . "type=podcast_episode&oid=" . $this->id . "&uid=" . (string) $uid . '&format=raw' . $additional_params;
+        $url = Stream::get_base_url($local, $streamToken) . "type=podcast_episode&oid=" . $this->id . "&uid=" . $uid . '&format=raw' . $additional_params;
         if ($player !== '') {
             $url .= "&player=" . $player;
         }
+
         $url .= "&name=" . $media_name;
 
         return Stream_Url::format($url);
@@ -638,10 +647,8 @@ class Podcast_Episode extends database_object implements
 
     /**
      * Updates the state of an episode
-     *
-     * @todo replace state by enum after switching to php 8
      */
-    public function change_state(string $state): void
+    public function change_state(PodcastEpisodeStateEnum $state): void
     {
         $this->getPodcastEpisodeRepository()->updateState($this, $state);
     }
@@ -657,6 +664,11 @@ class Podcast_Episode extends database_object implements
     public function getFileName(): string
     {
         return sprintf('%s - %s.%s', $this->getPodcastName(), $this->get_fullname(), $this->type);
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::PODCAST_EPISODE;
     }
 
     /**

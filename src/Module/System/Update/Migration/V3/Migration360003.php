@@ -36,7 +36,7 @@ final class Migration360003 extends AbstractMigration
 {
     protected array $changelog = [
         'Add image table to store images',
-        'Drop album_data and artist_data'
+        'Drop album_data and artist_data',
     ];
 
     public function migrate(): void
@@ -47,7 +47,7 @@ final class Migration360003 extends AbstractMigration
 
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `image` (`id` int(11) unsigned NOT NULL auto_increment, `image` mediumblob NOT NULL, `mime` varchar(64) NOT NULL, `size` varchar(64) NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation");
 
-        foreach (array('album', 'artist') as $type) {
+        foreach (['album', 'artist'] as $type) {
             $sql        = "SELECT `" . $type . "_id` AS `object_id`, `art`, `art_mime` FROM `" . $type . "_data` WHERE `art` IS NOT NULL";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
@@ -62,8 +62,11 @@ final class Migration360003 extends AbstractMigration
     public function getTableMigrations(
         string $collation,
         string $charset,
-        string $engine
+        string $engine,
+        int $build
     ): Generator {
-        yield 'image' => "CREATE TABLE IF NOT EXISTS `image` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `image` mediumblob DEFAULT NULL, `width` int(4) UNSIGNED DEFAULT 0, `height` int(4) UNSIGNED DEFAULT 0, `mime` varchar(64) COLLATE $collation DEFAULT NULL, `size` varchar(64) COLLATE $collation DEFAULT NULL, `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `kind` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        if ($build > 360003) {
+            yield 'image' => "CREATE TABLE IF NOT EXISTS `image` (`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, `image` mediumblob DEFAULT NULL, `width` int(4) UNSIGNED DEFAULT 0, `height` int(4) UNSIGNED DEFAULT 0, `mime` varchar(64) COLLATE $collation DEFAULT NULL, `size` varchar(64) COLLATE $collation DEFAULT NULL, `object_type` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL, `object_id` int(11) UNSIGNED NOT NULL, `kind` varchar(32) COLLATE $collation DEFAULT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;";
+        }
     }
 }

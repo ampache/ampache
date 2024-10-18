@@ -31,15 +31,8 @@ It's easy to use a program like github desktop to compare between branches.
 * Browse changes to check for things you've missed in the changelog
 * ~~Add pchart to composer~~ (part of the dev requirements so it's included in releases)
   * ~~composer require --update-no-dev szymach/c-pchart "3.*"~~
-* Grab the latest prettyphoto (if available/different from https://github.com/lachlan-00/prettyphoto)
 * ~~Run composer install~~ (adding pchart updates everything)
-* Grab the latest prettyphoto (if available/different from https://github.com/lachlan-00/prettyphoto)
 * Get missing map files
-
-```shell
-wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.js.map
-wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubusercontent.com/swisnl/jQuery-contextMenu/a7a1b9f3b9cd789d6eb733ee5e7cbc6c91b3f0f8/dist/jquery.contextMenu.min.css.map
-```
 
 * Reset the vendor folder completely and pull it all down
 
@@ -47,11 +40,18 @@ wget -P ./public/lib/components/jQuery-contextMenu/dist/ https://raw.githubuserc
 rm -rf ./composer.lock vendor/* public/lib/components/*
 ```
 
-* Install packages for all supported php releases (ONE at a time obviously)
+* Install composer packages for all supported php releases (ONE at a time obviously)
 
 ```shell
 php7.4 /usr/local/bin/composer install
 php8.0 /usr/local/bin/composer install
+```
+
+* Install npm packages & build javascript files
+
+```shell
+npm install
+npm run build
 ```
 
 * Remove broken symbolic links

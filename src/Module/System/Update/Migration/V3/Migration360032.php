@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,9 +36,9 @@ final class Migration360032 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('autoupdate', 'Check for Ampache updates automatically', '1', 100, 'boolean', 'system');
-        $this->updatePreferences('autoupdate_lastcheck', 'AutoUpdate last check time', '', 25, 'string', 'internal');
-        $this->updatePreferences('autoupdate_lastversion', 'AutoUpdate last version from last check', '', 25, 'string', 'internal');
-        $this->updatePreferences('autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', 25, 'boolean', 'internal');
+        $this->updatePreferences('autoupdate', 'Check for Ampache updates automatically', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('autoupdate_lastcheck', 'AutoUpdate last check time', '', AccessLevelEnum::USER->value, 'string', 'internal');
+        $this->updatePreferences('autoupdate_lastversion', 'AutoUpdate last version from last check', '', AccessLevelEnum::USER->value, 'string', 'internal');
+        $this->updatePreferences('autoupdate_lastversion_new', 'AutoUpdate last version from last check is newer', '', AccessLevelEnum::USER->value, 'boolean', 'internal');
     }
 }

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -63,7 +65,7 @@ final class RecordPlay5Method
                 : User::get_from_username((string)$input['user']);
         }
         // validate supplied user
-        $valid = ($play_user instanceof User && in_array($play_user->id, static::getUserRepository()->getValid()));
+        $valid = ($play_user instanceof User && in_array($play_user->id, self::getUserRepository()->getValid()));
         if ($valid === false) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
             Api5::error(sprintf(T_('Not Found: %s'), $input['user'] ?? $user->id), ErrorCodeEnum::NOT_FOUND, self::ACTION, 'user', $input['api_format']);
@@ -71,7 +73,7 @@ final class RecordPlay5Method
             return false;
         }
         // If you are setting plays for other users make sure we have an admin
-        if ($play_user->id !== $user->id && !Api5::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if ($play_user->id !== $user->id && !Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         ob_end_clean();

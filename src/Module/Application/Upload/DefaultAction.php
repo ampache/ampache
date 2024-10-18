@@ -28,6 +28,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
@@ -46,7 +47,6 @@ final class DefaultAction implements ApplicationActionInterface
 
     private AjaxUriRetrieverInterface $ajaxUriRetriever;
 
-
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
@@ -59,17 +59,20 @@ final class DefaultAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $access_level = $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL);
+        $access_level = AccessLevelEnum::tryFrom(
+            (int) $this->configContainer->get(ConfigurationKeyEnum::UPLOAD_ACCESS_LEVEL)
+        ) ?? AccessLevelEnum::USER;
+
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_UPLOAD) === false ||
-            $access_level == 0 ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, $access_level) === false
+            $access_level === AccessLevelEnum::DEFAULT ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, $access_level) === false
         ) {
             throw new AccessDeniedException();
         }
 
-        $upload_max = return_bytes(ini_get('upload_max_filesize'));
-        $post_max   = return_bytes(ini_get('post_max_size'));
+        $upload_max = return_bytes((string)ini_get('upload_max_filesize'));
+        $post_max   = return_bytes((string)ini_get('post_max_size'));
         $ajaxfs     = $this->ajaxUriRetriever->getAjaxServerUri() . '/fs.ajax.php';
         if ($post_max > 0 && ($post_max < $upload_max || $upload_max == 0)) {
             $upload_max = $post_max;

@@ -68,7 +68,10 @@ final class DeleteAvatarAction extends AbstractUserAction
             return null;
         }
 
-        if ($this->requestParser->verifyForm('delete_avatar') === false) {
+        if (
+            check_http_referer() === false ||
+            $this->requestParser->verifyForm('delete_avatar') === false
+        ) {
             throw new AccessDeniedException();
         }
 

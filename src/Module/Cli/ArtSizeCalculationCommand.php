@@ -45,8 +45,11 @@ final class ArtSizeCalculationCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->white(
             T_('Started art size calculation'),
             true
@@ -61,7 +64,7 @@ final class ArtSizeCalculationCommand extends Command
         while ($row = Dba::fetch_assoc($db_results)) {
             $folder = Art::get_dir_on_disk($row['object_type'], $row['object_id'], 'default');
             if ($inDisk && $localDir && $folder) {
-                $source = Art::get_from_source(array('file' => $folder . 'art-' . $row['size'] . '.jpg'), $row['object_type']);
+                $source = Art::get_from_source(['file' => $folder . 'art-' . $row['size'] . '.jpg'], $row['object_type']);
             } else {
                 $source = $row['image'];
             }

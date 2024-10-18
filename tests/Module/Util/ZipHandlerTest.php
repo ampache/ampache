@@ -28,25 +28,29 @@ namespace Ampache\Module\Util;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 class ZipHandlerTest extends MockeryTestCase
 {
-    /** @var MockInterface|ConfigContainerInterface|null */
-    private MockInterface $configContainer;
+    private MockInterface&ConfigContainerInterface $configContainer;
 
-    /** @var MockInterface|LoggerInterface|null */
-    private MockInterface $logger;
+    private MockInterface&LoggerInterface $logger;
 
-    private ?ZipHandler $subject;
+    private StreamFactoryInterface&MockObject $streamFactory;
+
+    private ZipHandler $subject;
 
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
+        $this->streamFactory   = $this->createMock(StreamFactoryInterface::class);
         $this->logger          = $this->mock(LoggerInterface::class);
 
         $this->subject = new ZipHandler(
             $this->configContainer,
+            $this->streamFactory,
             $this->logger
         );
     }

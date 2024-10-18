@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration500010 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('hide_single_artist', 'Hide the Song Artist column for Albums with one Artist', '0', 25, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('hide_single_artist', 'Hide the Song Artist column for Albums with one Artist', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }
 }

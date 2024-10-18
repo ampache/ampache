@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\PodcastSyncerInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api;
@@ -54,16 +56,16 @@ final class UpdatePodcastMethod
             return false;
         }
 
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $object_id = (int) $input['filter'];
         $podcast   = self::getPodcastRepository()->findById($object_id);
 
         if ($podcast !== null) {
-            if (static::getPodcastSyncer()->sync($podcast, true)) {
+            if (self::getPodcastSyncer()->sync($podcast, true)) {
                 Api::message('Synced episodes for podcast: ' . (string) $object_id, $input['api_format']);
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
             } else {
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 Api::error(sprintf('Bad Request: %s', $object_id), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'podcast', $input['api_format']);

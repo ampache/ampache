@@ -91,7 +91,7 @@ final class ShowIpHistoryAction extends AbstractUserAction
                 'workingUser' => $user,
                 'history' => $history,
                 'showAll' => $showAll,
-                'webPath' => $this->configContainer->getWebPath(),
+                'adminPath' => $this->configContainer->getWebPath('/admin'),
             ]
         );
         $this->ui->showBoxBottom();

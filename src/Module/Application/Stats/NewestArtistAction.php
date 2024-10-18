@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -36,24 +35,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class NewestArtistAction implements ApplicationActionInterface
+final readonly class NewestArtistAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'newest_artist';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,11 +58,8 @@ final class NewestArtistAction implements ApplicationActionInterface
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        $user    = Core::get_global('user');
-        $user_id = $user->id ?? 0;
-        $objects = Stats::get_newest('artist', -1, 0, 0, $user_id);
+        $objects = Stats::get_newest('artist', -1, 0, 0, $gatekeeper->getUser());
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('artist');
         $browse->show_objects($objects);

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Module\Application\Admin\Access;
 
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\Admin\Access\Lib\AccessListItemInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -70,7 +71,7 @@ class ShowActionTest extends MockeryTestCase
         $this->expectException(AccessDeniedException::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnFalse();
 
@@ -84,7 +85,7 @@ class ShowActionTest extends MockeryTestCase
         $access     = $this->mock(Access::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->once()
             ->andReturnTrue();
 

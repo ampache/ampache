@@ -26,32 +26,30 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Following;
 
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 
-final class UserFollowToggler implements UserFollowTogglerInterface
+final readonly class UserFollowToggler implements UserFollowTogglerInterface
 {
-    private UserFollowerRepositoryInterface $userFollowerRepository;
-
-    private UserActivityPosterInterface $userActivityPoster;
-
     public function __construct(
-        UserFollowerRepositoryInterface $userFollowerRepository,
-        UserActivityPosterInterface $userActivityPoster
+        private UserFollowerRepositoryInterface $userFollowerRepository,
+        private UserActivityPosterInterface $userActivityPoster
     ) {
-        $this->userFollowerRepository = $userFollowerRepository;
-        $this->userActivityPoster     = $userActivityPoster;
     }
 
+    /**
+     * Let a user (un)follow another user
+     */
     public function toggle(
-        int $userId,
-        int $followingUserId
+        User $user,
+        User $followingUser
     ): void {
-        if ($this->userFollowerRepository->isFollowedBy($userId, $followingUserId)) {
-            $this->userFollowerRepository->delete($userId, $followingUserId);
+        if ($this->userFollowerRepository->isFollowedBy($user, $followingUser)) {
+            $this->userFollowerRepository->delete($user, $followingUser);
         } else {
-            $this->userFollowerRepository->add($userId, $followingUserId);
+            $this->userFollowerRepository->add($user, $followingUser);
 
-            $this->userActivityPoster->post($followingUserId, 'follow', 'user', $userId, time());
+            $this->userActivityPoster->post($followingUser->getId(), 'follow', 'user', $user->getId(), time());
         }
     }
 }

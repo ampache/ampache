@@ -34,7 +34,7 @@ use Ampache\Repository\Model\Catalog;
 $max_upload_size = AmpConfig::get('max_upload_size'); ?>
 <?php Ui::show_box_top(T_('Add User'), 'box box_add_user'); ?>
 <?php echo AmpError::display('general'); ?>
-<form name="add_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get('web_path') . "/admin/users.php?action=add_user"; ?>">
+<form name="add_user" enctype="multipart/form-data" method="post" action="<?php echo AmpConfig::get_web_path('/admin') . '/users.php?action=add_user'; ?>">
     <table class="tabledata">
         <tr>
             <td><?php echo T_('Username'); ?>: *</td>
@@ -87,7 +87,7 @@ $max_upload_size = AmpConfig::get('max_upload_size'); ?>
     echo "<td>" . T_('User Catalog Filter') . ":<br /></td>\n<td>";
 
     $filters = Catalog::get_catalog_filters();
-    $options = array();
+    $options = [];
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == 0) {

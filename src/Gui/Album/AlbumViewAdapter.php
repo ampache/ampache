@@ -27,6 +27,8 @@ namespace Ampache\Gui\Album;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Catalog;
@@ -44,38 +46,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-final class AlbumViewAdapter implements AlbumViewAdapterInterface
+final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private GuiGatekeeperInterface $gatekeeper;
-
-    private Browse $browse;
-
-    private Album $album;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker,
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        Album $album
-    ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->zipHandler      = $zipHandler;
-        $this->functionChecker = $functionChecker;
-        $this->gatekeeper      = $gatekeeper;
-        $this->browse          = $browse;
-        $this->album           = $album;
+    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private GuiGatekeeperInterface $gatekeeper, private Browse $browse, private Album $album)
+    {
     }
 
     public function getId(): int
@@ -133,7 +107,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_album_' . $albumId
         );
@@ -145,7 +119,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_album_' . $albumId
         );
@@ -157,7 +131,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album&object_id=' . $albumId . '&append=true',
-            'play_add',
+            'low_priority',
             T_('Play last'),
             'addplay_album_' . $albumId
         );
@@ -169,7 +143,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album&id=' . $albumId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_album_' . $albumId
         );
@@ -181,7 +155,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album_random&id=' . $albumId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_album_' . $albumId
         );
@@ -191,7 +165,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -207,12 +181,12 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getPostShoutIcon(): string
     {
-        return Ui::get_icon('comment', T_('Post Shout'));
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -223,7 +197,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
             $this->zipHandler->isZipable('album');
     }
@@ -239,12 +213,15 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getBatchDownloadIcon(): string
     {
-        return Ui::get_icon('batch_download', T_('Batch download'));
+        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
     }
 
     public function isEditable(): bool
     {
-        return ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->album->get_user_owner());
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+            $this->gatekeeper->getUserId() == $this->album->get_user_owner()
+        );
     }
 
     public function getEditButtonTitle(): string
@@ -254,7 +231,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function getDeletionUrl(): string
@@ -269,7 +246,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getDeletionIcon(): string
     {
-        return Ui::get_icon('delete', T_('Delete'));
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function canBeDeleted(): bool
@@ -279,7 +256,7 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function getPlayedTimes(): int
@@ -289,12 +266,12 @@ final class AlbumViewAdapter implements AlbumViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return (string)$this->album->get_link();
+        return $this->album->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return (string)$this->album->get_f_link();
+        return $this->album->get_f_link();
     }
 
     public function getArtistLink(): string

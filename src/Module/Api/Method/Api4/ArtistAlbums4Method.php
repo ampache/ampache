@@ -54,7 +54,7 @@ final class ArtistAlbums4Method
         $artist  = new Artist($input['filter']);
         $results = [];
         if (isset($artist->id)) {
-            $results = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+            $results = self::getAlbumRepository()->getAlbumByArtist($artist->id);
         }
 
         ob_end_clean();

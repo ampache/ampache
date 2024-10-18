@@ -27,13 +27,16 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\AmpError;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\User;
 
 /** @var User $client */
-$web_path       = (string)AmpConfig::get('web_path', '');
-$access100      = Access::check('interface', 100);
+$web_path       = AmpConfig::get_web_path();
+$admin_path     = AmpConfig::get_web_path('/admin');
+$access100      = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
 <?php echo AmpError::display('general'); ?>
     <table class="tabledata">
@@ -85,7 +88,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('API key'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -99,8 +102,8 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
         <tr>
             <td>
                 <?php echo T_('Stream Token'); ?>
-                <?php if (Access::check('interface', 100)) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>
+                <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -115,7 +118,7 @@ $display_fields = (array) AmpConfig::get('registration_display_fields'); ?>
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
                 <?php } ?>
             </td>
             <td>

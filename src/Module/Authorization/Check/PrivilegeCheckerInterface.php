@@ -23,6 +23,9 @@
 
 namespace Ampache\Module\Authorization\Check;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+
 interface PrivilegeCheckerInterface
 {
     /**
@@ -32,8 +35,8 @@ interface PrivilegeCheckerInterface
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userid is provided
      */
     public function check(
-        string $type,
-        int $level,
+        AccessTypeEnum $type,
+        AccessLevelEnum $level,
         ?int $userId = null
     ): bool;
 }

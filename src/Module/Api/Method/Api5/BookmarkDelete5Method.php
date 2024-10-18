@@ -105,7 +105,7 @@ final class BookmarkDelete5Method
             return false;
         }
 
-        static::getBookmarkRepository()->delete((int) current($find));
+        self::getBookmarkRepository()->delete((int) current($find));
 
         Api5::message('Deleted Bookmark: ' . $object_id, $input['api_format']);
 

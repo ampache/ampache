@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600025 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_header_login', 'Show the login / registration links in the site header', '1', 100, 'boolean', 'system', 'interface');
+        $this->updatePreferences('show_header_login', 'Show the login / registration links in the site header', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system', 'interface');
     }
 }

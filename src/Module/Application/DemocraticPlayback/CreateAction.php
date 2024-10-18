@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\DemocraticPlayback;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -64,7 +65,7 @@ final class CreateAction implements ApplicationActionInterface
         if (
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_DEMOCRATIC_PLAYBACK) === false ||
             !$this->requestParser->verifyForm('create_democratic') ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false
         ) {
             throw new AccessDeniedException();
         }

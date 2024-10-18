@@ -75,7 +75,7 @@ final class ShowSongAction implements ApplicationActionInterface
         if ($song->isNew()) {
             $this->logger->warning(
                 'Requested a song that does not exist',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             echo T_('You have requested an object that does not exist');
         } else {

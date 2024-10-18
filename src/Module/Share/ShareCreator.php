@@ -27,8 +27,10 @@ namespace Ampache\Module\Share;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
@@ -55,7 +57,7 @@ final class ShareCreator implements ShareCreatorInterface
 
     public function create(
         User $user,
-        string $object_type,
+        LibraryItemEnum $object_type,
         int $object_id,
         bool $allow_stream = true,
         bool $allow_download = true,
@@ -64,9 +66,9 @@ final class ShareCreator implements ShareCreatorInterface
         int $max_counter = 0,
         ?string $description = ''
     ): ?int {
-        if (!Share::is_valid_type($object_type)) {
+        if (!in_array($object_type, Share::VALID_TYPES, true)) {
             $this->logger->error(
-                'create_share: Bad object_type ' . $object_type,
+                'create_share: Bad object_type ' . $object_type->value,
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
@@ -86,26 +88,26 @@ final class ShareCreator implements ShareCreatorInterface
         }
 
         if ($description === '') {
-            if ($object_type == 'song') {
+            if ($object_type === LibraryItemEnum::SONG) {
                 $song        = new Song($object_id);
                 $description = $song->title;
-            } elseif ($object_type == 'playlist') {
+            } elseif ($object_type === LibraryItemEnum::PLAYLIST) {
                 $playlist    = new Playlist($object_id);
                 $description = 'Playlist - ' . $playlist->name;
-            } elseif ($object_type == 'album') {
+            } elseif ($object_type === LibraryItemEnum::ALBUM) {
                 $album = new Album($object_id);
                 $album->format();
                 $description = $album->get_fullname() . ' (' . $album->get_artist_fullname() . ')';
-            } elseif ($object_type == 'album_disk') {
+            } elseif ($object_type === LibraryItemEnum::ALBUM_DISK) {
                 $albumdisk = new AlbumDisk($object_id);
                 $albumdisk->format();
                 $description = $albumdisk->get_fullname() . ' (' . $albumdisk->get_artist_fullname() . ')';
             }
         }
         $sql    = "INSERT INTO `share` (`user`, `object_type`, `object_id`, `creation_date`, `allow_stream`, `allow_download`, `expire_days`, `secret`, `counter`, `max_counter`, `description`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array(
+        $params = [
             $user->getId(),
-            $object_type,
+            $object_type->value,
             $object_id,
             time(),
             (int)$allow_stream,
@@ -115,15 +117,14 @@ final class ShareCreator implements ShareCreatorInterface
             0,
             $max_counter,
             $description
-        );
+        ];
         Dba::write($sql, $params);
 
-        $share_id = (int)
-        Dba::insert_id();
+        $share_id = (int)Dba::insert_id();
 
-        $url = Share::get_url((int)$share_id, $secret);
+        $url = Share::get_url($share_id, $secret);
         // Get a shortener url if any available
-        foreach ($this->pluginRetriever->retrieveByType('shortener', $user) as $plugin) {
+        foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::URL_SHORTENER, $user) as $plugin) {
             try {
                 /** @var string|false $short_url */
                 $short_url = $plugin->_plugin->shortener($url);
@@ -140,7 +141,7 @@ final class ShareCreator implements ShareCreatorInterface
         }
 
         $sql = "UPDATE `share` SET `public_url` = ? WHERE `id` = ?";
-        Dba::write($sql, array($url, $share_id));
+        Dba::write($sql, [$url, $share_id]);
 
         return $share_id;
     }

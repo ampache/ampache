@@ -27,7 +27,6 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -36,25 +35,15 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class UserflagSongAction implements ApplicationActionInterface
+final readonly class UserflagSongAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'userflag_song';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -69,12 +58,9 @@ final class UserflagSongAction implements ApplicationActionInterface
 
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
-        $user    = Core::get_global('user');
-        $user_id = $user->id ?? 0;
 
-        $objects = Userflag::get_latest('song', $user_id, -1);
+        $objects = Userflag::get_latest('song', $gatekeeper->getUser(), -1);
         $browse  = $this->modelFactory->createBrowse();
-        $browse->set_threshold($thresh_value);
         $browse->set_use_filters(false);
         $browse->set_type('song');
         $browse->set_sort('user_flag', 'DESC');

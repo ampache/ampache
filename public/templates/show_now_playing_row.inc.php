@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
@@ -118,7 +120,7 @@ $(document).ready(function(){
 </script>
 <?php } ?>
 
-<?php if (Access::check('interface', 25)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <div class="np_group" id="np_group_4">
     <?php if (AmpConfig::get('ratings')) { ?>
             <span id="rating_<?php echo $media->id; ?>_song">

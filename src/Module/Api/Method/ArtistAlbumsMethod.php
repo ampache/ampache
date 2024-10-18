@@ -90,7 +90,7 @@ final class ArtistAlbumsMethod
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
         $typeFilter = (array_key_exists('album_artist', $input) && (int)$input['album_artist'] == 1)
             ? 'album_artist'
@@ -111,11 +111,13 @@ final class ArtistAlbumsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count($browse->get_total());
                 echo Json_Data::albums($results, [], $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count($browse->get_total());
                 echo Xml_Data::albums($results, [], $user);
         }
 

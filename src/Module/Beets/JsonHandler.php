@@ -32,41 +32,30 @@ namespace Ampache\Module\Beets;
  */
 class JsonHandler extends Handler
 {
-    protected $uri;
+    protected string $uri;
 
-    /**
-     * @var Catalog
-     */
-    protected $handler;
-
-    /**
-     * string handler command to do whatever we need
-     * @var
-     */
-    protected $handlerCommand;
+    protected Catalog $handler;
 
     /**
      * Seperator between command and arguments
      * @var string
      */
-    protected $commandSeperator = '/';
+    protected string $commandSeperator = '/';
 
     /**
      * Defines the differences between beets and ampache fields
-     * @var array
      */
-    protected $fieldMapping = array(
-        'disc' => array('disk', '%d'),
-        'length' => array('time', '%d'),
-        'comments' => array('comment', '%s'),
-        'bitrate' => array('bitrate', '%d')
-    );
+    protected array $fieldMapping = [
+        'disc' => ['disk', '%d'],
+        'length' => ['time', '%d'],
+        'comments' => ['comment', '%s'],
+        'bitrate' => ['bitrate', '%d']
+    ];
 
     /**
      * JsonHandler constructor.
-     * @param $uri
      */
-    public function __construct($uri)
+    public function __construct(string $uri)
     {
         $this->uri = $uri;
     }
@@ -107,10 +96,10 @@ class JsonHandler extends Handler
      */
     protected function assembleUri($command): string
     {
-        $uriParts = array(
+        $uriParts = [
             $this->uri,
             $command
-        );
+        ];
 
         return implode('/', $uriParts);
     }
@@ -132,11 +121,11 @@ class JsonHandler extends Handler
      */
     public function removeUnwantedStrings($item): string
     {
-        $toRemove = array(
+        $toRemove = [
             '{"items":[',
             '{"results":[',
             ']}'
-        );
+        ];
 
         return str_replace($toRemove, '', $item);
     }
@@ -154,11 +143,9 @@ class JsonHandler extends Handler
     }
 
     /**
-     *
-     * @param string $char
-     * @param string $string
+     * countChar
      */
-    public function countChar($char, $string): int
+    public function countChar(string $char, string $string): int
     {
         return substr_count($string, $char);
     }
@@ -184,12 +171,12 @@ class JsonHandler extends Handler
      */
     public function createFileUrl($song): string
     {
-        $parts = array(
+        $parts = [
             $this->uri,
             'item',
             $song['id'],
             'file' . '#.' . strtolower($song['format'])
-        );
+        ];
 
         return implode('/', $parts);
     }

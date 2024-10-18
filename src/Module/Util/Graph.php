@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\User;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
@@ -41,7 +43,7 @@ class Graph
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             return true;
         }
-        debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
+        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
         return false;
     }
@@ -52,21 +54,12 @@ class Graph
      */
     protected function get_sql_date_format($field, $zoom): string
     {
-        switch ($zoom) {
-            case 'hour':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')";
-                break;
-            case 'year':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
-                break;
-            case 'month':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
-                break;
-            case 'day':
-            default:
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
-                break;
-        }
+        $dateformat = match ($zoom) {
+            'hour' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')",
+            'year' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')",
+            'month' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')",
+            default => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')",
+        };
 
         return "UNIX_TIMESTAMP(" . $dateformat . ")";
     }
@@ -100,7 +93,7 @@ class Graph
             $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
-        if (InterfaceImplementationChecker::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item((string)$object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
@@ -172,7 +165,7 @@ class Graph
         }
 
         $song_values  = $this->$fct($id, $type, $object_id, $start_date, $end_date, $zoom);
-        $video_values = array();
+        $video_values = [];
         if ($object_type === null && AmpConfig::get('allow_video')) {
             $video_values = $this->$fct($id, 'video', $object_id, $start_date, $end_date, $zoom);
         }
@@ -229,7 +222,7 @@ class Graph
      * @param string $fct
      * @param Data $MyData
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -339,7 +332,7 @@ class Graph
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, COUNT(`object_count`.`id`) AS `hits` FROM `object_count` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
-        $values = array();
+        $values = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['hits'];
         }
@@ -371,7 +364,7 @@ class Graph
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, SUM(`" . $object_type . "`.`" . $column . "`) AS `total` FROM `object_count` JOIN `" . $object_type . "` ON `" . $object_type . "`.`id` = `object_count`.`object_id` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
-        $values = array();
+        $values = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['total'];
         }
@@ -388,8 +381,14 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day'): array
-    {
+    protected function get_user_bandwidth_pts(
+        $user_id = 0,
+        $object_type = 'song',
+        $object_id = 0,
+        $start_date = null,
+        $end_date = null,
+        $zoom = 'day'
+    ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
@@ -430,13 +429,13 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
-        $values = array();
+        $values = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['files'];
         }
@@ -461,7 +460,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = ($object_type == 'album')
@@ -469,7 +468,7 @@ class Graph
             : "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT SUM(`t2`.`size`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + SUM(`" . $object_type . "`.`size`)) AS `storage` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
         $db_results = Dba::read($sql);
 
-        $values = array();
+        $values = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $values[$results['zoom_date']] = $results['storage'];
         }
@@ -494,7 +493,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $pts = array();
+        $pts = [];
 
         $where = $this->get_user_sql_where($user_id, $object_type, $object_id, $start_date, $end_date);
         if ($object_type === '') {
@@ -503,13 +502,13 @@ class Graph
         $sql        = "SELECT `geo_latitude`, `geo_longitude`, `geo_name`, MAX(`date`) AS `last_date`, COUNT(`id`) AS `hits` FROM `object_count` $where AND `geo_latitude` IS NOT NULL AND `geo_longitude` IS NOT NULL GROUP BY `geo_latitude`, `geo_longitude`, `geo_name` ORDER BY `last_date`, `geo_name` DESC";
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
-            $pts[] = array(
+            $pts[] = [
                 'latitude' => $results['geo_latitude'],
                 'longitude' => $results['geo_longitude'],
                 'name' => $results['geo_name'],
                 'last_date' => $results['last_date'],
                 'hits' => $results['hits']
-            );
+            ];
         }
 
         return $pts;
@@ -558,11 +557,11 @@ class Graph
         $myPicture->Antialias = false;
 
         /* Draw a background */
-        $Settings = array("R" => 90, "G" => 90, "B" => 90, "Dash" => 1, "DashR" => 120, "DashG" => 120, "DashB" => 120);
+        $Settings = ["R" => 90, "G" => 90, "B" => 90, "Dash" => 1, "DashR" => 120, "DashG" => 120, "DashB" => 120];
         $myPicture->drawFilledRectangle(0, 0, $width, $height, $Settings);
 
         /* Overlay with a gradient */
-        $Settings = array(
+        $Settings = [
             "StartR" => 200,
             "StartG" => 200,
             "StartB" => 200,
@@ -570,25 +569,25 @@ class Graph
             "EndG" => 50,
             "EndB" => 50,
             "Alpha" => 50
-        );
+        ];
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
 
         /* Add a border to the picture */
-        $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, array("R" => 0, "G" => 0, "B" => 0));
+        $myPicture->drawRectangle(0, 0, $width - 1, $height - 1, ["R" => 0, "G" => 0, "B" => 0]);
 
         /* Write the chart title */
-        $myPicture->setFontProperties(array("FontName" => "Forgotte.ttf", "FontSize" => 11));
-        $myPicture->drawText(150, 35, $title, array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+        $myPicture->setFontProperties(["FontName" => "Forgotte.ttf", "FontSize" => 11]);
+        $myPicture->drawText(150, 35, $title, ["FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE]);
 
         /* Set the default font */
-        $myPicture->setFontProperties(array("FontName" => "pf_arma_five.ttf", "FontSize" => 6));
+        $myPicture->setFontProperties(["FontName" => "pf_arma_five.ttf", "FontSize" => 6]);
 
         /* Define the chart area */
         $myPicture->setGraphArea(60, 40, $width - 20, $height - 50);
 
         /* Draw the scale */
-        $scaleSettings = array(
+        $scaleSettings = [
             "XMargin" => 10,
             "YMargin" => 10,
             "Floating" => true,
@@ -600,21 +599,21 @@ class Graph
             "Mode" => SCALE_MODE_START0,
             "LabelRotation" => 45,
             "LabelingMethod" => LABELING_DIFFERENT
-        );
+        ];
         $myPicture->drawScale($scaleSettings);
 
         /* Turn on Antialiasing */
         $myPicture->Antialias = true;
 
         /* Draw the line chart */
-        $myPicture->setShadow(true, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
+        $myPicture->setShadow(true, ["X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10]);
         $myPicture->drawLineChart();
 
         /* Write a label over the chart */
         $myPicture->writeLabel("Inbound", 720);
 
         /* Write the chart legend */
-        $myPicture->drawLegend(280, 20, array("Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL));
+        $myPicture->drawLegend(280, 20, ["Style" => LEGEND_NOBORDER, "Mode" => LEGEND_HORIZONTAL]);
 
         header("Content-Disposition: filename=\"ampache-graph.png\"");
         /* Render the picture (choose the best way) */
@@ -623,7 +622,7 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -822,23 +821,28 @@ class Graph
      * @param string $zoom
      */
     public function display_map(
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day'
-    ) {
-        $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        foreach (Plugin::get_plugins('display_map') as $plugin_name) {
+        $user_id,
+        $object_type,
+        $object_id,
+        $start_date,
+        $end_date,
+        $zoom,
+    ): bool {
+        $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return false;
+        }
+        foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if ($plugin->_plugin->display_map($pts)) {
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     /**

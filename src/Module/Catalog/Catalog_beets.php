@@ -38,10 +38,10 @@ use Exception;
  */
 class Catalog_beets extends Catalog
 {
-    protected $version     = '000001';
-    protected $type        = 'beets';
-    protected $description = 'Beets Catalog';
-    protected $listCommand = 'ls';
+    protected string $version     = '000001';
+    protected string $type        = 'beets';
+    protected string $description = 'Beets Catalog';
+    protected string $listCommand = 'ls';
 
     protected string $beetsdb = '';
 
@@ -76,7 +76,7 @@ class Catalog_beets extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_beets` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `beetsdb` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -89,9 +89,9 @@ class Catalog_beets extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['beetsdb'] = array('description' => T_('Beets Database File'), 'type' => 'text');
+        $fields['beetsdb'] = ['description' => T_('Beets Database File'), 'type' => 'text'];
 
         return $fields;
     }
@@ -118,7 +118,7 @@ class Catalog_beets extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `beetsdb` = ?';
-        $db_results = Dba::read($selectSql, array($beetsdb));
+        $db_results = Dba::read($selectSql, [$beetsdb]);
 
         if (Dba::num_rows($db_results)) {
             debug_event(self::class, 'Cannot add catalog with duplicate uri ' . $beetsdb, 1);
@@ -128,7 +128,7 @@ class Catalog_beets extends Catalog
         }
 
         $insertSql = 'INSERT INTO `catalog_beets` (`beetsdb`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, array($beetsdb, $catalog_id));
+        Dba::write($insertSql, [$beetsdb, $catalog_id]);
 
         return true;
     }

@@ -7,8 +7,8 @@
 AMPACHEDIR="/var/www/ampache"
 
 BRANCH='develop'
-#BRANCH='patch6'
-#BRANCH='release6'
+#BRANCH='patch7'
+#BRANCH='release7'
 
 ### What's the folder being updated
 echo $AMPACHEDIR
@@ -17,7 +17,7 @@ echo $AMPACHEDIR
 cd $AMPACHEDIR
 
 ### Do you dev? if you're editing files you can check out the original before updating
-git checkout composer.json public src bin config tests locale docs docker
+git checkout composer.json composer.lock public src bin config tests locale docs docker
 
 ### Update your local branch
 git pull
@@ -28,11 +28,22 @@ git pull
 ### Check for database updates
 php bin/cli admin:updateDatabase -e
 
+### Check for config file updates
+php bin/cli admin:updateConfigFile -e
+
+### Check for plugin updates
+php bin/cli admin:updatePlugins -e
+
 ### Clean up your garbage data
 php bin/cli run:updateCatalog -t
 
-### Don't use php8.2? you need the old composer
-#cp -f $AMPACHEDIR/composer_old.json $AMPACHEDIR/composer.json
+### Run a public site? you can forcibly set all preferences to admin and stop users changing things
+#php bin/cli admin:updatePreferenceAccessLevel -e -l admin
 
 ### You don't always need to do this but some people might want to keep composer packages updated here
-#composer update
+### You might want the dev packages as well so you can remove '--no-dev' to install those
+#composer install --no-dev --prefer-source --no-interaction
+
+### NPM is now required to handle all the javascript packages
+npm install
+npm run build

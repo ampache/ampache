@@ -28,6 +28,8 @@ namespace Ampache\Gui\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Album;
@@ -363,7 +365,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -384,7 +386,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
             ->andReturnTrue();
 
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -396,7 +398,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsFalseIfNotAccessible(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnFalse();
 
@@ -408,7 +410,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsFalseIfFeatureIsDeactivated(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -425,7 +427,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
     public function testCanShareReturnsTrueIfConditionsAreMet(): void
     {
         $this->gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
             ->once()
             ->andReturnTrue();
 
@@ -442,7 +444,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
     public function testCanBatchDownloadReturnsValue(): void
     {
         $this->functionChecker->shouldReceive('check')
-            ->with(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD)
+            ->with(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD)
             ->once()
             ->andReturnTrue();
 

@@ -52,8 +52,8 @@ final class DeletedSongsMethod
     public static function deleted_songs(array $input, User $user): bool
     {
         unset($user);
-        $songs = Song::get_deleted();
-        if (empty($songs)) {
+        $results = Song::get_deleted();
+        if (empty($results)) {
             Api::empty('deleted_songs', $input['api_format']);
 
             return false;
@@ -64,12 +64,14 @@ final class DeletedSongsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::deleted('song', $songs);
+                Json_Data::set_count(count($results));
+                echo Json_Data::deleted('song', $results);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::deleted('song', $songs);
+                Xml_Data::set_count(count($results));
+                echo Xml_Data::deleted('song', $results);
         }
 
         return true;

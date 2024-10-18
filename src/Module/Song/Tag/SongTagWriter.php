@@ -71,10 +71,10 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing metadata to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            $ndata = array();
+            $ndata = [];
             if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) === true) {
                 foreach ($song->getMetadata() as $metadata) {
                     $field = $metadata->getField();
@@ -94,25 +94,25 @@ final class SongTagWriter implements SongTagWriterInterface
             $song->format();
             if ($fileformat == 'mp3') {
                 $songMeta  = $this->getId3Metadata($song);
-                $txxxData  = $result['id3v2']['comments']['text'] ?? array();
-                $id3v2Data = $result['tags']['id3v2'] ?? array();
+                $txxxData  = $result['id3v2']['comments']['text'] ?? [];
+                $id3v2Data = $result['tags']['id3v2'] ?? [];
                 $apics     = $result['id3v2']['APIC'] ?? null;
                 // Update existing file frames.
                 if (!empty($txxxData)) {
                     foreach ($txxxData as $key => $value) {
                         $idx = $this->search_txxx($key, $songMeta['text']);
                         if ($idx) {
-                            $ndata['text'][] = array(
+                            $ndata['text'][] = [
                                 'data' => $songMeta['text'][$idx]['data'],
                                 'description' => $key,
                                 'encodingid' => 0
-                            );
+                            ];
                         } else {
-                            $ndata['text'][] = array(
+                            $ndata['text'][] = [
                                 'data' => $value,
                                 'description' => $key,
                                 'encodingid' => 0
-                            );
+                            ];
                         }
                     }
                 } else {
@@ -147,9 +147,9 @@ final class SongTagWriter implements SongTagWriterInterface
                 }
             } else {
                 $songMeta       = $this->getVorbisMetadata($song);
-                $vorbiscomments = $result['tags']['vorbiscomment'] ?? array();
+                $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
-                //  Update existing vorbiscomments
+                // Update existing vorbiscomments
                 if (!empty($vorbiscomments)) {
                     foreach ($vorbiscomments as $key => $value) {
                         if (isset($songMeta[$key])) {
@@ -183,26 +183,26 @@ final class SongTagWriter implements SongTagWriterInterface
             $file_has_pics = isset($apics) && is_array($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
-                    $ndata['attached_picture'][] = array(
+                    $ndata['attached_picture'][] = [
                         'data' => $apic['data'],
                         'mime' => $apic[$apic_mimetype],
                         'picturetypeid' => $apic[$apic_typeid],
                         'description' => $apic['description'],
                         'encodingid' => $apic['encodingid']
-                    );
+                    ];
                 }
             }
 
             $art = new Art($song->artist, 'artist');
             if ($art->has_db_info()) {
                 $image   = $art->get(true);
-                $new_pic = array(
+                $new_pic = [
                     'data' => $image,
                     'mime' => $art->raw_mime,
                     'picturetypeid' => 8,
                     'description' => $song->get_artist_fullname(),
                     'encodingid' => 0
-                );
+                ];
                 if ($file_has_pics) {
                     $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
                     if (is_null($idx)) {
@@ -215,13 +215,13 @@ final class SongTagWriter implements SongTagWriterInterface
             $art = new Art($song->album, 'album');
             if ($art->has_db_info()) {
                 $image   = $art->get(true);
-                $new_pic = array(
+                $new_pic = [
                     'data' => $image,
                     'mime' => $art->raw_mime,
                     'picturetypeid' => 3,
                     'description' => $song->f_album,
                     'encodingid' => 0
-                );
+                ];
                 if ($file_has_pics) {
                     $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
                     if (is_null($idx)) {
@@ -254,30 +254,30 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing rating to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $vainfo = $this->utilityFactory->createVaInfo(
                 (string) $song->file
             );
 
-            $ndata      = array();
+            $ndata      = [];
             $result     = $vainfo->read_id3();
             $fileformat = $result['fileformat'];
             $my_rating  = $rating->get_user_rating($user->id);
 
             if ($fileformat == 'mp3') {
-                $txxxData  = $result['id3v2']['comments']['text'] ?? array();
-                $id3v2Data = $result['tags']['id3v2'] ?? array();
+                $txxxData  = $result['id3v2']['comments']['text'] ?? [];
+                $id3v2Data = $result['tags']['id3v2'] ?? [];
                 $apics     = $result['id3v2']['APIC'] ?? null;
                 // Update existing file frames.
                 if (!empty($txxxData)) {
                     foreach ($txxxData as $key => $value) {
-                        $ndata['text'][] = array(
+                        $ndata['text'][] = [
                             'data' => $value,
                             'description' => $key,
                             'encodingid' => 0
-                        );
+                        ];
                     }
                 }
                 if (!empty($id3v2Data)) {
@@ -294,16 +294,16 @@ final class SongTagWriter implements SongTagWriterInterface
                     ];
                     $this->logger->debug(
                         print_r($ndata['Popularimeter'], true),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             } else {
-                $vorbiscomments = $result['tags']['vorbiscomment'] ?? array();
+                $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
                 if (!empty($vorbiscomments)) {
                     // Fill existing tags
@@ -313,13 +313,13 @@ final class SongTagWriter implements SongTagWriterInterface
                 }
                 if (!empty($user->email)) {
                     // set a rating and per-user rating
-                    $tag_rating                      = array(($my_rating > 0) ? $my_rating * (100 / 5) : 0);
+                    $tag_rating                      = [($my_rating > 0) ? $my_rating * (100 / 5) : 0];
                     $ndata['rating']                 = $tag_rating;
                     $ndata['rating:' . $user->email] = $tag_rating;
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -332,25 +332,25 @@ final class SongTagWriter implements SongTagWriterInterface
             $file_has_pics = isset($apics) && is_array($apics);
             if ($file_has_pics) {
                 foreach ($apics as $apic) {
-                    $ndata['attached_picture'][] = array(
+                    $ndata['attached_picture'][] = [
                         'data' => $apic['data'],
                         'picturetypeid' => $apic[$apic_typeid],
                         'description' => $apic['description'] ?? '',
                         'mime' => $apic[$apic_mimetype],
                         'encodingid' => $apic['encodingid'] ?? 0
-                    );
+                    ];
                 }
             }
             $art = new Art($song->artist, 'artist');
             if ($art->has_db_info()) {
                 $image   = $art->get(true);
-                $new_pic = array(
+                $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 8,
                     'description' => $song->get_artist_fullname(),
                     'mime' => $art->raw_mime,
                     'encodingid' => 0
-                );
+                ];
                 if ($file_has_pics) {
                     $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
                     if (is_null($idx)) {
@@ -361,13 +361,13 @@ final class SongTagWriter implements SongTagWriterInterface
             $art = new Art($song->album, 'album');
             if ($art->has_db_info()) {
                 $image   = $art->get(true);
-                $new_pic = array(
+                $new_pic = [
                     'data' => $image,
                     'picturetypeid' => 3,
                     'description' => $song->f_album,
                     'mime' => $art->raw_mime,
                     'encodingid' => 0
-                );
+                ];
                 if ($file_has_pics) {
                     $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
                     if (is_null($idx)) {
@@ -467,16 +467,16 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['catalognumber'] = $album->catalog_number;
         $meta['original_year'] = $album->original_year;
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) && $user instanceof User) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {
-                $meta['rating:' . $user->email] = array(($my_rating > 0) ? $my_rating * (100 / 5) : 0);
+                $meta['rating:' . $user->email] = [($my_rating > 0) ? $my_rating * (100 / 5) : 0];
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -509,8 +509,8 @@ final class SongTagWriter implements SongTagWriterInterface
                 'ownerid' => "http://musicbrainz.org"
             ];
         }
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($user instanceof User && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {
@@ -522,7 +522,7 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -538,9 +538,9 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $album = new Album($song->album);
         $album->format();
-        $meta['original_year'] = $album->original_year;  //TORY
+        $meta['original_year'] = $album->original_year; //TORY
 
-        $meta['text'] = array();
+        $meta['text'] = [];
         if ($song->album_mbid) {
             $meta['text'][] = [
                 'data' => $song->album_mbid,

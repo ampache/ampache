@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration520005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('api_hide_dupe_searches', 'Hide smartlists that match playlist names in Subsonic and API clients', '0', 25, 'boolean', 'options');
+        $this->updatePreferences('api_hide_dupe_searches', 'Hide smartlists that match playlist names in Subsonic and API clients', '0', AccessLevelEnum::USER->value, 'boolean', 'options');
     }
 }

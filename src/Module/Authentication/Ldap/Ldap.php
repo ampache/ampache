@@ -54,7 +54,7 @@ class Ldap
     {
         $sr_clean = [];
 
-        foreach (static::array_filter_key($searchresult, 'is_int') as $i => $result) {
+        foreach (self::array_filter_key($searchresult, 'is_int') as $i => $result) {
             $sr_clean[$i] = [];
 
             foreach ($result as $field => $values) {
@@ -63,7 +63,7 @@ class Ldap
                 } elseif ($field == 'dn') {
                     $sr_clean[$i][$field] = $values;
                 } else {
-                    $sr_clean[$i][$field] = static::array_filter_key($values, 'is_int');
+                    $sr_clean[$i][$field] = self::array_filter_key($values, 'is_int');
                 }
             }
         }
@@ -188,7 +188,7 @@ class Ldap
             throw new LdapException(ldap_errno($link));
         }
 
-        $entries = ldap_get_entries($link, $result);
+        $entries = ldap_get_entries($link, $result) ?: [];
 
         $entries = self::clean_search_results($entries);
 

@@ -54,5 +54,5 @@ interface UpdateViewAdapterInterface
      */
     public function getUpdateInfo(): Traversable;
 
-    public function getWebPath(): string;
+    public function getWebPath(?string $suffix = ''): string;
 }

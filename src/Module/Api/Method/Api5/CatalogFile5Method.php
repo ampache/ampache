@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -59,7 +61,7 @@ final class CatalogFile5Method
      */
     public static function catalog_file(array $input, User $user): bool
     {
-        if (!Api5::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api5::check_parameter($input, ['catalog', 'file', 'task'], self::ACTION)) {
@@ -107,10 +109,7 @@ final class CatalogFile5Method
                 $type  = 'podcast_episode';
                 $media = new Podcast_Episode(Catalog::get_id_from_file($file, $type));
                 break;
-            case 'clip':
-            case 'tvshow':
-            case 'movie':
-            case 'personal_video':
+            case 'video':
                 $type  = 'video';
                 $media = new Video(Catalog::get_id_from_file($file, $type));
                 break;

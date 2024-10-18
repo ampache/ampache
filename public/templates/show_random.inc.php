@@ -33,9 +33,9 @@ use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 /** @var VideoRepositoryInterface $videoRepository */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $get_type     = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
 $length       = $_POST['length'] ?? 0;
 $size_limit   = $_POST['size_limit'] ?? 0;
@@ -76,10 +76,10 @@ Ui::show_box_top(T_('Play Random Selection'), 'box box_random'); ?>
         <td>
         <select name="limit">
 <?php
-        foreach (array(1, 5, 10, 20, 30, 50, 100, 500, 1000) as $i) {
-            echo "\t\t\t" . '<option value="' . $i . '" ' .
-                (($random_count == $i) ? 'selected="selected"' : '') . '>' .
-                $i . "</option>\n";
+        foreach ([1, 5, 10, 20, 30, 50, 100, 500, 1000] as $count) {
+            echo "\t\t\t" . '<option value="' . $count . '" ' .
+                (($random_count == $count) ? 'selected="selected"' : '') . '>' .
+                $count . "</option>\n";
         }
 echo "\t\t\t" . '<option value="-1" ' .
     (($random_count == '-1') ? 'selected="selected"' : '') . '>' .
@@ -97,13 +97,13 @@ ${$name}                    = ' selected="selected"'; ?>
             echo "\t\t\t" . '<option value="0" ' .
 (($length == 0) ? 'selected="selected"' : '') . '>' .
 T_('Unlimited') . "</option>\n";
-foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
-    echo "\t\t\t" . '<option value="' . $i . '" ' .
-        (($length == $i) ? 'selected="selected"' : '') . '>';
-    if ($i < 60) {
-        printf(nT_('%d minute', '%d minutes', $i), $i);
+foreach ([15, 30, 60, 120, 240, 480, 960] as $value) {
+    echo "\t\t\t" . '<option value="' . $value . '" ' .
+        (($length == $value) ? 'selected="selected"' : '') . '>';
+    if ($value < 60) {
+        printf(nT_('%d minute', '%d minutes', $value), $value);
     } else {
-        printf(nT_('%d hour', '%d hours', $i / 60), $i / 60);
+        printf(nT_('%d hour', '%d hours', $value / 60), $value / 60);
     }
     echo "</option>\n";
 } ?>
@@ -118,10 +118,10 @@ foreach (array(15, 30, 60, 120, 240, 480, 960) as $i) {
     echo "\t\t\t" . '<option value="0" ' .
         (($size_limit == 0) ? 'selected="selected"' : '') . '>' .
         T_('Unlimited') . "</option>\n";
-foreach (array(64, 128, 256, 512, 1024) as $i) {
-    echo "\t\t\t" . '<option value="' . $i . '"' .
-        (($size_limit == $i) ? 'selected="selected"' : '') . '>' .
-        Ui::format_bytes($i * 1048576) . "</option>\n";
+foreach ([64, 128, 256, 512, 1024] as $value) {
+    echo "\t\t\t" . '<option value="' . $value . '"' .
+        (($size_limit == $value) ? 'selected="selected"' : '') . '>' .
+        Ui::format_bytes($value * 1048576) . "</option>\n";
 } ?>
                 </select>
         </td>

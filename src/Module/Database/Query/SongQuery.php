@@ -86,11 +86,9 @@ final class SongQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`song`.`id`";
+    protected string $select = "`song`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `song` ";
+    protected string $base = "SELECT %%SELECT%% FROM `song` ";
 
     /**
      * get_select

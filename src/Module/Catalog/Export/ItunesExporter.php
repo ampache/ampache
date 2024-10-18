@@ -75,7 +75,7 @@ final class ItunesExporter implements CatalogExporterInterface
             $xml['dict']['Track Number'] = (int) $song->track;
             $xml['dict']['Year']         = $song->year;
             $xml['dict']['Date Added']   = get_datetime(
-                $song->addition_time,
+                $song->getAdditionTime(),
                 'short',
                 'short',
                 "Y-m-d\TH:i:s\Z"

@@ -39,6 +39,7 @@ class User_Playlist extends database_object
     protected const DB_TABLENAME = 'user_playlist';
 
     public int $user;
+
     public string $client;
 
     /**
@@ -49,15 +50,19 @@ class User_Playlist extends database_object
      * @param int|null $user_id
      * @param string|null $client
      */
-    public function __construct($user_id = 0, $client = null)
-    {
+    public function __construct(
+        $user_id = 0,
+        $client = null
+    ) {
         if (!$user_id) {
             return;
         }
-        $client = $client ?? $this->get_latest();
+
+        $client ??= $this->get_latest();
         if (empty($client)) {
             return;
         }
+
         $this->user   = (int)$user_id;
         $this->client = substr($client, 0, 254);
     }
@@ -65,24 +70,23 @@ class User_Playlist extends database_object
     /**
      * get_current_object
      * This returns the next object in the user_playlist.
-     * @return array
      */
     public function get_current_object(): array
     {
-        $items = array();
+        $items = [];
         // Select the current object for this user
         $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `current_track` = 1 LIMIT 1";
-        $db_results = Dba::read($sql, array($this->user));
+        $db_results = Dba::read($sql, [$this->user]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            $items = array(
+            $items = [
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
                 'track_id' => $results['object_id'],
                 'track' => $results['track'],
                 'current_track' => $results['current_track'],
-                'current_time' => $results['current_time']
-            );
+                'current_time' => $results['current_time'],
+            ];
         }
 
         return $items;
@@ -99,10 +103,10 @@ class User_Playlist extends database_object
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, array($this->user));
+        Dba::write($sql, [$this->user]);
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `object_id` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, array($position, $object_type, $object_id, $this->user));
+        Dba::write($sql, [$position, $object_type, $object_id, $this->user]);
     }
 
     /**
@@ -116,10 +120,10 @@ class User_Playlist extends database_object
     {
         // remove the old current
         $sql = "UPDATE `user_playlist` SET `current_track` = 0, `current_time` = 0 WHERE `user` = ?";
-        Dba::write($sql, array($this->user));
+        Dba::write($sql, [$this->user]);
         // set the new one
         $sql = "UPDATE `user_playlist` SET `current_track` = 1, `current_time` = ? WHERE `object_type` = ? AND `track` = ? AND `user` = ? LIMIT 1";
-        Dba::write($sql, array($position, $object_type, $track, $this->user));
+        Dba::write($sql, [$position, $object_type, $track, $this->user]);
     }
 
     /**
@@ -129,7 +133,7 @@ class User_Playlist extends database_object
     public function get_count(): int
     {
         $sql        = "SELECT MAX(`track`) AS `count` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, array($this->user, $this->client));
+        $db_results = Dba::read($sql, [$this->user, $this->client]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)$results['count'];
@@ -142,9 +146,9 @@ class User_Playlist extends database_object
     public function get_time(): int
     {
         $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        $db_results = Dba::read($sql, array($this->user, $this->client));
+        $db_results = Dba::read($sql, [$this->user, $this->client]);
         $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
+        if ($results === []) {
             return time();
         }
 
@@ -158,7 +162,7 @@ class User_Playlist extends database_object
     public function get_latest(): string
     {
         $sql        = "SELECT MAX(`playqueue_time`) AS `time`, `playqueue_client`, `user` FROM `user_playlist` WHERE `user` = ? GROUP BY `playqueue_client`, `user`";
-        $db_results = Dba::read($sql, array($this->user));
+        $db_results = Dba::read($sql, [$this->user]);
         $results    = Dba::fetch_assoc($db_results);
 
         return $results['playqueue_client'] ?? '';
@@ -171,7 +175,7 @@ class User_Playlist extends database_object
     public function clear(): void
     {
         $sql = "DELETE FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
-        Dba::write($sql, array($this->user, $this->client));
+        Dba::write($sql, [$this->user, $this->client]);
     }
 
     /**
@@ -179,19 +183,22 @@ class User_Playlist extends database_object
      * Add an array of songs to the playlist
      * @return PDOStatement|false
      */
-    public function add_items($data, $time)
+    public function add_items(array $data, int $time)
     {
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
-        $values = array();
+        $values = [];
         foreach ($data as $row) {
-            $sql .= '(?, ?, ?, ?, ?, ?),';
-            $values[] = $time;
-            $values[] = $this->client;
-            $values[] = $this->user;
-            $values[] = $row['object_type'];
-            $values[] = $row['object_id'];
-            $values[] = $row['track'];
+            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
+                $sql .= '(?, ?, ?, ?, ?, ?),';
+                $values[] = $time;
+                $values[] = $this->client;
+                $values[] = $this->user;
+                $values[] = $row['object_type'];
+                $values[] = $row['object_id'];
+                $values[] = $row['track'];
+            }
         }
+
         // remove last comma
         $sql = substr($sql, 0, -1) . ';';
 
@@ -199,50 +206,33 @@ class User_Playlist extends database_object
     }
 
     /**
-     * set_items
-     * This function resets the User_Playlist while optionally setting the update client and time for that user
-     * @param array $playlist
-     * @param string $current_type
-     * @param int $current_id
-     * @param int $current_time
-     * @param int $time
-     */
-    public function set_items($playlist, $current_type, $current_id, $current_time, $time): void
-    {
-        if (!empty($playlist)) {
-            // clear the old list
-            $this->clear();
-            // set the new items
-            $this->add_items($playlist, $time);
-            $this->set_current_object($current_type, $current_id, $current_time);
-
-            // subsonic cares about queue dates so set them (and set them together)
-            User::set_user_data($this->user, 'playqueue_time', $time);
-            User::set_user_data($this->user, 'playqueue_client', $this->client);
-        }
-    }
-
-    /**
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int,
+     *  current_track: int,
+     *  current_time: int
+     * }>
      */
     public function get_items(): array
     {
-        $items = array();
+        $items = [];
         // Select all objects from this user
         $sql        = "SELECT `object_type`, `object_id`, `track`, `current_track`, `current_time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ? ORDER BY `track`";
-        $db_results = Dba::read($sql, array($this->user, $this->client));
+        $db_results = Dba::read($sql, [$this->user, $this->client]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
-            $items[] = array(
+            $items[] = [
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
                 'track_id' => $results['object_id'],
                 'track' => $results['track'],
                 'current_track' => $results['current_track'],
-                'current_time' => $results['current_time']
-            );
+                'current_time' => $results['current_time'],
+            ];
         }
 
         return $items;

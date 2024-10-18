@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration360023 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('subsonic_backend', 'Use SubSonic backend', '1', 100, 'boolean', 'system');
-        $this->updatePreferences('plex_backend', 'Use Plex backend', '0', 100, 'boolean', 'system');
+        $this->updatePreferences('subsonic_backend', 'Use SubSonic backend', '1', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
+        $this->updatePreferences('plex_backend', 'Use Plex backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
     }
 }

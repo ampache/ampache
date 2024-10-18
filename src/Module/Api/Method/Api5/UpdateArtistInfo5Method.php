@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method\Api5;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Api5;
@@ -53,7 +55,7 @@ final class UpdateArtistInfo5Method
             return false;
         }
 
-        if (!Api5::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api5::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $object_id = (int) $input['id'];

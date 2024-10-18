@@ -51,7 +51,10 @@ function debug_wresult($status = false, $value = null, $comment = ''): string
 // TODO remove me
 global $dic;
 /** @var EnvironmentInterface $environment */
-$environment = $dic->get(EnvironmentInterface::class); ?>
+$environment = $dic->get(EnvironmentInterface::class);
+
+/** @var string $configfile */
+?>
 <tr>
     <td><?php echo T_('PHP version'); ?></td>
     <td><?php echo debug_result($environment->check_php_version()); ?></td>
@@ -64,7 +67,7 @@ $environment = $dic->get(EnvironmentInterface::class); ?>
 <?php echo T_('This tests whether Ampache dependencies are installed.');
 if (!$environment->check_dependencies_folder()) { ?>
         <br />
-        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
+        <b><?php echo T_('Please download Composer from http://getcomposer.org, and install it (e.g: mv composer.phar /usr/local/bin/composer). Then run `composer install --no-dev --prefer-source --no-interaction` on the Ampache directory.'); ?></b>
 <?php } ?>
     </td>
 </tr>
@@ -158,7 +161,7 @@ if (!$environment->check_dependencies_folder()) { ?>
     <td><?php echo T_('Configuration file readability'); ?></td>
     <td><?php echo debug_result(is_readable($configfile), "WARNING"); ?></td>
     <td>
-        <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?> </br>
+        <?php echo T_('This test attempts to read config/ampache.cfg.php. If this fails the file is either not in the correct location, or not readable.'); ?> <br>
         <?php echo T_('If you are installing Ampache for the first time you can ignore this warning and proceed to the installer.'); ?> &nbsp;<a href="install.php"><?php echo T_('Web Installation'); ?></a>
     </td>
 </tr>
@@ -188,7 +191,7 @@ if (!$environment->check_dependencies_folder()) { ?>
     <td><?php echo T_('Web Path'); ?></td>
     <td>
         <?php if ($results && check_config_values($results)) {
-            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_icon('enable', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
+            echo "&nbsp;&nbsp;&nbsp;" . Ui::get_material_symbol('check_circle', T_('Enable')) . "&nbsp;&nbsp;&nbsp;";
         } else {
             echo debug_result(false, "SKIPPED");
         } ?>

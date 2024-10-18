@@ -41,12 +41,12 @@ final class InitializationHandlerGlobals implements InitializationHandlerInterfa
 
     public function init(): void
     {
-        Core::get_global('user')->format(false);
+        Core::get_global('user')?->format(false);
 
         if (session_id()) {
             Session::extend(session_id());
             // We only need to create the tmp playlist if we have a session
-            Core::get_global('user')->load_playlist();
+            Core::get_global('user')?->load_playlist();
         }
 
         $charset = $this->configContainer->get('site_charset');

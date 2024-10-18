@@ -24,35 +24,31 @@
 namespace Ampache\Module\User\Following;
 
 use Ampache\Module\Api\Ajax;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
 
-final class UserFollowStateRenderer implements UserFollowStateRendererInterface
+final readonly class UserFollowStateRenderer implements UserFollowStateRendererInterface
 {
-    private UserFollowerRepositoryInterface $userFollowerRepository;
-
     public function __construct(
-        UserFollowerRepositoryInterface $userFollowerRepository
+        private UserFollowerRepositoryInterface $userFollowerRepository
     ) {
-        $this->userFollowerRepository = $userFollowerRepository;
     }
 
     /**
      * Get html code to display the follow/unfollow link
-     *
-     * @param int $userId
-     * @param int $foreignUserId
-     * @return string
      */
     public function render(
-        int $userId,
-        int $foreignUserId
+        User $user,
+        User $foreignUser
     ): string {
-        if ($userId === $foreignUserId) {
+        $userId = $user->getId();
+
+        if ($userId === $foreignUser->getId()) {
             return '';
         }
 
-        $followed       = $this->userFollowerRepository->isFollowedBy($userId, $foreignUserId);
-        $followersCount = count($this->userFollowerRepository->getFollowers($userId));
+        $followed       = $this->userFollowerRepository->isFollowedBy($user, $foreignUser);
+        $followersCount = count($this->userFollowerRepository->getFollowers($user));
 
         $html = sprintf('<span id=\'button_follow_%s\' class=\'followbtn\'>', $userId);
         $html .= Ajax::text(

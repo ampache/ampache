@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
@@ -62,8 +63,8 @@ class ShowAddLabelActionTest extends MockeryTestCase
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(
-                AccessLevelEnum::TYPE_INTERFACE,
-                AccessLevelEnum::LEVEL_CONTENT_MANAGER
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER
             )
             ->once()
             ->andReturnFalse();
@@ -98,8 +99,8 @@ class ShowAddLabelActionTest extends MockeryTestCase
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(
-                AccessLevelEnum::TYPE_INTERFACE,
-                AccessLevelEnum::LEVEL_CONTENT_MANAGER
+                AccessTypeEnum::INTERFACE,
+                AccessLevelEnum::CONTENT_MANAGER
             )
             ->once()
             ->andReturnFalse();
