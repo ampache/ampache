@@ -1108,11 +1108,16 @@ class Search extends playlist_object
         }
 
         // Figure out if they want an AND based search or an OR based search
-        $operator            = $data['operator'] ?? '';
-        $request['operator'] = match (strtolower((string) $operator)) {
-            'or' => 'OR',
-            default => 'AND',
-        };
+        $operator = $data['operator'] ?? '';
+        switch (strtolower($operator)) {
+            case 'or':
+                $request['operator'] = 'OR';
+                break;
+            case 'and':
+            default:
+                $request['operator'] = 'AND';
+                break;
+        }
         if (array_key_exists('limit', $data)) {
             $request['limit'] = $data['limit'];
         }
