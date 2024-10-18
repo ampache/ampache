@@ -92,8 +92,9 @@ final class AdvancedSearchMethod
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $results        = Search::run($data, $user);
-        if (empty($results)) {
+        $search_sql     = Search::prepare($data, $user);
+        $query          = Search::query($search_sql);
+        if (empty($query['results'])) {
             Api::empty($type, $input['api_format']);
 
             return false;
@@ -103,78 +104,78 @@ final class AdvancedSearchMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                Json_Data::set_count(count($results));
+                Json_Data::set_count($query['count']);
                 switch ($type) {
                     case 'album':
-                        echo Json_Data::albums($results, [], $user);
+                        echo Json_Data::albums($query['results'], [], $user);
                         break;
                     case 'song_artist':
                     case 'album_artist':
                     case 'artist':
-                        echo Json_Data::artists($results, [], $user);
+                        echo Json_Data::artists($query['results'], [], $user);
                         break;
                     case 'label':
-                        echo Json_Data::labels($results);
+                        echo Json_Data::labels($query['results']);
                         break;
                     case 'playlist':
-                        echo Json_Data::playlists($results, $user);
+                        echo Json_Data::playlists($query['results'], $user);
                         break;
                     case 'podcast':
-                        echo Json_Data::podcasts($results, $user);
+                        echo Json_Data::podcasts($query['results'], $user);
                         break;
                     case 'podcast_episode':
-                        echo Json_Data::podcast_episodes($results, $user);
+                        echo Json_Data::podcast_episodes($query['results'], $user);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Json_Data::genres($results);
+                        echo Json_Data::genres($query['results']);
                         break;
                     case 'user':
-                        echo Json_Data::users($results);
+                        echo Json_Data::users($query['results']);
                         break;
                     case 'video':
-                        echo Json_Data::videos($results, $user);
+                        echo Json_Data::videos($query['results'], $user);
                         break;
                     default:
-                        echo Json_Data::songs($results, $user);
+                        echo Json_Data::songs($query['results'], $user);
                         break;
                 }
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
+                Xml_Data::set_count(count($query['count']));
                 switch ($type) {
                     case 'album':
-                        echo Xml_Data::albums($results, [], $user);
+                        echo Xml_Data::albums($query['results'], [], $user);
                         break;
                     case 'artist':
-                        echo Xml_Data::artists($results, [], $user);
+                        echo Xml_Data::artists($query['results'], [], $user);
                         break;
                     case 'label':
-                        echo Xml_Data::labels($results, $user);
+                        echo Xml_Data::labels($query['results'], $user);
                         break;
                     case 'playlist':
-                        echo Xml_Data::playlists($results, $user);
+                        echo Xml_Data::playlists($query['results'], $user);
                         break;
                     case 'podcast':
-                        echo Xml_Data::podcasts($results, $user);
+                        echo Xml_Data::podcasts($query['results'], $user);
                         break;
                     case 'podcast_episode':
-                        echo Xml_Data::podcast_episodes($results, $user);
+                        echo Xml_Data::podcast_episodes($query['results'], $user);
                         break;
                     case 'genre':
                     case 'tag':
-                        echo Xml_Data::genres($results, $user);
+                        echo Xml_Data::genres($query['results'], $user);
                         break;
                     case 'user':
-                        echo Xml_Data::users($results);
+                        echo Xml_Data::users($query['results']);
                         break;
                     case 'video':
-                        echo Xml_Data::videos($results, $user);
+                        echo Xml_Data::videos($query['results'], $user);
                         break;
                     default:
-                        echo Xml_Data::songs($results, $user);
+                        echo Xml_Data::songs($query['results'], $user);
                         break;
                 }
         }

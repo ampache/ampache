@@ -1312,6 +1312,28 @@ class Search extends playlist_object
     }
 
     /**
+     * query
+     *
+     * This function is used to simplify api searches and return valuable data for responses
+     * @param array $search_sql
+     * @return array
+     */
+    public static function query($search_sql): array
+    {
+        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
+        $num_rows   = Dba::num_rows($db_results);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return [
+            'results' => $results,
+            'count' => $num_rows
+        ];
+    }
+
+    /**
      * delete
      *
      * Does what it says on the tin.
