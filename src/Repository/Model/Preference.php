@@ -129,11 +129,14 @@ class Preference extends database_object
         'show_album_artist',
         'show_artist',
         'show_donate',
+        'show_header_login',
         'show_license',
         'show_lyrics',
+        'show_original_year',
         'show_played_times',
         'show_playlist_username',
         'show_skipped_times',
+        'show_subtitle',
         'show_wrapped',
         'sidebar_light',
         'site_title',
@@ -225,6 +228,8 @@ class Preference extends database_object
         'tadb_api_key',
         'tadb_overwrite_name',
         'tvdb_api_key',
+        'vlc_active',
+        'xbmc_active',
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
@@ -943,6 +948,9 @@ class Preference extends database_object
                 case 'custom_blankalbum':
                     Dba::write($pref_sql, [151, 'custom_blankalbum', '', T_('Custom blank album default image'), 75, 'string', 'interface', 'custom']);
                     break;
+                case 'custom_blankmovie':
+                    Dba::write($pref_sql, [152, 'custom_blankalbum', '', T_('Custom blank video default image'), 75, 'string', 'interface', 'custom']);
+                    break;
                 case 'libitem_browse_alpha':
                     Dba::write($pref_sql, [153, 'libitem_browse_alpha', '', T_('Alphabet browsing by default for following library items (album,artist,...)'), 75, 'string', 'interface', 'browse']);
                     break;
@@ -1057,6 +1065,16 @@ class Preference extends database_object
         }
 
         // delete Ampache 7 preferences that you don't need on db update as well
+
+        // Migration\V7\Migration700023
+        Preference::delete('extended_playlist_links');
+        // Migration\V7\Migration700022
+        Preference::delete('external_links_bandcamp');
+        Preference::delete('external_links_duckduckgo');
+        Preference::delete('external_links_google');
+        Preference::delete('external_links_lastfm');
+        Preference::delete('external_links_musicbrainz');
+        Preference::delete('external_links_wikipedia');
         // Migration\V7\Migration700016
         Preference::delete('sidebar_order_browse');
         Preference::delete('sidebar_order_dashboard');
@@ -1077,6 +1095,30 @@ class Preference extends database_object
         Preference::delete('sidebar_hide_playlist');
         Preference::delete('sidebar_hide_information');
 
+        // Delete additional plugin options and updates from Ampache 7
+
+        Preference::delete('catalogfav_order');
+        Dba::write('UPDATE `update_info` SET `version` = 2 WHERE `key` = \'Plugin_Catalog Favorites\';');
+
+        Preference::delete('ftl_order');
+        Dba::write('UPDATE `update_info` SET `version` = 2 WHERE `key` = \'Plugin_Friends Timeline\';');
+
+        Preference::delete('homedash_max_items');
+        Preference::delete('homedash_newest');
+        Preference::delete('homedash_popular');
+        Preference::delete('homedash_random');
+        Preference::delete('homedash_recent');
+        Preference::delete('homedash_trending');
+        Preference::delete('homedash_order');
+        Dba::write('DELETE FROM `update_info` WHERE `key` = \'Plugin_Home Dashboard\';');
+
+        Preference::delete('personalfav_order');
+        Dba::write('UPDATE `update_info` SET `version` = 2 WHERE `key` = \'Plugin_Personal Favorites\';');
+
+        Preference::delete('rssview_order');
+        Dba::write('UPDATE `update_info` SET `version` = 1 WHERE `key` = \'Plugin_RSSView\';');
+
+        // fix all these changes for your users
         foreach (array_merge([-1], self::getUserRepository()->getValid()) as $user_id) {
             User::fix_preferences($user_id);
         }
@@ -1413,7 +1455,6 @@ class Preference extends database_object
             'home_now_playing',
             'home_recently_played',
             'home_recently_played_all',
-            'httpq_active',
             'label',
             'ldap_start_tls',
             'libitem_contextmenu',
@@ -1424,7 +1465,6 @@ class Preference extends database_object
             'mail_enable',
             'mb_overwrite_name',
             'memory_cache',
-            'mpd_active',
             'no_symlinks',
             'notify_email',
             'now_playing_per_user',
@@ -1485,7 +1525,6 @@ class Preference extends database_object
             'upload_script',
             'upload_subdir',
             'upload_user_artist',
-            'upnp_active',
             'upnp_backend',
             'use_auth',
             'use_now_playing_embedded',
@@ -1506,7 +1545,7 @@ class Preference extends database_object
             'webplayer_html5',
             'webplayer_pausetabs',
             'write_tags',
-            'xml_rpc'
+            'xml_rpc',
         );
 
         if (in_array($key, $boolean_array)) {
