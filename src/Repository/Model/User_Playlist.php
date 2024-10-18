@@ -225,7 +225,14 @@ class User_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int,
+     *  track_id: int,
+     *  track: int,
+     *  current_track: int,
+     *  current_time: int
+     * }>
      */
     public function get_items(): array
     {

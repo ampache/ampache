@@ -4301,6 +4301,11 @@ parameters:
 			path: src/Module/Api/Xml_Data.php
 
 		-
+			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$counts with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Api/Xml_Data.php
+
+		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Xml_Data\\:\\:searches\\(\\) has parameter \\$searches with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Api/Xml_Data.php
@@ -13062,21 +13067,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:filter_data\\(\\) has parameter \\$operator with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
+			count: 2
 			path: src/Repository/Model/Search.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_random_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:get_search_array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -13107,6 +13102,16 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Search.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:query\\(\\) has parameter \\$search_sql with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Search.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:query\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -13691,11 +13696,6 @@ parameters:
 			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:session_clean\\(\\) has parameter \\$sessid with no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Tmp_Playlist.php
@@ -13867,11 +13867,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_current_object\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/User_Playlist.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\User_Playlist\\:\\:get_items\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/User_Playlist.php
 

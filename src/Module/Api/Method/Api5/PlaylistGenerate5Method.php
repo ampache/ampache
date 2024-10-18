@@ -79,9 +79,7 @@ final class PlaylistGenerate5Method
         $offset     = (int)($input['offset'] ?? 0);
         $limit      = (int)($input['limit'] ?? 0);
         $rule_count = 1;
-        $data       = [
-            'type' => 'song'
-        ];
+        $data       = ['type' => 'song'];
         debug_event(self::class, 'playlist_generate ' . $mode, 5);
         if (in_array($mode, ['forgotten', 'recent'], true)) {
             // played songs
@@ -147,7 +145,9 @@ final class PlaylistGenerate5Method
         }
 
         // get db data
-        $results = Search::run($data, $user);
+        $search_sql = Search::prepare($data, $user);
+        $query      = Search::query($search_sql);
+        $results    = $query['results'];
         shuffle($results);
 
         //slice the array if there is a limit

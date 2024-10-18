@@ -144,7 +144,12 @@ class Tmp_Playlist extends database_object
     /**
      * get_items
      * Returns an array of all object_ids currently in this Tmp_Playlist.
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int,
+     *  track_id: int,
+     *  track: int
+     * }>
      */
     public function get_items(): array
     {
@@ -171,7 +176,7 @@ class Tmp_Playlist extends database_object
                 'object_type' => $results['object_type'],
                 'object_id' => $results['object_id'],
                 'track_id' => $results['id'],
-                'track' => $count++,
+                'track' => $count++
             );
         }
 

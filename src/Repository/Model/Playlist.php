@@ -193,7 +193,7 @@ class Playlist extends playlist_object
      * get_playlist_array
      * Returns a list of playlists accessible by the user with formatted name.
      * @param int|null $user_id
-     * @return int[]
+     * @return array<string>
      */
     public static function get_playlist_array($user_id = null): array
     {
@@ -250,8 +250,8 @@ class Playlist extends playlist_object
      * @return list<array{
      *  object_type: string,
      *  object_id: int,
-     *  track: int,
-     *  track_id: int
+     *  track_id: int,
+     *  track: int
      * }>
      */
     public function get_items(): array
@@ -303,8 +303,8 @@ class Playlist extends playlist_object
                 $results[] = array(
                     'object_type' => $row['object_type'],
                     'object_id' => (int)$row['object_id'],
-                    'track' => (int)$row['track'],
-                    'track_id' => $row['id']
+                    'track_id' => $row['id'],
+                    'track' => (int)$row['track']
                 );
             }
         }
