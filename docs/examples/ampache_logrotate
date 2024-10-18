@@ -1,3 +1,4 @@
+# rename and store in /etc/logrotate.d/
 /var/log/ampache/*.log {
     daily
     rotate 4
