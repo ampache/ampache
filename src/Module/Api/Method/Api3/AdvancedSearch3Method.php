@@ -51,9 +51,9 @@ final class AdvancedSearch3Method
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = (isset($data['type'])) ? (string) $data['type'] : 'song';
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
+        $search_sql     = Search::prepare($data, $user);
+        $query          = Search::query($search_sql);
+        $results        = $query['results'];
 
         $type = 'song';
         if (isset($input['type'])) {

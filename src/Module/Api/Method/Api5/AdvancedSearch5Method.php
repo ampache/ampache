@@ -90,9 +90,9 @@ final class AdvancedSearch5Method
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
+        $search_sql     = Search::prepare($data, $user);
+        $query          = Search::query($search_sql);
+        $results        = $query['results'];
         if (empty($results)) {
             Api5::empty($type, $input['api_format']);
 

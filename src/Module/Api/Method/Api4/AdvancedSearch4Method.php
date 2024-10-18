@@ -75,9 +75,9 @@ final class AdvancedSearch4Method
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $search_sql = Search::prepare($data, $user);
-        $query      = Search::query($search_sql);
-        $results    = $query['results'];
+        $search_sql     = Search::prepare($data, $user);
+        $query          = Search::query($search_sql);
+        $results        = $query['results'];
 
         switch ($input['api_format']) {
             case 'json':

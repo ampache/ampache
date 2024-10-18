@@ -246,7 +246,8 @@ class Search extends playlist_object
         $this->basetypes['numeric'][] = [
             'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql' => '<='];
+            'sql' => '<='
+        ];
 
         $this->basetypes['numeric'][] = [
             'name' => 'equal',
