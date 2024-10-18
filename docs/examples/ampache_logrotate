@@ -1,0 +1,9 @@
+# rename and store in /etc/logrotate.d/
+/var/log/ampache/*.log {
+    daily
+    rotate 4
+    notifempty
+    missingok
+    su www-data www-data
+    create 640 www-data www-data
+}

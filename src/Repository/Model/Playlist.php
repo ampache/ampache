@@ -253,8 +253,8 @@ class Playlist extends playlist_object
      * @return list<array{
      *  object_type: LibraryItemEnum,
      *  object_id: int,
-     *  track: int,
-     *  track_id: int
+     *  track_id: int,
+     *  track: int
      * }>
      */
     public function get_items(): array
@@ -306,8 +306,8 @@ class Playlist extends playlist_object
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => (int)$row['object_id'],
-                    'track' => (int)$row['track'],
-                    'track_id' => $row['id']
+                    'track_id' => $row['id'],
+                    'track' => (int)$row['track']
                 ];
             }
         }

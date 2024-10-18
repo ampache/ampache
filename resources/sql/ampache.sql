@@ -17,9 +17,9 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Oct 09, 2024 at 03:36 AM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- Host: 192.168.1.9
+-- Generation Time: Oct 17, 2024 at 03:09 AM
+-- Server version: 11.4.3-MariaDB-1
 -- PHP Version: 8.2.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -858,7 +858,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1021,7 +1021,8 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (215, 'homedash_recent', '0', 'Recent', 25, 'boolean', 'plugins', 'home dashboard'),
 (216, 'homedash_trending', '1', 'Trending', 25, 'boolean', 'plugins', 'home dashboard'),
 (217, 'homedash_popular', '0', 'Popular', 25, 'boolean', 'plugins', 'home dashboard'),
-(218, 'homedash_order', '0', 'Plugin CSS order', 25, 'integer', 'plugins', 'home dashboard');
+(218, 'homedash_order', '0', 'Plugin CSS order', 25, 'integer', 'plugins', 'home dashboard'),
+(219, 'extended_playlist_links', '0', 'Show extended links for playlist media', 25, 'boolean', 'playlist', NULL);
 
 -- --------------------------------------------------------
 
@@ -1425,7 +1426,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '700022'),
+('db_version', '700023'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1739,7 +1740,8 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 215, 'homedash_recent', '0'),
 (-1, 216, 'homedash_trending', '1'),
 (-1, 217, 'homedash_popular', '0'),
-(-1, 218, 'homedash_order', '0');
+(-1, 218, 'homedash_order', '0'),
+(-1, 219, 'extended_playlist_links', '0');
 
 -- --------------------------------------------------------
 

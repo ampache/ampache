@@ -145,12 +145,16 @@ final class SearchGroupMethod
         $offset         = $input['offset'] ?? 0;
         $limit          = $input['limit'] ?? 0;
         $results        = [];
+        $count          = [];
         $data           = $input;
         $data['offset'] = 0;
         $data['limit']  = 0;
         foreach ($search_types as $type) {
             $data['type']   = $type;
-            $results[$type] = Search::run($data, $user, true);
+            $search_sql     = Search::prepare($data, $user);
+            $query          = Search::query($search_sql);
+            $results[$type] = $query['results'];
+            $count[$type]   = $query['count'];
         }
 
         ob_end_clean();
@@ -160,6 +164,7 @@ final class SearchGroupMethod
                 Json_Data::set_offset($offset);
                 Json_Data::set_limit($limit);
                 foreach ($results as $key => $search) {
+                    Json_Data::set_count($count[$key]);
                     switch ($key) {
                         case 'album':
                             if ((count($search) > $limit || $offset > 0) && $limit) {
@@ -213,8 +218,8 @@ final class SearchGroupMethod
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
-                echo Xml_Data::searches($results, $user);
+                // don't set count here as each type of object will count themselves
+                echo Xml_Data::searches($results, $count, $user);
         }
 
         return true;

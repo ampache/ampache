@@ -209,7 +209,11 @@ class Democratic extends Tmp_Playlist
      * Sorting is highest to lowest vote count, then by oldest to newest
      * vote activity.
      *
-     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
+     * @return list<array{
+     *   object_type: LibraryItemEnum,
+     *   object_id: int,
+     *   track_id: int,
+     *   track: int}>
      */
     public function get_items(?int $limit = null): array
     {
@@ -227,12 +231,14 @@ class Democratic extends Tmp_Playlist
 
         $db_results = Dba::read($sql, [$this->tmp_playlist]);
         $results    = [];
+        $count      = 1;
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['id']) {
                 $results[] = [
                     'object_type' => LibraryItemEnum::from($row['object_type']),
                     'object_id' => $row['object_id'],
-                    'id' => $row['id'],
+                    'track_id' => $row['id'],
+                    'track' => $count++
                 ];
             }
         }

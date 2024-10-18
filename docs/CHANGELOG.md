@@ -128,6 +128,26 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Don't show duplicate items in upload_catalog select when you don't have a music catalog
 * User config presets didn't do anything, now they match the cli `admin:resetPreferences` command
 
+## Ampache 6.6.4
+
+### Added
+
+* Delete all additional Ampache7 preferences on database update
+* Backport Ampache7 Search class to handle API updates
+
+### Fixed
+
+* Don't show track number header when not displaying song track numbers
+* User validation wasn't cleared after activation
+* Localplay preference displayed as bool types
+* Found some missing preferences for validation
+* Error on `site_title` and `api_always_download` insert when missing
+* Validate `website` on User update and create functions
+* Validate `website` on Label update
+* Validate `website` on Podcast update
+* Added checks for some file handles to make sure they're valid first
+* Fix up docstrings in a few areas
+
 ## Ampache 6.6.3
 
 ### Fixed
