@@ -213,7 +213,7 @@ final class SearchGroupMethod
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                Xml_Data::set_count(count($results));
+                // don't set count here as each type of object will count themselves
                 echo Xml_Data::searches($results, $user);
         }
 
