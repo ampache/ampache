@@ -5,7 +5,7 @@ declare(strict_types=0);
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
  * LICENSE: GNU Affero General Public License, version 3 (AGPLv3)
- * Copyright 2001 - 2017 Ampache.org
+ * Copyright Ampache.org, 2001-2024
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -225,12 +225,9 @@ class Xml3_Data
     /**
      * keyed_array
      *
-     * This will build an xml document from a key'd array,
-     *
-     * @param array $array
-     * @param bool $callback
+     * This will build an xml document from a key'd array
      */
-    public static function keyed_array($array, $callback = ''): string
+    public static function keyed_array(array $array, ?bool $callback = false): string
     {
         $string = '';
 
@@ -245,7 +242,7 @@ class Xml3_Data
 
             // If it's an array, run again
             if (is_array($value)) {
-                $value = self::keyed_array($value, 1);
+                $value = self::keyed_array($value, true);
                 $string .= "<$key$attribute>\n$value\n</$key>\n";
             } else {
                 $string .= "\t<$key$attribute><![CDATA[" . $value . "]]></$key>\n";
@@ -331,14 +328,14 @@ class Xml3_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist->id), $include, $user, false);
             } else {
                 $albums = (AmpConfig::get('album_group'))
                     ? $artist->album_count
                     : $artist->album_disk_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, '', false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -394,7 +391,7 @@ class Xml3_Data
 
             // Handle includes
             if ($include && in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByAlbum($album->id), $user, '', false);
+                $songs = self::songs(self::getSongRepository()->getByAlbum($album->id), $user, '', false);
             } else {
                 $songs = $album->song_count;
             }
@@ -626,7 +623,7 @@ class Xml3_Data
 
         /** @var Shoutbox $shout */
         foreach ($shouts as $shout) {
-            $user  = new User($shout->getUserId());
+            $user = new User($shout->getUserId());
             $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n";
             if ($user->isNew() === false) {
                 $string .= "\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>";

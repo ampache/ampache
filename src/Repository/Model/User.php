@@ -251,7 +251,7 @@ class User extends database_object
      */
     public static function get_from_username($username): ?User
     {
-        return static::getUserRepository()->findByUsername($username);
+        return self::getUserRepository()->findByUsername($username);
     }
 
     /**
@@ -668,7 +668,10 @@ class User extends database_object
      */
     public function update_website($new_website): void
     {
-        $new_website = rtrim((string)$new_website, "/");
+        $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
+        $new_website = is_string($new_website)
+            ? rtrim((string)$new_website, "/")
+            : null;
         $sql         = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
 
         debug_event(self::class, 'Updating website', 4);
@@ -877,7 +880,7 @@ class User extends database_object
         $encrypted = false
     ): int {
         // don't try to overwrite users that already exist
-        if (static::getUserRepository()->idByUsername($username) > 0 || static::getUserRepository()->idByEmail($email) > 0) {
+        if (self::getUserRepository()->idByUsername($username) > 0 || self::getUserRepository()->idByEmail($email) > 0) {
             return 0;
         }
         $website = rtrim((string)$website, "/");
@@ -1189,7 +1192,7 @@ class User extends database_object
         Dba::write($sql, array($this->username));
 
         Catalog::count_table('user');
-        static::getUserRepository()->collectGarbage();
+        self::getUserRepository()->collectGarbage();
 
         return true;
     }
@@ -1282,7 +1285,7 @@ class User extends database_object
      */
     public static function get_username($user_id): string
     {
-        $users = static::getUserRepository()->getValidArray(true);
+        $users = self::getUserRepository()->getValidArray(true);
 
         return (isset($users[$user_id]))
             ? $users[$user_id]
@@ -1295,7 +1298,7 @@ class User extends database_object
      */
     public static function getValidArray(): array
     {
-        return static::getUserRepository()->getValidArray();
+        return self::getUserRepository()->getValidArray();
     }
 
     /**

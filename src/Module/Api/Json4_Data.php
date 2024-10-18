@@ -116,7 +116,7 @@ class Json4_Data
      */
     public static function error($code, $string): string
     {
-        return json_encode(["error" => ["code" => $code, "message" => $string]], JSON_PRETTY_PRINT);
+        return json_encode(["error" => ["code" => $code, "message" => $string]], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -129,7 +129,7 @@ class Json4_Data
      */
     public static function success($string): string
     {
-        return json_encode(["success" => $string], JSON_PRETTY_PRINT);
+        return json_encode(["success" => $string], JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -159,9 +159,7 @@ class Json4_Data
 
             foreach ($atags as $tag_id => $data) {
                 if ($simple) {
-                    $JSON[] = [
-                        "name" => $data['name']
-                    ];
+                    $JSON[] = ["name" => $data['name']];
                 } else {
                     $JSON[] = [
                         "id" => (string)$tag_id,
@@ -241,7 +239,7 @@ class Json4_Data
             }
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -276,11 +274,9 @@ class Json4_Data
         } // end foreach
 
         // return a tag object
-        $JSON[] = [
-            "tag" => $TAGS
-        ];
+        $JSON[] = ["tag" => $TAGS];
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -321,12 +317,12 @@ class Json4_Data
 
             // Handle includes
             if (in_array("albums", $include)) {
-                $albums = self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false);
+                $albums = self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false);
             } else {
                 $albums = $artist->album_count;
             }
             if (in_array("songs", $include)) {
-                $songs = self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false);
+                $songs = self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false);
             } else {
                 $songs = $artist->song_count;
             }
@@ -353,7 +349,7 @@ class Json4_Data
         } // end foreach artists
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -407,7 +403,7 @@ class Json4_Data
 
             // Handle includes
             if ($include && in_array("songs", $include) && isset($album->id)) {
-                $songs = self::songs(static::getAlbumRepository()->getSongs($album->id), $user, false);
+                $songs = self::songs(self::getAlbumRepository()->getSongs($album->id), $user, false);
             } else {
                 $songs = $album->song_count;
             }
@@ -430,7 +426,7 @@ class Json4_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -512,7 +508,7 @@ class Json4_Data
                 "averagerating" => (string)($rating->get_average_rating() ?? null)];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -565,7 +561,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allShares, JSON_PRETTY_PRINT);
+        return json_encode($allShares, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -614,7 +610,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allCatalogs, JSON_PRETTY_PRINT);
+        return json_encode($allCatalogs, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -683,7 +679,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($allPodcasts, JSON_PRETTY_PRINT);
+        return json_encode($allPodcasts, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -743,7 +739,7 @@ class Json4_Data
         }
         $output = ($object) ? ["podcast_episode" => $JSON] : $JSON;
 
-        return json_encode($output, JSON_PRETTY_PRINT);
+        return json_encode($output, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -860,7 +856,7 @@ class Json4_Data
         } // end foreach
 
         if ($encode) {
-            return json_encode($JSON, JSON_PRETTY_PRINT);
+            return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
         }
 
         return $JSON;
@@ -908,7 +904,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -963,7 +959,7 @@ class Json4_Data
             ];
         } // end foreach
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1007,7 +1003,7 @@ class Json4_Data
             $JSON['user']['fullname'] = $user->fullname;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1030,11 +1026,9 @@ class Json4_Data
         } // end foreach
 
         // return a user object
-        $JSON[] = [
-            "user" => $user_array
-        ];
+        $JSON[] = ["user" => $user_array];
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1062,7 +1056,7 @@ class Json4_Data
             ];
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**
@@ -1096,7 +1090,7 @@ class Json4_Data
             $JSON['timeline'][] = $objArray;
         }
 
-        return json_encode($JSON, JSON_PRETTY_PRINT);
+        return json_encode($JSON, JSON_PRETTY_PRINT) ?: '';
     }
 
     /**

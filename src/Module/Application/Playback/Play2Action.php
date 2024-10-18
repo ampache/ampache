@@ -39,7 +39,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
-use Ampache\Module\User\Tracking\UserTrackerInterface;
 use Ampache\Module\Util\Horde_Browser;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
@@ -74,16 +73,13 @@ final class Play2Action implements ApplicationActionInterface
 
     private LoggerInterface $logger;
 
-    private UserTrackerInterface $userTracker;
-
     public function __construct(
         RequestParserInterface $requestParser,
         Horde_Browser $browser,
         AuthenticationManagerInterface $authenticationManager,
         NetworkCheckerInterface $networkChecker,
         UserRepositoryInterface $userRepository,
-        LoggerInterface $logger,
-        UserTrackerInterface $userTracker
+        LoggerInterface $logger
     ) {
         $this->requestParser         = $requestParser;
         $this->browser               = $browser;
@@ -91,7 +87,6 @@ final class Play2Action implements ApplicationActionInterface
         $this->networkChecker        = $networkChecker;
         $this->userRepository        = $userRepository;
         $this->logger                = $logger;
-        $this->userTracker           = $userTracker;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

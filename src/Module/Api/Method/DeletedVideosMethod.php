@@ -57,8 +57,8 @@ final class DeletedVideosMethod
         }
         unset($user);
 
-        $video_ids = Video::get_deleted();
-        if (empty($video_ids)) {
+        $results = Video::get_deleted();
+        if (empty($results)) {
             Api::empty('deleted_videos', $input['api_format']);
 
             return false;
@@ -69,12 +69,14 @@ final class DeletedVideosMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
-                echo Json_Data::deleted('video', $video_ids);
+                Json_Data::set_count(count($results));
+                echo Json_Data::deleted('video', $results);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
-                echo Xml_Data::deleted('video', $video_ids);
+                Xml_Data::set_count(count($results));
+                echo Xml_Data::deleted('video', $results);
         }
 
         return true;

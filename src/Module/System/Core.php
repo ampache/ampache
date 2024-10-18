@@ -192,6 +192,9 @@ class Core
      */
     public static function gen_secure_token($length)
     {
+        if ($length <= 0) {
+            return false;
+        }
         if (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {

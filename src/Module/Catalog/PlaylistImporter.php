@@ -40,9 +40,9 @@ final class PlaylistImporter
      *  count: int,
      *  id: int,
      *  results: list<array{
-     *    track: int,
-     *    file: string,
-     *    found: int
+     *   track: int,
+     *   file: string,
+     *   found: int
      *  }>
      * }
      */

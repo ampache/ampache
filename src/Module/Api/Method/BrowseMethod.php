@@ -137,7 +137,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name','ASC']);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
             $browse->set_filter('gather_type', $gather_type);
             $browse->set_filter('catalog', $catalog->id);
@@ -223,7 +223,7 @@ final class BrowseMethod
             }
             $child_type = $output_type;
 
-            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+            $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
             if (!empty($filter_type)) {
                 $browse->set_filter($filter_type, $item->getId());
@@ -250,11 +250,13 @@ final class BrowseMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count($browse->get_total());
                 echo Json_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count($browse->get_total());
                 echo Xml_Data::browses($results, $object_id, $object_type, $child_type, $catalog_id);
         }
 

@@ -294,7 +294,9 @@ class Label extends database_object implements library_item
         $address  = $data['address'] ?? null;
         $country  = $data['country'] ?? null;
         $email    = $data['email'] ?? null;
-        $website  = $data['website'] ?? null;
+        $website  = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
@@ -343,7 +345,9 @@ class Label extends database_object implements library_item
         $address       = $data['address'];
         $country       = $data['country'];
         $email         = $data['email'];
-        $website       = $data['website'];
+        $website       = (isset($data['website']))
+            ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
+            : null;
         $user          = $data['user'] ?? Core::get_global('user')->id;
         $active        = $data['active'];
         $creation_date = $data['creation_date'] ?? time();
