@@ -96,19 +96,19 @@ if (empty($object_ids) && isset($democratic->base_playlist)) {
 <tr>
     <td class="cel_action">
     <?php if ($democratic->has_vote($item['object_id'], $item['object_type']->value)) {
-        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['track_id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['track_id']);
     } else {
-        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']->value), 'tick', T_('Add Vote'), 'add_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']->value), 'tick', T_('Add Vote'), 'add_vote_' . $item['track_id']);
     } ?>
     </td>
-    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
+    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['track_id'])); ?></td>
     <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
     <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
     <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if ($access100) { ?>
     <td class="cel_admin">
-    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'close', T_('Delete'), 'delete_row_' . $item['id']); ?>
+    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['track_id'], 'close', T_('Delete'), 'delete_row_' . $item['track_id']); ?>
     </td>
     <?php } ?>
 </tr>

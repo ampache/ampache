@@ -971,7 +971,10 @@ class Search extends playlist_object
     {
         $t_playlist = T_('Playlist');
         $this->_add_type_text('title', T_('Name'), $t_playlist);
-        $playlist_types = [0 => T_('public'), 1 => T_('private')];
+        $playlist_types = [
+            0 => T_('public'),
+            1 => T_('private')
+        ];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
         $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
@@ -990,7 +993,11 @@ class Search extends playlist_object
 
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
-        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
+        $episode_states = [
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -1024,7 +1031,11 @@ class Search extends playlist_object
         $t_podcast_episodes = T_('Podcast Episode');
         $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
         $this->_add_type_text('podcast', T_('Podcast'), $t_podcast_episodes);
-        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
+        $episode_states = [
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -1362,6 +1373,12 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
+     * @return list<array{
+     *  object_type: LibraryItemEnum,
+     *  object_id: int,
+     *  track_id: int,
+     *  track: int
+     * }>
      */
     public function get_items(): array
     {
@@ -1397,8 +1414,8 @@ class Search extends playlist_object
             $results[] = [
                 'object_id' => $row['id'],
                 'object_type' => LibraryItemEnum::from($this->objectType),
-                'track' => $count++,
-                'track_id' => $row['id']
+                'track_id' => $row['id'],
+                'track' => $count++
             ];
         }
 
