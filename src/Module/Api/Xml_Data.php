@@ -619,16 +619,19 @@ class Xml_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array $searches Array of object_ids (Mixed string|int)
+     * @param array $searches Array of object_ids by object type
+     * @param array $counts Array of counts for each object type
      * @param User $user
      */
-    public static function searches($searches, $user): string
+    public static function searches($searches, $counts, $user): string
     {
         $string = "<search>\n";
 
         // here is where we call the object type
         foreach ($searches as $object_type => $objects) {
-            $count = self::$count ?? count($objects);
+            $count = (isset($counts[$object_type]) && is_int($counts[$object_type]))
+                ? $counts[$object_type]
+                : count($objects);
             switch ($object_type) {
                 case 'artist':
                     if (($count > self::$limit || self::$offset > 0) && self::$limit) {
@@ -1503,11 +1506,11 @@ class Xml_Data
      * This handles creating a xml document for a now_playing list
      *
      * @param list<array{
-     *   media: library_item,
-     *   client: User,
-     *   agent: string,
-     *   expire: int
-     *  }> $results
+     *  media: library_item,
+     *  client: User,
+     *  agent: string,
+     *  expire: int
+     * }> $results
      */
     public static function now_playing(array $results): string
     {

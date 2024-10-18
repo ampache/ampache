@@ -246,7 +246,8 @@ class Search extends playlist_object
         $this->basetypes['numeric'][] = [
             'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql' => '<='];
+            'sql' => '<='
+        ];
 
         $this->basetypes['numeric'][] = [
             'name' => 'equal',
@@ -970,7 +971,10 @@ class Search extends playlist_object
     {
         $t_playlist = T_('Playlist');
         $this->_add_type_text('title', T_('Name'), $t_playlist);
-        $playlist_types = [0 => T_('public'), 1 => T_('private')];
+        $playlist_types = [
+            0 => T_('public'),
+            1 => T_('private')
+        ];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
         $this->_add_type_select('owner', T_('Owner'), 'user_numeric', $users, $t_playlist);
@@ -989,7 +993,11 @@ class Search extends playlist_object
 
         $t_podcast_episodes = T_('Podcast Episodes');
         $this->_add_type_text('podcast_episode', T_('Podcast Episode'), $t_podcast_episodes);
-        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
+        $episode_states = [
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -1023,7 +1031,11 @@ class Search extends playlist_object
         $t_podcast_episodes = T_('Podcast Episode');
         $this->_add_type_text('title', T_('Name'), $t_podcast_episodes);
         $this->_add_type_text('podcast', T_('Podcast'), $t_podcast_episodes);
-        $episode_states = [0 => T_('skipped'), 1 => T_('pending'), 2 => T_('completed')];
+        $episode_states = [
+            0 => T_('skipped'),
+            1 => T_('pending'),
+            2 => T_('completed')
+        ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
@@ -1226,16 +1238,18 @@ class Search extends playlist_object
     }
 
     /**
-     * run
+     * prepare
      *
-     * This function actually runs the search and returns an array of the
-     * results.
+     * This function prepares the sql and parameters for execution.
      * @param array $data
      * @param User $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
-     * @return int[]
+     * @return array{
+     *     sql: string,
+     *     parameters: array
+     * }
      */
-    public static function run($data, $user = null, $require_rules = false): array
+    public static function prepare($data, $user = null, $require_rules = false): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
@@ -1258,10 +1272,13 @@ class Search extends playlist_object
         if ($require_rules && empty($search_info['where'])) {
             debug_event(self::class, 'require_rules: No rules were set on this search', 5);
 
-            return [];
+            return [
+                'sql' => '',
+                'parameters' => []
+            ];
         }
 
-        $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
+        $sql = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
         }
@@ -1276,15 +1293,56 @@ class Search extends playlist_object
         $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
         $sql = trim($sql);
-        //debug_event(self::class, 'SQL run: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
+        //debug_event(self::class, 'SQL prepare: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
 
-        $db_results = Dba::read($sql, $search_info['parameters']);
+        return [
+            'sql' => $sql,
+            'parameters' => $search_info['parameters']
+        ];
+    }
+
+    /**
+     * run
+     *
+     * This function actually runs the search and returns an array of the
+     * results.
+     * @param array $data
+     * @param User $user
+     * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
+     * @return int[]
+     */
+    public static function run($data, $user = null, $require_rules = false): array
+    {
+        $search_sql = self::prepare($data, $user, $require_rules);
+        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
         $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
 
         return $results;
+    }
+
+    /**
+     * query
+     *
+     * This function is used to simplify api searches and return valuable data for responses
+     * @param array $search_sql
+     * @return array
+     */
+    public static function query($search_sql): array
+    {
+        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
+        $num_rows   = Dba::num_rows($db_results);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return [
+            'results' => $results,
+            'count' => $num_rows
+        ];
     }
 
     /**
@@ -1315,6 +1373,12 @@ class Search extends playlist_object
      *
      * Return an array of the items output by our search
      * (part of the playlist interface).
+     * @return list<array{
+     *  object_type: LibraryItemEnum,
+     *  object_id: int,
+     *  track_id: int,
+     *  track: int
+     * }>
      */
     public function get_items(): array
     {
@@ -1350,8 +1414,8 @@ class Search extends playlist_object
             $results[] = [
                 'object_id' => $row['id'],
                 'object_type' => LibraryItemEnum::from($this->objectType),
-                'track' => $count++,
-                'track_id' => $row['id']
+                'track_id' => $row['id'],
+                'track' => $count++
             ];
         }
 

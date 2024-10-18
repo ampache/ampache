@@ -146,7 +146,9 @@ final class PlaylistGenerateMethod
         }
 
         // get db data
-        $results = Search::run($data, $user);
+        $search_sql = Search::prepare($data, $user);
+        $query      = Search::query($search_sql);
+        $results    = $query['results'];
         shuffle($results);
 
         //slice the array if there is a limit
