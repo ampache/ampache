@@ -1182,16 +1182,18 @@ class Search extends playlist_object
     }
 
     /**
-     * run
+     * prepare
      *
-     * This function actually runs the search and returns an array of the
-     * results.
+     * This function prepares the sql and parameters for execution.
      * @param array $data
      * @param User $user
      * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
-     * @return int[]
+     * @return array{
+     *     sql: string,
+     *     parameters: array
+     * }
      */
-    public static function run($data, $user = null, $require_rules = false): array
+    public static function prepare($data, $user = null, $require_rules = false): array
     {
         $limit  = (int)($data['limit'] ?? 0);
         $offset = (int)($data['offset'] ?? 0);
@@ -1206,6 +1208,7 @@ class Search extends playlist_object
             if ($offset > 0) {
                 $limit_sql .= $offset . ", ";
             }
+
             $limit_sql .= $limit;
         }
 
@@ -1213,26 +1216,50 @@ class Search extends playlist_object
         if ($require_rules && empty($search_info['where'])) {
             debug_event(self::class, 'require_rules: No rules were set on this search', 5);
 
-            return array();
+            return [
+                'sql' => '',
+                'parameters' => []
+            ];
         }
 
-        $sql         = $search_info['base'] . ' ' . $search_info['table_sql'];
+        $sql = $search_info['base'] . ' ' . $search_info['table_sql'];
         if (!empty($search_info['where_sql'])) {
             $sql .= ' WHERE ' . $search_info['where_sql'];
         }
+
         if (!empty($search_info['group_sql'])) {
             $sql .= ' GROUP BY ' . $search_info['group_sql'];
             if (!empty($search_info['having_sql'])) {
                 $sql .= ' HAVING ' . $search_info['having_sql'];
             }
         }
+
         $sql .= ($random > 0) ? " ORDER BY RAND()" : " ORDER BY " . $search->order_by;
         $sql .= ' ' . $limit_sql;
-        $sql = trim((string)$sql);
-        //debug_event(self::class, 'SQL run: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
+        $sql = trim($sql);
+        //debug_event(self::class, 'SQL prepare: ' . $sql . "\n" . print_r($search_info['parameters'], true), 5);
 
-        $db_results = Dba::read($sql, $search_info['parameters']);
-        $results    = array();
+        return [
+            'sql' => $sql,
+            'parameters' => $search_info['parameters']
+        ];
+    }
+
+    /**
+     * run
+     *
+     * This function actually runs the search and returns an array of the
+     * results.
+     * @param array $data
+     * @param User $user
+     * @param bool $require_rules // require a valid rule to return search items (instead of returning all items)
+     * @return int[]
+     */
+    public static function run($data, $user = null, $require_rules = false): array
+    {
+        $search_sql = self::prepare($data, $user, $require_rules);
+        $db_results = Dba::read((string)$search_sql['sql'], $search_sql['parameters']);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }

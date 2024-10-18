@@ -13101,6 +13101,16 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Search.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:prepare\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Search.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Search\\:\\:run\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
