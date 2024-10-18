@@ -111,7 +111,10 @@ final class BrowseMethod
             }
 
             switch ((string)$catalog->gather_types) {
-                case 'video':
+                case 'clip':
+                case 'tvshow':
+                case 'movie':
+                case 'personal_video':
                     $output_type = 'video';
                     $gather_type = 'video';
                     $browse->set_type('video');
