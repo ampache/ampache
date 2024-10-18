@@ -180,8 +180,8 @@ class Wanted extends database_object
 
                     if (
                         $add &&
-                        (static::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
-                            ($artist !== null && $artist->id && static::getAlbumRepository()->getByName($group->title, $artist->id) === []))
+                        (self::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
+                            ($artist !== null && $artist->id && self::getAlbumRepository()->getByName($group->title, $artist->id) === []))
                     ) {
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
@@ -229,7 +229,7 @@ class Wanted extends database_object
                                 $wanted->name &&
                                 $wanted->year
                             ) {
-                                static::getWantedManager()->add(
+                                self::getWantedManager()->add(
                                     $user,
                                     $wanted->mbid,
                                     $wanted->artist,
