@@ -1,5 +1,36 @@
 # API CHANGELOG
 
+## API 6.6.4
+
+Merge update from Ampache7. This update has counting updates to allow faster responses on larger results
+
+### Added
+
+* API6
+  * Use set_count function on data classes to speed up counting response totals
+  * Validate `website` for `user_edit`
+  * Use split search for search methods
+    * advanced_search / search
+    * search_songs
+    * user_update
+    * playlist_generate
+* API5
+  * Use split search for search methods
+    * advanced_search
+    * search_songs
+    * user_update
+    * playlist_generate
+* API4
+  * Use split search for search methods
+    * advanced_search
+    * search_songs
+    * user_update
+    * playlist_generate
+* API3
+  * Use split search for search methods
+    * advanced_search
+    * search_songs
+
 ## API 6.6.3
 
 **NO CHANGE**
