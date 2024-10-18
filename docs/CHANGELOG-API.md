@@ -2,7 +2,9 @@
 
 ## API 6.6.4
 
-Merge update from Ampache7. This update has counting updates to allow faster responses on larger results
+Merge update from Ampache7.
+
+This update has counting updates to allow faster responses on larger results
 
 ### Added
 
@@ -30,6 +32,11 @@ Merge update from Ampache7. This update has counting updates to allow faster res
   * Use split search for search methods
     * advanced_search
     * search_songs
+
+
+### Changed
+
+* Rename API-CHANGELOG.md => CHANGELOG-API.md
 
 ## API 6.6.3
 
