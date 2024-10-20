@@ -45,17 +45,17 @@ final class Migration370018 extends AbstractMigration
         $is_hidden  = false;
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['Field'] == 'merged_to') {
-                $this->updateDatabase("INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL");
+                $this->updateDatabase("INSERT INTO `tag_merge` (`tag_id`, `merged_to`) SELECT `tag`.`id`, `tag`.`merged_to` FROM `tag` WHERE `merged_to` IS NOT NULL;");
 
                 // don't drop until you've confirmed a merge
-                $this->updateDatabase("ALTER TABLE `tag` DROP COLUMN `merged_to`");
+                $this->updateDatabase("ALTER TABLE `tag` DROP COLUMN `merged_to`;");
             }
             if ($row['Field'] == 'is_hidden') {
                 $is_hidden = true;
             }
         }
         if (!$is_hidden) {
-            $this->updateDatabase("ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0");
+            $this->updateDatabase("ALTER TABLE `tag` ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0;");
         }
     }
 

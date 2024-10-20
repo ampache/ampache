@@ -37,6 +37,6 @@ final class Migration600006 extends AbstractMigration
     public function migrate(): void
     {
         Dba::write("ALTER TABLE `album` DROP COLUMN `disk_count`;");
-        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `disk_count` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `disk`");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `disk_count` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `disk`;");
     }
 }

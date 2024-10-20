@@ -35,6 +35,6 @@ final class Migration600021 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0');
+        $this->updateDatabase('ALTER TABLE `song` MODIFY COLUMN `time` int(11) unsigned NOT NULL DEFAULT 0;');
     }
 }

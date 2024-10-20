@@ -35,6 +35,6 @@ final class Migration550004 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search'");
+        $this->updateDatabase("UPDATE `preference` SET `catagory`='system' WHERE `name`='demo_use_search';");
     }
 }

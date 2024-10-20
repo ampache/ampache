@@ -35,6 +35,6 @@ final class Migration600038 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('UPDATE `access_list` SET `user` = -1 WHERE `user` = 0');
+        $this->updateDatabase('UPDATE `access_list` SET `user` = -1 WHERE `user` = 0;');
     }
 }

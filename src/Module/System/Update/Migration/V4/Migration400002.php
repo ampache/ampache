@@ -52,6 +52,6 @@ final class Migration400002 extends AbstractMigration
         Dba::write("ALTER TABLE `album` DROP COLUMN `catalog_number`;");
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `catalog_number` varchar(64) NULL;");
 
-        $this->updateDatabase("ALTER TABLE `song_data` DROP COLUMN `catalog_number`");
+        $this->updateDatabase("ALTER TABLE `song_data` DROP COLUMN `catalog_number`;");
     }
 }

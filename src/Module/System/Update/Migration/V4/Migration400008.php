@@ -51,7 +51,7 @@ final class Migration400008 extends AbstractMigration
             $this->updateDatabase("CREATE TABLE IF NOT EXISTS `" . $table . "` (`object_id` int(11) unsigned NOT NULL, `object_type` enum('album','artist','song','playlist','genre','catalog','live_stream','video','podcast_episode') CHARACTER SET utf8 NOT NULL, `count` int(11) unsigned NOT NULL DEFAULT '0', `threshold` int(11) unsigned NOT NULL DEFAULT '0', `count_type` varchar(16) NOT NULL, PRIMARY KEY (`object_id`, `object_type`, `threshold`, `count_type`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
         }
 
-        $this->updateDatabase("UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold'");
+        $this->updateDatabase("UPDATE `preference` SET `level`=75 WHERE `preference`.`name`='stats_threshold';");
     }
 
     public function getTableMigrations(

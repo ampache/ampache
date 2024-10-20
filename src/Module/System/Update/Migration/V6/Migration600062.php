@@ -35,6 +35,6 @@ final class Migration600062 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `player_control` MODIFY COLUMN `user` int(11) NOT NULL");
+        $this->updateDatabase("ALTER TABLE `player_control` MODIFY COLUMN `user` int(11) NOT NULL;");
     }
 }

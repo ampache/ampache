@@ -42,6 +42,6 @@ final class Migration400006 extends AbstractMigration
 
         $this->updateDatabase("DELETE FROM `preference` WHERE `preference`.`name` = 'shoutcast_active';");
 
-        $this->updateDatabase("DROP TABLE IF EXISTS `localplay_shoutcast`");
+        $this->updateDatabase("DROP TABLE IF EXISTS `localplay_shoutcast`;");
     }
 }
