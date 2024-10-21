@@ -40,7 +40,7 @@ final class Migration500007 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times')");
+        $this->updateDatabase("UPDATE `preference` SET `preference`.`subcatagory` = 'browse' WHERE `preference`.`name` IN ('show_played_times', 'browse_filter', 'libitem_browse_alpha', 'show_skipped_times');");
 
         $this->updatePreferences('show_license', 'Show License', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }

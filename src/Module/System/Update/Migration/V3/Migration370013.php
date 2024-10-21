@@ -36,7 +36,7 @@ final class Migration370013 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'iframes'");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'iframes';");
 
         $this->updatePreferences('ajax_load', 'Ajax page load', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }

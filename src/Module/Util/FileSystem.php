@@ -76,7 +76,9 @@ class FileSystem
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
 
-        return strlen($path) ? $path : '/';
+        return strlen($path)
+            ? $path
+            : '/';
     }
 
     /**

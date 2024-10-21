@@ -40,7 +40,7 @@ final class Migration600043 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('UPDATE `preference` SET `type` = \'boolean\' WHERE `name` = \'use_play2\'');
+        $this->updateDatabase('UPDATE `preference` SET `type` = \'boolean\' WHERE `name` = \'use_play2\';');
 
         $this->updatePreferences('jp_volume', 'Default webplayer volume', 0.80, AccessLevelEnum::USER->value, 'special', 'streaming', 'player');
     }

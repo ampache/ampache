@@ -91,6 +91,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
                 }
+
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
@@ -116,6 +117,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ) {
                     Stats::delete((int)$_REQUEST['activity_id']);
                 }
+
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();

@@ -6,6 +6,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 
 ### Added
 
+* New release structure type (client) based on the public release type. (Allow using an API client in the root Ampache folder)
 * Translations 2024-10
 * npm java package management
 * Convert most theme icons to use [Google Material Symbols & Icons](https://fonts.google.com/icons)
@@ -15,7 +16,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * User option to show dashboard links on the index instead of browse links
 * Use number for preference input text boxes when the preference value is numeric
 * Check the user is admin when deleting activities
-* Verify http_referer before delete actions
+* Verify `http_referer` before delete actions
 * Add option to clear update notifications which will also reset the check timer
 * Allow hiding licenses like genres
 * Show a warning on upload license selection
@@ -23,6 +24,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Garbage collect unactivated users after 30 days
 * Remove validation token on user activation
 * Show error on user add/update when the website is invalid (empty values are ignored)
+* Added a `get_web_path` function to allow easier squash and client structure management
 * Plugins
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
@@ -50,7 +52,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Enable `user_create_streamtoken` by default
   * Add option `waveform_drawflat` that was previously hardcoded
   * Add `webplayer_level` allow setting a minimum permission level for the webplayer (default user)
-* Database 700022
+* Database 700029
   * Add user preferences to show/hide menus in the sidebar and the switcher arrows
   * Add Indexes to `object_count`, `object_count_idx_count_type_date_id` and `object_count_idx_count_type_id`
   * Convert the remaining MyISAM tables to InnoDB
@@ -71,6 +73,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
   * Require unique preference names per-user in `user_preference` table'
   * Add `order` column to `license` table to allow sorting and hiding licenses
   * Add options to allow hiding different search links
+  * Remove `tvshow`, `tvshowseason` from `object_type` enums
 
 ### Changed
 
@@ -105,6 +108,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Unused stream actions
 * Old composer files
 * Unused PNG icons
+* CSS for sidebar order. Use the new preferences instead
 * Non-music Video features have been removed. You can no longer add catalogs for these video types
   * Movies
   * TV Shows

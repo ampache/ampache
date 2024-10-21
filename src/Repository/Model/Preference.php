@@ -1478,8 +1478,8 @@ class Preference extends database_object
                     ) !== false &&
                     Dba::write(
                         "UPDATE `preference` SET `level` = ? WHERE `name` IN (" .
-                        "'allow_video', 'custom_blankalbum', 'custom_blankmovie', 'custom_favicon'" .
-                        " 'custom_login_background', 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'" .
+                        "'allow_video', 'custom_blankalbum', 'custom_favicon' 'custom_login_background'," .
+                        " 'custom_login_logo', 'custom_text_footer', 'libitem_browse_alpha', 'stats_threshold'" .
                         ");",
                         [AccessLevelEnum::MANAGER->value]
                     ) !== false &&
@@ -1538,7 +1538,7 @@ class Preference extends database_object
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
                         "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
-                        " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
+                        " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
                         " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
@@ -1598,7 +1598,7 @@ class Preference extends database_object
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
                         "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
-                        " 'custom_blankmovie', 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
+                        " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo'," .
                         " 'custom_text_footer', 'custom_timezone', 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields'," .
                         " 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha', 'upload_script') AND `user` = ?;",
                         [$user->getId()]
@@ -1656,7 +1656,7 @@ class Preference extends database_object
                     Dba::write("UPDATE `user_preference` SET `value` = '-1' WHERE `name` IN ('upload_catalog') AND `user` = ?;", [$user->getId()]) !== false &&
                     Dba::write(
                         "UPDATE `user_preference` SET `value` = '' WHERE `name` IN (" .
-                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum', 'custom_blankmovie'," .
+                        "'api_hidden_playlists', 'autoupdate_lastcheck', 'autoupdate_lastversion_new', 'autoupdate_lastversion', 'custom_blankalbum'," .
                         " 'custom_datetime', 'custom_favicon', 'custom_login_background', 'custom_login_logo', 'custom_logo', 'custom_text_footer', 'custom_timezone'," .
                         " 'daap_pass', 'disabled_custom_metadata_fields_input', 'disabled_custom_metadata_fields', 'lastfm_challenge', 'lastfm_grant_link', 'libitem_browse_alpha'," .
                         " 'upload_script') AND `user` = ?;",
@@ -1955,7 +1955,7 @@ class Preference extends database_object
     public static function init(): bool
     {
         $user    = Core::get_global('user');
-        $user_id = $user->id ?? -1;
+        $user_id = $user?->id ?? -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

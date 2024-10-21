@@ -36,7 +36,7 @@ final class Migration360005 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DROP TABLE IF EXISTS `tmp_browse`");
+        $this->updateDatabase("DROP TABLE IF EXISTS `tmp_browse`;");
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `tmp_browse` (`id` int(13) NOT NULL auto_increment, `sid` varchar(128) CHARACTER SET utf8 NOT NULL, `data` longtext NOT NULL, `object_data` longtext, PRIMARY KEY (`sid`, `id`)) ENGINE=MYISAM DEFAULT CHARSET=utf8;");
     }
 
