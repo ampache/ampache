@@ -35,6 +35,6 @@ final class Migration600009 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `album` DROP COLUMN `disk`");
+        $this->updateDatabase("ALTER TABLE `album` DROP COLUMN `disk`;");
     }
 }

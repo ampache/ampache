@@ -35,6 +35,6 @@ final class Migration600002 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DROP TABLE IF EXISTS `channel`");
+        $this->updateDatabase("DROP TABLE IF EXISTS `channel`;");
     }
 }

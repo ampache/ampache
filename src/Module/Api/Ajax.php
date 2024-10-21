@@ -39,8 +39,8 @@ use Ampache\Module\Util\Ui;
  */
 class Ajax
 {
-    private static $include_override;
-    private static $counter = 0;
+    private static bool $include_override = false;
+    private static int $counter           = 0;
 
     /**
      * constructor
@@ -119,11 +119,15 @@ class Ajax
             $source_txt = "'$source'";
         }
 
+        $ajax_string = '$(document).ready(function () {';
+
         if ($post) {
-            $ajax_string = "ajaxPost('$url', '$post', $source_txt)";
+            $ajax_string .= "ajaxPost('$url', '$post', $source_txt)";
         } else {
-            $ajax_string = "ajaxPut('$url', $source_txt)";
+            $ajax_string .= "ajaxPut('$url', $source_txt)";
         }
+
+        $ajax_string .= '});';
 
         return $ajax_string;
     }
@@ -140,8 +144,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button($action, $icon, $alt, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button(
+        $action,
+        $icon,
+        $alt,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -150,7 +161,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $string = Ui::get_icon($icon, $alt);
+        $string = Ui::get_material_symbol($icon, $alt);
 
         // Generate an <a> so that it's more compliant with older
         // browsers (ie :hover actions) and also to unify linkbuttons
@@ -174,8 +185,15 @@ class Ajax
      * @param string $class
      * @param string $confirm
      */
-    public static function button_with_text($action, $icon, $text, $source = '', $post = '', $class = '', $confirm = ''): string
-    {
+    public static function button_with_text(
+        $action,
+        $icon,
+        $text,
+        $source = '',
+        $post = '',
+        $class = '',
+        $confirm = ''
+    ): string {
         // Get the correct action
         $ajax_string = self::action($action, $source, $post);
 
@@ -184,7 +202,7 @@ class Ajax
             $class = ' class="' . $class . '"';
         }
 
-        $button = Ui::get_icon($icon, $text);
+        $button = Ui::get_material_symbol($icon, $text);
 
         $string = "<a href=\"javascript:void(0);\" id=\"$source\" $class>" . $button . " " . $text . "</a>\n";
 

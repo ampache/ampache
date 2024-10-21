@@ -40,44 +40,28 @@ class Access
 {
     protected const DB_TABLENAME = 'access_list';
 
-    // Variables from DB
-    /**
-     * @var int $id
-     */
+    /** @var int $id */
     public $id;
 
-    /**
-     * @var string $name
-     */
+    /** @var string $name */
     public $name;
 
-    /**
-     * @var string $start
-     */
+    /** @var string $start */
     public $start;
 
-    /**
-     * @var string $end
-     */
+    /** @var string $end */
     public $end;
 
-    /**
-     * @var int $level
-     */
+    /** @var int $level */
     public $level;
 
-    /**
-     * @var int $user
-     */
+    /** @var int $user */
     public $user;
 
-    /**
-     * @var string $type
-     */
+    /** @var string $type */
     public $type;
 
-    /**
-     * @var bool $enabled
+    /** @var bool $enabled
      *
      * @deprecated seems not to be in use
      */
@@ -126,15 +110,14 @@ class Access
      * check_function
      *
      * This checks if specific functionality is enabled.
-     * @param string $type     *
      * @deprecated See FunctionChecker::check
      */
-    public static function check_function($type): bool
+    public static function check_function(AccessFunctionEnum $type): bool
     {
         global $dic;
 
         return $dic->get(FunctionCheckerInterface::class)->check(
-            (string) $type
+            $type
         );
     }
 
@@ -146,18 +129,16 @@ class Access
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is
      * always used.
-     * @param string $type
-     * @param int $level
      * @param int|null $user_id
      * @deprecated See PrivilegeChecker::check
      */
-    public static function check($type, $level, $user_id = null): bool
+    public static function check(AccessTypeEnum $type, AccessLevelEnum $level, $user_id = null): bool
     {
         global $dic;
 
         return $dic->get(PrivilegeCheckerInterface::class)->check(
-            (string) $type,
-            (int) $level,
+            $type,
+            $level,
             $user_id
         );
     }

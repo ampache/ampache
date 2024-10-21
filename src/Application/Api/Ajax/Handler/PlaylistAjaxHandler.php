@@ -27,25 +27,24 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
-final class PlaylistAjaxHandler implements AjaxHandlerInterface
+final readonly class PlaylistAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
@@ -58,6 +57,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if ($playlist->isNew()) {
                     break;
                 }
+
                 $playlist->format();
                 if ($playlist->has_collaborate()) {
                     $playlist->delete_track($_REQUEST['track_id']);
@@ -68,7 +68,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 $browse_id  = (int)($_REQUEST['browse_id'] ?? 0);
                 $object_ids = $playlist->get_items();
                 ob_start();
-                $browse = new Browse((int) $browse_id);
+                $browse = new Browse($browse_id);
                 $browse->set_type('playlist_media');
                 $browse->add_supplemental_object('playlist', $playlist->id);
                 $browse->save_objects($object_ids);
@@ -79,20 +79,22 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'append_item':
                 // Only song item are supported with playlists
-                if (!isset($_REQUEST['playlist_id']) || empty($_REQUEST['playlist_id'])) {
-                    if (!Access::check('interface', 25)) {
-                        debug_event('playlist.ajax', 'Error:' . Core::get_global('user')->username . ' does not have user access, unable to create playlist', 1);
+                if (empty($_REQUEST['playlist_id'])) {
+                    if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+                        debug_event('playlist.ajax', 'Error:' . $user->username . ' does not have user access, unable to create playlist', 1);
                         break;
                     }
 
                     $name = $_REQUEST['name'] ?? '';
                     if (empty($name)) {
-                        $name = Core::get_global('user')->username . ' - ' . get_datetime(time());
+                        $name = $user->username . ' - ' . get_datetime(time());
                     }
+
                     $playlist_id = (int)Playlist::create($name, 'public');
                     if ($playlist_id < 1) {
                         break;
                     }
+
                     $playlist = new Playlist($playlist_id);
                 } else {
                     $playlist = new Playlist($_REQUEST['playlist_id']);
@@ -101,6 +103,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                 if (!$playlist->has_collaborate()) {
                     break;
                 }
+
                 debug_event('playlist.ajax', 'Appending items to playlist {' . $playlist->id . '}...', 5);
 
                 $medias    = [];
@@ -109,7 +112,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
 
                 if (!empty($item_type) && InterfaceImplementationChecker::is_playable_item($item_type)) {
                     debug_event('playlist.ajax', 'Adding all medias of ' . $item_type . '(s) {' . $item_id . '}...', 5);
-                    $item_ids = explode(',', $item_id);
+                    $item_ids = explode(',', (string) $item_id);
                     foreach ($item_ids as $iid) {
                         $className = ObjectTypeToClassNameMapper::map($item_type);
                         /** @var library_item $libitem */
@@ -120,7 +123,7 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     }
                 } else {
                     debug_event('playlist.ajax', 'Adding all medias of current playlist...', 5);
-                    $medias = Core::get_global('user')->playlist->get_items();
+                    $medias = $user->playlist?->get_items() ?? [];
                 }
 
                 if (
@@ -132,14 +135,10 @@ final class PlaylistAjaxHandler implements AjaxHandlerInterface
                     debug_event('playlist.ajax', 'Items added successfully!', 5);
                     ob_start();
                     display_notification(T_('Added to playlist'));
-                    $results['rfc3514'] = ob_get_clean();
+                    $results['reloader'] = ob_get_clean();
                 } else {
                     debug_event('playlist.ajax', 'No item to add. Aborting...', 5);
                 }
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         }
 
         echo (string) xoutput_from_array($results);

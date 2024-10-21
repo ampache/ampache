@@ -34,34 +34,22 @@ use Ampache\Module\System\Core;
  */
 class CliHandler extends Handler
 {
-    /**
-     * @var Catalog
-     */
-    protected $handler;
-
-    /**
-     * string handler command to do whatever we need using call_user_func
-     * @var string
-     */
-    protected $handlerCommand;
+    protected Catalog $handler;
 
     /**
      * Field separator for beets field format
-     * @var string
      */
-    protected $seperator = '###';
+    protected string $seperator = '###';
 
     /**
      * Custom limiter of beets song because we may have multi line output
-     * @var string
      */
-    protected $itemEnd = '//EOS';
+    protected string $itemEnd = '//EOS';
 
     /**
      * Format string for the '-f' argument from 'beet ls'
-     * @var string
      */
-    protected $fieldFormat;
+    protected string $fieldFormat = '$';
 
     /**
      * Choose whether the -f argument from beets is applied. May be needed to use other commands than 'beet ls'
@@ -79,19 +67,18 @@ class CliHandler extends Handler
      * Beets command
      * @var string
      */
-    protected $beetsCommand = 'beet';
+    protected string $beetsCommand = 'beet';
 
     /**
      * Seperator between command and arguments
      * @var string
      */
-    protected $commandSeperator = ' ';
+    protected string $commandSeperator = ' ';
 
     /**
      * Defines the differences between beets and ampache fields
-     * @var array
      */
-    protected $fieldMapping = [
+    protected array $fieldMapping = [
         'disc' => ['disk', '%d'],
         'path' => ['file', '%s'],
         'length' => ['time', '%d'],
@@ -155,10 +142,9 @@ class CliHandler extends Handler
     }
 
     /**
-     *
-     * @param string $item
+     * itemIsComlete
      */
-    protected function itemIsComlete($item): bool
+    protected function itemIsComlete(string $item): bool
     {
         $offset   = strlen($this->itemEnd);
         $position = (strlen($item) > $offset)
@@ -198,8 +184,8 @@ class CliHandler extends Handler
     }
 
     /**
-     *
-     * @return array
+     * getFields
+     * @return string[]
      */
     protected function getFields(): array
     {

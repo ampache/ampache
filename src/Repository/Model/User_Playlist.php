@@ -39,6 +39,7 @@ class User_Playlist extends database_object
     protected const DB_TABLENAME = 'user_playlist';
 
     public int $user;
+
     public string $client;
 
     /**
@@ -49,15 +50,19 @@ class User_Playlist extends database_object
      * @param int|null $user_id
      * @param string|null $client
      */
-    public function __construct($user_id = 0, $client = null)
-    {
+    public function __construct(
+        $user_id = 0,
+        $client = null
+    ) {
         if (!$user_id) {
             return;
         }
-        $client = $client ?? $this->get_latest();
+
+        $client ??= $this->get_latest();
         if (empty($client)) {
             return;
         }
+
         $this->user   = (int)$user_id;
         $this->client = substr($client, 0, 254);
     }
@@ -65,7 +70,6 @@ class User_Playlist extends database_object
     /**
      * get_current_object
      * This returns the next object in the user_playlist.
-     * @return array
      */
     public function get_current_object(): array
     {
@@ -81,7 +85,7 @@ class User_Playlist extends database_object
                 'track_id' => $results['object_id'],
                 'track' => $results['track'],
                 'current_track' => $results['current_track'],
-                'current_time' => $results['current_time']
+                'current_time' => $results['current_time'],
             ];
         }
 
@@ -144,7 +148,7 @@ class User_Playlist extends database_object
         $sql        = "SELECT DISTINCT(`playqueue_time`) AS `time` FROM `user_playlist` WHERE `user` = ? AND `playqueue_client` = ?";
         $db_results = Dba::read($sql, [$this->user, $this->client]);
         $results    = Dba::fetch_assoc($db_results);
-        if (empty($results)) {
+        if ($results === []) {
             return time();
         }
 
@@ -179,19 +183,22 @@ class User_Playlist extends database_object
      * Add an array of songs to the playlist
      * @return PDOStatement|false
      */
-    public function add_items($data, $time)
+    public function add_items(array $data, int $time)
     {
         $sql    = 'INSERT INTO `user_playlist` (`playqueue_time`, `playqueue_client`, `user`, `object_type`, `object_id`, `track`) VALUES ';
         $values = [];
         foreach ($data as $row) {
-            $sql .= '(?, ?, ?, ?, ?, ?),';
-            $values[] = $time;
-            $values[] = $this->client;
-            $values[] = $this->user;
-            $values[] = $row['object_type'];
-            $values[] = $row['object_id'];
-            $values[] = $row['track'];
+            if (in_array($row['object_type'], ['song','live_stream','video','podcast_episode'])) {
+                $sql .= '(?, ?, ?, ?, ?, ?),';
+                $values[] = $time;
+                $values[] = $this->client;
+                $values[] = $this->user;
+                $values[] = $row['object_type'];
+                $values[] = $row['object_id'];
+                $values[] = $row['track'];
+            }
         }
+
         // remove last comma
         $sql = substr($sql, 0, -1) . ';';
 
@@ -199,33 +206,16 @@ class User_Playlist extends database_object
     }
 
     /**
-     * set_items
-     * This function resets the User_Playlist while optionally setting the update client and time for that user
-     * @param array $playlist
-     * @param string $current_type
-     * @param int $current_id
-     * @param int $current_time
-     * @param int $time
-     */
-    public function set_items($playlist, $current_type, $current_id, $current_time, $time): void
-    {
-        if (!empty($playlist)) {
-            // clear the old list
-            $this->clear();
-            // set the new items
-            $this->add_items($playlist, $time);
-            $this->set_current_object($current_type, $current_id, $current_time);
-
-            // subsonic cares about queue dates so set them (and set them together)
-            User::set_user_data($this->user, 'playqueue_time', $time);
-            User::set_user_data($this->user, 'playqueue_client', $this->client);
-        }
-    }
-
-    /**
      * get_items
      * Returns an array of all object_ids currently in this User_Playlist.
-     * @return array
+     * @return list<array{
+     *  object_type: string,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int,
+     *  current_track: int,
+     *  current_time: int
+     * }>
      */
     public function get_items(): array
     {
@@ -241,7 +231,7 @@ class User_Playlist extends database_object
                 'track_id' => $results['object_id'],
                 'track' => $results['track'],
                 'current_track' => $results['current_track'],
-                'current_time' => $results['current_time']
+                'current_time' => $results['current_time'],
             ];
         }
 

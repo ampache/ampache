@@ -27,7 +27,7 @@ use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 
 /** @var Artist $artist */
-/** @var array $biography */
+/** @var array<string, string> $biography */
 ?>
 <div class="item_info">
     <?php if ($artist instanceof Artist) {

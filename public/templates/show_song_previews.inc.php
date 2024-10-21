@@ -26,7 +26,7 @@ declare(strict_types=0);
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song_Preview;
 
-/** @var array $object_ids */ ?>
+/** @var list<int> $object_ids */ ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

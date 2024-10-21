@@ -25,20 +25,27 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class AmpacheLyristLyrics implements AmpachePluginInterface
+class AmpacheLyristLyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     public string $name        = 'Lyrist Lyrics';
+
     public string $categories  = 'lyrics';
+
     public string $description = 'Get lyrics from a public Lyrist instance';
+
     public string $url         = 'https://github.com/asrvd/lyrist';
+
     public string $version     = '000002';
+
     public string $min_ampache = '360022';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -58,11 +65,7 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', 25, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('lyrist_api_url', T_('Lyrist API URL'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -87,15 +90,14 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
         // check if user have a token
-        if (strlen(trim($data['lyrist_api_url']))) {
-            $this->api_host = trim($data['lyrist_api_url']);
+        if (strlen(trim((string) $data['lyrist_api_url'])) !== 0) {
+            $this->api_host = trim((string) $data['lyrist_api_url']);
         } else {
             debug_event('lyrist.plugin', 'No url (need to add your Lyrist host to ampache)', 4);
 
@@ -108,25 +110,25 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
-     * @param Song $song
-     * @return array|false
      */
-    public function get_lyrics($song)
+    public function get_lyrics(Song $song): ?array
     {
-        $uri     = rtrim(preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode((string)$song->get_artist_fullname());
+        $uri     = rtrim((string)preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode($song->get_artist_fullname());
         $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);
-            if ($json) {
-                if (!empty($json->lyrics)) {
-                    return [
-                        'text' => nl2br($json->lyrics),
-                        'url' => $json->image
-                    ];
-                }
+            if (
+                $json &&
+                !empty($json->lyrics) &&
+                !empty($json->image)
+            ) {
+                return [
+                    'text' => nl2br($json->lyrics),
+                    'url' => $json->image
+                ];
             }
         }
 
-        return false;
+        return null;
     }
 }

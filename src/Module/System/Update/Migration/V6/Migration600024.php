@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -34,12 +35,12 @@ final class Migration600024 extends AbstractMigration
 {
     protected array $changelog = [
         'Add ui option (\'show_subtitle\') Show Album subtitle on links (if available)',
-        'Add ui option (\'show_original_year\') Show Album original year on links (if available)'
+        'Add ui option (\'show_original_year\') Show Album original year on links (if available)',
     ];
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_subtitle', 'Show Album subtitle on links (if available)', '1', 25, 'boolean', 'interface', 'browse');
-        $this->updatePreferences('show_original_year', 'Show Album original year on links (if available)', '1', 25, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('show_subtitle', 'Show Album subtitle on links (if available)', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('show_original_year', 'Show Album original year on links (if available)', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }
 }

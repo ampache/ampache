@@ -29,7 +29,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
 Ui::show_box_top(T_('Add Radio Station'), 'box box_add_live_stream'); ?>
-<form name="radio" method="post" action="<?php echo AmpConfig::get('web_path'); ?>/radio.php?action=create">
+<form name="radio" method="post" action="<?php echo AmpConfig::get_web_path(); ?>/radio.php?action=create">
 <table class="tabledata">
 <tr>
     <td><?php echo T_('Name'); ?></td>

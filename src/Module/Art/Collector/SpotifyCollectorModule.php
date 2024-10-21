@@ -76,7 +76,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         if ($clientId === null || $clientSecret === null) {
             $this->logger->debug(
                 'gather_spotify: Missing Spotify credentials, check your config',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return $images;
@@ -90,7 +90,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             } catch (SpotifyWebAPIException $error) {
                 $this->logger->debug(
                     'gather_spotify: A problem exists with the client credentials',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 return $images;
@@ -105,7 +105,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
         if ($art->type == 'artist') {
             $this->logger->debug(
                 'gather_spotify artist: ' . $data['artist'],
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             $query   = $data['artist'];
             $getType = 'getArtist';
@@ -115,7 +115,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
             $logString  = sprintf('gather_spotify album: %s, artist: %s', $album_str, $artist_str);
             $this->logger->debug(
                 $logString,
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             // Check for manual search
             if (key_exists('search_limit', $data)) {
@@ -180,7 +180,7 @@ final class SpotifyCollectorModule implements CollectorModuleInterface
                 } catch (SpotifyWebAPIException $error) {
                     $this->logger->error(
                         'gather_spotify ' . $error->getMessage(),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     return $images;

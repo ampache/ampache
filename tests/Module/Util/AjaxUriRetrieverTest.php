@@ -47,16 +47,16 @@ class AjaxUriRetrieverTest extends MockeryTestCase
 
     public function testGetAjaxUriReturnsValue(): void
     {
-        $webPath = 'some-path';
+        $webPath = '/server';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with('/server')
             ->once()
             ->andReturn($webPath);
 
         static::assertSame(
             sprintf(
-                '%s/server/ajax.server.php',
+                '%s/ajax.server.php',
                 $webPath
             ),
             $this->subject->getAjaxUri()
@@ -68,15 +68,12 @@ class AjaxUriRetrieverTest extends MockeryTestCase
         $webPath = 'some-path';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with('/server')
             ->once()
             ->andReturn($webPath);
 
         static::assertSame(
-            sprintf(
-                '%s/server',
-                $webPath
-            ),
+            $webPath,
             $this->subject->getAjaxServerUri()
         );
     }

@@ -109,7 +109,7 @@ final class FindArtAction extends AbstractArtAction
             $path_info      = pathinfo($_FILES['file']['name']);
             $upload         = [];
             $upload['file'] = $_FILES['file']['tmp_name'];
-            $upload['mime'] = 'image/' . $path_info['extension'];
+            $upload['mime'] = 'image/' . ($path_info['extension'] ?? 'jpg');
             $image_data     = Art::get_from_source($upload, $object_type);
 
             if ($image_data != '') {
@@ -140,7 +140,7 @@ final class FindArtAction extends AbstractArtAction
         if (!empty($_REQUEST['cover'])) {
             $path_info            = pathinfo($_REQUEST['cover']);
             $cover_url[0]['url']  = scrub_in((string) $_REQUEST['cover']);
-            $cover_url[0]['mime'] = 'image/' . $path_info['extension'];
+            $cover_url[0]['mime'] = 'image/' . ($path_info['extension'] ?? 'jpg');
         }
         $images = array_merge($cover_url, $images);
 

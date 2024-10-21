@@ -44,11 +44,9 @@ final class ShowEditPlaylistAction extends AbstractEditAction
 
     private StreamFactoryInterface $streamFactory;
 
-
     private TalFactoryInterface $talFactory;
 
     private GuiFactoryInterface $guiFactory;
-
 
     public function __construct(
         ResponseFactoryInterface $responseFactory,

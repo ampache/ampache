@@ -46,9 +46,9 @@ final class MissingArtistFinder implements MissingArtistFinderInterface
      */
     public function find(string $artistName): array
     {
-        $filter = new ArtistFilter([
-            'artist' => $artistName
-        ]);
+        $filter = new ArtistFilter(
+            ['artist' => $artistName]
+        );
 
         return array_map(
             static function ($result): array {

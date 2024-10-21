@@ -33,6 +33,11 @@ interface UserRepositoryInterface
     public function getByRssToken(string $rssToken): ?User;
 
     /**
+     * Finds a user by its id
+     */
+    public function findById(int $id): ?User;
+
+    /**
      * Lookup for a user id with a certain name
      */
     public function idByUsername(string $username): int;

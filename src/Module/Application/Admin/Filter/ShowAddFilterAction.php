@@ -60,9 +60,7 @@ final class ShowAddFilterAction extends AbstractFilterAction
         $this->ui->showHeader();
         $this->ui->show(
             'show_add_filter.inc.php',
-            [
-                'filter_name' => $filter_name
-            ]
+            ['filter_name' => $filter_name]
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

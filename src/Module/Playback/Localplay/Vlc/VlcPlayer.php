@@ -32,21 +32,21 @@ namespace Ampache\Module\Playback\Localplay\Vlc;
  */
 class VlcPlayer
 {
-    public $host;
-    public $port;
-    public $password;
+    public string $host;
+    public int $port;
+    public string $password;
 
     /**
      * VlcPlayer
      * This is the constructor, it defaults to localhost
      * with port 8080
      * i would change this to another value then standard 8080, it gets used by more things
-     * @param string $host
-     * @param string $password
-     * @param int $port
      */
-    public function __construct($host = 'localhost', $password = '', $port = 8080)
-    {
+    public function __construct(
+        string $host = 'localhost',
+        string $password = '',
+        int $port = 8080
+    ) {
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
@@ -55,10 +55,8 @@ class VlcPlayer
     /**
      * add
      * append a song to the playlist
-     * $name    Name to be shown in the playlist
-     * $url        URL of the song
-     * @param string $name
-     * @param $url
+     * @param string $name // Name to be shown in the playlist
+     * @param string $url // URL of the song
      */
     public function add($name, $url): bool
     {
@@ -107,12 +105,12 @@ class VlcPlayer
      * next
      * go to next song
      */
-    public function next(): ?bool
+    public function next(): bool
     {
         $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -136,15 +134,16 @@ class VlcPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $pos
-     * @return bool|null
      */
-    public function skip($pos): ?bool
+    public function skip(int $track_id): bool
     {
-        $args    = ['command' => 'pl_play', '&id' => $pos];
+        $args    = [
+            'command' => 'pl_play',
+            '&id' => $track_id
+        ];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         // Works but if user clicks next afterwards player goes to first song our last song played before
@@ -156,12 +155,12 @@ class VlcPlayer
      * play
      * play the current song
      */
-    public function play(): ?bool
+    public function play(): bool
     {
         $args    = ['command' => 'pl_play'];
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -186,12 +185,12 @@ class VlcPlayer
      * stop
      * stops the current song amazing!
      */
-    public function stop(): ?bool
+    public function stop(): bool
     {
         $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -200,15 +199,13 @@ class VlcPlayer
     /**
      * repeat
      * This toggles the repeat state of VLC
-     * @param $value
-     * @return bool|null
      */
-    public function repeat($value): ?bool
+    public function repeat(bool $state): bool
     {
         $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
-            return null;
+            return false;
         }
 
         return true;
@@ -217,9 +214,8 @@ class VlcPlayer
     /**
      * random
      * this toggles the random state of VLC
-     * @param $value
      */
-    public function random($value): bool
+    public function random(bool $state): bool
     {
         $args    = ['command' => 'pl_random'];
         $results = $this->sendCommand('status.xml?', $args);
@@ -256,7 +252,7 @@ class VlcPlayer
 
         $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
-        $currentstat = $results['root']['state']['value'];
+        $currentstat = $results['root']['state']['value'] ?? $state;
 
         if ($currentstat == 'playing') {
             $state = 'play';
@@ -273,6 +269,7 @@ class VlcPlayer
 
     /**
      * extract the full state from the xml file and send to status in vlccontroller for further parsing.
+     * @return array|false
      */
     public function fullstate()
     {
@@ -449,7 +446,7 @@ class VlcPlayer
             $parser,
             XML_OPTION_TARGET_ENCODING,
             "UTF-8"
-        ); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
+        );
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
         xml_parse_into_struct($parser, trim($contents), $xml_values);
@@ -461,6 +458,7 @@ class VlcPlayer
 
         // Initializations
         $bigxml_array = [];
+        $parent       = [];
 
         $current = &$bigxml_array; // Reference
 
@@ -468,32 +466,37 @@ class VlcPlayer
         // Multiple tags with same name will be turned into an array
         $repeated_tag_index = [];
         foreach ($xml_values as $data) {
-            // Remove existing values, or there will be trouble
+            // Remove existing values, or there will be trouble. (these are optional)
             unset($attributes, $value);
 
-            // This command will extract these variables into the foreach scope
-            // tag(string), type(string), level(int), attributes(array).
-            extract($data); // We could use the array by itself, but this cooler.
+            // tag(string), type(string), level(int), attributes(array)
+            $tag        = (string)$data['tag'];
+            $type       = (string)$data['type'];
+            $level      = (int)$data['level'];
+            $value      = $data['value'] ?? null;
+            $attributes = $data['attributes'] ?? null;
 
             $result          = [];
             $attributes_data = [];
 
-            if (isset($value)) {
+            if ($value !== null) {
                 if ($priority == 'tag') {
                     $result = $value;
                 } else {
+                    // Put the value in a assoc array if we are in the 'Attribute' mode
                     $result['value'] = $value;
-                } // Put the value in a assoc array if we are in the 'Attribute' mode
+                }
             }
 
             // Set the attributes too.
-            if (isset($attributes) && $get_attributes) {
+            if ($attributes !== null && $get_attributes) {
                 foreach ($attributes as $attr => $val) {
                     if ($priority == 'tag') {
                         $attributes_data[$attr] = $val;
                     } else {
+                        // Set all the attributes in a array called 'attr'
                         $result['attr'][$attr] = $val;
-                    } // Set all the attributes in a array called 'attr'
+                    }
                 }
             }
 
@@ -543,36 +546,33 @@ class VlcPlayer
                     if ($priority == 'tag' && $attributes_data) {
                         $current[$tag . '_attr'] = $attributes_data;
                     }
-                } else {
-                    // If taken, put all things inside a list(array)
-                    if (isset($current[$tag][0]) && is_array($current[$tag])) {
-                        // If it is already an array push the new element into that array.
-                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                } elseif (isset($current[$tag][0]) && is_array($current[$tag])) {
+                    // If it is already an array push the new element into that array.
+                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
 
-                        if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+                    }
+                    $repeated_tag_index[$tag . '_' . $level]++;
+                } else {
+                    // If it is not an array... Make it an array using using the existing value and the new value
+                    $current[$tag] = [
+                        $current[$tag],
+                        $result
+                    ];
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    if ($priority == 'tag' && $get_attributes) {
+                        if (isset($current[$tag . '_attr'])) {
+                            // The attribute of the last(0th) tag must be moved as well
+                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                            unset($current[$tag . '_attr']);
+                        }
+
+                        if ($attributes_data) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
-                        $repeated_tag_index[$tag . '_' . $level]++;
-                    } else {
-                        // If it is not an array...
-                        $current[$tag] = [
-                            $current[$tag],
-                            $result
-                        ]; // ...Make it an array using using the existing value and the new value
-                        $repeated_tag_index[$tag . '_' . $level] = 1;
-                        if ($priority == 'tag' && $get_attributes) {
-                            if (isset($current[$tag . '_attr'])) {
-                                // The attribute of the last(0th) tag must be moved as well
-                                $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                                unset($current[$tag . '_attr']);
-                            }
-
-                            if ($attributes_data) {
-                                $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                            }
-                        }
-                        $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                     }
+                    $repeated_tag_index[$tag . '_' . $level]++; // 0 and 1 index is already taken
                 }
             } elseif ($type == 'close') {
                 // End of tag '</tag>'

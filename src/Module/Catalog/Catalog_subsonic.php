@@ -115,7 +115,7 @@ class Catalog_subsonic extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_subsonic` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `username` VARCHAR(255) COLLATE $collation NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -210,11 +210,11 @@ class Catalog_subsonic extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Subsonic Remote Update'));
         }
         $songsadded = $this->update_remote_catalog();
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -279,19 +279,17 @@ class Catalog_subsonic extends Catalog
                                 $data['genre']    = explode(' ', html_entity_decode($song['genre']));
                                 $data['file']     = $this->uri . '/rest/stream.view?id=' . $song['id'] . '&filename=' . urlencode($song['path']);
                                 if ($this->check_remote_song($data)) {
-                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $data['path'], 5);
+                                    debug_event('subsonic.catalog', 'Skipping existing song ' . $song['path'], 5);
                                 } else {
                                     $data['catalog'] = $this->catalog_id;
                                     debug_event('subsonic.catalog', 'Adding song ' . $song['path'], 5);
-                                    $song_Id = Song::insert($data);
-                                    if (!$song_Id) {
+                                    $song_id = Song::insert($data);
+                                    if (!$song_id) {
                                         debug_event('subsonic.catalog', 'Insert failed for ' . $song['path'], 1);
                                         /* HINT: filename (file path) */
                                         AmpError::add('general', T_('Unable to insert song - %s'), $song['path']);
-                                    } else {
-                                        if ($song['coverArt']) {
-                                            $this->insertArt($song, $song_Id);
-                                        }
+                                    } elseif ($song['coverArt']) {
+                                        $this->insertArt($song, $song_id);
                                     }
                                     $songsadded++;
                                 }
@@ -331,7 +329,7 @@ class Catalog_subsonic extends Catalog
 
     /**
      * @param $data
-     * @param $song_Id
+     * @param int|null $song_Id
      */
     public function insertArt($data, $song_Id): bool
     {
@@ -348,7 +346,10 @@ class Catalog_subsonic extends Catalog
         }
         $image = $subsonic->querySubsonic('getCoverArt', ['id' => $data['coverArt'], $size], true);
 
-        return $art->insert($image);
+        return (
+            is_string($image) &&
+            $art->insert($image)
+        );
     }
 
     /**
@@ -454,7 +455,12 @@ class Catalog_subsonic extends Catalog
                 } else {
                     try {
                         $filehandle = fopen($target_file, 'w');
-                        $curl       = curl_init();
+                        if (!is_resource($filehandle)) {
+                            debug_event('subsonic.catalog', 'Could not open file: ' . $target_file, 5);
+                            continue;
+                        }
+
+                        $curl = curl_init();
                         curl_setopt_array(
                             $curl,
                             [
@@ -485,9 +491,8 @@ class Catalog_subsonic extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param array $song
-     * @return int|bool
      */
-    public function check_remote_song($song)
+    public function check_remote_song($song): ?int
     {
         $url = $song['file'];
 
@@ -498,7 +503,7 @@ class Catalog_subsonic extends Catalog
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -512,7 +517,7 @@ class Catalog_subsonic extends Catalog
     }
 
     /**
-     * @param $url
+     * @param string $url
      */
     public function url_to_songid($url): int
     {
@@ -522,7 +527,7 @@ class Catalog_subsonic extends Catalog
             $song_id = $matches[1];
         }
 
-        return $song_id;
+        return (int)$song_id;
     }
 
     /**

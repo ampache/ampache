@@ -39,14 +39,14 @@ final class Migration360001 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `mbid` CHAR (36) AFTER `prefix`");
-        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `mbid` CHAR (36) AFTER `prefix`");
-        $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `mbid` CHAR (36) AFTER `track`");
+        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `mbid` CHAR (36) AFTER `prefix`;");
+        $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `mbid` CHAR (36) AFTER `prefix`;");
+        $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `mbid` CHAR (36) AFTER `track`;");
 
         // Remove any RIO related information from the database as the plugin has been removed
-        $sql = "DELETE FROM `update_info` WHERE `key` LIKE 'Plugin_Ri%'";
+        $sql = "DELETE FROM `update_info` WHERE `key` LIKE 'Plugin_Ri%';";
         Dba::write($sql);
-        $sql = "DELETE FROM `preference` WHERE `name` LIKE 'rio_%'";
+        $sql = "DELETE FROM `preference` WHERE `name` LIKE 'rio_%;'";
         Dba::write($sql);
     }
 }

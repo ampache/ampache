@@ -27,111 +27,75 @@ namespace Ampache\Gui\Stats;
 
 final class CatalogStats implements CatalogStatsInterface
 {
-    /** @var array{
-     *  tags: int,
-     *  formatted_size: string,
-     *  time_text: string,
-     *  users: int,
-     *  connected: int,
-     *  album?: int,
-     *  album_disk?: int,
-     *  artist?: int,
-     *  song?: int,
-     *  podcast?: int,
-     *  podcast_episode?: int,
-     *  items?: int,
-     *  video?: int,
-     *  user?: int
-     * } $stats
-     */
-    private array $stats;
-
     /**
-     * @param array{
-     *  tags: int,
-     *  formatted_size: string,
-     *  time_text: string,
-     *  users: int,
-     *  connected: int,
-     *  album?: int,
-     *  album_disk?: int,
-     *  artist?: int,
-     *  song?: int,
-     *  podcast?: int,
-     *  podcast_episode?: int,
-     *  items?: int,
-     *  video?: int,
-     *  user?: int
-     * } $stats
+     * @param array<string, int|string> $stats
      */
-    public function __construct(
-        array $stats
-    ) {
-        $this->stats = $stats;
+    public function __construct(private array $stats)
+    {
     }
 
     public function getConnectedCount(): int
     {
-        return $this->stats['connected'] ?? 0;
+        return (int)($this->stats['connected'] ?? 0);
     }
 
     public function getUserCount(): int
     {
-        return $this->stats['user'] ?? 0;
+        return (int)($this->stats['user'] ?? 0);
     }
 
     public function getAlbumCount(): int
     {
-        return $this->stats['album'] ?? 0;
+        return (int)($this->stats['album'] ?? 0);
     }
 
     public function getAlbumDiskCount(): int
     {
-        return $this->stats['album_disk'] ?? 0;
+        return (int)($this->stats['album_disk'] ?? 0);
     }
 
     public function getArtistCount(): int
     {
-        return $this->stats['artist'] ?? 0;
+        return (int)($this->stats['artist'] ?? 0);
     }
 
     public function getSongCount(): int
     {
-        return $this->stats['song'] ?? 0;
+        return (int)($this->stats['song'] ?? 0);
     }
 
     public function getPodcastCount(): int
     {
-        return $this->stats['podcast'] ?? 0;
+        return (int)($this->stats['podcast'] ?? 0);
     }
 
     public function getPodcastEpisodeCount(): int
     {
-        return $this->stats['podcast_episode'] ?? 0;
+        return (int)($this->stats['podcast_episode'] ?? 0);
     }
 
     public function getGenreCount(): int
     {
-        return $this->stats['tags'] ?? 0;
+        return (int)($this->stats['tags'] ?? 0);
     }
 
     public function getCatalogSize(): string
     {
-        return $this->stats['formatted_size'] ?? '';
+        return (string)($this->stats['formatted_size'] ?? '');
     }
 
     public function getPlayTime(): string
     {
-        return $this->stats['time_text'] ?? '';
+        return (string)($this->stats['time_text'] ?? '');
     }
 
     public function getItemCount(): int
     {
-        return $this->stats['items'] ?? 0;
+        return (int)($this->stats['items'] ?? 0);
     }
 
     public function getVideoCount(): int
     {
-        return $this->stats['video'] ?? 0;
+        return (int)($this->stats['video'] ?? 0);
     }
 }

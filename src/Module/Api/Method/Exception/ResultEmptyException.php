@@ -29,6 +29,7 @@ use Ampache\Module\Api\Exception\ErrorCodeEnum;
 
 final class ResultEmptyException extends ApiMethodException
 {
+    /** @var int $code */
     protected $code = ErrorCodeEnum::NOT_FOUND;
 
     protected string $type = 'empty';

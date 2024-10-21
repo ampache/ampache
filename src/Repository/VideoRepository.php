@@ -41,7 +41,7 @@ final class VideoRepository implements VideoRepositoryInterface
         ?int $count = 1
     ): array {
         $results    = [];
-        $sql        = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY RAND() LIMIT " . (string) ($count);
+        $sql        = "SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` LEFT JOIN `catalog` ON `catalog`.`id` = `video`.`catalog` WHERE `video`.`enabled` = '1' AND `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ORDER BY RAND() LIMIT " . $count;
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['id'];
@@ -57,12 +57,10 @@ final class VideoRepository implements VideoRepositoryInterface
     {
         $type = ObjectTypeToClassNameMapper::VIDEO_TYPES[$type];
 
-        $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower((string) $type) . '`;';
+        $sql        = 'SELECT COUNT(*) AS `count` FROM `' . strtolower($type->value) . '`;';
         $db_results = Dba::read($sql);
-        if ($results = Dba::fetch_assoc($db_results)) {
-            if (array_key_exists('count', $results)) {
-                return (int) $results['count'];
-            }
+        if (($results = Dba::fetch_assoc($db_results)) && array_key_exists('count', $results)) {
+            return (int) $results['count'];
         }
 
         return 0;

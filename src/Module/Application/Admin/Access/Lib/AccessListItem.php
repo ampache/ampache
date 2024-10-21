@@ -86,17 +86,12 @@ final class AccessListItem implements AccessListItemInterface
      */
     public function getTypeName(): string
     {
-        switch ($this->access->type) {
-            case 'rpc':
-                return T_('API/RPC');
-            case 'network':
-                return T_('Local Network Definition');
-            case 'interface':
-                return T_('Web Interface');
-            case 'stream':
-            default:
-                return T_('Stream Access');
-        }
+        return match ($this->access->type) {
+            'api', 'rpc' => T_('API/RPC'),
+            'network' => T_('Local Network Definition'),
+            'interface' => T_('Web Interface'),
+            default => T_('Stream Access'),
+        };
     }
 
     /**

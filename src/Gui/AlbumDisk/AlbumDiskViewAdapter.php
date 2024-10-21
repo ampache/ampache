@@ -27,6 +27,8 @@ namespace Ampache\Gui\AlbumDisk;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
@@ -44,38 +46,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\ZipHandlerInterface;
 
-final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
+final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ZipHandlerInterface $zipHandler;
-
-    private FunctionCheckerInterface $functionChecker;
-
-    private GuiGatekeeperInterface $gatekeeper;
-
-    private Browse $browse;
-
-    private AlbumDisk $albumDisk;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        ZipHandlerInterface $zipHandler,
-        FunctionCheckerInterface $functionChecker,
-        GuiGatekeeperInterface $gatekeeper,
-        Browse $browse,
-        AlbumDisk $albumDisk
-    ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->zipHandler      = $zipHandler;
-        $this->functionChecker = $functionChecker;
-        $this->gatekeeper      = $gatekeeper;
-        $this->browse          = $browse;
-        $this->albumDisk       = $albumDisk;
+    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private ZipHandlerInterface $zipHandler, private FunctionCheckerInterface $functionChecker, private GuiGatekeeperInterface $gatekeeper, private Browse $browse, private AlbumDisk $albumDisk)
+    {
     }
 
     public function getId(): int
@@ -138,7 +112,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_album_' . $albumId
         );
@@ -150,7 +124,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_album_' . $albumId
         );
@@ -162,7 +136,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=album_disk&object_id=' . $albumId . '&append=true',
-            'play_add',
+            'low_priority',
             T_('Play last'),
             'addplay_album_' . $albumId
         );
@@ -174,7 +148,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album_disk&id=' . $albumId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_album_' . $albumId
         );
@@ -186,7 +160,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=album_disk_random&id=' . $albumId,
-            'random',
+            'shuffle',
             T_('Random to Temporary Playlist'),
             'random_album_disk_' . $albumId
         );
@@ -196,7 +170,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -212,12 +186,12 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getPostShoutIcon(): string
     {
-        return Ui::get_icon('comment', T_('Post Shout'));
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -228,7 +202,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function canBatchDownload(): bool
     {
-        return $this->functionChecker->check(AccessLevelEnum::FUNCTION_BATCH_DOWNLOAD) &&
+        return $this->functionChecker->check(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_ZIP_DOWNLOAD) &&
             $this->zipHandler->isZipable('album_disk');
     }
@@ -244,12 +218,12 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getBatchDownloadIcon(): string
     {
-        return Ui::get_icon('batch_download', T_('Batch download'));
+        return Ui::get_material_symbol('folder_zip', T_('Batch download'));
     }
 
     public function isEditable(): bool
     {
-        return ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->albumDisk->get_user_owner());
+        return ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || $this->gatekeeper->getUserId() == $this->albumDisk->get_user_owner());
     }
 
     public function getEditButtonTitle(): string
@@ -259,7 +233,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function getDeletionUrl(): string
@@ -274,7 +248,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getDeletionIcon(): string
     {
-        return Ui::get_icon('delete', T_('Delete'));
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function canBeDeleted(): bool
@@ -284,7 +258,7 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function getPlayedTimes(): int
@@ -294,12 +268,12 @@ final class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterface
 
     public function getAlbumUrl(): string
     {
-        return (string)$this->albumDisk->get_link();
+        return $this->albumDisk->get_link();
     }
 
     public function getAlbumLink(): string
     {
-        return (string)$this->albumDisk->get_f_link();
+        return $this->albumDisk->get_f_link();
     }
 
     public function getArtistLink(): string

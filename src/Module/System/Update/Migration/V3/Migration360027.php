@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration360027 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('allow_personal_info', 'Allow to show my personal info to other users (now playing, recently played)', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('allow_personal_info', 'Allow to show my personal info to other users (now playing, recently played)', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

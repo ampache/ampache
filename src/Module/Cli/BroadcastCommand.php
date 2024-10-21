@@ -43,8 +43,11 @@ final class BroadcastCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->white(
             T_('Starting broadcasts...'),
             true

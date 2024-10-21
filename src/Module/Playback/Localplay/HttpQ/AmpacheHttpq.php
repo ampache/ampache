@@ -24,16 +24,18 @@
 namespace Ampache\Module\Playback\Localplay\HttpQ;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
-use PDOStatement;
 
 /**
  * AmpacheHttpq Class
@@ -45,8 +47,8 @@ use PDOStatement;
 class AmpacheHttpq extends localplay_controller
 {
     /* Variables */
-    private $version     = '000002';
-    private $description = "Controls an httpQ instance, requires Ampache's httpQ version";
+    private string $version     = '000002';
+    private string $description = "Controls an httpQ instance, requires Ampache's httpQ version";
 
     /* Constructed variables */
     private $_httpq;
@@ -89,13 +91,13 @@ class AmpacheHttpq extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `localplay_httpq` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, 25, 'integer', 'internal', 'httpq');
+        Preference::insert('httpq_active', T_('HTTPQ Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'httpq');
 
         return true;
     }
@@ -119,30 +121,27 @@ class AmpacheHttpq extends localplay_controller
      * add_instance
      * This takes keyed data and inserts a new httpQ instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_httpq` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
+        Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $uid = Dba::escape($uid);
         $sql = "DELETE FROM `localplay_httpq` WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -166,10 +165,10 @@ class AmpacheHttpq extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $uid  = Dba::escape($uid);
         $port = Dba::escape($data['port']);
@@ -179,8 +178,6 @@ class AmpacheHttpq extends localplay_controller
 
         $sql = "UPDATE `localplay_httpq` SET `host`='$host', `port`='$port', `name`='$name', `password`='$pass' WHERE `id`='$uid'";
         Dba::write($sql);
-
-        return true;
     }
 
     /**
@@ -202,10 +199,9 @@ class AmpacheHttpq extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all its variables
-     * @param string $instance
      * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
@@ -217,12 +213,11 @@ class AmpacheHttpq extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (empty($user)) {
             return false;
         }
         Preference::update('httpq_active', $user->id, $uid);
@@ -325,11 +320,10 @@ class AmpacheHttpq extends localplay_controller
     /**
      * skip
      * This tells httpQ to skip to the specified song
-     * @param $song
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
-        if ($this->_httpq->skip($song) === null) {
+        if ($this->_httpq->skip($track_id) === null) {
             return false;
         }
 
@@ -339,7 +333,7 @@ class AmpacheHttpq extends localplay_controller
     /**
      * This tells httpQ to increase the volume by WinAmps default amount
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         return $this->_httpq->volume_up();
     }
@@ -347,7 +341,7 @@ class AmpacheHttpq extends localplay_controller
     /**
      * This tells httpQ to decrease the volume by Winamp's default amount
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         return $this->_httpq->volume_down();
     }
@@ -406,9 +400,8 @@ class AmpacheHttpq extends localplay_controller
      * repeat
      * This tells httpQ to set the repeating the playlist (i.e. loop) to
      * either on or off
-     * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         if ($this->_httpq->repeat($state) === null) {
             return false;
@@ -421,11 +414,10 @@ class AmpacheHttpq extends localplay_controller
      * random
      * This tells httpQ to turn on or off the playing of songs from the
      * playlist in random order
-     * @param $onoff
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
-        if ($this->_httpq->random($onoff) === null) {
+        if ($this->_httpq->random($state) === null) {
             return false;
         }
 
@@ -477,27 +469,34 @@ class AmpacheHttpq extends localplay_controller
                     break;
                 default:
                     // If we don't know it, look up by filename
-                    $filename = Dba::escape($entry['file']);
-                    $sql      = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $filename          = Dba::escape($url_data['file']);
+                    $sql               = "SELECT `id`, 'song' AS `type` FROM `song` WHERE `file` LIKE '%$filename' UNION ALL SELECT `id`, 'live_stream' AS `type` FROM `live_stream` WHERE `url`='$filename' ";
+                    $libraryItemLoader = $this->getLibraryItemLoader();
 
                     $db_results = Dba::read($sql);
                     if ($row = Dba::fetch_assoc($db_results)) {
-                        $className = ObjectTypeToClassNameMapper::map($row['type']);
-                        $media     = new $className($row['id']);
-                        $media->format();
-                        switch ($row['type']) {
-                            case 'song':
-                                /** @var Song $media */
-                                $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
-                                $data['link'] = $media->get_f_link();
-                                break;
-                            case 'live_stream':
-                                /** @var Live_Stream $media */
-                                $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
-                                $data['name'] = "$media->name $site_url";
-                                $data['link'] = $media->site_url;
-                                break;
-                        } // end switch on type
+                        $media = $libraryItemLoader->load(
+                            LibraryItemEnum::from($row['type']),
+                            $row['id'],
+                            [Song::class, Live_Stream::class]
+                        );
+
+                        if ($media !== null) {
+                            $media->format();
+                            switch ($row['type']) {
+                                case 'song':
+                                    /** @var Song $media */
+                                    $data['name'] = $media->get_fullname() . ' - ' . $media->f_album . ' - ' . $media->f_artist;
+                                    $data['link'] = $media->get_f_link();
+                                    break;
+                                case 'live_stream':
+                                    /** @var Live_Stream $media */
+                                    $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                    $data['name'] = "$media->name $site_url";
+                                    $data['link'] = $media->site_url;
+                                    break;
+                            } // end switch on type
+                        }
                     } else {
                         $data['name'] = basename($data['raw']);
                         $data['link'] = basename($data['raw']);
@@ -560,5 +559,15 @@ class AmpacheHttpq extends localplay_controller
         $this->_httpq = new HttpQPlayer($options['host'], $options['password'], $options['port']);
 
         return ($this->_httpq->version() !== false); // Test our connection by retrieving the version
+    }
+
+    /**
+     * @deprecated Inject dependency
+     */
+    private function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
     }
 }

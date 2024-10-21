@@ -38,7 +38,7 @@ final class AlbumSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user?->getId() ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -342,7 +342,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'image_height':
                 case 'image_width':
-                    $looking       = ($rule[0] = 'image_width') ? 'width' : 'height';
+                    $looking       = ($rule[0] == 'image_width') ? 'width' : 'height';
                     $where[]       = "`image`.`$looking` $operator_sql ?";
                     $parameters[]  = $input;
                     $join['image'] = true;

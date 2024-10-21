@@ -66,13 +66,14 @@ final class ConfirmDeleteAction extends AbstractFilterAction
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 sprintf(T_('%s has been deleted'), $filter_name),
-                sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
+                sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_('You need at least one active Administrator account'),
-                sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog Filter')),
+                sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
             );
         }
 

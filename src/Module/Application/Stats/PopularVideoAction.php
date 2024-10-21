@@ -32,40 +32,26 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
-use Ampache\Module\System\Core;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\VideoRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class PopularVideoAction implements ApplicationActionInterface
+final readonly class PopularVideoAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'popular_video';
 
-    private UiInterface $ui;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private ConfigContainerInterface $configContainer;
-
-    private VideoRepositoryInterface $videoRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ModelFactoryInterface $modelFactory,
-        ConfigContainerInterface $configContainer,
-        VideoRepositoryInterface $videoRepository
+        private UiInterface $ui,
+        private ModelFactoryInterface $modelFactory,
+        private ConfigContainerInterface $configContainer,
+        private VideoRepositoryInterface $videoRepository
     ) {
-        $this->ui              = $ui;
-        $this->modelFactory    = $modelFactory;
-        $this->configContainer = $configContainer;
-        $this->videoRepository = $videoRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         $thresh_value = $this->configContainer->get(ConfigurationKeyEnum::STATS_THRESHOLD);
-        $user_id      = Core::get_global('user')->id ?? 0;
 
         $this->ui->showHeader();
         $this->ui->show('show_form_popular.inc.php');
@@ -80,7 +66,7 @@ final class PopularVideoAction implements ApplicationActionInterface
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALLOW_VIDEO) &&
             $this->videoRepository->getItemCount(Video::class)
         ) {
-            $objects = Stats::get_top('video', -1, $thresh_value, 0, $user_id);
+            $objects = Stats::get_top('video', -1, $thresh_value, 0, $gatekeeper->getUser());
             $browse  = $this->modelFactory->createBrowse();
             $browse->set_threshold($thresh_value);
             $browse->set_type('video');

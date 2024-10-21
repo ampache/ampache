@@ -36,9 +36,9 @@ final class Migration400021 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `song_data` DROP COLUMN `r128_track_gain`;");
+        Dba::write("ALTER TABLE `song_data` DROP COLUMN `r128_track_gain`;", [], true);
         $this->updateDatabase("ALTER TABLE `song_data` ADD COLUMN `r128_track_gain` smallint(5) DEFAULT NULL;");
-        Dba::write("ALTER TABLE `song_data` DROP COLUMN `r128_album_gain`;");
+        Dba::write("ALTER TABLE `song_data` DROP COLUMN `r128_album_gain`;", [], true);
         $this->updateDatabase("ALTER TABLE `song_data` ADD COLUMN `r128_album_gain` smallint(5) DEFAULT NULL;");
     }
 }

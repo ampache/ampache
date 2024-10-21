@@ -32,6 +32,7 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Rating;
@@ -42,25 +43,16 @@ use Ampache\Repository\Model\Userflag;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 
-final class DefaultAjaxHandler implements AjaxHandlerInterface
+final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private AlbumRepositoryInterface $albumRepository;
-
-    private SongRepositoryInterface $songRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AlbumRepositoryInterface $albumRepository,
-        SongRepositoryInterface $songRepository
+        private RequestParserInterface $requestParser,
+        private AlbumRepositoryInterface $albumRepository,
+        private SongRepositoryInterface $songRepository
     ) {
-        $this->requestParser   = $requestParser;
-        $this->albumRepository = $albumRepository;
-        $this->songRepository  = $songRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results      = [];
         $request_id   = (int)$this->requestParser->getFromRequest('id');
@@ -69,31 +61,24 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
         // Switch on the actions
         switch ($action) {
+            case 'basket_refresh':
             case 'refresh_rightbar':
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
             case 'current_playlist':
-                if ($request_type == 'delete') {
-                    $user = Core::get_global('user');
-                    if ($user instanceof User) {
-                        $user->load_playlist();
-                        if ($user->playlist !== null) {
-                            $user->playlist->delete_track($request_id);
-                        }
-                    }
+                if ($request_type === 'delete') {
+                    $user->load_playlist();
+                    $user->playlist?->delete_track($request_id);
                 } // end switch
 
                 $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 break;
-            case 'basket_refresh':
-                $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
-                $results['rfc3514']  = '0x0';
-                break;
             case 'basket':
                 // Handle the users basketcases...
-                $object_type = (empty($request_type))
+                $object_type = ($request_type === '' || $request_type === '0')
                     ? $this->requestParser->getFromRequest('object_type')
                     : $request_type;
+
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
                     $object_id = ($request_id === 0)
                         ? (int)$this->requestParser->getFromRequest('object_id')
@@ -103,13 +88,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                         /** @var playable_item $object */
                         $object = new $className($object_id);
                         $medias = $object->get_medias();
-                        $user   = Core::get_global('user');
-                        if ($user instanceof User) {
-                            $user->load_playlist();
-                            if ($user->playlist !== null) {
-                                $user->playlist->add_medias($medias);
-                            }
-                        }
+
+                        $user->load_playlist();
+                        $user->playlist?->add_medias($medias);
                     }
                 } else {
                     switch ($request_type) {
@@ -121,60 +102,70 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                             switch ($browse->get_type()) {
                                 case 'album':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
+                                        $songs = array_merge($songs, $this->getSongRepository()->getByAlbum($object_id));
                                     }
+
                                     break;
                                 case 'artist':
                                     foreach ($objects as $object_id) {
-                                        $songs = array_merge($songs, static::getSongRepository()->getAllByArtist($object_id));
+                                        $songs = array_merge($songs, $this->getSongRepository()->getAllByArtist($object_id));
                                     }
+
                                     break;
                                 case 'song':
                                     $songs = $objects;
                                     break;
-                            } // end switch type
-                            if ($request_type == 'browse_set_random') {
+                            }
+
+                            if ($request_type === 'browse_set_random') {
                                 shuffle($songs);
                             }
+
                             foreach ($songs as $object_id) {
-                                Core::get_global('user')->playlist->add_object($object_id, 'song');
+                                $user->playlist?->add_object($object_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'album_random':
                             $songs = $this->albumRepository->getRandomSongs($request_id);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'album_disk_random':
                             $songs = $this->albumRepository->getRandomSongsByAlbumDisk($request_id);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'tag_random':
                             $object = new Tag($request_id);
                             $songs  = $this->songRepository->getRandomByGenre($object);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'artist_random':
                             $object    = new Artist($request_id);
                             $songs     = $this->songRepository->getRandomByArtist($object);
                             foreach ($songs as $song_id) {
-                                Core::get_global('user')->playlist->add_object($song_id, 'song');
+                                $user->playlist?->add_object($song_id, LibraryItemEnum::SONG);
                             }
+
                             break;
                         case 'playlist_random':
                             $playlist = new Playlist($request_id);
                             $items    = $playlist->get_random_items();
                             foreach ($items as $item) {
-                                Core::get_global('user')->playlist->add_object($item['object_id'], $item['object_type']);
+                                $user->playlist?->add_object($item['object_id'], $item['object_type']);
                             }
+
                             break;
                         case 'clear_all':
-                            Core::get_global('user')->playlist->clear();
+                            $user->playlist?->clear();
                             break;
                     }
                 }
@@ -192,9 +183,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     $key           = "rating_" . filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT) . "_" . Core::get_get('rating_type');
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
-                } else {
-                    $results['rfc3514'] = '0x1';
                 }
+
                 break;
             case 'set_userflag':
                 /* Setting userflags */
@@ -208,9 +198,8 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     $key           = "userflag_" . $flag_id . "_" . $flagtype;
                     $results[$key] = ob_get_contents();
                     ob_end_clean();
-                } else {
-                    $results['rfc3514'] = '0x1';
                 }
+
                 break;
             case 'action_buttons':
                 $rating_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
@@ -224,12 +213,9 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     echo Userflag::show($rating_id, $rating_type);
                     echo "</span>";
                 }
+
                 $results['action_buttons'] = ob_get_contents();
                 ob_end_clean();
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         } // end switch action
 
         // Go ahead and do the echo
@@ -239,7 +225,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
     /**
      * @deprecated Inject by constructor
      */
-    private static function getSongRepository(): SongRepositoryInterface
+    private function getSongRepository(): SongRepositoryInterface
     {
         global $dic;
 

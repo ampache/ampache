@@ -40,9 +40,7 @@ use Ampache\Module\System\AmpError;
  */
 class AmpConfig
 {
-    /**
-     * @var array $_global
-     */
+    /** @var array $_global */
     private static $_global = [];
 
     /**
@@ -71,6 +69,16 @@ class AmpConfig
     public static function get_all(): array
     {
         return self::$_global;
+    }
+
+    /**
+     * get_web_path
+     *
+     * This return web_path for the site. This is used to allow creating custom configs and web locations
+     */
+    public static function get_web_path(?string $suffix = ''): string
+    {
+        return self::get('web_path', '') . $suffix;
     }
 
     /**
@@ -115,12 +123,9 @@ class AmpConfig
     /**
      * set_by_array
      *
-     * This is the same as the set function except it takes an array as
-     * input.
-     * @param array $array
-     * @param bool $clobber
+     * This is the same as the set function except it takes an array as input.
      */
-    public static function set_by_array($array, $clobber = false): void
+    public static function set_by_array(array $array, bool $clobber = false): void
     {
         foreach ($array as $name => $value) {
             self::set($name, $value, $clobber);
@@ -136,11 +141,11 @@ class AmpConfig
      *
      * pull the timer and check using the time of the song for %complete skips
      * @param int $previous_time
-     * @return int
+     * @return int|null
      */
     public static function get_skip_timer($previous_time): ?int
     {
-        $timekeeper = AmpConfig::get('skip_timer');
+        $timekeeper = self::get('skip_timer');
         $skip_time  = 20;
         if ((int)$timekeeper > 1) {
             $skip_time = $timekeeper;

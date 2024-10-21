@@ -32,8 +32,9 @@ use Ampache\Module\Util\Ui;
 
 /** @var Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer */
 
-$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$web_path = (string)AmpConfig::get('web_path', '');
+$t_ampache = T_('Ampache');
+$htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$web_path  = AmpConfig::get_web_path();
 
 $display_fields   = (array) AmpConfig::get('registration_display_fields');
 $mandatory_fields = (array) AmpConfig::get('registration_mandatory_fields');
@@ -53,13 +54,11 @@ $_SESSION['login'] = true; ?>
 
 <body id="registerPage">
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/base.js"></script>
-    <script src="<?php echo $web_path; ?>/lib/javascript/ajax.js"></script>
 
     <div id="maincontainer">
         <div id="header">
             <a href="<?php echo $web_path; ?>">
-                <h1 id="headerlogo"></h1>
+                <h1 id="logo"><img src="<?php echo Ui::get_logo_url(); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>"></h1>
             </a>
         </div>
 <?php $action    = scrub_in(Core::get_request('action'));
@@ -146,7 +145,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
 
                     <div class="registerfield require">
                         <label for="password_2"><?php echo T_('Confirm Password'); ?>:</label>
-                        <input id="password_2 type="password" name="password_2" maxlength="64" />
+                        <input id="password_2" type="password" name="password_2" maxlength="64" />
                     </div>
 
                     <?php if (AmpConfig::get('captcha_public_reg')) {
@@ -156,7 +155,7 @@ $city            = scrub_in(Core::get_request('city')); ?>
                     <div class="submit-registration">
                         <?php if (AmpConfig::get('user_agreement')) { ?>
                             <div id="agreementCheckbox">
-                                <label for="accept_agreement"></span><?php echo T_('I Accept'); ?><span class=alert-danger> *</label>
+                                <label for="accept_agreement"><?php echo T_('I Accept'); ?><span class=alert-danger> *</span></label>
                                 <input id="accept_agreement" type="checkbox" name="accept_agreement" />
                             </div>
                             <?php } ?>

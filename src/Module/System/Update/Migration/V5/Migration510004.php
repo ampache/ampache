@@ -36,7 +36,7 @@ final class Migration510004 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `waveform`;");
+        Dba::write("ALTER TABLE `podcast_episode` DROP COLUMN `waveform`;", [], true);
         $this->updateDatabase("ALTER TABLE `podcast_episode` ADD COLUMN `waveform` mediumblob DEFAULT NULL;");
     }
 }

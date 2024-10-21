@@ -67,7 +67,7 @@ final class SongDeleteMethod
 
             return false;
         }
-        if (static::getSongDeleter()->delete($song)) {
+        if (self::getSongDeleter()->delete($song)) {
             Api::message('song ' . $object_id . ' deleted', $input['api_format']);
             Catalog::count_table('song');
         } else {

@@ -43,10 +43,10 @@ final class GuiGatekeeper implements GuiGatekeeperInterface
     }
 
     public function mayAccess(
-        string $access_type,
-        int $access_level
+        AccessTypeEnum $type,
+        AccessLevelEnum $level
     ): bool {
-        return $this->privilegeChecker->check($access_type, $access_level);
+        return $this->privilegeChecker->check($type, $level);
     }
 
     public function getUserId(): int

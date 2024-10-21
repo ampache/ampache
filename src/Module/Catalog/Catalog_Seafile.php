@@ -133,7 +133,7 @@ class Catalog_Seafile extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `" . self::$table_name . "` (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `server_uri` VARCHAR(255) COLLATE $collation NOT NULL, `api_key` VARCHAR(100) COLLATE $collation NOT NULL, `library_name` VARCHAR(255) COLLATE $collation NOT NULL, `api_call_delay` INT NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -279,7 +279,7 @@ class Catalog_Seafile extends Catalog
         // Prevent the script from timing out
         set_time_limit(0);
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Seafile Remote Update'));
         }
 
@@ -300,7 +300,8 @@ class Catalog_Seafile extends Catalog
                         return 1;
                     }
                 } elseif ($is_video_file && count($this->get_gather_types('video')) > 0) {
-                    //TODO $this->insert_video();
+                    // TODO $this->insert_video();
+                    debug_event('seafile_catalog', 'read ' . $file->name . " ignored, video is unsupported", 5);
                 } elseif (!$is_audio_file && !$is_video_file) {
                     debug_event('seafile_catalog', 'read ' . $file->name . " ignored, unknown media file type", 5);
                 } else {
@@ -319,7 +320,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -333,9 +334,8 @@ class Catalog_Seafile extends Catalog
      *
      * Insert a song that isn't already in the database.
      * @param $file
-     * @return bool|int
      */
-    private function insert_song($file)
+    private function insert_song($file): ?int
     {
         if ($this->check_remote_song($this->seafile->to_virtual_path($file))) {
             debug_event('seafile_catalog', 'Skipping existing song ' . $file->name, 5);
@@ -371,7 +371,7 @@ class Catalog_Seafile extends Catalog
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -611,20 +611,18 @@ class Catalog_Seafile extends Catalog
      * check_remote_song
      *
      * checks to see if a remote song exists in the database or not
-     * if it find a song it returns the UID
-     * @param $file
-     * @return bool|mixed
+     * if it finds a song it returns the ID
      */
-    public function check_remote_song($file)
+    public function check_remote_song(string $file): ?int
     {
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
         $db_results = Dba::read($sql, [$file]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
-            return $results['id'];
+            return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -667,14 +665,12 @@ class Catalog_Seafile extends Catalog
 
             $file = $this->seafile->get_file($fileinfo['path'], $fileinfo['filename']);
 
-            $tempfile = $this->seafile->download($file);
-
-            $stream_path = $tempfile;
+            $stream_path = $this->seafile->download($file);
             $stream_name = $fileinfo['filename'];
 
             // in case this didn't get set for some reason
             if ($size == 0) {
-                $size = Core::get_filesize($tempfile);
+                $size = Core::get_filesize($stream_path);
             }
         }
 

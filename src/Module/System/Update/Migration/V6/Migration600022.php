@@ -35,6 +35,6 @@ final class Migration600022 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL");
+        $this->updateDatabase("ALTER TABLE `stream_playlist` MODIFY COLUMN `time` int(11) NULL;");
     }
 }

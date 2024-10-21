@@ -49,12 +49,13 @@ class Dba
      * query
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function query($sql, $params = [])
+    public static function query($sql, $params = [], $silent = false)
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
-        //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
+        //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
         if (empty(trim($sql))) {
             return false;
         }
@@ -62,7 +63,7 @@ class Dba
         // Be aggressive, be strong, be dumb
         $tries = 0;
         do {
-            $stmt = self::_query($sql, $params);
+            $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
 
         return $stmt;
@@ -72,13 +73,14 @@ class Dba
      * _query
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    private static function _query($sql, $params)
+    private static function _query($sql, $params, $silent = false)
     {
         $dbh = self::dbh();
         if (!$dbh) {
-            debug_event(__CLASS__, 'Error: failed to get database handle', 1);
+            debug_event(self::class, 'Error: failed to get database handle', 1);
 
             return false;
         }
@@ -95,21 +97,29 @@ class Dba
         } catch (PDOException $error) {
             // are you trying to write to something that doesn't exist?
             self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(__CLASS__, 'Error_query MSG: ' . $error->getMessage(), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
+            }
 
             return false;
         }
 
         if (!$stmt) {
             self::$_error = (string)json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            }
+
             self::disconnect();
         } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = (string)json_encode($stmt->errorInfo());
-            debug_event(__CLASS__, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(__CLASS__, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            }
+
             self::finish($stmt);
             self::disconnect();
 
@@ -124,22 +134,24 @@ class Dba
      * read
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function read($sql, $params = [])
+    public static function read($sql, $params = [], $silent = false)
     {
-        return self::query($sql, $params);
+        return self::query($sql, $params, $silent);
     }
 
     /**
      * write
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function write($sql, $params = [])
+    public static function write($sql, $params = [], $silent = false)
     {
-        return self::query($sql, $params);
+        return self::query($sql, $params, $silent);
     }
 
     /**
@@ -153,7 +165,7 @@ class Dba
     {
         $dbh = self::dbh();
         if (!$dbh) {
-            debug_event(__CLASS__, 'Wrong dbh.', 1);
+            debug_event(self::class, 'Wrong dbh.', 1);
 
             return '';
         }
@@ -383,11 +395,11 @@ class Dba
         }
 
         try {
-            debug_event(__CLASS__, 'Database connection...', 5);
+            debug_event(self::class, 'Database connection...', 5);
             $dbh = new PDO($dsn, $username, $password);
         } catch (PDOException $error) {
             self::$_error = $error->getMessage();
-            debug_event(__CLASS__, 'Connection failed: ' . $error->getMessage(), 1);
+            debug_event(self::class, 'Connection failed: ' . $error->getMessage(), 1);
 
             return null;
         }
@@ -402,21 +414,24 @@ class Dba
      */
     private static function _setup_dbh($dbh, $database): bool
     {
-        if (!$dbh) {
+        if (
+            !$dbh ||
+            $dbh->errorCode()
+        ) {
             return false;
         }
 
         $charset = self::translate_to_mysqlcharset(AmpConfig::get('site_charset'));
         $charset = $charset['charset'];
         if ($dbh->exec('SET NAMES ' . $charset) === false) {
-            debug_event(__CLASS__, 'Unable to set connection charset to ' . $charset, 1);
+            debug_event(self::class, 'Unable to set connection charset to ' . $charset, 1);
         }
 
         try {
             $dbh->exec('USE `' . $database . '`');
         } catch (PDOException $error) {
             self::$_error = (string)json_encode($dbh->errorInfo());
-            debug_event(__CLASS__, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
+            debug_event(self::class, 'Unable to select database ' . $database . ': ' . json_encode($dbh->errorInfo()), 1);
         }
 
         if (AmpConfig::get('sql_profiling')) {
@@ -507,15 +522,18 @@ class Dba
         $handle = sprintf('dbh_%s', $database);
 
         /** * @var null|PDO $connection */
-        $connection = AmpConfig::get($handle);
+        $dbh = AmpConfig::get($handle);
 
-        if ($connection === null) {
-            $connection = self::_connect();
-            self::_setup_dbh($connection, $database);
-            AmpConfig::set($handle, $connection, true);
+        if ($dbh === null) {
+            $dbh = self::_connect();
+            if (!self::_setup_dbh($dbh, $database)) {
+                return null;
+            }
+
+            AmpConfig::set($handle, $dbh, true);
         }
 
-        return $connection;
+        return $dbh;
     }
 
     /**
@@ -533,7 +551,7 @@ class Dba
         $handle = 'dbh_' . $database;
 
         // Nuke it
-        debug_event(__CLASS__, 'Database disconnection.', 6);
+        debug_event(self::class, 'Database disconnection.', 6);
         AmpConfig::set($handle, null, true);
 
         return true;
@@ -631,7 +649,7 @@ class Dba
         $db_results = self::read($sql);
 
         while ($row = self::fetch_row($db_results)) {
-            debug_event(__CLASS__, 'optimize_tables ' . $row[0], 5);
+            debug_event(self::class, 'optimize_tables ' . $row[0], 5);
             $sql = "OPTIMIZE TABLE `" . $row[0] . "`;";
             self::write($sql);
 

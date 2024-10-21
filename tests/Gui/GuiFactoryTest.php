@@ -58,7 +58,6 @@ class GuiFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-
         $this->subject = new GuiFactory(
             $this->createMock(ConfigContainerInterface::class),
             $this->createMock(ModelFactoryInterface::class),

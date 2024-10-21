@@ -25,12 +25,13 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback\Localplay\Upnp;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 
 class UPnPPlaylist
 {
     private $_deviceGUID;
-    private $_songs;
+    private $_songs   = [];
     private $_current = 0;
 
     /**
@@ -66,14 +67,14 @@ class UPnPPlaylist
         $this->PlayListSave();
     }
 
-    public function Clear()
+    public function Clear(): void
     {
         $this->_songs   = [];
         $this->_current = 0;
         $this->PlayListSave();
     }
 
-    public function AllItems()
+    public function AllItems(): array
     {
         return $this->_songs;
     }
@@ -139,13 +140,16 @@ class UPnPPlaylist
     }
 
     /**
-     * @param $pos
+     * skip
      */
-    public function Skip($pos): bool
+    public function skip(int $track_id): bool
     {
         // note that pos is started from 1 not from zero
-        if (($pos >= 1) && ($pos <= count($this->_songs))) {
-            $this->_current = $pos - 1;
+        if (
+            $track_id >= 1 &&
+            $track_id <= count($this->_songs)
+        ) {
+            $this->_current = $track_id - 1;
             $this->PlayListSave();
 
             return true;
@@ -166,11 +170,13 @@ class UPnPPlaylist
     private function PlayListSave()
     {
         $sid      = 'upnp_pls_' . $this->_deviceGUID;
-        $pls_data = json_encode([
-            'upnp_playlist' => $this->_songs,
-            'upnp_current' => $this->_current
-        ]);
-        if (!Session::exists('stream', $sid)) {
+        $pls_data = json_encode(
+            [
+                'upnp_playlist' => $this->_songs,
+                'upnp_current' => $this->_current
+            ]
+        );
+        if (!Session::exists(AccessTypeEnum::STREAM->value, $sid)) {
             Session::create(['type' => 'stream', 'sid' => $sid, 'value' => $pls_data]);
         } else {
             Session::write($sid, $pls_data);

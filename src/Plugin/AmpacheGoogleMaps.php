@@ -25,20 +25,27 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheGoogleMaps implements AmpachePluginInterface
+class AmpacheGoogleMaps extends AmpachePlugin implements PluginLocationInterface
 {
     public string $name        = 'GoogleMaps';
+
     public string $categories  = 'geolocation';
+
     public string $description = 'Show user\'s location with Google Maps';
+
     public string $url         = 'http://maps.google.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370022';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -58,11 +65,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', 75, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('gmaps_api_key', T_('Google Maps API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -84,10 +87,9 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     }
 
     /**
-     * @param float $latitude
-     * @param float $longitude
+     * get_location_name
      */
-    public function get_location_name($latitude, $longitude): string
+    public function get_location_name(float $latitude, float $longitude): string
     {
         $name = "";
         try {
@@ -98,17 +100,17 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
             if (count($place['results']) > 0) {
                 $name = $place['results'][0]['formatted_address'];
             }
-        } catch (Exception $error) {
-            debug_event(self::class, 'Error getting location name: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event(self::class, 'Error getting location name: ' . $exception->getMessage(), 1);
         }
 
         return $name;
     }
 
     /**
-     * @param array $points
+     * display_map
      */
-    public function display_map($points): bool
+    public function display_map(array $points): bool
     {
         if (!$this->api_key) {
             debug_event(self::class, 'Missing API key, display map plugin skipped.', 3);
@@ -119,12 +121,13 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         echo '<script>' . "\n";
         echo 'function map_ready() {' . "\n";
         echo 'var mapOptions = {' . "\n";
-        if (count($points) > 0) {
+        if ($points !== []) {
             echo 'center: { lat: ' . $points[0]['latitude'] . ', lng: ' . $points[0]['longitude'] . ' }, ' . "\n";
         } else {
             // No geolocation data? Display `Paris` city.
             echo 'center: { lat: 48.853, lng: 2.348 }, ' . "\n";
         }
+
         echo 'zoom: 11' . "\n";
         echo '};' . "\n";
         echo 'var map = new google.maps.Map(document.getElementById("map-canvas"), ' . "\n";
@@ -136,12 +139,14 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
             if (!empty($point['name'])) {
                 $ptdescr = $point['name'] . "\\n" . $ptdescr;
             }
+
             echo 'marker = new google.maps.Marker({' . "\n";
             echo 'position: { lat: ' . $point['latitude'] . ', lng: ' . $point['longitude'] . ' }, ' . "\n";
             echo 'title:"' . $ptdescr . '"' . "\n";
             echo '});' . "\n";
             echo 'marker.setMap(map);' . "\n";
         }
+
         echo '}' . "\n";
 
         echo 'function loadMapScript() {' . "\n";
@@ -160,20 +165,19 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['gmaps_api_key']))) {
+        if (trim((string) $data['gmaps_api_key']) === '') {
             $data                  = [];
             $data['gmaps_api_key'] = Preference::get_by_user(-1, 'gmaps_api_key');
         }
 
-        if (strlen(trim($data['gmaps_api_key']))) {
-            $this->api_key = trim($data['gmaps_api_key']);
+        if (strlen(trim((string) $data['gmaps_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['gmaps_api_key']);
         }
 
         return true;

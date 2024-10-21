@@ -33,7 +33,7 @@ use Ampache\Repository\Model\Shoutbox;
 Ui::show_box_top(T_('Shoutbox')); ?>
 <div id="shoutbox">
 <?php
-  foreach ($shouts as $shout) {?>
+  foreach ($shouts as $shout) { ?>
 <div id="shout<?php echo $shout->getId(); ?>" class="shout">
     <?php
     echo $shoutRenderer->render($shout, true, true);

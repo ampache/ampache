@@ -31,7 +31,7 @@ use Ampache\Module\Util\Ui;
 /** @var array<string, string> $exportTypes */
 
 Ui::show_box_top(T_('Export Catalog'), 'box box_export'); ?>
-<form name="export" action="<?php echo AmpConfig::get('web_path'); ?>/admin/export.php?action=export" method="post" enctype="multipart/form-data">
+<form name="export" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/export.php?action=export" method="post" enctype="multipart/form-data">
     <table class="tableform">
         <tr>
             <td><strong><?php echo T_('Catalog'); ?>:</strong></td>

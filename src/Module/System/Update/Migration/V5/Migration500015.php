@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration500015 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('hide_genres', 'Hide the Genre column in browse table rows', '0', 25, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('hide_genres', 'Hide the Genre column in browse table rows', '0', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }
 }

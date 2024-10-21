@@ -120,7 +120,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
 
             $this->logger->notice(
                 "gather_folder: Opening $dir and checking for " . $art->type . " Art",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             /* Open up the directory */
@@ -131,7 +131,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
 
                 $this->logger->warning(
                     "gather_folder: Opening $dir and checking for " . $art->type . " Art",
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 continue;
             }
@@ -154,7 +154,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 if (!Core::get_filesize($full_filename)) {
                     $this->logger->debug(
                         "gather_folder: Opening $dir and checking for " . $art->type . " Art",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     continue;
                 }
@@ -180,7 +180,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                     // We found the preferred filename and so we're done.
                     $this->logger->debug(
                         "gather_folder: Found preferred image file: $file",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $preferred[$index] = [
                         'file' => $full_filename,
@@ -192,7 +192,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
                 if ($art->type !== 'artist') {
                     $this->logger->debug(
                         "gather_folder: Found image file: $file",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $results[$index] = [
                         'file' => $full_filename,
@@ -210,7 +210,7 @@ final class FolderCollectorModule implements CollectorModuleInterface
             $results = $preferred;
         }
 
-        if ($limit && count($results) > $limit) {
+        if (count($results) > $limit) {
             $results = array_slice($results, 0, $limit);
         }
 

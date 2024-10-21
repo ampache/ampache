@@ -29,7 +29,6 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\SongRepositoryInterface;
 use Exception;
 use getID3;
@@ -111,7 +110,7 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
             return sizeof($priorities);
         }
 
-        return $priority;
+        return (int)$priority;
     }
 
     /**
@@ -277,13 +276,16 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
 
     /**
      * Gather tags from files. (rotate through existing images so you don't return a tone of dupes)
-     * @param Song|Video $media
      * @param array $data
      * @return array
      */
-    private function gatherMediaTags($media, $data): array
+    private function gatherMediaTags(Song|Video $media, array $data): array
     {
-        $mtype  = ObjectTypeToClassNameMapper::reverseMap(get_class($media));
+        if ($media instanceof Song) {
+            $mtype = 'song';
+        } else {
+            $mtype = 'video';
+        }
         $images = self::gatherFileArt((string)$media->file);
 
         // stop collecting dupes for each album
@@ -330,50 +332,28 @@ final class MetaTagCollectorModule implements CollectorModuleInterface
      */
     public static function getPictureType(int $picture_type): string
     {
-        switch ($picture_type) {
-            case 1:
-                return '32x32 PNG Icon';
-            case 2:
-                return 'Other Icon';
-            case 3:
-                return 'Front Cover';
-            case 4:
-                return 'Back Cover';
-            case 5:
-                return 'Leaflet';
-            case 6:
-                return 'Media';
-            case 7:
-                return 'Lead Artist';
-            case 8:
-                return 'Artist';
-            case 9:
-                return 'Conductor';
-            case 10:
-                return 'Band';
-            case 11:
-                return 'Composer';
-            case 12:
-                return 'Lyricist';
-            case 13:
-                return 'Recording Studio or Location';
-            case 14:
-                return 'Recording Session';
-            case 15:
-                return 'Performance';
-            case 16:
-                return 'Capture from Movie or Video';
-            case 17:
-                return 'Bright(ly) Colored Fish';
-            case 18:
-                return 'Illustration';
-            case 19:
-                return 'Band Logo';
-            case 20:
-                return 'Publisher Logo';
-            case 0:
-            default:
-                return 'Other';
-        }
+        return match ($picture_type) {
+            1 => '32x32 PNG Icon',
+            2 => 'Other Icon',
+            3 => 'Front Cover',
+            4 => 'Back Cover',
+            5 => 'Leaflet',
+            6 => 'Media',
+            7 => 'Lead Artist',
+            8 => 'Artist',
+            9 => 'Conductor',
+            10 => 'Band',
+            11 => 'Composer',
+            12 => 'Lyricist',
+            13 => 'Recording Studio or Location',
+            14 => 'Recording Session',
+            15 => 'Performance',
+            16 => 'Capture from Movie or Video',
+            17 => 'Bright(ly) Colored Fish',
+            18 => 'Illustration',
+            19 => 'Band Logo',
+            20 => 'Publisher Logo',
+            default => 'Other',
+        };
     }
 }

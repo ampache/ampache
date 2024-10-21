@@ -33,9 +33,10 @@ interface PluginRetrieverInterface
     /**
      * Yields all loadable plugin of a certain type
      *
-     * @todo migrate to php8+ enums
-     *
      * @return Generator<Plugin>
      */
-    public function retrieveByType(string $pluginType, User $user): Generator;
+    public function retrieveByType(
+        PluginTypeEnum $pluginType,
+        User $user
+    ): Generator;
 }

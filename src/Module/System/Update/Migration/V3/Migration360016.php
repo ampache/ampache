@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration360016 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('now_playing_per_user', 'Now playing filtered per user', '1', 50, 'boolean', 'interface');
+        $this->updatePreferences('now_playing_per_user', 'Now playing filtered per user', '1', AccessLevelEnum::CONTENT_MANAGER->value, 'boolean', 'interface');
     }
 }

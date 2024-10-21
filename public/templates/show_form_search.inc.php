@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Video;
@@ -39,7 +41,7 @@ $data = !empty($_POST)
     : $_REQUEST;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = (string)AmpConfig::get('web_path', '');
+$web_path        = AmpConfig::get_web_path();
 $limit           = $data['limit'] ?? 0;
 $limit1          = ($limit == 1) ? 'selected="selected"' : '';
 $limit5          = ($limit == 5) ? 'selected="selected"' : '';
@@ -122,7 +124,7 @@ Ui::show_box_top(T_('Search Ampache') . "...", 'box box_advanced_search'); ?>
     <a href="<?php echo $web_path . '/search.php?' . http_build_query($data); ?>" target=_blank><?php echo T_('Permalink'); ?></a>
 <?php } ?>
     <input class="button" type="submit" value="<?php echo T_('Search'); ?>" />&nbsp;&nbsp;
-<?php if ($currentType == 'song' && Access::check('interface', 25)) { ?>
+<?php if ($currentType == 'song' && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <input id="savesearchbutton" class="button" type="submit" value="<?php echo T_('Save as Smart Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_smartplaylist');" />&nbsp;&nbsp;
     <input id="saveasplaylistbutton" class="button" type="submit" value="<?php echo T_('Save as Playlist'); ?>" onClick="$('#hiddenaction').val('save_as_playlist');" />&nbsp;&nbsp;
 <?php } ?>

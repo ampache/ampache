@@ -24,7 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -33,14 +36,12 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 
-/** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
-
 $democratic = Democratic::get_current_playlist();
-$web_path   = (string)AmpConfig::get('web_path', '');
+$web_path   = AmpConfig::get_web_path();
 $use_search = AmpConfig::get('demo_use_search');
-$access100  = Access::check('interface', 100);
+$access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum  = AmpConfig::get('album_group');
+/** @var Ampache\Repository\Model\Browse $browse */
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -56,12 +57,13 @@ if ($browse->is_show_header()) {
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php if (empty($object_ids) && isset($democratic->base_playlist)) {
+<?php /** @var list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
+if (empty($object_ids) && isset($democratic->base_playlist)) {
     $playlist = ($use_search)
         ? new Search($democratic->base_playlist)
         : new Playlist($democratic->base_playlist); ?>
 <tr>
-    <td><?php echo T_('Playing from base playlist'); ?>.</a></td>
+    <td><?php echo T_('Playing from base playlist'); ?></a></td>
 </tr>
 <?php
 } else { ?>
@@ -84,7 +86,7 @@ if ($browse->is_show_header()) {
         if (!is_array($item)) {
             $item = (array) $item;
         }
-        $className = ObjectTypeToClassNameMapper::map($item['object_type']);
+        $className = ObjectTypeToClassNameMapper::map($item['object_type']->value);
         /** @var Song $media */
         $media = new $className($item['object_id']);
         if ($media->isNew()) {
@@ -93,20 +95,20 @@ if ($browse->is_show_header()) {
         $media->format(); ?>
 <tr>
     <td class="cel_action">
-    <?php if ($democratic->has_vote($item['object_id'], $item['object_type'])) {
-        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['id'] . '&browse_id=' . $browse->getId(), 'delete', T_('Remove Vote'), 'delete_vote_' . $item['id']);
+    <?php if ($democratic->has_vote($item['object_id'], $item['object_type']->value)) {
+        echo Ajax::button('?page=democratic&action=delete_vote&row_id=' . $item['track_id'] . '&browse_id=' . $browse->getId(), 'close', T_('Remove Vote'), 'delete_vote_' . $item['track_id']);
     } else {
-        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']), 'tick', T_('Add Vote'), 'add_vote_' . $item['id']);
+        echo Ajax::button('?page=democratic&action=add_vote&object_id=' . $media->id . '&browse_id=' . $browse->getId() . '&type=' . scrub_out($item['object_type']->value), 'tick', T_('Add Vote'), 'add_vote_' . $item['track_id']);
     } ?>
     </td>
-    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['id'])); ?></td>
+    <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['track_id'])); ?></td>
     <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
     <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
     <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if ($access100) { ?>
     <td class="cel_admin">
-    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['id'], 'disable', T_('Delete'), 'delete_row_' . $item['id']); ?>
+    <?php echo Ajax::button('?page=democratic&action=delete&row_id=' . $item['track_id'], 'close', T_('Delete'), 'delete_row_' . $item['track_id']); ?>
     </td>
     <?php } ?>
 </tr>

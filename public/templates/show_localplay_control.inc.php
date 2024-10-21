@@ -27,13 +27,13 @@ use Ampache\Module\Api\Ajax;
 
 ?>
 <div id="localplay-control">
-<?php echo Ajax::button('?page=localplay&action=command&command=prev', 'prev', T_('Previous'), 'localplay_control_previous'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=prev', 'skip_previous', T_('Previous'), 'localplay_control_previous'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=stop', 'stop', T_('Stop'), 'localplay_control_stop'); ?>
 <?php echo Ajax::button('?page=localplay&action=command&command=pause', 'pause', T_('Pause'), 'localplay_control_pause'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=play', 'play', T_('Play'), 'localplay_control_play'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=next', 'next', T_('Next'), 'localplay_control_next'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=play', 'play_arrow', T_('Play'), 'localplay_control_play'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=next', 'skip_next', T_('Next'), 'localplay_control_next'); ?>
 </p>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute', 'volumemute', T_('Mute'), 'localplay_mute'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_down', 'volumedn', T_('Decrease Volume'), 'localplay_volume_dn'); ?>
-<?php echo Ajax::button('?page=localplay&action=command&command=volume_up', 'volumeup', T_('Increase Volume'), 'localplay_volume_up'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_mute', 'no_sound', T_('Mute'), 'localplay_mute'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_down', 'volume_down', T_('Decrease Volume'), 'localplay_volume_dn'); ?>
+<?php echo Ajax::button('?page=localplay&action=command&command=volume_up', 'volume_up', T_('Increase Volume'), 'localplay_volume_up'); ?>
 </div>

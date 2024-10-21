@@ -30,12 +30,12 @@ use Ampache\Module\Statistics\Stats;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
 use Exception;
-use PDOStatement;
 
 /**
- * This user flag/unflag songs, albums, artists, videos, tvshows, movies ... as favorite.
+ * This user flag/unflag songs, albums, artists, videos... as favorite.
  */
 class Userflag extends database_object
 {
@@ -52,8 +52,10 @@ class Userflag extends database_object
      * @param int|null $object_id
      * @param string $type
      */
-    public function __construct($object_id, $type)
-    {
+    public function __construct(
+        $object_id,
+        $type
+    ) {
         $this->id   = (int)($object_id);
         $this->type = $type;
     }
@@ -76,16 +78,19 @@ class Userflag extends database_object
         if (empty($ids)) {
             return false;
         }
+
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user?->id ?? 0;
         }
+
         if ($user_id === 0) {
             return false;
         }
+
         $userflags  = [];
         $idlist     = '(' . implode(',', $ids) . ')';
-        $sql        = "SELECT `object_id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` IN $idlist AND `object_type` = ?";
+        $sql        = sprintf('SELECT `object_id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` IN %s AND `object_type` = ?', $idlist);
         $db_results = Dba::read($sql, [$user_id, $type]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -129,10 +134,8 @@ class Userflag extends database_object
             'podcast_episode',
             'search',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
-            'video'
+            'video',
         ];
 
         if ($object_type !== null) {
@@ -144,7 +147,7 @@ class Userflag extends database_object
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_flag` WHERE `object_type` = '$type' AND `user_flag`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);");
+                Dba::write(sprintf('DELETE FROM `user_flag` WHERE `object_type` = \'%s\' AND `user_flag`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type, $type));
             }
         }
     }
@@ -159,8 +162,9 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user?->id ?? 0;
         }
+
         if ($user_id === 0) {
             return false;
         }
@@ -171,6 +175,7 @@ class Userflag extends database_object
             if (empty($object) || !$object[0]) {
                 return false;
             }
+
             if ($get_date) {
                 return $object;
             }
@@ -185,8 +190,12 @@ class Userflag extends database_object
             // always cache the date in case it's called by subsonic
             parent::add_to_cache($key, $this->id, [true, $row['date']]);
             if ($get_date) {
-                return [true, $row['date']];
+                return [
+                    true,
+                    $row['date']
+                ];
             }
+
             $flagged = true;
         }
 
@@ -205,7 +214,7 @@ class Userflag extends database_object
     {
         if ($user_id === null) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user?->id ?? 0;
         }
 
         if ($user_id === 0) {
@@ -225,7 +234,7 @@ class Userflag extends database_object
             $params = [$this->id, $this->type, $user_id, $date];
             parent::add_to_cache('userflag_' . $this->type . '_user' . $user_id, $this->id, [1, $date]);
 
-            static::getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
+            $this->getUserActivityPoster()->post((int) $user_id, 'userflag', $this->type, $this->id, $date);
         }
 
         Dba::write($sql, $params);
@@ -251,7 +260,7 @@ class Userflag extends database_object
      */
     public static function save_flag($user, $song, $flagged): void
     {
-        foreach (Plugin::get_plugins('set_flag') as $plugin_name) {
+        foreach (Plugin::get_plugins(PluginTypeEnum::USER_FLAG_MANAGER) as $plugin_name) {
             try {
                 $plugin = new Plugin($plugin_name);
                 if ($plugin->_plugin !== null && $plugin->load($user)) {
@@ -268,73 +277,86 @@ class Userflag extends database_object
      * get_latest_sql
      * Get the latest sql
      * @param string $input_type
-     * @param int $user_id
      * @param int $since
      * @param int $before
      */
-    public static function get_latest_sql($input_type, $user_id = null, $since = 0, $before = 0): string
-    {
+    public static function get_latest_sql(
+        $input_type,
+        ?User $user = null,
+        $since = 0,
+        $before = 0
+    ): string {
         $type    = Stats::validate_type($input_type);
-        $user_id = (int)($user_id);
         $sql     = "SELECT DISTINCT(`user_flag`.`object_id`) AS `id`, COUNT(DISTINCT(`user_flag`.`user`)) AS `count`, `user_flag`.`object_type` AS `type`, MAX(`user_flag`.`user`) AS `user`, MAX(`user_flag`.`date`) AS `date` FROM `user_flag`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `user_flag`.`object_id` AND `user_flag`.`object_type` = 'artist'";
         }
-        $sql .= ($user_id > 0)
-            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
+
+        $sql .= ($user !== null)
+            ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user->getId() . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
-            $sql .= " AND" . Catalog::get_user_filter("user_flag_$type", $user_id);
+
+        if (AmpConfig::get('catalog_filter') && $user !== null) {
+            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user->getId());
         }
+
         if ($input_type == 'album_artist') {
             $sql .= " AND `artist`.`album_count` > 0";
         }
+
         if ($input_type == 'song_artist') {
             $sql .= " AND `artist`.`song_count` > 0";
         }
+
         if ($since > 0) {
             $sql .= " AND `user_flag`.`date` >= '" . $since . "'";
             if ($before > 0) {
                 $sql .= " AND `user_flag`.`date` <= '" . $before . "'";
             }
         }
-        $sql .= " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
+
         //debug_event(self::class, 'get_latest_sql ' . $sql, 5);
 
-        return $sql;
+        return $sql . " GROUP BY `user_flag`.`object_id`, `type` ORDER BY `count` DESC, `date` DESC ";
     }
 
     /**
      * get_latest
      * Get the latest user flagged objects
      * @param string $type
-     * @param int $user_id
      * @param int $count
      * @param int $offset
      * @param int $since
      * @param int $before
      * @return int[]
      */
-    public static function get_latest($type, $user_id = null, $count = 0, $offset = 0, $since = 0, $before = 0): array
-    {
+    public static function get_latest(
+        $type,
+        ?User $user = null,
+        $count = 0,
+        $offset = 0,
+        $since = 0,
+        $before = 0
+    ): array {
         if ($count === 0) {
             $count = AmpConfig::get('popular_threshold', 10);
         }
+
         if ($count === -1) {
             $count  = 0;
             $offset = 0;
         }
 
         // Select Top objects counting by # of rows
-        $sql   = self::get_latest_sql($type, $user_id, $since, $before);
+        $sql   = self::get_latest_sql($type, $user, $since, $before);
         $limit = ($offset < 1)
             ? $count
             : $offset . "," . $count;
         if ($limit > 0) {
-            $sql .= "LIMIT $limit";
+            $sql .= 'LIMIT ' . $limit;
         }
 
         //debug_event(self::class, 'get_latest ' . $sql, 5);
@@ -395,19 +417,18 @@ class Userflag extends database_object
      * @param string $object_type
      * @param int $old_object_id
      * @param int $new_object_id
-     * @return PDOStatement|bool
      */
-    public static function migrate($object_type, $old_object_id, $new_object_id)
+    public static function migrate($object_type, $old_object_id, $new_object_id): void
     {
         $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
+        Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**
      * @deprecated inject dependency
      */
-    private static function getUserActivityPoster(): UserActivityPosterInterface
+    private function getUserActivityPoster(): UserActivityPosterInterface
     {
         global $dic;
 

@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Api\Method\Api4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -55,7 +57,7 @@ final class UpdateArt4Method
         if (!Api4::check_parameter($input, ['type', 'id'], self::ACTION)) {
             return false;
         }
-        if (!Api4::check_access('interface', 75, $user->id, 'update_art', $input['api_format'])) {
+        if (!Api4::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, 'update_art', $input['api_format'])) {
             return false;
         }
         $type      = (string) $input['type'];
@@ -70,7 +72,7 @@ final class UpdateArt4Method
         }
         $className = ObjectTypeToClassNameMapper::map($type);
         /** @var Artist|Album $item */
-        $item      = new $className($object_id);
+        $item = new $className($object_id);
         if ($item->isNew()) {
             Api4::message('error', T_('The requested item was not found'), '404', $input['api_format']);
 

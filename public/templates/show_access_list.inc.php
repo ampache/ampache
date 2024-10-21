@@ -35,19 +35,19 @@ Ui::show_box_top(T_('Access Control'), 'box box_access_control');
 $addcurrent = T_('Add Current Host');
 $addrpc     = T_('Add API / RPC Host');
 $addlocal   = T_('Add Local Network Definition');
-$web_path   = (string)AmpConfig::get('web_path', ''); ?>
+$admin_path = AmpConfig::get_web_path('/admin'); ?>
 <div id="information_actions" class="left-column">
 <ul>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_icon('add_user', $addcurrent) . ' ' . $addcurrent; ?></a>
+        <a class="option-list" href="<?php echo $admin_path; ?>/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_CURRENT; ?>"><?php echo Ui::get_material_symbol('person', $addcurrent) . ' ' . $addcurrent; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_icon('cog', $addrpc) . ' ' . $addrpc; ?></a>
+        <a class="option-list" href="<?php echo $admin_path; ?>/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_RPC; ?>"><?php echo Ui::get_material_symbol('settings', $addrpc) . ' ' . $addrpc; ?></a>
     </li>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_icon('home', $addlocal) . ' ' . $addlocal; ?></a>
+        <a class="option-list" href="<?php echo $admin_path; ?>/access.php?action=show_add&add_type=<?php echo AccessListTypeEnum::ADD_TYPE_LOCAL; ?>"><?php echo Ui::get_material_symbol('lan', $addlocal) . ' ' . $addlocal; ?></a>
     <li>
-        <a class="option-list" href="<?php echo $web_path; ?>/admin/access.php?action=show_add_advanced"><?php echo Ui::get_icon('add_key', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
+        <a class="option-list" href="<?php echo $admin_path; ?>/access.php?action=show_add_advanced"><?php echo Ui::get_material_symbol('manufacturing', T_('Advanced Add')) . ' ' . T_('Advanced Add'); ?></a>
     </li>
 </ul>
 </div>
@@ -79,8 +79,8 @@ $web_path   = (string)AmpConfig::get('web_path', ''); ?>
     <td><?php echo $access->getUserName(); ?></td>
     <td><?php echo $access->getTypeName(); ?></td>
     <td>
-        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
-        <a href="<?php echo $web_path; ?>/admin/access.php?action=show_delete_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+        <a href="<?php echo $admin_path; ?>/access.php?action=show_edit_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('edit', T_('Edit')); ?></a>
+        <a href="<?php echo $admin_path; ?>/access.php?action=show_delete_record&access_id=<?php echo $access->getId(); ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
     </td>
 </tr>
     <?php } ?>

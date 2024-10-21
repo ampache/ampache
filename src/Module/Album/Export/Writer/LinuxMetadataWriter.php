@@ -40,7 +40,9 @@ final class LinuxMetadataWriter implements MetadataWriterInterface
         );
 
         $meta_handle = fopen($meta_file, 'w');
-        fwrite($meta_handle, $string);
-        fclose($meta_handle);
+        if ($meta_handle) {
+            fwrite($meta_handle, $string);
+            fclose($meta_handle);
+        }
     }
 }

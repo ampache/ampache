@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\User;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\Mailer;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\UserRepositoryInterface;
@@ -60,8 +61,8 @@ final class NewPasswordSender implements NewPasswordSenderInterface
         }
 
         // do not allow administrator password resets
-        if ($user->has_access(100)) {
-            debug_event(__CLASS__, 'Administrator can\'t reset their password.', 1);
+        if ($user->has_access(AccessLevelEnum::ADMIN)) {
+            debug_event(self::class, 'Administrator can\'t reset their password.', 1);
 
             return false;
         }

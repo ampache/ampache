@@ -36,18 +36,12 @@ use Ampache\Repository\Model\User;
  *
  * Tables: `live_stream`
  */
-final class LiveStreamRepository implements LiveStreamRepositoryInterface
+final readonly class LiveStreamRepository implements LiveStreamRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->connection   = $connection;
     }
 
     /**
@@ -60,11 +54,7 @@ final class LiveStreamRepository implements LiveStreamRepositoryInterface
     public function findAll(
         ?User $user = null
     ): array {
-        $userId = null;
-
-        if ($user !== null) {
-            $userId = $user->getId();
-        }
+        $userId = $user?->getId();
 
         $db_results = $this->connection->query(
             'SELECT DISTINCT `live_stream`.`id` FROM `live_stream` INNER JOIN `catalog_map` ON `catalog_map`.`object_id` = `live_stream`.`id` AND `catalog_map`.`object_type` = \'live_stream\' AND `catalog_map`.`catalog_id` IN (' . implode(',', Catalog::get_catalogs('', $userId, true)) . ');'

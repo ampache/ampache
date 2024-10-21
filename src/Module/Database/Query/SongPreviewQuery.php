@@ -29,11 +29,9 @@ use Ampache\Repository\Model\Query;
 
 final class SongPreviewQuery implements QueryInterface
 {
-    /** @var string */
-    protected $select = "";
+    protected string $select = "";
 
-    /** @var string */
-    protected $base = "";
+    protected string $base = "";
 
     public const FILTERS = [
     ];

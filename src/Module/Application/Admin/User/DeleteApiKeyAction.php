@@ -68,7 +68,10 @@ final class DeleteApiKeyAction extends AbstractUserAction
             return null;
         }
 
-        if ($this->requestParser->verifyForm('delete_apikey') === false) {
+        if (
+            check_http_referer() === false ||
+            $this->requestParser->verifyForm('delete_apikey') === false
+        ) {
             throw new AccessDeniedException();
         }
 

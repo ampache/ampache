@@ -54,7 +54,7 @@ final class FriendsTimeline4Method
             $since = (int)($input['since'] ?? 0);
 
             if ($user->id > 0) {
-                $results = static::getUseractivityRepository()->getActivities($user->id, $limit, $since);
+                $results = self::getUseractivityRepository()->getActivities($user->id, $limit, $since);
                 ob_end_clean();
                 switch ($input['api_format']) {
                     case 'json':

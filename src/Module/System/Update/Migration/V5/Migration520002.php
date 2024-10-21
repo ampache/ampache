@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V5;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration520002 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('show_playlist_username', 'Show playlist owner username in titles', '1', 25, 'boolean', 'interface', 'browse');
+        $this->updatePreferences('show_playlist_username', 'Show playlist owner username in titles', '1', AccessLevelEnum::USER->value, 'boolean', 'interface', 'browse');
     }
 }

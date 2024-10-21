@@ -88,6 +88,6 @@ final class Migration550002 extends AbstractMigration
         $this->updateDatabase("DROP TABLE IF EXISTS `user_catalog`;");
 
         // Drop filter_user but only if the migration has worked
-        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;");
+        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;", [], true);
     }
 }

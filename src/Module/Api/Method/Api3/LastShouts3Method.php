@@ -55,7 +55,7 @@ final class LastShouts3Method
                 $username = null;
             }
 
-            $results = static::getShoutRepository()->getTop($limit, $username);
+            $results = self::getShoutRepository()->getTop($limit, $username);
 
             ob_end_clean();
             echo Xml3_Data::shouts($results);

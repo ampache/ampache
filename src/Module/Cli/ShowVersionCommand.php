@@ -45,8 +45,11 @@ final class ShowVersionCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->info(
             $this->configContainer->get('version'),
             true

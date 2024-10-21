@@ -53,20 +53,20 @@ namespace Ampache\Module\Playback\Localplay\HttpQ;
  */
 class HttpQPlayer
 {
-    public $host;
-    public $port;
-    public $password;
+    public ?string $host;
+    public ?string $password;
+    public ?int $port;
 
     /**
      * HttpQPlayer
      * This is the constructor, it defaults to localhost
      * with port 4800
-     * @param string $host
-     * @param string $password
-     * @param int $port
      */
-    public function __construct($host = "localhost", $password = '', $port = 4800)
-    {
+    public function __construct(
+        ?string $host = "localhost",
+        ?string $password = '',
+        ?int $port = 4800
+    ) {
         $this->host     = $host;
         $this->port     = $port;
         $this->password = $password;
@@ -79,9 +79,8 @@ class HttpQPlayer
      * $url     URL of the song
      * @param string $name
      * @param string $url
-     * @return bool|string
      */
-    public function add($name, $url)
+    public function add($name, $url): bool
     {
         $args = [];
 
@@ -90,11 +89,14 @@ class HttpQPlayer
 
         $results = $this->sendCommand('playurl', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
@@ -114,16 +116,19 @@ class HttpQPlayer
      * clear
      * clear the playlist
      */
-    public function clear()
+    public function clear(): bool
     {
         $args    = [];
         $results = $this->sendCommand("delete", $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
@@ -135,7 +140,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("next", $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -151,7 +159,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand("prev", $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -161,15 +172,16 @@ class HttpQPlayer
     /**
      * skip
      * This skips to POS in the playlist
-     * @param $pos
-     * @return bool|null
      */
-    public function skip($pos): ?bool
+    public function skip(int $track_id): bool
     {
-        $args    = ['index' => $pos];
+        $args    = ['index' => $track_id];
         $results = $this->sendCommand('setplaylistpos', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -184,102 +196,115 @@ class HttpQPlayer
      * play
      * play the current song
      */
-    public function play()
+    public function play(): bool
     {
         $args    = [];
         $results = $this->sendCommand("play", $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * pause
      * toggle pause mode on current song
      */
-    public function pause()
+    public function pause(): bool
     {
         $args    = [];
         $results = $this->sendCommand("pause", $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * stop
      * stops the current song amazing!
      */
-    public function stop()
+    public function stop(): bool
     {
         $args    = [];
         $results = $this->sendCommand('stop', $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * repeat
      * This toggles the repeat state of HttpQ
-     * @param $value
-     * @return bool|string
      */
-    public function repeat($value)
+    public function repeat(bool $state): bool
     {
-        $args    = ['enable' => $value];
+        $args    = ['enable' => $state];
         $results = $this->sendCommand('repeat', $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * random
      * this toggles the random state of HttpQ
-     * @param $value
-     * @return bool|string
      */
-    public function random($value)
+    public function random(bool $state): bool
     {
-        $args    = ['enable' => $value];
+        $args    = ['enable' => $state];
         $results = $this->sendCommand('shuffle', $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * delete_pos
      * This deletes a specific track
      * @param $track
-     * @return bool|string
      */
-    public function delete_pos($track)
+    public function delete_pos($track): bool
     {
         $args    = ['index' => $track];
         $results = $this->sendCommand('deletepos', $args);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
@@ -295,7 +320,10 @@ class HttpQPlayer
         if ($results == '1') {
             $state = 'play';
         }
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             $state = 'stop';
         }
         if ($results == '3') {
@@ -309,16 +337,19 @@ class HttpQPlayer
      * get_volume
      * This returns the current volume
      */
-    public function get_volume()
+    public function get_volume(): ?float
     {
         $args    = [];
         $results = $this->sendCommand('getvolume', $args);
 
-        if ($results == '0') {
-            return false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return null;
         }
 
-        return round((($results / 255) * 100), 2);
+        return round((((int)$results / 255) * 100), 2);
     }
 
     /**
@@ -330,7 +361,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumeup', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -346,7 +380,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendCommand('volumedown', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -366,7 +403,10 @@ class HttpQPlayer
         $args    = ['level' => $volume];
         $results = $this->sendCommand('setvolume', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -382,7 +422,10 @@ class HttpQPlayer
         $args    = [];
         $results = $this->sendcommand('flushplaylist', $args);
 
-        if ($results == '0') {
+        if (
+            !$results ||
+            $results == '0'
+        ) {
             return false;
         }
 
@@ -392,6 +435,7 @@ class HttpQPlayer
     /**
      * get_repeat
      * This returns the current state of the repeat
+     * @return string|bool
      */
     public function get_repeat()
     {
@@ -403,6 +447,7 @@ class HttpQPlayer
     /**
      * get_random
      * This returns the current state of shuffle
+     * @return string|bool
      */
     public function get_random()
     {
@@ -415,6 +460,7 @@ class HttpQPlayer
      * get_now_playing
      * This returns the file information for the currently
      * playing song
+     * @return string|bool
      */
     public function get_now_playing()
     {
@@ -430,29 +476,32 @@ class HttpQPlayer
      * This returns a delimited string of all of the filenames
      * current in your playlist
      */
-    public function get_tracks()
+    public function get_tracks(): bool
     {
         // Pull a delimited list of all tracks
         $results = $this->sendCommand('getplaylistfile', ['delim' => '::']);
 
-        if ($results == '0') {
-            $results = false;
+        if (
+            !$results ||
+            $results == '0'
+        ) {
+            return false;
         }
 
-        return $results;
+        return true;
     }
 
     /**
      * sendCommand
      * This is the core of this library it takes care of sending the HTTP
      * request to the HttpQ server and getting the response
-     * @param $cmd
-     * @param $args
+     * @param string $cmd
+     * @param array $args
      * @return string|bool
      */
     private function sendCommand($cmd, $args)
     {
-        $fsock = fsockopen($this->host, (int)$this->port, $errno, $errstr);
+        $fsock = fsockopen(($this->host ?? 'localhost'), ($this->port ?? 4800), $errno, $errstr);
 
         if (!$fsock) {
             debug_event(self::class, "HttpQPlayer: $errstr ($errno)", 1);

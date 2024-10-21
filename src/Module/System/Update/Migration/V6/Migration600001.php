@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600001 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('webplayer_removeplayed', 'Remove tracks before the current playlist item in the webplayer when played', '0', 25, 'special', 'streaming', 'player');
+        $this->updatePreferences('webplayer_removeplayed', 'Remove tracks before the current playlist item in the webplayer when played', '0', AccessLevelEnum::USER->value, 'special', 'streaming', 'player');
     }
 }

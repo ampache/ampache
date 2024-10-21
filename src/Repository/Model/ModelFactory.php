@@ -134,12 +134,6 @@ final class ModelFactory implements ModelFactoryInterface
         return new PrivateMsg($privateMessageId);
     }
 
-    public function createTvShow(
-        int $tvShowId
-    ): TvShow {
-        return new TvShow($tvShowId);
-    }
-
     public function createDemocratic(
         int $democraticId
     ): Democratic {

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Useractivity;
@@ -34,18 +36,26 @@ use Ampache\Module\User\Activity\UserActivityRendererInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\UserActivityRepositoryInterface;
 
-class AmpacheFriendsTimeline implements AmpachePluginInterface
+class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Friends Timeline';
+
     public string $categories  = 'home';
+
     public string $description = 'Friends Timeline on homepage';
+
     public string $url         = '';
-    public string $version     = '000001';
+
+    public string $version     = '000002';
+
     public string $min_ampache = '370040';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+
+    private int $order = 0;
 
     /**
      * Constructor
@@ -61,11 +71,11 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, 25, 'integer', 'plugins', $this->name)) {
+        if (!Preference::insert('ftl_max_items', T_('Friends timeline max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        return Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -74,7 +84,10 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
      */
     public function uninstall(): bool
     {
-        return Preference::delete('ftl_max_items');
+        return (
+            Preference::delete('ftl_max_items') &&
+            Preference::delete('ftl_order')
+        );
     }
 
     /**
@@ -83,6 +96,15 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
      */
     public function upgrade(): bool
     {
+        $from_version = Plugin::get_plugin_version($this->name);
+        if ($from_version == 0) {
+            return false;
+        }
+
+        if ($from_version < (int)$this->version) {
+            Preference::insert('ftl_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
+        }
+
         return true;
     }
 
@@ -94,14 +116,17 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? false;
-            if ($user_id) {
-                echo '<div class="home_plugin">';
+            $user_id = $user?->id ?? 0;
+            if ($user_id !== 0) {
+                $divString = ($this->order > 0)
+                    ? '<div class="ftl" style="order: ' . $this->order . '">'
+                    : '<div class="ftl">';
+                echo $divString;
                 $activities = $this->getUseractivityRepository()->getFriendsActivities(
-                    (int) $user_id,
+                    $user_id,
                     (int) $this->maxitems
                 );
-                if (!empty($activities)) {
+                if ($activities !== []) {
                     Ui::show_box_top(T_('Friends Timeline'));
                     Useractivity::build_cache($activities);
 
@@ -112,8 +137,10 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
                             new Useractivity($activity_id)
                         );
                     }
+
                     Ui::show_box_bottom();
                 }
+
                 echo '</div>';
             }
         }
@@ -122,9 +149,8 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -133,6 +159,8 @@ class AmpacheFriendsTimeline implements AmpachePluginInterface
         if ($this->maxitems < 1) {
             $this->maxitems = 10;
         }
+
+        $this->order = (int)($data['ftl_order'] ?? 0);
 
         return true;
     }

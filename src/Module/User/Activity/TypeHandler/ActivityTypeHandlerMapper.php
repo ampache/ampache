@@ -49,7 +49,7 @@ final class ActivityTypeHandlerMapper implements ActivityTypeHandlerMapperInterf
      */
     public function map(string $object_type): ActivityTypeHandlerInterface
     {
-        $mapperClass = static::MAP[$object_type] ?? GenericActivityTypeHandler::class;
+        $mapperClass = self::MAP[$object_type] ?? GenericActivityTypeHandler::class;
 
         return new $mapperClass(
             $this->userActivityRepository

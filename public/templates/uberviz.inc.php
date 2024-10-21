@@ -1,7 +1,7 @@
 <?php
 use Ampache\Config\AmpConfig;
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get_web_path(); ?>
 <div id="uberviz">
     <div id="preloader"></div>
     <div id="viz"></div>

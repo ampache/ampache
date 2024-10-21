@@ -82,10 +82,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                     $media   = new Podcast_Episode($file_id);
                     break;
-                case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
+                case 'video':
                     $type    = 'video';
                     $file_id = Catalog::get_id_from_file($filePath, $type);
                     $media   = new Video($file_id);
@@ -167,7 +164,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer($buffer),
+            $this->cleanBuffer((string)$buffer),
             true
         );
     }

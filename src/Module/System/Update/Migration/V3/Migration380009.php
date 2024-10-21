@@ -36,7 +36,7 @@ final class Migration380009 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_update`;");
+        Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_update`;", [], true);
         $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT '0';");
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration400020 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('custom_login_background', 'Custom URL - Login page background', '', 75, 'string', 'interface', 'custom');
+        $this->updatePreferences('custom_login_background', 'Custom URL - Login page background', '', AccessLevelEnum::MANAGER->value, 'string', 'interface', 'custom');
     }
 }

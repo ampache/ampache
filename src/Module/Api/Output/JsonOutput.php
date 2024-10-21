@@ -50,6 +50,11 @@ final class JsonOutput implements ApiOutputInterface
         Json_Data::set_limit($limit);
     }
 
+    public function setCount(int $count): void
+    {
+        Json_Data::set_count($count);
+    }
+
     /**
      * Generate an empty api result
      */
@@ -111,8 +116,6 @@ final class JsonOutput implements ApiOutputInterface
      * @param User $user
      * @param bool $encode
      * @param bool $asObject
-     * @param int $limit
-     * @param int $offset
      *
      * @return array|string
      */
@@ -121,13 +124,8 @@ final class JsonOutput implements ApiOutputInterface
         array $include,
         User $user,
         bool $encode = true,
-        bool $asObject = true,
-        int $limit = 0,
-        int $offset = 0
+        bool $asObject = true
     ) {
-        Json_Data::set_offset($offset);
-        Json_Data::set_limit($limit);
-
         return Json_Data::albums($albums, $include, $user, $encode, $asObject);
     }
 

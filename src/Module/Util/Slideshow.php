@@ -26,44 +26,45 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Module\Statistics\Stats;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
-use Ampache\Repository\Model\Plugin;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 
 final class Slideshow implements SlideshowInterface
 {
     private ModelFactoryInterface $modelFactory;
 
+    private PluginRetrieverInterface $pluginRetriever;
+
     public function __construct(
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->modelFactory = $modelFactory;
+        $this->modelFactory    = $modelFactory;
+        $this->pluginRetriever = $pluginRetriever;
     }
 
-    public function getCurrentSlideshow(): array
+    public function getCurrentSlideshow(User $user): array
     {
-        $user_id = Core::get_global('user')->id ?? -1;
-        $songs   = Stats::get_recently_played($user_id, 'stream', 'song');
+        $songs   = Stats::get_recently_played($user->getId(), 'stream', 'song');
         $images  = [];
         if ($songs !== []) {
             $last_song = $this->modelFactory->createSong((int) $songs[0]['object_id']);
             $last_song->format();
-            $images = $this->getImages($last_song);
+            $images = $this->getImages($last_song, $user);
         }
 
         return $images;
     }
 
-    private function getImages(Song $song): array
+    private function getImages(Song $song, User $user): array
     {
         $images = [];
 
-        foreach (Plugin::get_plugins('get_photos') as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                $images += $plugin->_plugin->get_photos($song->f_artist);
-            }
+        foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::SLIDESHOW, $user) as $plugin) {
+            $images += $plugin->_plugin->get_photos($song->f_artist);
         }
 
         return $images;

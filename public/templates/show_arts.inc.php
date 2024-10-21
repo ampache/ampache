@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 $total_images = count($images);
 $rows         = floor($total_images / 5);
 $count        = 0;
-$web_path     = AmpConfig::get('web_path'); ?>
+$web_path     = AmpConfig::get_web_path(); ?>
 <?php Ui::show_box_top(T_('Select New Art'), 'box box_album_art'); ?>
 <table class="table-data">
 <tr>
@@ -47,7 +47,10 @@ while ($count <= $rows) {
     while ($j < 5) {
         $key        = $count * 5 + $j;
         $image_url  = $web_path . '/image.php?type=session&image_index=' . $key . '&cache_bust=' . date('YmdHis') . bin2hex(random_bytes(20));
-        $dimensions = ['width' => 0, 'height' => 0];
+        $dimensions = [
+            'width' => 0,
+            'height' => 0
+        ];
         if (!empty($_SESSION['form']['images'][$key])) {
             $dimensions = Core::image_dimensions(Art::get_from_source($_SESSION['form']['images'][$key], $object_type));
         }

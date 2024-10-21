@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Api\Method\LostPasswordMethod;
 use Ampache\Module\Api\Method\RegisterMethod;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
@@ -116,7 +117,7 @@ final class ApiHandler implements ApiHandlerInterface
         $api_format  = $input['api_format'];
         $version     = (isset($input['version'])) ? $input['version'] : Api::$version;
         $user        = $gatekeeper->getUser();
-        $userId      = $user->id ?? -1;
+        $userId      = $user?->id ?? -1;
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
             $api_session = Session::get_api_version($input['auth']);
@@ -141,7 +142,7 @@ final class ApiHandler implements ApiHandlerInterface
             if ($api_version == 6 && !Preference::get_by_user($userId, 'api_enable_6')) {
                 $this->logger->warning(
                     'No API version available; check your options!',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 return $response->withBody(
@@ -195,7 +196,7 @@ final class ApiHandler implements ApiHandlerInterface
 
             $this->logger->warning(
                 'Error Attempted to use the API with Access Control turned off',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             switch ($api_version) {
@@ -251,13 +252,16 @@ final class ApiHandler implements ApiHandlerInterface
             !$is_public &&
             (
                 !$user instanceof User || // User is required for non-public methods
-                (!$header_auth && $input['auth'] === md5((string)$user->username)) || // require header auth for simplified session
+                (
+                    !$header_auth &&
+                    $input['auth'] === md5((string)$user->username)
+                ) || // require header auth for simplified session
                 $gatekeeper->sessionExists($input['auth']) === false // no valid session
             )
         ) {
             $this->logger->warning(
                 sprintf('Invalid Session attempt to API [%s]', $action),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
 
@@ -306,10 +310,10 @@ final class ApiHandler implements ApiHandlerInterface
             }
         }
 
-        if (!$this->networkChecker->check(AccessLevelEnum::TYPE_API, $userId, AccessLevelEnum::LEVEL_GUEST)) {
+        if (!$this->networkChecker->check(AccessTypeEnum::API, $userId, AccessLevelEnum::GUEST)) {
             $this->logger->warning(
                 sprintf('Unauthorized access attempt to API [%s]', filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             ob_end_clean();
 
@@ -492,7 +496,7 @@ final class ApiHandler implements ApiHandlerInterface
              */
             $this->logger->notice(
                 sprintf('API function [%s]', $handlerClassName),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             if (
@@ -533,14 +537,14 @@ final class ApiHandler implements ApiHandlerInterface
 
                 return null;
             }
-        } catch (ApiException $e) {
+        } catch (ApiException $error) {
             switch ($api_version) {
                 case 3:
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error3(
-                                $e->getCode(),
-                                $e->getMessage()
+                                $error->getCode(),
+                                $error->getMessage()
                             )
                         )
                     );
@@ -548,8 +552,8 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error4(
-                                $e->getCode(),
-                                $e->getMessage()
+                                $error->getCode(),
+                                $error->getMessage()
                             )
                         )
                     );
@@ -557,10 +561,10 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error5(
-                                $e->getCode(),
-                                $e->getMessage(),
+                                $error->getCode(),
+                                $error->getMessage(),
                                 $action,
-                                $e->getType()
+                                $error->getType()
                             )
                         )
                     );
@@ -569,19 +573,19 @@ final class ApiHandler implements ApiHandlerInterface
                     return $response->withBody(
                         $this->streamFactory->createStream(
                             $output->error(
-                                $e->getCode(),
-                                $e->getMessage(),
+                                $error->getCode(),
+                                $error->getMessage(),
                                 $action,
-                                $e->getType()
+                                $error->getType()
                             )
                         )
                     );
             }
-        } catch (Throwable $e) {
+        } catch (Throwable $error) {
             $this->logger->error(
-                $e->getMessage(),
+                $error->getMessage(),
                 [
-                    LegacyLogger::CONTEXT_TYPE => __CLASS__,
+                    LegacyLogger::CONTEXT_TYPE => self::class,
                     'method' => $action
                 ]
             );
@@ -654,7 +658,7 @@ final class ApiHandler implements ApiHandlerInterface
          */
         $this->logger->notice(
             sprintf('DebugHandler: API function [%s]', $handlerClassName),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         if (

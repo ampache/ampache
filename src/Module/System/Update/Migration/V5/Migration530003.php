@@ -35,12 +35,12 @@ final class Migration530003 extends AbstractMigration
 {
     protected array $changelog = [
         'Drop id column from catalog_map table',
-        'Alter `catalog_map` object_type charset and collation'
+        'Alter `catalog_map` object_type charset and collation',
     ];
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;");
+        Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;", [], true);
         $this->updateDatabase("ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;");
     }
 }

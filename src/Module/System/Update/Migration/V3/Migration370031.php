@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,8 +36,8 @@ final class Migration370031 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('custom_login_logo', 'Custom login page logo url', '', 75, 'string', 'interface');
-        $this->updatePreferences('custom_favicon', 'Custom favicon url', '', 75, 'string', 'interface');
-        $this->updatePreferences('custom_text_footer', 'Custom text footer', '', 75, 'string', 'interface');
+        $this->updatePreferences('custom_login_logo', 'Custom login page logo url', '', AccessLevelEnum::MANAGER->value, 'string', 'interface');
+        $this->updatePreferences('custom_favicon', 'Custom favicon url', '', AccessLevelEnum::MANAGER->value, 'string', 'interface');
+        $this->updatePreferences('custom_text_footer', 'Custom text footer', '', AccessLevelEnum::MANAGER->value, 'string', 'interface');
     }
 }

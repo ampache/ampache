@@ -36,7 +36,7 @@ final class Migration600048 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `rating` DROP COLUMN `date`');
-        $this->updateDatabase('ALTER TABLE `rating` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `rating`');
+        Dba::write('ALTER TABLE `rating` DROP COLUMN `date`;', [], true);
+        $this->updateDatabase('ALTER TABLE `rating` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `rating`;');
     }
 }

@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Exception\CatalogLoadingException;
@@ -51,7 +52,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
     /** @var list<string> */
     private const EXPECTED_MIME_TYPES = [
         'text/x-opml+xml',
-        'text/xml'
+        'text/xml',
     ];
 
     public const REQUEST_KEY = 'import_podcasts';
@@ -87,7 +88,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         }
 
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
             !$this->requestParser->verifyForm('import_podcasts')
         ) {
@@ -102,7 +103,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
             $catalog = $this->catalogLoader->getById($catalogId);
 
             $importedCount = $this->importPodcasts($request, $catalog);
-        } catch (CatalogLoadingException $e) {
+        } catch (CatalogLoadingException) {
             AmpError::add('catalog', T_('Catalog not found'));
 
             $importedCount = 0;
@@ -112,9 +113,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_import_podcasts.inc.php',
-                [
-                    'catalogId' => (int)($data['catalog'] ?? 0),
-                ]
+                ['catalogId' => (int)($data['catalog'] ?? 0)]
             );
         } else {
             $this->ui->showConfirmation(
@@ -156,7 +155,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
 
         try {
             return $this->podcastOpmlImporter->import($catalog, $file->getStream()->getContents());
-        } catch (InvalidCatalogException $e) {
+        } catch (InvalidCatalogException) {
             AmpError::add('catalog', T_('Invalid catalog type'));
 
             return 0;

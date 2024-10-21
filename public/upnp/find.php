@@ -24,13 +24,11 @@ class UPnPFind
         return($discover); //!!
 
         /*
-        $devices = array();
+        $devices = [];
         flush();
         foreach ($discover as $response) {
-
             $device = new Device();
             if ($device->initByDiscoveryReponse($response)) {
-
                 $device->saveToCache();
 
                 try {
@@ -40,7 +38,7 @@ class UPnPFind
                     $sink = $protocolInfo['Sink'];
                     $tmp = explode(',', $sink);
 
-                    $protocols = array();
+                    $protocols = [];
 
                     foreach ($tmp as $protocol) {
                         $t = explode(':', $protocol);
@@ -49,7 +47,7 @@ class UPnPFind
                         }
                     }
                 } catch (UPnPException $upnpe) {
-                    $protocols = array();
+                    $protocols = [];
                 }
 
                 $device->protocolInfo = $protocols;
@@ -129,7 +127,9 @@ class UPnPFind
             $tmp = explode(':', trim($line));
 
             $key   = strtoupper(array_shift($tmp));
-            $value = (count($tmp) > 0 ? trim(join(':', $tmp)) : null);
+            $value = (count($tmp) > 0)
+                ? trim(join(':', $tmp))
+                : null;
 
             $result[$key] = $value;
         }

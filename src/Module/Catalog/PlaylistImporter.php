@@ -40,9 +40,9 @@ final class PlaylistImporter
      *  count: int,
      *  id: int,
      *  results: list<array{
-     *    track: int,
-     *    file: string,
-     *    found: int
+     *   track: int,
+     *   file: string,
+     *   found: int
      *  }>
      * }
      */
@@ -63,7 +63,7 @@ final class PlaylistImporter
         $import   = [];
         $pinfo    = pathinfo($playlist_file);
         $track    = 1;
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         if (isset($files)) {
             foreach ($files as $file) {
                 $found    = false;
@@ -75,7 +75,7 @@ final class PlaylistImporter
                     $sql        = 'SELECT COUNT(*) FROM `song` WHERE `id` = ?';
                     $db_results = Dba::read($sql, [$url_data['id']]);
                     if (Dba::num_rows($db_results) && (int)$url_data['id'] > 0) {
-                        debug_event(__CLASS__, "import_playlist identified: {" . $url_data['id'] . "}", 5);
+                        debug_event(self::class, "import_playlist identified: {" . $url_data['id'] . "}", 5);
                         $songs[$track] = $url_data['id'];
                         $track++;
                         $found = true;
@@ -100,13 +100,13 @@ final class PlaylistImporter
                     $results    = Dba::fetch_assoc($db_results);
 
                     if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                        debug_event(__CLASS__, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
+                        debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
                         $songs[$track] = (int)$results['id'];
                         $track++;
                         $found = true;
                     } else {
                         // Not found in absolute path, create it from relative path
-                        $file = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $file;
+                        $file = ($pinfo['dirname'] ?? '') . DIRECTORY_SEPARATOR . $file;
                         // Normalize the file path. realpath requires the files to exists.
                         $file = realpath($file);
                         if ($file) {
@@ -114,7 +114,7 @@ final class PlaylistImporter
                             $results    = Dba::fetch_assoc($db_results);
 
                             if (array_key_exists('id', $results) && (int)($results['id'] ?? 0) > 0) {
-                                debug_event(__CLASS__, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
+                                debug_event(self::class, "import_playlist identified: {" . (int)$results['id'] . "}", 5);
                                 $songs[$track] = (int)$results['id'];
                                 $track++;
                                 $found = true;
@@ -123,7 +123,7 @@ final class PlaylistImporter
                     }
                 } // if it's a file
                 if (!$found) {
-                    debug_event(__CLASS__, "import_playlist skipped: {{$orig}}", 5);
+                    debug_event(self::class, "import_playlist skipped: {{$orig}}", 5);
                 }
                 // add the results to an array to display after
                 $import[] = [
@@ -134,7 +134,7 @@ final class PlaylistImporter
             }
         }
 
-        debug_event(__CLASS__, "import_playlist Parsed " . $playlist_file . ", found " . count($songs) . " songs", 5);
+        debug_event(self::class, "import_playlist Parsed " . $playlist_file . ", found " . count($songs) . " songs", 5);
 
         if (count($songs)) {
             $name        = $pinfo['filename'];

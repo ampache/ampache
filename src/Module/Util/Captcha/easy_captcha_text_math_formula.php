@@ -33,7 +33,7 @@ class easy_captcha_text_math_formula extends easy_captcha
     public $question = "1+1";
     public $solution = "2";
 
-    #-- set up
+    // set up
     public function __construct()
     {
         $this->question = sprintf(self::CAPTCHA_WHATIS_TEXT, $this->create_formula());
@@ -42,18 +42,18 @@ class easy_captcha_text_math_formula extends easy_captcha
         // but I had this code handy already ;) and it's easier to modify
     }
 
-    #-- simple IS-EQUAL check
+    // simple IS-EQUAL check
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
         return (int)$this->solution == (int)$input;
     }
 
-    #-- make new captcha formula string
+    // make new captcha formula string
 
     /**
      * create_formula
@@ -73,7 +73,7 @@ class easy_captcha_text_math_formula extends easy_captcha
         return $formula[rand(0, count($formula) - 1)];
     }
 
-    #-- remove non-arithmetic characters
+    // remove non-arithmetic characters
 
     /**
      * @param string $string
@@ -84,11 +84,11 @@ class easy_captcha_text_math_formula extends easy_captcha
         return preg_replace("/[^-+*\/\d]/", "", $string);
     }
 
-    #-- "solve" simple calculations
+    // "solve" simple calculations
 
     /**
      * @param $formula
-     * @return integer
+     * @return int
      */
     public function calculate_formula($formula)
     {
@@ -108,6 +108,8 @@ class easy_captcha_text_math_formula extends easy_captcha
             ];
         }
 
-        return ($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));
+        return (isset($calc) && $calc[$op1 . $op2])
+            ? $calc[$op1 . $op2]
+            : rand(0, 1 << 23);
     }
 }

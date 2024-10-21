@@ -33,6 +33,7 @@ use Ampache\Module\Api\Method\Exception\RequestParamMissingException;
 use Ampache\Module\Api\Method\Exception\ResultEmptyException;
 use Ampache\Module\Api\Output\ApiOutputInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Podcast\PodcastDeleterInterface;
 use Ampache\Repository\Model\User;
@@ -88,7 +89,7 @@ final class PodcastDeleteMethod implements MethodInterface
             );
         }
 
-        if (!$this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER, $user->getId())) {
+        if (!$this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->getId())) {
             throw new AccessDeniedException(
                 T_('Access denied')
             );

@@ -26,23 +26,18 @@ declare(strict_types=1);
 namespace Ampache\Module\User\Activity;
 
 use Ampache\Config\ConfigContainerInterface;
-use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Useractivity;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 
-final class UserActivityRenderer implements UserActivityRendererInterface
+final readonly class UserActivityRenderer implements UserActivityRendererInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
     public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory
+        private ConfigContainerInterface $configContainer,
+        private ModelFactoryInterface $modelFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
     }
 
     /**
@@ -56,41 +51,35 @@ final class UserActivityRenderer implements UserActivityRendererInterface
             return '';
         }
 
-        $user      = $this->modelFactory->createUser((int) $useractivity->user);
-        $className = ObjectTypeToClassNameMapper::map($useractivity->object_type);
+        $user    = $this->modelFactory->createUser($useractivity->user);
+        $libitem = $this->libraryItemLoader->load(
+            LibraryItemEnum::from($useractivity->object_type),
+            $useractivity->object_id
+        );
 
-        /** @var library_item $libitem */
-        $libitem = new $className($useractivity->object_id);
-        $descr   = $user->get_f_link() . ' ';
-        switch ($useractivity->action) {
-            case 'shout':
-                $descr .= T_('commented on');
-                break;
-            case 'upload':
-                $descr .= T_('uploaded');
-                break;
-            case 'play':
-                $descr .= T_('played');
-                break;
-            case 'userflag':
-                $descr .= T_('favorited');
-                break;
-            case 'follow':
-                $descr .= T_('started to follow');
-                break;
-            case 'rating':
-                $descr .= T_('rated');
-                break;
-            default:
-                $descr .= T_('did something on');
-                break;
+        if ($libitem === null) {
+            return '';
         }
+
+        $descr   = $user->get_f_link() . ' ';
+        $descr .= match ($useractivity->action) {
+            'shout' => T_('commented on'),
+            'upload' => T_('uploaded'),
+            'play' => T_('played'),
+            'userflag' => T_('favorited'),
+            'follow' => T_('started to follow'),
+            'rating' => T_('rated'),
+            default => T_('did something on'),
+        };
+        $link = (!empty($libitem->get_f_parent_link()))
+            ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
+            : $libitem->get_f_link();
 
         return sprintf(
             '<div>%s %s %s</div>',
-            get_datetime((int) $useractivity->activity_date),
+            get_datetime($useractivity->activity_date),
             $descr,
-            $libitem->get_f_link()
+            $link
         );
     }
 }

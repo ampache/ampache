@@ -43,8 +43,13 @@ class SubsonicClient
      * @param string $port
      * @param string $client
      */
-    public function __construct($username, $password, $serverUrl, $port = "4040", $client = "Ampache")
-    {
+    public function __construct(
+        $username,
+        $password,
+        $serverUrl,
+        $port = "4040",
+        $client = "Ampache"
+    ) {
         $this->setServer($serverUrl, $port);
 
         $this->_creds = [
@@ -66,6 +71,7 @@ class SubsonicClient
             'getArtistInfo',
             'search',
             'search2',
+            'getOpenSubsonicExtensions',
             'getPlaylists',
             'getPlaylist',
             'createPlaylist',

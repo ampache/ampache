@@ -32,7 +32,11 @@ final class ObjectCache implements ObjectCacheInterface
 {
     public function compute(): void
     {
-        $count_types = ['stream', 'download', 'skip'];
+        $count_types = [
+            'stream',
+            'download',
+            'skip'
+        ];
         $thresholds  = [0, 7, 10];
         $sql         = "SELECT DISTINCT(`user_preference`.`value`) FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` IN ('stats_threshold', 'popular_threshold')";
         $db_results  = Dba::read($sql);
@@ -40,7 +44,18 @@ final class ObjectCache implements ObjectCacheInterface
             // get individual user thresholds if not the default
             $thresholds[] = (int)$row['value'];
         }
-        $object_types = ['album', 'artist', 'song', 'genre', 'catalog', 'live_stream', 'video', 'podcast', 'podcast_episode', 'playlist'];
+        $object_types = [
+            'album',
+            'artist',
+            'song',
+            'genre',
+            'catalog',
+            'live_stream',
+            'video',
+            'podcast',
+            'podcast_episode',
+            'playlist'
+        ];
 
         foreach ($thresholds as $threshold) {
             foreach ($count_types as $count_type) {

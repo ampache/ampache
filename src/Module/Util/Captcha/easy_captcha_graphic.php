@@ -39,14 +39,16 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
     public $quality;
     public $solution;
 
-    #-- config
+    // config
     /**
      * easy_captcha_graphic constructor.
      * @param $x
      * @param $y
      */
-    public function __construct($x = null, $y = null)
-    {
+    public function __construct(
+        $x = null,
+        $y = null
+    ) {
         if (!$y) {
             $x = strtok(easy_captcha::CAPTCHA_IMAGE_SIZE, "x,|/*;:");
             $y = strtok(",.");
@@ -62,8 +64,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         $this->solution = $this->mkpass();
     }
 
-
-    #-- return a single .ttf font filename
+    // return a single .ttf font filename
 
     /**
      * @return mixed
@@ -76,8 +77,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         return $fonts[rand(0, count($fonts) - 1)];
     }
 
-
-    #-- makes string of random letters (for embedding into image)
+    // makes string of random letters (for embedding into image)
 
     /**
      * @return false|string
@@ -88,19 +88,18 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         for ($n = 0; $n < 10; $n++) {
             $string .= chr(rand(0, 255));
         }
-        $string = base64_encode($string);   // base64-set, but filter out unwanted chars
-        $string = preg_replace(
+        $string = base64_encode($string); // base64-set, but filter out unwanted chars
+        $string = (string)preg_replace(
             "/[+\/=IG0ODQR]/i",
             "",
             $string
-        );  // strips hard to discern letters, depends on used font type
+        ); // strips hard to discern letters, depends on used font type
         $string = substr($string, 0, rand(easy_captcha::CAPTCHA_MIN_CHARS, self::CAPTCHA_MAX_CHARS));
 
         return ($string);
     }
 
-
-    #-- return GD color
+    // return GD color
 
     /**
      * @param $a
@@ -127,8 +126,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
         return imagecolorallocate($this->img, $r ^ $R, $g ^ $R, $b ^ $R);
     }
 
-
-    #-- generate JPEG output
+    // generate JPEG output
 
     /**
      * @return false|string

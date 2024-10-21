@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Database\DatabaseConnectionInterface;
+use Ampache\Repository\Model\UpdateInfoEnum;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,13 +51,13 @@ class UpdateInfoRepositoryTest extends TestCase
 
     public function testGetValeByKeyReturnsNullIfNothingWasFound(): void
     {
-        $key = 'some-key';
+        $key = UpdateInfoEnum::CRON_DATE;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
                 'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-                [$key],
+                [$key->value],
             )
             ->willReturn(false);
 
@@ -67,14 +68,14 @@ class UpdateInfoRepositoryTest extends TestCase
 
     public function testGetValeByKeyReturnsValue(): void
     {
-        $key   = 'some-key';
+        $key   = UpdateInfoEnum::CRON_DATE;
         $value = 666;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
                 'SELECT value from update_info WHERE `key` = ? LIMIT 1',
-                [$key],
+                [$key->value],
             )
             ->willReturn($value);
 
@@ -86,7 +87,7 @@ class UpdateInfoRepositoryTest extends TestCase
 
     public function testSetValueUpdatesExistingValue(): void
     {
-        $key   = 'some-key';
+        $key   = UpdateInfoEnum::CRON_DATE;
         $value = 'some-value';
 
         $result = $this->createMock(PDOStatement::class);
@@ -95,7 +96,7 @@ class UpdateInfoRepositoryTest extends TestCase
             ->method('query')
             ->with(
                 'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
-                [$value, $key]
+                [$value, $key->value]
             )
             ->willReturn($result);
 
@@ -108,7 +109,7 @@ class UpdateInfoRepositoryTest extends TestCase
 
     public function testSetValueInsertIfUpdateFails(): void
     {
-        $key   = 'some-key';
+        $key   = UpdateInfoEnum::CRON_DATE;
         $value = 'some-value';
 
         $result = $this->createMock(PDOStatement::class);
@@ -119,11 +120,11 @@ class UpdateInfoRepositoryTest extends TestCase
                 ...self::withConsecutive(
                     [
                         'UPDATE `update_info` SET `value` = ? WHERE `key` = ?',
-                        [$value, $key]
+                        [$value, $key->value]
                     ],
                     [
                         'INSERT INTO `update_info` (`key`, `value`) VALUES (?, ?)',
-                        [$key, $value]
+                        [$key->value, $value]
                     ]
                 )
             )

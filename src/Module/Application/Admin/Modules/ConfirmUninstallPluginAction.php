@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -52,7 +53,7 @@ final class ConfirmUninstallPluginAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 
@@ -60,8 +61,8 @@ final class ConfirmUninstallPluginAction implements ApplicationActionInterface
 
         $plugin = scrub_in((string) $_REQUEST['plugin']);
         $url    = sprintf(
-            '%s/admin/modules.php?action=uninstall_plugin&plugin=%s',
-            $this->configContainer->getWebPath(),
+            '%s/modules.php?action=uninstall_plugin&plugin=%s',
+            $this->configContainer->getWebPath('/admin'),
             $plugin
         );
         $title = T_('Are You Sure?');

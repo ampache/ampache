@@ -35,12 +35,12 @@ final class Migration380011 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE session MODIFY username varchar(255)");
+        $this->updateDatabase("ALTER TABLE session MODIFY username varchar(255);");
 
-        $this->updateDatabase("ALTER TABLE session_remember MODIFY username varchar(255)");
+        $this->updateDatabase("ALTER TABLE session_remember MODIFY username varchar(255);");
 
-        $this->updateDatabase("ALTER TABLE user MODIFY username varchar(255)");
+        $this->updateDatabase("ALTER TABLE user MODIFY username varchar(255);");
 
-        $this->updateDatabase("ALTER TABLE user MODIFY fullname varchar(255)");
+        $this->updateDatabase("ALTER TABLE user MODIFY fullname varchar(255);");
     }
 }

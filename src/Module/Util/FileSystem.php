@@ -29,7 +29,7 @@ use Exception;
 
 class FileSystem
 {
-    protected $base = null;
+    protected ?string $base = null;
 
     /**
      * @param $path
@@ -42,7 +42,7 @@ class FileSystem
         if (!$temp) {
             throw new Exception('Path does not exist: ' . $path);
         }
-        if ($this->base && strlen($this->base)) {
+        if (!empty($this->base)) {
             if (strpos($temp, $this->base) !== 0) {
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
@@ -60,9 +60,8 @@ class FileSystem
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
-        $fs_id = $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
 
-        return $fs_id;
+        return $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
     }
 
     /**
@@ -73,11 +72,13 @@ class FileSystem
     protected function id($path): string
     {
         $path = $this->real($path);
-        $path = substr($path, strlen($this->base));
+        $path = substr($path, strlen((string)$this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
 
-        return strlen($path) ? $path : '/';
+        return strlen($path)
+            ? $path
+            : '/';
     }
 
     /**
@@ -111,27 +112,33 @@ class FileSystem
             if ($item == '.' || $item == '..' || $item === null) {
                 continue;
             }
-            $tmp = preg_match('([^ a-zа-я-_0-9.]+)ui', $item);
+            $tmp = preg_match('([^ a-zа-я-_0-9.()\[\]]+)ui', $item);
             if ($tmp === false || $tmp === 1) {
                 continue;
             }
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($fullPath)) {
                 $res[] = [
-                    'text' => $item,
-                    'children' => true,
-                    'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item),
-                    'icon' => 'folder'
+                    'title' => $item,
+                    'key' => $this->id($fullPath),
+                    'lazy' => true
                 ];
             }
         }
-        if ($with_root && $this->id($dir) === '/') {
+        usort($res, function ($a, $b) {
+            return strcasecmp($a['title'], $b['title']);
+        });
+        if (
+            $with_root &&
+            $this->id($dir) === '/'
+        ) {
             $res = [
                 [
-                    'text' => basename($this->base),
+                    'title' => basename((string)$this->base),
                     'children' => $res,
-                    'id' => '/',
-                    'icon' => 'folder',
-                    'state' => ['opened' => true, 'disabled' => true]
+                    'key' => '/',
+                    'expanded' => true,
+                    'lazy' => true
                 ]
             ];
         }
@@ -264,8 +271,8 @@ class FileSystem
             throw new Exception('Cannot remove root');
         }
         if (is_dir($dir)) {
-            foreach (array_diff(scandir($dir), [".", ".."]) as $f) {
-                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $f));
+            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
+                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $file));
             }
             rmdir($dir);
         }
@@ -313,8 +320,8 @@ class FileSystem
 
         if (is_dir($dir)) {
             mkdir($new);
-            foreach (array_diff(scandir($dir), [".", ".."]) as $f) {
-                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $f), $this->id($new));
+            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
+                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
             }
         }
         if (is_file($dir)) {

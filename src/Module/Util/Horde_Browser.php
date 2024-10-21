@@ -224,7 +224,7 @@ class Horde_Browser
              * agent strings. */
             if (preg_match('/; (120x160|240x280|240x320|320x320)\)/', $agent)) {
                 $this->_mobile = true;
-            } elseif (preg_match('|Tablet|', $agent)) {
+            } elseif (str_contains($agent, 'Tablet')) {
                 $this->_mobile = true;
                 $this->_tablet = true;
             }
@@ -263,7 +263,7 @@ class Horde_Browser
             if (strpos($version[1], '.') !== false) {
                 list($this->_majorVersion, $this->_minorVersion) = explode('.', $version[1]);
             } else {
-                $this->_majorVersion = $version[1];
+                $this->_majorVersion = (int)$version[1];
                 $this->_minorVersion = 0;
             }
 
@@ -380,9 +380,9 @@ class Horde_Browser
                 $this->_mobile = true;
             }
 
-            $this->_majorVersion = $version[1];
+            $this->_majorVersion = (int)$version[1];
             if (isset($version[2])) {
-                $this->_minorVersion = $version[2];
+                $this->_minorVersion = (int)$version[2];
             }
 
             if (stripos($agent, 'Chrome/') !== false || stripos($agent, 'CriOS/') !== false) {
@@ -396,7 +396,7 @@ class Horde_Browser
                 $this->setFeature('iframes');
                 $this->setFeature('accesskey');
                 $this->setFeature('xmlhttpreq');
-                $this->setQuirk('empty_file_input_value', 0);
+                $this->setQuirk('empty_file_input_value', false);
 
                 if (preg_match('|Chrome/([0-9.]+)|i', $agent, $version_string)) {
                     list($this->_majorVersion, $this->_minorVersion) = explode('.', $version_string[1], 2);
@@ -715,7 +715,7 @@ class Horde_Browser
      *   - utf
      *   - wml
      *   - xmlhttpreq
-     * @param bool $value Special capability parameter.
+     * @param bool|string|float|int $value Special capability parameter.
      */
     public function setFeature($feature, $value = true)
     {

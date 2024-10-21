@@ -29,7 +29,7 @@ use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Util\Ui;
 
 /** @var Localplay $localplay */
-/** @var array $objects */
+/** @var list<int> $objects */
 
 Ajax::start_container('localplay_status');
 Ui::show_box_top(T_('Localplay Control') . ' - ' . strtoupper($localplay->type), 'box box_localplay_status');
@@ -59,7 +59,7 @@ if (!empty($status)) {
             <?php echo T_('Random'); ?>
         </li>
         <li>
-            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'delete', T_('Clear Playlist'), 'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
+            <?php echo Ajax::button('?page=localplay&action=command&command=delete_all', 'close', T_('Clear Playlist'), 'localplay_clear_all'); ?><?php echo T_('Clear Playlist'); ?>
         </li>
     </ul>
 </div>

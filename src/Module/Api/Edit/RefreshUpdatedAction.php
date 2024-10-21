@@ -105,7 +105,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
         library_item $libitem,
         int $object_id
     ): ?ResponseInterface {
-        $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+        $show_ratings = User::is_registered() && AmpConfig::get('ratings');
         /**
          * @todo Every editable item type will need some sort of special handling here
          */
@@ -307,30 +307,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
                 ob_end_clean();
                 break;
-            case 'tvshow_row':
-                $hide_genres = AmpConfig::get('hide_genres');
-                ob_start();
-
-                $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
-                    [
-                        'libitem' => $libitem,
-                        'is_table' => true,
-                        'object_type' => $object_type,
-                        'object_id' => $object_id,
-                        'show_ratings' => $show_ratings,
-                        'hide_genres' => $hide_genres,
-                        'cel_cover' => 'cel_cover',
-                        'cel_tags' => 'cel_tags',
-                    ]
-                );
-
-                $results = ob_get_contents();
-
-                ob_end_clean();
-                break;
             case 'live_stream_row':
-            case 'tvshow_season_row':
                 ob_start();
 
                 $this->ui->show(
@@ -383,7 +360,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
 
         return $this->responseFactory->createResponse()
             ->withBody(
-                $this->streamFactory->createStream($results)
+                $this->streamFactory->createStream((string)$results)
             );
     }
 }

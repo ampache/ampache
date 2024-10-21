@@ -30,26 +30,18 @@ use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Broadcast;
 use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
-final class PlayerAjaxHandler implements AjaxHandlerInterface
+final readonly class PlayerAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private AjaxUriRetrieverInterface $ajaxUriRetriever;
-
-    private UiInterface $ui;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        AjaxUriRetrieverInterface $ajaxUriRetriever,
-        UiInterface $ui
+        private RequestParserInterface $requestParser,
+        private AjaxUriRetrieverInterface $ajaxUriRetriever,
+        private UiInterface $ui
     ) {
-        $this->requestParser    = $requestParser;
-        $this->ajaxUriRetriever = $ajaxUriRetriever;
-        $this->ui               = $ui;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
@@ -70,7 +62,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                 return;
             case 'broadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
-                if (empty($broadcast_id)) {
+                if ($broadcast_id === '' || $broadcast_id === '0') {
                     $broadcast_id = Broadcast::create(T_('My Broadcast'));
                 }
 
@@ -80,6 +72,7 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                     $broadcast->update_state(true, $key);
                     $results['broadcast'] = Broadcast::get_unbroadcast_link((int) $broadcast_id) . '<script>startBroadcast(\'' . $key . '\');</script>';
                 }
+
                 break;
             case 'unbroadcast':
                 $broadcast_id = Core::get_get('broadcast_id');
@@ -88,10 +81,6 @@ final class PlayerAjaxHandler implements AjaxHandlerInterface
                     $broadcast->update_state(false);
                     $results['broadcast'] = Broadcast::get_broadcast_link() . '<script>stopBroadcast();</script>';
                 }
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         } // switch on action;
 
         // We always do this

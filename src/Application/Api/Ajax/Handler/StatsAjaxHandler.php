@@ -26,33 +26,30 @@ declare(strict_types=0);
 namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\System\Core;
+use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\System\Plugin\PluginRetrieverInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
-use Ampache\Repository\Model\Plugin;
 use Ampache\Module\System\Session;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-final class StatsAjaxHandler implements AjaxHandlerInterface
+final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser,
+        private PluginRetrieverInterface $pluginRetriever
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
-        /** @var User $user */
-        $user = (!empty(Core::get_global('user')))
-            ? Core::get_global('user')
-            : new User(-1);
 
         // Switch on the actions
         switch ($action) {
@@ -65,30 +62,36 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                             $longitude = (float)($_REQUEST['longitude'] ?? 0);
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if (empty($name)) {
-                                foreach (Plugin::get_plugins('get_location_name') as $plugin_name) {
-                                    $plugin = new Plugin($plugin_name);
-                                    if ($plugin->_plugin !== null && $plugin->load($user)) {
-                                        $name = $plugin->_plugin->get_location_name($latitude, $longitude);
-                                        if (!empty($name)) {
-                                            break;
-                                        }
+                            if ($name === null || $name === '' || $name === '0') {
+                                foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
+                                    $name = $plugin->_plugin->get_location_name($latitude, $longitude);
+                                    if (!empty($name)) {
+                                        break;
                                     }
                                 }
                             }
+
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
                             if ($latitude > 0 && $longitude > 0) {
-                                Session::update_geolocation(session_id(), $latitude, $longitude, $name);
+                                Session::update_geolocation((string)session_id(), $latitude, $longitude, $name);
                             }
                         }
                     }
                 } else {
                     debug_event('stats.ajax', 'Geolocation not enabled for the user.', 3);
                 }
+
                 break;
             case 'delete_play':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (
+                    check_http_referer() === true &&
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
+
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
@@ -103,10 +106,18 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
+
                 $results['recently_played'] = ob_get_clean();
                 break;
             case 'delete_skip':
-                Stats::delete((int)$_REQUEST['activity_id']);
+                if (
+                    check_http_referer() === true &&
+                    Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) &&
+                    isset($_REQUEST['activity_id'])
+                ) {
+                    Stats::delete((int)$_REQUEST['activity_id']);
+                }
+
                 ob_start();
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();

@@ -38,8 +38,8 @@ final class Migration370011 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("ALTER TABLE `tvshow` ADD COLUMN `prefix` varchar(32) CHARACTER SET $charset NULL");
+        $this->updateDatabase("ALTER TABLE `tvshow` ADD COLUMN `prefix` varchar(32) CHARACTER SET $charset NULL;");
 
-        $this->updateDatabase("ALTER TABLE `movie` ADD COLUMN `prefix` varchar(32) CHARACTER SET $charset NULL");
+        $this->updateDatabase("ALTER TABLE `movie` ADD COLUMN `prefix` varchar(32) CHARACTER SET $charset NULL;");
     }
 }

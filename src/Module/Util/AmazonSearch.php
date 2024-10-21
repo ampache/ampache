@@ -46,11 +46,11 @@ class AmazonSearch
     public $url_suffix       = '/onca/xml';
     public $base_url;
     public $search;
-    public $public_key;    // AWSAccessKeyId
-    public $private_key;   // AWSSecretKey
+    public $public_key; // AWSAccessKeyId
+    public $private_key; // AWSSecretKey
     public $associate_tag; // Amazon Affiliate Associate Tag
     public $results = []; // Array of results
-    public $_parser;   // The XML parser
+    public $_parser; // The XML parser
     public $_grabtags; // Tags to grab the contents of
     public $_sourceTag; // source tag don't ask
     public $_subTag; // Stupid hack to make things come our right
@@ -71,8 +71,12 @@ class AmazonSearch
      * @param $associate_tag
      * @param string $base_url_param
      */
-    public function __construct($public_key, $private_key, $associate_tag, $base_url_param = '')
-    {
+    public function __construct(
+        $public_key,
+        $private_key,
+        $associate_tag,
+        $base_url_param = ''
+    ) {
         // If we have a base url then use it
         if ($base_url_param != '') {
             $this->base_url = str_replace('http://', '', $base_url_param);
@@ -119,7 +123,7 @@ class AmazonSearch
      * @param string $user
      * @param string $pass
      */
-    public function setProxy($host = '', $port = '', $user = '', $pass = '')
+    public function setProxy($host = '', $port = '', $user = '', $pass = ''): void
     {
         if ($host) {
             $this->_proxy_host = $host;
@@ -138,7 +142,7 @@ class AmazonSearch
     /**
      * Create the XML parser to process the response.
      */
-    public function createParser()
+    public function createParser(): void
     {
         $this->_parser = xml_parser_create();
 
@@ -156,7 +160,7 @@ class AmazonSearch
      *
      * @param string $url The URL of the Amazon webservice.
      */
-    public function runSearch($url)
+    public function runSearch($url): void
     {
         // create the parser
         $this->createParser();
@@ -257,9 +261,7 @@ class AmazonSearch
         $signature = base64_encode(hash_hmac("sha256", $string_to_sign, $this->private_key, true));
 
         // urlencode the signed string, replace illegal char
-        $signature = str_replace("%7E", "~", rawurlencode($signature));
-
-        return $signature;
+        return str_replace("%7E", "~", rawurlencode($signature));
     }
 
     /**
@@ -290,7 +292,7 @@ class AmazonSearch
      *
      * @param string $asin The 'Amazon standard Identification Number'
      */
-    public function runSearchAsin($asin)
+    public function runSearchAsin($asin): void
     {
         // get the proxy config
         $options = $this->getProxyConfig();
@@ -342,7 +344,7 @@ class AmazonSearch
      * @param $tag
      * @param $attributes
      */
-    public function startElement($parser, $tag, $attributes)
+    public function startElement($parser, $tag, $attributes): void
     {
         if ($tag == "ASIN") {
             $this->_sourceTag = $tag;
@@ -354,12 +356,10 @@ class AmazonSearch
         // If it's in the tag list, don't grab our search results
         if (strlen($this->_sourceTag)) {
             $this->_currentTag = $tag;
+        } elseif ($tag != "TotalPages") {
+            $this->_currentTag = '';
         } else {
-            if ($tag != "TotalPages") {
-                $this->_currentTag = '';
-            } else {
-                $this->_currentTag = $tag;
-            }
+            $this->_currentTag = $tag;
         }
     }
 
@@ -368,7 +368,7 @@ class AmazonSearch
      * @param $parser
      * @param $cdata
      */
-    public function cdata($parser, $cdata)
+    public function cdata($parser, $cdata): void
     {
         $tag    = $this->_currentTag;
         $subtag = $this->_subTag;
@@ -398,7 +398,7 @@ class AmazonSearch
      * @param $parser
      * @param $tag
      */
-    public function endElement($parser, $tag)
+    public function endElement($parser, $tag): void
     {
         // zero the tag
         $this->_currentTag = '';

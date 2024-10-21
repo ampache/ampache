@@ -92,8 +92,6 @@ final class ArtCleanup implements ArtCleanupInterface
             'podcast',
             'podcast_episode',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video'
         ];
@@ -126,8 +124,6 @@ final class ArtCleanup implements ArtCleanupInterface
             'podcast',
             'podcast_episode',
             'song',
-            'tvshow',
-            'tvshow_season',
             'user',
             'video'
         ];

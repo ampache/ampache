@@ -32,7 +32,7 @@ use Generator;
  */
 final class Versions
 {
-    public const MAXIMUM_UPDATABLE_VERSION = 600076; // AMPACHE_VERSION (db_version)
+    public const MAXIMUM_UPDATABLE_VERSION = 700029; // AMPACHE_VERSION (db_version)
 
     /** @var array<int, class-string<MigrationInterface>> List of available migrations */
     private static array $versions = [
@@ -280,11 +280,33 @@ final class Versions
         600069 => Migration\V6\Migration600069::class,
         600070 => Migration\V6\Migration600070::class,
         600071 => Migration\V6\Migration600071::class,
-        600072 => Migration\V6\Migration600072::class,
-        600073 => Migration\V6\Migration600073::class,
-        600074 => Migration\V6\Migration600074::class,
-        600075 => Migration\V6\Migration600075::class,
-        600076 => Migration\V6\Migration600076::class,
+        700001 => Migration\V7\Migration700001::class,
+        700002 => Migration\V7\Migration700002::class,
+        700003 => Migration\V7\Migration700003::class,
+        700004 => Migration\V7\Migration700004::class,
+        700005 => Migration\V7\Migration700005::class,
+        700007 => Migration\V7\Migration700007::class,
+        700008 => Migration\V7\Migration700008::class,
+        700009 => Migration\V7\Migration700009::class,
+        700010 => Migration\V7\Migration700010::class,
+        700011 => Migration\V7\Migration700011::class,
+        700012 => Migration\V7\Migration700012::class,
+        700013 => Migration\V7\Migration700013::class,
+        700014 => Migration\V7\Migration700014::class,
+        700015 => Migration\V7\Migration700015::class,
+        700016 => Migration\V7\Migration700016::class,
+        700018 => Migration\V7\Migration700018::class,
+        700019 => Migration\V7\Migration700019::class,
+        700020 => Migration\V7\Migration700020::class,
+        700021 => Migration\V7\Migration700021::class,
+        700022 => Migration\V7\Migration700022::class,
+        700023 => Migration\V7\Migration700023::class,
+        700024 => Migration\V7\Migration700024::class,
+        700025 => Migration\V7\Migration700025::class,
+        700026 => Migration\V7\Migration700026::class,
+        700027 => Migration\V7\Migration700027::class,
+        700028 => Migration\V7\Migration700028::class,
+        700029 => Migration\V7\Migration700029::class,
     ];
 
     /**

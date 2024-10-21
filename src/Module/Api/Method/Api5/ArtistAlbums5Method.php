@@ -60,7 +60,7 @@ final class ArtistAlbums5Method
 
             return false;
         }
-        $results = static::getAlbumRepository()->getAlbumByArtist($object_id);
+        $results = self::getAlbumRepository()->getAlbumByArtist($object_id);
         if (empty($results)) {
             Api5::empty('album', $input['api_format']);
 

@@ -35,15 +35,15 @@ final class Migration600019 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('UPDATE IGNORE `rating` SET `object_type` = \'album_disk\' WHERE `object_type` = \'\'');
+        $this->updateDatabase('UPDATE IGNORE `rating` SET `object_type` = \'album_disk\' WHERE `object_type` = \'\';');
         $this->updateDatabase('DELETE FROM `rating` WHERE `object_type` = \'\';');
-        $this->updateDatabase('UPDATE IGNORE `object_count` SET `object_type` = \'album_disk\' WHERE `object_type` = \'\'');
-        $this->updateDatabase('DELETE FROM `object_count` WHERE `object_type` = \'\'');
+        $this->updateDatabase('UPDATE IGNORE `object_count` SET `object_type` = \'album_disk\' WHERE `object_type` = \'\';');
+        $this->updateDatabase('DELETE FROM `object_count` WHERE `object_type` = \'\';');
 
         // rating (id, `user`, object_type, object_id, rating)
-        $this->updateDatabase('INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT \'album_disk\', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = \'album\' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = \'album\' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = \'album\' AND `album_disk`.`id` IS NOT NULL');
+        $this->updateDatabase('INSERT IGNORE INTO `rating` (`object_type`, `object_id`, `user`, `rating`) SELECT DISTINCT \'album_disk\', `album_disk`.`id`, `rating`.`user`, `rating`.`rating` FROM `rating` LEFT JOIN `album` ON `rating`.`object_type` = \'album\' AND `rating`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `rating` AS `album_rating` ON `album_rating`.`object_type` = \'album\' AND `rating`.`rating` = `album_rating`.`rating` AND `rating`.`user` = `album_rating`.`user` WHERE `rating`.`object_type` = \'album\' AND `album_disk`.`id` IS NOT NULL;');
 
         // user_flag (id, `user`, object_id, object_type, `date`)
-        $this->updateDatabase('INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT \'album_disk\', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = \'album\' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = \'album\' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = \'album\' AND `album_disk`.`id` IS NOT NULL');
+        $this->updateDatabase('INSERT IGNORE INTO `user_flag` (`object_type`, `object_id`, `user`, `date`) SELECT DISTINCT \'album_disk\', `album_disk`.`id`, `user_flag`.`user`, `user_flag`.`date` FROM `user_flag` LEFT JOIN `album` ON `user_flag`.`object_type` = \'album\' AND `user_flag`.`object_id` = `album`.`id` LEFT JOIN `album_disk` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `user_flag` AS `album_flag` ON `album_flag`.`object_type` = \'album\' AND `user_flag`.`date` = `album_flag`.`date` AND `user_flag`.`user` = `album_flag`.`user` WHERE `user_flag`.`object_type` = \'album\' AND `album_disk`.`id` IS NOT NULL;');
     }
 }

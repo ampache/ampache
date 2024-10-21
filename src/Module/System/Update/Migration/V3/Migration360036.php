@@ -35,10 +35,10 @@ final class Migration360036 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%'");
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'min_object_count'");
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'bandwidth'");
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'features'");
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'tags_userlist'");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` LIKE 'ellipse_threshold_%';");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'min_object_count';");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'bandwidth';");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'features';");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'tags_userlist';");
     }
 }

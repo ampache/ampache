@@ -43,8 +43,9 @@ $dir       = $dir ?? 'ltr'; ?>
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
 </head>
 <body>
-<!-- rfc3514 implementation -->
+    <!-- rfc3514 implementation -->
     <div id="rfc3514" style="display: none;">0x0</div>
+    <div id="reloader" style="display: none;"></div>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">

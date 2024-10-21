@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Admin\Export;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Catalog\CatalogLoaderInterface;
 use Ampache\Module\Catalog\Exception\CatalogLoadingException;
@@ -57,7 +58,7 @@ final class ExportAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
@@ -72,16 +73,17 @@ final class ExportAction implements ApplicationActionInterface
         // instead of waiting until contents are generated, which could take a long time.
         ob_implicit_flush();
 
-        $requestData = (array)$request->getParsedBody();
-        $catalogId   = (int) ($requestData['export_catalog'] ?? 0);
+        $requestData  = (array)$request->getParsedBody();
+        $catalogId    = (int) ($requestData['export_catalog'] ?? 0);
+        $exportFormat = CatalogExportTypeEnum::tryFrom($requestData['export_format'] ?? '') ?? CatalogExportTypeEnum::CSV;
 
         try {
             $catalog = $this->catalogLoader->getById($catalogId);
-        } catch (CatalogLoadingException $e) {
+        } catch (CatalogLoadingException) {
             $catalog = null;
         }
 
-        $exporter = $this->catalogExportFactory->createFromExportType($requestData['export_format'] ?? CatalogExportTypeEnum::CSV);
+        $exporter = $this->catalogExportFactory->createFromExportType($exportFormat);
         $exporter->sendHeaders();
         $exporter->export($catalog);
 

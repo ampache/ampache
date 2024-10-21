@@ -42,8 +42,6 @@ if (array_key_exists('ssid', $_REQUEST)) {
 }
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
-    [
-        DefaultAction::REQUEST_KEY => DefaultAction::class,
-    ],
+    [DefaultAction::REQUEST_KEY => DefaultAction::class],
     DefaultAction::REQUEST_KEY
 );

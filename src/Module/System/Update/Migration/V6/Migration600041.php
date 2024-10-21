@@ -36,7 +36,7 @@ final class Migration600041 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`');
-        $this->updateDatabase('CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`)');
+        Dba::write('ALTER TABLE `label_asso` DROP KEY `label_asso_label_IDX`;');
+        $this->updateDatabase('CREATE INDEX `label_asso_label_IDX` USING BTREE ON `label_asso` (`label`);');
     }
 }

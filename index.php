@@ -24,7 +24,7 @@
                 <p>The root Ampache folder has changed to <a href="./public" target="_blank">./public</a></p>
             </div>
             <div class="alert alert-danger">
-                <p>You must update your DocumentRoot to the new path.</p>
+                <p>You must update your DocumentRoot to the new path</p>
                 <p><a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes" target="_blank">Please check the Ampache wiki for more information</a></p>
             </div>
         </div>
