@@ -41,11 +41,11 @@ final class Migration400024 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `artist` DROP COLUMN `song_count`;");
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `song_count`;", [], true);
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `song_count` smallint(5) unsigned DEFAULT 0 NULL;");
-        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_count`;");
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_count`;", [], true);
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_count` smallint(5) unsigned DEFAULT 0 NULL;");
-        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_group_count`;");
+        Dba::write("ALTER TABLE `artist` DROP COLUMN `album_group_count`;", [], true);
         $this->updateDatabase("ALTER TABLE `artist` ADD COLUMN `album_group_count` smallint(5) unsigned DEFAULT 0 NULL;");
     }
 }

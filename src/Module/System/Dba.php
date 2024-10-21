@@ -49,9 +49,10 @@ class Dba
      * query
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function query($sql, $params = [])
+    public static function query($sql, $params = [], $silent = false)
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(self::class, $sql . ' ' . json_encode($params), 5);
@@ -62,7 +63,7 @@ class Dba
         // Be aggressive, be strong, be dumb
         $tries = 0;
         do {
-            $stmt = self::_query($sql, $params);
+            $stmt = self::_query($sql, $params, $silent);
         } while (!$stmt && $tries++ < 3);
 
         return $stmt;
@@ -72,9 +73,10 @@ class Dba
      * _query
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    private static function _query($sql, $params)
+    private static function _query($sql, $params, $silent = false)
     {
         $dbh = self::dbh();
         if (!$dbh) {
@@ -95,21 +97,29 @@ class Dba
         } catch (PDOException $error) {
             // are you trying to write to something that doesn't exist?
             self::$_error = $error->getMessage();
-            debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . $error->getMessage(), 1);
+            }
 
             return false;
         }
 
         if (!$stmt) {
             self::$_error = (string)json_encode($dbh->errorInfo());
-            debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($dbh->errorInfo()), 1);
+            }
+
             self::disconnect();
         } elseif ($stmt->errorCode() && $stmt->errorCode() != '00000') {
             self::$_error = (string)json_encode($stmt->errorInfo());
-            debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
-            debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            if (!$silent) {
+                debug_event(self::class, 'Error_query SQL: ' . self::$_sql . ' ' . json_encode($params), 5);
+                debug_event(self::class, 'Error_query MSG: ' . json_encode($stmt->errorInfo()), 1);
+            }
+
             self::finish($stmt);
             self::disconnect();
 
@@ -124,22 +134,24 @@ class Dba
      * read
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function read($sql, $params = [])
+    public static function read($sql, $params = [], $silent = false)
     {
-        return self::query($sql, $params);
+        return self::query($sql, $params, $silent);
     }
 
     /**
      * write
      * @param string $sql
      * @param array $params
+     * @param bool $silent
      * @return PDOStatement|false
      */
-    public static function write($sql, $params = [])
+    public static function write($sql, $params = [], $silent = false)
     {
-        return self::query($sql, $params);
+        return self::query($sql, $params, $silent);
     }
 
     /**
