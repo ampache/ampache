@@ -33,7 +33,7 @@ final class Migration700013 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `ip_history` DROP COLUMN `action`;");
+        Dba::write("ALTER TABLE `ip_history` DROP COLUMN `action`;", [], true);
         $this->updateDatabase("ALTER TABLE `ip_history` ADD COLUMN `action` CHAR (36);");
     }
 }

@@ -39,7 +39,7 @@ final class Migration500008 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;");
+        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;", [], true);
         $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `filter_user` int(11) unsigned DEFAULT 0 NOT NULL;");
 
         $tables = [
@@ -50,7 +50,7 @@ final class Migration500008 extends AbstractMigration
             $this->updateDatabase("REPLACE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT `$type`.`catalog`, '$type', `$type`.`id` FROM `$type`;");
         }
 
-        Dba::write("ALTER TABLE `user_data` DROP KEY `unique_data`;");
+        Dba::write("ALTER TABLE `user_data` DROP KEY `unique_data`;", [], true);
         $this->updateDatabase("ALTER TABLE `user_data` ADD UNIQUE `unique_data` (`user`, `key`);");
     }
 }

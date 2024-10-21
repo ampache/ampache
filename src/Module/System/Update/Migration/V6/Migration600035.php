@@ -36,7 +36,7 @@ final class Migration600035 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `podcast_episode` DROP COLUMN `enabled`;');
+        Dba::write('ALTER TABLE `podcast_episode` DROP COLUMN `enabled`;', [], true);
         $this->updateDatabase('ALTER TABLE `podcast_episode` ADD COLUMN `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 1 AFTER `played`;');
     }
 }

@@ -121,7 +121,6 @@ class Preference extends database_object
         'localplay_controller',
         'localplay_level',
         'lock_songs',
-        'mpd_active',
         'notify_email',
         'now_playing_per_user',
         'offset_limit',
@@ -184,12 +183,9 @@ class Preference extends database_object
         'upload_script',
         'upload_subdir',
         'upload_user_artist',
-        'upnp_active',
         'upnp_backend',
         'use_original_year',
         'use_play2',
-        'vlc_active',
-        'xbmc_active',
         'webdav_backend',
         'webplayer_aurora',
         'webplayer_confirmclose',
@@ -200,7 +196,7 @@ class Preference extends database_object
     ];
 
     /**
-     * plugin preferences might not be there but they need to be kept if you're using them
+     * plugin and module preferences might not be there but they need to be kept if you're using them
      */
     public const PLUGIN_LIST = [
         '7digital_api_key',
@@ -231,6 +227,7 @@ class Preference extends database_object
         'homedash_random',
         'homedash_recent',
         'homedash_trending',
+        'httpq_active',
         'index_dashboard_form',
         'lastfm_challenge',
         'lastfm_grant_link',
@@ -240,12 +237,13 @@ class Preference extends database_object
         'matomo_site_id',
         'matomo_url',
         'mb_overwrite_name',
+        'mpd_active',
         'paypal_business',
         'paypal_currency_code',
         'personalfav_display',
+        'personalfav_order',
         'personalfav_playlist',
         'personalfav_smartlist',
-        'personalfav_order',
         'piwik_site_id',
         'piwik_url',
         'ratingmatch_flag_rule',
@@ -270,6 +268,9 @@ class Preference extends database_object
         'stream_control_time_max',
         'tadb_api_key',
         'tadb_overwrite_name',
+        'upnp_active',
+        'vlc_active',
+        'xbmc_active',
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
@@ -300,10 +301,20 @@ class Preference extends database_object
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?";
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+            $pref_name    = self::id_from_name($pref_name);
+        }
+
+        $sql = ($ampacheSeven)
+            ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?"
+            : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
         $db_results = Dba::read($sql, [$pref_name, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'";
+            $sql = ($ampacheSeven)
+                ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'"
+                : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
             $db_results = Dba::read($sql, [$pref_name]);
         }
 
@@ -353,7 +364,14 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        $params = [$value, $name];
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+        }
+
+        $params = ($ampacheSeven)
+            ? [$value, $name]
+            : [$value, $pref_id];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -363,12 +381,16 @@ class Preference extends database_object
         }
 
         if ($applytodefault && $access100) {
-            $sql = "UPDATE `preference` SET `value` = ? WHERE `name` = ?";
+            $sql = ($ampacheSeven)
+                ? "UPDATE `preference` SET `value` = ? WHERE `name` = ?;"
+                : "UPDATE `preference` SET `value` = ? WHERE `preference` = ?;";
             Dba::write($sql, $params);
         }
 
         if (self::has_access($name)) {
-            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check;
+            $sql = ($ampacheSeven)
+                ? 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check
+                : 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? ' . $user_check;
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -391,7 +413,9 @@ class Preference extends database_object
     public static function update_level($preference, $level): bool
     {
         // First prepare
-        $preference_id = is_numeric($preference) ? $preference : self::id_from_name($preference);
+        $preference_id = is_numeric($preference)
+            ? $preference
+            : self::id_from_name($preference);
 
         $sql = "UPDATE `preference` SET `level` = ? WHERE `id` = ?;";
         Dba::write($sql, [$level, $preference_id]);
@@ -407,7 +431,15 @@ class Preference extends database_object
      */
     public static function update_all($preference, $value): bool
     {
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+            $preference   = self::id_from_name($preference);
+        }
+
+        $sql = ($ampacheSeven)
+            ? "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?"
+            : "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
         Dba::write($sql, [$value, $preference]);
 
         parent::clear_cache();
@@ -591,16 +623,30 @@ class Preference extends database_object
             return false;
         }
 
-        $pref_id    = Dba::insert_id();
-        $params     = [$pref_id, $name, $default];
-        $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
+        // Check for databases < Migration700020
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+        }
+
+        $pref_id = Dba::insert_id();
+        if ($ampacheSeven) {
+            $params = [$pref_id, $name, $default];
+            $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
+        } else {
+            $params = [$pref_id, $default];
+            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, ?);";
+        }
+
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
 
         if ($category !== "system") {
-            $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);";
+            $sql = ($ampacheSeven)
+                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);"
+                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) (SELECT `user`.`id`, ?, ? FROM `user`);";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
@@ -784,12 +830,6 @@ class Preference extends database_object
                     break;
                 case 'show_lyrics':
                     Dba::write($pref_sql, [69, 'show_lyrics', '0', T_('Show lyrics'), AccessLevelEnum::DEFAULT->value,'boolean', 'interface', 'player']);
-                    break;
-                case 'mpd_active':
-                    Dba::write($pref_sql, [70, 'mpd_active', '0', T_('MPD Active Instance'), AccessLevelEnum::USER->value,'integer', 'internal', 'mpd']);
-                    break;
-                case 'httpq_active':
-                    Dba::write($pref_sql, [71, 'httpq_active', '0', T_('HTTPQ Active Instance'), AccessLevelEnum::USER->value,'integer', 'internal', 'httpq']);
                     break;
                 case 'lastfm_grant_link':
                     Dba::write($pref_sql, [77, 'lastfm_grant_link', '', T_('Last.FM Grant URL'), AccessLevelEnum::USER->value,'string', 'internal', 'lastfm']);
