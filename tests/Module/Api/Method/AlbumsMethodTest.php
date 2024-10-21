@@ -169,8 +169,6 @@ class AlbumsMethodTest extends MockeryTestCase
 
         $result  = 'some-result';
         $include = [123, 456];
-        $limit   = 42;
-        $offset  = 33;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)

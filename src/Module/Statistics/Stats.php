@@ -439,7 +439,7 @@ class Stats
     {
         if ($user_id === 0) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user?->id ?? 0;
         }
         if ((int)$user_id == 0) {
             return [

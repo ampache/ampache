@@ -187,6 +187,8 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        return (is_array($labels) ? $ret : implode(",", $ret));
+        return (is_array($labels)
+            ? $ret
+            : implode(",", $ret));
     }
 }

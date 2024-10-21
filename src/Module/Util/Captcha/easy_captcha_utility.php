@@ -279,6 +279,8 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
 
         $path = $abspath . implode('/', $path);
 
-        return empty($path) ? '.' : $path;
+        return empty($path)
+            ? '.'
+            : $path;
     }
 }

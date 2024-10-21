@@ -85,7 +85,7 @@ final class Ping4Method
             $row        = Dba::fetch_assoc($db_results);
             // Now we need to quickly get the totals
             $user   = User::get_from_username(Session::username($input['auth']));
-            $counts = Catalog::get_server_counts($user->id ?? 0);
+            $counts = Catalog::get_server_counts($user?->id ?? 0);
 
             // now add it all together
             $countarray = [

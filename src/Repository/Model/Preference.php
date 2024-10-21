@@ -1955,7 +1955,7 @@ class Preference extends database_object
     public static function init(): bool
     {
         $user    = Core::get_global('user');
-        $user_id = $user->id ?? -1;
+        $user_id = $user?->id ?? -1;
 
         // First go ahead and try to load it from the preferences
         if (self::load_from_session($user_id)) {

@@ -3825,7 +3825,7 @@ abstract class Catalog extends database_object
     {
         if (!$user_id) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? false;
+            $user_id = $user?->id ?? false;
         }
 
         if (!$user_id) {

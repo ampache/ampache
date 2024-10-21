@@ -116,7 +116,7 @@ class AmpacheFriendsTimeline extends AmpachePlugin implements PluginDisplayHomeI
     {
         if (AmpConfig::get('sociable')) {
             $user    = Core::get_global('user');
-            $user_id = $user->id ?? 0;
+            $user_id = $user?->id ?? 0;
             if ($user_id !== 0) {
                 $divString = ($this->order > 0)
                     ? '<div class="ftl" style="order: ' . $this->order . '">'

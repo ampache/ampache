@@ -862,7 +862,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             }
         }
 
-        return (is_array($tags) ? $ret : implode(",", $ret));
+        return (is_array($tags)
+            ? $ret
+            : implode(",", $ret));
     }
 
     /**
