@@ -35,7 +35,7 @@ $htmllang = str_replace("_", "-", $lang);
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $lang; ?>" lang="<?php echo $lang; ?>">
 <head>
     <!-- Propelled by Ampache | ampache.org -->
-    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>" />
+    <meta http-equiv="Content-Type" content="text/html; Charset=<?php echo $charset; ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="cache-control" content="max-age=0">
     <meta http-equiv="cache-control" content="no-cache">

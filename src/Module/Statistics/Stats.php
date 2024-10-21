@@ -921,7 +921,7 @@ class Stats
     {
         $limit         = AmpConfig::get('popular_threshold', 10);
         $access100     = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-        $object_string = (empty($object_type) || !in_array($object_type, ['album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'tvshow', 'tvshow_season', 'user', 'video']))
+        $object_string = (empty($object_type) || !in_array($object_type, ['album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video']))
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
             : "'$object_type'";
 

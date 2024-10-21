@@ -40,9 +40,9 @@ final class Migration600016 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `album_map` DROP KEY `object_type_IDX`');
-        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`)');
-        Dba::write('ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`');
-        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`)');
+        Dba::write('ALTER TABLE `album_map` DROP KEY `object_type_IDX`;');
+        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);');
+        Dba::write('ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`;');
+        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`);');
     }
 }

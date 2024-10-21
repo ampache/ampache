@@ -43,7 +43,7 @@ final class Migration360028 extends AbstractMigration
     public function migrate(): void
     {
         // Update previous update preference
-        $this->updateDatabase("UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info'");
+        $this->updateDatabase("UPDATE `preference` SET `name`='allow_personal_info_now', `description`='Personal information visibility - Now playing' WHERE `name`='allow_personal_info';");
 
         // Insert new recently played preference
         $this->updatePreferences('allow_personal_info_recent', 'Personal information visibility - Recently played / actions', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');

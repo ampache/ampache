@@ -35,9 +35,9 @@ final class Migration360038 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `wanted` ADD COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`");
-        $this->updateDatabase("ALTER TABLE `wanted` MODIFY `artist` int(11) NULL");
-        $this->updateDatabase("ALTER TABLE `song_preview` ADD COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`");
-        $this->updateDatabase("ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL");
+        $this->updateDatabase("ALTER TABLE `wanted` ADD COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`;");
+        $this->updateDatabase("ALTER TABLE `wanted` MODIFY `artist` int(11) NULL;");
+        $this->updateDatabase("ALTER TABLE `song_preview` ADD COLUMN `artist_mbid` varchar(36) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL AFTER `artist`;");
+        $this->updateDatabase("ALTER TABLE `song_preview` MODIFY `artist` int(11) NULL;");
     }
 }

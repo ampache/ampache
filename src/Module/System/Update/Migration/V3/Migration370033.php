@@ -40,8 +40,8 @@ final class Migration370033 extends AbstractMigration
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine  = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `label` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `category` varchar(40) NULL, `summary` TEXT CHARACTER SET $charset NULL, `address` varchar(256) NULL, `email` varchar(128) NULL, `website` varchar(256) NULL, `user` int(11) unsigned NULL, `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine");
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `label_asso` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` int(11) unsigned NOT NULL, `artist` int(11) unsigned NOT NULL, `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine");
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `label` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `name` varchar(80) NOT NULL, `category` varchar(40) NULL, `summary` TEXT CHARACTER SET $charset NULL, `address` varchar(256) NULL, `email` varchar(128) NULL, `website` varchar(256) NULL, `user` int(11) unsigned NULL, `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine;");
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `label_asso` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` int(11) unsigned NOT NULL, `artist` int(11) unsigned NOT NULL, `creation_date` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine;");
     }
 
     public function getTableMigrations(

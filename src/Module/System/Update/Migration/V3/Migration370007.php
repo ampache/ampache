@@ -44,7 +44,7 @@ final class Migration370007 extends AbstractMigration
         $this->updatePreferences('daap_backend', 'Use DAAP backend', '0', AccessLevelEnum::ADMIN->value, 'boolean', 'system');
         $this->updatePreferences('daap_pass', 'DAAP backend password', '', AccessLevelEnum::ADMIN->value, 'string', 'system');
 
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine");
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `daap_session` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `creationdate` int(11) unsigned NOT NULL, PRIMARY KEY (`id`)) ENGINE=$engine;");
     }
 
     public function getTableMigrations(

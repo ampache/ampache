@@ -39,6 +39,6 @@ final class Migration380012 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url'");
+        $this->updateDatabase("UPDATE `preference` SET `description`='Enable url rewriting' WHERE `preference`.`name`='stream_beautiful_url';");
     }
 }

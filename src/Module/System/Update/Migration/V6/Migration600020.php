@@ -39,6 +39,6 @@ final class Migration600020 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('UPDATE `preference` SET `level` = 100 WHERE `catagory` = \'system\'');
+        $this->updateDatabase('UPDATE `preference` SET `level` = 100 WHERE `catagory` = \'system\';');
     }
 }

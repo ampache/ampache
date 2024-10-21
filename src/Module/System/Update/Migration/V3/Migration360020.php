@@ -51,9 +51,9 @@ final class Migration360020 extends AbstractMigration
         $db_results = Dba::read($sql);
         while ($results = Dba::fetch_assoc($db_results)) {
             if ($results['catalog_type'] == 'local') {
-                $this->updateDatabase("INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?)");
+                $this->updateDatabase("INSERT INTO `catalog_local` (`path`, `catalog_id`) VALUES (?, ?);");
             } elseif ($results['catalog_type'] == 'remote') {
-                $this->updateDatabase("INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)");
+                $this->updateDatabase("INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?);");
             }
         }
 

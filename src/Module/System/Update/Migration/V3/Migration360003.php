@@ -45,7 +45,7 @@ final class Migration360003 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `image` (`id` int(11) unsigned NOT NULL auto_increment, `image` mediumblob NOT NULL, `mime` varchar(64) NOT NULL, `size` varchar(64) NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation");
+        $this->updateDatabase("CREATE TABLE IF NOT EXISTS `image` (`id` int(11) unsigned NOT NULL auto_increment, `image` mediumblob NOT NULL, `mime` varchar(64) NOT NULL, `size` varchar(64) NOT NULL, `object_type` varchar(64) NOT NULL, `object_id` int(11) unsigned NOT NULL, PRIMARY KEY (`id`), KEY `object_type` (`object_type`), KEY `object_id` (`object_id`)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
 
         foreach (['album', 'artist'] as $type) {
             $sql        = "SELECT `" . $type . "_id` AS `object_id`, `art`, `art_mime` FROM `" . $type . "_data` WHERE `art` IS NOT NULL";
@@ -55,7 +55,7 @@ final class Migration360003 extends AbstractMigration
                 Dba::write($sql);
             }
 
-            $this->updateDatabase("DROP TABLE IF EXISTS `" . $type . "_data`");
+            $this->updateDatabase("DROP TABLE IF EXISTS `" . $type . "_data`;");
         }
     }
 
