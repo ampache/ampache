@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class ClipQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -52,7 +52,7 @@ final class ClipQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`clip`.`id`";

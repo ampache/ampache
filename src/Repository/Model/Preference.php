@@ -26,7 +26,6 @@ declare(strict_types=0);
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
-use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
@@ -42,7 +41,7 @@ class Preference extends database_object
     /**
      * This array contains System preferences that can (should) not be edited or deleted from the api
      */
-    public const SYSTEM_LIST = array(
+    public const SYSTEM_LIST = [
         'ajax_load',
         'album_group',
         'album_release_type',
@@ -229,7 +228,7 @@ class Preference extends database_object
         'yourls_api_key',
         'yourls_domain',
         'yourls_use_idn',
-    );
+    ];
 
     /**
      * __constructor
@@ -259,10 +258,10 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, array($pref_id, $user_id));
+        $db_results = Dba::read($sql, [$pref_id, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
             $sql        = "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
-            $db_results = Dba::read($sql, array($pref_id));
+            $db_results = Dba::read($sql, [$pref_id]);
         }
         $data = Dba::fetch_assoc($db_results);
 
@@ -297,7 +296,7 @@ class Preference extends database_object
         if (is_array($value)) {
             $value = implode(',', $value);
         }
-        $params = array($value, $pref_id);
+        $params = [$value, $pref_id];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -342,7 +341,7 @@ class Preference extends database_object
         }
 
         $sql = "UPDATE `preference` SET `level` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($level, $preference_id));
+        Dba::write($sql, [$level, $preference_id]);
 
         return true;
     }
@@ -385,7 +384,7 @@ class Preference extends database_object
         } else {
             $sql = "SELECT * FROM `preference` WHERE `id` = ?";
         }
-        $db_results = Dba::read($sql, array($preference));
+        $db_results = Dba::read($sql, [$preference]);
 
         return Dba::num_rows($db_results);
     }
@@ -404,7 +403,7 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `level` FROM `preference` WHERE `name` = ?;";
-        $db_results = Dba::read($sql, array($preference));
+        $db_results = Dba::read($sql, [$preference]);
         $data       = Dba::fetch_assoc($db_results);
 
         if (Access::check('interface', $data['level'])) {
@@ -426,10 +425,10 @@ class Preference extends database_object
         }
 
         $sql        = "SELECT `id` FROM `preference` WHERE `name` = ?";
-        $db_results = Dba::read($sql, array($name));
+        $db_results = Dba::read($sql, [$name]);
         $results    = Dba::fetch_assoc($db_results);
         if (array_key_exists('id', $results)) {
-            parent::add_to_cache('id_from_name', $name, array($results['id']));
+            parent::add_to_cache('id_from_name', $name, [$results['id']]);
 
             return (int)$results['id'];
         }
@@ -447,7 +446,7 @@ class Preference extends database_object
     {
         $pref_id    = Dba::escape($pref_id);
         $sql        = "SELECT `name` FROM `preference` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($pref_id));
+        $db_results = Dba::read($sql, [$pref_id]);
         $results    = Dba::fetch_assoc($db_results);
         if (empty($results)) {
             return null;
@@ -467,7 +466,7 @@ class Preference extends database_object
         $sql = "SELECT `preference`.`category` FROM `preference` GROUP BY `category` ORDER BY `category`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($row['category'] != 'internal') {
                 $results[] = $row['category'];
@@ -491,11 +490,11 @@ class Preference extends database_object
 
         $sql = "SELECT `preference`.`id`, `preference`.`name`, `preference`.`description`, `preference`.`level`, `preference`.`type`, `preference`.`category`, `preference`.`subcategory`, `user_preference`.`value` FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` = ? AND `user_preference`.`user` = ? AND `preference`.`category` != 'internal' $user_limit ORDER BY `preference`.`subcategory`, `preference`.`description`";
 
-        $db_results = Dba::read($sql, array($pref_name, $user_id));
-        $results    = array();
+        $db_results = Dba::read($sql, [$pref_name, $user_id]);
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
                 'level' => $row['level'],
@@ -504,7 +503,7 @@ class Preference extends database_object
                 'type' => $row['type'],
                 'category' => $row['category'],
                 'subcategory' => $row['subcategory']
-            );
+            ];
         }
 
         return $results;
@@ -535,13 +534,13 @@ class Preference extends database_object
             $subcategory = strtolower((string)$subcategory);
         }
         $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $db_results = Dba::write($sql, array($name, $description, $default, (int)$level, $type, $category, $subcategory));
+        $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
 
         if (!$db_results) {
             return false;
         }
         $pref_id    = Dba::insert_id();
-        $params     = array($pref_id, $default);
+        $params     = [$pref_id, $default];
         $sql        = "INSERT INTO `user_preference` VALUES (-1, ?, ?)";
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
@@ -576,7 +575,7 @@ class Preference extends database_object
             $sql = "DELETE FROM `preference` WHERE `id` = ?";
         }
 
-        if (Dba::write($sql, array($preference)) !== false) {
+        if (Dba::write($sql, [$preference]) !== false) {
             self::clean_preferences();
 
             return true;
@@ -594,7 +593,7 @@ class Preference extends database_object
     public static function rename($old, $new): void
     {
         $sql = "UPDATE `preference` SET `name` = ? WHERE `name` = ?";
-        Dba::write($sql, array($new, $old));
+        Dba::write($sql, [$new, $old]);
     }
 
     /**
@@ -617,7 +616,7 @@ class Preference extends database_object
      */
     public static function fix_preferences($results): array
     {
-        $arrays = array(
+        $arrays = [
             'allow_zip_types',
             'art_order',
             'auth_methods',
@@ -627,12 +626,12 @@ class Preference extends database_object
             'registration_display_fields',
             'registration_mandatory_fields',
             'wanted_types'
-        );
+        ];
 
         foreach ($arrays as $item) {
             $results[$item] = (array_key_exists($item, $results) && trim((string)$results[$item]))
                 ? explode(',', $results[$item])
-                : array();
+                : [];
         }
 
         foreach ($results as $key => $data) {
@@ -1065,7 +1064,7 @@ class Preference extends database_object
     public static function translate_db(): void
     {
         $sql        = "UPDATE `preference` SET `preference`.`description` = ? WHERE `preference`.`name` = ? AND `preference`.`description` != ?;";
-        $pref_array = array(
+        $pref_array = [
             '7digital_api_key' => T_('7digital consumer key'),
             '7digital_secret_api_key' => T_('7digital secret'),
             'ajax_load' => T_('Ajax page load'),
@@ -1252,9 +1251,9 @@ class Preference extends database_object
             'yourls_api_key' => T_('YOURLS API key'),
             'yourls_domain' => T_('YOURLS domain name'),
             'yourls_use_idn' => T_('YOURLS use IDN')
-        );
+        ];
         foreach ($pref_array as $key => $value) {
-            Dba::write($sql, array($value, $key, $value));
+            Dba::write($sql, [$value, $key, $value]);
         }
     }
 
@@ -1298,7 +1297,7 @@ class Preference extends database_object
      */
     public static function is_boolean($key): bool
     {
-        $boolean_array = array(
+        $boolean_array = [
             'access_control',
             'access_list',
             'admin_enable_required',
@@ -1483,7 +1482,7 @@ class Preference extends database_object
             'webplayer_pausetabs',
             'write_tags',
             'xml_rpc'
-        );
+        ];
 
         if (in_array($key, $boolean_array)) {
             return true;
@@ -1509,9 +1508,9 @@ class Preference extends database_object
 
         /* Get Global Preferences */
         $sql        = "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`category`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`category` !='system'";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, [$user_id]);
 
-        $results = array();
+        $results = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $value          = $row['system_value'] ?? $row['value'];
             $name           = $row['name'];

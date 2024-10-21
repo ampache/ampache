@@ -53,7 +53,7 @@ final class UserAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
         $user_id = (int)$this->requestParser->getFromRequest('user_id');
 

@@ -71,7 +71,7 @@ class easy_captcha_dxy_wave
         $distorty = $this->dist_y * sin(($y / $this->slow_y) - ($x / 0.9 / $this->slow_x));
 
         #-- result
-        return array($distortx, $distorty);
+        return [$distortx, $distorty];
     }
 
     #-- array of values with random start/end values
@@ -86,7 +86,7 @@ class easy_captcha_dxy_wave
     {
         $BEG    = $this->real_rand($a, $b);
         $DIFF   = $this->real_rand($a, $b) - $BEG;
-        $result = array();
+        $result = [];
         for ($count = 0; $count <= $max; $count++) {
             $result[$count] = $BEG + $DIFF * $count / $max;
         }

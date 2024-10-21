@@ -148,10 +148,10 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         if (!in_array('music', $gather_types)) {
             debug_event('theaudiodb.plugin', 'Not a valid media type, skipped.', 5);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
         try {
             if (in_array('album', $gather_types)) {
                 debug_event('theaudiodb.plugin', 'Getting album metadata from TheAudioDb...', 5);
@@ -215,7 +215,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      */
     public function get_external_metadata($object, string $object_type): bool
     {
-        $valid_types = array('artist');
+        $valid_types = ['artist'];
         // Artist metadata only for now
         if (!in_array($object_type, $valid_types)) {
             debug_event('theaudiodb.plugin', 'get_external_metadata only supports Artists', 5);
@@ -223,7 +223,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             return false;
         }
 
-        $data = array();
+        $data = [];
         try {
             if (in_array($object_type, $valid_types)) {
                 $release = null;
@@ -316,7 +316,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
@@ -331,7 +331,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     {
         $url = 'http://www.theaudiodb.com/api/v1/json/' . $this->api_key . '/' . $func;
         //debug_event('theaudiodb.plugin', 'API call: ' . $url, 5);
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = Requests::get($url, [], Core::requests_options());
 
         if ($request->status_code != 200) {
             return null;

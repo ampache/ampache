@@ -188,7 +188,7 @@ class Video extends database_object implements
     {
         foreach (ObjectTypeToClassNameMapper::VIDEO_TYPES as $dtype) {
             $sql        = "SELECT `id` FROM `" . strtolower($dtype) . "` WHERE `id` = ?";
-            $db_results = Dba::read($sql, array($video_id));
+            $db_results = Dba::read($sql, [$video_id]);
             $results    = Dba::fetch_assoc($db_results);
             if (array_key_exists('id', $results)) {
                 $className = ObjectTypeToClassNameMapper::map(strtolower($dtype));
@@ -295,12 +295,12 @@ class Video extends database_object implements
      */
     public function get_keywords(): array
     {
-        $keywords          = array();
-        $keywords['title'] = array(
+        $keywords          = [];
+        $keywords['title'] = [
             'important' => true,
             'label' => T_('Title'),
             'value' => $this->get_fullname()
-        );
+        ];
 
         return $keywords;
     }
@@ -384,7 +384,7 @@ class Video extends database_object implements
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -396,7 +396,7 @@ class Video extends database_object implements
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -406,12 +406,12 @@ class Video extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'video') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'video',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -472,7 +472,7 @@ class Video extends database_object implements
         // delete files matching catalog_ignore_pattern
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
         if ($ignore_pattern) {
-            Dba::write("DELETE FROM `video` WHERE `file` REGEXP ?;", array($ignore_pattern));
+            Dba::write("DELETE FROM `video` WHERE `file` REGEXP ?;", [$ignore_pattern]);
         }
         // clean up missing catalogs
         Dba::write("DELETE FROM `video` WHERE `video`.`catalog` NOT IN (SELECT `id` FROM `catalog`);");
@@ -549,7 +549,7 @@ class Video extends database_object implements
      * @param string $player
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'video', $options);
     }
@@ -607,7 +607,7 @@ class Video extends database_object implements
     /**
      * Insert new video.
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         $check_file = Catalog::get_id_from_file($data['file'], 'video');
         if ($check_file > 0) {
@@ -630,7 +630,7 @@ class Video extends database_object implements
         $video_bitrate = Catalog::check_int($data['video_bitrate'], 4294967294, 0);
 
         $sql    = "INSERT INTO `video` (`file`, `catalog`, `title`, `video_codec`, `audio_codec`, `resolution_x`, `resolution_y`, `size`, `time`, `mime`, `release_date`, `addition_time`, `bitrate`, `mode`, `channels`, `display_x`, `display_y`, `frame_rate`, `video_bitrate`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $params = array($data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate);
+        $params = [$data['file'], $data['catalog'], $data['title'], $data['video_codec'], $data['audio_codec'], $rezx, $rezy, $data['size'], $data['time'], $data['mime'], $release_date, time(), $bitrate, $mode, $channels, $disx, $disy, $frame_rate, $video_bitrate];
         Dba::write($sql, $params);
         $video_id = (int) Dba::insert_id();
 
@@ -658,7 +658,7 @@ class Video extends database_object implements
     /**
      * Insert video for derived type.
      */
-    private static function insert_video_type(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    private static function insert_video_type(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         if (is_array($gtypes) && count($gtypes) > 0) {
             $gtype = $gtypes[0];
@@ -686,7 +686,7 @@ class Video extends database_object implements
     {
         $sql    = "UPDATE `video` SET `title` = ?";
         $title  = $data['title'] ?? $this->title;
-        $params = array($title);
+        $params = [$title];
         // don't require a release date when updating a video
         if (isset($data['release_date'])) {
             $f_release_date     = (string) $data['release_date'];
@@ -720,7 +720,7 @@ class Video extends database_object implements
 
         $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id));
+        Dba::write($sql, [$new_video->title, $new_video->bitrate, $new_video->size, $new_video->time, $new_video->video_codec, $new_video->audio_codec, $new_video->resolution_x, $new_video->resolution_y, $release_date, $new_video->channels, $new_video->display_x, $new_video->display_y, $new_video->frame_rate, $new_video->video_bitrate, $update_time, $video_id]);
     }
 
     /**
@@ -731,7 +731,7 @@ class Video extends database_object implements
     public static function update_video_counts($video_id): void
     {
         if ($video_id > 0) {
-            $params = array($video_id);
+            $params = [$video_id];
             $sql    = "UPDATE `video` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
             Dba::write($sql, $params);
             $sql = "UPDATE `video` SET `total_skip` = 0 WHERE `total_skip` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_id` = ? AND `object_count`.`object_type` = 'video' AND `object_count`.`count_type` = 'stream');";
@@ -749,10 +749,10 @@ class Video extends database_object implements
      */
     public function get_release_item_art(): array
     {
-        return array(
+        return [
             'object_type' => 'video',
             'object_id' => $this->id
-        );
+        ];
     }
 
     /**
@@ -817,7 +817,7 @@ class Video extends database_object implements
      */
     public function get_subtitles(): array
     {
-        $subtitles = array();
+        $subtitles = [];
         $pinfo     = pathinfo($this->file);
         $filter    = $pinfo['dirname'] . DIRECTORY_SEPARATOR . $pinfo['filename'] . '*.srt';
 
@@ -831,11 +831,11 @@ class Video extends database_object implements
                     $lang_name = $this->get_language_name($lang_code);
                 }
             }
-            $subtitles[] = array(
+            $subtitles[] = [
                 'file' => $pinfo['dirname'] . DIRECTORY_SEPARATOR . $srt,
                 'lang_code' => $lang_code,
                 'lang_name' => $lang_name
-            );
+            ];
         }
 
         return $subtitles;
@@ -847,7 +847,7 @@ class Video extends database_object implements
      */
     protected function get_language_name($code): string
     {
-        $languageCodes = array(
+        $languageCodes = [
          "aa" => T_("Afar"),
          "ab" => T_("Abkhazian"),
          "ae" => T_("Avestan"),
@@ -1032,7 +1032,7 @@ class Video extends database_object implements
          "za" => T_("Zhuang"),
          "zh" => T_("Chinese"),
          "zu" => T_("Zulu")
-        );
+        ];
 
         return $languageCodes[$code];
     }
@@ -1069,7 +1069,7 @@ class Video extends database_object implements
         }
         if ($deleted === true) {
             // keep details about deletions
-            $params = array($this->id);
+            $params = [$this->id];
             $sql    = "REPLACE INTO `deleted_video` (`id`, `addition_time`, `delete_time`, `title`, `file`, `catalog`, `total_count`, `total_skip`) SELECT `id`, `addition_time`, UNIX_TIMESTAMP(), `title`, `file`, `catalog`, `total_count`, `total_skip` FROM `video` WHERE `id` = ?;";
             Dba::write($sql, $params);
 
@@ -1102,7 +1102,7 @@ class Video extends database_object implements
         }
 
         $sql = "UPDATE `video` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($time, $video_id));
+        Dba::write($sql, [$time, $video_id]);
     }
 
     /**
@@ -1140,7 +1140,7 @@ class Video extends database_object implements
         }
 
         $sql = "UPDATE `video` SET `$field` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $video_id));
+        Dba::write($sql, [$value, $video_id]);
 
         return true;
     }
@@ -1152,7 +1152,7 @@ class Video extends database_object implements
      */
     public static function get_deleted(): array
     {
-        $deleted    = array();
+        $deleted    = [];
         $sql        = "SELECT * FROM `deleted_video`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1176,8 +1176,8 @@ class Video extends database_object implements
     {
         // Remove some stuff we don't care about
         unset($video->catalog, $video->played, $video->enabled, $video->addition_time, $video->update_time, $video->type);
-        $string_array = array('title', 'tags');
-        $skip_array   = array('id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields');
+        $string_array = ['title', 'tags'];
+        $skip_array   = ['id', 'tag_id', 'mime', 'total_count', 'disabledMetadataFields'];
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);
     }

@@ -254,7 +254,7 @@ class Song extends database_object implements
         $disksubtitle     = $results['disksubtitle'] ?? null;
         $year             = Catalog::normalize_year($results['year'] ?? 0);
         $comment          = $results['comment'] ?? null;
-        $tags             = $results['genre'] ?? array(); // multiple genre support makes this an array
+        $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
         $lyrics           = $results['lyrics'] ?? null;
         $user_upload      = $results['user_upload'] ?? null;
         $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
@@ -266,9 +266,9 @@ class Song extends database_object implements
             }
         }
         // info for the artist_map table.
-        $artists_array          = $results['artists'] ?? array();
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
+        $artists_array          = $results['artists'] ?? [];
+        $artist_mbid_array      = $results['mb_artistid_array'] ?? [];
+        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (!empty($artist) && !empty($albumartist) && $artist == $albumartist) {
@@ -324,7 +324,7 @@ class Song extends database_object implements
 
         $sql = "INSERT INTO `song` (`catalog`, `file`, `album`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $db_results = Dba::write($sql, array(
+        $db_results = Dba::write($sql, [
             $catalog,
             $file,
             $album_id,
@@ -345,7 +345,7 @@ class Song extends database_object implements
             $license_id,
             $composer,
             $channels
-        ));
+        ]);
 
         if (!$db_results) {
             debug_event(self::class, 'Unable to insert ' . $file, 2);
@@ -354,7 +354,7 @@ class Song extends database_object implements
         }
 
         $song_id = (int)Dba::insert_id();
-        $artists = array($artist_id, (int)$albumartist_id);
+        $artists = [$artist_id, (int)$albumartist_id];
 
         // create the album_disk (if missing)
         AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
@@ -431,7 +431,7 @@ class Song extends database_object implements
         }
 
         $sql = "INSERT INTO `song_data` (`song_id`, `disksubtitle`, `comment`, `lyrics`, `label`, `language`, `replaygain_track_gain`, `replaygain_track_peak`, `replaygain_album_gain`, `replaygain_album_peak`, `r128_track_gain`, `r128_album_gain`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($song_id, $disksubtitle, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain));
+        Dba::write($sql, [$song_id, $disksubtitle, $comment, $lyrics, $label, $language, $replaygain_track_gain, $replaygain_track_peak, $replaygain_album_gain, $replaygain_album_peak, $r128_track_gain, $r128_album_gain]);
 
         return $song_id;
     }
@@ -446,7 +446,7 @@ class Song extends database_object implements
         // delete files matching catalog_ignore_pattern
         $ignore_pattern = AmpConfig::get('catalog_ignore_pattern');
         if ($ignore_pattern) {
-            Dba::write("DELETE FROM `song` WHERE `file` REGEXP ?;", array($ignore_pattern));
+            Dba::write("DELETE FROM `song` WHERE `file` REGEXP ?;", [$ignore_pattern]);
         }
         // delete duplicates
         Dba::write("DELETE `dupe` FROM `song` AS `dupe`, `song` AS `orig` WHERE `dupe`.`id` > `orig`.`id` AND `dupe`.`file` <=> `orig`.`file`;");
@@ -483,9 +483,9 @@ class Song extends database_object implements
         if ($idlist == '()') {
             return false;
         }
-        $artists = array();
-        $albums  = array();
-        $tags    = array();
+        $artists = [];
+        $albums  = [];
+        $tags    = [];
 
         // Song data cache
         $sql = (AmpConfig::get('catalog_disable'))
@@ -552,7 +552,7 @@ class Song extends database_object implements
         }
 
         $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
-        $db_results = Dba::read($sql, array($song_id));
+        $db_results = Dba::read($sql, [$song_id]);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             parent::add_to_cache('song', $song_id, $results);
@@ -560,7 +560,7 @@ class Song extends database_object implements
             return $results;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -570,7 +570,7 @@ class Song extends database_object implements
     public static function has_id($song_id): bool
     {
         $sql        = "SELECT `song`.`id` FROM `song` WHERE `song`.`id` = ?";
-        $db_results = Dba::read($sql, array($song_id));
+        $db_results = Dba::read($sql, [$song_id]);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
             return true;
@@ -601,7 +601,7 @@ class Song extends database_object implements
     ): string {
         // by default require song, album, artist for any searches
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND (`album`.`name` = ? OR LTRIM(CONCAT(COALESCE(`album`.`prefix`, ''), ' ', `album`.`name`)) = ?)";
-        $params = array($song_name, $artist_name, $artist_name, $album_name, $album_name);
+        $params = [$song_name, $artist_name, $artist_name, $album_name, $album_name];
         if (!empty($song_mbid)) {
             $sql .= " AND `song`.`mbid` = ?";
             $params[] = $song_mbid;
@@ -643,9 +643,9 @@ class Song extends database_object implements
         }
 
         $sql        = "SELECT $columns FROM `song_data` WHERE `song_id` = ?";
-        $db_results = Dba::read($sql, array($song_id));
+        $db_results = Dba::read($sql, [$song_id]);
         if (!$db_results) {
-            return array();
+            return [];
         }
         $results = Dba::fetch_assoc($db_results);
 
@@ -730,7 +730,7 @@ class Song extends database_object implements
      */
     public static function get_disabled($count = 0): array
     {
-        $results = array();
+        $results = [];
 
         $sql = "SELECT `id` FROM `song` WHERE `enabled`='0'";
         if ($count) {
@@ -754,14 +754,14 @@ class Song extends database_object implements
         $sql_base = "SELECT `song`.`id` FROM `song`";
         if ($data['mb_trackid']) {
             $sql        = $sql_base . " WHERE `song`.`mbid` = ? LIMIT 1";
-            $db_results = Dba::read($sql, array($data['mb_trackid']));
+            $db_results = Dba::read($sql, [$data['mb_trackid']]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 return $results['id'];
             }
         }
         if ($data['file']) {
             $sql        = $sql_base . " WHERE `song`.`file` = ? LIMIT 1";
-            $db_results = Dba::read($sql, array($data['file']));
+            $db_results = Dba::read($sql, [$data['file']]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 return $results['id'];
             }
@@ -769,7 +769,7 @@ class Song extends database_object implements
 
         $where  = "WHERE `song`.`title` = ?";
         $sql    = $sql_base;
-        $params = array($data['title']);
+        $params = [$data['title']];
         if ($data['track']) {
             $where .= " AND `song`.`track` = ?";
             $params[] = $data['track'];
@@ -920,7 +920,7 @@ class Song extends database_object implements
             return $this->album_disk;
         }
         $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
-        $db_results = Dba::read($sql, array($this->album, $this->disk));
+        $db_results = Dba::read($sql, [$this->album, $this->disk]);
         $results    = Dba::fetch_assoc($db_results);
         if (empty($results)) {
             return null;
@@ -993,8 +993,8 @@ class Song extends database_object implements
     {
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
-        $string_array = array('title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'album_disk', 'time');
-        $skip_array   = array(
+        $string_array = ['title', 'comment', 'lyrics', 'composer', 'tags', 'artist', 'album', 'album_disk', 'time'];
+        $skip_array   = [
             'id',
             'tag_id',
             'mime',
@@ -1008,7 +1008,7 @@ class Song extends database_object implements
             'albumartist_mbid',
             'mb_albumid_group',
             'disabledMetadataFields'
-        );
+        ];
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
     }
@@ -1023,9 +1023,9 @@ class Song extends database_object implements
      */
     public static function compare_media_information($media, $new_media, $string_array, $skip_array): array
     {
-        $array            = array();
+        $array            = [];
         $array['change']  = false;
-        $array['element'] = array();
+        $array['element'] = [];
 
         // Pull out all the currently set vars
         $fields = get_object_vars($media);
@@ -1194,10 +1194,10 @@ class Song extends database_object implements
         $update_time = time();
 
         $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, array($new_song->album, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels, (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id));
+        Dba::write($sql, [$new_song->album, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, (int) $new_song->bitrate, (int) $new_song->rate, $new_song->mode, $new_song->channels, (int) $new_song->size, (int) $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
-        Dba::write($sql, array($new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id));
+        Dba::write($sql, [$new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
     }
 
     /**
@@ -1437,7 +1437,7 @@ class Song extends database_object implements
         }
 
         $sql = "UPDATE `song` SET `update_time` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($time, $song_id));
+        Dba::write($sql, [$time, $song_id]);
     }
 
     /**
@@ -1495,7 +1495,7 @@ class Song extends database_object implements
 
         $sql = "UPDATE `song` SET `$field` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($value, $song_id));
+        return Dba::write($sql, [$value, $song_id]);
     }
 
     /**
@@ -1525,7 +1525,7 @@ class Song extends database_object implements
 
         $sql = "UPDATE `song_data` SET `$field` = ? WHERE `song_id` = ?";
 
-        return Dba::write($sql, array($value, $song_id));
+        return Dba::write($sql, [$value, $song_id]);
     }
 
     /**
@@ -1635,22 +1635,22 @@ class Song extends database_object implements
      */
     public function get_keywords(): array
     {
-        $keywords               = array();
-        $keywords['mb_trackid'] = array(
+        $keywords               = [];
+        $keywords['mb_trackid'] = [
             'important' => false,
             'label' => T_('Track MusicBrainzID'),
             'value' => $this->mbid
-        );
-        $keywords['artist'] = array(
+        ];
+        $keywords['artist'] = [
             'important' => true,
             'label' => T_('Artist'),
             'value' => $this->f_artist
-        );
-        $keywords['title'] = array(
+        ];
+        $keywords['title'] = [
             'important' => true,
             'label' => T_('Title'),
             'value' => $this->get_fullname()
-        );
+        ];
 
         return $keywords;
     }
@@ -1795,10 +1795,10 @@ class Song extends database_object implements
      */
     public function get_parent(): ?array
     {
-        return array(
+        return [
             'object_type' => 'album',
             'object_id' => $this->album
-        );
+        ];
     }
 
     /**
@@ -1808,11 +1808,11 @@ class Song extends database_object implements
      */
     public static function get_parent_array($object_id, $type = 'artist'): array
     {
-        $results = array();
+        $results = [];
         $sql     = ($type == 'album')
             ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
             : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
-        $db_results = Dba::read($sql, array($object_id));
+        $db_results = Dba::read($sql, [$object_id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
@@ -1827,7 +1827,7 @@ class Song extends database_object implements
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -1839,7 +1839,7 @@ class Song extends database_object implements
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -1849,12 +1849,12 @@ class Song extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'song') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'song',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -2028,11 +2028,11 @@ class Song extends database_object implements
                 $this->bitrate = $bitrate;
 
                 // replace duplicate/incorrect parameters on the additional params
-                $patterns = array(
+                $patterns = [
                     '/&format=[a-z]+/',
                     '/&transcode_to=[a-z|0-9]+/',
                     '/&bitrate=[0-9]+/',
-                );
+                ];
                 $additional_params = preg_replace($patterns, '', $additional_params);
                 $additional_params .= '&transcode_to=' . $transcode_type . '&bitrate=' . $bitrate;
             }
@@ -2078,7 +2078,7 @@ class Song extends database_object implements
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }
@@ -2098,7 +2098,7 @@ class Song extends database_object implements
     public function get_lyrics(): array
     {
         if ($this->lyrics) {
-            return array('text' => $this->lyrics);
+            return ['text' => $this->lyrics];
         }
 
         foreach (Plugin::get_plugins('get_lyrics') as $plugin_name) {
@@ -2116,7 +2116,7 @@ class Song extends database_object implements
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -2127,7 +2127,7 @@ class Song extends database_object implements
      */
     public function run_custom_play_action($action_index, $codec = ''): array
     {
-        $transcoder = array();
+        $transcoder = [];
         $actions    = self::get_custom_play_actions();
         if ($action_index <= count($actions)) {
             $action = $actions[$action_index - 1];
@@ -2143,10 +2143,10 @@ class Song extends database_object implements
 
             debug_event(self::class, "Running custom play action: " . $run, 3);
 
-            $descriptors = array(1 => array('pipe', 'w'));
+            $descriptors = [1 => ['pipe', 'w']];
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
                 // Windows doesn't like to provide stderr as a pipe
-                $descriptors[2] = array('pipe', 'w');
+                $descriptors[2] = ['pipe', 'w'];
             }
             $process = proc_open($run, $descriptors, $pipes);
 
@@ -2165,15 +2165,15 @@ class Song extends database_object implements
      */
     public static function get_custom_play_actions(): array
     {
-        $actions = array();
+        $actions = [];
         $count   = 0;
         while (AmpConfig::get('custom_play_action_title_' . $count)) {
-            $actions[] = array(
+            $actions[] = [
                 'index' => ($count + 1),
                 'title' => AmpConfig::get('custom_play_action_title_' . $count),
                 'icon' => AmpConfig::get('custom_play_action_icon_' . $count),
                 'run' => AmpConfig::get('custom_play_action_run_' . $count),
-            );
+            ];
             ++$count;
         }
 
@@ -2206,7 +2206,7 @@ class Song extends database_object implements
      */
     public static function get_deleted(): array
     {
-        $deleted    = array();
+        $deleted    = [];
         $sql        = "SELECT * FROM `deleted_song`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -2237,24 +2237,24 @@ class Song extends database_object implements
             Catalog::migrate_map('artist', $old_artist, $new_artist);
             // update mapping tables
             $sql = "UPDATE IGNORE `album_map` SET `object_id` = ? WHERE `object_id` = ?";
-            if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
                 return false;
             }
             $sql = "UPDATE IGNORE `artist_map` SET `artist_id` = ? WHERE `artist_id` = ?";
-            if (Dba::write($sql, array($new_artist, $old_artist)) === false) {
+            if (Dba::write($sql, [$new_artist, $old_artist]) === false) {
                 return false;
             }
             $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-            if (Dba::write($sql, array($new_artist, 'artist', $old_artist)) === false) {
+            if (Dba::write($sql, [$new_artist, 'artist', $old_artist]) === false) {
                 return false;
             }
             // delete leftovers duplicate maps
             $sql = "DELETE FROM `album_map` WHERE `object_id` = ?";
-            Dba::write($sql, array($old_artist));
+            Dba::write($sql, [$old_artist]);
             $sql = "DELETE FROM `artist_map` WHERE `artist_id` = ?";
-            Dba::write($sql, array($old_artist));
+            Dba::write($sql, [$old_artist]);
             $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-            Dba::write($sql, array('artist', $old_artist));
+            Dba::write($sql, ['artist', $old_artist]);
         }
 
         return true;
@@ -2282,37 +2282,37 @@ class Song extends database_object implements
 
         // update mapping tables
         $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `album_id` = ?";
-        if (Dba::write($sql, array($new_album, $old_album)) === false) {
+        if (Dba::write($sql, [$new_album, $old_album]) === false) {
             return false;
         }
         if ($song_id > 0) {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, array($new_album, $old_album, $song_id)) === false) {
+            if (Dba::write($sql, [$new_album, $old_album, $song_id]) === false) {
                 return false;
             }
         } else {
             $sql = "UPDATE IGNORE `album_map` SET `album_id` = ? WHERE `album_id` = ? AND `object_type` = 'song'";
-            if (Dba::write($sql, array($new_album, $old_album)) === false) {
+            if (Dba::write($sql, [$new_album, $old_album]) === false) {
                 return false;
             }
         }
         $sql = "UPDATE IGNORE `artist_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, array($new_album, 'album', $old_album)) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
             return false;
         }
         $sql = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        if (Dba::write($sql, array($new_album, 'album', $old_album)) === false) {
+        if (Dba::write($sql, [$new_album, 'album', $old_album]) === false) {
             return false;
         }
         // delete leftovers duplicate maps
         $sql = "DELETE FROM `album_disk` WHERE `album_id` = ?";
-        Dba::write($sql, array($old_album));
+        Dba::write($sql, [$old_album]);
         $sql = "DELETE FROM `album_map` WHERE `album_id` = ?";
-        Dba::write($sql, array($old_album));
+        Dba::write($sql, [$old_album]);
         $sql = "DELETE FROM `artist_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, array('album', $old_album));
+        Dba::write($sql, ['album', $old_album]);
         $sql = "DELETE FROM `catalog_map` WHERE `object_type` = ? AND `object_id` = ?";
-        Dba::write($sql, array('album', $old_album));
+        Dba::write($sql, ['album', $old_album]);
 
         return true;
     }

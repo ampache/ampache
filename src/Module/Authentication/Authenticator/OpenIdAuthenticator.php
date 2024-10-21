@@ -47,7 +47,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
     public function auth(string $username, string $password): array
     {
         unset($password);
-        $results = array();
+        $results = [];
         // Username contains the openid url. We don't care about password here.
         $website = $username;
         if (strpos($website, 'http://') === 0 || strpos($website, 'https://') === 0) {
@@ -56,8 +56,8 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                 $auth_request = $consumer->begin($website);
                 if ($auth_request) {
                     $sreg_request = Auth_OpenID_SRegRequest::build(// Required
-                        array('nickname'), // Optional
-                        array('fullname', 'email')
+                        ['nickname'], // Optional
+                        ['fullname', 'email']
                     );
                     if ($sreg_request) {
                         $auth_request->addExtension($sreg_request);
@@ -92,7 +92,7 @@ final class OpenIdAuthenticator implements AuthenticatorInterface
                             AmpConfig::get('web_path'),
                             Openid::get_return_url(),
                             false,
-                            array('id' => $form_id)
+                            ['id' => $form_id]
                         );
 
                         if (Auth_OpenID::isFailure($form_html)) {

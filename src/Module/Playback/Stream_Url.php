@@ -69,7 +69,7 @@ class Stream_Url extends MemoryObject
     public static function parse($url): array
     {
         if (empty($url)) {
-            return array();
+            return [];
         }
         if (AmpConfig::get('stream_beautiful_url')) {
             $posargs = strpos($url, '/play/');
@@ -89,7 +89,7 @@ class Stream_Url extends MemoryObject
 
         $query    = (string)parse_url($url, PHP_URL_QUERY);
         $elements = explode('&', $query);
-        $results  = array();
+        $results  = [];
 
         $results['base_url'] = $url;
 

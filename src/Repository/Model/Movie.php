@@ -86,14 +86,14 @@ class Movie extends Video
      * create
      * This takes a key'd array of data as input and inserts a new movie entry, it returns the record id
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         $trimmed = Catalog::trim_prefix(trim((string)$data['original_name']));
         $name    = $trimmed['string'];
         $prefix  = $trimmed['prefix'];
 
         $sql = "INSERT INTO `movie` (`id`, `original_name`, `prefix`, `summary`, `year`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['id'], $name, $prefix, $data['summary'], $data['year']));
+        Dba::write($sql, [$data['id'], $name, $prefix, $data['summary'], $data['year']]);
 
         return (int)$data['id'];
     }
@@ -119,7 +119,7 @@ class Movie extends Video
         $year    = Catalog::normalize_year($data['year'] ?? $this->year);
 
         $sql = "UPDATE `movie` SET `original_name` = ?, `prefix` = ?, `summary` = ?, `year` = ? WHERE `id` = ?";
-        Dba::write($sql, array($name, $prefix, $summary, $year, $this->id));
+        Dba::write($sql, [$name, $prefix, $summary, $year, $this->id]);
 
         $this->original_name = $name;
         $this->prefix        = $prefix;
@@ -157,11 +157,11 @@ class Movie extends Video
     public function get_keywords(): array
     {
         $keywords         = parent::get_keywords();
-        $keywords['type'] = array(
+        $keywords['type'] = [
             'important' => false,
             'label' => null,
             'value' => 'movie'
-        );
+        ];
 
         return $keywords;
     }
@@ -180,7 +180,7 @@ class Movie extends Video
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `movie` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
         }
 
         return $deleted;

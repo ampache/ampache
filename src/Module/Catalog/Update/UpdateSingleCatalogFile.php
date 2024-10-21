@@ -50,7 +50,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
         bool $searchArtMode
     ): void {
         $sql        = "SELECT `id` FROM `catalog` WHERE `name` = ? AND `catalog_type`='local'";
-        $db_results = Dba::read($sql, array($catname));
+        $db_results = Dba::read($sql, [$catname]);
 
         ob_end_clean();
         ob_start();
@@ -128,7 +128,7 @@ final class UpdateSingleCatalogFile extends AbstractCatalogUpdater implements Up
                 // new files don't have an ID
                 if (!$file_id && $addMode == 1) {
                     // Look for new files
-                    $catalog->add_file($filePath, array());
+                    $catalog->add_file($filePath, []);
                     Catalog::get_id_from_file($filePath, $type);
                     // get the new id after adding it
                     $file_id = Catalog::get_id_from_file($filePath, $type);

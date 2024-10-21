@@ -164,13 +164,13 @@ final class AmpacheRss implements AmpacheRssInterface
      */
     private function get_title(string $type): string
     {
-        $titles = array(
+        $titles = [
             'now_playing' => T_('Now Playing'),
             'recently_played' => T_('Recently Played'),
             'latest_album' => T_('Newest Albums'),
             'latest_artist' => T_('Newest Artists'),
             'latest_shout' => T_('Newest Shouts')
-        );
+        ];
 
         return AmpConfig::get('site_title') . ' - ' . $titles[$type];
     }
@@ -253,13 +253,13 @@ final class AmpacheRss implements AmpacheRssInterface
     {
         $data = Stream::get_now_playing();
 
-        $results    = array();
+        $results    = [];
         $format     = (string) (AmpConfig::get('rss_format') ?? '%t - %a - %A');
-        $string_map = array(
+        $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
             '%A' => 'album'
-        );
+        ];
         foreach ($data as $element) {
             /** @var Song|Video $media */
             $media = $element['media'];
@@ -288,13 +288,13 @@ final class AmpacheRss implements AmpacheRssInterface
                 $title       = str_replace($search, $text, $title);
                 $description = str_replace($search, $text, $description);
             }
-            $xml_array = array(
+            $xml_array = [
                 'title' => str_replace(' - - ', ' - ', $title),
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
                 'comments' => $client->get_fullname() . ' - ' . $element['agent'],
                 'pubDate' => date("r", (int)$element['expire'])
-            );
+            ];
             $results[] = $xml_array;
         } // end foreach
 
@@ -328,7 +328,7 @@ final class AmpacheRss implements AmpacheRssInterface
      */
     private function load_recently_played(int $user_id, int &$pub_date): array
     {
-        $results = array();
+        $results = [];
         $data    = Stats::get_recently_played($user_id, 'stream', 'song');
 
         foreach ($data as $item) {
@@ -341,13 +341,13 @@ final class AmpacheRss implements AmpacheRssInterface
             if ($song->enabled && $is_allowed_recent) {
                 $description = '<p>' . T_('User') . ': ' . $client->username . '</p><p>' . T_('Title') . ': ' . $song->get_fullname() . '</p><p>' . T_('Artist') . ': ' . $song->get_artist_fullname() . '</p><p>' . T_('Album') . ': ' . $song->get_album_fullname() . '</p><p>' . T_('Play date') . ': ' . get_datetime($item['date']) . '</p>';
 
-                $xml_array = array(
+                $xml_array = [
                     'title' => $song->get_fullname() . ' - ' . $song->get_artist_fullname() . ' - ' . $song->get_album_fullname(),
                     'link' => str_replace('&amp;', '&', (string)$song->get_link()),
                     'description' => $description,
                     'comments' => (string)$client->username,
                     'pubDate' => date("r", (int)$item['date'])
-                );
+                ];
                 $results[] = $xml_array;
                 if ($pub_date == 0) {
                     $pub_date = (int)$item['date'];
@@ -376,19 +376,19 @@ final class AmpacheRss implements AmpacheRssInterface
         $user_id = $user->id ?? 0;
         $ids     = Stats::get_newest('album', 10, 0, 0, $user_id);
 
-        $results = array();
+        $results = [];
 
         foreach ($ids as $albumid) {
             $album = new Album($albumid);
 
-            $xml_array = array(
+            $xml_array = [
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
                 'image' => (string)Art::url($album->id, 'album', null, 2),
                 'comments' => '',
                 'pubDate' => date("c", $album->addition_time)
-            );
+            ];
             $results[] = $xml_array;
         } // end foreach
 
@@ -413,20 +413,20 @@ final class AmpacheRss implements AmpacheRssInterface
         $user_id = $user->id ?? 0;
         $ids     = Stats::get_newest('artist', 10, 0, 0, $user_id);
 
-        $results = array();
+        $results = [];
 
         foreach ($ids as $artistid) {
             $artist = new Artist($artistid);
             $artist->format();
 
-            $xml_array = array(
+            $xml_array = [
                 'title' => $artist->get_fullname(),
                 'link' => $artist->get_link(),
                 'description' => $artist->summary,
                 'image' => (string)Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
                 'pubDate' => ''
-            );
+            ];
             $results[] = $xml_array;
         } // end foreach
 
@@ -449,7 +449,7 @@ final class AmpacheRss implements AmpacheRssInterface
     {
         $shouts = $this->shoutRepository->getTop(10);
 
-        $results = array();
+        $results = [];
 
         foreach ($shouts as $shout) {
             $object = $this->shoutObjectLoader->loadByShout($shout);
@@ -462,14 +462,14 @@ final class AmpacheRss implements AmpacheRssInterface
                 }
                 $user->format();
 
-                $xml_array = array(
+                $xml_array = [
                     'title' => $user->getUsername() . ' ' . T_('on') . ' ' . $object->get_fullname(),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
                     'image' => (string)Art::url($shout->getObjectId(), (string)$shout->getObjectType(), null, 2),
                     'comments' => '',
                     'pubDate' => $shout->getDate()->format(DATE_ATOM)
-                );
+                ];
                 $results[] = $xml_array;
             }
         } // end foreach

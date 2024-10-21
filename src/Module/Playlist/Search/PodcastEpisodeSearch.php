@@ -43,16 +43,16 @@ final class PodcastEpisodeSearch implements SearchInterface
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $group      = array();
-        $having     = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $group      = [];
+        $having     = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -213,7 +213,7 @@ final class PodcastEpisodeSearch implements SearchInterface
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`podcast_episode`.`id`), `podcast_episode`.`pubdate` FROM `podcast_episode`',
             'join' => $join,
             'where' => $where,
@@ -223,6 +223,6 @@ final class PodcastEpisodeSearch implements SearchInterface
             'group_sql' => $group_sql,
             'having_sql' => $having_sql,
             'parameters' => $parameters
-        );
+        ];
     }
 }

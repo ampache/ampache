@@ -101,7 +101,7 @@ class AmpacheOmdb implements AmpachePluginInterface
         if (!empty($year)) {
             $url .= '&y=' . rawurlencode($year);
         }
-        $request = Requests::get($url, array(), Core::requests_options());
+        $request = Requests::get($url, [], Core::requests_options());
 
         return json_decode($request->body);
     }
@@ -142,7 +142,7 @@ class AmpacheOmdb implements AmpachePluginInterface
 
         $title = $media_info['original_name'] ?? $media_info['title'];
 
-        $results = array();
+        $results = [];
         try {
             // We cannot distinguish movies from tvshows with OMDb API (related to Imdb)
             $query = $this->query_omdb($title);
@@ -202,7 +202,7 @@ class AmpacheOmdb implements AmpachePluginInterface
      * @param int $limit
      * @return array
      */
-    public function gather_arts($type, $options = array(), $limit = 5): array
+    public function gather_arts($type, $options = [], $limit = 5): array
     {
         return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
     }

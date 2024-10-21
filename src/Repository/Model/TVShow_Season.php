@@ -55,7 +55,7 @@ class TVShow_Season extends database_object implements
     public $f_link;
 
     // Constructed vars
-    private static $_mapcache = array();
+    private static $_mapcache = [];
 
     /**
      * TV Show
@@ -107,7 +107,7 @@ class TVShow_Season extends database_object implements
         $sql .= "ORDER BY `tvshow_episode`.`episode_number`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -128,7 +128,7 @@ class TVShow_Season extends database_object implements
         } else {
             $sql = "SELECT COUNT(`tvshow_episode`.`id`) AS `episode_count`, `video`.`catalog` AS `catalog_id` FROM `tvshow_episode` LEFT JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `tvshow_episode`.`season` = ? GROUP BY `catalog_id`";
 
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
             $row        = Dba::fetch_assoc($db_results);
             parent::add_to_cache('tvshow_extra', $this->id, $row);
         }
@@ -165,22 +165,22 @@ class TVShow_Season extends database_object implements
      */
     public function get_keywords(): array
     {
-        $keywords           = array();
-        $keywords['tvshow'] = array(
+        $keywords           = [];
+        $keywords['tvshow'] = [
             'important' => true,
             'label' => T_('TV Show'),
             'value' => $this->f_tvshow
-        );
-        $keywords['tvshow_season'] = array(
+        ];
+        $keywords['tvshow_season'] = [
             'important' => false,
             'label' => T_('Season'),
             'value' => $this->season_number
-        );
-        $keywords['type'] = array(
+        ];
+        $keywords['type'] = [
             'important' => false,
             'label' => null,
             'value' => 'tvshow'
-        );
+        ];
 
         return $keywords;
     }
@@ -232,10 +232,10 @@ class TVShow_Season extends database_object implements
      */
     public function get_parent(): ?array
     {
-        return array(
+        return [
             'object_type' => 'tvshow',
             'object_id' => $this->tvshow
-        );
+        ];
     }
 
     /**
@@ -243,7 +243,7 @@ class TVShow_Season extends database_object implements
      */
     public function get_childrens(): array
     {
-        return array('tvshow_episode' => $this->get_episodes());
+        return ['tvshow_episode' => $this->get_episodes()];
     }
 
     /**
@@ -255,7 +255,7 @@ class TVShow_Season extends database_object implements
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -263,14 +263,14 @@ class TVShow_Season extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'video') {
             $episodes = $this->get_episodes();
             foreach ($episodes as $episode_id) {
-                $medias[] = array(
+                $medias[] = [
                     'object_type' => 'video',
                     'object_id' => $episode_id
-                );
+                ];
             }
         }
 
@@ -357,8 +357,8 @@ class TVShow_Season extends database_object implements
         $object_id  = 0;
         $exists     = false;
         $sql        = 'SELECT `id` FROM `tvshow_season` WHERE `tvshow` = ? AND `season_number` = ?';
-        $db_results = Dba::read($sql, array($tvshow, $season_number));
-        $id_array   = array();
+        $db_results = Dba::read($sql, [$tvshow, $season_number]);
+        $id_array   = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $key            = 'null';
             $id_array[$key] = $row['id'];
@@ -381,7 +381,7 @@ class TVShow_Season extends database_object implements
 
         $sql = 'INSERT INTO `tvshow_season` (`tvshow`, `season_number`) ' . 'VALUES(?, ?)';
 
-        $db_results = Dba::write($sql, array($tvshow, $season_number));
+        $db_results = Dba::write($sql, [$tvshow, $season_number]);
         if (!$db_results) {
             return null;
         }
@@ -403,7 +403,7 @@ class TVShow_Season extends database_object implements
     public function update(array $data): int
     {
         $sql = 'UPDATE `tvshow_season` SET `season_number` = ?, `tvshow` = ? WHERE `id` = ?';
-        Dba::write($sql, array($data['season_number'], $data['tvshow'], $this->id));
+        Dba::write($sql, [$data['season_number'], $data['tvshow'], $this->id]);
 
         return $this->id;
     }
@@ -427,7 +427,7 @@ class TVShow_Season extends database_object implements
 
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_season` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
             if ($deleted) {
                 $this->getArtCleanup()->collectGarbageForObject('tvshow_season', $this->id);
                 Userflag::garbage_collection('tvshow_season', $this->id);
@@ -449,7 +449,7 @@ class TVShow_Season extends database_object implements
     {
         $sql = "UPDATE `tvshow_season` SET `tvshow` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($tvshow_id, $season_id));
+        return Dba::write($sql, [$tvshow_id, $season_id]);
     }
 
     /**

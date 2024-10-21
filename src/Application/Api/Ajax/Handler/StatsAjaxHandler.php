@@ -47,7 +47,7 @@ final class StatsAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
         /** @var User $user */
         $user = (!empty(Core::get_global('user')))

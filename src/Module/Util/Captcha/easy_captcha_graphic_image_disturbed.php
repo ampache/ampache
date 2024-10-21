@@ -126,7 +126,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $x        = $w1 + $w2 * $p;
             $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
             $font            = $this->font();
-            list($r, $g, $b) = array(rand(30, 99), rand(30, 99), rand(30, 99));
+            list($r, $g, $b) = [rand(30, 99), rand(30, 99), rand(30, 99)];
             imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);
             imagettftext($this->img, $size, $rotation, $x, $y - 1, $this->rgb($r, $g, $b), $font, $letter);
         }

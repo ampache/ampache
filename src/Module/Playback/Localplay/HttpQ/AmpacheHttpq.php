@@ -128,7 +128,7 @@ class AmpacheHttpq extends localplay_controller
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::write($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
+        return Dba::write($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
@@ -155,7 +155,7 @@ class AmpacheHttpq extends localplay_controller
         $sql = "SELECT * FROM `localplay_httpq` ORDER BY `name`";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
         }
@@ -190,11 +190,11 @@ class AmpacheHttpq extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = array();
-        $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields             = [];
+        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -209,7 +209,7 @@ class AmpacheHttpq extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('httpq_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_httpq` WHERE `id` = ?" : "SELECT * FROM `localplay_httpq`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -444,14 +444,14 @@ class AmpacheHttpq extends localplay_controller
         $list = $this->_httpq->get_tracks();
 
         if (!$list) {
-            return array();
+            return [];
         }
 
         $songs   = explode("::", $list);
-        $results = array();
+        $results = [];
 
         foreach ($songs as $key => $entry) {
-            $data = array();
+            $data = [];
 
             /* Required Elements */
             $data['id']  = $key;
@@ -521,7 +521,7 @@ class AmpacheHttpq extends localplay_controller
      */
     public function status(): array
     {
-        $array = array();
+        $array = [];
         /* Construct the Array */
         $array['state']  = $this->_httpq->state();
         $array['volume'] = $this->_httpq->get_volume();

@@ -129,11 +129,11 @@ class Catalog_remote extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['uri']      = array('description' => T_('URI'), 'type' => 'url');
-        $fields['username'] = array('description' => T_('Username'), 'type' => 'text');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields['uri']      = ['description' => T_('URI'), 'type' => 'url'];
+        $fields['username'] = ['description' => T_('Username'), 'type' => 'text'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -185,7 +185,7 @@ class Catalog_remote extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $sql        = 'SELECT `id` FROM `catalog_remote` WHERE `uri` = ?';
-        $db_results = Dba::read($sql, array($uri));
+        $db_results = Dba::read($sql, [$uri]);
 
         if (Dba::num_rows($db_results)) {
             debug_event('remote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
@@ -196,7 +196,7 @@ class Catalog_remote extends Catalog
         }
 
         $sql = 'INSERT INTO `catalog_remote` (`uri`, `username`, `password`, `catalog_id`) VALUES (?, ?, ?, ?)';
-        Dba::write($sql, array($uri, $username, $password, $catalog_id));
+        Dba::write($sql, [$uri, $username, $password, $catalog_id]);
 
         return true;
     }
@@ -231,7 +231,7 @@ class Catalog_remote extends Catalog
     {
         try {
             $remote_handle = new AmpacheApi\AmpacheApi(
-                array(
+                [
                     'username' => $this->username,
                     'password' => $this->password,
                     'server' => $this->uri,
@@ -239,7 +239,7 @@ class Catalog_remote extends Catalog
                     'api_secure' => (substr($this->uri, 0, 8) == 'https://'),
                     'api_format' => 'xml',
                     'server_version' => Api::DEFAULT_VERSION
-                )
+                ]
             );
         } catch (Exception $error) {
             debug_event('remote.catalog', 'Connection error: ' . $error->getMessage(), 1);
@@ -303,7 +303,7 @@ class Catalog_remote extends Catalog
             $start = $current;
             $current += $step;
             try {
-                $songs = $remote_handle->send_command('songs', array('offset' => $start, 'limit' => $step));
+                $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
                 foreach ($songs as $song) {
                     if (!$song->url) {
@@ -312,11 +312,11 @@ class Catalog_remote extends Catalog
                     if ($this->check_remote_song($song->url)) {
                         debug_event('remote.catalog', 'Skipping existing song ' . $song->url, 5);
                     } else {
-                        $genres = array();
+                        $genres = [];
                         foreach ($song->genre as $genre) {
                             $genres[] = $genre->name;
                         }
-                        $data = array(
+                        $data = [
                             'albumartist' => $song->albumartist->name,
                             'album' => $song->album->name,
                             'artist' => $song->artist->name,
@@ -345,7 +345,7 @@ class Catalog_remote extends Catalog
                             'title' => $song->title ?? null,
                             'track' => $song->track ?? null,
                             'year' => $song->year ?? null
-                        );
+                        ];
                         //debug_event('remote.catalog', 'DATA ' . print_r($data, true), 1);
                         if (!Song::insert($data)) {
                             debug_event('remote.catalog', 'Insert failed for ' . $song->url, 1);
@@ -398,17 +398,17 @@ class Catalog_remote extends Catalog
 
         $dead       = 0;
         $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-        $db_results = Dba::read($sql, array($this->catalog_id));
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             debug_event('remote.catalog', 'Starting work on ' . $row['file'] . ' (' . $row['id'] . ')', 5);
             try {
-                $song = $remote_handle->send_command('url_to_song', array('url' => $row['file']));
+                $song = $remote_handle->send_command('url_to_song', ['url' => $row['file']]);
                 if (count($song) == 1) {
                     debug_event('remote.catalog', 'keeping song', 5);
                 } else {
                     debug_event('remote.catalog', 'removing song', 5);
                     $dead++;
-                    Dba::write('DELETE FROM `song` WHERE `id` = ?', array($row['id']));
+                    Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 }
             } catch (Exception $error) {
                 // FIXME: What to do, what to do
@@ -424,7 +424,7 @@ class Catalog_remote extends Catalog
      */
     public function check_catalog_proc(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -469,7 +469,7 @@ class Catalog_remote extends Catalog
         }
         $handshake  = $remote_handle->info();
         $sql        = "SELECT `id`, `file`, substring_index(file,'.',-1) AS `extension` FROM `song` WHERE `catalog` = ?;";
-        $db_results = Dba::read($sql, array($this->catalog_id));
+        $db_results = Dba::read($sql, [$this->catalog_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $target_file = rtrim(trim($path), '/') . '/' . $this->catalog_id . '/' . $row['id'] . '.' . $row['extension'];
             $remote_url  = $row['file'] . '&ssid=' . $handshake->auth . '&format=' . $target . '&bitrate=' . $max_bitrate;
@@ -480,13 +480,13 @@ class Catalog_remote extends Catalog
                     $curl       = curl_init();
                     curl_setopt_array(
                         $curl,
-                        array(
+                        [
                             CURLOPT_RETURNTRANSFER => 1,
                             CURLOPT_FILE => $filehandle,
                             CURLOPT_TIMEOUT => 0,
                             CURLOPT_PIPEWAIT => 1,
                             CURLOPT_URL => $remote_url,
-                        )
+                        ]
                     );
                     curl_exec($curl);
                     curl_close($curl);
@@ -518,7 +518,7 @@ class Catalog_remote extends Catalog
             return false;
         }
         $sql        = 'SELECT `id` FROM `song` WHERE `file` = ?';
-        $db_results = Dba::read($sql, array($url));
+        $db_results = Dba::read($sql, [$url]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];

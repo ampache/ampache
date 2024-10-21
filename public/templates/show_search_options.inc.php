@@ -35,7 +35,7 @@ Ui::show_box_top(T_('Options'), 'info-box');
 $search_type = (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
 <div id="information_actions">
 <ul>
-<?php if (in_array($search_type, array('song', 'album', 'artist'))) { ?>
+<?php if (in_array($search_type, ['song', 'album', 'artist'])) { ?>
     <li>
         <?php echo Ajax::button_with_text('?action=basket&type=browse_set&browse_id=' . $browse->id, 'add', T_('Add to Temporary Playlist'), 'add_search_results'); ?>
     </li>

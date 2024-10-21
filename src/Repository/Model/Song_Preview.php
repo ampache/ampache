@@ -115,7 +115,7 @@ class Song_Preview extends database_object implements Media, playable_item
         }
         $sql = 'INSERT INTO `song_preview` (`file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid`, `session`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-        $db_results = Dba::write($sql, array(
+        $db_results = Dba::write($sql, [
             $results['file'],
             $results['album_mbid'],
             $results['artist'],
@@ -125,7 +125,7 @@ class Song_Preview extends database_object implements Media, playable_item
             $results['track'],
             $results['mbid'],
             $results['session'],
-        ));
+        ]);
 
         if (!$db_results) {
             debug_event(self::class, 'Unable to insert ' . $results['disk'] . '-' . $results['track'] . '-' . $results['title'], 2);
@@ -162,7 +162,7 @@ class Song_Preview extends database_object implements Media, playable_item
         $sql        = "SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` IN $idlist  ORDER BY `disk`, `track`;";
         $db_results = Dba::read($sql);
 
-        $artists = array();
+        $artists = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             parent::add_to_cache('song_preview', $row['id'], $row);
             if ($row['artist']) {
@@ -183,20 +183,20 @@ class Song_Preview extends database_object implements Media, playable_item
     private function has_info($preview_id = 0): array
     {
         if ($preview_id === null) {
-            return array();
+            return [];
         }
         if (parent::is_cached('song_preview', $preview_id)) {
             return parent::get_from_cache('song_preview', $preview_id);
         }
 
         $sql        = 'SELECT `id`, `file`, `album_mbid`, `artist`, `artist_mbid`, `title`, `disk`, `track`, `mbid` FROM `song_preview` WHERE `id` = ? ORDER BY `disk`, `track`;';
-        $db_results = Dba::read($sql, array($preview_id));
+        $db_results = Dba::read($sql, [$preview_id]);
 
         $results = Dba::fetch_assoc($db_results);
         if (!empty($results['id'])) {
             if (empty($results['artist_mbid'])) {
                 $sql        = 'SELECT `mbid` FROM `artist` WHERE `id` = ?';
-                $db_results = Dba::read($sql, array($results['artist']));
+                $db_results = Dba::read($sql, [$results['artist']]);
                 if ($artist_res = Dba::fetch_assoc($db_results)) {
                     $results['artist_mbid'] = $artist_res['mbid'];
                 }
@@ -206,7 +206,7 @@ class Song_Preview extends database_object implements Media, playable_item
             return $results;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -308,7 +308,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -320,7 +320,7 @@ class Song_Preview extends database_object implements Media, playable_item
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -328,12 +328,12 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'song_preview') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'song_preview',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -382,7 +382,7 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public function get_stream_types($player = null): array
     {
-        return array('native');
+        return ['native'];
     }
 
     /**
@@ -402,9 +402,9 @@ class Song_Preview extends database_object implements Media, playable_item
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -448,10 +448,10 @@ class Song_Preview extends database_object implements Media, playable_item
      */
     public static function get_song_previews($album_mbid): array
     {
-        $songs = array();
+        $songs = [];
 
         $sql        = "SELECT `id` FROM `song_preview` WHERE `session` = ? AND `album_mbid` = ? ORDER BY `disk`, `track`;";
-        $db_results = Dba::read($sql, array(session_id(), $album_mbid));
+        $db_results = Dba::read($sql, [session_id(), $album_mbid]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
             $songs[] = new Song_Preview($results['id']);

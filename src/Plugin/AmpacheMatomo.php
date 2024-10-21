@@ -127,7 +127,7 @@ class AmpacheMatomo implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['matomo_site_id'])) || !strlen(trim($data['matomo_url']))) {
-            $data                   = array();
+            $data                   = [];
             $data['matomo_site_id'] = Preference::get_by_user(-1, 'matomo_site_id');
             $data['matomo_url']     = Preference::get_by_user(-1, 'matomo_url');
         }

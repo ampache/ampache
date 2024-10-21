@@ -49,8 +49,8 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
     {
         // allow replacing empty values when not set on your tab
         $null_allowed = (isset($_REQUEST['tab']) && ($_REQUEST['tab']) == 'plugins')
-            ? array('personalfav_playlist', 'personalfav_smartlist')
-            : array();
+            ? ['personalfav_playlist', 'personalfav_smartlist']
+            : [];
 
         // Get current keys
         $sql = ($user_id == '-1')
@@ -58,14 +58,14 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
             : "SELECT `id`, `name`, `type` FROM `preference` WHERE `category` != 'system'";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         // Collect the current possible keys
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
                 'type' => $row['type']
-            );
+            ];
         } // end collecting keys
 
         // Foreach through possible keys and assign them
@@ -85,7 +85,7 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
                     $value = (string) Stream::validate_bitrate($value);
                     break;
                 case 'custom_timezone':
-                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: array();
+                    $listIdentifiers = DateTimeZone::listIdentifiers() ?: [];
                     if (!in_array($value, $listIdentifiers)) {
                         $value = '';
                     }

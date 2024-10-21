@@ -58,7 +58,7 @@ if (!$gart) {
 <?php echo T_('Subtitle'); ?>:
 <select name="subtitle" id="play_setting_subtitle">
     <option value=''><?php echo T_("None"); ?></option>
-    <?php $subtitles = ($video->file) ? $video->get_subtitles() : array();
+    <?php $subtitles = ($video->file) ? $video->get_subtitles() : [];
     foreach ($subtitles as $subtitle) {
         echo "<option value='" . $subtitle['lang_code'] . "' ";
         if (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe']) && $_SESSION['iframe']['subtitle'] == $subtitle['lang_code']) {

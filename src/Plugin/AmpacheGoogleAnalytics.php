@@ -110,7 +110,7 @@ class AmpacheGoogleAnalytics implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['googleanalytics_tracking_id']))) {
-            $data                                = array();
+            $data                                = [];
             $data['googleanalytics_tracking_id'] = Preference::get_by_user(-1, 'googleanalytics_tracking_id');
         }
 

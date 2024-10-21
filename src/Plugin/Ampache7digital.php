@@ -99,7 +99,7 @@ class Ampache7digital implements AmpachePluginInterface
      */
     public function get_song_preview($track_mbid, $artist_name, $title): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -128,7 +128,7 @@ class Ampache7digital implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['7digital_api_key'])) || !strlen(trim($data['7digital_secret_api_key']))) {
-            $data                            = array();
+            $data                            = [];
             $data['7digital_api_key']        = Preference::get_by_user(-1, '7digital_api_key');
             $data['7digital_secret_api_key'] = Preference::get_by_user(-1, '7digital_secret_api_key');
         }

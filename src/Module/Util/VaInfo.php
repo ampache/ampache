@@ -43,7 +43,7 @@ use getid3_writetags;
  */
 final class VaInfo implements VaInfoInterface
 {
-    private const DEFAULT_INFO = array(
+    private const DEFAULT_INFO = [
         'albumartist' => null,
         'album' => null,
         'artist' => null,
@@ -111,7 +111,7 @@ final class VaInfo implements VaInfoInterface
         'video_bitrate' => null,
         'video_codec' => null,
         'year' => null
-    );
+    ];
     private const MBID_REGEX = '/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/';
 
     public $encoding      = '';
@@ -119,11 +119,11 @@ final class VaInfo implements VaInfoInterface
     public $encodingId3v2 = '';
     public $filename      = '';
     public $type          = '';
-    public $tags          = array();
-    public $gatherTypes   = array();
+    public $tags          = [];
+    public $gatherTypes   = [];
     public $islocal;
 
-    protected $_raw           = array();
+    protected $_raw           = [];
     protected $_getID3        = null;
     protected $_forcedSize    = 0;
     protected $_file_encoding = '';
@@ -162,7 +162,7 @@ final class VaInfo implements VaInfoInterface
         ConfigContainerInterface $configContainer,
         LoggerInterface $logger,
         $file,
-        $gatherTypes = array(),
+        $gatherTypes = [],
         $encoding = null,
         $encodingId3v1 = null,
         $dirPattern = '',
@@ -225,12 +225,12 @@ final class VaInfo implements VaInfoInterface
                 $mb_order = 'auto';
             }
 
-            $test_tags = array('artist', 'album', 'genre', 'title');
+            $test_tags = ['artist', 'album', 'genre', 'title'];
 
             if ($encodingId3v1 !== null) {
                 $this->encodingId3v1 = $encodingId3v1;
             } else {
-                $tags = array();
+                $tags = [];
                 foreach ($test_tags as $tag) {
                     if (array_key_exists('id3v1', $this->_raw) && array_key_exists($tag, $this->_raw['id3v1']) && $value = $this->_raw['id3v1'][$tag]) {
                         $tags[$tag] = $value;
@@ -243,7 +243,7 @@ final class VaInfo implements VaInfoInterface
 
             if ($configContainer->get(ConfigurationKeyEnum::GETID3_DETECT_ID3V2_ENCODING)) {
                 // The user has told us to be moronic, so let's do that thing
-                $tags = array();
+                $tags = [];
                 foreach ($test_tags as $tag) {
                     if (array_key_exists('id3v2', $this->_raw) && array_key_exists($tag, $this->_raw['id3v2']) && $value = $this->_raw['id3v2']['comments'][$tag]) {
                         $tags[$tag] = $value;
@@ -284,7 +284,7 @@ final class VaInfo implements VaInfoInterface
             return 'ISO-8859-1';
         }
 
-        $encodings = array();
+        $encodings = [];
         if (is_array($tags)) {
             foreach ($tags as $tag) {
                 if (is_array($tag)) {
@@ -407,7 +407,7 @@ final class VaInfo implements VaInfoInterface
 
         $format                       = $extensionMap[$extension];
         $tagWriter->filename          = $this->filename;
-        $tagWriter->tagformats        = array($format);
+        $tagWriter->tagformats        = [$format];
         $tagWriter->overwrite_tags    = true;
         $tagWriter->remove_other_tags = false;
         $tagWriter->tag_encoding      = $TaggingFormat;
@@ -469,12 +469,12 @@ final class VaInfo implements VaInfoInterface
      */
     public function prepare_metadata_for_writing($frames): array
     {
-        $ndata = array();
+        $ndata = [];
         foreach ($frames as $key => $text) {
             switch ($key) {
                 case 'text':
                     foreach ($text as $tkey => $data) {
-                        $ndata['text'][] = array('data' => $data, 'description' => $tkey, 'encodingid' => 0);
+                        $ndata['text'][] = ['data' => $data, 'description' => $tkey, 'encodingid' => 0];
                     }
                     break;
                 default:
@@ -506,7 +506,7 @@ final class VaInfo implements VaInfoInterface
             );
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -529,14 +529,14 @@ final class VaInfo implements VaInfoInterface
         ];
 
 
-        $order = array();
+        $order = [];
         foreach ($tagorderMap[$configKey] ?? [] as $source) {
             //debug_event(__CLASS__, "source: " . $source, true, 5);
             $order[] = strtolower($source);
         }
 
         // Iterate through the defined key order adding them to an ordered array.
-        $returned_keys = array();
+        $returned_keys = [];
         foreach ($order as $value) {
             if (array_key_exists($value, $results)) {
                 $returned_keys[] = $value;
@@ -546,11 +546,11 @@ final class VaInfo implements VaInfoInterface
         // return a default list of items (if you get here this is probably a bad file)
         if (empty($returned_keys)) {
             debug_event(__CLASS__, "get_tag_type: Couln't find tags, this is probably a bad file", 5);
-            $returned_keys = array(
+            $returned_keys = [
                 'getid3',
                 'filename',
                 'general'
-            );
+            ];
         }
 
         // Unless they explicitly set it, add bitrate/mode/mime/etc.
@@ -582,7 +582,7 @@ final class VaInfo implements VaInfoInterface
 
         foreach ($keys as $key) {
             // Ampache has a set list of columns to look for but we need to check through and fill it based on the collected tags
-            $tags = $results[$key] ?? array();
+            $tags = $results[$key] ?? [];
 
             $info['file']     = (!$info['file'] && array_key_exists('file', $tags)) ? $tags['file'] : $info['file'];
             $info['bitrate']  = (!$info['bitrate'] && array_key_exists('bitrate', $tags)) ? (int) $tags['bitrate'] : $info['bitrate'];
@@ -637,7 +637,7 @@ final class VaInfo implements VaInfoInterface
 
             // artists is an array treat it as one
             if (!empty($tags['artists']) && !is_array($tags['artists'])) {
-                $tags['artists'] = array($tags['artists']);
+                $tags['artists'] = [$tags['artists']];
             }
             $info['artists'] = (!$info['artists'] && array_key_exists('artists', $tags) && !empty($tags['artists']))
                 ? $tags['artists']
@@ -712,7 +712,7 @@ final class VaInfo implements VaInfoInterface
             return $matches;
         }
 
-        return array($mbid);
+        return [$mbid];
     }
 
     /**
@@ -744,7 +744,7 @@ final class VaInfo implements VaInfoInterface
     public static function parse_mbid_array($mbid): array
     {
         if (empty($mbid)) {
-            return array();
+            return [];
         }
         if (is_array($mbid)) {
             $mbid = implode(";", $mbid);
@@ -753,7 +753,7 @@ final class VaInfo implements VaInfoInterface
             return $matches[0];
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -807,7 +807,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _get_tags(): array
     {
-        $results = array();
+        $results = [];
         //$this->logger->debug('RAW TAGS ' . print_r($this->_raw, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
         // The tags can come in many different shapes and colors depending on the encoding.
         if (array_key_exists('tags', $this->_raw) && is_array($this->_raw['tags'])) {
@@ -914,7 +914,7 @@ final class VaInfo implements VaInfoInterface
             ? Core::get_global('user')
             : new User(-1);
         // don't loop over getid3 and filename
-        $tag_order = array_diff($tag_order, array('getid3', 'filename'));
+        $tag_order = array_diff($tag_order, ['getid3', 'filename']);
         foreach ($tag_order as $tag_source) {
             if (in_array($tag_source, $plugin_names)) {
                 $plugin            = new Plugin($tag_source);
@@ -931,7 +931,7 @@ final class VaInfo implements VaInfoInterface
                         );
                     }
                 }
-            } elseif (!in_array($tag_source, array('filename', 'getid3'))) {
+            } elseif (!in_array($tag_source, ['filename', 'getid3'])) {
                 $this->logger->debug(
                     '_get_plugin_tags: ' . $tag_source . ' is not a valid metadata_order plugin',
                     [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -951,7 +951,7 @@ final class VaInfo implements VaInfoInterface
     private function _parse_general($tags): array
     {
         //$this->logger->debug('_parse_general: ' . print_r($tags, true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
-        $parsed = array();
+        $parsed = [];
         if ((in_array('movie', $this->gatherTypes)) || (in_array('tvshow', $this->gatherTypes))) {
             $parsed['title'] = $this->formatVideoName(urldecode($this->_pathinfo['filename']));
         } else {
@@ -1071,7 +1071,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_generic($tags): array
     {
-        $parsed = array();
+        $parsed = [];
         foreach ($tags as $tagname => $data) {
             //$this->logger->debug('generic tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
@@ -1114,12 +1114,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'originalyear':
                 case 'originalreleaseyear':
@@ -1153,7 +1153,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_lyrics($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             if ($tag == 'unsyncedlyrics' || $tag == 'unsynced lyrics' || $tag == 'unsynchronised lyric') {
@@ -1175,7 +1175,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_vorbiscomment($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             //$this->logger->debug('Vorbis tag: ' . $tag . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -1234,13 +1234,13 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'releasestatus':
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'unsyncedlyrics':
                 case 'unsynced lyrics':
@@ -1327,7 +1327,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_id3v1($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             // This is our baseline for naming so everything's already right,
@@ -1348,7 +1348,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_id3v2($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             //$this->logger->debug('id3v2 tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -1472,7 +1472,7 @@ final class VaInfo implements VaInfoInterface
                         $parsed['mb_albumid_group'] = self::parse_mbid($id3v2['comments']['text'][$txxx['description']]);
                         break;
                     case 'musicbrainz album type':
-                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), array('')));
+                        $parsed['release_type'] = (is_array($id3v2['comments']['text'][$txxx['description']])) ? implode(", ", $id3v2['comments']['text'][$txxx['description']]) : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $id3v2['comments']['text'][$txxx['description']]), ['']));
                         break;
                     case 'musicbrainz album status':
                         $parsed['release_status'] = $id3v2['comments']['text'][$txxx['description']];
@@ -1563,7 +1563,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_riff($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             switch ($tag) {
@@ -1587,7 +1587,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_quicktime($tags): array
     {
-        $parsed = array();
+        $parsed = [];
 
         foreach ($tags as $tag => $data) {
             //$this->logger->debug('Quicktime tag: ' . strtolower($tag) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
@@ -1625,12 +1625,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz album type':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'musicbrainz album status':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'track_number':
                     //$parsed['track'] = $data[0];
@@ -1702,7 +1702,7 @@ final class VaInfo implements VaInfoInterface
      */
     private function _cleanup_asf($tags): array
     {
-        $parsed = array();
+        $parsed = [];
         foreach ($tags as $tagname => $data) {
             //$this->logger->debug('asf tag: ' . strtolower($tagname) . ' value: ' . print_r($data ?? '', true), [LegacyLogger::CONTEXT_TYPE => __CLASS__]);
             switch (strtolower($tagname)) {
@@ -1741,12 +1741,12 @@ final class VaInfo implements VaInfoInterface
                 case 'musicbrainz_albumtype':
                     $parsed['release_type'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'musicbrainz_albumstatus':
                     $parsed['release_status'] = (is_array($data) && count($data) > 1)
                         ? implode(", ", $data)
-                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), array('')));
+                        : implode(', ', array_diff(preg_split("/[^a-zA-Z0-9*]/", $data[0]), ['']));
                     break;
                 case 'releasecomment':
                 case 'version':
@@ -1845,14 +1845,14 @@ final class VaInfo implements VaInfoInterface
     private function _parse_filename($filepath): array
     {
         $origin  = $filepath;
-        $results = array();
+        $results = [];
         $file    = pathinfo($filepath, PATHINFO_FILENAME);
 
         if (in_array('tvshow', $this->gatherTypes)) {
-            $season  = array();
-            $episode = array();
-            $tvyear  = array();
-            $temp    = array();
+            $season  = [];
+            $episode = [];
+            $tvyear  = [];
+            $temp    = [];
             preg_match("~(?<=\(\[\<\{)[1|2][0-9]{3}[^p]|[1|2][0-9]{3}[^p]~", $filepath, $tvyear);
             $results['year'] = (!empty($tvyear)) ? (int) $tvyear[0] : null;
 
@@ -1952,7 +1952,7 @@ final class VaInfo implements VaInfoInterface
     public static function parse_pattern($filepath, $dirPattern, $filePattern): array
     {
         $logger          = static::getLogger();
-        $results         = array();
+        $results         = [];
         $slash_type_preg = DIRECTORY_SEPARATOR;
         if ($slash_type_preg == '\\') {
             $slash_type_preg .= DIRECTORY_SEPARATOR;
@@ -2047,13 +2047,13 @@ final class VaInfo implements VaInfoInterface
         $order = $this->configContainer->get(ConfigurationKeyEnum::TAG_ORDER);
 
         if (!is_array($order)) {
-            $order = array($order);
+            $order = [$order];
         }
 
         $key = array_shift($order);
 
-        $broken                 = array();
-        $broken[$key]           = array();
+        $broken                 = [];
+        $broken[$key]           = [];
         $broken[$key]['title']  = '**BROKEN** ' . $this->filename;
         $broken[$key]['album']  = 'Unknown (Broken)';
         $broken[$key]['artist'] = 'Unknown (Broken)';
@@ -2072,7 +2072,7 @@ final class VaInfo implements VaInfoInterface
         //debug_event(__CLASS__, "parseGenres: " . print_r($data, true), 5);
         $result = null;
         if (is_array($data)) {
-            $result = array();
+            $result = [];
             foreach ($data as $row) {
                 if (!empty($row)) {
                     foreach (self::splitSlashedlist(str_replace("\x00", ';', str_replace('Folk, World, & Country', 'Folk World & Country', $row)), false) as $genre) {
@@ -2098,7 +2098,7 @@ final class VaInfo implements VaInfoInterface
         //debug_event(__CLASS__, "parseArtists: " . print_r($data, true), 5);
         $result = null;
         if (is_array($data)) {
-            $result = array();
+            $result = [];
             foreach ($data as $row) {
                 if (!empty($row)) {
                     foreach (explode(';', str_replace("\x00", ';', $row)) as $artist) {
@@ -2152,7 +2152,7 @@ final class VaInfo implements VaInfoInterface
      */
     private static function translate_pattern_code(string $code)
     {
-        $code_array = array(
+        $code_array = [
             '%a' => 'artist',
             '%A' => 'album',
             '%b' => 'barcode',
@@ -2169,7 +2169,7 @@ final class VaInfo implements VaInfoInterface
             '%y' => 'year',
             '%Y' => 'original_year',
             '%o' => 'zz_other'
-        );
+        ];
 
         if (isset($code_array[$code])) {
             return $code_array[$code];

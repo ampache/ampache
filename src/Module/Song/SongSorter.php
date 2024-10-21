@@ -73,7 +73,7 @@ final class SongSorter implements SongSorterInterface
 
         if (!empty($catalogName)) {
             $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local' AND `name` = ?;";
-            $db_results = Dba::read($sql, array($catalogName));
+            $db_results = Dba::read($sql, [$catalogName]);
         } else {
             $sql        = "SELECT `id` FROM `catalog` WHERE `catalog_type`='local';";
             $db_results = Dba::read($sql);
@@ -345,7 +345,7 @@ final class SongSorter implements SongSorterInterface
 
             // Update the catalog
             $sql = "UPDATE `song` SET `file` = ? WHERE `id` = ?;";
-            Dba::write($sql, array($fullname, $song->id));
+            Dba::write($sql, [$fullname, $song->id]);
         } // end else
 
         return true;

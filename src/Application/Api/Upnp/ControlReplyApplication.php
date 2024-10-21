@@ -66,7 +66,7 @@ final class ControlReplyApplication implements ApplicationInterface
             return;
         }
 
-        $items        = array();
+        $items        = [];
         $totMatches   = 0;
         $responseType = "u:Error";
         $soapXML      = '';
@@ -131,14 +131,14 @@ final class ControlReplyApplication implements ApplicationInterface
                     debug_event('control-reply', 'Browse request for root items', 5);
                     // Root items
                     if ($upnpRequest['browseflag'] == 'BrowseMetadata') {
-                        $items[] = array(
+                        $items[] = [
                             'id' => '0',
                             'parentID' => '-1',
                             'childCount' => '2',
                             'searchable' => '1',
                             'dc:title' => T_('root'),
                             'upnp:class' => 'object.container',
-                        );
+                        ];
                     } else {
                         $filter = '*'; // Some devices don't seem to specify a sensible filter (may remove)
                         //$items[] = array();

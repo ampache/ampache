@@ -73,7 +73,7 @@ function scrub_in($input)
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
     } else {
-        $results = array();
+        $results = [];
         foreach ($input as $item) {
             $results[] = scrub_in((string) $item);
         }
@@ -159,7 +159,7 @@ function get_languages(): array
         debug_event('general.lib', 'Error unable to open locale directory', 1);
     }
 
-    $results = array();
+    $results = [];
 
     while (false !== ($file = readdir($handle))) {
         $full_file = __DIR__ . '/../../locale/' . $file;
@@ -340,7 +340,7 @@ function get_languages(): array
     ksort($results);
 
     // Prepend English (US)
-    $results = array("en_US" => "English (US)") + $results;
+    $results = ["en_US" => "English (US)"] + $results;
 
     return $results;
 }
@@ -352,7 +352,7 @@ function get_languages(): array
  */
 function is_rtl($locale): bool
 {
-    return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
+    return in_array($locale, ["he_IL", "fa_IR", "ar_SA"]);
 }
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
@@ -362,7 +362,7 @@ if (!function_exists('apache_request_headers')) {
      */
     function apache_request_headers(): array
     {
-        $headers = array();
+        $headers = [];
         foreach ($_SERVER as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
                 $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
@@ -602,7 +602,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
 
     // List of things that should only be displayed if they told us to turn
     // on the firehose
-    $ignores = array(
+    $ignores = [
         // We know var is deprecated, shut up
         'var: Deprecated. Please use the public/private/protected modifiers',
         // getid3 spews errors, yay!
@@ -611,7 +611,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         'Assigning the return value of new by reference is deprecated',
         // The XML-RPC lib is broken (kinda)
         'used as offset, casting to integer',
-    );
+    ];
 
     foreach ($ignores as $ignore) {
         if (strpos($errstr, $ignore) !== false) {
@@ -740,7 +740,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     }
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
-    $params = array();
+    $params = [];
     if ($user_id !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
         $params[] = $user_id;
@@ -800,7 +800,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     }
 
     $sql    = "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` ";
-    $params = array();
+    $params = [];
     if ($user_id !== null) {
         $sql .= "WHERE `user` = ? ";
         $params[] = $user_id;
@@ -910,7 +910,7 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
     }
 
     $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-    $db_results = Dba::read($sql, array($season->tvshow));
+    $db_results = Dba::read($sql, [$season->tvshow]);
 
     while ($row = Dba::fetch_assoc($db_results)) {
         $selected = '';
@@ -945,7 +945,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $params = array();
+    $params = [];
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
     if (!empty($filter_type)) {
         $sql .= "WHERE `gather_types` = ? ";
@@ -953,7 +953,7 @@ function show_catalog_select($name, $catalog_id, $style = '', $allow_none = fals
     }
     $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
-    $results    = array();
+    $results    = [];
     while ($row = Dba::fetch_assoc($db_results)) {
         $results[] = $row;
     }
@@ -1191,7 +1191,7 @@ function nT_($original, $plural, $value): string
  */
 function get_themes(): array
 {
-    $results = array();
+    $results = [];
 
     $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
     if (!$lst_files) {
@@ -1226,7 +1226,7 @@ function get_themes(): array
  */
 function get_theme($name)
 {
-    static $_mapcache = array();
+    static $_mapcache = [];
 
     if (strlen((string) $name) < 1) {
         return false;

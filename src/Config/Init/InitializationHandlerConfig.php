@@ -121,7 +121,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['date_timezone'] = date_default_timezone_get();
         }
         if (!empty($results['date_timezone'])) {
-            $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+            $listIdentifiers = DateTimeZone::listIdentifiers() ?? [];
             if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }

@@ -90,7 +90,7 @@ final class ShareAction implements ApplicationActionInterface
         $user       = Core::get_global('user');
         $object_ids = (!empty($user))
             ? $this->shareRepository->getIdsByUser($user)
-            : array();
+            : [];
         if (!empty($object_ids)) {
             $browse = $this->modelFactory->createBrowse();
             $browse->set_type('share');

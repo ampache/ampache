@@ -104,17 +104,17 @@ class AmpachePersonalFavorites implements AmpachePluginInterface
     {
         // display if you've enabled it
         if ($this->display) {
-            $list_array = array();
+            $list_array = [];
             foreach (explode(',', $this->playlist) as $list_id) {
                 $playlist     = new Playlist((int)$list_id);
                 if ($playlist->isNew() === false) {
-                    $list_array[] = array($playlist, 'playlist');
+                    $list_array[] = [$playlist, 'playlist'];
                 }
             }
             foreach (explode(',', $this->smartlist) as $list_id) {
                 $smartlist = new Search((int)$list_id);
                 if ($smartlist->isNew() === false) {
-                    $list_array[] = array($smartlist, 'search');
+                    $list_array[] = [$smartlist, 'search'];
                 }
             }
             if (!empty($list_array)) {

@@ -41,8 +41,8 @@ final class InstallationHelper implements InstallationHelperInterface
     {
         $sql       = trim((string) $sql);
         $sql       = preg_replace("/\n--[^\n]*\n/", "\n", $sql);
-        $buffer    = array();
-        $ret       = array();
+        $buffer    = [];
+        $ret       = [];
         $in_string = false;
         for ($count = 0; $count < strlen((string) $sql) - 1; $count++) {
             if ($sql[$count] == ";" && !$in_string) {
@@ -136,7 +136,7 @@ final class InstallationHelper implements InstallationHelperInterface
         }
         $valid     = true;
         $htaccess  = file_get_contents($file);
-        $new_lines = array();
+        $new_lines = [];
         $lines     = explode("\n", $htaccess);
         foreach ($lines as $line) {
             $parts   = explode(' ', (string) $line);
@@ -302,12 +302,12 @@ final class InstallationHelper implements InstallationHelperInterface
             $query    = fread(fopen($sql_file, 'r'), Core::get_filesize($sql_file));
             $pieces   = $this->split_sql($query);
             $p_count  = count($pieces);
-            $errors   = array();
+            $errors   = [];
             for ($count = 0; $count < $p_count; $count++) {
                 $pieces[$count] = trim((string) $pieces[$count]);
                 if (!empty($pieces[$count]) && $pieces[$count] != '#') {
                     if (!Dba::write($pieces[$count])) {
-                        $errors[] = array(Dba::error(), $pieces[$count]);
+                        $errors[] = [Dba::error(), $pieces[$count]];
                     }
                 }
             }
@@ -317,7 +317,7 @@ final class InstallationHelper implements InstallationHelperInterface
             $sql = "ALTER DATABASE `" . $database . "` DEFAULT CHARACTER SET $charset COLLATE " . $collation;
             Dba::write($sql);
             // if you've set a custom collation we need to change it
-            $tables = array("access_list", "album", "artist", "bookmark", "broadcast", "cache_object_count", "cache_object_count_run", "catalog", "catalog_local", "catalog_remote", "channel", "clip", "daap_session", "democratic", "image", "ip_history", "label", "label_asso", "license", "live_stream", "localplay_httpq", "localplay_mpd", "metadata", "metadata_field", "movie", "now_playing", "object_count", "personal_video", "player_control", "playlist", "playlist_data", "podcast", "podcast_episode", "preference", "rating", "recommendation", "recommendation_item", "search", "session", "session_remember", "session_stream", "share", "song", "song_data", "song_preview", "stream_playlist", "tag", "tag_map", "tag_merge", "tmp_browse", "tmp_playlist", "tmp_playlist_data", "tvshow", "tvshow_episode", "tvshow_season", "update_info", "user", "user_activity", "user_catalog", "user_flag", "user_follower", "user_preference", "user_pvmsg", "user_shout", "user_vote", "video", "wanted");
+            $tables = ["access_list", "album", "artist", "bookmark", "broadcast", "cache_object_count", "cache_object_count_run", "catalog", "catalog_local", "catalog_remote", "channel", "clip", "daap_session", "democratic", "image", "ip_history", "label", "label_asso", "license", "live_stream", "localplay_httpq", "localplay_mpd", "metadata", "metadata_field", "movie", "now_playing", "object_count", "personal_video", "player_control", "playlist", "playlist_data", "podcast", "podcast_episode", "preference", "rating", "recommendation", "recommendation_item", "search", "session", "session_remember", "session_stream", "share", "song", "song_data", "song_preview", "stream_playlist", "tag", "tag_map", "tag_merge", "tmp_browse", "tmp_playlist", "tmp_playlist_data", "tvshow", "tvshow_episode", "tvshow_season", "update_info", "user", "user_activity", "user_catalog", "user_flag", "user_follower", "user_preference", "user_pvmsg", "user_shout", "user_vote", "video", "wanted"];
             foreach ($tables as $table_name) {
                 $sql = "ALTER TABLE `" . $table_name . "` CHARACTER SET $charset COLLATE " . $collation;
                 Dba::write($sql);
@@ -328,9 +328,9 @@ final class InstallationHelper implements InstallationHelperInterface
         if (AmpConfig::get('lang', 'en_US') != 'en_US') {
             // FIXME: 31? I hate magic.
             $sql = 'UPDATE `preference` SET `value` = ? WHERE `id` = 31';
-            Dba::write($sql, array(AmpConfig::get('lang', 'en_US')));
+            Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
             $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = 31';
-            Dba::write($sql, array(AmpConfig::get('lang', 'en_US')));
+            Dba::write($sql, [AmpConfig::get('lang', 'en_US')]);
         }
 
         return true;
@@ -453,11 +453,11 @@ final class InstallationHelper implements InstallationHelperInterface
         $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
         $process        = proc_open(
             "$whereIsCommand $command",
-            array(
-                0 => array("pipe", "r"), // STDIN
-                1 => array("pipe", "w"), // STDOUT
-                2 => array("pipe", "w"), // STDERR
-            ),
+            [
+                0 => ["pipe", "r"], // STDIN
+                1 => ["pipe", "w"], // STDOUT
+                2 => ["pipe", "w"], // STDERR
+            ],
             $pipes
         );
 
@@ -480,7 +480,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_get_transcode_modes(): array
     {
-        $modes = array();
+        $modes = [];
 
         if ($this->command_exists('ffmpeg')) {
             $modes[] = 'ffmpeg';
@@ -497,7 +497,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_transcode_mode($mode)
     {
-        $trconfig = array(
+        $trconfig = [
             'encode_target' => 'mp3',
             'encode_video_target' => 'webm',
             'transcode_m4a' => 'required',
@@ -508,7 +508,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'transcode_avi' => 'allowed',
             'transcode_mpg' => 'allowed',
             'transcode_mkv' => 'allowed',
-        );
+        ];
         if ($mode == 'ffmpeg' || $mode == 'avconv') {
             $trconfig['transcode_cmd']          = $mode;
             $trconfig['transcode_input']        = '-i %FILE%';
@@ -524,7 +524,7 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_use_case($case)
     {
-        $trconfig = array(
+        $trconfig = [
             'use_auth' => 'true',
             'ratings' => 'true',
             'sociable' => 'true',
@@ -534,15 +534,15 @@ final class InstallationHelper implements InstallationHelperInterface
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
             'share' => 'false'
-        );
+        ];
 
-        $dbconfig = array(
+        $dbconfig = [
             'download' => '1',
             'share' => '0',
             'allow_video' => '0',
             'home_now_playing' => '1',
             'home_recently_played' => '1'
-        );
+        ];
 
         switch ($case) {
             case 'minimalist':
@@ -592,13 +592,13 @@ final class InstallationHelper implements InstallationHelperInterface
      */
     public function install_config_backends(array $backends)
     {
-        $dbconfig = array(
+        $dbconfig = [
             'subsonic_backend' => '0',
             'daap_backend' => '0',
             'upnp_backend' => '0',
             'webdav_backend' => '0',
             'stream_beautiful_url' => '0'
-        );
+        ];
 
         foreach ($backends as $backend) {
             switch ($backend) {

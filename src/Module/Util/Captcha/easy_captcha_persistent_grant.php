@@ -44,7 +44,7 @@ class easy_captcha_persistent_grant extends easy_captcha
     public function solved($input = 0)
     {
         if (easy_captcha::CAPTCHA_PERSISTENT && isset($_COOKIE[$this->cookie()])) {
-            return in_array($_COOKIE[$this->cookie()], array($this->validity_token(), $this->validity_token(-1)));
+            return in_array($_COOKIE[$this->cookie()], [$this->validity_token(), $this->validity_token(-1)]);
         }
 
         return false;

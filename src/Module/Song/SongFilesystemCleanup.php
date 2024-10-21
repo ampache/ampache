@@ -45,7 +45,7 @@ final class SongFilesystemCleanup implements SongFilesystemCleanupInterface
             if ($dryRun === false) {
                 $sql = 'DELETE FROM `song` WHERE `id` = ?;';
 
-                Dba::write($sql, array($row['id']));
+                Dba::write($sql, [$row['id']]);
 
                 if (file_exists($row['file'])) {
                     unlink($row['file']);

@@ -48,7 +48,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
         $democratic->set_parent();
 
         $show_browse = false;
-        $results     = array();
+        $results     = [];
         $action      = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -58,17 +58,17 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'add_vote':
-                $democratic->add_vote(array(
-                    array(
+                $democratic->add_vote([
+                    [
                         'object_type' => Core::get_request('type'),
                         'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
-                    )
-                ));
+                    ]
+                ]);
                 $show_browse = true;
                 break;
             case 'delete':
                 if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
 
                     return;
                 }
@@ -78,7 +78,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'send_playlist':
                 if (!Access::check('interface', 75)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
 
                     return;
                 }
@@ -88,7 +88,7 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'clear_playlist':
                 if (!Access::check('interface', 100)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
 
                     return;
                 }

@@ -53,7 +53,7 @@ final class GetAdvancedAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $objectIds  = array();
+        $objectIds  = [];
         $objectType = $_REQUEST['type'] ?? 'song';
 
         $user = Core::get_global('user');

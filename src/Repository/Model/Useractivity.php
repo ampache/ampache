@@ -95,6 +95,6 @@ class Useractivity extends database_object
     {
         $sql = "UPDATE `user_activity` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 }

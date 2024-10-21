@@ -44,13 +44,13 @@ class SeafileAdapter
      */
     public static function request_api_key($server_uri, $username, $password)
     {
-        $options = array(
-            'http' => array(
+        $options = [
+            'http' => [
                 'header' => "Content-type: application/x-www-form-urlencoded\r\n",
                 'method' => 'POST',
-                'content' => http_build_query(array('username' => $username, 'password' => $password))
-            )
-        );
+                'content' => http_build_query(['username' => $username, 'password' => $password])
+            ]
+        ];
 
         $result = file_get_contents($server_uri . '/api2/auth-token/', false, stream_context_create($options));
 
@@ -90,7 +90,7 @@ class SeafileAdapter
         $this->library_name    = $library_name;
         $this->api_key         = $api_key;
         $this->call_delay      = $call_delay;
-        $this->directory_cache = array();
+        $this->directory_cache = [];
     }
 
     // do we have all the info we need?
@@ -129,12 +129,12 @@ class SeafileAdapter
             ]
         ]);
 
-        $this->client = array(
+        $this->client = [
             'Libraries' => new Library($client),
             'Directories' => new Directory($client),
             'Files' => new File($client),
             'Client' => $client
-        );
+        ];
 
         // Get Library
         $libraries = $this->throttle_check(function () {
@@ -209,10 +209,10 @@ class SeafileAdapter
     {
         $split = explode('|', $file_path);
 
-        return array(
+        return [
             'path' => $split[1],
             'filename' => $split[2]
-        );
+        ];
     }
 
     /**

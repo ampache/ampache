@@ -43,7 +43,7 @@ final class Migration360002 extends AbstractMigration
     public function migrate(): void
     {
         // Drop the key from catalog and ACL
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `catalog` DROP COLUMN `key`",
             "ALTER TABLE `access_list` DROP COLUMN `key`",
             "ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`",
@@ -54,7 +54,7 @@ final class Migration360002 extends AbstractMigration
             "ALTER TABLE `artist` ADD FULLTEXT(`name`)",
             "ALTER TABLE `album` ADD FULLTEXT(`name`)",
             "ALTER TABLE `song` ADD FULLTEXT(`title`)"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }

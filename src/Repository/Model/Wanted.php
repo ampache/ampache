@@ -257,7 +257,7 @@ class Wanted extends database_object
     {
         if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
-            Dba::write($sql, array($this->mbid));
+            Dba::write($sql, [$this->mbid]);
             $this->accepted = 1;
 
             foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
@@ -315,7 +315,7 @@ class Wanted extends database_object
     public function load_all(): void
     {
         $mbrainz     = new MusicBrainz(new RequestsHttpAdapter());
-        $this->songs = array();
+        $this->songs = [];
 
         try {
             $user            = Core::get_global('user');
@@ -338,7 +338,7 @@ class Wanted extends database_object
                  *     primary-type: string
                  * } $group
                  */
-                $group = $mbrainz->lookup('release-group', $this->mbid, array('releases'));
+                $group = $mbrainz->lookup('release-group', $this->mbid, ['releases']);
                 // Set fresh data
                 $this->name = $group->title;
                 $this->year = (int)date("Y", strtotime($group->{'first-release-date'}));
@@ -370,10 +370,10 @@ class Wanted extends database_object
                          *     packaging-id: string,
                          * } $release
                          */
-                        $release = $mbrainz->lookup('release', $release_mbid, array('recordings'));
+                        $release = $mbrainz->lookup('release', $release_mbid, ['recordings']);
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
-                                $song                = array();
+                                $song                = [];
                                 $song['disk']        = Album::sanitize_disk($media->position);
                                 $song['track']       = $track->number;
                                 $song['title']       = $track->title;
@@ -414,7 +414,7 @@ class Wanted extends database_object
                 }
             }
         } catch (Exception $error) {
-            $this->songs = array();
+            $this->songs = [];
         }
 
         foreach ($this->songs as $song) {

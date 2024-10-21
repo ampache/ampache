@@ -37,7 +37,7 @@ abstract class database_object
 {
     protected const DB_TABLENAME = null;
 
-    private static $object_cache = array();
+    private static $object_cache = [];
 
     // Statistics for debugging
     public static $cache_hit       = 0;
@@ -56,7 +56,7 @@ abstract class database_object
 
         // Make sure we've got a real id and table
         if ($table === null || $object_id < 1) {
-            return array();
+            return [];
         }
 
         if (self::is_cached($table, $object_id)) {
@@ -66,12 +66,12 @@ abstract class database_object
             }
         }
 
-        $params     = array($object_id);
+        $params     = [$object_id];
         $sql        = "SELECT * FROM `$table` WHERE `id` = ?";
         $db_results = Dba::read($sql, $params);
 
         if (!$db_results) {
-            return array();
+            return [];
         }
 
         $row = Dba::fetch_assoc($db_results);
@@ -102,7 +102,7 @@ abstract class database_object
      */
     public static function clear_cache(): void
     {
-        self::$object_cache = array();
+        self::$object_cache = [];
     }
 
     /**
@@ -137,7 +137,7 @@ abstract class database_object
             return self::$object_cache[$index][$object_id];
         }
 
-        return array();
+        return [];
     }
 
     /**

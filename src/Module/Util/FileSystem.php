@@ -106,7 +106,7 @@ class FileSystem
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);
         }
-        $res = array();
+        $res = [];
         foreach ($lst as $item) {
             if ($item == '.' || $item == '..' || $item === null) {
                 continue;
@@ -116,24 +116,24 @@ class FileSystem
                 continue;
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-                $res[] = array(
+                $res[] = [
                     'text' => $item,
                     'children' => true,
                     'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item),
                     'icon' => 'folder'
-                );
+                ];
             }
         }
         if ($with_root && $this->id($dir) === '/') {
-            $res = array(
-                array(
+            $res = [
+                [
                     'text' => basename($this->base),
                     'children' => $res,
                     'id' => '/',
                     'icon' => 'folder',
-                    'state' => array('opened' => true, 'disabled' => true)
-                )
-            );
+                    'state' => ['opened' => true, 'disabled' => true]
+                ]
+            ];
         }
 
         return $res;
@@ -147,23 +147,23 @@ class FileSystem
     public function data($fs_id): array
     {
         if (strpos($fs_id, ":")) {
-            $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
+            $fs_id = array_map([$this, 'id'], explode(':', $fs_id));
 
-            return array(
+            return [
                 'type' => 'multiple',
                 'content' => 'Multiple selected: ' . implode(' ', $fs_id)
-            );
+            ];
         }
         $dir = $this->path($fs_id);
         if (is_dir($dir)) {
-            return array(
+            return [
                 'type' => 'folder',
                 'content' => $fs_id
-            );
+            ];
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
-            $dat = array('type' => $ext, 'content' => '');
+            $dat = ['type' => $ext, 'content' => ''];
             switch ($ext) {
                 /*case 'txt':
                 case 'text':
@@ -222,7 +222,7 @@ class FileSystem
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
 
-        return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
+        return ['id' => $this->id($dir . DIRECTORY_SEPARATOR . $name)];
     }
 
     /**
@@ -249,7 +249,7 @@ class FileSystem
         }
         rename($dir, $new);
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 
     /**
@@ -264,7 +264,7 @@ class FileSystem
             throw new Exception('Cannot remove root');
         }
         if (is_dir($dir)) {
-            foreach (array_diff(scandir($dir), array(".", "..")) as $f) {
+            foreach (array_diff(scandir($dir), [".", ".."]) as $f) {
                 $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $f));
             }
             rmdir($dir);
@@ -273,7 +273,7 @@ class FileSystem
             unlink($dir);
         }
 
-        return array('status' => 'OK');
+        return ['status' => 'OK'];
     }
 
     /**
@@ -291,7 +291,7 @@ class FileSystem
         $new = $par . DIRECTORY_SEPARATOR . $new;
         rename($dir, $new);
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 
     /**
@@ -313,7 +313,7 @@ class FileSystem
 
         if (is_dir($dir)) {
             mkdir($new);
-            foreach (array_diff(scandir($dir), array(".", "..")) as $f) {
+            foreach (array_diff(scandir($dir), [".", ".."]) as $f) {
                 $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $f), $this->id($new));
             }
         }
@@ -321,6 +321,6 @@ class FileSystem
             copy($dir, $new);
         }
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 }

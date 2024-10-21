@@ -91,14 +91,14 @@ $t_logout          = T_('Log out'); ?>
     $className = 'sidebar_' . $_SESSION['state']['sidebar_tab'];
 
     // List of buttons ( id, title, icon, access level)
-    $sidebar_items[] = array('id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5);
+    $sidebar_items[] = ['id' => 'home', 'title' => $t_home, 'icon' => 'home', 'access' => 5];
     if (AmpConfig::get('allow_localplay_playback') && AmpConfig::get('localplay_controller') && Access::check('localplay', 5)) {
-        $sidebar_items[] = array('id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volumeup', 'access' => 5);
+        $sidebar_items[] = ['id' => 'localplay', 'title' => $t_localplay, 'icon' => 'volumeup', 'access' => 5];
     }
     if ($is_session) {
-        $sidebar_items[] = array('id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5);
+        $sidebar_items[] = ['id' => 'preferences', 'title' => $t_preferences, 'icon' => 'edit', 'access' => 5];
     }
-    $sidebar_items[] = array('id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75); ?>
+    $sidebar_items[] = ['id' => 'admin', 'title' => T_('Admin'), 'icon' => 'admin', 'access' => 75]; ?>
     <?php foreach ($sidebar_items as $item) {
         if (Access::check('interface', $item['access'])) {
             $active    = ('sidebar_' . $item['id'] == $className) ? ' active' : '';

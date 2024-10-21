@@ -135,18 +135,18 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
-            return array();
+            return [];
         }
 
         if (!$mbid = $media_info['mb_trackid']) {
-            return array();
+            return [];
         }
 
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
-        $includes = array(
+        $includes = [
             'artists',
             'releases'
-        );
+        ];
         try {
             /**
              * https://musicbrainz.org/ws/2/recording/140e8071-d7bb-4e05-9547-bfeea33916d0?inc=artists+releases&fmt=json
@@ -165,10 +165,10 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         } catch (Exception $error) {
             debug_event('MusicBrainz.plugin', 'Lookup error ' . $error, 3);
 
-            return array();
+            return [];
         }
 
-        $results = array();
+        $results = [];
 
         if (isset($track->{'artist-credit'}) && count($track->{'artist-credit'}) > 0) {
             $artist                 = $track->{'artist-credit'}[0];
@@ -194,7 +194,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
      */
     public function get_external_metadata($object, string $object_type): bool
     {
-        $valid_types = array('label', 'artist');
+        $valid_types = ['label', 'artist'];
         // Artist metadata only for now
         if (!in_array($object_type, $valid_types)) {
             debug_event('MusicBrainz.plugin', 'get_external_metadata only supports Labels and Artists', 5);
@@ -203,7 +203,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
 
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
-        $results = array();
+        $results = [];
         if ($object->mbid !== null && VaInfo::is_mbid($object->mbid)) {
             try {
                 switch ($object_type) {
@@ -262,7 +262,7 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
             }
         } else {
             try {
-                $args = array($object_type => $object->get_fullname());
+                $args = [$object_type => $object->get_fullname()];
                 switch ($object_type) {
                     case 'label':
                         /**
@@ -304,11 +304,11 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
         }
         if (!empty($results)) {
             debug_event('MusicBrainz.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
-            $data = array();
+            $data = [];
             switch ($object_type) {
                 case 'label':
                     /** @var Label $object */
-                    $data = array(
+                    $data = [
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
                         'category' => $results->{'type'} ?? $object->category,
@@ -318,20 +318,20 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
                         'email' => $object->email,
                         'website' => $object->website,
                         'active' => ($results->{'life-span'}->{'ended'} == 1) ? 0 : 1
-                    );
+                    ];
                     break;
                 case 'artist':
                     /** @var Artist $object */
                     $placeFormed = (isset($results->{'begin-area'}->{'name'}) && isset($results->{'area'}->{'name'}))
                         ? $results->{'begin-area'}->{'name'} . ', ' . $results->{'area'}->{'name'}
                         : $results->{'begin-area'}->{'name'} ?? $object->placeformed;
-                    $data = array(
+                    $data = [
                         'name' => $results->{'name'} ?? $object->get_fullname(),
                         'mbid' => $results->{'id'} ?? $object->mbid,
                         'summary' => $object->summary,
                         'placeformed' => $placeFormed,
                         'yearformed' => explode('-', ($results->{'life-span'}->{'begin'} ?? ''))[0] ?? $object->yearformed
-                    );
+                    ];
 
                     // when you come in with an mbid you might want to keep the name updated
                     if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && $data['name'] !== $object->get_fullname()) {
@@ -362,8 +362,8 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
     {
         //debug_event(self::class, "get_artist: {{$mbid}}", 4);
         $mbrainz = new MusicBrainz(new RequestsHttpAdapter());
-        $results = array();
-        $data    = array();
+        $results = [];
+        $data    = [];
         if (VaInfo::is_mbid($mbid)) {
             try {
                 /**
@@ -397,10 +397,10 @@ class AmpacheMusicBrainz implements AmpachePluginInterface
             }
         }
         if (!empty($results) && isset($results->{'name'}) && isset($results->{'id'})) {
-            $data = array(
+            $data = [
                 'name' => $results->{'name'},
                 'mbid' => $results->{'id'}
-            );
+            ];
         }
 
         return $data;

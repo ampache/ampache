@@ -270,7 +270,7 @@ class Playlist extends playlist_object
 
         while ($row = Dba::fetch_assoc($db_object_types)) {
             $object_type = $row['object_type'];
-            $params      = array($this->id);
+            $params      = [$this->id];
 
             switch ($object_type) {
                 case "song":
@@ -300,12 +300,12 @@ class Playlist extends playlist_object
             $db_results = Dba::read($sql, $params);
 
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = array(
+                $results[] = [
                     'object_type' => $row['object_type'],
                     'object_id' => (int)$row['object_id'],
                     'track' => (int)$row['track'],
                     'track_id' => $row['id']
-                );
+                ];
             }
         }
 
@@ -361,12 +361,12 @@ class Playlist extends playlist_object
             //debug_event(__CLASS__, "get_random_items(): " . $sql . $limit_sql, 5);
             $db_results = Dba::read($sql, $params);
             while ($row = Dba::fetch_assoc($db_results)) {
-                $results[] = array(
+                $results[] = [
                     'object_type' => $row['object_type'],
                     'object_id' => (int)$row['object_id'],
                     'track' => (int)$row['track'],
                     'track_id' => $row['id']
-                );
+                ];
             }
         }
 
@@ -650,10 +650,10 @@ class Playlist extends playlist_object
     {
         $medias = [];
         foreach ($song_ids as $song_id) {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'song',
                 'object_id' => $song_id,
-            );
+            ];
         }
 
         if ($this->add_medias($medias)) {

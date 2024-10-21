@@ -137,7 +137,7 @@ class easy_captcha
         $this->passed     = 0;
         $this->maxpasses  = 2; // 2
         $this->failures   = 0;
-        $this->shortcut   = array();
+        $this->shortcut   = [];
         $this->grant      = 0; // unchecked access
 
         #-- mk IMAGE/GRAPHIC
@@ -259,12 +259,12 @@ class easy_captcha
         $this->save();
 
         #-- check for errors
-        $errors = array(
+        $errors = [
             "invalid object created" => !$this->is_valid(),
             "captcha_id storage could not be saved" => !$this->saved,
             "no ->id present" => empty($this->id),
             "no ->created timestamp" => empty($this->created),
-        );
+        ];
         if (array_sum($errors)) {
             return '<div id="captcha" class="error">*' . implode("<br>*", array_keys(array_filter($errors))) . '</div>';
         }

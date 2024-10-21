@@ -62,7 +62,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results      = array();
+        $results      = [];
         $request_id   = (int)$this->requestParser->getFromRequest('id');
         $request_type = $this->requestParser->getFromRequest('type');
         $action       = $this->requestParser->getFromRequest('action');
@@ -115,7 +115,7 @@ final class DefaultAjaxHandler implements AjaxHandlerInterface
                     switch ($request_type) {
                         case 'browse_set':
                         case 'browse_set_random':
-                            $songs   = array();
+                            $songs   = [];
                             $browse  = new Browse((int)$this->requestParser->getFromRequest('browse_id'));
                             $objects = $browse->get_saved();
                             switch ($browse->get_type()) {

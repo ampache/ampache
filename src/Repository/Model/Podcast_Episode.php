@@ -233,17 +233,17 @@ class Podcast_Episode extends database_object implements
      */
     public function get_keywords(): array
     {
-        $keywords            = array();
-        $keywords['podcast'] = array(
+        $keywords            = [];
+        $keywords['podcast'] = [
             'important' => true,
             'label' => T_('Podcast'),
             'value' => $this->getPodcastName()
-        );
-        $keywords['title'] = array(
+        ];
+        $keywords['title'] = [
             'important' => true,
             'label' => T_('Title'),
             'value' => $this->get_fullname()
-        );
+        ];
 
         return $keywords;
     }
@@ -345,10 +345,10 @@ class Podcast_Episode extends database_object implements
      */
     public function get_parent(): ?array
     {
-        return array(
+        return [
             'object_type' => 'podcast',
             'object_id' => $this->podcast
-        );
+        ];
     }
 
     /**
@@ -356,7 +356,7 @@ class Podcast_Episode extends database_object implements
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -368,7 +368,7 @@ class Podcast_Episode extends database_object implements
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -376,12 +376,12 @@ class Podcast_Episode extends database_object implements
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'podcast_episode') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'podcast_episode',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -465,7 +465,7 @@ class Podcast_Episode extends database_object implements
         $author   = (isset($data['author'])) ? scrub_in(Dba::check_length((string)$data['author'], 64)) : null;
 
         $sql = 'UPDATE `podcast_episode` SET `title` = ?, `website` = ?, `description` = ?, `author` = ?, `category` = ? WHERE `id` = ?';
-        Dba::write($sql, array($title, $website, $description, $author, $category, $this->id));
+        Dba::write($sql, [$title, $website, $description, $author, $category, $this->id]);
 
         $this->title       = $title;
         $this->website     = $website;
@@ -544,7 +544,7 @@ class Podcast_Episode extends database_object implements
         }
 
         $sql = "UPDATE `podcast_episode` SET `$field` = ? WHERE `id` = ?";
-        Dba::write($sql, array($value, $episode_id));
+        Dba::write($sql, [$value, $episode_id]);
     }
 
     /**
@@ -562,7 +562,7 @@ class Podcast_Episode extends database_object implements
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
         return Stream::get_transcode_settings_for_media($this->type, $target, $player, 'song', $options);
     }

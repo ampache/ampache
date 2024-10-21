@@ -101,7 +101,7 @@ class Broadcast extends database_object implements library_item
     public function update_state($started, $key = ''): void
     {
         $sql = "UPDATE `broadcast` SET `started` = ?, `key` = ?, `song` = '0', `listeners` = '0' WHERE `id` = ?";
-        Dba::write($sql, array($started, $key, $this->id));
+        Dba::write($sql, [$started, $key, $this->id]);
 
         $this->started = $started;
     }
@@ -113,7 +113,7 @@ class Broadcast extends database_object implements library_item
     public function update_listeners($listeners): void
     {
         $sql = "UPDATE `broadcast` SET `listeners` = ? WHERE `id` = ?";
-        Dba::write($sql, array($listeners, $this->id));
+        Dba::write($sql, [$listeners, $this->id]);
         $this->listeners = $listeners;
     }
 
@@ -124,7 +124,7 @@ class Broadcast extends database_object implements library_item
     public function update_song($song_id): void
     {
         $sql = "UPDATE `broadcast` SET `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($song_id, $this->id));
+        Dba::write($sql, [$song_id, $this->id]);
         $this->song          = $song_id;
         $this->song_position = 0;
     }
@@ -137,7 +137,7 @@ class Broadcast extends database_object implements library_item
     {
         $sql = "DELETE FROM `broadcast` WHERE `id` = ?";
 
-        return Dba::write($sql, array($this->id));
+        return Dba::write($sql, [$this->id]);
     }
 
     /**
@@ -149,7 +149,7 @@ class Broadcast extends database_object implements library_item
     {
         if (!empty($name)) {
             $sql    = "INSERT INTO `broadcast` (`user`, `name`, `description`, `is_private`) VALUES (?, ?, ?, '1')";
-            $params = array(Core::get_global('user')->id, $name, $description);
+            $params = [Core::get_global('user')->id, $name, $description];
             Dba::write($sql, $params);
 
             return (int)Dba::insert_id();
@@ -172,7 +172,7 @@ class Broadcast extends database_object implements library_item
         $private     = !empty($data['private']);
 
         $sql    = "UPDATE `broadcast` SET `name` = ?, `description` = ?, `is_private` = ? WHERE `id` = ?";
-        $params = array($name, $description, $private, $this->id);
+        $params = [$name, $description, $private, $this->id];
         Dba::write($sql, $params);
 
         return $this->id;
@@ -196,7 +196,7 @@ class Broadcast extends database_object implements library_item
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -253,7 +253,7 @@ class Broadcast extends database_object implements library_item
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -265,7 +265,7 @@ class Broadcast extends database_object implements library_item
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -276,12 +276,12 @@ class Broadcast extends database_object implements library_item
     public function get_medias(?string  $filter_type = null): array
     {
         // Not a media, shouldn't be that
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'broadcast') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'broadcast',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -346,7 +346,7 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcast($key): ?Broadcast
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($key));
+        $db_results = Dba::read($sql, [$key]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return new Broadcast($results['id']);
@@ -407,9 +407,9 @@ class Broadcast extends database_object implements library_item
     public static function get_broadcasts($user_id): array
     {
         $sql        = "SELECT `id` FROM `broadcast` WHERE `user` = ?";
-        $db_results = Dba::read($sql, array($user_id));
+        $db_results = Dba::read($sql, [$user_id]);
 
-        $broadcasts = array();
+        $broadcasts = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $broadcasts[] = (int)$results['id'];
         }

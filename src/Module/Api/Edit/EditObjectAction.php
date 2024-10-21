@@ -174,7 +174,7 @@ final class EditObjectAction extends AbstractEditAction
     private function clean_to_existing($labels)
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
-        $ret   = array();
+        $ret   = [];
         if ($array !== false) {
             foreach ($array as $label) {
                 $label = trim((string)$label);
