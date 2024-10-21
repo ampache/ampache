@@ -302,7 +302,7 @@ class Preference extends database_object
         }
 
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
             $ampacheSeven = false;
             $pref_name    = self::id_from_name($pref_name);
         }
@@ -364,7 +364,14 @@ class Preference extends database_object
             $value = implode(',', $value);
         }
 
-        $params = [$value, $name];
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+        }
+
+        $params = ($ampacheSeven)
+            ? [$value, $name]
+            : [$value, $pref_id];
 
         if ($applytoall && $access100) {
             $user_check = "";
@@ -374,12 +381,16 @@ class Preference extends database_object
         }
 
         if ($applytodefault && $access100) {
-            $sql = "UPDATE `preference` SET `value` = ? WHERE `name` = ?";
+            $sql = ($ampacheSeven)
+                ? "UPDATE `preference` SET `value` = ? WHERE `name` = ?;"
+                : "UPDATE `preference` SET `value` = ? WHERE `preference` = ?;";
             Dba::write($sql, $params);
         }
 
         if (self::has_access($name)) {
-            $sql = 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check;
+            $sql = ($ampacheSeven)
+                ? 'UPDATE `user_preference` SET `value` = ? WHERE `name` = ? ' . $user_check
+                : 'UPDATE `user_preference` SET `value` = ? WHERE `preference` = ? ' . $user_check;
             Dba::write($sql, $params);
             self::clear_from_session();
 
@@ -402,7 +413,9 @@ class Preference extends database_object
     public static function update_level($preference, $level): bool
     {
         // First prepare
-        $preference_id = is_numeric($preference) ? $preference : self::id_from_name($preference);
+        $preference_id = is_numeric($preference)
+            ? $preference
+            : self::id_from_name($preference);
 
         $sql = "UPDATE `preference` SET `level` = ? WHERE `id` = ?;";
         Dba::write($sql, [$level, $preference_id]);
@@ -418,7 +431,15 @@ class Preference extends database_object
      */
     public static function update_all($preference, $value): bool
     {
-        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?";
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+            $ampacheSeven = false;
+            $preference   = self::id_from_name($preference);
+        }
+
+        $sql = ($ampacheSeven)
+            ? "UPDATE `user_preference` SET `value` = ? WHERE `name` = ?"
+            : "UPDATE `user_preference` SET `value` = ? WHERE `preference` = ?";
         Dba::write($sql, [$value, $preference]);
 
         parent::clear_cache();
@@ -604,7 +625,7 @@ class Preference extends database_object
 
         // Check for databases < Migration700020
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
             $ampacheSeven = false;
         }
 
