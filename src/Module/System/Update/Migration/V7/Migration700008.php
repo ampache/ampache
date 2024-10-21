@@ -39,7 +39,7 @@ final class Migration700008 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
 
-        if (!Dba::read('SELECT SUM(`user_id`) FROM `user_playlist_map`;')) {
+        if (!Dba::read('SELECT SUM(`user_id`) FROM `user_playlist_map`;', [], true)) {
             $this->updateDatabase('DROP TABLE IF EXISTS `user_playlist_map`;');
             $this->updateDatabase(
                 sprintf(

@@ -44,17 +44,17 @@ final class Migration500001 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `album` DROP COLUMN `release_status`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `release_status`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `release_status` varchar(32) DEFAULT NULL;");
-        Dba::write("ALTER TABLE `album` DROP COLUMN `addition_time`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `addition_time`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `addition_time` int(11) UNSIGNED DEFAULT 0 NULL;");
-        Dba::write("ALTER TABLE `album` DROP COLUMN `catalog`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `catalog`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `catalog` int(11) UNSIGNED NOT NULL DEFAULT '0';");
-        Dba::write("ALTER TABLE `label` DROP COLUMN `mbid`;");
+        Dba::write("ALTER TABLE `label` DROP COLUMN `mbid`;", [], true);
         $this->updateDatabase("ALTER TABLE `label` ADD COLUMN `mbid` varchar(36) DEFAULT NULL;");
-        Dba::write("ALTER TABLE `label` DROP COLUMN `country`;");
+        Dba::write("ALTER TABLE `label` DROP COLUMN `country`;", [], true);
         $this->updateDatabase("ALTER TABLE `label` ADD COLUMN `country` varchar(64) DEFAULT NULL;");
-        Dba::write("ALTER TABLE `label` DROP COLUMN `active`;");
+        Dba::write("ALTER TABLE `label` DROP COLUMN `active`;", [], true);
         $this->updateDatabase("ALTER TABLE `label` ADD COLUMN `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1';");
         $this->updateDatabase("UPDATE `album`, (SELECT min(`song`.`catalog`) AS `catalog`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`catalog` = `song`.`catalog` WHERE `album`.`catalog` != `song`.`catalog` AND `album`.`id` = `song`.`album`;");
         $this->updateDatabase("UPDATE `album`, (SELECT SUM(`song`.`time`) AS `time`, `song`.`album` FROM `song` GROUP BY `song`.`album`) AS `song` SET `album`.`time` = `song`.`time` WHERE `album`.`time` != `song`.`time` AND `album`.`id` = `song`.`album`;");

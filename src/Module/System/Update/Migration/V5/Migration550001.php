@@ -59,7 +59,7 @@ final class Migration550001 extends AbstractMigration
         $this->updateDatabase("CREATE TABLE IF NOT EXISTS `catalog_filter_group_map` (`group_id` int(11) UNSIGNED NOT NULL, `catalog_id` int(11) UNSIGNED NOT NULL, `enabled` tinyint(1) UNSIGNED NOT NULL DEFAULT 0, UNIQUE KEY (group_id,catalog_id)) ENGINE=$engine DEFAULT CHARSET=$charset COLLATE=$collation;");
 
         // Add the default access group to the user table
-        Dba::write("ALTER TABLE `user` DROP COLUMN `catalog_filter_group`;");
+        Dba::write("ALTER TABLE `user` DROP COLUMN `catalog_filter_group`;", [], true);
         $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `catalog_filter_group` INT(11) UNSIGNED NOT NULL DEFAULT 0;");
     }
 

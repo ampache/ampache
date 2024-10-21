@@ -49,7 +49,7 @@ final class Migration500002 extends AbstractMigration
             'podcast_episode'
         ];
         foreach ($tables as $type) {
-            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;");
+            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;", [], true);
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';");
 
             $this->updateDatabase("UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_count` = `object_count`.`total_count` WHERE `$type`.`total_count` != `object_count`.`total_count` AND `$type`.`id` = `object_count`.`object_id`;");
@@ -62,7 +62,7 @@ final class Migration500002 extends AbstractMigration
             'podcast_episode'
         ];
         foreach ($tables as $type) {
-            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;");
+            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;", [], true);
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';");
 
             $this->updateDatabase("UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;");
