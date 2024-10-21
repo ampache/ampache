@@ -1603,7 +1603,7 @@ class Upnp_Api
             'upnp:album' => self::_replaceSpecialSymbols($song->f_album),
             'upnp:genre' => Tag::get_display($song->tags, false, 'song'),
             'upnp:originalTrackNumber' => $song->track,
-            'res' => $song->play_url('', AccessTypeEnum::API->value, true), // For upnp, use local
+            'res' => $song->play_url('', 'api', true), // For upnp, use local
             'protocolInfo' => $arrFileType['mime'],
             'size' => $song->size,
             'duration' => $song->f_time_h . '.0',
@@ -1662,7 +1662,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
             'upnp:genre' => Tag::get_display($video->tags, false, 'video'),
 
-            'res' => $video->play_url('', AccessTypeEnum::API->value),
+            'res' => $video->play_url('', 'api'),
             'protocolInfo' => $arrFileType['mime'],
             'size' => $video->size,
             'duration' => $video->f_time_h . '.0',
@@ -1709,7 +1709,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url
         ];
         if (isset($arrFileType['mime'])) {
-            $ret['res']          = $episode->play_url('', AccessTypeEnum::API->value);
+            $ret['res']          = $episode->play_url('', 'api');
             $ret['protocolInfo'] = $arrFileType['mime'];
             $ret['size']         = $episode->size;
             $ret['duration']     = $episode->f_time_h . '.0';
