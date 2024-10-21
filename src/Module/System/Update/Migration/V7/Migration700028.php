@@ -22,21 +22,17 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Ampache\Module\System\Update\Migration\V6;
+namespace Ampache\Module\System\Update\Migration\V7;
 
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-/**
- * Add `disk_count` to album table
- */
-final class Migration600006 extends AbstractMigration
+final class Migration700028 extends AbstractMigration
 {
-    protected array $changelog = ['Add `disk_count` to album table'];
+    protected array $changelog = ['Delete tv types from `object_type` column in `rating` table'];
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `album` DROP COLUMN `disk_count`;");
-        $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `disk_count` int(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `disk`;");
+        $this->updateDatabase('DELETE FROM `rating` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'user\', \'video\');');
+        $this->updateDatabase('ALTER TABLE `rating` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'catalog\', \'tag\', \'label\', \'live_stream\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'tvshow\', \'tvshow_season\', \'user\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
     }
 }

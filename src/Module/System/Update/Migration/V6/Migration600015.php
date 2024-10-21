@@ -37,6 +37,6 @@ final class Migration600015 extends AbstractMigration
     public function migrate(): void
     {
         Dba::write("ALTER TABLE `user` DROP COLUMN `streamtoken`;");
-        $this->updateDatabase('ALTER TABLE `user` ADD COLUMN `streamtoken` varchar(255) NULL AFTER `rsstoken`');
+        $this->updateDatabase('ALTER TABLE `user` ADD COLUMN `streamtoken` varchar(255) NULL AFTER `rsstoken`;');
     }
 }

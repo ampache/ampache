@@ -57,7 +57,7 @@ if ($browse->is_show_header()) {
   <col id="col_admin" />
   <?php } ?>
 </colgroup>
-<?php /** @var list<array{object_type: LibraryItemEnum, object_id: int, id: int}> $object_ids */
+<?php /** @var list<array{object_type: LibraryItemEnum, object_id: int, track_id: int, track: int}> $object_ids */
 if (empty($object_ids) && isset($democratic->base_playlist)) {
     $playlist = ($use_search)
         ? new Search($democratic->base_playlist)

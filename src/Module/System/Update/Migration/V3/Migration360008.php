@@ -53,10 +53,10 @@ final class Migration360008 extends AbstractMigration
 
         if (!$remote_username) {
             // Add in Username / Password for catalog - to be used for remote catalogs
-            $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`");
+            $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`;");
         }
         if (!$remote_password) {
-            $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `remote_password` VARCHAR (255) AFTER `remote_username`");
+            $this->updateDatabase("ALTER TABLE `catalog` ADD COLUMN `remote_password` VARCHAR (255) AFTER `remote_username`;");
         }
     }
 }

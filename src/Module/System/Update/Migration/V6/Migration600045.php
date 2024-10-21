@@ -36,9 +36,9 @@ final class Migration600045 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `search` DROP COLUMN `last_update`');
-        $this->updateDatabase('ALTER TABLE `search` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT 0 AFTER `type`');
-        Dba::write('ALTER TABLE `search` DROP COLUMN `date`');
-        $this->updateDatabase('ALTER TABLE `search` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `type`');
+        Dba::write('ALTER TABLE `search` DROP COLUMN `last_update`;');
+        $this->updateDatabase('ALTER TABLE `search` ADD COLUMN `last_update` int(11) unsigned NOT NULL DEFAULT 0 AFTER `type`;');
+        Dba::write('ALTER TABLE `search` DROP COLUMN `date`;');
+        $this->updateDatabase('ALTER TABLE `search` ADD COLUMN `date` int(11) UNSIGNED NOT NULL DEFAULT 0 AFTER `type`;');
     }
 }
