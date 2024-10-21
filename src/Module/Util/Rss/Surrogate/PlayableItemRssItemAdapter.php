@@ -155,7 +155,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;
                 if ($this->user !== null) {
-                    $data['url']  = $media->play_url('', AccessTypeEnum::API->value, false, $this->user->getId(), $this->user->streamtoken);
+                    $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
                 }
             }
 

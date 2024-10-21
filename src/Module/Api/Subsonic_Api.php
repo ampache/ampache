@@ -1574,10 +1574,10 @@ class Subsonic_Api
                 $params .= '&cache=1';
             }
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url($params, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url($params, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
 
         // return an error on missing files
@@ -1606,10 +1606,10 @@ class Subsonic_Api
         $url    = '';
         if (Subsonic_Xml_Data::_isSong($fileid)) {
             $object = new Song(Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         } elseif (Subsonic_Xml_Data::_isPodcastEpisode($fileid)) {
             $object = new Podcast_episode((int) Subsonic_Xml_Data::_getAmpacheId($fileid));
-            $url    = $object->play_url('', AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+            $url    = $object->play_url('', 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
         }
         // return an error on missing files
         if (empty($url)) {
@@ -2398,7 +2398,7 @@ class Subsonic_Api
 
                         if (Subsonic_Xml_Data::_isSong($song_id)) {
                             $media = new Song(Subsonic_Xml_Data::_getAmpacheId($song_id));
-                            $url   = $media->play_url('&client=' . $localplay->type, AccessTypeEnum::API->value, function_exists('curl_version'), $user->id, $user->streamtoken);
+                            $url   = $media->play_url('&client=' . $localplay->type, 'api', function_exists('curl_version'), $user->id, $user->streamtoken);
                         }
 
                         if ($url !== null) {
