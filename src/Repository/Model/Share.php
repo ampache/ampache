@@ -37,7 +37,7 @@ use PDOStatement;
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
-    public const VALID_TYPES     = array(
+    public const VALID_TYPES     = [
         'album',
         'album_disk',
         'artist',
@@ -47,7 +47,7 @@ class Share extends database_object
         'search',
         'song',
         'video',
-    );
+    ];
 
     public int $id = 0;
     public int $user;
@@ -201,14 +201,14 @@ class Share extends database_object
         $this->description    = $data['description'] ?? $this->description;
 
         $sql    = "UPDATE `share` SET `max_counter` = ?, `expire_days` = ?, `allow_stream` = ?, `allow_download` = ?, `description` = ? WHERE `id` = ?";
-        $params = array(
+        $params = [
             $this->max_counter,
             $this->expire_days,
             $this->allow_stream ? 1 : 0,
             $this->allow_download ? 1 : 0,
             $this->description,
             $this->id
-        );
+        ];
         if (!$user->has_access(75)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
@@ -284,7 +284,7 @@ class Share extends database_object
                 $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
                 /** @var Album|AlbumDisk|Playlist $object */
                 $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_songs() : array();
+                $songs  = (isset($object->id)) ? $object->get_songs() : [];
                 foreach ($songs as $songid) {
                     $isShare = ($media_id == $songid);
                     if ($isShare) {
@@ -306,7 +306,7 @@ class Share extends database_object
     public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
-        $medias   = array();
+        $medias   = [];
 
         switch ($this->object_type) {
             case 'album':
@@ -315,7 +315,7 @@ class Share extends database_object
                 $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
                 /** @var Album|AlbumDisk|Playlist $object */
                 $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_medias('song') : array();
+                $songs  = (isset($object->id)) ? $object->get_medias('song') : [];
                 foreach ($songs as $song) {
                     $medias[] = $song;
                 }

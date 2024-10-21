@@ -104,7 +104,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     $mime = 'image/';
                     $mime .= $results['extension'] ?? 'jpg';
 
-                    $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
+                    $images[] = ['url' => $match, 'mime' => $mime, 'title' => 'Google'];
                     if ($limit > 0 && count($images) >= $limit) {
                         break;
                     }

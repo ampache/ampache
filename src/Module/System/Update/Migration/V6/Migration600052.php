@@ -43,7 +43,7 @@ final class Migration600052 extends AbstractMigration
             if ($playlist->isNew()) {
                 // delete missing playlist data
                 $sql = 'DELETE FROM `playlist_data` WHERE `playlist` = ?;';
-                Dba::write($sql, array($row['playlist']));
+                Dba::write($sql, [$row['playlist']]);
             } else {
                 // regenerate tracks for existing playlists
                 $playlist->regenerate_track_numbers();

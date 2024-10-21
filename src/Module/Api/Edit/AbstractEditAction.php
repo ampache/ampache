@@ -76,7 +76,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $object_type        = implode('_', explode('_', $object_type, -1));
         }
 
-        if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, array('share', 'tag', 'tag_hidden'))) {
+        if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden'])) {
             $this->logger->warning(
                 sprintf('Type `%d` is not based on an item library.', $object_type),
                 [LegacyLogger::CONTEXT_TYPE => __CLASS__]
@@ -110,7 +110,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
 
         // Make sure they got them rights
         if (!Access::check('interface', (int) $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-            echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+            echo (string) xoutput_from_array(['rfc3514' => '0x1']);
 
             return null;
         }

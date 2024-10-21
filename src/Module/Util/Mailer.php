@@ -166,16 +166,16 @@ final class Mailer implements MailerInterface
                 break;
         } // end filter switch
 
-        $db_results = Dba::read($sql, isset($inactive) ? array($inactive) : array());
+        $db_results = Dba::read($sql, isset($inactive) ? [$inactive] : []);
 
-        $results = array();
+        $results = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[] = array(
+            $results[] = [
                 'id' => $row['id'],
                 'fullname' => $row['fullname'],
                 'email' => $row['email']
-            );
+            ];
         }
 
         return $results;

@@ -94,7 +94,7 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
         <?php } ?>
     <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), array('object_type' => 'podcast', 'object_id' => (string)$podcast->getId())); ?>
+            <?php echo AmpacheRss::get_display('podcast', (Core::get_global('user')->id ?? -1), T_('RSS Feed'), ['object_type' => 'podcast', 'object_id' => (string)$podcast->getId()]); ?>
         </li>
         <?php } ?>
         <li>

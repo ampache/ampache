@@ -66,7 +66,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -79,13 +79,13 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 $limit       = $_REQUEST['limit'] ?? 5;
 
                 if ($target == 'anywhere' || $target == 'artist') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'artist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -95,25 +95,25 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($sres as $artistid) {
                         $artist    = new Artist($artistid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Artists'),
                             'link' => $web_path . '/artists.php?action=show&artist=' . $artistid,
                             'label' => scrub_out($artist->get_fullname()),
                             'value' => scrub_out($artist->get_fullname()),
                             'rels' => '',
                             'image' => (string)Art::url($artist->id, 'artist', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' && $album_group) || $target == 'album') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'album',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -123,25 +123,25 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($sres as $albumid) {
                         $album     = new Album($albumid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show&album=' . $albumid,
                             'label' => scrub_out($album->get_fullname()),
                             'value' => scrub_out($album->get_fullname()),
                             'rels' => scrub_out($album->get_artist_fullname()),
                             'image' => (string)Art::url($album->id, 'album', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' && !$album_group) || $target == 'album_disk') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'album_disk',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -151,25 +151,25 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($sres as $albumdiskid) {
                         $albumdisk = new AlbumDisk($albumdiskid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Albums'),
                             'link' => $web_path . '/albums.php?action=show_disk&album_disk=' . $albumdiskid,
                             'label' => scrub_out($albumdisk->get_fullname()),
                             'value' => scrub_out($albumdisk->get_fullname()),
                             'rels' => scrub_out($albumdisk->get_artist_fullname()),
                             'image' => (string)Art::url($albumdisk->album_id, 'album', null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if ($target == 'anywhere' || $target == 'title') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'song',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -183,25 +183,25 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $has_art    = Art::has_db($song->id, 'song');
                         $art_object = ($show_song_art && $has_art) ? $song->id : $song->album;
                         $art_type   = ($show_song_art && $has_art) ? 'song' : 'album';
-                        $results[]  = array(
+                        $results[]  = [
                             'type' => T_('Songs'),
                             'link' => $web_path . "/song.php?action=show_song&song_id=" . $songid,
                             'label' => scrub_out($song->title),
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_artist_fullname()),
                             'image' => (string)Art::url($art_object, $art_type, null, 10),
-                        );
+                        ];
                     }
                 }
 
                 if ($target == 'anywhere' || $target == 'playlist') {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'playlist',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
                     // Limit not reached, new search with another operator
                     if (count($sres) < $limit) {
@@ -211,25 +211,25 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     }
                     foreach ($sres as $playlistid) {
                         $playlist  = new Playlist($playlistid);
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Playlists'),
                             'link' => $web_path . '/playlist.php?action=show&playlist_id=' . $playlistid,
                             'label' => $playlist->name,
                             'value' => $playlist->get_fullname(),
                             'rels' => '',
                             'image' => '',
-                        );
+                        ];
                     }
                 }
 
                 if (($target == 'anywhere' || $target == 'label') && AmpConfig::get('label')) {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'label',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'title',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
 
                     // Limit not reached, new search with another operator
@@ -242,14 +242,14 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $label = $this->labelRepository->findById($labelid);
 
                         if ($label !== null) {
-                            $results[] = array(
+                            $results[] = [
                                 'type' => T_('Labels'),
                                 'link' => $web_path . '/labels.php?action=show&label=' . $labelid,
                                 'label' => $label->name,
                                 'value' => $label->name,
                                 'rels' => '',
                                 'image' => (string)Art::url($label->getId(), 'label', null, 10),
-                            );
+                            ];
                         }
                     }
                 }
@@ -258,14 +258,14 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     $sres  = $this->missingArtistFinder->find($search);
                     $count = 0;
                     foreach ($sres as $artist) {
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Missing Artists'),
                             'link' => $web_path . '/artists.php?action=show_missing&mbid=' . $artist['mbid'],
                             'label' => scrub_out($artist['name']),
                             'value' => scrub_out($artist['name']),
                             'rels' => '',
                             'image' => '',
-                        );
+                        ];
                         $count++;
 
                         if ($count >= $limit) {
@@ -275,13 +275,13 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if ($target == 'user' && AmpConfig::get('sociable')) {
-                    $searchreq = array(
+                    $searchreq = [
                         'limit' => $limit,
                         'type' => 'user',
                         'rule_1_input' => $search,
                         'rule_1_operator' => '2', // Starts with...
                         'rule_1' => 'username',
-                    );
+                    ];
                     $sres = Search::run($searchreq);
 
                     // Limit not reached, new search with another operator
@@ -293,21 +293,21 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                     foreach ($sres as $user_id) {
                         $user      = new User($user_id);
                         $avatar    = $user->get_avatar();
-                        $results[] = array(
+                        $results[] = [
                             'type' => T_('Users'),
                             'link' => '',
                             'label' => $user->username,
                             'value' => $user->username,
                             'rels' => '',
                             'image' => $avatar['url'] ?? '',
-                        );
+                        ];
                     }
                 }
 
                 break;
             case 'search_random':
                 if (!Access::check('interface', 75)) {
-                    echo (string) xoutput_from_array(array('rfc3514' => '0x1'));
+                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
 
                     return;
                 }

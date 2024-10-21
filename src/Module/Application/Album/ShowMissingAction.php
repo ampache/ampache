@@ -99,8 +99,8 @@ final class ShowMissingAction implements ApplicationActionInterface
 
         // you might not send an artist name
         $options = (isset($artist))
-            ? array('artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name)
-            : array('album_name' => $walbum->name, 'keyword' => $walbum->name);
+            ? ['artist' => $artist->get_fullname(), 'album_name' => $walbum->name, 'keyword' => $artist->get_fullname() . " " . $walbum->name]
+            : ['album_name' => $walbum->name, 'keyword' => $walbum->name];
 
         // Attempt to find the art.
         $art    = $this->modelFactory->createArt((int) $walbum->mbid);

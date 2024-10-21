@@ -31,13 +31,13 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 
-$tag_types = array(
+$tag_types = [
     'artist' => T_('Artist'),
     'album' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
     'tag_hidden' => T_('Hidden'),
-);
+];
 
 /** @var UiInterface $ui */
 /** @var Browse $browse2 */

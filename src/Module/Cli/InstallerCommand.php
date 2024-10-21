@@ -92,14 +92,14 @@ final class InstallerCommand extends Command
             }
         }
 
-        AmpConfig::set_by_array(array(
+        AmpConfig::set_by_array([
             'web_path' => $web_path,
             'database_name' => $db_name,
             'database_username' => $db_user,
             'database_password' => $db_pass,
             'database_hostname' => $db_host,
             'database_port' => $db_port
-        ), true);
+        ], true);
 
         // Install the database
         if (!$this->installationHelper->install_insert_db($new_db_user, $new_db_pass, true, $force)) {
@@ -115,10 +115,10 @@ final class InstallerCommand extends Command
             return;
         }
 
-        AmpConfig::set_by_array(array(
+        AmpConfig::set_by_array([
             'database_username' => $new_db_user ?? $db_user,
             'database_password' => $new_db_pass ?? $db_pass
-        ), true);
+        ], true);
 
         // Write the config file
         /** @noinspection PhpUnhandledExceptionInspection */

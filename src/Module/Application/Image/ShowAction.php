@@ -225,7 +225,7 @@ final class ShowAction implements ApplicationActionInterface
                 }
                 $image = file_get_contents($defaultimg);
             } else {
-                $thumb_data = array();
+                $thumb_data = [];
                 if (array_key_exists('thumb', $_GET)) {
                     $thumb_data = $art->get_thumb($size);
                     $etag .= '-' . $thumb;

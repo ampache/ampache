@@ -55,7 +55,7 @@ class Scrobbler
         $this->scheme        = $scheme;
         $this->api_key       = $api_key;
         $this->secret        = $secret;
-        $this->queued_tracks = array();
+        $this->queued_tracks = [];
     }
 
     /**
@@ -64,7 +64,7 @@ class Scrobbler
      * It is the md5 of the <name><value> of all parameter plus API's secret
      * @param array $vars
      */
-    public function get_api_sig($vars = array()): string
+    public function get_api_sig($vars = []): string
     {
         ksort($vars);
         $sig = '';
@@ -90,15 +90,15 @@ class Scrobbler
     {
         // Encode parameters per RFC1738
         $params = http_build_query($vars);
-        $opts   = array(
-            'http' => array(
+        $opts   = [
+            'http' => [
                 'method' => $method,
-                'header' => array(
+                'header' => [
                     'Host: ' . $this->host,
                     'User-Agent: Ampache/' . AmpConfig::get('version')
-                ),
-            )
-        );
+                ],
+            ]
+        ];
         // POST request need parameters in body and additional headers
         if ($method == 'POST') {
             $opts['http']['content']  = $params;
@@ -153,11 +153,11 @@ class Scrobbler
     public function get_session_key($token = null)
     {
         if ($token !== null) {
-            $vars = array(
+            $vars = [
                 'method' => 'auth.getSession',
                 'api_key' => $this->api_key,
                 'token' => $token
-            );
+            ];
             // sign the call
             $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
@@ -210,7 +210,7 @@ class Scrobbler
             return false;
         }
 
-        $newtrack           = array();
+        $newtrack           = [];
         $newtrack['artist'] = $artist;
         $newtrack['album']  = $album;
         $newtrack['title']  = $title;
@@ -242,7 +242,7 @@ class Scrobbler
 
         // Build the query string (encoded per RFC1738 by the call method)
         $count = 0;
-        $vars  = array();
+        $vars  = [];
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];
@@ -291,7 +291,7 @@ class Scrobbler
      */
     public function love($is_loved, $artist = '', $title = ''): bool
     {
-        $vars           = array();
+        $vars           = [];
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys

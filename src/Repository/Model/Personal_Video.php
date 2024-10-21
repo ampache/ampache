@@ -81,10 +81,10 @@ class Personal_Video extends Video
      * create
      * This takes a key'd array of data as input and inserts a new personal video entry, it returns the record id
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         $sql = "INSERT INTO `personal_video` (`id`, `location`, `summary`) VALUES (?, ?, ?)";
-        Dba::write($sql, array($data['id'], $data['location'], $data['summary']));
+        Dba::write($sql, [$data['id'], $data['location'], $data['summary']]);
 
         return (int)$data['id'];
     }
@@ -99,7 +99,7 @@ class Personal_Video extends Video
         parent::update($data);
 
         $sql = "UPDATE `personal_video` SET `location` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($data['location'], $data['summary'], $this->id));
+        Dba::write($sql, [$data['location'], $data['summary'], $this->id]);
 
         return $this->id;
     }
@@ -127,7 +127,7 @@ class Personal_Video extends Video
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `personal_video` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
         }
 
         return $deleted;

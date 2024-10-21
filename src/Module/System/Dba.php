@@ -40,7 +40,7 @@ use PDOStatement;
  */
 class Dba
 {
-    public static $stats = array('query' => 0);
+    public static $stats = ['query' => 0];
 
     private static $_sql;
     private static string $_error;
@@ -51,7 +51,7 @@ class Dba
      * @param array $params
      * @return PDOStatement|false
      */
-    public static function query($sql, $params = array())
+    public static function query($sql, $params = [])
     {
         // json_encode throws errors about UTF-8 cleanliness, which we don't care about here.
         //debug_event(__CLASS__, $sql . ' ' . json_encode($params), 5);
@@ -126,7 +126,7 @@ class Dba
      * @param array $params
      * @return PDOStatement|false
      */
-    public static function read($sql, $params = array())
+    public static function read($sql, $params = [])
     {
         return self::query($sql, $params);
     }
@@ -137,7 +137,7 @@ class Dba
      * @param array $params
      * @return PDOStatement|false
      */
-    public static function write($sql, $params = array())
+    public static function write($sql, $params = [])
     {
         return self::query($sql, $params);
     }
@@ -196,7 +196,7 @@ class Dba
     public static function fetch_assoc($resource, $finish = true): array
     {
         if (!$resource) {
-            return array();
+            return [];
         }
 
         $result = $resource->fetch(PDO::FETCH_ASSOC);
@@ -206,7 +206,7 @@ class Dba
                 self::finish($resource);
             }
 
-            return array();
+            return [];
         }
 
         return $result;
@@ -226,7 +226,7 @@ class Dba
     public static function fetch_row($resource, $finish = true): array
     {
         if (!$resource) {
-            return array();
+            return [];
         }
 
         $result = $resource->fetch(PDO::FETCH_NUM);
@@ -236,7 +236,7 @@ class Dba
                 self::finish($resource);
             }
 
-            return array();
+            return [];
         }
 
         return $result;
@@ -612,10 +612,10 @@ class Dba
                 break;
         }
 
-        return array(
+        return [
             'charset' => $target_charset,
             'collation' => $target_collation
-        );
+        ];
     }
 
     /**

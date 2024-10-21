@@ -123,7 +123,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -203,7 +203,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -215,7 +215,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -223,12 +223,12 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'live_stream') {
-            $medias[] = array(
+            $medias[] = [
                 'object_type' => 'live_stream',
                 'object_id' => $this->id
-            );
+            ];
         }
 
         return $medias;
@@ -293,7 +293,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
             AmpError::add('general', T_('Name is required'));
         }
 
-        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
+        $allowed_array = ['https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp'];
 
         $elements = explode(":", (string)$data['url']);
 
@@ -315,13 +315,13 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
         Dba::write(
             $sql,
-            array(
+            [
                 $data['name'] ?? $this->name,
                 $data['site_url'] ?? null,
                 $data['url'] ?? $this->url,
                 strtolower((string)$data['codec']),
                 $this->id
-            )
+            ]
         );
 
         return $this->id;
@@ -343,7 +343,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
-        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
+        $allowed_array = ['https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp'];
 
         $elements = explode(":", (string)$data['url']);
 
@@ -370,7 +370,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
+        Dba::write($sql, [$data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
@@ -388,7 +388,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_stream_types($player = null): array
     {
-        return array('native');
+        return ['native'];
     }
 
     /**
@@ -422,9 +422,9 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
-        return array();
+        return [];
     }
 
     /**

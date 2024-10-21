@@ -87,9 +87,9 @@ class Catalog_beetsremote extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
+        $fields['uri'] = ['description' => T_('Beets Server URI'), 'type' => 'url'];
 
         return $fields;
     }
@@ -116,7 +116,7 @@ class Catalog_beetsremote extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
-        $db_results = Dba::read($selectSql, array($uri));
+        $db_results = Dba::read($selectSql, [$uri]);
 
         if (Dba::num_rows($db_results)) {
             debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
@@ -126,7 +126,7 @@ class Catalog_beetsremote extends Catalog
         }
 
         $insertSql = 'INSERT INTO `catalog_beetsremote` (`uri`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, array($uri, $catalog_id));
+        Dba::write($insertSql, [$uri, $catalog_id]);
 
         return true;
     }

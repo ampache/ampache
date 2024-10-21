@@ -131,7 +131,7 @@ class AmpacheXbmc extends localplay_controller
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id));
+        return Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id]);
     }
 
     /**
@@ -142,7 +142,7 @@ class AmpacheXbmc extends localplay_controller
     public function delete_instance($uid): bool
     {
         $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
-        Dba::query($sql, array($uid));
+        Dba::query($sql, [$uid]);
 
         return true;
     }
@@ -156,7 +156,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_xbmc` ORDER BY `name`";
         $db_results = Dba::query($sql);
-        $results    = array();
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -174,7 +174,7 @@ class AmpacheXbmc extends localplay_controller
     public function update_instance($uid, $data): bool
     {
         $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
-        Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid));
+        Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
 
         return true;
     }
@@ -186,12 +186,12 @@ class AmpacheXbmc extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields         = array();
-        $fields['name'] = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host'] = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port'] = array('description' => T_('Port'), 'type' => 'number');
-        $fields['user'] = array('description' => T_('Username'), 'type' => 'text');
-        $fields['pass'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields         = [];
+        $fields['name'] = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host'] = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port'] = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['user'] = ['description' => T_('Username'), 'type' => 'text'];
+        $fields['pass'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -206,7 +206,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -249,10 +249,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Playlist->Add(
-                array(
+                [
                     'playlistid' => $this->_playlistId,
-                    'item' => array('file' => $url->url)
-                )
+                    'item' => ['file' => $url->url]
+                ]
             );
 
             return true;
@@ -276,10 +276,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Playlist->Remove(
-                array(
+                [
                     'playlistid' => $this->_playlistId,
                     'position' => $object_id
-                )
+                ]
             );
 
             return true;
@@ -305,9 +305,9 @@ class AmpacheXbmc extends localplay_controller
             $this->stop();
 
             $clear = $this->_xbmc->Playlist->Clear(
-                array(
+                [
                     'playlistid' => $this->_playlistId
-                )
+                ]
             );
 
             //we have a delay between the stop/clear playlist in kodi and kodi notify it in the status, so, we add a mininal sleep
@@ -339,18 +339,18 @@ class AmpacheXbmc extends localplay_controller
 
             if ($status['state'] == 'pause') {
                 $this->_xbmc->Player->PlayPause(
-                    array(
+                    [
                         'playerid' => $this->_playerId,
                         'play' => true
-                    )
+                    ]
                 );
             } elseif ($status['state'] == 'stop') {
                 $this->_xbmc->Player->Open(
-                    array(
-                       'item' => array(
+                    [
+                       'item' => [
                            'playlistid' => $this->_playlistId
-                       )
-                    )
+                       ]
+                    ]
                 );
 
             }
@@ -383,10 +383,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->PlayPause(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'play' => $play
-                )
+                ]
             );
 
 
@@ -411,9 +411,9 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->Stop(
-                array(
+                [
                     'playerid' => $this->_playerId
-                )
+                ]
             );
 
             return true;
@@ -440,10 +440,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->GoTo(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'to' => $song
-                )
+                ]
             );
 
             return true;
@@ -465,9 +465,9 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                array(
+                [
                     'volume' => 'increment'
-                )
+                ]
             );
 
             return true;
@@ -489,9 +489,9 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                array(
+                [
                     'volume' => 'decrement'
-                )
+                ]
             );
 
             return true;
@@ -514,10 +514,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->GoTo(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'to' => 'next'
-                )
+                ]
             );
 
             return true;
@@ -540,10 +540,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->GoTo(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'to' => 'previous'
-                )
+                ]
             );
 
             return true;
@@ -567,9 +567,9 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                array(
+                [
                     'volume' => $volume
-                )
+                ]
             );
 
             return true;
@@ -593,10 +593,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->SetRepeat(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'repeat' => ($state ? 'all' : 'off')
-                )
+                ]
             );
 
             return true;
@@ -620,10 +620,10 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->SetShuffle(
-                array(
+                [
                     'playerid' => $this->_playerId,
                     'shuffle' => $onoff
-                )
+                ]
             );
 
             return true;
@@ -646,20 +646,20 @@ class AmpacheXbmc extends localplay_controller
             return false;
         }
 
-        $results = array();
+        $results = [];
 
         try {
             $playlist = $this->_xbmc->Playlist->GetItems(
-                array(
+                [
                     'playlistid' => $this->_playlistId,
-                    'properties' => array('file')
-                )
+                    'properties' => ['file']
+                ]
             );
 
             for ($i = $playlist['limits']['start']; $i < $playlist['limits']['end']; ++$i) {
                 $item = $playlist['items'][$i];
 
-                $data          = array();
+                $data          = [];
                 $data['link']  = $item['file'];
                 $data['id']    = $i;
                 $data['track'] = $i + 1;
@@ -691,16 +691,16 @@ class AmpacheXbmc extends localplay_controller
      */
     public function status(): array
     {
-        $array = array();
+        $array = [];
         if (!$this->_xbmc) {
             return $array;
         }
 
         try {
             $appprop = $this->_xbmc->Application->GetProperties(
-                array(
-                    'properties' => array('volume')
-                )
+                [
+                    'properties' => ['volume']
+                ]
             );
             $array['volume']       = (int)($appprop['volume']);
             $array['track_title']  = '';
@@ -712,14 +712,14 @@ class AmpacheXbmc extends localplay_controller
                 $array['state'] = 'play';
 
                 $speed = $this->_xbmc->Player->GetProperties(
-                    array(
+                    [
                         'playerid' => $this->_playerId,
-                        'properties' => array('speed')
-                    )
+                        'properties' => ['speed']
+                    ]
                 );
 
                 //speed == 0, pause
-                if($speed['speed'] == 0) {
+                if ($speed['speed'] == 0) {
                     $array['state'] = 'pause';
                 }
 
@@ -732,26 +732,26 @@ class AmpacheXbmc extends localplay_controller
 
 
                 $currentplay = $this->_xbmc->Player->GetItem(
-                    array(
+                    [
                         'playerid' => $this->_playerId,
-                        'properties' => array('file')
-                    )
+                        'properties' => ['file']
+                    ]
                 );
 
                 $playprop = $this->_xbmc->Player->GetProperties(
-                    array(
+                    [
                         'playerid' => $this->_playerId,
-                        'properties' => array('repeat', 'shuffled')
-                    )
+                        'properties' => ['repeat', 'shuffled']
+                    ]
                 );
                 $array['repeat'] = ($playprop['repeat'] != "off");
                 $array['random'] = (strtolower($playprop['shuffled']) == 1);
 
                 $playposition = $this->_xbmc->Player->GetProperties(
-                    array(
+                    [
                         'playerid' => $this->_playerId,
-                        'properties' => array('position')
-                    )
+                        'properties' => ['position']
+                    ]
                 );
 
                 $array['track'] = $playposition['position'] + 1;
@@ -760,7 +760,7 @@ class AmpacheXbmc extends localplay_controller
 
                 $url_data = $this->parse_url($playlist_item);
                 $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
-                if(!empty($oid)) {
+                if (!empty($oid)) {
                     $song = new Song($oid);
                     if ($song->isNew() === false) {
                         $array['track_title']  = $song->title;

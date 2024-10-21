@@ -160,7 +160,7 @@ class Core
         $expire = time() + $window;
 
         // Register it
-        $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
+        $_SESSION['forms'][$sid] = ['name' => $name, 'expire' => $expire];
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
         } else {
@@ -216,10 +216,10 @@ class Core
      */
     public static function image_dimensions($image_data): array
     {
-        $empty = array(
+        $empty = [
             'width' => 0,
             'height' => 0
-        );
+        ];
         if (!function_exists('imagecreatefromstring')) {
             return $empty;
         }
@@ -241,10 +241,10 @@ class Core
             return $empty;
         }
 
-        return array(
+        return [
             'width' => $width,
             'height' => $height
-        );
+        ];
     }
 
     /**
@@ -372,11 +372,11 @@ class Core
      * @param array $options
      * @return array
      */
-    public static function requests_options($options = array()): array
+    public static function requests_options($options = []): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy   = array();
+                $proxy   = [];
                 $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
                 if (AmpConfig::get('proxy_user')) {
                     $proxy[] = AmpConfig::get('proxy_user');

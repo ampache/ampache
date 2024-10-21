@@ -66,7 +66,7 @@ class VlcPlayer
         $aurl .= "&";
         $aurl .= urlencode($name);
 
-        $args    = array('command' => 'in_enqueue', '&input' => $aurl);
+        $args    = ['command' => 'in_enqueue', '&input' => $aurl];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -81,7 +81,7 @@ class VlcPlayer
      */
     public function version(): bool
     {
-        $args    = array();
+        $args    = [];
         $results = $this->sendCommand('status.xml', $args);
 
         return ($results !== null);
@@ -94,7 +94,7 @@ class VlcPlayer
      */
     public function clear(): ?bool
     {
-        $args    = array('command' => 'pl_empty');
+        $args    = ['command' => 'pl_empty'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -109,7 +109,7 @@ class VlcPlayer
      */
     public function next(): ?bool
     {
-        $args    = array('command' => 'pl_next');
+        $args    = ['command' => 'pl_next'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -124,7 +124,7 @@ class VlcPlayer
      */
     public function prev(): ?bool
     {
-        $args    = array('command' => 'pl_previous');
+        $args    = ['command' => 'pl_previous'];
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
@@ -141,7 +141,7 @@ class VlcPlayer
      */
     public function skip($pos): ?bool
     {
-        $args    = array('command' => 'pl_play', '&id' => $pos);
+        $args    = ['command' => 'pl_play', '&id' => $pos];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -158,7 +158,7 @@ class VlcPlayer
      */
     public function play(): ?bool
     {
-        $args    = array('command' => 'pl_play');
+        $args    = ['command' => 'pl_play'];
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
@@ -173,7 +173,7 @@ class VlcPlayer
      */
     public function pause(): ?bool
     {
-        $args    = array('command' => 'pl_pause');
+        $args    = ['command' => 'pl_pause'];
         $results = $this->sendCommand("status.xml?", $args);
         if ($results === null) {
             return null;
@@ -188,7 +188,7 @@ class VlcPlayer
      */
     public function stop(): ?bool
     {
-        $args    = array('command' => 'pl_stop');
+        $args    = ['command' => 'pl_stop'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -205,7 +205,7 @@ class VlcPlayer
      */
     public function repeat($value): ?bool
     {
-        $args    = array('command' => 'pl_repeat');
+        $args    = ['command' => 'pl_repeat'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return null;
@@ -221,7 +221,7 @@ class VlcPlayer
      */
     public function random($value): bool
     {
-        $args    = array('command' => 'pl_random');
+        $args    = ['command' => 'pl_random'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -237,7 +237,7 @@ class VlcPlayer
      */
     public function delete_pos($track): bool
     {
-        $args    = array('command' => 'pl_delete', '&id' => $track);
+        $args    = ['command' => 'pl_delete', '&id' => $track];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -252,7 +252,7 @@ class VlcPlayer
      */
     public function state(): string
     {
-        $args = array();
+        $args = [];
 
         $state       = 'unknown';
         $results     = $this->sendCommand('status.xml', $args);
@@ -276,7 +276,7 @@ class VlcPlayer
      */
     public function fullstate()
     {
-        $args = array();
+        $args = [];
 
         $results = $this->sendCommand('status.xml', $args);
         if ($results === null) {
@@ -292,7 +292,7 @@ class VlcPlayer
      */
     public function volume_up(): bool
     {
-        $args    = array('command' => 'volume', '&val' => '%2B20');
+        $args    = ['command' => 'volume', '&val' => '%2B20'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -307,7 +307,7 @@ class VlcPlayer
      */
     public function volume_down(): bool
     {
-        $args    = array('command' => 'volume', '&val' => '-20');
+        $args    = ['command' => 'volume', '&val' => '-20'];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -325,7 +325,7 @@ class VlcPlayer
     {
         // Convert it to base 400
         $value   = $value * 4;
-        $args    = array('command' => 'volume', '&val' => $value);
+        $args    = ['command' => 'volume', '&val' => $value];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -340,7 +340,7 @@ class VlcPlayer
      */
     public function clear_playlist(): bool
     {
-        $args    = array('command' => 'pl_empty');
+        $args    = ['command' => 'pl_empty'];
         $results = $this->sendcommand('status.xml?', $args);
         if ($results === null) {
             return false;
@@ -357,7 +357,7 @@ class VlcPlayer
     public function get_tracks()
     {
         // Gets complete playlist + medialib in VLC's case, needs to be looked at
-        $args = array();
+        $args = [];
 
         $results = $this->sendCommand('playlist.xml', $args);
         if ($results === null) {
@@ -435,12 +435,12 @@ class VlcPlayer
     private function xmltoarray($contents, $get_attributes = 1, $priority = 'attribute'): array
     {
         if (!$contents) {
-            return array();
+            return [];
         }
 
         if (!function_exists('xml_parser_create')) {
             //print "'xml_parser_create()' function not found!";
-            return array();
+            return [];
         }
 
         // Get the XML parser of PHP - PHP must have this module for the parser to work
@@ -456,17 +456,17 @@ class VlcPlayer
         xml_parser_free($parser);
 
         if (!$xml_values) {
-            return array();
+            return [];
         } // Hmm...
 
         // Initializations
-        $bigxml_array = array();
+        $bigxml_array = [];
 
         $current = &$bigxml_array; // Reference
 
         // Go through the tags.
         // Multiple tags with same name will be turned into an array
-        $repeated_tag_index = array();
+        $repeated_tag_index = [];
         foreach ($xml_values as $data) {
             // Remove existing values, or there will be trouble
             unset($attributes, $value);
@@ -475,8 +475,8 @@ class VlcPlayer
             // tag(string), type(string), level(int), attributes(array).
             extract($data); // We could use the array by itself, but this cooler.
 
-            $result          = array();
-            $attributes_data = array();
+            $result          = [];
+            $attributes_data = [];
 
             if (isset($value)) {
                 if ($priority == 'tag') {
@@ -518,10 +518,10 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++;
                     } else {
                         // This section will make the value an array if multiple tags with the same name appear together
-                        $current[$tag] = array(
+                        $current[$tag] = [
                             $current[$tag],
                             $result
-                        ); // This will combine the existing item and the new item together to make an array
+                        ]; // This will combine the existing item and the new item together to make an array
                         $repeated_tag_index[$tag . '_' . $level] = 2;
 
                         if (isset($current[$tag . '_attr'])) {
@@ -555,10 +555,10 @@ class VlcPlayer
                         $repeated_tag_index[$tag . '_' . $level]++;
                     } else {
                         // If it is not an array...
-                        $current[$tag] = array(
+                        $current[$tag] = [
                             $current[$tag],
                             $result
-                        ); // ...Make it an array using using the existing value and the new value
+                        ]; // ...Make it an array using using the existing value and the new value
                         $repeated_tag_index[$tag . '_' . $level] = 1;
                         if ($priority == 'tag' && $get_attributes) {
                             if (isset($current[$tag . '_attr'])) {

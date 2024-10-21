@@ -43,7 +43,7 @@ final class CatalogAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions

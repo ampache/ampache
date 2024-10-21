@@ -46,7 +46,7 @@ use Ampache\Repository\ShoutRepositoryInterface;
  */
 class Browse extends Query
 {
-    private const BROWSE_TYPES = array(
+    private const BROWSE_TYPES = [
         'album',
         'album_disk',
         'artist',
@@ -80,7 +80,7 @@ class Browse extends Query
         'user',
         'video',
         'wanted',
-    );
+    ];
 
     /**
      * @var int $duration
@@ -228,7 +228,7 @@ class Browse extends Query
         $objects = $_SESSION['browse']['supplemental'][$this->id] ?? '';
 
         if (!is_array($objects)) {
-            $objects = array();
+            $objects = [];
         }
 
         return $objects;
@@ -270,7 +270,7 @@ class Browse extends Query
      * @param array $object_ids
      * @param bool|array|string $argument
      */
-    public function show_objects($object_ids = array(), $argument = false): void
+    public function show_objects($object_ids = [], $argument = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || empty($object_ids)) {
             $object_ids = $this->get_saved();
@@ -321,7 +321,7 @@ class Browse extends Query
         debug_event(self::class, 'show_objects called. browse {' . $this->id . '} type {' . $type . '}', 5);
 
         // hide some of the useless columns in a browse
-        $hide_columns   = array();
+        $hide_columns   = [];
         $argument_param = '';
         if (is_array($argument)) {
             if (array_key_exists('hide', $argument) && is_array($argument['hide'])) {
@@ -602,7 +602,7 @@ class Browse extends Query
             if ((isset($_COOKIE[$name]))) {
                 $this->set_use_alpha(Core::get_cookie($name) == 'true');
             } else {
-                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? array() : explode(
+                $default_alpha = (!AmpConfig::get('libitem_browse_alpha')) ? [] : explode(
                     ",",
                     AmpConfig::get('libitem_browse_alpha')
                 );

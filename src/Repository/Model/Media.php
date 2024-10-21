@@ -73,7 +73,7 @@ interface Media
      * @param array $options
      * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array;
+    public function get_transcode_settings($target = null, $player = null, $options = []): array;
 
     /**
      * getYear

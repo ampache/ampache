@@ -194,27 +194,27 @@ abstract class Catalog extends database_object
      * This is a private var that's used during catalog builds
      * @var array $_playlists
      */
-    protected $_playlists = array();
+    protected $_playlists = [];
 
     /**
      * Cache all files in catalog for quick lookup during add
      * @var array $_filecache
      */
-    protected $_filecache = array();
+    protected $_filecache = [];
 
     // Used in functions
     /**
      * @var array $albums
      */
-    protected static $albums = array();
+    protected static $albums = [];
     /**
      * @var array $artists
      */
-    protected static $artists = array();
+    protected static $artists = [];
     /**
      * @var array $tags
      */
-    protected static $tags = array();
+    protected static $tags = [];
 
     /**
      * get_path
@@ -346,7 +346,7 @@ abstract class Catalog extends database_object
     public function uninstall(): void
     {
         $sql = "DELETE FROM `catalog` WHERE `catalog_type` = ?";
-        Dba::query($sql, array($this->get_type()));
+        Dba::query($sql, [$this->get_type()]);
 
         $sql = "DROP TABLE `catalog_" . $this->get_type() . "`";
         Dba::query($sql);
@@ -359,7 +359,7 @@ abstract class Catalog extends database_object
     public static function create_from_id($catalog_id): ?Catalog
     {
         $sql        = 'SELECT `catalog_type` FROM `catalog` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($catalog_id));
+        $db_results = Dba::read($sql, [$catalog_id]);
         $row        = Dba::fetch_assoc($db_results);
         if (empty($row)) {
             return null;
@@ -400,7 +400,7 @@ abstract class Catalog extends database_object
         }
         // identify if it's actually enabled
         $sql        = 'SELECT `enabled` FROM `catalog` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($catalog->id));
+        $db_results = Dba::read($sql, [$catalog->id]);
 
         while ($results = Dba::fetch_assoc($db_results)) {
             $catalog->enabled = $results['enabled'];
@@ -435,7 +435,7 @@ abstract class Catalog extends database_object
     public static function getName(int $catalog_id): string
     {
         $sql        = "SELECT `name` FROM `catalog` WHERE `id` = ?";
-        $db_results = Dba::read($sql, array($catalog_id));
+        $db_results = Dba::read($sql, [$catalog_id]);
         $row        = Dba::fetch_assoc($db_results);
 
         return $row['name'] ?? '';
@@ -487,7 +487,7 @@ abstract class Catalog extends database_object
     public static function filter_user_count(int $filter_id): int
     {
         $sql        = "SELECT COUNT(1) AS `count` FROM `user` WHERE `catalog_filter_group` = ?";
-        $db_results = Dba::read($sql, array($filter_id));
+        $db_results = Dba::read($sql, [$filter_id]);
         $row        = Dba::fetch_assoc($db_results);
 
         return (int) $row['count'];
@@ -500,7 +500,7 @@ abstract class Catalog extends database_object
     public static function filter_catalog_count(int $filter_id): int
     {
         $sql        = "SELECT COUNT(1) AS `count` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `enabled` = 1";
-        $db_results = Dba::read($sql, array($filter_id));
+        $db_results = Dba::read($sql, [$filter_id]);
         $row        = Dba::fetch_assoc($db_results);
 
         return (int) $row['count'];
@@ -512,7 +512,7 @@ abstract class Catalog extends database_object
      */
     public static function filter_name_exists(string $filter_name, int $exclude_id = 0): bool
     {
-        $params = array($filter_name);
+        $params = [$filter_name];
         $sql    = "SELECT `id` FROM `catalog_filter_group` WHERE `name` = ?";
         if ($exclude_id >= 0) {
             $sql .= " AND `id` != ?";
@@ -534,7 +534,7 @@ abstract class Catalog extends database_object
     public static function check_filter_catalog_enabled(int $filter_id, int $catalog_id): bool
     {
         $sql        = "SELECT `enabled` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ? AND `enabled` = 1;";
-        $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+        $db_results = Dba::read($sql, [$filter_id, $catalog_id]);
 
         return Dba::num_rows($db_results) > 0;
     }
@@ -545,7 +545,7 @@ abstract class Catalog extends database_object
      */
     public static function add_catalog_filter_group_map(int $catalog_id): void
     {
-        $results    = array();
+        $results    = [];
         $sql        = "SELECT `id` FROM `catalog_filter_group` ORDER BY `id`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -555,7 +555,7 @@ abstract class Catalog extends database_object
         foreach ($results as $filter_id) {
             $enabled = ($filter_id == 0) ? 1 : 0; // always enable for the DEFAULT group
             $sql     = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES (?, ?, ?);";
-            $params  = array((int)$filter_id, $catalog_id, $enabled);
+            $params  = [(int)$filter_id, $catalog_id, $enabled];
             Dba::write($sql, $params);
         }
     }
@@ -578,7 +578,7 @@ abstract class Catalog extends database_object
         $filter_id = Dba::insert_id();
 
         // Fill in catalog_filter_group_map table for the new filter
-        $results    = array();
+        $results    = [];
         $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -605,9 +605,9 @@ abstract class Catalog extends database_object
     public static function edit_catalog_filter(int $filter_id, string $filter_name, array $catalogs): bool
     {
         // Modify the filter name
-        $results = array();
+        $results = [];
         $sql     = "UPDATE `catalog_filter_group` SET `name` = ? WHERE `id` = ?;";
-        Dba::write($sql, array($filter_name, $filter_id));
+        Dba::write($sql, [$filter_name, $filter_id]);
 
         // Fill in catalog_filter_group_map table for the filter
         $sql        = "SELECT `id` FROM `catalog` ORDER BY `id`";
@@ -618,12 +618,12 @@ abstract class Catalog extends database_object
 
         foreach ($results as $catalog_id) {
             $sql        = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `group_id` = ? AND `catalog_id` = ?";
-            $db_results = Dba::read($sql, array($filter_id, $catalog_id));
+            $db_results = Dba::read($sql, [$filter_id, $catalog_id]);
             $enabled    = $catalogs[$catalog_id];
             $sql        = (Dba::num_rows($db_results))
                 ? "UPDATE `catalog_filter_group_map` SET `enabled` = ? WHERE `group_id` = ? AND `catalog_id` = ?"
                 : "INSERT INTO `catalog_filter_group_map` SET `enabled` = ?, `group_id` = ?, `catalog_id` = ?";
-            if (!Dba::write($sql, array($enabled, $filter_id, $catalog_id))) {
+            if (!Dba::write($sql, [$enabled, $filter_id, $catalog_id])) {
                 return false;
             }
         }
@@ -639,7 +639,7 @@ abstract class Catalog extends database_object
     public static function delete_catalog_filter(int $filter_id)
     {
         if ($filter_id > 0) {
-            $params = array($filter_id);
+            $params = [$filter_id];
             $sql    = "DELETE FROM `catalog_filter_group` WHERE `id` = ?";
             if (Dba::write($sql, $params)) {
                 $sql = "DELETE FROM `catalog_filter_group_map` WHERE `group_id` = ?";
@@ -658,7 +658,7 @@ abstract class Catalog extends database_object
     public static function reset_user_filter(int $filter_id): void
     {
         $sql = "UPDATE `user` SET `catalog_filter_group` = 0 WHERE `catalog_filter_group` = ?";
-        Dba::write($sql, array($filter_id));
+        Dba::write($sql, [$filter_id]);
     }
 
     /**
@@ -709,7 +709,7 @@ abstract class Catalog extends database_object
 
         $table      = 'catalog_' . $this->get_type();
         $sql        = "SELECT `id` FROM `$table` WHERE `catalog_id` = ?";
-        $db_results = Dba::read($sql, array($object_id));
+        $db_results = Dba::read($sql, [$object_id]);
         if ($results = Dba::fetch_assoc($db_results)) {
             $info_type = parent::get_info($results['id'], $table);
             foreach ($info_type as $key => $value) {
@@ -870,7 +870,7 @@ abstract class Catalog extends database_object
         if (count($this->_filecache) == 0) {
             // Get _EVERYTHING_
             $sql        = 'SELECT `id`, `file` FROM `song` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
 
             // Populate the filecache
             while ($results = Dba::fetch_assoc($db_results)) {
@@ -878,7 +878,7 @@ abstract class Catalog extends database_object
             }
 
             $sql        = 'SELECT `id`, `file` FROM `video` WHERE `catalog` = ?';
-            $db_results = Dba::read($sql, array($this->id));
+            $db_results = Dba::read($sql, [$this->id]);
 
             while ($results = Dba::fetch_assoc($db_results)) {
                 $this->_filecache[strtolower((string)$results['file'])] = 'v_' . $results['id'];
@@ -896,7 +896,7 @@ abstract class Catalog extends database_object
         $sql = ($user_id > 0)
             ? "SELECT `key`, `value` FROM `user_data` WHERE `key` = ? AND `user` = " . $user_id
             : "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($key));
+        $db_results = Dba::read($sql, [$key]);
         $results    = Dba::fetch_assoc($db_results);
 
         return (int)($results['value'] ?? 0);
@@ -911,7 +911,7 @@ abstract class Catalog extends database_object
      */
     public static function set_update_info($key, $value): void
     {
-        Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", array($key, $value));
+        Dba::write("REPLACE INTO `update_info` SET `key` = ?, `value` = ?;", [$key, $value]);
     }
 
     /**
@@ -950,7 +950,7 @@ abstract class Catalog extends database_object
         }
         $sql = "UPDATE `catalog` SET `$field` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($value, $catalog_id));
+        return Dba::write($sql, [$value, $catalog_id]);
     }
 
     /**
@@ -981,7 +981,7 @@ abstract class Catalog extends database_object
      */
     public static function get_catalogs($filter_type = '', $user_id = null, $query = false): array
     {
-        $params = array();
+        $params = [];
         $sql    = "SELECT `id` FROM `catalog` ";
         $join   = 'WHERE';
         if (!empty($filter_type)) {
@@ -1005,12 +1005,12 @@ abstract class Catalog extends database_object
         $sql .= "ORDER BY `name`;";
         //debug_event(self::class, 'get_catalogs ' . $sql . ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, $params);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
         if (empty($results) && $query) {
-            return array(0);
+            return [0];
         }
 
         return $results;
@@ -1130,7 +1130,7 @@ abstract class Catalog extends database_object
         $gather_types   = $data['gather_media'];
 
         // Should it be an array? Not now.
-        if (!in_array($gather_types, array('music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'))) {
+        if (!in_array($gather_types, ['music', 'clip', 'tvshow', 'movie', 'personal_video', 'podcast'])) {
             return 0;
         }
 
@@ -1141,13 +1141,13 @@ abstract class Catalog extends database_object
         }
 
         $sql = 'INSERT INTO `catalog` (`name`, `catalog_type`, `rename_pattern`, `sort_pattern`, `gather_types`) VALUES (?, ?, ?, ?, ?)';
-        Dba::write($sql, array(
+        Dba::write($sql, [
             $name,
             $type,
             $rename_pattern,
             $sort_pattern,
             $gather_types
-        ));
+        ]);
 
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
@@ -1161,7 +1161,7 @@ abstract class Catalog extends database_object
         /** @var Catalog_beets|Catalog_beetsremote|Catalog_dropbox|Catalog_local|Catalog_remote|Catalog_Seafile|Catalog_subsonic $classname */
         if (!$classname::create_type($insert_id, $data)) {
             $sql = 'DELETE FROM `catalog` WHERE `id` = ?';
-            Dba::write($sql, array($insert_id));
+            Dba::write($sql, [$insert_id]);
             $insert_id = 0;
         }
 
@@ -1215,10 +1215,10 @@ abstract class Catalog extends database_object
         }
         if ($user_id == -1) {
             // DEFAULT group only for System / Guest access
-            $params = array($catalog_id);
+            $params = [$catalog_id];
             $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` = 0;";
         } else {
-            $params = array($catalog_id, $user_id);
+            $params = [$catalog_id, $user_id];
             $sql    = "SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_id` = ? AND `enabled` = 1 AND `group_id` IN (SELECT `catalog_filter_group` FROM `user` WHERE `id` = ?);";
         }
         //debug_event(self::class, 'has_access ' . $sql . ' ' . print_r($params, true), 5);
@@ -1243,7 +1243,7 @@ abstract class Catalog extends database_object
         $results = self::SERVER_COUNTS;
         if ($user_id > 0) {
             $sql        = "SELECT `key`, `value` FROM `user_data` WHERE `user` = ?;";
-            $db_results = Dba::read($sql, array($user_id));
+            $db_results = Dba::read($sql, [$user_id]);
         } else {
             $sql        = "SELECT `key`, `value` FROM `update_info`;";
             $db_results = Dba::read($sql);
@@ -1264,7 +1264,7 @@ abstract class Catalog extends database_object
     public static function count_table(string $table, ?int $catalog_id = 0, ?int $update_time = 0): int
     {
         $sql       = "SELECT COUNT(`id`) FROM `$table` ";
-        $params    = array();
+        $params    = [];
         $where_sql = 'WHERE';
         if ($catalog_id > 0) {
             $sql .= $where_sql . " `catalog` = ? ";
@@ -1299,14 +1299,14 @@ abstract class Catalog extends database_object
     public static function count_catalog($catalog_id): array
     {
         $catalog = self::create_from_id($catalog_id);
-        $results = array(
+        $results = [
             'items' => 0,
             'time' => 0,
             'size' => 0
-        );
+        ];
         if ($catalog instanceof Catalog) {
             $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
-            $params    = $catalog_id ? array($catalog_id) : array();
+            $params    = $catalog_id ? [$catalog_id] : [];
 
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {
@@ -1367,13 +1367,13 @@ abstract class Catalog extends database_object
      */
     public function get_album_ids($filter = ''): array
     {
-        $results = array();
+        $results = [];
 
         $sql = 'SELECT `album`.`id` FROM `album` WHERE `album`.`catalog` = ?';
         if ($filter === 'art') {
             $sql = "SELECT `album`.`id` FROM `album` LEFT JOIN `image` ON `album`.`id` = `image`.`object_id` AND `object_type` = 'album' WHERE `album`.`catalog` = ? AND `image`.`object_id` IS NULL";
         }
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1391,14 +1391,14 @@ abstract class Catalog extends database_object
      */
     public function get_video_ids($type = ''): array
     {
-        $results = array();
+        $results = [];
 
         $sql = 'SELECT DISTINCT(`video`.`id`) AS `id` FROM `video` ';
         if (!empty($type)) {
             $sql .= 'JOIN `' . $type . '` ON `' . $type . '`.`id` = `video`.`id`';
         }
         $sql .= 'WHERE `video`.`catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1419,7 +1419,7 @@ abstract class Catalog extends database_object
             $catalogs = self::get_catalogs();
         }
 
-        $results = array();
+        $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
             if ($catalog === null) {
@@ -1462,9 +1462,9 @@ abstract class Catalog extends database_object
      */
     public function get_tvshow_ids(): array
     {
-        $results    = array();
+        $results    = [];
         $sql        = 'SELECT DISTINCT(`tvshow`.`id`) AS `id` FROM `tvshow` JOIN `tvshow_season` ON `tvshow_season`.`tvshow` = `tvshow`.`id` JOIN `tvshow_episode` ON `tvshow_episode`.`season` = `tvshow_season`.`id` JOIN `video` ON `video`.`id` = `tvshow_episode`.`id` WHERE `video`.`catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1483,7 +1483,7 @@ abstract class Catalog extends database_object
             $catalogs = self::get_catalogs();
         }
 
-        $results = array();
+        $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
             if ($catalog === null) {
@@ -1545,7 +1545,7 @@ abstract class Catalog extends database_object
                 $sql           = "SELECT `id`, `name` FROM (SELECT `id`, `name` FROM `playlist` UNION SELECT CONCAT('smart_', `id`) AS `id`, `name` FROM `search`) AS `playlist` WHERE `id` IN (" . $object_string . ")";
                 break;
             default:
-                return array();
+                return [];
         }
 
         $sort_sql = ';';
@@ -1565,7 +1565,7 @@ abstract class Catalog extends database_object
         $sql .= $sort_sql;
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results, false)) {
             $results[] = $row;
         }
@@ -1587,7 +1587,7 @@ abstract class Catalog extends database_object
             : "SELECT DISTINCT `artist`.`id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name`, `artist`.`name`, `artist`.`album_count` AS `album_count`, MIN(`catalog_map`.`catalog_id`) AS `catalog_id`, `image`.`object_id` AS `has_art` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` IN (" . Dba::escape(implode(',', $catalogs)) . ") LEFT JOIN `image` ON `image`.`object_type` = 'artist' AND `image`.`object_id` = `artist`.`id` AND `image`.`size` = 'original' WHERE `catalog_map`.`catalog_id` IS NOT NULL GROUP BY `artist`.`id`, `f_name`, `artist`.`name`, `artist`.`album_count`, `image`.`object_id` ORDER BY `f_name`;";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results, false)) {
             $results[] = $row;
         }
@@ -1604,7 +1604,7 @@ abstract class Catalog extends database_object
      */
     public function get_artist_ids($filter = ''): array
     {
-        $results = array();
+        $results = [];
 
         $sql = 'SELECT DISTINCT(`song`.`artist`) AS `artist` FROM `song` WHERE `song`.`catalog` = ?';
         if ($filter === 'art') {
@@ -1622,7 +1622,7 @@ abstract class Catalog extends database_object
             // Update for things added in the last run or empty ones
             $sql = "SELECT DISTINCT(`artist`.`id`) AS `artist` FROM `artist` WHERE `artist`.`id` IN (SELECT DISTINCT `song`.`artist` FROM `song` WHERE `song`.`catalog` = ? AND `addition_time` > " . $this->last_add . ") OR (`album_count` = 0 AND `song_count` = 0) ";
         }
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int) $row['artist'];
@@ -1660,7 +1660,7 @@ abstract class Catalog extends database_object
         }
         $sql        = "SELECT `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `artist`.`album_count` AS `albums` FROM `song` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` $sql_where GROUP BY `artist`.`id`, `artist`.`name`, `artist`.`prefix`, `artist`.`summary`, `song`.`artist`, `artist`.`album_count` ORDER BY `artist`.`name` " . $sql_limit;
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = Artist::construct_from_array($row);
         }
@@ -1679,7 +1679,7 @@ abstract class Catalog extends database_object
     public static function get_id_from_file($file_path, $media_type): int
     {
         $sql        = "SELECT `id` FROM `$media_type` WHERE `file` = ?;";
-        $db_results = Dba::read($sql, array($file_path));
+        $db_results = Dba::read($sql, [$file_path]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['id'];
@@ -1699,7 +1699,7 @@ abstract class Catalog extends database_object
      */
     public static function get_ids_from_folder($folder_path, $media_type): array
     {
-        $objects     = array();
+        $objects     = [];
         $folder_path = Dba::escape($folder_path);
         $media_type  = Dba::escape($media_type);
         $sql         = "SELECT `id` FROM `$media_type` WHERE `file` LIKE '$folder_path%'";
@@ -1720,10 +1720,10 @@ abstract class Catalog extends database_object
      */
     public function get_label_ids($filter): array
     {
-        $results = array();
+        $results = [];
 
         $sql        = 'SELECT `id` FROM `label` WHERE `category` = ? OR `mbid` IS NULL';
-        $db_results = Dba::read($sql, array($filter));
+        $db_results = Dba::read($sql, [$filter]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
@@ -1740,7 +1740,7 @@ abstract class Catalog extends database_object
      */
     public static function get_children($name, $catalog_id = 0): array
     {
-        $childrens = array();
+        $childrens = [];
         $sql       = "SELECT DISTINCT `artist`.`id` FROM `artist` ";
         if ((int)$catalog_id > 0) {
             $sql .= "LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'album_artist' AND `catalog_map`.`object_id` = `artist`.`id` AND `catalog_map`.`catalog_id` = " . (int)$catalog_id;
@@ -1749,12 +1749,12 @@ abstract class Catalog extends database_object
         if ((int)$catalog_id > 0) {
             $sql .= "AND `catalog_map`.`object_id` IS NOT NULL";
         }
-        $db_results = Dba::read($sql, array($name, $name));
+        $db_results = Dba::read($sql, [$name, $name]);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $childrens[] = array(
+            $childrens[] = [
                 'object_type' => 'artist',
                 'object_id' => $row['id']
-            );
+            ];
         }
 
         return $childrens;
@@ -1791,7 +1791,7 @@ abstract class Catalog extends database_object
         $sql .= "GROUP BY `album`.`id` ORDER BY `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1835,7 +1835,7 @@ abstract class Catalog extends database_object
         $sql .= "LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` $sql_where $sql_group ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` $sql_limit";
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1851,10 +1851,10 @@ abstract class Catalog extends database_object
      */
     public function get_podcast_ids(): array
     {
-        $results = array();
+        $results = [];
 
         $sql        = 'SELECT `podcast`.`id` FROM `podcast` WHERE `podcast`.`catalog` = ?';
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1875,7 +1875,7 @@ abstract class Catalog extends database_object
 
         $podcastRepository = self::getPodcastRepository();
 
-        $results = array();
+        $results = [];
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
             if ($catalog === null) {
@@ -1902,13 +1902,13 @@ abstract class Catalog extends database_object
      */
     private function get_newest_podcasts_ids(int $count): array
     {
-        $results = array();
+        $results = [];
 
         $sql = 'SELECT `podcast_episode`.`id` FROM `podcast_episode` INNER JOIN `podcast` ON `podcast`.`id` = `podcast_episode`.`podcast` WHERE `podcast`.`catalog` = ? ORDER BY `podcast_episode`.`pubdate` DESC';
         if ($count > 0) {
             $sql .= ' LIMIT ' . (string)$count;
         }
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -1924,7 +1924,7 @@ abstract class Catalog extends database_object
     public static function get_newest_podcasts($count): array
     {
         $catalogs = self::get_catalogs('podcast');
-        $results  = array();
+        $results  = [];
 
         foreach ($catalogs as $catalog_id) {
             $catalog = self::create_from_id($catalog_id);
@@ -1958,7 +1958,7 @@ abstract class Catalog extends database_object
             $libitem = new $className($object_id);
         }
         $inserted = false;
-        $options  = array();
+        $options  = [];
         if (method_exists($libitem, 'format')) {
             $libitem->format();
         }
@@ -1986,7 +1986,7 @@ abstract class Catalog extends database_object
         // don't search for art when you already have it
         if ($art->has_db_info() && $db_art_first) {
             debug_event(__CLASS__, "gather_art_item $type: {{$object_id}} blocked", 5);
-            $results = array();
+            $results = [];
         } else {
             debug_event(__CLASS__, "gather_art_item $type: {{$object_id}} searching", 4);
 
@@ -2004,7 +2004,7 @@ abstract class Catalog extends database_object
                 $inserted = $art->insert($image, $result['mime']);
                 // If they've enabled resizing of images generate a thumbnail
                 if (AmpConfig::get('resize_images')) {
-                    $size  = array('width' => 275, 'height' => 275);
+                    $size  = ['width' => 275, 'height' => 275];
                     $thumb = $art->generate_thumb($image, $size, $result['mime']);
                     if (!empty($thumb)) {
                         $art->save_thumb($thumb['thumb'], $thumb['thumb_mime'], $size);
@@ -2059,7 +2059,7 @@ abstract class Catalog extends database_object
         set_time_limit(0);
 
         $search_count = 0;
-        $searches     = array();
+        $searches     = [];
         if ($songs == null) {
             $searches['album']  = $this->get_album_ids('art');
             $searches['artist'] = $this->get_artist_ids('art');
@@ -2067,10 +2067,10 @@ abstract class Catalog extends database_object
                 $searches['song'] = $this->get_song_ids();
             }
         } else {
-            $searches['album']  = array();
-            $searches['artist'] = array();
+            $searches['album']  = [];
+            $searches['artist'] = [];
             if ($gather_song_art) {
-                $searches['song'] = array();
+                $searches['song'] = [];
             }
             foreach ($songs as $song_id) {
                 $song = new Song($song_id);
@@ -2119,7 +2119,7 @@ abstract class Catalog extends database_object
      * including similar artists that exist in your catalog.
      * @param array $artist_list
      */
-    public function gather_artist_info($artist_list = array()): void
+    public function gather_artist_info($artist_list = []): void
     {
         // Prevent the script from timing out
         set_time_limit(0);
@@ -2210,8 +2210,8 @@ abstract class Catalog extends database_object
      */
     public function get_songs($offset = 0, $limit = 0): array
     {
-        $songs   = array();
-        $results = array();
+        $songs   = [];
+        $results = [];
         if ($offset > 0) {
             $limit = $offset . ', ' . $limit;
         }
@@ -2220,7 +2220,7 @@ abstract class Catalog extends database_object
         if ($offset > 0 || $limit > 0) {
             $sql .= " LIMIT $limit";
         }
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $songs[] = (int)$row['id'];
@@ -2245,10 +2245,10 @@ abstract class Catalog extends database_object
      */
     public function get_song_ids(): array
     {
-        $songs = array();
+        $songs = [];
 
         $sql        = "SELECT `id` FROM `song` WHERE `catalog` = ? AND `enabled` = '1'";
-        $db_results = Dba::read($sql, array($this->id));
+        $db_results = Dba::read($sql, [$this->id]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $songs[] = (int)$row['id'];
@@ -2294,7 +2294,7 @@ abstract class Catalog extends database_object
     public static function update_settings($data): void
     {
         $sql    = "UPDATE `catalog` SET `name` = ?, `rename_pattern` = ?, `sort_pattern` = ? WHERE `id` = ?";
-        $params = array($data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']);
+        $params = [$data['name'], $data['rename_pattern'], $data['sort_pattern'], $data['catalog_id']];
         Dba::write($sql, $params);
     }
 
@@ -2313,7 +2313,7 @@ abstract class Catalog extends database_object
         set_time_limit(0);
 
         $return_id = $object_id;
-        $songs     = array();
+        $songs     = [];
         $libitem   = 0;
 
         switch ($type) {
@@ -2337,10 +2337,10 @@ abstract class Catalog extends database_object
                 $episode = new Podcast_Episode($object_id);
                 self::update_media_from_tags($episode);
 
-                return array(
+                return [
                     'object_id' => $object_id,
                     'change' => true
-                );
+                ];
         } // end switch type
 
         if (!$api) {
@@ -2387,7 +2387,7 @@ abstract class Catalog extends database_object
             $genres = self::getSongTags('album', $libitem->id);
             Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true);
             if ($artist || $album || $tags || $maps) {
-                $artists = array();
+                $artists = [];
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
                     $artists[] = $albumArtist_id;
@@ -2429,10 +2429,10 @@ abstract class Catalog extends database_object
             }
         }
 
-        return array(
+        return [
             'object_id' => $return_id,
             'change' => ($album || $artist || $maps || $tags)
-        );
+        ];
     }
 
     /**
@@ -2447,11 +2447,11 @@ abstract class Catalog extends database_object
      */
     public static function update_media_from_tags(
         $media,
-        $gather_types = array('music'),
+        $gather_types = ['music'],
         $sort_pattern = '',
         $rename_pattern = ''
     ): array {
-        $array   = array();
+        $array   = [];
         $catalog = self::create_from_id($media->catalog);
         if ($catalog === null) {
             debug_event(__CLASS__, 'update_media_from_tags: Error loading catalog ' . $media->catalog, 2);
@@ -2496,7 +2496,7 @@ abstract class Catalog extends database_object
         $extension = strtolower(pathinfo($streamConfiguration['file_path'], PATHINFO_EXTENSION));
         $results   = $catalog->get_media_tags($media, $gather_types, $sort_pattern, $rename_pattern);
         // for files without tags try to update from their file name instead
-        if ($media->id && in_array($extension, array('wav', 'shn'))) {
+        if ($media->id && in_array($extension, ['wav', 'shn'])) {
             // match against your catalog 'Filename Pattern' and 'Folder Pattern'
             $patres  = VaInfo::parse_pattern($streamConfiguration['file_path'], $catalog->sort_pattern ?? '', $catalog->rename_pattern ?? '');
             $results = array_merge($results, $patres);
@@ -2592,10 +2592,10 @@ abstract class Catalog extends database_object
         $new_song->r128_album_gain       = (!is_null($results['r128_album_gain'])) ? (int) $results['r128_album_gain'] : null;
 
         // genre is used in the tag and tag_map tables
-        $tag_array = array();
+        $tag_array = [];
         if (!empty($results['genre'])) {
             if (!is_array($results['genre'])) {
-                $results['genre'] = array($results['genre']);
+                $results['genre'] = [$results['genre']];
             }
             // check if this thing has been renamed into something else
             foreach ($results['genre'] as $tagName) {
@@ -2637,9 +2637,9 @@ abstract class Catalog extends database_object
         $version          = self::check_length($results['version'], 64);
 
         // info for the artist_map table.
-        $artists_array          = $results['artists'] ?? array();
-        $artist_mbid_array      = $results['mb_artistid_array'] ?? array();
-        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? array();
+        $artists_array          = $results['artists'] ?? [];
+        $artist_mbid_array      = $results['mb_artistid_array'] ?? [];
+        $albumartist_mbid_array = $results['mb_albumartistid_array'] ?? [];
         // if you have an artist array this will be named better than what your tags will give you
         if (!empty($artists_array)) {
             if (!empty($artist) && !empty($albumartist) && $artist == $albumartist) {
@@ -2652,7 +2652,7 @@ abstract class Catalog extends database_object
             $is_upload_artist = Artist::is_upload($song->artist);
             if ($is_upload_artist) {
                 debug_event(__CLASS__, "$song->artist : is an uploaded song artist", 4);
-                $artist_mbid_array = array();
+                $artist_mbid_array = [];
             }
         }
         $is_upload_albumartist = false;
@@ -2660,7 +2660,7 @@ abstract class Catalog extends database_object
             $is_upload_albumartist = Artist::is_upload($song->albumartist);
             if ($is_upload_albumartist) {
                 debug_event(__CLASS__, "$song->albumartist : is an uploaded album artist", 4);
-                $albumartist_mbid_array = array();
+                $albumartist_mbid_array = [];
             }
         }
         // check whether this artist exists (and the album_artist)
@@ -2691,8 +2691,8 @@ abstract class Catalog extends database_object
         $new_song_album  = new Album($new_song->album);
 
         // get the artists / album_artists for this song
-        $songArtist_array  = array($new_song->artist);
-        $albumArtist_array = array($new_song->albumartist);
+        $songArtist_array  = [$new_song->artist];
+        $albumArtist_array = [$new_song->albumartist];
         // artist_map stores song and album against the artist_id
         $artist_map_song  = Artist::get_artist_map('song', $song->id);
         $artist_map_album = Artist::get_artist_map('album', $new_song->album);
@@ -2895,13 +2895,13 @@ abstract class Catalog extends database_object
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
                 $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
-                Dba::write($sql, array($new_song->album, $song->get_album_disk()));
+                Dba::write($sql, [$new_song->album, $song->get_album_disk()]);
             }
 
             // a change on any song will update for the entire disk
             if ($new_song->disksubtitle !== $song->disksubtitle) {
                 $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?";
-                Dba::write($sql, array($new_song->disksubtitle, $song->get_album_disk()));
+                Dba::write($sql, [$new_song->disksubtitle, $song->get_album_disk()]);
             }
 
             if ($song->tags != $new_song->tags) {
@@ -2997,7 +2997,7 @@ abstract class Catalog extends database_object
     public static function update_podcast_episode_from_tags($results, Podcast_Episode $podcast_episode): array
     {
         $sql = "UPDATE `podcast_episode` SET `file` = ?, `size` = ?, `time` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `state` = 'completed' WHERE `id` = ?";
-        Dba::write($sql, array($podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id));
+        Dba::write($sql, [$podcast_episode->file, $results['size'], $results['time'], $results['bitrate'], $results['rate'], $results['mode'], $results['channels'], $podcast_episode->id]);
 
         $podcast_episode->size     = $results['size'];
         $podcast_episode->time     = $results['time'];
@@ -3006,7 +3006,7 @@ abstract class Catalog extends database_object
         $podcast_episode->mode     = (in_array($results['mode'], ['vbr', 'cbr', 'abr'])) ? $results['mode'] : 'vbr';
         $podcast_episode->channels = $results['channels'];
 
-        $array            = array();
+        $array            = [];
         $array['change']  = true;
         $array['element'] = false;
 
@@ -3078,7 +3078,7 @@ abstract class Catalog extends database_object
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "DELETE FROM `album_map` WHERE `album_id` = ? AND `object_id` = ? AND `object_type` = ?;";
-                Dba::write($sql, array($row['album_id'], $row['object_id'], $row['object_type']));
+                Dba::write($sql, [$row['album_id'], $row['object_id'], $row['object_type']]);
             }
             // this isn't really needed often and is slow
             Dba::write("DELETE FROM `recommendation_item` WHERE `recommendation` NOT IN (SELECT `id` FROM `recommendation`);");
@@ -3132,7 +3132,7 @@ abstract class Catalog extends database_object
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $sql = "INSERT IGNORE INTO `object_count` (`object_type`, `object_id`, `count_type`, `date`, `user`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                Dba::write($sql, array('podcast', $row['podcast'], $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']));
+                Dba::write($sql, ['podcast', $row['podcast'], $row['count_type'], $row['date'], $row['user'], $row['agent'], $row['geo_latitude'], $row['geo_longitude'], $row['geo_name']]);
             }
             $sql = "UPDATE `podcast_episode` SET `total_count` = 0 WHERE `total_count` > 0 AND `id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_count`.`object_type` = 'podcast_episode' AND `object_count`.`count_type` = 'stream');";
             Dba::write($sql);
@@ -3188,7 +3188,7 @@ abstract class Catalog extends database_object
         debug_event(__CLASS__, 'update_counts server total counts', 5);
         $catalog_disable = AmpConfig::get('catalog_disable');
         // tables with media items to count, song-related tables and the rest
-        $media_tables = array('song', 'video', 'podcast_episode');
+        $media_tables = ['song', 'video', 'podcast_episode'];
         $items        = 0;
         $time         = 0;
         $size         = 0;
@@ -3207,7 +3207,7 @@ abstract class Catalog extends database_object
         self::set_update_info('time', $time);
         self::set_update_info('size', $size);
 
-        $list_tables = array('artist', 'album', 'album_disk', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license');
+        $list_tables = ['artist', 'album', 'album_disk', 'search', 'playlist', 'live_stream', 'podcast', 'user', 'catalog', 'label', 'tag', 'share', 'license'];
         foreach ($list_tables as $table) {
             $sql        = "SELECT COUNT(`id`) FROM `$table`";
             $db_results = Dba::read($sql);
@@ -3264,7 +3264,7 @@ abstract class Catalog extends database_object
             $rename_pattern = $this->rename_pattern;
         }
         if ($media->file === null) {
-            return array();
+            return [];
         }
 
         $vainfo = self::getUtilityFactory()->createVaInfo(
@@ -3280,7 +3280,7 @@ abstract class Catalog extends database_object
         } catch (Exception $error) {
             debug_event(__CLASS__, 'Error ' . $error->getMessage(), 1);
 
-            return array();
+            return [];
         }
 
         $key = VaInfo::get_tag_type($vainfo->tags);
@@ -3302,11 +3302,11 @@ abstract class Catalog extends database_object
         $types = explode(',', $catalog_media_type);
 
         if ($media_type == "video") {
-            $types = array_diff($types, array('music'));
+            $types = array_diff($types, ['music']);
         }
 
         if ($media_type == "music") {
-            $types = array_diff($types, array('personal_video', 'movie', 'tvshow', 'clip'));
+            $types = array_diff($types, ['personal_video', 'movie', 'tvshow', 'clip']);
         }
 
         return $types;
@@ -3346,7 +3346,7 @@ abstract class Catalog extends database_object
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql = "DELETE FROM `album` WHERE `id` = ?";
-            Dba::write($sql, array($row['id']));
+            Dba::write($sql, [$row['id']]);
         }
         // these files have missing albums so you can't verify them without updating from tags first
         $sql        = "SELECT `id` FROM `song` WHERE `album` in (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`));";
@@ -3479,10 +3479,10 @@ abstract class Catalog extends database_object
             $prefix = null;
         }
 
-        return array(
+        return [
             'string' => $string,
             'prefix' => $prefix
-        );
+        ];
     }
 
     /**
@@ -3538,7 +3538,7 @@ abstract class Catalog extends database_object
     {
         $items = preg_split("/ feat\. /i", $string);
         if (!$items) {
-            return array($string);
+            return [$string];
         }
 
         return array_map('trim', $items);
@@ -3636,7 +3636,7 @@ abstract class Catalog extends database_object
      */
     public static function delete($catalog_id): bool
     {
-        $params  = array($catalog_id);
+        $params  = [$catalog_id];
         $catalog = self::create_from_id($catalog_id);
         if (!$catalog) {
             return false;
@@ -3721,7 +3721,7 @@ abstract class Catalog extends database_object
         } elseif ($media_type == 'podcast') {
             self::update_mapping('podcast');
             self::update_mapping('podcast_episode');
-        } elseif (in_array($media_type, array('clip', 'tvshow', 'movie', 'personal_video'))) {
+        } elseif (in_array($media_type, ['clip', 'tvshow', 'movie', 'personal_video'])) {
             self::update_mapping('video');
         }
     }
@@ -3765,10 +3765,10 @@ abstract class Catalog extends database_object
         if ($object_type == 'artist') {
             // insert catalog_map artists
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `song`.`catalog` AS `catalog_id`, 'song_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `song` LEFT JOIN `artist_map` ON `song`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'song' WHERE `artist_map`.`object_type` IS NOT NULL UNION SELECT DISTINCT `album`.`catalog` AS `catalog_id`, 'album_artist' AS `map_type`, `artist_map`.`artist_id` AS `object_id` FROM `album` LEFT JOIN `artist_map` ON `album`.`id` = `artist_map`.`object_id` AND `artist_map`.`object_type` = 'album' WHERE `artist_map`.`object_type` IS NOT NULL GROUP BY `catalog`, `artist_map`.`object_type`, `artist_map`.`artist_id`;";
-            Dba::write($sql, array($object_id, $object_id, $object_id, $object_id));
+            Dba::write($sql, [$object_id, $object_id, $object_id, $object_id]);
         } elseif ($catalog > 0) {
             $sql = "INSERT IGNORE INTO `catalog_map` (`catalog_id`, `object_type`, `object_id`) VALUES (?, ?, ?);";
-            Dba::write($sql, array($catalog, $object_type, $object_id));
+            Dba::write($sql, [$catalog, $object_type, $object_id]);
         }
     }
 
@@ -3782,7 +3782,7 @@ abstract class Catalog extends database_object
     public static function migrate_map($object_type, $old_object_id, $new_object_id)
     {
         $sql    = "UPDATE IGNORE `catalog_map` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
-        $params = array($new_object_id, $object_type, $old_object_id);
+        $params = [$new_object_id, $object_type, $old_object_id];
 
         return Dba::write($sql, $params);
     }
@@ -3819,11 +3819,11 @@ abstract class Catalog extends database_object
      */
     protected static function getSongTags($type, $object_id): array
     {
-        $tags = array();
+        $tags = [];
         $sql  = ($type == 'artist')
             ? "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`id` IN (SELECT `object_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_type` = 'song') AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;"
             : "SELECT `tag`.`name` FROM `tag` JOIN `tag_map` ON `tag`.`id` = `tag_map`.`tag_id` JOIN `song` ON `tag_map`.`object_id` = `song`.`id` WHERE `song`.`$type` = ? AND `tag_map`.`object_type` = 'song' GROUP BY `tag`.`id`, `tag`.`name`;";
-        $db_results = Dba::read($sql, array($object_id));
+        $db_results = Dba::read($sql, [$object_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $tags[] = $row['name'];
         }
@@ -3892,10 +3892,10 @@ abstract class Catalog extends database_object
     public static function process_action($action, $catalogs, $options = null): void
     {
         if (empty($options)) {
-            $options = array(
+            $options = [
                 'gather_art' => false,
                 'parse_playlist' => false
-            );
+            ];
         }
         // make sure parse_playlist is set
         if ($action == 'import_to_catalog') {
@@ -3909,7 +3909,7 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'add_to_catalog':
             case 'import_to_catalog':
-                $catalog_media_types = array();
+                $catalog_media_types = [];
                 if ($catalogs) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
@@ -3955,7 +3955,7 @@ abstract class Catalog extends database_object
                 }
 
                 /* This runs the clean/verify/add in that order */
-                $catalog_media_types = array();
+                $catalog_media_types = [];
                 foreach ($catalogs as $catalog_id) {
                     $catalog = self::create_from_id($catalog_id);
                     if ($catalog !== null) {
@@ -3981,7 +3981,7 @@ abstract class Catalog extends database_object
                 // Intentional break fall-through
             case 'clean_catalog':
                 if ($catalogs) {
-                    $catalog_media_types = array();
+                    $catalog_media_types = [];
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
                         if ($catalog !== null) {
@@ -4066,7 +4066,7 @@ abstract class Catalog extends database_object
                     $catalog_id = Catalog_local::get_from_path($add_path);
                     if (is_int($catalog_id)) {
                         $catalog = self::create_from_id($catalog_id);
-                        if ($catalog !== null && $catalog->add_to_catalog(array('subdirectory' => $add_path))) {
+                        if ($catalog !== null && $catalog->add_to_catalog(['subdirectory' => $add_path])) {
                             self::update_catalog_map($catalog->gather_types);
                         }
                     }
@@ -4128,7 +4128,7 @@ abstract class Catalog extends database_object
             case 'garbage_collect':
                 debug_event(__CLASS__, 'Run Garbage collection', 5);
                 static::getCatalogGarbageCollector()->collect();
-                $catalog_media_types = array();
+                $catalog_media_types = [];
                 if (!empty($catalogs)) {
                     foreach ($catalogs as $catalog_id) {
                         $catalog = self::create_from_id($catalog_id);
@@ -4197,16 +4197,16 @@ abstract class Catalog extends database_object
             : '%b';
 
         // Replace everything we can find
-        $replace_array = array('%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b');
-        $content_array = array($artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $version, $disk, $genre, $barcode);
+        $replace_array = ['%a', '%A', '%t', '%T', '%y', '%Y', '%c', '%C', '%r', '%R', '%s', '%d', '%g', '%b'];
+        $content_array = [$artist, $album, $title, $track, $year, $original_year, $comment, $catalog_number, $release_type, $release_status, $version, $disk, $genre, $barcode];
         $sort_pattern  = str_replace($replace_array, $content_array, $sort_pattern);
 
         // Remove non A-Z0-9 chars
         $sort_pattern = preg_replace("[^\\\/A-Za-z0-9\-\_\ \'\, \(\)]", "_", $sort_pattern);
 
         // Replace non-critical search patterns
-        $post_replace_array = array('%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()');
-        $post_content_array = array('', '', '', '', '', '', '', '', '', '');
+        $post_replace_array = ['%Y', '%c', '%C', '%r', '%R', '%g', '%b', ' []', ' ()'];
+        $post_content_array = ['', '', '', '', '', '', '', '', '', ''];
         $sort_pattern       = str_replace($post_replace_array, $post_content_array, (string)$sort_pattern);
 
         $home .= "/$sort_pattern";

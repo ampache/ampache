@@ -51,7 +51,7 @@ class Art extends database_object
 {
     protected const DB_TABLENAME = 'image';
 
-    public const VALID_TYPES = array(
+    public const VALID_TYPES = [
         'bmp',
         'gif',
         'jp2',
@@ -59,7 +59,7 @@ class Art extends database_object
         'jpg',
         'png',
         'webp',
-    );
+    ];
 
     /**
      * @var int $id
@@ -260,7 +260,7 @@ class Art extends database_object
     public function has_db_info($fallback = false): bool
     {
         $sql         = "SELECT `id`, `image`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
-        $db_results  = Dba::read($sql, array($this->type, $this->uid, $this->kind));
+        $db_results  = Dba::read($sql, [$this->type, $this->uid, $this->kind]);
         $default_art = false;
 
         while ($results = Dba::fetch_assoc($db_results)) {
@@ -297,7 +297,7 @@ class Art extends database_object
 
         // If there is no thumb and we want thumbs
         if (!$this->thumb && AmpConfig::get('resize_images')) {
-            $size = array('width' => 275, 'height' => 275);
+            $size = ['width' => 275, 'height' => 275];
             $data = $this->generate_thumb($this->raw, $size, $this->raw_mime);
             // If it works save it!
             if (!empty($data)) {
@@ -323,7 +323,7 @@ class Art extends database_object
     public static function has_db($object_id, $object_type, $kind = 'default'): bool
     {
         $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, array($object_type, $object_id, $kind));
+        $db_results = Dba::read($sql, [$object_type, $object_id, $kind]);
         $nb_img     = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
             $nb_img = $results['nb_img'];
@@ -339,7 +339,7 @@ class Art extends database_object
     public function insert_url($url): void
     {
         debug_event(self::class, 'Insert art from url ' . $url, 4);
-        $image = self::get_from_source(array('url' => $url), $this->type);
+        $image = self::get_from_source(['url' => $url], $this->type);
         $rurl  = pathinfo($url);
         $mime  = "image/" . ($rurl['extension'] ?? 'jpg');
         $this->insert($image, $mime);
@@ -384,7 +384,7 @@ class Art extends database_object
         if (AmpConfig::get('write_tags', false)) {
             $className = ObjectTypeToClassNameMapper::map($this->type);
             $object    = new $className($this->uid);
-            $songs     = array();
+            $songs     = [];
             debug_event(__CLASS__, 'Inserting ' . $this->type . ' image' . $object->name . ' for song files.', 5);
             if ($this->type === 'album') {
                 /** Use special treatment for albums */
@@ -403,7 +403,7 @@ class Art extends database_object
                     $song->file
                 );
 
-                $ndata      = array();
+                $ndata      = [];
                 $data       = $vainfo->read_id3();
                 $fileformat = $data['fileformat'];
                 if ($fileformat == 'flac' || $fileformat == 'ogg') {
@@ -414,12 +414,12 @@ class Art extends database_object
                 /* is the file flac or mp3? */
                 $apic_typeid   = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'typeid' : 'picturetypeid';
                 $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg') ? 'image_mime' : 'mime';
-                $new_pic       = array(
+                $new_pic       = [
                     'data' => $source,
                     'mime' => $mime,
                     'picturetypeid' => $picturetypeid,
                     'description' => $description
-                );
+                ];
 
                 if (is_null($apics)) {
                     $ndata['attached_picture'][] = $new_pic;
@@ -429,12 +429,12 @@ class Art extends database_object
                             $idx = $this->check_for_duplicate($apics, $ndata, $new_pic, $apic_typeid);
                             if (is_null($idx)) {
                                 $ndata['attached_picture'][] = $new_pic;
-                                $ndata['attached_picture'][] = array(
+                                $ndata['attached_picture'][] = [
                                     'data' => $apics[0]['data'],
                                     'description' => $apics[0]['description'],
                                     'mime' => $apics[0]['mime'],
                                     'picturetypeid' => $apics[0]['picturetypeid']
-                                );
+                                ];
                             }
                             break;
                         case 2:
@@ -447,12 +447,12 @@ class Art extends database_object
                                 $ndata['attached_picture'][0] = $new_pic;
                             } else {
                                 $apicsId                             = ($idx == 0) ? 1 : 0;
-                                $ndata['attached_picture'][$apicsId] = array(
+                                $ndata['attached_picture'][$apicsId] = [
                                     'data' => $apics[$apicsId]['data'],
                                     'mime' => $apics[$apicsId][$apic_mimetype],
                                     'picturetypeid' => $apics[$apicsId][$apic_typeid],
                                     'description' => $apics[$apicsId]['description']
-                                );
+                                ];
                             }
 
                             break;
@@ -470,7 +470,7 @@ class Art extends database_object
         }
         // Insert it!
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
+        Dba::write($sql, [$source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind]);
 
         return true;
     }
@@ -746,13 +746,13 @@ class Art extends database_object
         $sizetext = $width . 'x' . $height;
 
         $sql = "DELETE FROM `image` WHERE `object_id` = ? AND `object_type` = ? AND `size` = ? AND `kind` = ?";
-        Dba::write($sql, array($this->uid, $this->type, $sizetext, $this->kind));
+        Dba::write($sql, [$this->uid, $this->type, $sizetext, $this->kind]);
 
         if (AmpConfig::get('album_art_store_disk') && self::write_to_dir($source, $sizetext, $this->type, $this->uid, $this->kind, $mime)) {
             $source = null;
         }
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `width`, `height`, `object_type`, `object_id`, `kind`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind));
+        Dba::write($sql, [$source, $mime, $sizetext, $width, $height, $this->type, $this->uid, $this->kind]);
 
         return true;
     }
@@ -768,7 +768,7 @@ class Art extends database_object
     {
         $sizetext   = $size['width'] . 'x' . $size['height'];
         $sql        = "SELECT `image`, `mime` FROM `image` WHERE `size` = ? AND `object_type` = ? AND `object_id` = ? AND `kind` = ?";
-        $db_results = Dba::read($sql, array($sizetext, $this->type, $this->uid, $this->kind));
+        $db_results = Dba::read($sql, [$sizetext, $this->type, $this->uid, $this->kind]);
 
         $results = Dba::fetch_assoc($db_results);
         if (count($results)) {
@@ -779,19 +779,19 @@ class Art extends database_object
             }
 
             if ($image != null) {
-                return array(
+                return [
                     'thumb' => (AmpConfig::get('album_art_store_disk'))
                         ? self::read_from_dir($sizetext, $this->type, $this->uid, $this->kind, $results['mime'])
                         : $results['image'],
                     'thumb_mime' => $results['mime']
-                );
+                ];
             } else {
                 debug_event(self::class, 'Thumb entry found in database but associated data cannot be found.', 3);
             }
         }
 
         // If we didn't get a result try again
-        $results = array();
+        $results = [];
         if (!$this->raw && $this->thumb) {
             $results = $this->generate_thumb($this->thumb, $size, $this->raw_mime);
         }
@@ -823,35 +823,35 @@ class Art extends database_object
         if (!self::test_image($image)) {
             debug_event(self::class, 'Not trying to generate thumbnail, invalid data passed', 1);
 
-            return array();
+            return [];
         }
 
         if (!function_exists('gd_info')) {
             debug_event(self::class, 'PHP-GD Not found - unable to resize art', 1);
 
-            return array();
+            return [];
         }
 
         // Check and make sure we can resize what you've asked us to
         if (($type == 'jpg' || $type == 'jpeg' || $type == 'jpg?v=2') && !(imagetypes() & IMG_JPG)) {
             debug_event(self::class, 'PHP-GD Does not support JPGs - unable to resize', 1);
 
-            return array();
+            return [];
         }
         if ($type == 'png' && !imagetypes() & IMG_PNG) {
             debug_event(self::class, 'PHP-GD Does not support PNGs - unable to resize', 1);
 
-            return array();
+            return [];
         }
         if ($type == 'gif' && !imagetypes() & IMG_GIF) {
             debug_event(self::class, 'PHP-GD Does not support GIFs - unable to resize', 1);
 
-            return array();
+            return [];
         }
         if ($type == 'bmp' && !imagetypes() & IMG_WBMP) {
             debug_event(self::class, 'PHP-GD Does not support BMPs - unable to resize', 1);
 
-            return array();
+            return [];
         }
 
         $source = imagecreatefromstring($image);
@@ -859,10 +859,10 @@ class Art extends database_object
         if (!$source) {
             debug_event(self::class, 'Failed to create Image from string - Source Image is damaged / malformed', 2);
 
-            return array();
+            return [];
         }
 
-        $source_size = array('height' => imagesy($source), 'width' => imagesx($source));
+        $source_size = ['height' => imagesy($source), 'width' => imagesx($source)];
 
         // Create a new blank image of the correct size
         $thumbnail = imagecreatetruecolor((int) $size['width'], (int) $size['height']);
@@ -892,7 +892,7 @@ class Art extends database_object
             imagedestroy($source);
             imagedestroy($thumbnail);
 
-            return array();
+            return [];
         }
         imagedestroy($source);
 
@@ -929,7 +929,7 @@ class Art extends database_object
         if ($mime_type === null) {
             debug_event(self::class, 'Error: No mime type found using: ' . $mime, 2);
 
-            return array();
+            return [];
         }
 
         $data = (string) ob_get_contents();
@@ -940,13 +940,13 @@ class Art extends database_object
         if ($data === '') {
             debug_event(self::class, 'Unknown Error resizing art', 1);
 
-            return array();
+            return [];
         }
 
-        return array(
+        return [
             'thumb' => $data,
             'thumb_mime' => $mime_type
-        );
+        ];
     }
 
     /**
@@ -977,7 +977,7 @@ class Art extends database_object
                 $type = (AmpConfig::get('show_song_art')) ? 'song' : 'album';
             }
             $sql        = "SELECT * FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `size`='original'";
-            $db_results = Dba::read($sql, array($type, $data['db']));
+            $db_results = Dba::read($sql, [$type, $data['db']]);
             $row        = Dba::fetch_assoc($db_results);
 
             return $row['art'];
@@ -986,11 +986,11 @@ class Art extends database_object
         // Check to see if it's a URL
         if (array_key_exists('url', $data) && filter_var($data['url'], FILTER_VALIDATE_URL)) {
             debug_event(self::class, 'CHECKING URL ' . $data['url'], 2);
-            $options = array();
+            $options = [];
             try {
                 $options['timeout'] = 10;
                 Requests\Autoload::register();
-                $request = Requests\Requests::get($data['url'], array(), Core::requests_options($options));
+                $request = Requests\Requests::get($data['url'], [], Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
@@ -1042,9 +1042,9 @@ class Art extends database_object
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
             $sid = $sid ? scrub_out($sid) : scrub_out(session_id());
             if ($sid == null) {
-                $sid = Session::create(array(
+                $sid = Session::create([
                     'type' => 'api'
-                ));
+                ]);
             }
         } else {
             $sid = 'none';
@@ -1062,7 +1062,7 @@ class Art extends database_object
         }
         if (!isset($mime) && !isset($thumb_mime)) {
             $sql        = "SELECT `object_type`, `object_id`, `mime`, `size` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, array($type, $uid));
+            $db_results = Dba::read($sql, [$type, $uid]);
 
             while ($row = Dba::fetch_assoc($db_results)) {
                 parent::add_to_cache('art', $key . $row['size'], $row);
@@ -1122,7 +1122,7 @@ class Art extends database_object
         debug_event(self::class, 'duplicate... type:' . $object_type . ' old_id:' . $old_object_id . ' new_type:' . $write_type . ' new_id:' . $new_object_id, 5);
         if (AmpConfig::get('album_art_store_disk')) {
             $sql        = "SELECT `size`, `kind`, `mime` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
-            $db_results = Dba::read($sql, array($object_type, $old_object_id));
+            $db_results = Dba::read($sql, [$object_type, $old_object_id]);
             while ($row = Dba::fetch_assoc($db_results)) {
                 $image = self::read_from_dir($row['size'], $object_type, $old_object_id, $row['kind'], $row['mime']);
                 if ($image !== null) {
@@ -1133,7 +1133,7 @@ class Art extends database_object
 
         $sql = "INSERT INTO `image` (`image`, `mime`, `size`, `object_type`, `object_id`, `kind`) SELECT `image`, `mime`, `size`, ? AS `object_type`, ? AS `object_id`, `kind` FROM `image` WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($write_type, $new_object_id, $object_type, $old_object_id));
+        return Dba::write($sql, [$write_type, $new_object_id, $object_type, $old_object_id]);
     }
 
     /**
@@ -1149,8 +1149,8 @@ class Art extends database_object
      */
     public static function gather_metadata_plugin($plugin, $type, $options): array
     {
-        $gtypes     = array();
-        $media_info = array();
+        $gtypes     = [];
+        $media_info = [];
         switch ($type) {
             case 'tvshow':
             case 'tvshow_season':
@@ -1188,22 +1188,22 @@ class Art extends database_object
         }
 
         $meta   = $plugin->get_metadata($gtypes, $media_info);
-        $images = array();
+        $images = [];
 
         if (array_key_exists('art', $meta)) {
             $url      = $meta['art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
+            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
         }
         if (array_key_exists('tvshow_season_art', $meta)) {
             $url      = $meta['tvshow_season_art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
+            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
         }
         if (array_key_exists('tvshow_art', $meta)) {
             $url      = $meta['tvshow_art'];
             $ures     = pathinfo($url);
-            $images[] = array('url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name);
+            $images[] = ['url' => $url, 'mime' => 'image/' . ($ures['extension'] ?? 'jpg'), 'title' => $plugin->name];
         }
 
         return $images;
@@ -1215,7 +1215,7 @@ class Art extends database_object
      */
     public static function get_thumb_size(int $thumb): array
     {
-        $size = array();
+        $size = [];
 
         switch ($thumb) {
             case 1:

@@ -81,12 +81,12 @@ class Plugin
     public static function get_plugins($type = ''): array
     {
         // make static cache for optimization when multiple call
-        static $plugins_list = array();
+        static $plugins_list = [];
         if (isset($plugins_list[$type])) {
             return $plugins_list[$type];
         }
 
-        $plugins_list[$type] = array();
+        $plugins_list[$type] = [];
 
         foreach (PluginEnum::LIST as $name => $className) {
             if ($type != '') {
@@ -256,7 +256,7 @@ class Plugin
     {
         $name       = Dba::escape('Plugin_' . $plugin_name);
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, array($name));
+        $db_results = Dba::read($sql, [$name]);
 
         if ($results = Dba::fetch_assoc($db_results)) {
             return (int)$results['value'];
@@ -329,7 +329,7 @@ class Plugin
         $version = (int)Dba::escape($version);
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
-        Dba::write($sql, array($name, $version));
+        Dba::write($sql, [$name, $version]);
     }
 
     /**

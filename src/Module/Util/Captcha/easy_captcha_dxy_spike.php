@@ -41,6 +41,6 @@ class easy_captcha_dxy_spike
         #-- centre spike
         $y += 0.0;
 
-        return array($x, $y);
+        return [$x, $y];
     }
 }

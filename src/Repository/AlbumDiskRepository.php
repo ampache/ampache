@@ -54,7 +54,7 @@ final class AlbumDiskRepository implements AlbumDiskRepositoryInterface
             [$album->getId()]
         );
 
-        $results    = array();
+        $results    = [];
         while ($rowId = $result->fetchColumn()) {
             $results[] = new AlbumDisk((int) $rowId);
         }

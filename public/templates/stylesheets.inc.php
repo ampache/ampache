@@ -31,7 +31,7 @@ $theme_path     = AmpConfig::get('theme_path') . '/templates';
 $theme_color    = AmpConfig::get('theme_color');
 $theme_css_base = AmpConfig::get('theme_css_base');
 if (!is_array($theme_css_base)) {
-    $theme_css_base = array($theme_css_base);
+    $theme_css_base = [$theme_css_base];
 }
 foreach ($theme_css_base as $css_base) { ?>
     <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>" />

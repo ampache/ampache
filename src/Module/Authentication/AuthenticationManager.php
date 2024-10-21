@@ -136,7 +136,7 @@ final class AuthenticationManager implements AuthenticationManagerInterface
 
             xoutput_headers();
 
-            $results            = array();
+            $results            = [];
             $results['rfc3514'] = '<script>reloadRedirect("' . $target . '")</script>';
             echo (string)xoutput_from_array($results);
         } else {

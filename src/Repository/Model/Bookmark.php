@@ -73,7 +73,7 @@ class Bookmark extends database_object
             }
 
             $sql        = "SELECT * FROM `bookmark` WHERE `object_type` = ? AND `object_id` = ? AND `user` = ?";
-            $db_results = Dba::read($sql, array($object_type, $object_id, $user_id));
+            $db_results = Dba::read($sql, [$object_type, $object_id, $user_id]);
 
             if (!$db_results) {
                 return;
@@ -108,15 +108,15 @@ class Bookmark extends database_object
      */
     public static function getBookmarks(array $data): array
     {
-        $bookmarks = array();
+        $bookmarks = [];
         if ($data['object_type'] !== 'bookmark') {
             $comment_sql = (!empty($data['comment'])) ? "AND `comment` = '" . scrub_in($data['comment']) . "'" : "";
             $sql         = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `object_type` = ? AND `object_id` = ? " . $comment_sql . ' ORDER BY `update_date` DESC;';
-            $db_results  = Dba::read($sql, array($data['user'], $data['object_type'], $data['object_id']));
+            $db_results  = Dba::read($sql, [$data['user'], $data['object_type'], $data['object_id']]);
         } else {
             // bookmarks are per user
             $sql        = "SELECT `id` FROM `bookmark` WHERE `user` = ? AND `id` = ?;";
-            $db_results = Dba::read($sql, array($data['user'], $data['object_id']));
+            $db_results = Dba::read($sql, [$data['user'], $data['object_id']]);
         }
         while ($results = Dba::fetch_assoc($db_results)) {
             $bookmarks[] = (int) $results['id'];
@@ -143,13 +143,13 @@ class Bookmark extends database_object
         if (AmpConfig::get('bookmark_latest', false)) {
             // delete duplicates first
             $sql = "DELETE FROM `bookmark` WHERE `user` = ? AND `comment` = ? AND `object_type` = ? AND `object_id` = ?;";
-            Dba::write($sql, array($userId, $comment, $data['object_type'], $data['object_id']));
+            Dba::write($sql, [$userId, $comment, $data['object_type'], $data['object_id']]);
         }
 
         //insert the new bookmark
         $sql = "INSERT INTO `bookmark` (`user`, `position`, `comment`, `object_type`, `object_id`, `creation_date`, `update_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        return Dba::write($sql, array($userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate));
+        return Dba::write($sql, [$userId, $data['position'], $comment, $data['object_type'], $data['object_id'], $updateDate, $updateDate]);
     }
 
     /**
@@ -166,7 +166,7 @@ class Bookmark extends database_object
     {
         $sql = "UPDATE `bookmark` SET `position` = ?, `comment` = ?, `update_date` = ? WHERE `id` = ?";
 
-        return Dba::write($sql, array($data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId));
+        return Dba::write($sql, [$data['position'], scrub_in((string) $data['comment']), $updateDate, $bookmarkId]);
     }
 
     public function getUserName(): string

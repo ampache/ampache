@@ -106,7 +106,7 @@ if (Access::check_function('batch_download') && $zipHandler->isZipable('tmp_play
 } ?>
 <ul id="rb_current_playlist" class="striped-rows">
 
-<?php $objects = array();
+<?php $objects = [];
 // FIXME :: this is kludgy
 if (!defined('NO_SONGS') && Core::get_global('user') instanceof User && Core::get_global('user')->playlist) {
     $objects = Core::get_global('user')->playlist->get_items();
@@ -130,7 +130,7 @@ if (count($objects) > 100) {
     $objects   = array_slice($objects, 0, 100, true);
 }
 
-$normal_array = array('broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video');
+$normal_array = ['broadcast', 'democratic', 'live_stream', 'podcast_episode', 'song', 'song_preview', 'video'];
 
 foreach ($objects as $object_data) {
     $uid  = $object_data['track_id'];

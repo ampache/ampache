@@ -201,7 +201,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_childrens(): array
     {
-        return array('podcast_episode' => $this->getEpisodeIds());
+        return ['podcast_episode' => $this->getEpisodeIds()];
     }
 
     /**
@@ -213,7 +213,7 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
@@ -221,14 +221,14 @@ class Podcast extends database_object implements library_item, CatalogItemInterf
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'podcast_episode') {
             $episodes = $this->getEpisodeIds(PodcastEpisodeStateEnum::COMPLETED);
             foreach ($episodes as $episode_id) {
-                $medias[] = array(
+                $medias[] = [
                     'object_type' => 'podcast_episode',
                     'object_id' => $episode_id
-                );
+                ];
             }
         }
 

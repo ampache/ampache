@@ -69,7 +69,7 @@ final class UserFollowerRepository implements UserFollowerRepositoryInterface
     public function isFollowedBy(int $userId, int $followingUserId): bool
     {
         $sql        = "SELECT `id` FROM `user_follower` WHERE `user` = ? AND `follow_user` = ?";
-        $db_results = Dba::read($sql, array($followingUserId, $userId));
+        $db_results = Dba::read($sql, [$followingUserId, $userId]);
 
         return Dba::num_rows($db_results) > 0;
     }

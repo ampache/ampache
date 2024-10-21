@@ -38,7 +38,7 @@ final class Migration520001 extends AbstractMigration
     {
         $sql        = "SELECT `id` FROM `preference` WHERE `name` IN (SELECT `name` FROM `preference` GROUP BY `name` HAVING count(`name`) >1) AND `id` NOT IN (SELECT MIN(`id`) FROM `preference` GROUP by `name`);";
         $dupe_prefs = Dba::read($sql);
-        $pref_list  = array();
+        $pref_list  = [];
         while ($results = Dba::fetch_assoc($dupe_prefs)) {
             $pref_list[] = (int)$results['id'];
         }
@@ -46,7 +46,7 @@ final class Migration520001 extends AbstractMigration
         // delete duplicates (if they exist)
         foreach ($pref_list as $pref_id) {
             $sql = "DELETE FROM `preference` WHERE `id` = ?;";
-            $this->updateDatabase($sql, array($pref_id));
+            $this->updateDatabase($sql, [$pref_id]);
         }
 
         $this->updateDatabase("DELETE FROM `user_preference` WHERE `preference` NOT IN (SELECT `id` FROM `preference`);");

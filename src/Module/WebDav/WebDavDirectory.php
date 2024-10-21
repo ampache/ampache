@@ -52,7 +52,7 @@ class WebDavDirectory extends DAV\Collection
     public function getChildren(): array
     {
         //debug_event(self::class, 'Directory getChildren', 5);
-        $children = array();
+        $children = [];
         $childs   = $this->libitem->get_childrens();
         foreach ($childs as $key => $child) {
             if (is_string($key)) {

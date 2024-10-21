@@ -53,7 +53,7 @@ final class TagAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results   = array();
+        $results   = [];
         $action    = $this->requestParser->getFromRequest('action');
         $type      = (string)filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
         $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);

@@ -60,7 +60,7 @@ final class PlaylistExporter implements PlaylistExporterInterface
         switch ($type) {
             case 'albums':
                 $ids   = Catalog::get_albums();
-                $items = array();
+                $items = [];
                 foreach ($ids as $albumid) {
                     $items[] = new Album($albumid);
                 }
@@ -76,9 +76,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array($playlistId);
+                    $ids = [$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = ($user->id)
                         ? new Search((int)$playlist_id, 'song', $user)
@@ -98,9 +98,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
 
                     $ids = $browse->get_objects();
                 } else {
-                    $ids = array((int)$playlistId);
+                    $ids = [(int)$playlistId];
                 }
-                $items = array();
+                $items = [];
                 foreach ($ids as $playlist_id) {
                     $playlist = new Playlist($playlist_id);
                     if ($playlist->isNew() === false) {

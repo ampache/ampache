@@ -92,7 +92,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $name = "";
         try {
             $url     = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&sensor=false";
-            $request = Requests::get($url, array(), Core::requests_options());
+            $request = Requests::get($url, [], Core::requests_options());
 
             $place = json_decode($request->body, true);
             if (count($place['results']) > 0) {
@@ -168,7 +168,7 @@ class AmpacheGoogleMaps implements AmpachePluginInterface
         $data = $user->prefs;
         // load system when nothing is given
         if (!strlen(trim($data['gmaps_api_key']))) {
-            $data                  = array();
+            $data                  = [];
             $data['gmaps_api_key'] = Preference::get_by_user(-1, 'gmaps_api_key');
         }
 

@@ -86,7 +86,7 @@ class TVShow_Episode extends Video
      * insert
      * Insert a new tv show episode and related entities.
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         if (empty($data['tvshow'])) {
             $data['tvshow'] = T_('Unknown');
@@ -130,13 +130,13 @@ class TVShow_Episode extends Video
     public static function create($data): int
     {
         $sql = "INSERT INTO `tvshow_episode` (`id`, `original_name`, `season`, `episode_number`, `summary`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array(
+        Dba::write($sql, [
             $data['id'],
             $data['original_name'],
             $data['tvshow_season'],
             $data['tvshow_episode'],
             $data['summary']
-        ));
+        ]);
 
         return $data['id'];
     }
@@ -156,7 +156,7 @@ class TVShow_Episode extends Video
         $summary        = $data['summary'] ?? null;
 
         $sql = "UPDATE `tvshow_episode` SET `original_name` = ?, `season` = ?, `episode_number` = ?, `summary` = ? WHERE `id` = ?";
-        Dba::write($sql, array($original_name, $tvshow_season, $tvshow_episode, $summary, $this->id));
+        Dba::write($sql, [$original_name, $tvshow_season, $tvshow_episode, $summary, $this->id]);
 
         $this->original_name  = $original_name;
         $this->season         = $tvshow_season;
@@ -207,28 +207,28 @@ class TVShow_Episode extends Video
     public function get_keywords(): array
     {
         $keywords           = parent::get_keywords();
-        $keywords['tvshow'] = array(
+        $keywords['tvshow'] = [
             'important' => true,
             'label' => T_('TV Show'),
             'value' => $this->f_tvshow
-        );
-        $keywords['tvshow_season'] = array(
+        ];
+        $keywords['tvshow_season'] = [
             'important' => false,
             'label' => T_('Season'),
             'value' => $this->f_season
-        );
+        ];
         if ($this->episode_number) {
-            $keywords['tvshow_episode'] = array(
+            $keywords['tvshow_episode'] = [
                 'important' => false,
                 'label' => T_('Episode'),
                 'value' => $this->episode_number
-            );
+            ];
         }
-        $keywords['type'] = array(
+        $keywords['type'] = [
             'important' => false,
             'label' => null,
             'value' => 'tvshow'
-        );
+        ];
 
         return $keywords;
     }
@@ -239,10 +239,10 @@ class TVShow_Episode extends Video
      */
     public function get_parent(): ?array
     {
-        return array(
+        return [
             'object_type' => 'tvshow_season',
             'object_id' => $this->season
-        );
+        ];
     }
 
     /**
@@ -251,10 +251,10 @@ class TVShow_Episode extends Video
      */
     public function get_release_item_art(): array
     {
-        return array(
+        return [
             'object_type' => 'tvshow_season',
             'object_id' => $this->season
-        );
+        ];
     }
 
     /**
@@ -311,7 +311,7 @@ class TVShow_Episode extends Video
         $deleted = parent::remove();
         if ($deleted) {
             $sql     = "DELETE FROM `tvshow_episode` WHERE `id` = ?";
-            $deleted = (Dba::write($sql, array($this->id)) !== false);
+            $deleted = (Dba::write($sql, [$this->id]) !== false);
         }
 
         return $deleted;

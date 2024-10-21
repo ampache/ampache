@@ -83,10 +83,10 @@ class Userflag extends database_object
         if ($user_id === 0) {
             return false;
         }
-        $userflags  = array();
+        $userflags  = [];
         $idlist     = '(' . implode(',', $ids) . ')';
         $sql        = "SELECT `object_id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` IN $idlist AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $type));
+        $db_results = Dba::read($sql, [$user_id, $type]);
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $userflags[$row['object_id']] = $row['date'];
@@ -97,10 +97,10 @@ class Userflag extends database_object
                 parent::add_to_cache(
                     'userflag_' . $type . '_user' . $user_id,
                     $object_id,
-                    array(1, $userflags[$object_id])
+                    [1, $userflags[$object_id]]
                 );
             } else {
-                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, array(false));
+                parent::add_to_cache('userflag_' . $type . '_user' . $user_id, $object_id, [false]);
             }
         }
 
@@ -116,7 +116,7 @@ class Userflag extends database_object
      */
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
-        $types = array(
+        $types = [
             'album',
             'album_disk',
             'artist',
@@ -133,12 +133,12 @@ class Userflag extends database_object
             'tvshow_season',
             'user',
             'video'
-        );
+        ];
 
         if ($object_type !== null) {
             if (in_array($object_type, $types)) {
                 $sql = "DELETE FROM `user_flag` WHERE `object_type` = ? AND `object_id` = ?";
-                Dba::write($sql, array($object_type, $object_id));
+                Dba::write($sql, [$object_type, $object_id]);
             } else {
                 debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
@@ -180,12 +180,12 @@ class Userflag extends database_object
 
         $flagged    = false;
         $sql        = "SELECT `id`, `date` FROM `user_flag` WHERE `user` = ? AND `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($user_id, $this->id, $this->type));
+        $db_results = Dba::read($sql, [$user_id, $this->id, $this->type]);
         if ($row = Dba::fetch_assoc($db_results)) {
             // always cache the date in case it's called by subsonic
-            parent::add_to_cache($key, $this->id, array(true, $row['date']));
+            parent::add_to_cache($key, $this->id, [true, $row['date']]);
             if ($get_date) {
-                return array(true, $row['date']);
+                return [true, $row['date']];
             }
             $flagged = true;
         }
@@ -283,7 +283,7 @@ class Userflag extends database_object
         $sql .= ($user_id > 0)
             ? " WHERE `user_flag`.`object_type` = '" . $type . "' AND `user_flag`.`user` = '" . $user_id . "'"
             : " WHERE `user_flag`.`object_type` = '" . $type . "'";
-        if (AmpConfig::get('catalog_disable') && in_array($type, array('artist', 'album', 'album_disk', 'song', 'video'))) {
+        if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
         if (AmpConfig::get('catalog_filter') && $user_id > 0) {
@@ -339,7 +339,7 @@ class Userflag extends database_object
 
         //debug_event(self::class, 'get_latest ' . $sql, 5);
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['id'];
         }
@@ -401,7 +401,7 @@ class Userflag extends database_object
     {
         $sql = "UPDATE IGNORE `user_flag` SET `object_id` = ? WHERE `object_type` = ? AND `object_id` = ?";
 
-        return Dba::write($sql, array($new_object_id, $object_type, $old_object_id));
+        return Dba::write($sql, [$new_object_id, $object_type, $old_object_id]);
     }
 
     /**

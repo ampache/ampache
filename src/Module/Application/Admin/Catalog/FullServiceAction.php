@@ -58,10 +58,10 @@ final class FullServiceAction extends AbstractCatalogAction
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
-        $options = array(
+        $options = [
             'gather_art' => true,
             'parse_playlist' => true
-        );
+        ];
 
         catalog_worker('full_service', $catalogIds, $options);
 

@@ -276,20 +276,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
         $sql = ($showAlbum)
             ? "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort"
             : "SELECT DISTINCT `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year FROM `album_disk` LEFT JOIN `album` ON `album`.`id` = `album_disk`.`album_id` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album_disk`.`id`, `album_disk`.`disk`, `album`.`name`, `album`.`release_type`, `album`.`mbid`, $original_year ORDER BY $sql_sort, `album_disk`.`disk`";
-        $db_results = Dba::read($sql, array($artistId));
-        $results    = array();
+        $db_results = Dba::read($sql, [$artistId]);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {
                 // We assume undefined release type is album
                 $rtype = $row['release_type'] ?? 'album';
                 if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
+                    $results[$rtype] = [];
                 }
                 $results[$rtype][] = (int)$row['id'];
 
                 $sort = (string)AmpConfig::get('album_release_type_sort');
                 if ($sort) {
-                    $results_sort = array();
+                    $results_sort = [];
                     $asort        = explode(',', $sort);
 
                     foreach ($asort as $rtype) {
@@ -345,20 +345,20 @@ final class AlbumRepository implements AlbumRepositoryInterface
         }
 
         $sql        = "SELECT DISTINCT `album`.`id`, `album`.`release_type`, `album`.`mbid` FROM `album` LEFT JOIN `album_map` ON `album_map`.`album_id` = `album`.`id` WHERE `album_map`.`object_id` = ? $catalog_where GROUP BY `album`.`id`, `album`.`release_type`, `album`.`mbid` ORDER BY $sql_sort";
-        $db_results = Dba::read($sql, array($artistId));
-        $results    = array();
+        $db_results = Dba::read($sql, [$artistId]);
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             if ($group_release_type) {
                 // We assume undefined release type is album
                 $rtype = $row['release_type'] ?? 'album';
                 if (!isset($results[$rtype])) {
-                    $results[$rtype] = array();
+                    $results[$rtype] = [];
                 }
                 $results[$rtype][] = (int)$row['id'];
 
                 $sort = (string)AmpConfig::get('album_release_type_sort');
                 if ($sort) {
-                    $results_sort = array();
+                    $results_sort = [];
                     $asort        = explode(',', $sort);
 
                     foreach ($asort as $rtype) {

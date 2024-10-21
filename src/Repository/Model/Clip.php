@@ -105,7 +105,7 @@ class Clip extends Video
      * create
      * This takes a key'd array of data as input and inserts a new clip entry, it returns the record id
      */
-    public static function insert(array $data, ?array $gtypes = array(), ?array $options = array()): int
+    public static function insert(array $data, ?array $gtypes = [], ?array $options = []): int
     {
         debug_event(self::class, 'insert ' . print_r($data, true), 5);
         $artist_id = self::_get_artist_id($data);
@@ -117,7 +117,7 @@ class Clip extends Video
             debug_event(__CLASS__, 'insert ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
             $sql = "INSERT INTO `clip` (`id`, `artist`, `song`) VALUES (?, ?, ?)";
-            Dba::write($sql, array($data['id'], $artist_id, $song_id));
+            Dba::write($sql, [$data['id'], $artist_id, $song_id]);
         }
 
         return (int)$data['id'];
@@ -135,7 +135,7 @@ class Clip extends Video
         debug_event(self::class, 'update ' . print_r(['artist_id' => $artist_id, 'song_id' => $song_id], true), 5);
 
         $sql = "UPDATE `clip` SET `artist` = ?, `song` = ? WHERE `id` = ?";
-        Dba::write($sql, array($artist_id, $song_id, $this->id));
+        Dba::write($sql, [$artist_id, $song_id, $this->id]);
 
         return $this->id;
     }
@@ -185,11 +185,11 @@ class Clip extends Video
     {
         $keywords = parent::get_keywords();
         if ($this->artist) {
-            $keywords['artist'] = array(
+            $keywords['artist'] = [
                 'important' => true,
                 'label' => T_('Artist'),
                 'value' => $this->f_artist
-            );
+            ];
         }
 
         return $keywords;
@@ -202,10 +202,10 @@ class Clip extends Video
     public function get_parent(): ?array
     {
         if ($this->artist) {
-            return array(
+            return [
                 'object_type' => 'artist',
                 'object_id' => $this->artist
-            );
+            ];
         }
 
         return null;
@@ -222,7 +222,7 @@ class Clip extends Video
     {
         if ($object_type == 'artist') {
             $sql    = "UPDATE `clip` SET `artist` = ? WHERE `artist` = ?";
-            $params = array($new_object_id, $old_object_id);
+            $params = [$new_object_id, $old_object_id];
 
             return Dba::write($sql, $params);
         }

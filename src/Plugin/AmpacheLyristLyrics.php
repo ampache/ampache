@@ -114,15 +114,15 @@ class AmpacheLyristLyrics implements AmpachePluginInterface
     public function get_lyrics($song)
     {
         $uri     = rtrim(preg_replace('/\/api\/?/', '', $this->api_host), '/') . '/api/' . urlencode((string)$song->title) . '/' . urlencode((string)$song->get_artist_fullname());
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $json = json_decode($request->body);
             if ($json) {
                 if (!empty($json->lyrics)) {
-                    return array(
+                    return [
                         'text' => nl2br($json->lyrics),
                         'url' => $json->image
-                    );
+                    ];
                 }
             }
         }

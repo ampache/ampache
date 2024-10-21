@@ -98,15 +98,15 @@ class Ampachechartlyrics implements AmpachePluginInterface
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
         $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
             if ($xml) {
                 if (!empty($xml->Lyric)) {
-                    return array(
+                    return [
                         'text' => nl2br($xml->Lyric),
                         'url' => $xml->LyricUrl
-                    );
+                    ];
                 }
             }
         }

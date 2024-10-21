@@ -88,7 +88,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
 
     public function handle(): void
     {
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
         $user    = Core::get_global('user');
         $moment  = (int) AmpConfig::get('of_the_moment');
@@ -102,7 +102,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'top_tracks':
                 $artist       = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $object_ids   = $this->songRepository->getTopSongsByArtist($artist, (int)AmpConfig::get('popular_threshold', 10));
-                $hide_columns = array('cel_artist');
+                $hide_columns = ['cel_artist'];
                 ob_start();
                 require_once Ui::find_template('show_top_tracks.inc.php');
                 $results['top_tracks'] = ob_get_clean();
@@ -185,8 +185,8 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $artist = new Artist((int)$this->requestParser->getFromRequest('artist'));
                     $artist->format();
                     $limit_threshold = AmpConfig::get('stats_threshold', 7);
-                    $object_ids      = array();
-                    $missing_objects = array();
+                    $object_ids      = [];
+                    $missing_objects = [];
                     if ($similars = Recommendation::get_artists_like($artist->id, 10, !AmpConfig::get('wanted'))) {
                         foreach ($similars as $similar) {
                             if ($similar['id']) {
@@ -204,7 +204,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'similar_songs':
                 $artist     = new Artist((int)$this->requestParser->getFromRequest('artist'));
                 $similars   = Recommendation::get_artists_like($artist->id);
-                $object_ids = array();
+                $object_ids = [];
                 if (!empty($similars)) {
                     foreach ($similars as $similar) {
                         if ($similar['id']) {
@@ -218,7 +218,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                 shuffle($object_ids);
                 $object_ids   = array_slice($object_ids, 0, (int)AmpConfig::get('popular_threshold', 10));
                 $browse       = new Browse();
-                $hide_columns = array();
+                $hide_columns = [];
                 ob_start();
                 require_once Ui::find_template('show_similar_songs.inc.php');
                 $results['similar_songs'] = ob_get_clean();
@@ -236,7 +236,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
             case 'labels':
                 if (AmpConfig::get('label') && array_key_exists('artist', $_REQUEST)) {
                     $labels     = $this->labelRepository->getByArtist((int)$this->requestParser->getFromRequest('artist'));
-                    $object_ids = array();
+                    $object_ids = [];
                     if (count($labels) > 0) {
                         foreach ($labels as $labelid => $label) {
                             $object_ids[] = $labelid;
@@ -264,7 +264,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     } elseif (array_key_exists('artist_mbid', $_REQUEST)) {
                         $walbums = Wanted::get_missing_albums(null, $_REQUEST['artist_mbid']);
                     } else {
-                        $walbums = array();
+                        $walbums = [];
                     }
 
                     ob_start();
@@ -448,7 +448,7 @@ final class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->save_objects($object_ids);
                     $browse->store();
 
-                    $hide_columns = array();
+                    $hide_columns = [];
                     Ui::show_box_top(T_('Songs'), 'info-box');
                     require_once Ui::find_template('show_songs.inc.php');
                     Ui::show_box_bottom();

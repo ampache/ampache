@@ -29,11 +29,11 @@ use Ampache\Repository\Model\Query;
 
 final class PersonalVideoQuery implements QueryInterface
 {
-    public const FILTERS = array(
-    );
+    public const FILTERS = [
+    ];
 
     /** @var string[] $sorts */
-    protected array $sorts = array(
+    protected array $sorts = [
         'id',
         'title',
         'name',
@@ -51,7 +51,7 @@ final class PersonalVideoQuery implements QueryInterface
         'user_flag',
         'userflag',
         'user_flag_rating',
-    );
+    ];
 
     /** @var string */
     protected $select = "`personal_video`.`id`";

@@ -62,7 +62,7 @@ final class ArtistRepository implements ArtistRepositoryInterface
         int $userId,
         ?int $count = 1
     ): array {
-        $results = array();
+        $results = [];
         $sql     = "SELECT DISTINCT `artist_map`.`artist_id` FROM `artist_map` LEFT JOIN `song` ON `song`.`artist` = `artist_map`.`artist_id` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();

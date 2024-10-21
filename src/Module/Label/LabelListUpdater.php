@@ -48,7 +48,7 @@ final class LabelListUpdater implements LabelListUpdaterInterface
 
         $clabels      = $this->labelRepository->getByArtist($artistId);
         $filter_list  = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labelsComma);
-        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : array();
+        $editedLabels = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
         foreach ($clabels as $clid => $clv) {
             if ($clid) {

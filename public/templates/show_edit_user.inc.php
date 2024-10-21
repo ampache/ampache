@@ -133,7 +133,7 @@ switch ($var_name) {
             <td><?php
 
     $filters = Catalog::get_catalog_filters();
-    $options = array();
+    $options = [];
     foreach ($filters as $filter) {
         $selected = "";
         if ($filter['id'] == $client->catalog_filter_group) {
