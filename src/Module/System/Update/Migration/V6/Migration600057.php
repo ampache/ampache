@@ -27,7 +27,7 @@ namespace Ampache\Module\System\Update\Migration\V6;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Convert `object_type` to an enum on `image` table
+ * Convert `object_type` to an enum on `user_activity` table
  */
 final class Migration600057 extends AbstractMigration
 {

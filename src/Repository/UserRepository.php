@@ -390,7 +390,7 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function activateByUsername(string $username): void
     {
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
+        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
         Dba::write($sql, [$username]);
     }
 

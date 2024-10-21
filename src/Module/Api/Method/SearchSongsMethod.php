@@ -60,7 +60,10 @@ final class SearchSongsMethod
         $data['rule_1_input']    = $input['filter'];
         $data['rule_1_operator'] = 0;
 
-        $results = Search::run($data, $user);
+        $search_sql = Search::prepare($data, $user);
+        $query      = Search::query($search_sql);
+        $results    = $query['results'];
+        $count      = $query['count'];
         if (empty($results)) {
             Api::empty('song', $input['api_format']);
 
@@ -72,11 +75,13 @@ final class SearchSongsMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count($count);
                 echo Json_Data::songs($results, $user);
                 break;
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count($count);
                 echo Xml_Data::songs($results, $user);
         }
 

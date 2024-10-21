@@ -59,7 +59,9 @@ final class SearchSongs4Method
         $data['rule_1_input']    = $input['filter'];
         $data['rule_1_operator'] = 0;
 
-        $results = Search::run($data, $user);
+        $search_sql = Search::prepare($data, $user);
+        $query      = Search::query($search_sql);
+        $results    = $query['results'];
 
         ob_end_clean();
         switch ($input['api_format']) {

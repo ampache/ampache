@@ -1002,9 +1002,10 @@ class Art extends database_object
 
         // Check to see if it's a FILE
         if (isset($data['file'])) {
-            $handle     = fopen($data['file'], 'rb');
-            if ($handle) {
-                $image_data = (string)fread($handle, Core::get_filesize($data['file']));
+            $handle = fopen($data['file'], 'rb');
+            $length = filesize($data['file']);
+            if ($handle && $length > 0) {
+                $image_data = (string)fread($handle, $length);
                 fclose($handle);
 
                 return $image_data;
