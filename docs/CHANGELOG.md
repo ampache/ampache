@@ -21,7 +21,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Allow hiding licenses like genres
 * Show a warning on upload license selection
 * Show Bandcamp search icon on object pages
-* Garbage collect unactivated users after 30 days
+* Garbage collect inactive users after 30 days
 * Remove validation token on user activation
 * Show error on user add/update when the website is invalid (empty values are ignored)
 * Added a `get_web_path` function to allow easier squash and client structure management
@@ -101,6 +101,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Don't show track sort on non track pages
 * Validate URLs on save
 * Block users creating a user called System (including translation into site language)
+* Don't show query errors on check queries. (these can be annoying and are useless)
 
 ### Removed
 
