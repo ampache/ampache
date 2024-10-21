@@ -1351,7 +1351,7 @@ class Json_Data
                 "mode" => $episode->mode,
                 "channels" => $episode->channels,
                 "public_url" => $episode->get_link(),
-                "url" => $episode->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
+                "url" => $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "catalog" => (string)$episode->catalog,
                 "art" => $art_url,
                 "has_art" => $episode->has_art(),
@@ -1415,7 +1415,7 @@ class Json_Data
             $songType     = $song->type;
             $songMime     = $song->mime;
             $songBitrate  = $song->bitrate;
-            $play_url     = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
+            $play_url     = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album   = self::getAlbumRepository()->getNames($song->album);
             $song_artist  = Artist::get_name_array_by_id($song->artist);
             $song_artists = [];
@@ -1571,7 +1571,7 @@ class Json_Data
                 "size" => (int)$video->size,
                 "genre" => self::genre_array($video->tags),
                 "time" => (int)$video->time,
-                "url" => $video->play_url('', AccessTypeEnum::API->value, false, $user->getId(), $user->streamtoken),
+                "url" => $video->play_url('', 'api', false, $user->getId(), $user->streamtoken),
                 "art" => $art_url,
                 "has_art" => $video->has_art(),
                 "flag" => (bool)$flag->get_flag($user->getId()),
@@ -1627,7 +1627,7 @@ class Json_Data
             $songType    = $song->type;
             $songMime    = $song->mime;
             $songBitrate = $song->bitrate;
-            $play_url    = $song->play_url('', AccessTypeEnum::API->value, false, $user->id, $user->streamtoken);
+            $play_url    = $song->play_url('', 'api', false, $user->id, $user->streamtoken);
             $song_album  = self::getAlbumRepository()->getNames($song->album);
             $song_artist = Artist::get_name_array_by_id($song->artist);
 
