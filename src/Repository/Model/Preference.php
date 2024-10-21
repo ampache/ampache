@@ -301,10 +301,20 @@ class Preference extends database_object
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?";
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+            $ampacheSeven = false;
+            $pref_name    = self::id_from_name($pref_name);
+        }
+
+        $sql = ($ampacheSeven)
+            ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?"
+            : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
         $db_results = Dba::read($sql, [$pref_name, $user_id]);
         if (Dba::num_rows($db_results) < 1) {
-            $sql        = "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'";
+            $sql = ($ampacheSeven)
+                ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'"
+                : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
             $db_results = Dba::read($sql, [$pref_name]);
         }
 
