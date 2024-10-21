@@ -49,7 +49,7 @@ final class Migration600004 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = 'MyISAM';
         // add disk to song table
-        Dba::write("ALTER TABLE `song` DROP COLUMN `disk`;");
+        Dba::write("ALTER TABLE `song` DROP COLUMN `disk`;", [], true);
         $this->updateDatabase("ALTER TABLE `song` ADD COLUMN `disk` smallint(5) UNSIGNED DEFAULT NULL AFTER `album`;");
 
         // fill the data

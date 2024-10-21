@@ -40,7 +40,7 @@ final class Migration530003 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;");
+        Dba::write("ALTER TABLE `catalog_map` DROP COLUMN `id`;", [], true);
         $this->updateDatabase("ALTER TABLE `catalog_map` MODIFY COLUMN object_type varchar(16) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL NULL;");
     }
 }
