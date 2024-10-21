@@ -592,16 +592,30 @@ class Preference extends database_object
             return false;
         }
 
-        $pref_id    = Dba::insert_id();
-        $params     = [$pref_id, $name, $default];
-        $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
+        // Check for databases < Migration700020
+        $ampacheSeven = true;
+        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+            $ampacheSeven = false;
+        }
+
+        $pref_id = Dba::insert_id();
+        if ($ampacheSeven) {
+            $params = [$pref_id, $name, $default];
+            $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
+        } else {
+            $params = [$pref_id, $default];
+            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, ?);";
+        }
+
         $db_results = Dba::write($sql, $params);
         if (!$db_results) {
             return false;
         }
 
         if ($category !== "system") {
-            $sql        = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);";
+            $sql = ($ampacheSeven)
+                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);"
+                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) (SELECT `user`.`id`, ?, ? FROM `user`);";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
