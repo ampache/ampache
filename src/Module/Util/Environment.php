@@ -61,7 +61,9 @@ final class Environment implements EnvironmentInterface
      */
     public function check_php_hash_algo(): bool
     {
-        return function_exists('hash_algos') ? in_array('sha256', hash_algos()) : false;
+        return (function_exists('hash_algos'))
+            ? in_array('sha256', hash_algos())
+            : false;
     }
 
     /**
@@ -109,7 +111,9 @@ final class Environment implements EnvironmentInterface
      */
     public function check_php_pdo_mysql(): bool
     {
-        return class_exists('PDO') ? in_array('mysql', PDO::getAvailableDrivers()) : false;
+        return (class_exists('PDO'))
+            ? in_array('mysql', PDO::getAvailableDrivers())
+            : false;
     }
 
     /**
