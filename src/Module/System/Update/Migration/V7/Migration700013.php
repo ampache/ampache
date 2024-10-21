@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V7;
 
+use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration700013 extends AbstractMigration
@@ -32,6 +33,7 @@ final class Migration700013 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("ALTER TABLE `ip_history` ADD COLUMN `action` CHAR(36);");
+        Dba::write("ALTER TABLE `ip_history` DROP COLUMN `action`;");
+        $this->updateDatabase("ALTER TABLE `ip_history` ADD COLUMN `action` CHAR (36);");
     }
 }
