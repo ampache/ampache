@@ -69,7 +69,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $artist     = $this->mock(Artist::class);
 
         $artistId = 666;
-        $userId   = 24;
         $webPath  = 'some-web-path';
 
         $request->shouldReceive('getQueryPArams')
