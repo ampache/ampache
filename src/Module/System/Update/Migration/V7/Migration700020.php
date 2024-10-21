@@ -58,7 +58,7 @@ final class Migration700020 extends AbstractMigration
         }
 
         // Require unique preference names per-user in `user_preference` table
-        Dba::write("ALTER TABLE `user_preference` DROP KEY `unique_name`;");
+        Dba::write("ALTER TABLE `user_preference` DROP KEY `unique_name`;", [], true);
         $this->updateDatabase("ALTER TABLE `user_preference` ADD UNIQUE `unique_name` (`user`, `name`);");
     }
 }
