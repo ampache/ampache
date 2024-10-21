@@ -51,10 +51,12 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 
                 return;
             }
+
             $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
             if ($catalog === null) {
                 return;
             }
+
             $new_enabled = !$catalog->enabled;
             Catalog::update_enabled($new_enabled, $catalog->id);
             $catalog->enabled = $new_enabled;
@@ -67,6 +69,7 @@ final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
                 $button     = 'check_circle';
                 $buttontext = T_('Enable');
             }
+
             $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
         } // switch on action;
 
