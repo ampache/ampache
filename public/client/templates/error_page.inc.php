@@ -38,9 +38,9 @@ $dir       = $dir ?? 'ltr'; ?>
 <meta http-equiv="refresh" content="10;URL=<?php echo $redirect_url; ?>" />
 <?php Ui::show_custom_style(); ?>
 <title><?php echo T_('Ampache Error Page'); ?></title>
-<link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
 </head>
 <body>
     <!-- rfc3514 implementation -->
