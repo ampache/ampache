@@ -36,7 +36,7 @@ final class Migration540002 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_type_date_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `object_type_date_IDX` USING BTREE ON `object_count` (`object_type`, `date`);");
     }
 }

@@ -40,8 +40,9 @@ final class Migration700021 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `license` DROP COLUMN `order`;", [], true);
-        $this->updateDatabase("ALTER TABLE `license` ADD COLUMN `order` SMALLINT(4) UNSIGNED NULL AFTER `external_link`;");
+        if (!Dba::read('SELECT `order` FROM `license` LIMIT 1;', [], true)) {
+            $this->updateDatabase("ALTER TABLE `license` ADD COLUMN `order` SMALLINT(4) UNSIGNED NULL AFTER `external_link`;");
+        }
 
         $this->updateDatabase("UPDATE `license` SET `order` = `id` WHERE `order` IS NULL;");
 

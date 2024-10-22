@@ -36,8 +36,9 @@ final class Migration700014 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `user_preference` DROP COLUMN `name`;', [], true);
-        $this->updateDatabase('ALTER TABLE `user_preference` ADD COLUMN `name` varchar(128) DEFAULT NULL AFTER `preference`;');
+        if (!Dba::read('SELECT `name` FROM `user_preference` LIMIT 1;', [], true)) {
+            $this->updateDatabase('ALTER TABLE `user_preference` ADD COLUMN `name` varchar(128) DEFAULT NULL AFTER `preference`;');
+        }
         $this->updateDatabase('UPDATE `user_preference`, (SELECT `preference`.`name`, `preference`.`id` FROM `preference`) AS `preference` SET `user_preference`.`name` = `preference`.`name` WHERE `preference`.`id` = `user_preference`.`preference`;');
 
     }

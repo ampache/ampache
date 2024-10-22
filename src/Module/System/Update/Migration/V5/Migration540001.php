@@ -39,25 +39,25 @@ final class Migration540001 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `album` DROP KEY `catalog_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `catalog_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `catalog_IDX` USING BTREE ON `album` (`catalog`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `album_artist_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `album_artist_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `album_artist_IDX` USING BTREE ON `album` (`album_artist`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `original_year_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `original_year_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `original_year_IDX` USING BTREE ON `album` (`original_year`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `release_type_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `release_type_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `release_type_IDX` USING BTREE ON `album` (`release_type`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `release_status_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `release_status_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `release_status_IDX` USING BTREE ON `album` (`release_status`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `mbid_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `mbid_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `mbid_IDX` USING BTREE ON `album` (`mbid`);");
 
-        Dba::write("ALTER TABLE `album` DROP KEY `mbid_group_IDX`;");
+        Dba::write("ALTER TABLE `album` DROP KEY `mbid_group_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `mbid_group_IDX` USING BTREE ON `album` (`mbid_group`);");
     }
 }
