@@ -616,19 +616,14 @@ class Preference extends database_object
             $subcategory = strtolower((string)$subcategory);
         }
 
-        $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Work around ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
+        $sql        = (!Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true))
+            ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
+            : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
 
         if (!$db_results) {
-            // try ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
-            if (Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true)) {
-                $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
-            }
-
-            if (!$db_results) {
-                return false;
-            }
+            return false;
         }
 
         // Check for databases < Ampache\Module\System\Update\Migration\V7\Migration700020
