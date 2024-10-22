@@ -620,10 +620,18 @@ class Preference extends database_object
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
 
         if (!$db_results) {
-            return false;
+            // try ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
+            if (Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true)) {
+                $sql        = "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
+            }
+
+            if (!$db_results) {
+                return false;
+            }
         }
 
-        // Check for databases < Migration700020
+        // Check for databases < Ampache\Module\System\Update\Migration\V7\Migration700020
         $ampacheSeven = true;
         if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
             $ampacheSeven = false;
