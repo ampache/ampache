@@ -212,7 +212,7 @@ switch ($user_access) {
                 </span>
             </td>
         </tr>
-        <?php if ($user_access !== 100) { ?>
+        <?php if ($client->access !== 100) { ?>
         <tr>
             <td><?php echo T_('Config Preset'); ?>&nbsp;<span class="information">(<?php echo T_('This affects all non-admin accounts'); ?>)</span></td>
             <td>
