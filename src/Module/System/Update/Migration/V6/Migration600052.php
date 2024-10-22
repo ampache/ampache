@@ -49,7 +49,7 @@ final class Migration600052 extends AbstractMigration
                 $playlist->regenerate_track_numbers();
             }
         }
-        Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;");
+        Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;", [], true);
         $sql = 'ALTER TABLE `playlist_data` ADD CONSTRAINT `playlist_track_UN` UNIQUE KEY (`playlist`,`track`);';
         $this->updateDatabase($sql);
     }
