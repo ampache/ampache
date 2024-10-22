@@ -5,7 +5,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
-        <link rel="shortcut icon" href="./public/client/favicon.ico">
+        <link rel="icon" href="./public/client/favicon.ico">
         <link rel="stylesheet" href="./public/client/lib/components/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="./public/client/lib/components/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="./public/client/templates/install.css" type="text/css" media="screen">

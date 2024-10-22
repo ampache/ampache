@@ -637,7 +637,7 @@ class Ui implements UiInterface
         }
 
         $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path('/client') . "/favicon.ico";
-        echo "<link rel=\"shortcut icon\" href=\"" . $favicon . "\">\n";
+        echo "<link rel=\"icon\" href=\"" . $favicon . "\">\n";
     }
 
     /**
