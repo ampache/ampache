@@ -45,8 +45,8 @@ $htmllang = str_replace("_", "-", $lang);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title><?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?></title>
-    <link href="lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     <script src="lib/components/jquery/jquery.min.js"></script>
     <script src="lib/components/bootstrap/js/bootstrap.min.js"></script>
