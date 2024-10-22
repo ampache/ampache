@@ -4,6 +4,10 @@
 
 Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
 
+Ampache7 still supports upgrading your database from any version higher than 3.6.0 (released in 2013!)
+
+I want to just thank everyone who has helped over the last year on this version from code right down to just asking for help.
+
 ### Added
 
 * New release structure type (client) based on the public release type. (Allow using an API client in the root Ampache folder)
@@ -25,6 +29,7 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Remove validation token on user activation
 * Show error on user add/update when the website is invalid (empty values are ignored)
 * Added a `get_web_path` function to allow easier squash and client structure management
+* Hide SQL debug errors on queries that check status/backwards compatibility functions
 * Plugins
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
@@ -132,6 +137,9 @@ Information and changes for this major release are recorded in the wiki. [Ampach
 * Don't show HTML errors in cli
 * Don't show duplicate items in upload_catalog select when you don't have a music catalog
 * User config presets didn't do anything, now they match the cli `admin:resetPreferences` command
+* Make sure preference read and insert is supported on all Ampache versions
+  * Ampache6 changed spells `category` correctly. (Migration600051)
+  * Ampache7 adds the preference name to the `user_preference` table. (Migration700020)
 
 ## Ampache 6.6.4
 
