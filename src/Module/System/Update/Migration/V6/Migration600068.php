@@ -33,6 +33,6 @@ final class Migration600068 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;");
+        Dba::write("ALTER TABLE `playlist_data` DROP KEY `playlist_track_UN`;", [], true);
     }
 }
