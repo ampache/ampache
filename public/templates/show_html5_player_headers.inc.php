@@ -30,14 +30,14 @@ $jpplaylist = ($isLight)
     : '#202020';
 
 if ($iframed || $isShare) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true); ?>" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black-iframed.css', true); ?>" type="text/css">
 <?php } else { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true); ?>" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jplayer.midnight.black.css', true); ?>" type="text/css">
 <?php } ?>
 <?php if (!$iframed) {
     require_once Ui::find_template('stylesheets.inc.php'); ?>
-    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen" />
-    <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?php echo $web_path . Ui::find_template('jquery-editdialog.css', true); ?>" type="text/css" media="screen">
+    <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/jquery-ui-ampache/jquery-ui.min.css" type="text/css" media="screen">
     <script src="<?php echo $web_path; ?>/lib/components/jquery/jquery.min.js"></script>
     <script src="<?php echo $web_path; ?>/lib/components/jquery-ui/jquery-ui.min.js"></script>
     <script src="<?php echo $web_path; ?>/lib/components/js-cookie/js.cookie.js"></script>
@@ -52,7 +52,7 @@ if ($iframed || $isShare) { ?>
     </script>
     <?php
 } ?>
-<link href="<?php echo $web_path; ?>/lib/modules/UberViz/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="<?php echo $web_path; ?>/lib/modules/UberViz/style.css" type="text/css">
 <?php if (AmpConfig::get('webplayer_aurora')) { ?>
     <script src="<?php echo $web_path; ?>/lib/modules/aurora.js/aurora.js"></script>
 <?php } ?>

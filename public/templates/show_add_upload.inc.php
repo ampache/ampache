@@ -77,7 +77,7 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 </div>
 
 <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/wunderbaum/wunderbaum.css" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/file-upload.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo $web_path; ?>/templates/file-upload.css" type="text/css" media="screen">
 <script src="<?php echo $web_path; ?>/lib/components/wunderbaum/wunderbaum.umd.min.js"></script>
 
 <script>
