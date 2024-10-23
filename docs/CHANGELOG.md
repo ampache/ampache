@@ -137,6 +137,7 @@ I want to just thank everyone who has helped over the last year on this version 
 * Don't show HTML errors in cli
 * Don't show duplicate items in upload_catalog select when you don't have a music catalog
 * User config presets didn't do anything, now they match the cli `admin:resetPreferences` command
+* Don't show Visualizer related buttons in the webplayer until it's turned on
 * Make sure preference read and insert is supported on all Ampache versions
   * Ampache6 changed spells `category` correctly. (Migration600051)
   * Ampache7 adds the preference name to the `user_preference` table. (Migration700020)
