@@ -106,7 +106,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->willReturn(true);
 
         $albumDisk->expects(static::once())
