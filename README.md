@@ -8,9 +8,7 @@
 
 ## News
 
-Ampache6 is [here!](https://github.com/ampache/ampache/releases/)
-
-Ampache7 development has almost completed
+Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
 
 Information and changes for this major release are being recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
 
