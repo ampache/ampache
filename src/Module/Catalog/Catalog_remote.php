@@ -301,7 +301,7 @@ class Catalog_remote extends Catalog
 
         Ui::update_text(
             T_("Remote Catalog Updated"),
-            /* HINT: count of songs found*/
+            /* HINT: count of songs found */
             sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info->songs), $remote_catalog_info->songs)
         );
 

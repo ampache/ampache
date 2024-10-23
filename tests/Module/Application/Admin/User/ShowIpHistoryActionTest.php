@@ -119,12 +119,16 @@ class ShowIpHistoryActionTest extends MockeryTestCase
     {
         $request    = $this->mock(ServerRequestInterface::class);
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
-        $user       = $this->createMock(User::class);
 
         $userId       = 666;
         $history      = new ArrayIterator(['some-history']);
         $userFullName = 'some-name';
+        $userName     = 'username';
         $webPath      = 'some-path';
+
+        $user           = $this->createMock(User::class);
+        $user->fullname = $userFullName;
+        $user->username = $userName;
 
         $gatekeeper->shouldReceive('mayAccess')
             ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
