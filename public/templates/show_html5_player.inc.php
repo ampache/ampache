@@ -555,10 +555,10 @@ if ($isVideo === false) {
                             <div id="replaygainbtn" class="action_button">
                                 <a href="javascript:ToggleReplayGain();"><?php echo Ui::get_material_symbol('graphic_eq', addslashes(T_('ReplayGain'))); ?></a>
                             </div>
-                            <div id="vizfullbtn" class="action_button">
+                            <div id="vizfullbtn" class="action_button" style="visibility: hidden">
                                 <a href="javascript:ShowVisualizerFullScreen();"><?php echo Ui::get_material_symbol('fullscreen', addslashes(T_('Visualizer full-screen'))); ?></a>
                             </div>
-                            <div id="equalizerbtn" class="action_button">
+                            <div id="equalizerbtn" class="action_button" style="visibility: hidden">
                                 <a href="javascript:ShowEqualizer();"><?php echo Ui::get_material_symbol('equalizer', addslashes(T_('Equalizer'))); ?></a>
                             </div>
                         <?php } ?>
