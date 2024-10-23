@@ -31,7 +31,7 @@ if (empty($logo_url)) {
     $logo_url = Ui::get_logo_url('dark');
 }
 
-$web_path = (string)AmpConfig::get('web_path', ''); ?>
+$web_path = AmpConfig::get_web_path(); ?>
 <!DOCTYPE html>
 <html lang="en-US">
     <head>
@@ -41,9 +41,9 @@ $web_path = (string)AmpConfig::get('web_path', ''); ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo T_('Ampache') . ' -- ' . T_("Debug Page"); ?></title>
         <?php Ui::show_custom_style(); ?>
-        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="<?php echo $web_path; ?>/lib/components/bootstrap/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

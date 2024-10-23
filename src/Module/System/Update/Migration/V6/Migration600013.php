@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600013 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('api_enable_6', 'Enable API6 responses', '1', 25, 'boolean', 'options');
+        $this->updatePreferences('api_enable_6', 'Enable API6 responses', '1', AccessLevelEnum::USER->value, 'boolean', 'options');
     }
 }

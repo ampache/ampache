@@ -107,7 +107,7 @@ final class AlbumsMethod implements MethodInterface
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
         }
-        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort,$order]);
+        $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), [$sort, $order]);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
         $browse->set_api_filter($method, $input['filter'] ?? '');
@@ -124,15 +124,15 @@ final class AlbumsMethod implements MethodInterface
 
         ob_end_clean();
 
+        $output->setOffset($input['offset'] ?? 0);
+        $output->setLimit($input['limit'] ?? 0);
+        $output->setCount($browse->get_total());
+
         /** @var string $result */
         $result = $output->albums(
             $results,
             $include,
-            $user,
-            true,
-            true,
-            (int)($input['limit'] ?? 0),
-            (int)($input['offset'] ?? 0)
+            $user
         );
 
         return $response->withBody(

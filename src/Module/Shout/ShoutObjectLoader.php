@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Shout;
 
-use Ampache\Module\Util\InterfaceImplementationChecker;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\Song;
@@ -39,29 +39,27 @@ use Ampache\Repository\Model\Video;
  * Shouts should only be linked to enabled library-items
  * (at least in some cases)
  */
-final class ShoutObjectLoader implements ShoutObjectLoaderInterface
+final readonly class ShoutObjectLoader implements ShoutObjectLoaderInterface
 {
+    public function __construct(
+        private LibraryItemLoaderInterface $libraryItemLoader
+    ) {
+    }
+
     /**
      * Loads a library item by its type and id and check if it may be used
      */
-    public function loadByObjectType(string $type, int $object_id): ?library_item
+    public function loadByObjectType(LibraryItemEnum $type, int $object_id): ?library_item
     {
-        if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return null;
-        }
+        $object = $this->libraryItemLoader->load(
+            $type,
+            $object_id
+        );
 
-        $className = ObjectTypeToClassNameMapper::map($type);
-        /** @var library_item $object */
-        $object = new $className($object_id);
-
-        if ($object->getId() > 0) {
-            if ($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) {
-                if (!$object->enabled) {
-                    $object = null;
-                }
+        if ($object instanceof Song || $object instanceof Podcast_Episode || $object instanceof Video) {
+            if (!$object->enabled) {
+                $object = null;
             }
-        } else {
-            $object = null;
         }
 
         return $object;
@@ -72,6 +70,6 @@ final class ShoutObjectLoader implements ShoutObjectLoaderInterface
      */
     public function loadByShout(Shoutbox $shout): ?library_item
     {
-        return $this->loadByObjectType((string) $shout->getObjectType(), $shout->getObjectId());
+        return $this->loadByObjectType($shout->getObjectType(), $shout->getObjectId());
     }
 }

@@ -26,13 +26,14 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Xbmc;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 use XBMC_RPC_ConnectionException;
 use XBMC_RPC_Exception;
 use XBMC_RPC_HTTPClient;
@@ -44,8 +45,8 @@ use XBMC_RPC_HTTPClient;
 class AmpacheXbmc extends localplay_controller
 {
     /* Variables */
-    private $version     = '000001';
-    private $description = 'Controls a XBMC instance';
+    private string $version     = '000001';
+    private string $description = 'Controls a XBMC instance';
 
     /* Constructed variables */
     private $_xbmc;
@@ -92,13 +93,13 @@ class AmpacheXbmc extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `localplay_xbmc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `user` VARCHAR(255) COLLATE $collation NOT NULL, `pass` VARCHAR(255) COLLATE $collation NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, 25, 'integer', 'internal', 'xbmc');
+        Preference::insert('xbmc_active', T_('XBMC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'xbmc');
 
         return true;
     }
@@ -122,29 +123,26 @@ class AmpacheXbmc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new xbmc instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id]);
+        Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['user'] ?? null, $data['pass'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $sql = "DELETE FROM `localplay_xbmc` WHERE `id` = ?";
         Dba::query($sql, [$uid]);
-
-        return true;
     }
 
     /**
@@ -168,15 +166,13 @@ class AmpacheXbmc extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $sql = "UPDATE `localplay_xbmc` SET `host` = ?, `port` = ?, `name` = ?, `user` = ?, `pass` = ? WHERE `id` = ?";
         Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['user'], $data['pass'], $uid]);
-
-        return true;
     }
 
     /**
@@ -199,10 +195,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('xbmc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_xbmc` WHERE `id` = ?" : "SELECT * FROM `localplay_xbmc`";
@@ -214,12 +208,11 @@ class AmpacheXbmc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (!$user instanceof User) {
             return false;
         }
         Preference::update('xbmc_active', $user->id, $uid);
@@ -301,13 +294,10 @@ class AmpacheXbmc extends localplay_controller
         }
 
         try {
-
             $this->stop();
 
             $clear = $this->_xbmc->Playlist->Clear(
-                [
-                    'playlistid' => $this->_playlistId
-                ]
+                ['playlistid' => $this->_playlistId]
             );
 
             //we have a delay between the stop/clear playlist in kodi and kodi notify it in the status, so, we add a mininal sleep
@@ -345,13 +335,7 @@ class AmpacheXbmc extends localplay_controller
                     ]
                 );
             } elseif ($status['state'] == 'stop') {
-                $this->_xbmc->Player->Open(
-                    [
-                       'item' => [
-                           'playlistid' => $this->_playlistId
-                       ]
-                    ]
-                );
+                $this->_xbmc->Player->Open(['item' => ['playlistid' => $this->_playlistId]]);
 
             }
 
@@ -389,7 +373,6 @@ class AmpacheXbmc extends localplay_controller
                 ]
             );
 
-
             return true;
         } catch (XBMC_RPC_Exception $error) {
             debug_event(self::class, 'pause failed, is the player started? ' . $error->getMessage(), 1);
@@ -411,9 +394,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Player->Stop(
-                [
-                    'playerid' => $this->_playerId
-                ]
+                ['playerid' => $this->_playerId]
             );
 
             return true;
@@ -427,22 +408,21 @@ class AmpacheXbmc extends localplay_controller
     /**
      * skip
      * This tells XBMC to skip to the specified song
-     * @param $song
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
         if (!$this->_xbmc) {
             return false;
         }
 
         // force integer, some apps sends string (subsonic jukebox)
-        $song = (int)$song;
+        $track_id = (int)$track_id;
 
         try {
             $this->_xbmc->Player->GoTo(
                 [
                     'playerid' => $this->_playerId,
-                    'to' => $song
+                    'to' => $track_id
                 ]
             );
 
@@ -465,9 +445,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => 'increment'
-                ]
+                ['volume' => 'increment']
             );
 
             return true;
@@ -489,9 +467,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => 'decrement'
-                ]
+                ['volume' => 'decrement']
             );
 
             return true;
@@ -567,9 +543,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $this->_xbmc->Application->SetVolume(
-                [
-                    'volume' => $volume
-                ]
+                ['volume' => $volume]
             );
 
             return true;
@@ -583,9 +557,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * repeat
      * This tells XBMC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -610,9 +583,8 @@ class AmpacheXbmc extends localplay_controller
     /**
      * random
      * This tells XBMC to turn on or off the playing of songs from the playlist in random order
-     * @param $onoff
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
         if (!$this->_xbmc) {
             return false;
@@ -622,7 +594,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Player->SetShuffle(
                 [
                     'playerid' => $this->_playerId,
-                    'shuffle' => $onoff
+                    'shuffle' => $state
                 ]
             );
 
@@ -640,13 +612,12 @@ class AmpacheXbmc extends localplay_controller
      * The songs that XBMC currently has in it's playlist. This must be
      * done in a standardized fashion
      */
-    public function get()
+    public function get(): array
     {
-        if (!$this->_xbmc) {
-            return false;
-        }
-
         $results = [];
+        if (!$this->_xbmc) {
+            return $results;
+        }
 
         try {
             $playlist = $this->_xbmc->Playlist->GetItems(
@@ -698,9 +669,7 @@ class AmpacheXbmc extends localplay_controller
 
         try {
             $appprop = $this->_xbmc->Application->GetProperties(
-                [
-                    'properties' => ['volume']
-                ]
+                ['properties' => ['volume']]
             );
             $array['volume']       = (int)($appprop['volume']);
             $array['track_title']  = '';
@@ -729,7 +698,6 @@ class AmpacheXbmc extends localplay_controller
                 if (empty($xbmc_players)) {
                     $array['state'] = 'stop';
                 }
-
 
                 $currentplay = $this->_xbmc->Player->GetItem(
                     [

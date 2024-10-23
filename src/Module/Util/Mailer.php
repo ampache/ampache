@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Dba;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -108,16 +109,15 @@ final class Mailer implements MailerInterface
      */
     public function isMailEnabled(): bool
     {
-        return static::is_mail_enabled();
+        return self::is_mail_enabled();
     }
 
     /**
      * validate_address
      *
      * Checks whether what we have looks like a valid address.
-     * @param string $address
      */
-    public static function validate_address($address): bool
+    public static function validate_address(string $address): bool
     {
         return PHPMailer::ValidateAddress($address);
     }
@@ -144,20 +144,23 @@ final class Mailer implements MailerInterface
      * get_users
      * This returns an array of userids for people who have e-mail
      * addresses based on the passed filter
-     * @param $filter
-     * @return array
+     * @param string $filter
+     * @return array<int, array{id: string, fullname: string, email: string}>
      */
     public static function get_users($filter): array
     {
+        $params = [];
         switch ($filter) {
             case 'users':
-                $sql = "SELECT * FROM `user` WHERE `access`='25' AND `email` IS NOT NULL";
+                $sql      = "SELECT * FROM `user` WHERE `access`= ? AND `email` IS NOT NULL";
+                $params[] = AccessLevelEnum::USER->value;
                 break;
             case 'admins':
-                $sql = "SELECT * FROM `user` WHERE `access`='100' AND `email` IS NOT NULL";
+                $sql      = "SELECT * FROM `user` WHERE `access`= ? AND `email` IS NOT NULL";
+                $params[] = AccessLevelEnum::ADMIN->value;
                 break;
             case 'inactive':
-                $inactive = time() - 2592000;
+                $params[] = time() - 2592000;
                 $sql      = 'SELECT * FROM `user` WHERE `last_seen` <= ? AND `email` IS NOT NULL';
                 break;
             case 'all':
@@ -166,7 +169,7 @@ final class Mailer implements MailerInterface
                 break;
         } // end filter switch
 
-        $db_results = Dba::read($sql, isset($inactive) ? [$inactive] : []);
+        $db_results = Dba::read($sql, $params);
 
         $results = [];
 
@@ -258,7 +261,7 @@ final class Mailer implements MailerInterface
     }
 
     /**
-     * @param $group_name
+     * @param string $group_name
      * @return bool
      * @throws Exception
      */

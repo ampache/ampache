@@ -47,15 +47,26 @@ final class ArtCleanupCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->info(
             'This file cleans the image table for items that don\'t fit into set dimensions',
             true
         );
 
-        $runable = (!$this->configContainer->get('album_art_min_width') && $this->configContainer->get('album_art_min_height')) ||
-            (!$this->configContainer->get('album_art_max_width') && !$this->configContainer->get('album_art_max_height'));
+        $runable = (
+            (
+                !$this->configContainer->get('album_art_min_width') &&
+                $this->configContainer->get('album_art_min_height')
+            ) ||
+            (
+                !$this->configContainer->get('album_art_max_width') &&
+                !$this->configContainer->get('album_art_max_height')
+            )
+        );
 
         if ($runable === false) {
             $interactor->error(

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,7 +36,7 @@ final class Migration360048 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('concerts_limit_future', 'Limit number of future events', '0', 25, 'integer', 'interface');
-        $this->updatePreferences('concerts_limit_past', 'Limit number of past events', '0', 25, 'integer', 'interface');
+        $this->updatePreferences('concerts_limit_future', 'Limit number of future events', '0', AccessLevelEnum::USER->value, 'integer', 'interface');
+        $this->updatePreferences('concerts_limit_past', 'Limit number of past events', '0', AccessLevelEnum::USER->value, 'integer', 'interface');
     }
 }

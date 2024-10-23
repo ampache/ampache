@@ -30,6 +30,7 @@ use Ampache\MockeryTestCase;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\LicenseRepositoryInterface;
@@ -68,7 +69,7 @@ class EditActionTest extends MockeryTestCase
         $gatekeeper = $this->mock(GuiGatekeeperInterface::class);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnFalse();
 
@@ -85,10 +86,11 @@ class EditActionTest extends MockeryTestCase
         $license    = $this->createMock(License::class);
 
         $licenseId    = 666;
-        $webPath      = 'some-path';
+        $webPath      = '/admin';
         $name         = 'some-name';
         $description  = 'some-description';
         $externalLink = 'some-external-link';
+        $order        = null;
 
         $this->licenseRepository->shouldReceive('findById')
             ->with($licenseId)
@@ -108,15 +110,19 @@ class EditActionTest extends MockeryTestCase
             ->with($externalLink)
             ->willReturnSelf();
         $license->expects(static::once())
+            ->method('setOrder')
+            ->with($order)
+            ->willReturnSelf();
+        $license->expects(static::once())
             ->method('save');
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with($webPath)
             ->once()
             ->andReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -137,7 +143,7 @@ class EditActionTest extends MockeryTestCase
             ->with(
                 T_('No Problem'),
                 'The License has been updated',
-                sprintf('%s/admin/license.php', $webPath)
+                sprintf('%s/license.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')
@@ -170,7 +176,7 @@ class EditActionTest extends MockeryTestCase
             ->andReturnNull();
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -195,15 +201,15 @@ class EditActionTest extends MockeryTestCase
 
         $name        = 'some-name';
         $description = 'some-description';
-        $webPath     = 'some-path';
+        $webPath     = '/admin';
 
         $this->configContainer->shouldReceive('getWebPath')
-            ->withNoArgs()
+            ->with($webPath)
             ->once()
             ->andReturn($webPath);
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)
             ->once()
             ->andReturnTrue();
 
@@ -232,6 +238,10 @@ class EditActionTest extends MockeryTestCase
             ->with('')
             ->willReturnSelf();
         $license->expects(static::once())
+            ->method('setOrder')
+            ->with(null)
+            ->willReturnSelf();
+        $license->expects(static::once())
             ->method('save');
 
         $this->ui->shouldReceive('showHeader')
@@ -241,7 +251,7 @@ class EditActionTest extends MockeryTestCase
             ->with(
                 T_('No Problem'),
                 'A new License has been created',
-                sprintf('%s/admin/license.php', $webPath)
+                sprintf('%s/license.php', $webPath)
             )
             ->once();
         $this->ui->shouldReceive('showQueryStats')

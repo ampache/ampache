@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Ampache -- Debug Page</title>
-        <link rel='shortcut icon' href='./public/favicon.ico' />
-        <link href="./public/lib/components/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="./public/lib/components/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="./public/templates/install.css" type="text/css" media="screen" />
+        <link rel="icon" href="./public/favicon.ico">
+        <link rel="stylesheet" href="./public/lib/components/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./public/lib/components/bootstrap/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="./public/templates/install.css" type="text/css" media="screen">
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -24,7 +24,7 @@
                 <p>The root Ampache folder has changed to <a href="./public" target="_blank">./public</a></p>
             </div>
             <div class="alert alert-danger">
-                <p>You must update your DocumentRoot to the new path.</p>
+                <p>You must update your DocumentRoot to the new path</p>
                 <p><a href="https://github.com/ampache/ampache/wiki/Ampache-Next-Changes" target="_blank">Please check the Ampache wiki for more information</a></p>
             </div>
         </div>

@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Album;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -59,10 +60,10 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
         $this->logger->debug(
             'Set track numbers called.',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
 
@@ -72,13 +73,15 @@ final class SetTrackNumbersAction implements ApplicationActionInterface
 
             $this->logger->debug(
                 sprintf('%d=%s', $key, Core::get_get($key)),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 
         if (isset($_GET['order'])) {
             $songs = explode(';', Core::get_get('order'));
-            $track = filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT) ? ((filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1) : 1;
+            $track = (filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT))
+                ? ((int)filter_input(INPUT_GET, 'offset', FILTER_SANITIZE_NUMBER_INT)) + 1
+                : 1;
             foreach ($songs as $song_id) {
                 if ($song_id != '') {
                     Song::update_track($track, (int) $song_id);

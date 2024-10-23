@@ -29,6 +29,8 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Api;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Localplay\LocalPlayTypeEnum;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Repository\MetadataFieldRepositoryInterface;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -37,22 +39,61 @@ use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Preference;
+use Ampache\Repository\Model\User;
 
 /**
  * A collection of methods related to the user interface
  */
 class Ui implements UiInterface
 {
-    private static $_ticker;
-    private static $_icon_cache;
-    private static $_image_cache;
+    private static int $_ticker = 0;
 
-    private ConfigContainerInterface $configContainer;
+    /** @var array<string, string> $_icon_cache */
+    private static array $_icon_cache = [];
+
+    /** @var array<string, string> $_image_cache */
+    private static array $_image_cache = [];
 
     public function __construct(
-        ConfigContainerInterface $configContainer
+        private readonly ConfigContainerInterface $configContainer
     ) {
-        $this->configContainer = $configContainer;
+    }
+
+    /**
+     * This dumps out some html and an icon for the type of rss that we specify
+     *
+     * @param array<string, string>|null $params
+     */
+    public static function getRssLink(
+        RssFeedTypeEnum $type,
+        ?User $user = null,
+        string $title = '',
+        ?array $params = null
+    ): string {
+        $strparams = "";
+        if ($params != null && is_array($params)) {
+            foreach ($params as $key => $value) {
+                $strparams .= "&" . scrub_out($key) . "=" . scrub_out($value);
+            }
+        }
+
+        $rsstoken = '';
+        if ($user !== null) {
+            $rsstoken = "&rsstoken=" . $user->getRssToken();
+        }
+
+        $string = '<a class="nohtml" href="' . AmpConfig::get(
+            'web_path'
+        ) . '/rss.php?type=' . $type->value . $rsstoken . $strparams . '" target="_blank">' . Ui::get_material_symbol(
+            'rss_feed',
+            T_('RSS Feed')
+        );
+        if (!empty($title)) {
+            $string .= '&nbsp;' . $title;
+        }
+        $string .= '</a>';
+
+        return $string;
     }
 
     /**
@@ -147,7 +188,7 @@ class Ui implements UiInterface
      */
     public static function check_ticker(): bool
     {
-        if (defined('SSE_OUTPUT') || defined('API')) {
+        if (defined('SSE_OUTPUT') || defined('CLI') || defined('API')) {
             return false;
         }
         if (!isset(self::$_ticker) || (time() > self::$_ticker + 1)) {
@@ -204,26 +245,14 @@ class Ui implements UiInterface
             $pass++;
         }
 
-        switch ($pass) {
-            case 1:
-                $unit = 'kB';
-                break;
-            case 2:
-                $unit = 'MB';
-                break;
-            case 3:
-                $unit = 'GB';
-                break;
-            case 4:
-                $unit = 'TB';
-                break;
-            case 5:
-                $unit = 'PB';
-                break;
-            default:
-                $unit = 'B';
-                break;
-        }
+        $unit = match ($pass) {
+            1 => 'kB',
+            2 => 'MB',
+            3 => 'GB',
+            4 => 'TB',
+            5 => 'PB',
+            default => 'B',
+        };
 
         return ((string)round($value, $precision)) . ' ' . $unit;
     }
@@ -320,6 +349,49 @@ class Ui implements UiInterface
     }
 
     /**
+     * get_material_symbol
+     *
+     * Returns an <svg> tag for the specified Material Symbol
+     */
+    public static function get_material_symbol(string $name, ?string $title = null, ?string $id_attrib = null, ?string $class_attrib = null): string
+    {
+        $title    = $title ?? T_(ucfirst($name));
+        $filepath = __DIR__ . '/../../../resources/images/material-symbols/' . $name . '.svg';
+        if (!is_file($filepath)) {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+            $filepath = __DIR__ . '/../../../resources/images/icon_error.svg';
+        }
+        $tag = '';
+        // load svg file
+        $svgicon = simplexml_load_file($filepath);
+        if ($svgicon !== false) {
+            if (empty($svgicon->title)) {
+                $svgicon->addChild('title', $title);
+            } else {
+                $svgicon->title = $title;
+            }
+            if (empty($svgicon->desc)) {
+                $svgicon->addChild('desc', $title);
+            } else {
+                $svgicon->desc = $title;
+            }
+
+            if (!empty($id_attrib)) {
+                $svgicon->addAttribute('id', $id_attrib);
+            }
+            if (empty($class_attrib)) {
+                $class_attrib = '';
+            }
+            $svgicon->addAttribute('class', 'material-symbol material-symbol-' . $name . " " . $class_attrib);
+
+            $tag = explode("\n", (string)$svgicon->asXML(), 3)[1];
+        }
+
+        return $tag;
+    }
+
+    /**
      * _find_icon
      *
      * Does the finding icon thing. match svg first over png
@@ -331,16 +403,33 @@ class Ui implements UiInterface
             return self::$_icon_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . '/images/icons/';
+        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/icons/';
         $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+
         if (empty($filesearch)) {
-            // if the theme is missing an icon. fall back to default images folder
-            $filename = 'icon_' . $name . '.png';
-            $path     = '/images/';
-        } else {
-            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
+            // if the theme is missing an icon, fall back to default images folder
+            $path = 'images/';
+            // check private resources folder for svg files
+            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . 'icon_' . $name . '.svg', GLOB_BRACE);
+            if (empty($filesearch)) {
+                // finally fall back to the public images folder
+                $filesearch = glob(__DIR__ . '/../../../public/' . $path . 'icon_' . $name . '.{svg,png}', GLOB_BRACE);
+            }
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+
+        if (!empty($filesearch) && is_file($filesearch[0])) {
+            $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
+        } else {
+            // fall back to error icon if icon is missing
+            debug_event(self::class, 'Runtime Error: icon ' . $name . ' not found.', 1);
+
+            return __DIR__ . '/../../../resources/images/icon_error.svg';
+        }
+        if (pathinfo($filename, PATHINFO_EXTENSION) === 'svg') {
+            $url = (string)$filesearch[0];
+        } else {
+            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
+        }
         // cache the url so you don't need to keep searching
         self::$_icon_cache[$name] = $url;
 
@@ -362,8 +451,6 @@ class Ui implements UiInterface
             // load svg file
             $svgimage = simplexml_load_file($image_url);
             if ($svgimage !== false) {
-                $svgimage->addAttribute('class', 'image');
-
                 if (empty($svgimage->title)) {
                     $svgimage->addChild('title', $title);
                 } else {
@@ -413,16 +500,33 @@ class Ui implements UiInterface
             return self::$_image_cache[$name];
         }
 
-        $path       = AmpConfig::get('theme_path') . '/images/';
+        // always check themes first
+        $path       = 'themes/' . AmpConfig::get('theme_name', 'reborn') . '/images/';
         $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+        if (empty($filesearch)) {
+            $path = 'images/';
+            // check private resources folder for svg files
+            $filesearch = glob(__DIR__ . '/../../../resources/' . $path . $name . '.svg', GLOB_BRACE);
+            if (empty($filesearch)) {
+                // finally fall back to the public images folder
+                $filesearch = glob(__DIR__ . '/../../../public/' . $path . $name . '.{svg,png}', GLOB_BRACE);
+            }
+        }
         if (empty($filesearch)) {
             // if the theme is missing an image. fall back to default images folder
             $filename = $name . '.png';
-            $path     = '/images/';
+            $path     = 'images/';
         } else {
             $filename = pathinfo($filesearch[0], PATHINFO_BASENAME);
         }
-        $url = AmpConfig::get('web_path') . $path . $filename;
+        if (
+            $filesearch &&
+            pathinfo($filename, PATHINFO_EXTENSION) === 'svg'
+        ) {
+            $url = $filesearch[0];
+        } else {
+            $url = AmpConfig::get_web_path() . '/' . $path . $filename;
+        }
         // cache the url so you don't need to keep searching
         self::$_image_cache[$name] = $url;
 
@@ -461,12 +565,14 @@ class Ui implements UiInterface
         if (!defined("TABLE_RENDERED")) {
             show_table_render();
         }
-
-        $plugins = Plugin::get_plugins('display_on_footer');
-        foreach ($plugins as $plugin_name) {
-            $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
-                $plugin->_plugin->display_on_footer();
+        $user = Core::get_global('user');
+        if ($user instanceof User) {
+            $plugins = Plugin::get_plugins(PluginTypeEnum::FOOTER_WIDGET);
+            foreach ($plugins as $plugin_name) {
+                $plugin = new Plugin($plugin_name);
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
+                    $plugin->_plugin->display_on_footer();
+                }
             }
         }
 
@@ -527,11 +633,11 @@ class Ui implements UiInterface
         }
 
         if (AmpConfig::get('custom_login_logo', false)) {
-            echo "<style>#loginPage #headerlogo, #registerPage #headerlogo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
+            echo "<style>#loginPage #headerlogo, #registerPage #logo { background-image: url('" . AmpConfig::get('custom_login_logo') . "') !important; }</style>";
         }
 
-        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get('web_path') . "/favicon.ico";
-        echo "<link rel='shortcut icon' href='" . $favicon . "' />\n";
+        $favicon = AmpConfig::get('custom_favicon', false) ?: AmpConfig::get_web_path() . "/favicon.ico";
+        echo "<link rel=\"icon\" href=\"" . $favicon . "\">\n";
     }
 
     /**
@@ -558,12 +664,10 @@ class Ui implements UiInterface
         if (defined('SSE_OUTPUT')) {
             echo "id: " . $update_id . "\n";
             echo "data: displayNotification('" . json_encode($value) . "', 5000)\n\n";
+        } elseif (!empty($field)) {
+            echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
         } else {
-            if (!empty($field)) {
-                echo "<script>updateText('" . $field . "', '" . json_encode($value) . "');</script>\n";
-            } else {
-                echo "<br />" . $value . "<br /><br />\n";
-            }
+            echo "<br />" . $value . "<br /><br />\n";
         }
 
         ob_flush();
@@ -583,10 +687,10 @@ class Ui implements UiInterface
             return AmpConfig::get('custom_logo');
         }
         if ($color !== null) {
-            return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
+            return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . $color . '.png';
         }
 
-        return AmpConfig::get('web_path') . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color') . '.png';
+        return AmpConfig::get_web_path() . AmpConfig::get('theme_path') . '/images/ampache-' . AmpConfig::get('theme_color', 'dark') . '.png';
     }
 
     /**
@@ -692,12 +796,10 @@ class Ui implements UiInterface
                 echo T_("Enabled");
             } elseif ($value == '0') {
                 echo T_("Disabled");
+            } elseif (str_ends_with($name, '_pass') || str_ends_with($name, '_api_key')) {
+                echo "******";
             } else {
-                if (preg_match('/_pass$/', $name) || preg_match('/_api_key$/', $name)) {
-                    echo "******";
-                } else {
-                    echo $value;
-                }
+                echo $value;
             }
 
             return;
@@ -734,6 +836,7 @@ class Ui implements UiInterface
             case 'catalogfav_gridview':
             case 'condPL':
             case 'cron_cache':
+            case 'custom_logo_user':
             case 'daap_backend':
             case 'demo_clear_sessions':
             case 'demo_mode':
@@ -741,15 +844,28 @@ class Ui implements UiInterface
             case 'direct_link':
             case 'display_menu':
             case 'download':
+            case 'extended_playlist_links':
+            case 'external_links_google':
+            case 'external_links_duckduckgo':
+            case 'external_links_wikipedia':
+            case 'external_links_lastfm':
+            case 'external_links_bandcamp':
+            case 'external_links_musicbrainz':
             case 'force_http_play':
             case 'geolocation':
             case 'hide_genres':
             case 'hide_single_artist':
+            case 'homedash_random':
+            case 'homedash_newest':
+            case 'homedash_recent':
+            case 'homedash_trending':
+            case 'homedash_popular':
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_now_playing':
             case 'home_recently_played':
             case 'home_recently_played_all':
+            case 'index_dashboard_form':
             case 'libitem_contextmenu':
             case 'lock_songs':
             case 'mb_overwrite_name':
@@ -778,6 +894,13 @@ class Ui implements UiInterface
             case 'show_wrapped':
             case 'show_subtitle':
             case 'sidebar_light':
+            case 'sidebar_hide_browse':
+            case 'sidebar_hide_dashboard':
+            case 'sidebar_hide_information':
+            case 'sidebar_hide_playlist':
+            case 'sidebar_hide_search':
+            case 'sidebar_hide_switcher':
+            case 'sidebar_hide_video':
             case 'song_page_title':
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
@@ -816,7 +939,7 @@ class Ui implements UiInterface
                 echo "</select>\n";
                 break;
             case 'upload_catalog':
-                show_catalog_select('upload_catalog', $value, '', true, 'music');
+                show_catalog_select('upload_catalog', $value, '', true, 'music', 'local');
                 break;
             case 'play_type':
                 $is_stream     = '';
@@ -1082,7 +1205,7 @@ class Ui implements UiInterface
                 break;
             case 'theme_color':
                 // This include a two-step configuration (first change theme and save, then change theme color and save)
-                $theme_cfg = get_theme(AmpConfig::get('theme_name'));
+                $theme_cfg = get_theme(AmpConfig::get('theme_name', 'reborn'));
                 if ($theme_cfg !== null) {
                     echo "<select name=\"$name\">\n";
                     foreach ($theme_cfg['colors'] as $color) {
@@ -1172,7 +1295,9 @@ class Ui implements UiInterface
             case 'personalfav_smartlist':
                 $ids       = explode(',', $value);
                 $options   = [];
-                $playlists = ($name == 'personalfav_smartlist') ? Search::get_search_array() : Playlist::get_playlist_array();
+                $playlists = ($name == 'personalfav_smartlist')
+                    ? Search::get_search_array()
+                    : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
                         $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
@@ -1188,12 +1313,49 @@ class Ui implements UiInterface
                 $plugin      = new Plugin($plugin_name);
                 $url         = $plugin->_plugin->url;
                 $api_key     = rawurlencode(AmpConfig::get('lastfm_api_key'));
-                $callback    = rawurlencode(AmpConfig::get('web_path') . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
+                $callback    = rawurlencode(AmpConfig::get_web_path() . '/preferences.php?tab=plugins&action=grant&plugin=' . $plugin_name);
                 /* HINT: Plugin Name */
-                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_icon('plugin', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                echo "<a href=\"$url/api/auth/?api_key=$api_key&cb=$callback\" target=\"_blank\">" . Ui::get_material_symbol('extension', sprintf(T_("Click to grant %s access to Ampache"), $plugin_name)) . '</a>';
+                break;
+            case 'bandwidth':
+            case 'features':
+            case 'share_expire':
+            case 'slideshow_time':
+            case 'concerts_limit_future':
+            case 'concerts_limit_past':
+            case 'direct_play_limit':
+            case 'browser_notify_timeout':
+            case 'podcast_keep':
+            case 'podcast_new_download':
+            case 'of_the_moment':
+            case 'amazon_max_results_pages':
+            case 'catalogfav_max_items':
+            case 'catalogfav_order':
+            case 'ftl_max_items':
+            case 'ftl_order':
+            case 'homedash_max_items':
+            case 'homedash_order':
+            case 'personalfav_order':
+            case 'rssview_max_items':
+            case 'rssview_order':
+            case 'shouthome_max_items':
+            case 'shouthome_order':
+            case 'sidebar_order_browse':
+            case 'sidebar_order_dashboard':
+            case 'sidebar_order_information':
+            case 'sidebar_order_playlist':
+            case 'sidebar_order_search':
+            case 'sidebar_order_video':
+            case 'stream_control_bandwidth_max':
+            case 'stream_control_bandwidth_days':
+            case 'stream_control_hits_max':
+            case 'stream_control_hits_days':
+            case 'stream_control_time_max':
+            case 'stream_control_time_days':
+                echo '<input type="number" name="' . $name . '" value="' . (int)$value . '" />';
                 break;
             default:
-                if (preg_match('/_pass$/', $name)) {
+                if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
                     echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';
@@ -1218,12 +1380,11 @@ class Ui implements UiInterface
         );
     }
 
-
     /**
      * This function takes a boolean value and then prints out a friendly text
      * message.
      */
-    public static function printBool(bool $value): string
+    public static function printBool(?bool $value = false): string
     {
         if ($value) {
             $string = '<span class="item_on">' . T_('On') . '</span>';

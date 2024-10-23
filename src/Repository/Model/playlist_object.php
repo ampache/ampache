@@ -24,6 +24,8 @@
 namespace Ampache\Repository\Model;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
@@ -71,8 +73,10 @@ abstract class playlist_object extends database_object implements library_item
 
     /**
      * @return list<array{
-     *  object_type: string,
-     *  object_id: int
+     *  object_type: LibraryItemEnum,
+     *  object_id: int,
+     *  track: int,
+     *  track_id: int
      * }>
      */
     abstract public function get_items(): array;
@@ -80,9 +84,8 @@ abstract class playlist_object extends database_object implements library_item
     /**
      * format
      * This takes the current playlist object and gussies it up a little bit so it is presentable to the users
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         // format shared lists using the username
         $this->f_name = (Core::get_global('user') instanceof User && ($this->user == Core::get_global('user')->id))
@@ -90,8 +93,12 @@ abstract class playlist_object extends database_object implements library_item
             : scrub_out($this->name . " (" . $this->username . ")");
         $this->get_f_type();
         $this->get_f_link();
-        $this->f_date        = $this->date !== 0 ? get_datetime((int)$this->date) : T_('Unknown');
-        $this->f_last_update = $this->last_update ? get_datetime((int)$this->last_update) : T_('Unknown');
+        $this->f_date = ($this->date !== 0)
+            ? get_datetime((int)$this->date)
+            : T_('Unknown');
+        $this->f_last_update = ($this->last_update)
+            ? get_datetime((int)$this->last_update)
+            : T_('Unknown');
     }
 
     /**
@@ -132,7 +139,7 @@ abstract class playlist_object extends database_object implements library_item
         if (
             $user instanceof User &&
             !empty($this->collaborate) &&
-            in_array($user->getId(), explode(',', $this->collaborate))
+            in_array($user->getId(), explode(',', (string)$this->collaborate))
         ) {
             return true;
         }
@@ -151,18 +158,18 @@ abstract class playlist_object extends database_object implements library_item
         if (
             $user instanceof User &&
             (
-                $user->access === 100 ||
+                $user->access === AccessLevelEnum::ADMIN->value ||
                 $this->user === $user->getId()
             )
         ) {
             return true;
         }
 
-        if (Access::check('interface', 100)) {
+        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             return true;
         }
 
-        if (!Access::check('interface', 25)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             return false;
         }
 
@@ -173,16 +180,14 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
         if ($filter_type) {
             return array_filter(
                 $this->get_items(),
-                function (array $item) use ($filter_type): bool {
-                    return $item['object_type'] == $filter_type;
-                }
+                static fn (array $item): bool => $item['object_type']->value === $filter_type
             );
         } else {
             return $this->get_items();
@@ -223,7 +228,7 @@ abstract class playlist_object extends database_object implements library_item
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = ($this instanceof Search)
                 ? $web_path . '/smartplaylist.php?action=show&playlist_id=' . $this->id
                 : $web_path . '/playlist.php?action=show&playlist_id=' . $this->id;
@@ -247,13 +252,21 @@ abstract class playlist_object extends database_object implements library_item
     }
 
     /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Get item type (public / private).
      */
     public function get_f_type(): string
     {
         // don't do anything if it's formatted
         if ($this->f_type === null) {
-            $this->f_type = ($this->type == 'private') ? Ui::get_icon('lock', T_('Private')) : '';
+            $this->f_type = ($this->type == 'private') ? Ui::get_material_symbol('lock', T_('Private')) : '';
         }
 
         return $this->f_type;
@@ -328,24 +341,27 @@ abstract class playlist_object extends database_object implements library_item
         $count    = 0;
         $images   = [];
         $title    = T_('Playlist Items');
-        $web_path = AmpConfig::get('web_path');
+        $web_path = AmpConfig::get_web_path();
         shuffle($medias);
         foreach ($medias as $media) {
             if ($count >= $limit) {
                 return $images;
             }
-            if (InterfaceImplementationChecker::is_library_item($media['object_type'])) {
-                if (!Art::has_db($media['object_id'], $media['object_type'])) {
-                    $className = ObjectTypeToClassNameMapper::map($media['object_type']);
+
+            if (InterfaceImplementationChecker::is_library_item($media['object_type']->value)) {
+                if (!Art::has_db($media['object_id'], $media['object_type']->value)) {
+                    $className = ObjectTypeToClassNameMapper::map($media['object_type']->value);
+                    /** @var playable_item $libitem */
                     $libitem   = new $className($media['object_id']);
                     $parent    = $libitem->get_parent();
                     if ($parent !== null) {
                         $media = $parent;
                     }
                 }
-                $art = new Art($media['object_id'], $media['object_type']);
+
+                $art = new Art($media['object_id'], $media['object_type']->value);
                 if ($art->has_db_info()) {
-                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type'];
+                    $link     = $web_path . "/image.php?object_id=" . $media['object_id'] . "&object_type=" . $media['object_type']->value;
                     $images[] = ['url' => $link, 'mime' => $art->raw_mime, 'title' => $title];
                 }
             }

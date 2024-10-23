@@ -63,9 +63,7 @@ class SeafileAdapter
         return $token->token;
     }
 
-    /////////////////////////
     // instance
-    /////////////////////////
 
     private $server;
     private $api_key;
@@ -84,8 +82,12 @@ class SeafileAdapter
      * @param $call_delay
      * @param $api_key
      */
-    public function __construct($server_uri, $library_name, $call_delay, $api_key)
-    {
+    public function __construct(
+        $server_uri,
+        $library_name,
+        $call_delay,
+        $api_key
+    ) {
         $this->server          = $server_uri;
         $this->library_name    = $library_name;
         $this->api_key         = $api_key;
@@ -100,7 +102,12 @@ class SeafileAdapter
      */
     public function ready(): bool
     {
-        return $this->server != null && $this->api_key != null && $this->library_name != null && $this->call_delay != null;
+        return (
+            $this->server != null &&
+            $this->api_key != null &&
+            $this->library_name != null &&
+            $this->call_delay != null
+        );
     }
 
     // create API client object & find library
@@ -120,14 +127,14 @@ class SeafileAdapter
             return false;
         }
 
-        $client = new Client([
-            'base_uri' => $this->server,
-            'debug' => false,
-            'delay' => $this->call_delay,
-            'headers' => [
-                'Authorization' => 'Token ' . $this->api_key
+        $client = new Client(
+            [
+                'base_uri' => $this->server,
+                'debug' => false,
+                'delay' => $this->call_delay,
+                'headers' => ['Authorization' => 'Token ' . $this->api_key]
             ]
-        ]);
+        );
 
         $this->client = [
             'Libraries' => new Library($client),
@@ -146,10 +153,13 @@ class SeafileAdapter
         }));
 
         if (count($matches) == 0) {
-            AmpError::add('general', sprintf(
-                T_('Could not find the Seafile library called "%s", no media was updated'),
-                $this->library_name
-            ));
+            AmpError::add(
+                'general',
+                sprintf(
+                    T_('Could not find the Seafile library called "%s", no media was updated'),
+                    $this->library_name
+                )
+            );
 
             return false;
         }
@@ -326,9 +336,10 @@ class SeafileAdapter
 
         $tempfile = fopen($tempfilename, 'wb');
 
-        fwrite($tempfile, $response->getBody());
-
-        fclose($tempfile);
+        if ($tempfile) {
+            fwrite($tempfile, $response->getBody());
+            fclose($tempfile);
+        }
 
         return $tempfilename;
     }

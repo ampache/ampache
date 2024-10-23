@@ -71,8 +71,11 @@ final class AddCatalogAction extends AbstractCatalogAction
         ob_end_flush();
 
         $body = (array)$request->getParsedBody();
-
-        if (!strlen(filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS)) || filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS) == 'none') {
+        $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        if (
+            empty($type) ||
+            $type == 'none'
+        ) {
             AmpError::add('general', T_('Please select a Catalog type'));
         }
 
@@ -103,7 +106,7 @@ final class AddCatalogAction extends AbstractCatalogAction
             $this->ui->showConfirmation(
                 T_('No Problem'),
                 T_('The Catalog creation process has started'),
-                sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath()),
+                sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin')),
                 0,
                 'confirmation',
                 false

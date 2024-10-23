@@ -34,12 +34,12 @@ final class Migration530014 extends AbstractMigration
 {
     protected array $changelog = [
         'Delete `object_count` duplicates',
-        'Use a smaller unique index on `object_count`'
+        'Use a smaller unique index on `object_count`',
     ];
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_UNIQUE_IDX`;", [], true);
 
         // delete duplicates and make sure they're gone
         $this->updateDatabase("DELETE FROM `object_count` WHERE `id` IN (SELECT `id` FROM (SELECT `id` FROM `object_count` WHERE `object_id` IN (SELECT `object_id` FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type` HAVING COUNT(`object_id`) > 1) AND `id` NOT IN (SELECT MIN(`id`) FROM `object_count` GROUP BY `object_type`, `object_id`, `date`, `user`, `agent`, `count_type`)) AS `count`);");

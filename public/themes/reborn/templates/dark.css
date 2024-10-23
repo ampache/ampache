@@ -24,6 +24,11 @@
    General style rules
    -------------------------- */
 
+:root {
+    color-scheme: dark;
+    accent-color: #ff9d00;
+}
+
 body {
     color: #fff;
     background-color: #222;
@@ -48,14 +53,18 @@ hr {
 
 input[type=password],
 input[type=text],
+input[type=checkbox],
+input[type=radio],
 input[type=url],
 input[type=year],
+select,
 textarea {
-    background-color: #f5f5f5;
-    background-image: linear-gradient(to top, #eee, #fff);
-    border-color: #fff;
+    background-color: hsl(0, 0%, 10%);
+    background-image: linear-gradient(to top, hsl(0, 0%, 12%), hsl(0, 0%, 8%));
+    border-color: hsl(0, 0%, 30%);
 }
 
+button,
 input[type=button],
 input[type=submit],
 .editdialogstyle.ui-dialog .ui-dialog-buttonset button {
@@ -64,6 +73,8 @@ input[type=submit],
     color: #fff;
 }
 
+button:hover,
+button:focus,
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
@@ -72,6 +83,7 @@ input[type=submit]:focus,
     background-color: #cc6200;
 }
 
+button:focus:active,
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
     box-shadow: inset 0 0 3px #000, 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -126,18 +138,8 @@ input[type=submit]:focus:active {
     box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
 }
 
-#sb_Subsearch input[type=text] {
-    border-color: #444;
-}
-
 #sb_Subsearch input[type=text]:focus {
-    color: #555;
-    background: rgba(255, 255, 255, 0.9);
     border-color: #ff9d00;
-}
-
-#headerbox select {
-    color: #555;
 }
 
 /* --------------------------
@@ -151,11 +153,6 @@ input[type=submit]:focus:active {
     background-color: rgba(0, 0, 0, 0.15);
     border: 2px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-}
-
-#loginPage #headerlogo,
-#registerPage #headerlogo {
-    background-image: url('../images/ampache-dark.png');
 }
 
 #loginPage #loginbox {
@@ -216,7 +213,23 @@ input[type=submit]:focus:active {
 }
 
 #sidebar-header:hover {
+    color: #ffc466;
+}
+
+#sidebar_home,
+#sidebar_localplay,
+#sidebar_preferences,
+#sidebar_admin,
+#sidebar_logout {
     color: #fff;
+}
+
+#sidebar_home:hover,
+#sidebar_localplay:hover,
+#sidebar_preferences:hover,
+#sidebar_admin:hover,
+#sidebar_logout:hover {
+    color: #ffc466;
 }
 
 #sidebar-content,
@@ -227,11 +240,19 @@ input[type=submit]:focus:active {
     background-color: #1a1a1a;
 }
 
+#sidebar-light-default {
+    border-color: hsl(0, 0%, 30%);
+    background: #1a1a1a;
+}
 /* Tabs content */
 #sidebar-page {
     background-color: rgba(0, 0, 0, 0.15);
     border-color: rgba(0, 0, 0, 0.15);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#sidebar-tabs .active > a {
+    color: #ff9d00;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -253,6 +274,30 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  fill: #ff9d00;
+}
+
+.image-topmenu-album:hover,
+.image-topmenu-artist:hover,
+.image-topmenu-favorite:hover,
+.image-topmenu-logout:hover,
+.image-topmenu-playlist:hover,
+.image-topmenu-radio:hover,
+.image-topmenu-smartlist:hover,
+.image-topmenu-tagcloud:hover,
+.image-topmenu-upload:hover {
+  fill: #ffc466;
+}
+
 /* Localplay */
 .active_instance {
     border-color: #fff;
@@ -266,6 +311,10 @@ input[type=submit]:focus:active {
     border-color: rgba(0, 0, 0, 0.15);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #fff;
+}
+
+#rightbar #rb_action {
+    color: #ff9d00;
 }
 
 #rightbar #rb_current_playlist li {
@@ -441,7 +490,8 @@ span.fatalerror {
     color: #999;
 }
 
-.item_art .item_art_play .item_art_play_icon {
+.item_art .item_art_play .item_art_play_icon,
+.item_art .item_art_play_150 .item_art_play_icon {
     background-image: url('../images/videoplay.png');
 }
 
@@ -556,6 +606,24 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #ff9d00;
+}
+
+/* ------------------------
+   Wunderbaum tree
+   ------------------------ */
+.wunderbaum {
+    --wb-node-text-color: #fff;
+    --wb-background-color: #222;
+    --wb-alternate-row-color: #292929;
+    --wb-alternate-row-color-hover: var(--wb-hover-color);
+    --wb-focus-border-color: var(--wb-active-color);
+    --wb-drop-source-color: var(--wb-hover-color);
+    --wb-drop-target-color: var(--wb-active-color);
+    --wb-hover-color: hsl(29, 100%, 20%);
+    --wb-active-color: hsl(29, 100%, 40%);
+    --wb-active-hover-color: var(--wb-active-color);
+    --wb-active-color-grayscale: var(--wb-active-color);
+    --wb-active-hover-color-grayscale: var(--wb-active-color);
 }
 
 /* --------------------------

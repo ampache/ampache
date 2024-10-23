@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V4;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration400009 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('unique_playlist', 'Only add unique items to playlists', '0', 25, 'boolean', 'playlist');
+        $this->updatePreferences('unique_playlist', 'Only add unique items to playlists', '0', AccessLevelEnum::USER->value, 'boolean', 'playlist');
     }
 }

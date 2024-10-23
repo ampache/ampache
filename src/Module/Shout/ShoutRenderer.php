@@ -28,34 +28,22 @@ namespace Ampache\Module\Shout;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Art;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 
 /**
  * Renders a shout within the ui
  */
-final class ShoutRenderer implements ShoutRendererInterface
+final readonly class ShoutRenderer implements ShoutRendererInterface
 {
-    private PrivilegeCheckerInterface $privilegeChecker;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-    private ShoutObjectLoaderInterface $shoutObjectLoader;
-
     public function __construct(
-        PrivilegeCheckerInterface $privilegeChecker,
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        ShoutObjectLoaderInterface $shoutObjectLoader
+        private PrivilegeCheckerInterface $privilegeChecker,
+        private ConfigContainerInterface $configContainer,
+        private ShoutObjectLoaderInterface $shoutObjectLoader
     ) {
-        $this->privilegeChecker  = $privilegeChecker;
-        $this->configContainer   = $configContainer;
-        $this->modelFactory      = $modelFactory;
-        $this->shoutObjectLoader = $shoutObjectLoader;
     }
 
     /**
@@ -65,7 +53,7 @@ final class ShoutRenderer implements ShoutRendererInterface
     {
         $object          = $this->shoutObjectLoader->loadByShout($shout);
         $shoutObjectId   = $shout->getObjectId();
-        $shoutObjectType = (string) $shout->getObjectType();
+        $shoutObjectType = $shout->getObjectType()->value;
 
         if ($object === null) {
             return '';
@@ -95,26 +83,26 @@ final class ShoutRenderer implements ShoutRendererInterface
             if ($jsbuttons) {
                 $html .= Ajax::button(
                     '?page=stream&action=directplay&playtype=' . $shoutObjectType . '&' . $shoutObjectType . '_id=' . $shoutObjectId,
-                    'play',
+                    'play_circle',
                     T_('Play'),
                     'play_' . $shoutObjectType . '_' . $shoutObjectId
                 );
                 $html .= Ajax::button(
                     '?action=basket&type=' . $shoutObjectType . '&id=' . $shoutObjectId,
-                    'add',
+                    'new_window',
                     T_('Add'),
                     'add_' . $shoutObjectType . '_' . $shoutObjectId
                 );
             }
-            if ($this->privilegeChecker->check(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER)) {
-                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_icon('comment', T_('Post Shout')) . "</a>";
+            if ($this->privilegeChecker->check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
+                $html .= "<a href=\"" . $webPath . "/shout.php?action=show_add_shout&type=" . $shoutObjectType . "&id=" . $shoutObjectId . "\">" . Ui::get_material_symbol('comment', T_('Post Shout')) . "</a>";
             }
             $html .= "</div>";
         }
         $html .= "<div class='shoutbox-user'>" . T_('by') . " ";
 
-        if ($shout->getUserId() > 0) {
-            $user = $this->modelFactory->createUser($shout->getUserId());
+        $user = $shout->getUser();
+        if ($user !== null) {
             if ($details) {
                 $html .= $user->get_f_link();
             } else {

@@ -105,6 +105,11 @@ html {
     height: 100%;
 }
 
+svg {
+    height: 1em;
+    width: 1em;
+}
+
 body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     margin: 0;
@@ -187,18 +192,20 @@ input[type=password],
 input[type=text],
 input[type=url],
 input[type=number],
+select,
 textarea {
     padding: 4px 6px;
     background-repeat: repeat-x;
-    border: 2px solid;
+    border-style: solid;
+    border-width: 1px;
     border-radius: 2px;
     box-sizing: border-box;
 }
 
+button,
 input[type=button],
 input[type=submit] {
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     position: relative;
     padding: 5px 12px 4px;
     font-size: 18px;
@@ -206,8 +213,10 @@ input[type=submit] {
     border: 0;
     border-radius: 2px;
     cursor: pointer;
+    outline: 0;
 }
 
+button:hover,
 input[type=button]:hover,
 input[type=button]:focus,
 input[type=submit]:hover,
@@ -218,6 +227,7 @@ input[type=submit]:focus {
     text-decoration: none;
 }
 
+button:focus:active,
 input[type=button]:focus:active,
 input[type=submit]:focus:active {
     transition: background-position 0.1s linear;
@@ -301,6 +311,11 @@ div#autoupdate > span {
     width: 20%;
 }
 
+#header #logo img {
+    height: 128px;
+    width: 128px;
+}
+
 #header #headerlogo img {
     height: 64px;
     width: 64px;
@@ -310,6 +325,11 @@ div#autoupdate > span {
     height: 64px;
     padding-bottom: 64px;
     padding-top: 24px;
+}
+
+#mobileheader #logo img {
+    height: 128px;
+    width: 128px;
 }
 
 #header #headerbox {
@@ -323,15 +343,42 @@ div#autoupdate > span {
     width: 100%;
 }
 
+#header .box-content {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+#header .box-content input,
+#header .box-content select {
+    height: 30px;
+    font-size: 15px;
+}
+
 #cookie_notice {
     padding-top: 20px;
     text-align: center;
 }
 
-#sb_Subsearch,
 #play_type_switch {
-    display: inline-block;
-    margin: 15px auto auto 50px;
+    margin-left: 50px;
+    margin-right: 4px;
+}
+
+#rightbar-minimize {
+    position: absolute;
+    top: 44px;
+    right: 12px;
+}
+
+#rightbar-minimize .material-symbol-dock_to_left {
+    color: #ccc;
+}
+
+#sb_Subsearch form {
+    display: flex;
+    gap: 4px;
+    align-items: center;
 }
 
 #loginInfo {
@@ -342,24 +389,16 @@ div#autoupdate > span {
 
 #sb_Subsearch input[type=submit] {
     min-width: 100px;
-    font-size: 15px;
 }
 
 #sb_Subsearch input[type=text] {
     width: 175px;
-    height: 30px;
-    padding: 0 25px;
-    margin: 0;
-    font-size: 15px;
+    padding: 0 10px;
     border-radius: 15px;
 }
 
 #headerbox select {
     min-width: 150px;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-weight: normal;
-    line-height: normal;
 }
 
 #sb_Subsearch a {
@@ -403,8 +442,8 @@ div#autoupdate > span {
     box-shadow: none;
 }
 
-#loginPage #headerlogo,
-#registerPage #headerlogo {
+#loginPage #logo,
+#registerPage #logo {
     width: 128px;
     height: 128px;
     background-repeat: no-repeat;
@@ -607,6 +646,10 @@ div#autoupdate > span {
     display: none !important;
 }
 
+#sidebar-content {
+    width: 148px;
+}
+
 #sidebar-content-light {
     padding: 0;
     display: none;
@@ -618,12 +661,24 @@ div#autoupdate > span {
     position: fixed;
     left: 0;
     margin: 17px auto 5px 5px;
-    padding: 10px 0 10px 0;
+    padding: 5px 0 10px 0;
+    text-align: center;
+}
+
+#sidebar-light-default {
+    border: 2px solid;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 70px;
+    position: fixed;
+    left: 0;
+    margin: 0 auto 5px 5px;
+    padding: 5px 0 10px 0;
     text-align: center;
 }
 
 #sidebar-light li {
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 #sidebar-light img {
@@ -648,14 +703,21 @@ div#autoupdate > span {
 
 /* For sidebar tabs */
 #sidebar-tabs {
-    padding: 2px;
-    height: 25px;
+    height: 29px;
 }
 
 #sidebar-tabs li.sb1 {
     float: left;
-    margin: 0 4px 0 4px;
-    height: 25px;
+}
+
+#sidebar-tabs li.sb1 + li {
+    margin-left: 8px;
+}
+
+#sidebar-tabs > li > a {
+    font-size: 15px;
+    line-height: 1;
+    vertical-align: top;
 }
 
 #sidebar-tabs .active > a {
@@ -669,7 +731,7 @@ div#autoupdate > span {
     background-color: currentColor;
     border-radius: 2px;
     height: 2px;
-    bottom: -2px;
+    bottom: -7px;
     left: 0;
     right: 0;
 }
@@ -738,36 +800,22 @@ div#autoupdate > span {
     flex-direction: column;
 }
 
-.sb2_browse {
-    order: 10;
-}
-
-.sb2_dashboard {
-    order: 15;
-}
-
-.sb2_video {
-    order: 20;
-}
-
-.sb2_playlist {
-    order: 30;
-}
-
-.sb2_search {
-    order: 40;
-}
-
-.sb2_random {
-    order: 50;
-}
-
-.sb2_information {
-    order: 60;
-}
-
 #sidebar-tabs #catalog_select {
     width: 130px;
+}
+
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  height: 32px;
+  width: 32px;
+  margin-bottom: -5px;
 }
 
 /* Localplay */
@@ -1266,7 +1314,7 @@ table.disablegv td.cel_ratings {
 
 .upload_select {
     display: grid;
-    width: 50%;
+    max-width: 90%;
 }
 
 .vakata-context,
@@ -1515,7 +1563,6 @@ span.fatalerror {
     padding: 8px 10px 8px;
     cursor: pointer;
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
     border-radius: 2px 4px 4px 2px;
     background-color: #5f5f5f;
     background-image: linear-gradient(to top, #6d6d6d, #4a4a4a);
@@ -1580,7 +1627,16 @@ span.fatalerror {
     width: 64px;
 }
 
-.item_art .item_art_play .item_art_play_icon {
+.item_art .item_art_play_150 {
+    display: none;
+    height: 64px;
+    margin: 43px auto 0 auto;
+    position: relative;
+    width: 64px;
+}
+
+.item_art .item_art_play .item_art_play_icon,
+.item_art .item_art_play_150 .item_art_play_icon {
     display: block;
     height: 64px;
     opacity: 0.4;
@@ -1589,7 +1645,8 @@ span.fatalerror {
     width: 64px;
 }
 
-.item_art .item_art_play .item_art_play_icon:hover {
+.item_art .item_art_play .item_art_play_icon:hover,
+.item_art .item_art_play_150 .item_art_play_icon:hover {
     opacity: 1;
 }
 
@@ -1634,7 +1691,8 @@ span.fatalerror {
     display: block;
 }
 
-.item_art:hover  .item_art_play {
+.item_art:hover  .item_art_play,
+.item_art:hover  .item_art_play_150 {
     display: block;
 }
 
@@ -1686,7 +1744,7 @@ span.fatalerror {
 
 .external_links a {
     margin: 0 5px 0 0;
-    opacity: 0.3;
+    opacity: 0.7;
 }
 
 .external_links a:hover {
@@ -1842,9 +1900,37 @@ dl.media_details dd {
     text-decoration: underline;
 }
 
+/* ------------------------
+   Wunderbaum tree (upload page)
+   ------------------------ */
+.wunderbaum.wunderbaum.wunderbaum {
+    font-family: inherit;
+    --wb-active-border-color: transparent;
+    --wb-active-border-color-grayscale: transparent;
+    --wb-hover-border-color: transparent;
+    --wb-active-hover-border-color: transparent;
+    --wb-border-color: transparent;
+    --wb-focus-border-color: transparent;
+}
+
 /* --------------------------
    Other
    -------------------------- */
+.material-symbol {
+    height: 1.2em;
+    width: 1.2em;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.material-symbol-lock {
+    font-size: 15px;
+    line-height: 1;
+    vertical-align: top;
+}
+
 ol,
 ul,
 #rightbar ul {

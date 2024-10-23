@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\PreferencesFromRequestUpdaterInterface;
@@ -65,7 +66,7 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             !$this->requestParser->verifyForm('update_preference')
         ) {
             throw new AccessDeniedException();
@@ -78,8 +79,8 @@ final class AdminUpdatePreferencesAction implements ApplicationActionInterface
             ->withHeader(
                 'Location',
                 sprintf(
-                    '%s/admin/users.php?action=show_preferences&user_id=%s',
-                    $this->configContainer->getWebPath(),
+                    '%s/users.php?action=show_preferences&user_id=%s',
+                    $this->configContainer->getWebPath('/admin'),
                     scrub_out(Core::get_post('user_id'))
                 )
             );

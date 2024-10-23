@@ -30,7 +30,6 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 
 /** @var Browse $browse */
-/** @var array $object_ids */
 
 if (!Core::is_session_started()) {
     session_start();

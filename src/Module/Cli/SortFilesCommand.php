@@ -52,7 +52,11 @@ final class SortFilesCommand extends Command
     public function execute(
         ?string $catalogName
     ): void {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
+
+        $interactor = $this->io();
         $values     = $this->values();
         $dryRun     = $values['execute'] === false;
 
@@ -63,7 +67,7 @@ final class SortFilesCommand extends Command
             );
         } else {
             $interactor->warn(
-                T_('Running in Write Mode. Make sure you\'ve tested first!'),
+                "***" . T_("WARNING") . "*** " . T_('Running in Write Mode. Make sure you\'ve tested first!'),
                 true
             );
         }

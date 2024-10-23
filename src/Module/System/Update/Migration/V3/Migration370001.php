@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Ampache\Module\System\Update\Migration\V3;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -38,10 +39,10 @@ final class Migration370001 extends AbstractMigration
     {
         $charset = (AmpConfig::get('database_charset', 'utf8mb4'));
 
-        $this->updateDatabase("DROP TABLE IF EXISTS `dynamic_playlist`");
-        $this->updateDatabase("DROP TABLE IF EXISTS `dynamic_playlist_data`");
-        $this->updateDatabase("ALTER TABLE `user_vote` ADD COLUMN `sid` varchar(256) CHARACTER SET $charset NULL AFTER `date`");
+        $this->updateDatabase("DROP TABLE IF EXISTS `dynamic_playlist`;");
+        $this->updateDatabase("DROP TABLE IF EXISTS `dynamic_playlist_data`;");
+        $this->updateDatabase("ALTER TABLE `user_vote` ADD COLUMN `sid` varchar(256) CHARACTER SET $charset NULL AFTER `date`;");
 
-        $this->updatePreferences('demo_clear_sessions', 'Clear democratic votes of expired user sessions', '0', 25, 'boolean', 'playlist');
+        $this->updatePreferences('demo_clear_sessions', 'Clear democratic votes of expired user sessions', '0', AccessLevelEnum::USER->value, 'boolean', 'playlist');
     }
 }

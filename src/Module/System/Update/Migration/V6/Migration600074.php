@@ -26,7 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V6;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Playlist;
 
 /**
  * Add `collaborate` to the playlist table to allow other users to add songs to the list
@@ -37,7 +36,7 @@ final class Migration600074 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;");
+        Dba::write("ALTER TABLE `playlist` DROP COLUMN `collaborate`;", [], true);
         $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `collaborate` varchar(255) NULL;");
     }
 }

@@ -27,11 +27,13 @@ namespace Ampache\Gui\Song;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Userflag;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Application\Song\DeleteAction;
@@ -41,26 +43,10 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\Ui;
 
-final class SongViewAdapter implements SongViewAdapterInterface
+final readonly class SongViewAdapter implements SongViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private GuiGatekeeperInterface $gatekeeper;
-
-    private Song $song;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        ModelFactoryInterface $modelFactory,
-        GuiGatekeeperInterface $gatekeeper,
-        Song $song
-    ) {
-        $this->configContainer = $configContainer;
-        $this->modelFactory    = $modelFactory;
-        $this->gatekeeper      = $gatekeeper;
-        $this->song            = $song;
+    public function __construct(private ConfigContainerInterface $configContainer, private ModelFactoryInterface $modelFactory, private GuiGatekeeperInterface $gatekeeper, private Song $song)
+    {
     }
 
     public function getId(): int
@@ -113,7 +99,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId,
-            'play',
+            'play_circle',
             T_('Play'),
             'play_song_' . $songId
         );
@@ -125,7 +111,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&playnext=true',
-            'play_next',
+            'menu_open',
             T_('Play next'),
             'nextplay_song_' . $songId
         );
@@ -137,7 +123,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?page=stream&action=directplay&object_type=song&object_id=' . $songId . '&append=true',
-            'play_add',
+            'low_priority',
             T_('Play last'),
             'addplay_song_' . $songId
         );
@@ -166,7 +152,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
         return Ajax::button(
             '?action=basket&type=song&id=' . $songId,
-            'add',
+            'new_window',
             T_('Add to Temporary Playlist'),
             'add_song_' . $songId
         );
@@ -176,7 +162,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
     {
         return (
             $this->configContainer->isAuthenticationEnabled() === false ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === true
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)
         ) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SOCIABLE);
     }
@@ -192,12 +178,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getPostShoutIcon(): string
     {
-        return Ui::get_icon('comment', T_('Post Shout'));
+        return Ui::get_material_symbol('comment', T_('Post Shout'));
     }
 
     public function canShare(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) &&
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) &&
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHARE);
     }
 
@@ -217,13 +203,13 @@ final class SongViewAdapter implements SongViewAdapterInterface
             '',
             '',
             false,
-            Core::get_global('user')->id ?? 0
+            Core::get_global('user')?->getId() ?? 0
         );
     }
 
     public function getExternalPlayIcon(): string
     {
-        return Ui::get_icon('link', T_('Link'));
+        return Ui::get_material_symbol('link', T_('Link'));
     }
 
     public function getDownloadUrl(): string
@@ -237,7 +223,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDownloadIcon(): string
     {
-        return Ui::get_icon('download', T_('Download'));
+        return Ui::get_material_symbol('download', T_('Download'));
     }
 
     public function canDisplayStats(): bool
@@ -245,11 +231,17 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $owner_id = $this->song->get_user_owner();
 
         return (
-            (($owner_id !== null && !empty($GLOBALS['user'])) && $owner_id == $GLOBALS['user']->id) ||
-            $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
-        ) &&
-        $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
-        is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/');
+            $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::STATISTICAL_GRAPHS) &&
+            is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/') &&
+            (
+                (
+                    $owner_id !== null &&
+                    !empty($GLOBALS['user'])
+                ) &&
+                $owner_id == $GLOBALS['user']->id
+            ) ||
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        );
     }
 
     public function getDisplayStatsUrl(): string
@@ -272,18 +264,26 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDisplayStatsIcon(): string
     {
-        return Ui::get_icon('statistics', T_('Graphs'));
+        return Ui::get_material_symbol('bar_chart', T_('Graphs'));
     }
 
     public function getRefreshIcon(): string
     {
-        return Ui::get_icon('file_refresh', T_('Update from tags'));
+        return Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     }
 
     public function isEditable(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) ||
-            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) ||
+            (
+                (
+                    Core::get_global('user') instanceof User &&
+                    $this->song->get_user_owner() == Core::get_global('user')->id
+                ) &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            )
+        );
     }
 
     public function getEditButtonTitle(): string
@@ -293,13 +293,21 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getEditIcon(): string
     {
-        return Ui::get_icon('edit', T_('Edit'));
+        return Ui::get_material_symbol('edit', T_('Edit'));
     }
 
     public function canToggleState(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) ||
-            ((!empty(Core::get_global('user')) && $this->song->get_user_owner() == Core::get_global('user')->id) && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT) === true);
+        return (
+            $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) ||
+            (
+                (
+                    Core::get_global('user') instanceof User &&
+                    $this->song->get_user_owner() == Core::get_global('user')->id
+                ) &&
+                $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::UPLOAD_ALLOW_EDIT)
+            )
+        );
     }
 
     public function getToggleStateButton(): string
@@ -307,10 +315,10 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songId = $this->song->getId();
 
         if ($this->song->enabled) {
-            $icon     = 'disable';
+            $icon     = 'unpublished';
             $icontext = T_('Disable');
         } else {
-            $icon     = 'enable';
+            $icon     = 'check_circle';
             $icontext = T_('Enable');
         }
 
@@ -334,7 +342,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getDeletionIcon(): string
     {
-        return Ui::get_icon('delete', T_('Delete'));
+        return Ui::get_material_symbol('close', T_('Delete'));
     }
 
     public function canBeDeleted(): bool
@@ -349,11 +357,12 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Title')]        = scrub_out($this->song->title);
         $songprops[T_('Song Artist')]  = $this->song->get_f_artist_link();
         $songprops[T_('Album Artist')] = $this->song->get_f_albumartist_link();
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true) {
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
             $songprops[T_('Album')] = $this->song->get_f_album_link();
         } else {
             $songprops[T_('Album')] = $this->song->get_f_album_disk_link();
         }
+
         $songprops[T_('Composer')]      = scrub_out($this->song->composer);
         $songprops[T_('Genres')]        = $this->song->f_tags;
         $songprops[T_('Track')]         = $this->song->track;
@@ -362,28 +371,45 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Year')]          = $this->song->year;
         $songprops[T_('Original Year')] = $this->song->get_album_original_year($this->song->album);
         $songprops[T_('Length')]        = scrub_out($this->song->f_time);
-        $songprops[T_('Links')]         = "<a href=\"http://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>" .
-            "&nbsp;<a href=\"https://www.duckduckgo.com/?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>" .
-            "&nbsp;<a href=\"http://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
-        if ($this->song->mbid) {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
-        } else {
-            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+        $songprops[T_('Links')]         = "";
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_GOOGLE)) {
+            $songprops[T_('Links')] .= "<a href=\"https://www.google.com/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('google', T_('Search on Google ...')) . "</a>";
         }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_DUCKDUCKGO)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode((string)$this->song->f_artist) . "+" . rawurlencode((string)$this->song->f_name) . "\" target=\"_blank\">" . UI::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_LASTFM)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://www.last.fm/search?q=%22" . rawurlencode((string)$this->song->f_artist) . "%22+%22" . rawurlencode((string)$this->song->f_name) . "%22&type=track\" target=\"_blank\">" . UI::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_BANDCAMP)) {
+            $songprops[T_('Links')] .= "&nbsp;<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string)$this->song->f_artist) . "+" . rawurlencode((string)$this->song->f_name) . "&item_type=t\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+        }
+
+        if ($this->configContainer->get(ConfigurationKeyEnum::EXTERNAL_LINKS_MUSICBRAINZ)) {
+            $songprops[T_('Links')] .= ($this->song->mbid)
+                ? "&nbsp;<a href=\"https://musicbrainz.org/recording/" . $this->song->mbid . "\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>"
+                : "&nbsp;<a href=\"https://musicbrainz.org/taglookup?tag-lookup.artist=%22" . rawurlencode((string)$this->song->f_artist) . "%22&tag-lookup.track=%22" . rawurlencode((string)$this->song->f_name) . "%22\" target=\"_blank\">" . UI::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+        }
+
         $songprops[T_('Comment')] = scrub_out($this->song->comment ?? '');
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::LABEL)) {
-            $web_path     = $this->configContainer->getWebPath();
             $label_string = '';
             foreach (array_map('trim', explode(';', (string)$this->song->label)) as $label_name) {
-                $label_string .= "<a href=\"" . $web_path . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
+                $label_string .= "<a href=\"" . $this->configContainer->getWebPath() . "/labels.php?action=show&name=" . scrub_out($label_name) . "\">" . scrub_out($label_name) . "</a>, ";
             }
+
             $songprops[T_('Label')] = rtrim($label_string, ', ');
         } else {
             $songprops[T_('Label')] = scrub_out($this->song->label ?? '');
         }
-        if (isset($this->song->language)) {
+
+        if ($this->song->language !== null) {
             $songprops[T_('Song Language')] = scrub_out($this->song->language);
         }
+
         $songprops[T_('Catalog Number')] = scrub_out($this->song->get_album_catalog_number($this->song->album));
         $songprops[T_('Barcode')]        = scrub_out($this->song->get_album_barcode($this->song->album));
         $songprops[T_('Bitrate')]        = scrub_out($this->song->f_bitrate);
@@ -391,31 +417,38 @@ final class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
-        if (isset($this->song->replaygain_track_gain) && $this->song->replaygain_track_gain !== null) {
+        if ($this->song->replaygain_track_gain !== null && $this->song->replaygain_track_gain !== null) {
             $songprops[T_('ReplayGain Track Gain')] = $this->song->replaygain_track_gain;
         }
-        if (isset($this->song->replaygain_album_gain) && $this->song->replaygain_album_gain !== null) {
+
+        if ($this->song->replaygain_album_gain !== null && $this->song->replaygain_album_gain !== null) {
             $songprops[T_('ReplayGain Album Gain')] = $this->song->replaygain_album_gain;
         }
-        if (isset($this->song->r128_track_gain) && $this->song->r128_track_gain !== null) {
+
+        if ($this->song->r128_track_gain !== null && $this->song->r128_track_gain !== null) {
             $songprops[T_('R128 Track Gain')] = $this->song->r128_track_gain;
         }
-        if (isset($this->song->r128_album_gain) && $this->song->r128_album_gain !== null) {
+
+        if ($this->song->r128_album_gain !== null && $this->song->r128_album_gain !== null) {
             $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
-        if ($this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) && $this->song->file !== null) {
+
+        if ($this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) && $this->song->file !== null) {
             $data                      = pathinfo($this->song->file);
             $songprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
             $songprops[T_('Filename')] = scrub_out($data['filename'] . "." . ($data['extension'] ?? ''));
             $songprops[T_('Size')]     = $this->song->f_size;
         }
-        if ($this->song->update_time) {
+
+        if ($this->song->update_time !== 0) {
             $songprops[T_('Last Updated')] = get_datetime((int) $this->song->update_time);
         }
-        $songprops[T_('Added')] = get_datetime((int) $this->song->addition_time);
+
+        $songprops[T_('Added')] = get_datetime($this->song->getAdditionTime());
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_PLAYED_TIMES)) {
             $songprops[T_('Played')] = $this->song->total_count;
         }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::SHOW_SKIPPED_TIMES)) {
             $songprops[T_('Skipped')] = $this->song->total_skip;
         }
@@ -440,27 +473,27 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function canEditPlaylist(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
     }
 
     public function getAddToPlaylistIcon(): string
     {
-        return Ui::get_icon('playlist_add', T_('Add to playlist'));
+        return Ui::get_material_symbol('playlist_add', T_('Add to playlist'));
     }
 
     public function canBeReordered(): bool
     {
-        return $this->gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER);
+        return $this->gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER);
     }
 
     public function getReorderIcon(): string
     {
-        return Ui::get_icon('drag', T_('Reorder'));
+        return Ui::get_material_symbol('drag_indicator', T_('Reorder'));
     }
 
     public function getPreferencesIcon(): string
     {
-        return Ui::get_icon('preferences', T_('Song Information'));
+        return Ui::get_material_symbol('page_info', T_('Song Information'));
     }
 
     public function getTrackNumber(): string
@@ -475,7 +508,7 @@ final class SongViewAdapter implements SongViewAdapterInterface
 
     public function getSongLink(): string
     {
-        return (string)$this->song->get_f_link();
+        return $this->song->get_f_link();
     }
 
     public function getArtistLink(): string

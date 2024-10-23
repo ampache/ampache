@@ -42,34 +42,16 @@ use SimpleXMLElement;
 /**
  * Provides functions for podcast-syncing
  */
-final class PodcastSyncer implements PodcastSyncerInterface
+final readonly class PodcastSyncer implements PodcastSyncerInterface
 {
-    private PodcastRepositoryInterface $podcastRepository;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader;
-
-    private PodcastDeleterInterface $podcastDeleter;
-
-    private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        PodcastRepositoryInterface $podcastRepository,
-        ModelFactoryInterface $modelFactory,
-        PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
-        PodcastDeleterInterface $podcastDeleter,
-        PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
-        ConfigContainerInterface $configContainer
+        private PodcastRepositoryInterface $podcastRepository,
+        private ModelFactoryInterface $modelFactory,
+        private PodcastEpisodeDownloaderInterface $podcastEpisodeDownloader,
+        private PodcastDeleterInterface $podcastDeleter,
+        private PodcastEpisodeRepositoryInterface $podcastEpisodeRepository,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->podcastRepository        = $podcastRepository;
-        $this->modelFactory             = $modelFactory;
-        $this->podcastEpisodeDownloader = $podcastEpisodeDownloader;
-        $this->podcastDeleter           = $podcastDeleter;
-        $this->podcastEpisodeRepository = $podcastEpisodeRepository;
-        $this->configContainer          = $configContainer;
     }
 
     /**
@@ -80,11 +62,12 @@ final class PodcastSyncer implements PodcastSyncerInterface
         bool $gather = false
     ): bool {
         $feed = $podcast->getFeedUrl();
-
-        debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
         if ($feed === '') {
             return false;
         }
+
+        debug_event(self::class, 'Syncing feed ' . $feed . ' ...', 4);
+
         $xmlstr = file_get_contents($feed, false, stream_context_create(Core::requests_options()));
         if ($xmlstr === false) {
             debug_event(self::class, 'Cannot access feed ' . $feed, 1);
@@ -108,7 +91,15 @@ final class PodcastSyncer implements PodcastSyncerInterface
     }
 
     /**
-     * Sync all podcast-item within the given catalogs
+     * Syncs a single episode
+     */
+    public function syncEpisode(Podcast_Episode $episode): void
+    {
+        $this->podcastEpisodeDownloader->fetch($episode);
+    }
+
+    /**
+     * Sync all podcast-items within the given catalogs
      *
      * @param iterable<Catalog> $catalogs
      *
@@ -172,7 +163,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
 
         /** @var Podcast_Episode $episode */
         foreach ($downloadEpisodes as $episode) {
-            $episode->change_state('pending');
+            $episode->change_state(PodcastEpisodeStateEnum::PENDING);
             if ($gather) {
                 $this->podcastEpisodeDownloader->fetch($episode);
 
@@ -284,7 +275,7 @@ final class PodcastSyncer implements PodcastSyncerInterface
             $title,
             $guid,
             $podcast->getId(),
-            $state,
+            $state->value,
             $source,
             $website,
             $description,

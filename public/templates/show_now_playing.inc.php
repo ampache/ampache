@@ -30,15 +30,17 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\Model\Video;
 
-/** @var array $results */
+/** @var list<array{media: Media, client: User, agent: string,}> $results */
 
 if (count($results)) {
-    $rss_link = AmpConfig::get('use_rss') ? '&nbsp' . AmpacheRss::get_display('nowplaying') : '';
+    $rss_link = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::NOW_PLAYING) : '';
     $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
     Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
 
@@ -56,7 +58,7 @@ if (count($results)) {
             $np_user->fullname = "Ampache User";
         }
         if (!$np_user->f_avatar_medium) {
-            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get('web_path') . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
+            $np_user->f_avatar_medium = '<img src="' . AmpConfig::get_web_path() . '/images/blankuser.png' . '" title="User Avatar" style="width: 64px; height: 64px;" />';
         }
         echo "<div class=\"np_row\">";
         if (get_class($media) == Song::class) {

@@ -59,7 +59,7 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         }
 
         $video = Video::create_from_id(
-            filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
+            (int)filter_input(INPUT_GET, 'video_id', FILTER_SANITIZE_SPECIAL_CHARS)
         );
         if (!Catalog::can_remove($video)) {
             throw new AccessDeniedException(
@@ -78,7 +78,8 @@ final class ConfirmDeleteAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_('Couldn\'t delete this Video.'),
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Video')),
                 $this->configContainer->getWebPath()
             );
         }

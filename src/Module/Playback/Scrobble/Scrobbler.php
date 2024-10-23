@@ -41,14 +41,19 @@ class Scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param $api_key
-     * @param string $scheme
-     * @param string $host
-     * @param string $challenge
-     * @param string $secret
+     * @param string $api_key
+     * @param string|null $scheme
+     * @param string|null $host
+     * @param string|null $challenge
+     * @param string|null $secret
      */
-    public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
-    {
+    public function __construct(
+        $api_key,
+        $scheme = 'https',
+        $host = '',
+        $challenge = '',
+        $secret = ''
+    ) {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
         $this->host          = $host;
@@ -72,9 +77,8 @@ class Scrobbler
             $sig .= $name . $value;
         }
         $sig .= $this->secret;
-        $sig = md5($sig);
 
-        return $sig;
+        return md5($sig);
     }
 
     /**
@@ -86,7 +90,7 @@ class Scrobbler
      * @param array $vars
      * @return string|false
      */
-    public function call_url($url, $method = 'GET', $vars = null)
+    public function call_url($url, $method = 'GET', $vars = [])
     {
         // Encode parameters per RFC1738
         $params = http_build_query($vars);
@@ -163,7 +167,9 @@ class Scrobbler
             $vars['api_sig'] = $sig;
             // call the getSession API
             $response = $this->call_url('/2.0/', 'GET', $vars);
-            $xml      = simplexml_load_string($response);
+            $xml      = ($response)
+                ? simplexml_load_string($response)
+                : false;
             if ($xml) {
                 $status = (string)$xml['status'];
                 if ($status == 'ok') {
@@ -202,8 +208,14 @@ class Scrobbler
      * @param $length
      * @param $track
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length, $track): bool
-    {
+    public function queue_track(
+        $artist,
+        $album,
+        $title,
+        $timestamp,
+        $length,
+        $track
+    ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
 
@@ -264,7 +276,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {
@@ -305,7 +319,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {

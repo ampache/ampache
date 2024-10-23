@@ -34,14 +34,10 @@ use PDO;
  *
  * Tables: `image`
  */
-final class ImageRepository implements ImageRepositoryInterface
+final readonly class ImageRepository implements ImageRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -99,9 +95,7 @@ final class ImageRepository implements ImageRepositoryInterface
     {
         $this->connection->query(
             'UPDATE `image` SET `image` = NULL WHERE `id` = ?',
-            [
-                $imageId
-            ]
+            [$imageId]
         );
     }
 }

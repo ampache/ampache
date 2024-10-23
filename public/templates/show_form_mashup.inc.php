@@ -2,13 +2,15 @@
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Video;
 use Ampache\Repository\VideoRepositoryInterface;
 
 global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
-$web_path        = (string)AmpConfig::get('web_path', '');
+$web_path        = AmpConfig::get_web_path();
 $filter_str      = (string) filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS);
 $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
@@ -21,7 +23,7 @@ $albumString     = (AmpConfig::get('album_group'))
     <a class="category <?php echo ($filter_str == 'artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/mashup.php?action=artist">
         <?php echo T_('Artists'); ?>
     </a>
-    <?php if (Access::check('interface', 25)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <a class="category <?php echo ($filter_str == 'playlist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/mashup.php?action=playlist">
         <?php echo T_('Playlists'); ?>
     </a>

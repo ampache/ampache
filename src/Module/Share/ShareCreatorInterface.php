@@ -24,13 +24,14 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Share;
 
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
 interface ShareCreatorInterface
 {
     public function create(
         User $user,
-        string $object_type,
+        LibraryItemEnum $object_type,
         int $object_id,
         bool $allow_stream = true,
         bool $allow_download = true,

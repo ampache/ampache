@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
@@ -35,19 +36,28 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
-class AmpacheCatalogFavorites implements AmpachePluginInterface
+class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHomeInterface
 {
     public string $name        = 'Catalog Favorites';
+
     public string $categories  = 'home';
+
     public string $description = 'Catalog favorites on homepage';
+
     public string $url         = '';
-    public string $version     = '000002';
+
+    public string $version     = '000003';
+
     public string $min_ampache = '370021';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $maxitems;
+
     private $gridview;
+
+    private int $order = 0;
 
     /**
      * Constructor
@@ -63,14 +73,15 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, 25, 'integer', 'plugins', $this->name)) {
-            return false;
-        }
-        if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('catalogfav_max_items', T_('Catalog favorites max items'), 5, AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        if (!Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name)) {
+            return false;
+        }
+
+        return Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
     }
 
     /**
@@ -81,7 +92,8 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
     {
         return (
             Preference::delete('catalogfav_max_items') &&
-            Preference::delete('catalogfav_gridview')
+            Preference::delete('catalogfav_gridview') &&
+            Preference::delete('catalogfav_order')
         );
     }
 
@@ -95,8 +107,10 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < (int)$this->version) {
-            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('catalogfav_gridview', T_('Catalog favorites grid view display'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
+            Preference::insert('catalogfav_order', T_('Plugin CSS order'), '0', AccessLevelEnum::USER->value, 'integer', 'plugins', $this->name);
         }
 
         return true;
@@ -111,15 +125,19 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
         $userflags = Userflag::get_latest('song', null, $this->maxitems);
         if (
             AmpConfig::get('ratings') &&
-            !empty($userflags)
+            $userflags !== []
         ) {
             $count     = 0;
-            echo '<div class="home_plugin">';
+            $divString = ($this->order > 0)
+                ? '<div class="catalogfav" style="order: ' . $this->order . '">'
+                : '<div class="catalogfav">';
+            echo $divString;
             Ui::show_box_top(T_('Highlight'));
             echo '<table class="tabledata striped-rows';
             if (!$this->gridview) {
                 echo " disablegv";
             }
+
             echo '">';
             foreach ($userflags as $userflag) {
                 $item = new Song($userflag);
@@ -131,30 +149,33 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button(
                                 '?page=stream&action=directplay&object_type=song&object_id=' . $userflag,
-                                'play',
+                                'play_circle',
                                 T_('Play'),
                                 'play_song_' . $userflag
                             );
                             if (Stream_Playlist::check_autoplay_next()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&playnext=true',
-                                    'play_next',
+                                    'menu_open',
                                     T_('Play next'),
                                     'nextplay_song_' . $userflag
                                 );
                             }
+
                             if (Stream_Playlist::check_autoplay_append()) {
                                 echo Ajax::button(
                                     '?page=stream&action=directplay&object_type=song&object_id=' . $userflag . '&append=true',
-                                    'play_add',
+                                    'low_priority',
                                     T_('Play last'),
                                     'addplay_song_' . $userflag
                                 );
                             }
                         }
-                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'add', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
+
+                        echo Ajax::button('?action=basket&type=song&id=' . $userflag, 'new_window', T_('Add to Temporary Playlist'), 'play_full_' . $userflag);
                         echo '</span></td>';
                     }
+
                     echo '<td class=grid_cover>';
                     $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
@@ -172,6 +193,7 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
                     $count++;
                 }
             }
+
             echo '</table>';
             Ui::show_box_bottom();
             echo '</div>';
@@ -181,9 +203,8 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -192,7 +213,9 @@ class AmpacheCatalogFavorites implements AmpachePluginInterface
         if ($this->maxitems < 1) {
             $this->maxitems = 5;
         }
+
         $this->gridview = ($data['catalogfav_gridview'] == '1');
+        $this->order    = (int)($data['catalogfav_order'] ?? 0);
 
         return true;
     }

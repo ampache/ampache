@@ -38,7 +38,7 @@ class UPnPDevice
 
     /**
      * UPnPDevice constructor.
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
     public function __construct($descriptionUrl)
     {
@@ -49,7 +49,7 @@ class UPnPDevice
 
     /**
      * Reads description URL from session
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
     private function restoreDescriptionUrl($descriptionUrl): bool
     {
@@ -66,9 +66,9 @@ class UPnPDevice
     }
 
     /**
-     * @param $descriptionUrl
+     * @param string $descriptionUrl
      */
-    private function parseDescriptionUrl($descriptionUrl)
+    private function parseDescriptionUrl($descriptionUrl): void
     {
         debug_event('upnpdevice', 'parseDescriptionUrl: ' . $descriptionUrl, 5);
 
@@ -79,7 +79,7 @@ class UPnPDevice
         curl_close($curl);
         //!!debug_event('upnpdevice', 'parseDescriptionUrl response: ' . $response, 5);
 
-        $responseXML = simplexml_load_string($response);
+        $responseXML = simplexml_load_string((string)$response);
         $services    = $responseXML->device->serviceList->service ?? [];
         foreach ($services as $service) {
             $serviceType                                      = $service->serviceType;
@@ -94,11 +94,13 @@ class UPnPDevice
 
         $this->_settings['descriptionURL'] = $descriptionUrl;
 
-        Session::create([
-            'type' => 'stream',
-            'sid' => 'upnp_dev_' . $descriptionUrl,
-            'value' => json_encode($this->_settings)
-        ]);
+        Session::create(
+            [
+                'type' => 'stream',
+                'sid' => 'upnp_dev_' . $descriptionUrl,
+                'value' => json_encode($this->_settings)
+            ]
+        );
     }
 
     /**
@@ -150,7 +152,7 @@ class UPnPDevice
         //debug_event('upnpdevice', 'sendRequestToDevice response: ' . $response, 5);
 
         $headers = [];
-        $tmp     = explode("\r\n\r\n", $response);
+        $tmp     = explode("\r\n\r\n", (string)$response);
 
         foreach ($tmp as $key => $value) {
             if (substr($value, 0, 8) == 'HTTP/1.1') {
@@ -171,7 +173,7 @@ class UPnPDevice
     public function instanceOnly($command, $type = 'AVTransport', $instance_id = 0): string
     {
         $args = ['InstanceID' => $instance_id];
-        //$response = \Format::forge($response, 'xml:ns')->to_array();
+        //$response = \Format::forge($response, 'xml:ns')->to_[];
         //return $response['s:Body']['u:' . $command . 'Response'];
 
         return $this->sendRequestToDevice($command, $args, $type);
@@ -186,7 +188,7 @@ class UPnPDevice
     /*
     public function Subscribe($type = 'AVTransport')
     {
-        $web_path = Ampache\Config\AmpConfig::get('web_path');
+        $web_path = Ampache\Config\AmpConfig::get_web_path();
         $eventSubsUrl = $web_path . '/upnp/play-event.php?device=' . urlencode($this->_descrUrl);
         $eventUrl = $this->_host . $this->_eventURLs[$type];
 

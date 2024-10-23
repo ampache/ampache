@@ -28,21 +28,21 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 ?>
 <table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="share">
     <thead>
     <tr class="th-top">
-            <th class="cel_object essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object', T_('Object'), 'sort_share_object'); ?></th>
-            <th class="cel_object_type optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object_type', T_('Object Type'), 'sort_share_object_type'); ?></th>
-            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=user', T_('User'), 'sort_share_user'); ?></th>
-            <th class="cel_creation_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=creation_date', T_('Creation Date'), 'sort_share_creation_date'); ?></th>
-            <th class="cel_lastvisit_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=lastvisit_date', T_('Last Visit'), 'sort_share_lastvisit_date'); ?></th>
-            <th class="cel_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=counter', T_('Counter'), 'sort_share_counter'); ?></th>
-            <th class="cel_max_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=max_counter', T_('Max Counter'), 'sort_share_max_counter'); ?></th>
-            <th class="cel_allow_stream optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_stream', T_('Allow Stream'), 'sort_share_allow_stream'); ?></th>
-            <th class="cel_allow_download optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_download', T_('Allow Download'), 'sort_share_allow_download'); ?></th>
-            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expiry Days'), 'sort_share_expire'); ?></th>
+            <th class="cel_object essential"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object', T_('Object'), 'share_sort_object'); ?></th>
+            <th class="cel_object_type optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=object_type', T_('Object Type'), 'share_sort_object_type'); ?></th>
+            <th class="cel_user optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=user', T_('User'), 'share_sort_user'); ?></th>
+            <th class="cel_creation_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=creation_date', T_('Creation Date'), 'share_sort_creation_date'); ?></th>
+            <th class="cel_lastvisit_date optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=lastvisit_date', T_('Last Visit'), 'share_sort_lastvisit_date'); ?></th>
+            <th class="cel_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=counter', T_('Counter'), 'share_sort_counter'); ?></th>
+            <th class="cel_max_counter optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=max_counter', T_('Max Counter'), 'share_sort_max_counter'); ?></th>
+            <th class="cel_allow_stream optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_stream', T_('Allow Stream'), 'share_sort_allow_stream'); ?></th>
+            <th class="cel_allow_download optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_download', T_('Allow Download'), 'share_sort_allow_download'); ?></th>
+            <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expiry Days'), 'share_sort_expire'); ?></th>
             <th class="cel_public_url essential"><?php echo T_('Public URL'); ?></th>
             <th class="cel_action  essential"><?php echo T_('Actions'); ?></th>
         </tr>

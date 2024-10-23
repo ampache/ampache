@@ -28,7 +28,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Media;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Video;
@@ -128,7 +127,7 @@ class Catalog_dropbox extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_dropbox` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `apikey` VARCHAR(255) COLLATE $collation NOT NULL, `secret` VARCHAR(255) COLLATE $collation NOT NULL, `path` VARCHAR(255) COLLATE $collation NOT NULL, `authtoken` VARCHAR(255) COLLATE $collation NOT NULL, `getchunk` TINYINT(1) NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -164,12 +163,12 @@ class Catalog_dropbox extends Catalog
         return (!empty($this->authtoken));
     }
 
-    public function show_ready_process()
+    public function show_ready_process(): void
     {
         // $this->showAuthToken();
     }
 
-    public function perform_ready()
+    public function perform_ready(): void
     {
         // $this->authcode = $_REQUEST['authcode'];
         // $this->completeAuthToken();
@@ -216,8 +215,8 @@ class Catalog_dropbox extends Catalog
         }
         try {
             $app = new DropboxApp($apikey, $secret, $authtoken);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
 
             return false;
         }
@@ -225,8 +224,8 @@ class Catalog_dropbox extends Catalog
 
         try {
             $listFolderContents = $dropbox->listFolder($path);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "dropbox-path": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "dropbox-path": ' . $error->getMessage()));
             $listFolderContents = null;
 
             return false;
@@ -264,11 +263,11 @@ class Catalog_dropbox extends Catalog
             $this->authcode = $options['authcode'];
         }
 
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_top(T_('Running Dropbox Remote Update') . '. . .');
         }
         $songsadded = $this->update_remote_catalog();
-        if (!defined('SSE_OUTPUT') && !defined('API')) {
+        if (!defined('SSE_OUTPUT') && !defined('CLI') && !defined('API')) {
             Ui::show_box_bottom();
         }
 
@@ -358,13 +357,11 @@ class Catalog_dropbox extends Catalog
                 } else {
                     debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this catalog.", 5);
                 }
-            } else {
-                if (count($this->get_gather_types('video')) > 0) {
-                    if ($is_video_file && $this->insert_video($dropbox, $path)) {
-                        return true;
-                    } else {
-                        debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
-                    }
+            } elseif (count($this->get_gather_types('video')) > 0) {
+                if ($is_video_file && $this->insert_video($dropbox, $path)) {
+                    return true;
+                } else {
+                    debug_event('dropbox.catalog', "read " . $path . " ignored, bad media type for this video catalog.", 5);
                 }
             }
         } else {
@@ -387,53 +384,54 @@ class Catalog_dropbox extends Catalog
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
-        } else {
-            $meta    = $dropbox->getMetadata($path);
-            $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
-            // Download File
-            $this->download($dropbox, $path, -1, $outfile);
-
-            $vainfo = $this->getUtilityFactory()->createVaInfo(
-                $outfile,
-                $this->get_gather_types('music'),
-                '',
-                '',
-                (string) $this->sort_pattern,
-                (string) $this->rename_pattern
-            );
-            $vainfo->gather_tags();
-
-            $key     = VaInfo::get_tag_type($vainfo->tags);
-            $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
-            // Set the remote path
-            $results['file']    = $path;
-            $results['catalog'] = $this->id;
-
-            // Set the remote path
-            if (!empty($results['artist']) && !empty($results['album'])) {
-                $this->count++;
-                $results['file'] = $outfile;
-                $song_id         = Song::insert($results);
-                if ($song_id) {
-                    parent::gather_art([$song_id]);
-                }
-                $results['file'] = $path;
-                $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
-                Dba::write($sql, [$results['file'], $song_id]);
-            } else {
-                debug_event(
-                    'dropbox.catalog',
-                    $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.",
-                    5
-                );
-            }
-            unlink($outfile);
-
-            return true;
+            return false;
         }
 
-        return false;
+        $meta    = $dropbox->getMetadata($path);
+        $outfile = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
+
+        // Download File
+        $this->download($dropbox, $path, -1, $outfile);
+
+        $vainfo = $this->getUtilityFactory()->createVaInfo(
+            $outfile,
+            $this->get_gather_types('music'),
+            '',
+            '',
+            (string) $this->sort_pattern,
+            (string) $this->rename_pattern
+        );
+        $vainfo->gather_tags();
+
+        $key     = VaInfo::get_tag_type($vainfo->tags);
+        $results = VaInfo::clean_tag_info($vainfo->tags, $key, $outfile);
+        // Set the remote path
+        $results['file']    = $path;
+        $results['catalog'] = $this->id;
+
+        // Set the remote path
+        if (!empty($results['artist']) && !empty($results['album'])) {
+            $this->count++;
+            $results['file'] = $outfile;
+            $song_id         = Song::insert($results);
+            if ($song_id) {
+                parent::gather_art([$song_id]);
+            }
+            $results['file'] = $path;
+            $sql             = "UPDATE `song` SET `file` = ? WHERE `id` = ?";
+            Dba::write($sql, [$results['file'], $song_id]);
+        } else {
+            debug_event(
+                'dropbox.catalog',
+                $results['file'] . " ignored because it is an orphan songs. Please check your catalog patterns.",
+                5
+            );
+        }
+
+        unlink($outfile);
+
+        return true;
     }
 
     /**
@@ -450,56 +448,58 @@ class Catalog_dropbox extends Catalog
     {
         if ($this->check_remote_file($path)) {
             debug_event('dropbox_catalog', 'Skipping existing song ' . $path, 5);
-        } else {
-            /* Create the vainfo object and get info */
-            $readfile = true;
-            $meta     = $dropbox->getMetadata($path);
-            $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
-            // Download File
-            $res = $this->download($dropbox, $path, 40960, $outfile);
+            return 0;
+        }
 
-            if ($res) {
-                $gtypes = $this->get_gather_types('video');
+        /* Create the vainfo object and get info */
+        $readfile = true;
+        $meta     = $dropbox->getMetadata($path);
+        $outfile  = Core::get_tmp_dir() . DIRECTORY_SEPARATOR . $meta->getName();
 
-                $vainfo = $this->getUtilityFactory()->createVaInfo(
-                    $outfile,
-                    $gtypes,
-                    '',
-                    '',
-                    (string) $this->sort_pattern,
-                    (string) $this->rename_pattern,
-                    $readfile
-                );
-                $vainfo->gather_tags();
+        // Download File
+        $res = $this->download($dropbox, $path, 40960, $outfile);
 
-                $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
-                $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
-                $results['catalog'] = $this->id;
+        if ($res) {
+            $gtypes = $this->get_gather_types('video');
 
-                $results['file'] = $outfile;
-                $video_id        = Video::insert($results, $gtypes);
-                if ($results['art']) {
-                    $art = new Art($video_id, 'video');
-                    $art->insert_url($results['art']);
+            $vainfo = $this->getUtilityFactory()->createVaInfo(
+                $outfile,
+                $gtypes,
+                '',
+                '',
+                (string) $this->sort_pattern,
+                (string) $this->rename_pattern,
+                $readfile
+            );
+            $vainfo->gather_tags();
 
-                    if (AmpConfig::get('generate_video_preview')) {
-                        Video::generate_preview($video_id);
-                    }
-                } else {
-                    $this->videos_to_gather[] = $video_id;
+            $tag_name           = VaInfo::get_tag_type($vainfo->tags, 'metadata_order_video');
+            $results            = VaInfo::clean_tag_info($vainfo->tags, $tag_name, $outfile);
+            $results['catalog'] = $this->id;
+
+            $results['file'] = $outfile;
+            $video_id        = Video::insert($results);
+            if ($results['art']) {
+                $art = new Art($video_id, 'video');
+                $art->insert_url($results['art']);
+
+                if (AmpConfig::get('generate_video_preview')) {
+                    Video::generate_preview($video_id);
                 }
-                $results['file'] = $path;
-                $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
-                Dba::write($sql, [$results['file'], $video_id]);
-
-                return $video_id;
             } else {
-                debug_event('dropbox.catalog', 'failed to download file', 5);
+                $this->videos_to_gather[] = $video_id;
             }
-        } // insert_video
+            $results['file'] = $path;
+            $sql             = "UPDATE `video` SET `file` = ? WHERE `id` = ?";
+            Dba::write($sql, [$results['file'], $video_id]);
 
-        return 0;
+            return $video_id;
+        } else {
+            debug_event('dropbox.catalog', 'failed to download file', 5);
+
+            return 0;
+        }
     }
 
     /**
@@ -587,8 +587,8 @@ class Catalog_dropbox extends Catalog
             }
 
             $this->update_last_update($date);
-        } catch (DropboxClientException $e) {
-            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $e->getMessage()));
+        } catch (DropboxClientException $error) {
+            AmpError::add('general', T_('Invalid "API key", "secret", or "access token": ' . $error->getMessage()));
         }
 
         return $updated;
@@ -612,8 +612,8 @@ class Catalog_dropbox extends Catalog
             $file = $row['file'];
             try {
                 $metadata = $dropbox->getMetadata($file, ["include_deleted" => true]);
-            } catch (DropboxClientException $e) {
-                if ($e->getCode() == 409) {
+            } catch (DropboxClientException $error) {
+                if ($error->getCode() == 409) {
                     $dead++;
                     Dba::write('DELETE FROM `song` WHERE `id` = ?', [$row['id']]);
                 } else {
@@ -658,9 +658,8 @@ class Catalog_dropbox extends Catalog
      * checks to see if a remote song exists in the database or not
      * if it find a song it returns the UID
      * @param $file
-     * @return int|bool
      */
-    public function check_remote_file($file)
+    public function check_remote_file($file): ?int
     {
         $is_audio_file = Catalog::is_audio_file($file);
         if ($is_audio_file) {
@@ -673,7 +672,7 @@ class Catalog_dropbox extends Catalog
             return (int)$results['id'];
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -736,7 +735,7 @@ class Catalog_dropbox extends Catalog
             $this->download($dropbox, $file, null, $outfile);
 
             $file = $outfile;
-        } catch (DropboxClientException $e) {
+        } catch (DropboxClientException) {
             debug_event('dropbox.catalog', 'File not found on Dropbox: ' . $media->file, 5);
         }
 

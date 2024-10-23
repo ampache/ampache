@@ -61,7 +61,7 @@ final class LegacyLogger implements LoggerInterface
     public function emergency($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_CRITICAL,
+            self::LOG_LEVEL_CRITICAL,
             $message,
             $context
         );
@@ -73,7 +73,7 @@ final class LegacyLogger implements LoggerInterface
     public function alert($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_CRITICAL,
+            self::LOG_LEVEL_CRITICAL,
             $message,
             $context
         );
@@ -85,7 +85,7 @@ final class LegacyLogger implements LoggerInterface
     public function critical($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_CRITICAL,
+            self::LOG_LEVEL_CRITICAL,
             $message,
             $context
         );
@@ -97,7 +97,7 @@ final class LegacyLogger implements LoggerInterface
     public function error($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_ERROR,
+            self::LOG_LEVEL_ERROR,
             $message,
             $context
         );
@@ -109,7 +109,7 @@ final class LegacyLogger implements LoggerInterface
     public function warning($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_WARNING,
+            self::LOG_LEVEL_WARNING,
             $message,
             $context
         );
@@ -121,7 +121,7 @@ final class LegacyLogger implements LoggerInterface
     public function notice($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_NOTICE,
+            self::LOG_LEVEL_NOTICE,
             $message,
             $context
         );
@@ -133,7 +133,7 @@ final class LegacyLogger implements LoggerInterface
     public function info($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_NOTICE,
+            self::LOG_LEVEL_NOTICE,
             $message,
             $context
         );
@@ -145,7 +145,7 @@ final class LegacyLogger implements LoggerInterface
     public function debug($message, array $context = []): void
     {
         $this->log(
-            static::LOG_LEVEL_DEBUG,
+            self::LOG_LEVEL_DEBUG,
             $message,
             $context
         );
@@ -167,21 +167,21 @@ final class LegacyLogger implements LoggerInterface
             if ($user) {
                 $username = $user->username;
             } else {
-                $username = static::FALLBACK_USERNAME;
+                $username = self::FALLBACK_USERNAME;
             }
         }
 
         /* Set it up here to make sure it's _always_ the same */
         $time       = time();
         $log_time   = date("c", $time);
-        $event_name = $context[static::CONTEXT_TYPE] ?? '';
+        $event_name = $context[self::CONTEXT_TYPE] ?? '';
 
         $log_filename = $this->configContainer->get('log_filename');
         if (empty($log_filename)) {
             $log_filename = "%name.%Y%m%d.log";
         }
 
-        $log_filename = str_replace("%name", static::LOG_NAME, $log_filename);
+        $log_filename = str_replace("%name", self::LOG_NAME, $log_filename);
         $log_filename = str_replace("%Y", date('Y'), $log_filename);
         $log_filename = str_replace("%m", date('m'), $log_filename);
         $log_filename = str_replace("%d", date('d'), $log_filename);

@@ -15,7 +15,7 @@ There are a few docker files I've been using to build and test that have helped 
 Anyone with a bit of docker knowledge should be able to get up and running but here's the gist.
 
 * Run `docker-compose up` to start the container
-* Don't forget to run `composer install` in the project root
+* Don't forget to run `composer install` & `npm install` & `npm run build` in the project root
 
 After you're up and running you should be able to install as normal. (MySQL is not included in the docker files)
 

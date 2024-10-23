@@ -27,56 +27,50 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Module\System\Core;
+use Ampache\Repository\Model\User;
 
-final class CatalogAjaxHandler implements AjaxHandlerInterface
+final readonly class CatalogAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
-        // Switch on the actions
-        switch ($action) {
-            case 'flip_state':
-                if (!Access::check('interface', 75)) {
-                    debug_event('catalog.ajax', Core::get_global('user')->username . ' attempted to change the state of a catalog', 1);
+        if ($action === 'flip_state') {
+            if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
+                debug_event('catalog.ajax', ($user->username ?? T_('Unknown')) . ' attempted to change the state of a catalog', 1);
 
-                    return;
-                }
-                $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
-                if ($catalog === null) {
-                    break;
-                }
-                $new_enabled = !$catalog->enabled;
-                Catalog::update_enabled($new_enabled, $catalog->id);
-                $catalog->enabled = $new_enabled;
+                return;
+            }
 
-                // Return the new Ajax::button
-                $id = 'button_flip_state_' . $catalog->id;
-                if ($new_enabled) {
-                    $button     = 'disable';
-                    $buttontext = T_('Disable');
-                } else {
-                    $button     = 'enable';
-                    $buttontext = T_('Enable');
-                }
-                $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
+            $catalog = Catalog::create_from_id((int)$this->requestParser->getFromRequest('catalog_id'));
+            if ($catalog === null) {
+                return;
+            }
 
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
+            $new_enabled = !$catalog->enabled;
+            Catalog::update_enabled($new_enabled, $catalog->id);
+            $catalog->enabled = $new_enabled;
+            // Return the new Ajax::button
+            $id = 'button_flip_state_' . $catalog->id;
+            if ($new_enabled) {
+                $button     = 'unpublished';
+                $buttontext = T_('Disable');
+            } else {
+                $button     = 'check_circle';
+                $buttontext = T_('Enable');
+            }
+
+            $results[$id] = Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $button, $buttontext, 'flip_state_' . $catalog->id);
         } // switch on action;
 
         // We always do this

@@ -27,7 +27,7 @@ namespace Ampache\Module\System\Update\Migration\V6;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
- * Convert `object_type` to an enum on `image` table
+ * Convert `object_type` to an enum on `share` table
  */
 final class Migration600060 extends AbstractMigration
 {
@@ -35,7 +35,7 @@ final class Migration600060 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase('DELETE FROM `share` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'video\')');
+        $this->updateDatabase('DELETE FROM `share` WHERE `object_type` IS NULL OR `object_type` NOT IN (\'album\', \'album_disk\', \'artist\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'video\');');
         $this->updateDatabase('ALTER TABLE `share` MODIFY COLUMN `object_type` enum(\'album\', \'album_disk\', \'artist\', \'playlist\', \'podcast\', \'podcast_episode\', \'search\', \'song\', \'video\') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;');
     }
 }

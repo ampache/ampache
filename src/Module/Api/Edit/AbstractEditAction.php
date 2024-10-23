@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\Access;
@@ -35,6 +37,7 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -59,14 +62,14 @@ abstract class AbstractEditAction implements ApplicationActionInterface
     ): ?ResponseInterface {
         $this->logger->debug(
             'Called for action: {' . Core::get_request('action') . '}',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         // Post first
-        $object_type = $_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+        $object_type = (string)($_POST['type'] ?? filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $object_id   = (int) Core::get_get('id');
         if (empty($object_type)) {
-            $object_type = $source_object_type = filter_input(
+            $object_type = $source_object_type = (string)filter_input(
                 INPUT_GET,
                 'object_type',
                 FILTER_SANITIZE_SPECIAL_CHARS
@@ -79,7 +82,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden'])) {
             $this->logger->warning(
                 sprintf('Type `%d` is not based on an item library.', $object_type),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
@@ -88,11 +91,11 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         $className = ObjectTypeToClassNameMapper::map($object_type);
         $this->logger->warning(
             $className,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         $this->logger->warning(
-            $object_id,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            (string) $object_id,
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         /** @var library_item $libitem */
         $libitem = new $className($object_id);
@@ -100,18 +103,16 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $libitem->format();
         }
 
-        $level = '50';
-        if ($libitem->get_user_owner() == Core::get_global('user')->id) {
-            $level = '25';
+        $level = AccessLevelEnum::CONTENT_MANAGER;
+        if (Core::get_global('user') instanceof User && $libitem->get_user_owner() == Core::get_global('user')->id) {
+            $level = AccessLevelEnum::USER;
         }
         if (Core::get_request('action') == 'show_edit_playlist') {
-            $level = '25';
+            $level = AccessLevelEnum::USER;
         }
 
         // Make sure they got them rights
-        if (!Access::check('interface', (int) $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
-            echo (string) xoutput_from_array(['rfc3514' => '0x1']);
-
+        if (!Access::check(AccessTypeEnum::INTERFACE, $level) || $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }
 

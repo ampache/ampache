@@ -56,7 +56,7 @@ final class PodcastFolderProvider implements PodcastFolderProviderInterface
 
         try {
             $catalog = $this->catalogLoader->getById($catalogId);
-        } catch (CatalogLoadingException $e) {
+        } catch (CatalogLoadingException) {
             throw new PodcastFolderException(sprintf('Catalog not found: %d', $catalogId));
         }
 

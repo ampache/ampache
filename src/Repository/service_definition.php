@@ -25,6 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\ModelFactory;
+use Ampache\Repository\Model\LibraryItemLoader;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+
 use function DI\autowire;
 
 return [
@@ -44,7 +49,7 @@ return [
     BookmarkRepositoryInterface::class => autowire(BookmarkRepository::class),
     PrivateMessageRepositoryInterface::class => autowire(PrivateMessageRepository::class),
     VideoRepositoryInterface::class => autowire(VideoRepository::class),
-    Model\ModelFactoryInterface::class => autowire(Model\ModelFactory::class),
+    ModelFactoryInterface::class => autowire(ModelFactory::class),
     PreferenceRepositoryInterface::class => autowire(PreferenceRepository::class),
     PodcastRepositoryInterface::class => autowire(PodcastRepository::class),
     UpdateInfoRepositoryInterface::class => autowire(UpdateInfoRepository::class),
@@ -55,4 +60,5 @@ return [
     PodcastEpisodeRepositoryInterface::class => autowire(PodcastEpisodeRepository::class),
     ImageRepositoryInterface::class => autowire(ImageRepository::class),
     AlbumDiskRepositoryInterface::class => autowire(AlbumDiskRepository::class),
+    LibraryItemLoaderInterface::class => autowire(LibraryItemLoader::class),
 ];

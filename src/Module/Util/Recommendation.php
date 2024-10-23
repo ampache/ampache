@@ -133,7 +133,7 @@ class Recommendation
      * update_recommendation_cache
      * @param string $type
      * @param int $object_id
-     * @param $recommendations
+     * @param array $recommendations
      */
     protected static function update_recommendation_cache($type, $object_id, $recommendations): void
     {
@@ -206,8 +206,8 @@ class Recommendation
 
                         $artist_name = $child->artist->name;
                         $searchname  = Catalog::trim_prefix((string)$artist_name);
-                        $s_name      = Dba::escape($searchname['string']);
-                        $s_fullname  = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
+                        $s_name      = $searchname['string'];
+                        $s_fullname  = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
 
                         $sql = ($catalog_disable)
                             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `artist` ON `song`.`artist`=`artist`.`id` LEFT JOIN `catalog` ON `song`.`catalog` = `catalog`.`id` WHERE `song`.`title` = ? AND (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND `catalog`.`enabled` = '1'"
@@ -215,7 +215,7 @@ class Recommendation
 
                         $db_result = Dba::read($sql, [$song_name, $s_name, $s_fullname]);
                         if ($result = Dba::fetch_assoc($db_result)) {
-                            $local_id = $result['id'];
+                            $local_id = (int)$result['id'];
                             debug_event(self::class, "$song_name matched local song $local_id", 4);
                             $similars[] = [
                                 'id' => $local_id,
@@ -233,7 +233,7 @@ class Recommendation
                     }
                     self::update_recommendation_cache('song', $song_id, $similars);
                 }
-            } catch (LastFmQueryFailedException $e) {
+            } catch (LastFmQueryFailedException) {
                 // Ignore request errors here
             }
         }
@@ -307,8 +307,8 @@ class Recommendation
                         // Then we fall back to the less likely to work exact name match
                         if ($local_id === null) {
                             $searchname = Catalog::trim_prefix($name);
-                            $s_name     = Dba::escape($searchname['string']);
-                            $s_fullname = Dba::escape(trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string'])));
+                            $s_name     = $searchname['string'];
+                            $s_fullname = trim(trim((string)$searchname['prefix']) . ' ' . trim((string)$searchname['string']));
                             $sql        = ($catalog_disable)
                                 ? "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?) AND " . $enable_filter
                                 : "SELECT `artist`.`id` FROM `artist` WHERE (`artist`.`name` = ? OR LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) = ?)";
@@ -339,7 +339,7 @@ class Recommendation
                         self::update_recommendation_cache('artist', $artist_id, $similars);
                     }
                 }
-            } catch (LastFmQueryFailedException $e) {
+            } catch (LastFmQueryFailedException) {
                 // Ignore request errors here
             }
         }
@@ -377,15 +377,17 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return $results;
         }
 
-        $results['summary'] = strip_tags(preg_replace(
-            "#<a href=([^<]*)Last\.fm</a>.#",
-            "",
-            (string)$xml->artist->bio->summary
-        ));
+        $results['summary'] = strip_tags(
+            (string)preg_replace(
+                "#<a href=([^<]*)Last\.fm</a>.#",
+                "",
+                (string)$xml->artist->bio->summary
+            )
+        );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (string)$xml->artist->bio->placeformed;
         $results['yearformed']  = (string)$xml->artist->bio->yearformed;
@@ -423,16 +425,18 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('artist.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return [];
         }
 
         $results            = [];
-        $results['summary'] = strip_tags(preg_replace(
-            "#<a href=([^<]*)Last\.fm</a>.#",
-            "",
-            ($xml->artist->bio->summary ?? '')
-        ));
+        $results['summary'] = strip_tags(
+            (string)preg_replace(
+                "#<a href=([^<]*)Last\.fm</a>.#",
+                "",
+                ($xml->artist->bio->summary ?? '')
+            )
+        );
         $results['summary']     = str_replace("Read more on Last.fm", "", $results['summary']);
         $results['placeformed'] = (isset($xml->artist->bio->yearformed))
             ? (string)$xml->artist->bio->placeformed
@@ -479,15 +483,17 @@ class Recommendation
 
         try {
             $xml = self::get_lastfm_results('album.getinfo', $query);
-        } catch (LastFmQueryFailedException $e) {
+        } catch (LastFmQueryFailedException) {
             return $results;
         }
 
-        $results['summary'] = strip_tags(preg_replace(
-            "#<a href=([^<]*)Last\.fm</a>.#",
-            "",
-            ($xml->album->wiki->summary ?? '')
-        ));
+        $results['summary'] = strip_tags(
+            (string)preg_replace(
+                "#<a href=([^<]*)Last\.fm</a>.#",
+                "",
+                ($xml->album->wiki->summary ?? '')
+            )
+        );
         $results['summary'] = str_replace("Read more on Last.fm", "", $results['summary']);
 
         if ($album->isNew() === false) {

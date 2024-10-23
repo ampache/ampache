@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -59,7 +61,7 @@ final class CatalogFolderMethod
      */
     public static function catalog_folder(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, ['catalog', 'folder', 'task'], self::ACTION)) {
@@ -108,10 +110,7 @@ final class CatalogFolderMethod
                 $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Podcast_Episode::class;
                 break;
-            case 'clip':
-            case 'tvshow':
-            case 'movie':
-            case 'personal_video':
+            case 'video':
                 $type      = 'video';
                 $file_ids  = Catalog::get_ids_from_folder($folder, $type);
                 $className = Video::class;

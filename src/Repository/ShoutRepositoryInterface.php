@@ -23,6 +23,7 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Shoutbox;
 use Traversable;
 
@@ -37,7 +38,7 @@ interface ShoutRepositoryInterface extends BaseRepositoryInterface
      * @return Traversable<Shoutbox>
      */
     public function getBy(
-        string $objectType,
+        LibraryItemEnum $objectType,
         int $objectId
     ): Traversable;
 

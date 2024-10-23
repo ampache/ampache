@@ -28,6 +28,8 @@ namespace Ampache\Application\Api\Ajax\Handler;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
@@ -42,29 +44,17 @@ use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Wanted\MissingArtistFinderInterface;
 
-final class SearchAjaxHandler implements AjaxHandlerInterface
+final readonly class SearchAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private MissingArtistFinderInterface $missingArtistFinder;
-
-    private LabelRepositoryInterface $labelRepository;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        MissingArtistFinderInterface $missingArtistFinder,
-        LabelRepositoryInterface $labelRepository
+        private RequestParserInterface $requestParser,
+        private ConfigContainerInterface $configContainer,
+        private MissingArtistFinderInterface $missingArtistFinder,
+        private LabelRepositoryInterface $labelRepository
     ) {
-        $this->requestParser       = $requestParser;
-        $this->configContainer     = $configContainer;
-        $this->missingArtistFinder = $missingArtistFinder;
-        $this->labelRepository     = $labelRepository;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
@@ -72,8 +62,8 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
         // Switch on the actions
         switch ($action) {
             case 'search':
-                $web_path    = AmpConfig::get('web_path');
-                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP) === true);
+                $web_path    = AmpConfig::get_web_path();
+                $album_group = ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP));
                 $search      = htmlspecialchars_decode(($_REQUEST['search'] ?? ''));
                 $target      = $_REQUEST['target'] ?? '';
                 $limit       = $_REQUEST['limit'] ?? 5;
@@ -93,6 +83,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $artistid) {
                         $artist    = new Artist($artistid);
                         $results[] = [
@@ -121,6 +112,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumid) {
                         $album     = new Album($albumid);
                         $results[] = [
@@ -149,6 +141,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $albumdiskid) {
                         $albumdisk = new AlbumDisk($albumdiskid);
                         $results[] = [
@@ -177,6 +170,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     $show_song_art = AmpConfig::get('show_song_art', false);
                     foreach ($sres as $songid) {
                         $song       = new Song($songid);
@@ -209,6 +203,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $playlistid) {
                         $playlist  = new Playlist($playlistid);
                         $results[] = [
@@ -238,6 +233,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $labelid) {
                         $label = $this->labelRepository->findById($labelid);
 
@@ -290,6 +286,7 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
                         $searchreq['rule_1_operator'] = '0';
                         $sres                         = array_unique(array_merge($sres, Search::run($searchreq)));
                     }
+
                     foreach ($sres as $user_id) {
                         $user      = new User($user_id);
                         $avatar    = $user->get_avatar();
@@ -306,18 +303,12 @@ final class SearchAjaxHandler implements AjaxHandlerInterface
 
                 break;
             case 'search_random':
-                if (!Access::check('interface', 75)) {
-                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
-
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=search_random&search_id=' . scrub_out($_REQUEST['playlist_id']);
+                $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
         } // switch on action;
 
         // We always do this

@@ -45,6 +45,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             $sql .= "AND `user_activity`.`activity_date` <= ? ";
             $params[] = $since;
         }
+
         $sql .= "ORDER BY `user_activity`.`activity_date` DESC LIMIT " . $limit;
         $db_results = Dba::read($sql, $params);
         $results    = [];
@@ -73,6 +74,7 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             $sql .= "AND `activity_date` <= ? ";
             $params[] = $since;
         }
+
         $sql .= "ORDER BY `activity_date` DESC LIMIT " . $limit;
         $db_results = Dba::read($sql, $params);
         $results    = [];
@@ -114,8 +116,6 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
             'podcast',
             'podcast_episode',
             'song',
-            'tvshow',
-            'tvshow_season',
             'video'
         ];
 
@@ -124,12 +124,13 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
                 $sql = "DELETE FROM `user_activity` WHERE `object_type` = ? AND `object_id` = ?";
                 Dba::write($sql, [$object_type, $object_id]);
             } else {
-                debug_event(__CLASS__, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
+                debug_event(self::class, 'Garbage collect on type `' . $object_type . '` is not supported.', 1);
             }
         } else {
             foreach ($types as $type) {
-                Dba::write("DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `$type`.`id` FROM `$type`);", [$type]);
+                Dba::write(sprintf('DELETE FROM `user_activity` WHERE `object_type` = ? AND `user_activity`.`object_id` NOT IN (SELECT `%s`.`id` FROM `%s`);', $type, $type), [$type]);
             }
+
             // accidental plays
             Dba::write("DELETE FROM `user_activity` WHERE `object_type` IN ('album', 'artist') AND `action` = 'play';");
             // deleted users

@@ -31,15 +31,14 @@ namespace Ampache\Module\Util\Captcha;
  */
 class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
 {
-    /* returns jpeg file stream with unscannable letters encoded
-       in front of colorful disturbing background
-    */
     /**
+     * returns jpeg file stream with unscannable letters encoded
+     * in front of colorful disturbing background
      * @return false|string
      */
     public function jpeg()
     {
-        #-- step by step
+        // step by step
         $this->create();
         $this->background_lines();
         $this->background_letters();
@@ -48,14 +47,13 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         return $this->output();
     }
 
-
-    #-- initialize in-memory image with gd library
+    // initialize in-memory image with gd library
     public function create()
     {
         $this->img = imagecreatetruecolor($this->width, $this->height);
         imagefilledrectangle($this->img, 0, 0, $this->width, $this->height, $this->random_color(222, 255));
 
-        #-- encolour bg
+        // encolour bg
         $wd = 20;
         $x  = 0;
         while ($x < $this->width) {
@@ -64,7 +62,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- make interesting background I, lines
+    // make interesting background I, lines
     public function background_lines()
     {
         $c1 = rand(150, 185);
@@ -92,7 +90,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- more disturbing II, random letters
+    // more disturbing II, random letters
     public function background_letters()
     {
         $limit = rand(30, 90);
@@ -110,7 +108,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
         }
     }
 
-    #-- add the real text to it
+    // add the real text to it
     public function text()
     {
         $phrase = $this->solution;
@@ -124,7 +122,7 @@ class easy_captcha_graphic_image_disturbed extends easy_captcha_graphic
             $rotation = rand(-33, 33);
             $y        = rand($size + 3, $this->height - 3);
             $x        = $w1 + $w2 * $p;
-            $w1 += rand(-$this->width / 90, $this->width / 40);  // @BUG: last char could be +30 pixel outside of image
+            $w1 += rand(-$this->width / 90, $this->width / 40); // @BUG: last char could be +30 pixel outside of image
             $font            = $this->font();
             list($r, $g, $b) = [rand(30, 99), rand(30, 99), rand(30, 99)];
             imagettftext($this->img, $size, $rotation, $x + 1, $y, $this->rgb($r * 2, $g * 2, $b * 2), $font, $letter);

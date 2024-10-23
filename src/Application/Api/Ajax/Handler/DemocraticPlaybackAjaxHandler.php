@@ -27,22 +27,22 @@ namespace Ampache\Application\Api\Ajax\Handler;
 
 use Ampache\Module\Authorization\Access;
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Democratic;
+use Ampache\Repository\Model\User;
 
-final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
+final readonly class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $democratic = Democratic::get_current_playlist();
         $democratic->set_parent();
@@ -58,18 +58,18 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'add_vote':
-                $democratic->add_vote([
+                $democratic->add_vote(
                     [
-                        'object_type' => Core::get_request('type'),
-                        'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                        [
+                            'object_type' => Core::get_request('type'),
+                            'object_id' => filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT)
+                        ]
                     ]
-                ]);
+                );
                 $show_browse = true;
                 break;
             case 'delete':
-                if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
-                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
-
+                if ($user->has_access(AccessLevelEnum::MANAGER)) {
                     return;
                 }
 
@@ -77,19 +77,15 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $show_browse = true;
                 break;
             case 'send_playlist':
-                if (!Access::check('interface', 75)) {
-                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
-
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
                     return;
                 }
 
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
-                $results['rfc3514']           = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=democratic&democratic_id=' . scrub_out($_REQUEST['democratic_id']);
+                $results['reloader']          = '<script>' . Core::get_reloadutil() . '("' . $_SESSION['iframe']['target'] . '")</script>';
                 break;
             case 'clear_playlist':
-                if (!Access::check('interface', 100)) {
-                    echo (string) xoutput_from_array(['rfc3514' => '0x1']);
-
+                if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
                     return;
                 }
 
@@ -98,10 +94,6 @@ final class DemocraticPlaybackAjaxHandler implements AjaxHandlerInterface
                 $democratic->clear();
 
                 $show_browse = true;
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         } // switch on action;
 
         if ($show_browse) {

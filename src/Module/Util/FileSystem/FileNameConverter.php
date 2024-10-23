@@ -78,7 +78,11 @@ final class FileNameConverter implements FileNameConverterInterface
         string $path,
         bool $force
     ): bool {
-        $source_encoding = iconv_get_encoding('output_encoding');
+        /** @var string $source_encoding */
+        $source_encoding = iconv_get_encoding('output_encoding') ?: 'UTF-8';
+        if (!is_string($source_encoding)) {
+            return false;
+        }
 
         // Correctly detect the slash we need to use here
         if (strstr($path, "/")) {
@@ -123,18 +127,28 @@ final class FileNameConverter implements FileNameConverterInterface
             }
 
             $verify_filename = iconv($siteCharset, $siteCharset . '//IGNORE', $full_file);
+            if (!$verify_filename) {
+                continue;
+            }
 
             if (strcmp($full_file, $verify_filename) != 0) {
                 $translated_filename = iconv($source_encoding, $siteCharset . '//TRANSLIT', $full_file);
 
                 // Make sure the extension stayed the same
-                if (substr($translated_filename, strlen($translated_filename) - 3, 3) != substr($full_file, strlen($full_file) - 3, 3)) {
+                if (
+                    $translated_filename &&
+                    substr($translated_filename, strlen($translated_filename) - 3, 3) != substr($full_file, strlen($full_file) - 3, 3)
+                ) {
                     $interactor->warn(
                         T_('Translation failure, stripping non-valid characters'),
                         true
                     );
 
                     $translated_filename = iconv($source_encoding, $siteCharset . '//IGNORE', $full_file);
+                }
+
+                if (empty($translated_filename)) {
+                    continue;
                 }
 
                 $interactor->info(
@@ -193,11 +207,10 @@ final class FileNameConverter implements FileNameConverterInterface
         string $full_file,
         string $translated_filename
     ): bool {
-
         // First break out the base directory name and make sure it exists
         // in case our crap char is in the directory
         $directory = dirname($translated_filename);
-        $data      = preg_split("/[\/\\\]/", $directory);
+        $data      = preg_split("/[\/\\\]/", $directory) ?: [];
         $path      = '';
 
         foreach ($data as $dir) {
@@ -269,15 +282,13 @@ final class FileNameConverter implements FileNameConverterInterface
      * This is run on every individual element of the search
      * Before it is put together, this removes / and \ and also
      * once I figure it out, it'll clean other stuff
-     * @param string $string
-     * @return string|string[]|null
      */
-    private function charset_clean_name(string $string)
+    private function charset_clean_name(string $string): string
     {
         /* First remove any / or \ chars */
-        $string_1 = preg_replace('/[\/\\\]/', '-', $string);
-        $string_2 = str_replace(':', ' ', $string_1);
+        $clean_string = (string)preg_replace('/[\/\\\]/', '-', $string);
+        $clean_string = (string)str_replace(':', ' ', $clean_string);
 
-        return preg_replace('/[\!\:\*]/', '_', $string_2);
+        return (string)preg_replace('/[\!\:\*]/', '_', $clean_string);
     }
 }

@@ -26,9 +26,11 @@ declare(strict_types=1);
 namespace Ampache\Module\Util;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\System\Core;
 use Ampache\Repository\UserRepositoryInterface;
+use Ampache\Repository\Model\User;
 use CpChart;
 use CpChart\Data;
 use Ampache\Module\System\Dba;
@@ -41,7 +43,7 @@ class Graph
         if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) {
             return true;
         }
-        debug_event(__CLASS__, 'Access denied, statistical graph disabled.', 1);
+        debug_event(self::class, 'Access denied, statistical graph disabled.', 1);
 
         return false;
     }
@@ -52,21 +54,12 @@ class Graph
      */
     protected function get_sql_date_format($field, $zoom): string
     {
-        switch ($zoom) {
-            case 'hour':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')";
-                break;
-            case 'year':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')";
-                break;
-            case 'month':
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')";
-                break;
-            case 'day':
-            default:
-                $dateformat = "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')";
-                break;
-        }
+        $dateformat = match ($zoom) {
+            'hour' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d %H:00:00')",
+            'year' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-01-01')",
+            'month' => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-01')",
+            default => "DATE_FORMAT(FROM_UNIXTIME(" . $field . "), '%Y-%m-%d')",
+        };
 
         return "UNIX_TIMESTAMP(" . $dateformat . ")";
     }
@@ -100,7 +93,7 @@ class Graph
             $sql .= " AND `object_count`.`user` = " . $user_id;
         }
 
-        if (InterfaceImplementationChecker::is_library_item($object_type)) {
+        if (InterfaceImplementationChecker::is_library_item((string)$object_type)) {
             $sql .= " AND `object_count`.`object_type` = '" . $object_type . "'";
             if ($object_id > 0) {
                 $sql .= " AND `object_count`.`object_id` = '" . $object_id . "'";
@@ -229,7 +222,7 @@ class Graph
      * @param string $fct
      * @param Data $MyData
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -388,8 +381,14 @@ class Graph
      * @param string $zoom
      * @return array
      */
-    protected function get_user_bandwidth_pts($user_id = 0, $object_type = 'song', $object_id = 0, $start_date = null, $end_date = null, $zoom = 'day'): array
-    {
+    protected function get_user_bandwidth_pts(
+        $user_id = 0,
+        $object_type = 'song',
+        $object_id = 0,
+        $start_date = null,
+        $end_date = null,
+        $zoom = 'day'
+    ): array {
         return $this->get_user_object_count_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
     }
 
@@ -430,7 +429,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = "SELECT " . $dateformat . " AS `zoom_date`, ((SELECT COUNT(`t2`.`id`) FROM `" . $object_type . "` `t2` WHERE `t2`.`addition_time` < `zoom_date`) + COUNT(`" . $object_type . "`.`id`)) AS `files` FROM `" . $object_type . "` " . $where . " GROUP BY " . $dateformat;
@@ -461,7 +460,7 @@ class Graph
         $end_date = null,
         $zoom = 'day'
     ): array {
-        $start_date = $start_date ?? ($end_date ?? time()) - 864000;
+        $start_date = $start_date ?? (($end_date ?? time()) - 864000);
         $dateformat = $this->get_sql_date_format("`" . $object_type . "`.`addition_time`", $zoom);
         $where      = $this->get_catalog_sql_where($object_type, $object_id, $catalog_id, $start_date, $end_date);
         $sql        = ($object_type == 'album')
@@ -623,7 +622,7 @@ class Graph
 
     /**
      * @param int $user_id
-     * @param string $object_type
+     * @param string|null $object_type
      * @param int $object_id
      * @param int $start_date
      * @param int $end_date
@@ -822,23 +821,28 @@ class Graph
      * @param string $zoom
      */
     public function display_map(
-        $user_id = 0,
-        $object_type = null,
-        $object_id = 0,
-        $start_date = null,
-        $end_date = null,
-        $zoom = 'day'
-    ) {
-        $pts = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
-
-        foreach (Plugin::get_plugins('display_map') as $plugin_name) {
+        $user_id,
+        $object_type,
+        $object_id,
+        $start_date,
+        $end_date,
+        $zoom,
+    ): bool {
+        $pts  = $this->get_geolocation_pts($user_id, $object_type, $object_id, $start_date, $end_date, $zoom);
+        $user = Core::get_global('user');
+        if (!$user instanceof User) {
+            return false;
+        }
+        foreach (Plugin::get_plugins(PluginTypeEnum::GEO_MAP) as $plugin_name) {
             $plugin = new Plugin($plugin_name);
-            if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+            if ($plugin->_plugin !== null && $plugin->load($user)) {
                 if ($plugin->_plugin->display_map($pts)) {
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     /**

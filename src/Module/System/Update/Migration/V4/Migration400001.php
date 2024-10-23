@@ -34,7 +34,7 @@ final class Migration400001 extends AbstractMigration
     protected array $changelog = [
         'Update preferences for older users to match current subcategory items',
         '(~3.6 introduced subcategories but didn\'t include updates for existing users',
-        'This is a cosmetic update and does not affect any operation)'
+        'This is a cosmetic update and does not affect any operation)',
     ];
 
     public function migrate(): void

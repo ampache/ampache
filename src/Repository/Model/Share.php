@@ -30,41 +30,56 @@ use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 use PDOStatement;
 
 class Share extends database_object
 {
     protected const DB_TABLENAME = 'share';
-    public const VALID_TYPES     = [
-        'album',
-        'album_disk',
-        'artist',
-        'playlist',
-        'podcast',
-        'podcast_episode',
-        'search',
-        'song',
-        'video',
+
+    /** @var list<LibraryItemEnum> */
+    public const VALID_TYPES = [
+        LibraryItemEnum::ALBUM,
+        LibraryItemEnum::ALBUM_DISK,
+        LibraryItemEnum::ARTIST,
+        LibraryItemEnum::PLAYLIST,
+        LibraryItemEnum::PODCAST,
+        LibraryItemEnum::PODCAST_EPISODE,
+        LibraryItemEnum::SEARCH,
+        LibraryItemEnum::SONG,
+        LibraryItemEnum::VIDEO,
     ];
 
     public int $id = 0;
+
     public int $user;
-    public ?string $object_type;
+
+    public ?string $object_type = null;
+
     public int $object_id;
+
     public bool $allow_stream;
+
     public bool $allow_download;
+
     public int $expire_days;
+
     public int $max_counter;
-    public ?string $secret;
+
+    public ?string $secret = null;
+
     public int $counter;
+
     public int $creation_date;
+
     public int $lastvisit_date;
-    public ?string $public_url;
-    public ?string $description;
+
+    public ?string $public_url = null;
+
+    public ?string $description = null;
 
     public $f_name;
+
     /** @var Song|Artist|Album|playlist_object|null $object */
     private $object;
 
@@ -77,6 +92,7 @@ class Share extends database_object
         if (!$share_id) {
             return;
         }
+
         $info = $this->get_info($share_id, static::DB_TABLENAME);
         foreach ($info as $key => $value) {
             $this->$key = $value;
@@ -93,19 +109,14 @@ class Share extends database_object
         return $this->id === 0;
     }
 
-    public static function is_valid_type(string $type): bool
-    {
-        return in_array(strtolower($type), self::VALID_TYPES);
-    }
-
     /**
      * get_url
-     * @param null|int $share_id
+     * @param int $share_id
      * @param string $secret
      */
     public static function get_url($share_id, $secret): string
     {
-        $url = AmpConfig::get('web_path') . '/share.php?id=' . $share_id;
+        $url = AmpConfig::get_web_path() . '/share.php?id=' . $share_id;
         if (!empty($secret)) {
             $url .= '&secret=' . $secret;
         }
@@ -118,20 +129,28 @@ class Share extends database_object
      */
     public function isAccessible(User $user): bool
     {
-        return $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+        return $user->has_access(AccessLevelEnum::MANAGER) ||
             $this->user === $user->getId();
     }
 
     public function show_action_buttons(): void
     {
-        if ($this->isNew() === false) {
-            if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) || $this->user == (int)Core::get_global('user')->id) {
-                if ($this->allow_download) {
-                    echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_icon('download', T_('Download')) . "</a>";
-                }
-                echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_icon('edit', T_('Edit')) . "</a>";
-                echo "<a href=\"" . AmpConfig::get('web_path') . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_icon('delete', T_('Delete')) . "</a>";
+        if (
+            $this->isNew() === false &&
+            (
+                Core::get_global('user') instanceof User &&
+                (
+                    Core::get_global('user')->has_access(AccessLevelEnum::MANAGER) ||
+                    $this->user === Core::get_global('user')->id
+                )
+            )
+        ) {
+            if ($this->allow_download) {
+                echo "<a class=\"nohtml\" href=\"" . $this->public_url . "&action=download\">" . Ui::get_material_symbol('download', T_('Download')) . "</a>";
             }
+
+            echo "<a id=\"edit_share_ " . $this->id . "\" onclick=\"showEditDialog('share_row', '" . $this->id . "', 'edit_share_" . $this->id . "', '" . T_('Share Edit') . "', 'share_')\">" . Ui::get_material_symbol('edit', T_('Edit')) . "</a>";
+            echo "<a href=\"" . AmpConfig::get_web_path() . "/share.php?action=show_delete&id=" . $this->id . "\">" . Ui::get_material_symbol('close', T_('Delete')) . "</a>";
         }
     }
 
@@ -146,12 +165,13 @@ class Share extends database_object
     private function getObject()
     {
         if ($this->object === null) {
-            $className    = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-            /** @var Song|Artist|Album|playlist_object $libitem */
-            $libitem      = new $className($this->object_id);
-            if ($libitem->isNew() === false) {
-                $this->object = $libitem;
-            }
+            /** @var Song|Artist|Album|playlist_object|null $object */
+            $object = $this->getLibraryItemLoader()->load(
+                LibraryItemEnum::from((string) $this->object_type),
+                $this->object_id,
+                [Song::class, Artist::class, Album::class, playlist_object::class]
+            );
+            $this->object = $object;
         }
 
         return $this->object ?? null;
@@ -178,7 +198,9 @@ class Share extends database_object
 
     public function getLastVisitDateFormatted(): string
     {
-        return $this->lastvisit_date > 0 ? get_datetime($this->lastvisit_date) : '';
+        return ($this->lastvisit_date > 0)
+            ? get_datetime($this->lastvisit_date)
+            : '';
     }
 
     public function getCreationDateFormatted(): string
@@ -188,8 +210,6 @@ class Share extends database_object
 
     /**
      * update
-     * @param array $data
-     * @param User $user
      * @return PDOStatement|bool
      */
     public function update(array $data, User $user)
@@ -207,9 +227,9 @@ class Share extends database_object
             $this->allow_stream ? 1 : 0,
             $this->allow_download ? 1 : 0,
             $this->description,
-            $this->id
+            $this->id,
         ];
-        if (!$user->has_access(75)) {
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
             $sql .= " AND `user` = ?";
             $params[] = $user->id;
         }
@@ -248,7 +268,12 @@ class Share extends database_object
             return false;
         }
 
-        if (!empty($this->secret) && $secret != $this->secret) {
+        if (
+            $this->secret !== null &&
+            $this->secret !== '' &&
+            $this->secret !== '0' &&
+            $secret != $this->secret
+        ) {
             debug_event(self::class, 'Access Denied: secret requires to access share ' . $this->id . '.', 3);
 
             return false;
@@ -270,63 +295,61 @@ class Share extends database_object
     }
 
     /**
-     * is_shared_media
      * Has this media object come from a shared object?
-     * @param int|string $media_id
      */
-    public function is_shared_media($media_id): bool
+    public function is_shared_media(int $media_id): bool
     {
-        $isShare = false;
-        switch ($this->object_type) {
-            case 'album':
-            case 'album_disk':
-            case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
-                /** @var Album|AlbumDisk|Playlist $object */
-                $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_songs() : [];
-                foreach ($songs as $songid) {
-                    $isShare = ($media_id == $songid);
-                    if ($isShare) {
-                        break;
-                    }
-                }
-                break;
-            default:
-                $isShare = (($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id == $media_id);
-                break;
-        }
+        $objectType = $this->getObjectType();
 
-        return $isShare;
+        switch ($objectType) {
+            case LibraryItemEnum::ALBUM:
+            case LibraryItemEnum::ALBUM_DISK:
+            case LibraryItemEnum::PLAYLIST:
+                /** @var Album|AlbumDisk|Playlist $object */
+                $object = $this->getLibraryItemLoader()->load(
+                    LibraryItemEnum::from((string) $this->object_type),
+                    $this->object_id,
+                    [Album::class, AlbumDisk::class, Playlist::class]
+                );
+
+                return in_array(
+                    $media_id,
+                    $object->get_songs(),
+                    true
+                );
+            default:
+                return ($this->object_type == 'song' || $this->object_type == 'video') && $this->object_id === $media_id;
+        }
     }
 
-    /**
-     * @return Stream_Playlist
-     */
     public function create_fake_playlist(): Stream_Playlist
     {
         $playlist = new Stream_Playlist(-1);
         $medias   = [];
 
-        switch ($this->object_type) {
-            case 'album':
-            case 'album_disk':
-            case 'playlist':
-                $className = ObjectTypeToClassNameMapper::map((string)$this->object_type);
+        $objectType = $this->getObjectType();
+
+        switch ($objectType) {
+            case LibraryItemEnum::ALBUM:
+            case LibraryItemEnum::ALBUM_DISK:
+            case LibraryItemEnum::PLAYLIST:
                 /** @var Album|AlbumDisk|Playlist $object */
-                $object = new $className($this->object_id);
-                $songs  = (isset($object->id)) ? $object->get_medias('song') : [];
-                foreach ($songs as $song) {
-                    $medias[] = $song;
-                }
+                $object = $this->getLibraryItemLoader()->load(
+                    $objectType,
+                    $this->object_id,
+                    [Album::class, AlbumDisk::class, Playlist::class]
+                );
+
+                $medias = $object->get_medias('song');
                 break;
             default:
                 $medias[] = [
-                    'object_type' => (string) $this->object_type,
+                    'object_type' => $objectType,
                     'object_id' => $this->object_id,
                 ];
                 break;
         }
+
         if (!empty($medias)) {
             $playlist->add($medias, '&share_id=' . $this->id . '&share_secret=' . $this->secret);
         }
@@ -334,9 +357,6 @@ class Share extends database_object
         return $playlist;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return $this->user;
@@ -373,14 +393,28 @@ class Share extends database_object
             '<a onclick="showShareDialog(event, \'%s\', %d);">%s',
             $object_type,
             $object_id,
-            Ui::get_icon('share', T_('Share'))
+            Ui::get_material_symbol('share', T_('Share'))
         );
 
         if ($show_text) {
             $result .= sprintf('&nbsp;%s', T_('Share'));
         }
-        $result .= '</a>';
 
-        return $result;
+        return $result . '</a>';
+    }
+
+    public function getObjectType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::from((string) $this->object_type);
+    }
+
+    /**
+     * @deprecated Inject by constructor
+     */
+    private function getLibraryItemLoader(): LibraryItemLoaderInterface
+    {
+        global $dic;
+
+        return $dic->get(LibraryItemLoaderInterface::class);
     }
 }

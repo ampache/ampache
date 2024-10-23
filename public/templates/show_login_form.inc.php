@@ -33,9 +33,10 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\Mailer;
 use Ampache\Module\Util\Ui;
 
-$web_path = (string)AmpConfig::get('web_path', '');
-$htmllang = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$dir      = is_rtl(AmpConfig::get('lang', 'en_US'))
+$t_ampache = T_('Ampache');
+$web_path  = AmpConfig::get_web_path();
+$htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
+$dir       = is_rtl(AmpConfig::get('lang', 'en_US'))
     ? 'rtl'
     : 'ltr';
 
@@ -66,7 +67,7 @@ $_SESSION['login'] = true; ?>
     <div id="maincontainer">
         <?php if (!$mobile_session) {
             echo "<div id=\"header\"><!-- This is the header -->";
-            echo "<a href=\"" . $web_path . "\" id=\"headerlogo\"></a>";
+            echo "<a href=\"" . $web_path . "\" id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></a>";
             echo "</div>";
         } ?>
         <div id="loginbox">
@@ -104,15 +105,15 @@ $_SESSION['login'] = true; ?>
             </form>
             <?php if ($mobile_session) {
                 echo '<div id="mobileheader"><!-- This is the header -->';
-                echo '<h1 id="headerlogo"></h1>';
+                echo "<h1 id=\"logo\"><img src=\"" . Ui::get_logo_url() . "\" title=\"" . $t_ampache . "\" alt=\"" . $t_ampache . "\"></h1>";
                 echo '</div>';
             }
 if (AmpConfig::get('cookie_disclaimer')) {
-    echo '<div id="cookie_notice>';
+    echo '<div id="cookie_notice">';
     echo T_("Ampache places cookies on your computer to help make this website better.");
-    echo '</br>';
+    echo '<br>';
     echo T_("Cookies are used for core site functionality and are not used for tracking or analytics.");
-    echo '</br>';
+    echo '<br>';
     echo T_("By logging in you agree to the use of cookies while using this site.");
     echo '</div>';
 }

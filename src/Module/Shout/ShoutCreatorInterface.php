@@ -24,6 +24,7 @@
 namespace Ampache\Module\Shout;
 
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use PHPMailer\PHPMailer\Exception;
 
@@ -39,7 +40,7 @@ interface ShoutCreatorInterface
     public function create(
         User $user,
         library_item $libItem,
-        string $objectType,
+        LibraryItemEnum $objectType,
         string $text,
         bool $isSticky,
         int $offset

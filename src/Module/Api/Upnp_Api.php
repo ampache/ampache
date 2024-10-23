@@ -32,7 +32,7 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Clip;
+use Ampache\Repository\Model\Video;
 use Ampache\Repository\AlbumRepositoryInterface;
 use Ampache\Repository\LiveStreamRepositoryInterface;
 use Ampache\Repository\Model\User;
@@ -40,19 +40,13 @@ use Ampache\Repository\PodcastRepositoryInterface;
 use Ampache\Repository\SongRepositoryInterface;
 use DateTime;
 use DOMDocument;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
-use Ampache\Repository\Model\Movie;
-use Ampache\Repository\Model\Personal_Video;
 use Ampache\Repository\Model\Playlist;
-use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Podcast_Episode;
 use Ampache\Repository\Model\Search;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-use Ampache\Repository\Model\TvShow;
-use Ampache\Repository\Model\TVShow_Episode;
-use Ampache\Repository\Model\TVShow_Season;
-use Ampache\Repository\Model\Video;
 use Exception;
 use XMLReader;
 
@@ -224,7 +218,7 @@ class Upnp_Api
         $values = [];
         foreach ($lines as $line) {
             //$line = str_replace( ' ', '', $line );
-            $line   = preg_replace('/[\x00-\x1F\x7F]/', '', $line);
+            $line   = (string)preg_replace('/[\x00-\x1F\x7F]/', '', $line);
             $tokens = explode(' ', $line);
             //echo 'BARELINE:'.$line.'&'.count($tokens).PHP_EOL;
             if (count($tokens) > 1) {
@@ -277,10 +271,8 @@ class Upnp_Api
                 self::sendResponse($delaytime, 'urn:schemas-upnp-org:service:ContentDirectory:1', $address);
                 # And one that MiniDLNA advertises
                 self::sendResponse($delaytime, 'urn:microsoft.com:service:X_MS_MediaReceiverRegistrar:1', $address);
-            } else {
-                if (self::SSDP_DEBUG) {
-                    debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
-                }
+            } elseif (self::SSDP_DEBUG) {
+                debug_event(self::class, 'ST header not for a service we provide [' . $actst . ']', 5);
             }
         } elseif (self::SSDP_DEBUG) {
             debug_event(self::class, 'M-SEARCH MAN header not understood [' . $headers['man'] . ']', 5);
@@ -695,7 +687,7 @@ class Upnp_Api
                             'id' => $root . '/smartplaylists',
                             'parentID' => $root,
                             'restricted' => '1',
-                            'childCount' => $counts['smartplaylist'],
+                            'childCount' => $counts['search'],
                             'dc:title' => T_('Smart Playlists'),
                             'upnp:class' => 'object.container',
                         ];
@@ -829,7 +821,7 @@ class Upnp_Api
                     case 2: // Get artist's albums list
                         $artist = new Artist((int)$pathreq[1]);
                         if ($artist->isNew() === false) {
-                            $album_ids              = static::getAlbumRepository()->getAlbumByArtist($artist->id);
+                            $album_ids              = self::getAlbumRepository()->getAlbumByArtist($artist->id);
                             [$maxCount, $album_ids] = self::_slice($album_ids, $start, $count);
                             foreach ($album_ids as $album_id) {
                                 $album = new Album($album_id);
@@ -860,7 +852,7 @@ class Upnp_Api
                     case 2: // Get album's songs list
                         $album = new Album((int)$pathreq[1]);
                         if (isset($album->id)) {
-                            $song_ids              = static::getSongRepository()->getByAlbum($album->id);
+                            $song_ids              = self::getSongRepository()->getByAlbum($album->id);
                             [$maxCount, $song_ids] = self::_slice($song_ids, $start, $count);
                             foreach ($song_ids as $song_id) {
                                 $song = new Song($song_id);
@@ -906,7 +898,7 @@ class Upnp_Api
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
-                                if ($item['object_type'] == 'song') {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
                                     $song->format();
                                     $mediaItems[] = self::_itemSong($song, $parent);
@@ -932,7 +924,7 @@ class Upnp_Api
                             $items              = $playlist->get_items();
                             [$maxCount, $items] = self::_slice($items, $start, $count);
                             foreach ($items as $item) {
-                                if ($item['object_type'] == 'song') {
+                                if ($item['object_type'] == LibraryItemEnum::SONG) {
                                     $song = new Song($item['object_id']);
                                     $song->format();
                                     $mediaItems[] = self::_itemSong($song, $parent);
@@ -947,7 +939,7 @@ class Upnp_Api
                 if (count($pathreq) == 1) {
                     /** @var User|null $user */
                     $user   = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
-                    $radios = static::getLiveStreamRepository()->findAll(
+                    $radios = self::getLiveStreamRepository()->findAll(
                         $user
                     );
 
@@ -1022,104 +1014,24 @@ class Upnp_Api
 
         $meta = null;
         switch ($pathreq[0]) {
-            case 'tvshows':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = count(Catalog::get_tvshows());
-                        $meta   = [
-                            'id' => $root . '/tvshows',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('TV Shows'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->isNew() === false) {
-                            $tvshow->format();
-                            $meta = self::_itemTVShow($tvshow, $root . '/tvshows');
-                        }
-                        break;
-                    case 3:
-                        $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->isNew() === false) {
-                            $season->format();
-                            $meta = self::_itemTVShowSeason($season, $root . '/tvshows/' . $pathreq[1]);
-                        }
-                        break;
-                    case 4:
-                        $video = new TVShow_Episode((int)$pathreq[3]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/tvshows/' . $pathreq[1] . '/' . $pathreq[2]);
-                        }
-                        break;
-                }
-                break;
             case 'clips':
                 switch (count($pathreq)) {
                     case 1:
-                        $counts = Catalog::get_videos_count(null, 'clip');
+                        $counts = Catalog::get_videos_count();
                         $meta   = [
-                            'id' => $root . '/clips',
+                            'id' => $root . '/videos',
                             'parentID' => $root,
                             'restricted' => '1',
                             'childCount' => $counts,
-                            'dc:title' => T_('Clips'),
+                            'dc:title' => T_('Videos'),
                             'upnp:class' => 'object.container',
                         ];
                         break;
                     case 2:
-                        $video = new Clip((int)$pathreq[1]);
+                        $video = new Video((int)$pathreq[1]);
                         if ($video->isNew() === false) {
                             $video->format();
-                            $meta = self::_itemVideo($video, $root . '/clips');
-                        }
-                        break;
-                }
-                break;
-            case 'movies':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = Catalog::get_videos_count(null, 'movie');
-                        $meta   = [
-                            'id' => $root . '/movies',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('Movies'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $video = new Movie((int)$pathreq[1]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/movies');
-                        }
-                        break;
-                }
-                break;
-            case 'personal_videos':
-                switch (count($pathreq)) {
-                    case 1:
-                        $counts = Catalog::get_videos_count(null, 'personal_video');
-                        $meta   = [
-                            'id' => $root . '/personal_videos',
-                            'parentID' => $root,
-                            'restricted' => '1',
-                            'childCount' => $counts,
-                            'dc:title' => T_('Personal Videos'),
-                            'upnp:class' => 'object.container',
-                        ];
-                        break;
-                    case 2:
-                        $video = new Personal_Video((int)$pathreq[1]);
-                        if ($video->isNew() === false) {
-                            $video->format();
-                            $meta = self::_itemVideo($video, $root . '/personal_videos');
+                            $meta = self::_itemVideo($video, $root . '/videos');
                         }
                         break;
                 }
@@ -1162,68 +1074,10 @@ class Upnp_Api
         }
 
         switch ($pathreq[0]) {
-            case 'tvshows':
-                switch (count($pathreq)) {
-                    case 1: // Get tvshow list
-                        $tvshows                  = Catalog::get_tvshows();
-                        [$maxCount, $tvshows]     = self::_slice($tvshows, $start, $count);
-                        foreach ($tvshows as $tvshow) {
-                            $tvshow->format();
-                            $mediaItems[] = self::_itemTVShow($tvshow, $parent);
-                        }
-                        break;
-                    case 2: // Get season list
-                        $tvshow = new TvShow((int)$pathreq[1]);
-                        if ($tvshow->isNew() === false) {
-                            $season_ids                  = $tvshow->get_seasons();
-                            [$maxCount, $season_ids]     = self::_slice($season_ids, $start, $count);
-                            foreach ($season_ids as $season_id) {
-                                $season = new TVShow_Season($season_id);
-                                $season->format();
-                                $mediaItems[] = self::_itemTVShowSeason($season, $parent);
-                            }
-                        }
-                        break;
-                    case 3: // Get episode list
-                        $season = new TVShow_Season((int)$pathreq[2]);
-                        if ($season->isNew() === false) {
-                            $episode_ids                  = $season->get_episodes();
-                            [$maxCount, $episode_ids]     = self::_slice($episode_ids, $start, $count);
-                            foreach ($episode_ids as $episode_id) {
-                                $video = new Video($episode_id);
-                                $video->format();
-                                $mediaItems[] = self::_itemVideo($video, $parent);
-                            }
-                        }
-                        break;
-                }
-                break;
-            case 'clips':
-                // Get clips list
+            case 'videos':
+                // Get videos list
                 if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'clip');
-                    [$maxCount, $videos] = self::_slice($videos, $start, $count);
-                    foreach ($videos as $video) {
-                        $video->format();
-                        $mediaItems[] = self::_itemVideo($video, $parent);
-                    }
-                }
-                break;
-            case 'movies':
-                // Get movies list
-                if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'movie');
-                    [$maxCount, $videos] = self::_slice($videos, $start, $count);
-                    foreach ($videos as $video) {
-                        $video->format();
-                        $mediaItems[] = self::_itemVideo($video, $parent);
-                    }
-                }
-                break;
-            case 'personal_videos':
-                // Get personal_videos list
-                if (count($pathreq) == 1) {
-                    $videos              = Catalog::get_videos(null, 'personal_video');
+                    $videos              = Catalog::get_videos();
                     [$maxCount, $videos] = self::_slice($videos, $start, $count);
                     foreach ($videos as $video) {
                         $video->format();
@@ -1232,10 +1086,7 @@ class Upnp_Api
                 }
                 break;
             default:
-                $mediaItems[] = self::_videoMetadata('clips');
-                $mediaItems[] = self::_videoMetadata('tvshows');
-                $mediaItems[] = self::_videoMetadata('movies');
-                $mediaItems[] = self::_videoMetadata('personal_videos');
+                $mediaItems[] = self::_videoMetadata('videos');
                 break;
         }
 
@@ -1662,7 +1513,7 @@ class Upnp_Api
      */
     private static function _itemAlbum($album, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($album->id, 'album', $api_session);
 
         return [
@@ -1719,7 +1570,7 @@ class Upnp_Api
      */
     public static function _itemSong($song, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($song->album, 'album', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1743,7 +1594,7 @@ class Upnp_Api
             'parentID' => $parent,
             'restricted' => 'false', // XXX
             'dc:title' => self::_replaceSpecialSymbols($song->f_name),
-            'dc:date' => date("c", (int) $song->addition_time),
+            'dc:date' => $song->getAdditionTime()->format(DATE_ATOM),
             'dc:creator' => self::_replaceSpecialSymbols($song->f_artist),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
             'upnp:albumArtURI' => $art_url,
@@ -1769,7 +1620,7 @@ class Upnp_Api
      */
     public static function _itemLiveStream($radio, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($radio->id, 'live_stream', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1789,47 +1640,13 @@ class Upnp_Api
     }
 
     /**
-     * @param $tvshow
-     * @param string $parent
-     * @return array
-     */
-    private static function _itemTVShow($tvshow, $parent): array
-    {
-        return [
-            'id' => 'amp://video/tvshows/' . $tvshow->id,
-            'parentID' => $parent,
-            'restricted' => '1',
-            'childCount' => count($tvshow->get_seasons()),
-            'dc:title' => self::_replaceSpecialSymbols($tvshow->f_name),
-            'upnp:class' => 'object.container',
-        ];
-    }
-
-    /**
-     * @param TVShow_Season $season
-     * @param string $parent
-     * @return array
-     */
-    private static function _itemTVShowSeason($season, $parent): array
-    {
-        return [
-            'id' => 'amp://video/tvshows/' . $season->tvshow . '/' . $season->id,
-            'parentID' => $parent,
-            'restricted' => '1',
-            'childCount' => count($season->get_episodes()),
-            'dc:title' => self::_replaceSpecialSymbols($season->f_name),
-            'upnp:class' => 'object.container',
-        ];
-    }
-
-    /**
      * @param $video
      * @param string $parent
      * @return array
      */
     private static function _itemVideo($video, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($video->id, 'video', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();
@@ -1875,7 +1692,7 @@ class Upnp_Api
      */
     private static function _itemPodcastEpisode($episode, $parent): array
     {
-        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : false;
+        $api_session = (AmpConfig::get('require_session')) ? Stream::get_session() : null;
         $art_url     = Art::url($episode->podcast, 'podcast', $api_session);
 
         $fileTypesByExt = self::_getFileTypes();

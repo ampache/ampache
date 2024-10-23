@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Register;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -47,6 +48,8 @@ final class AddUserAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'add_user';
 
+    public UiInterface $ui;
+
     private ConfigContainerInterface $configContainer;
 
     private ModelFactoryInterface $modelFactory;
@@ -54,8 +57,6 @@ final class AddUserAction implements ApplicationActionInterface
     private UserRepositoryInterface $userRepository;
 
     private Registration\RegistrationAgreementRendererInterface $registrationAgreementRenderer;
-
-    private UiInterface $ui;
 
     public function __construct(
         ConfigContainerInterface $configContainer,
@@ -166,27 +167,18 @@ final class AddUserAction implements ApplicationActionInterface
         if (AmpError::occurred()) {
             $this->ui->show(
                 'show_user_registration.inc.php',
-                [
-                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
-                ]
+                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
             );
 
             return null;
         }
 
-        /* Attempt to create the new user */
-        switch ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
-            case 'admin':
-                $access = 100;
-                break;
-            case 'user':
-                $access = 25;
-                break;
-            case 'guest':
-            default:
-                $access = 5;
-                break;
-        } // auto-user level
+        // Attempt to create the new user
+        $access = match ($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER)) {
+            'admin' => AccessLevelEnum::ADMIN,
+            'user' => AccessLevelEnum::USER,
+            default => AccessLevelEnum::GUEST,
+        };
 
         $userId = User::create(
             $username,
@@ -206,9 +198,7 @@ final class AddUserAction implements ApplicationActionInterface
 
             $this->ui->show(
                 'show_user_registration.inc.php',
-                [
-                    'registrationAgreementRenderer' => $this->registrationAgreementRenderer,
-                ]
+                ['registrationAgreementRenderer' => $this->registrationAgreementRenderer]
             );
 
             return null;

@@ -30,6 +30,8 @@ use Ampache\Module\Api\Api;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
 use Ampache\Module\Api\Json_Data;
 use Ampache\Module\Api\Xml_Data;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Podcast\Exception\PodcastCreationException;
 use Ampache\Module\Podcast\PodcastCreatorInterface;
 use Ampache\Repository\Model\Catalog;
@@ -59,7 +61,7 @@ final class PodcastCreateMethod
 
             return false;
         }
-        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, ['url', 'catalog'], self::ACTION)) {
@@ -79,7 +81,7 @@ final class PodcastCreateMethod
                 urldecode($input['url']),
                 $catalog
             );
-        } catch (PodcastCreationException $e) {
+        } catch (PodcastCreationException) {
             Api::error('Bad Request', '4710', self::ACTION, 'system', $input['api_format']);
 
             return false;

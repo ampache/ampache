@@ -22,6 +22,10 @@ declare(strict_types=0);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
+
+/** @var string $web_path */
+/** @var string $htmllang */
+
 require __DIR__ . '/install_header.inc.php'; ?>
 <?php if (!defined('INSTALL')) {
     return false;

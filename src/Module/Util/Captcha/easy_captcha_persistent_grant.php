@@ -33,13 +33,15 @@ use Ampache\Config\AmpConfig;
  */
 class easy_captcha_persistent_grant extends easy_captcha
 {
-    public function __construct($captcha_id = null, $ignore_expiration = 0)
-    {
+    public function __construct(
+        $captcha_id = null,
+        $ignore_expiration = 0
+    ) {
     }
 
     /**
-     * @param integer $input
-     * @return boolean
+     * @param int $input
+     * @return bool
      */
     public function solved($input = 0)
     {
@@ -50,7 +52,7 @@ class easy_captcha_persistent_grant extends easy_captcha
         return false;
     }
 
-    #-- set captcha persistence cookie
+    // set captcha persistence cookie
     public function grant()
     {
         if (!headers_sent()) {
@@ -65,10 +67,10 @@ class easy_captcha_persistent_grant extends easy_captcha
         }
     }
 
-    #-- pseudo password (time-bombed)
+    // pseudo password (time-bombed)
 
     /**
-     * @param integer $deviation
+     * @param int $deviation
      * @return string
      */
     public function validity_token($deviation = 0)

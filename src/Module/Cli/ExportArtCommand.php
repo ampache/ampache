@@ -59,8 +59,11 @@ final class ExportArtCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         $interactor->info(
             T_('Start Art Dump'),
             true
@@ -73,14 +76,14 @@ final class ExportArtCommand extends Command
                 $this->dic->get(MetadataWriter::class),
                 $clearData
             );
-        } catch (ArtExportException $e) {
+        } catch (ArtExportException $error) {
             $this->logger->error(
-                $e->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                $error->getMessage(),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $interactor->error(
-                $e->getMessage(),
+                $error->getMessage(),
                 true
             );
         }

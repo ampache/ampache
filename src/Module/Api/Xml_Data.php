@@ -41,6 +41,7 @@ use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Playlist;
@@ -69,8 +70,10 @@ class Xml_Data
 {
     // This is added so that we don't pop any webservers
     private static ?int $limit  = 5000;
+
     private static int $offset  = 0;
-    private static string $type = '';
+
+    private static ?int $count = null;
 
     /**
      * set_offset
@@ -103,21 +106,13 @@ class Xml_Data
     }
 
     /**
-     * set_type
+     * set_count
      *
-     * This sets the type of Xml_Data we are working on
-     *
-     * @param string $type Xml_Data type
+     * Set the total count of returned objects
      */
-    public static function set_type($type): bool
+    public static function set_count(int $count): void
     {
-        if (!in_array(strtolower($type), ['rss', 'xspf', 'itunes'])) {
-            return false;
-        }
-
-        self::$type = $type;
-
-        return true;
+        self::$count = (int)$count;
     }
 
     /**
@@ -165,31 +160,6 @@ class Xml_Data
     public static function empty(): string
     {
         return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n</root>\n";
-    }
-
-    /**
-     * header
-     *
-     * This returns the header
-     *
-     * @param string $title
-     * @see _header()
-     */
-    public static function header($title = null): string
-    {
-        return self::_header($title);
-    }
-
-    /**
-     * footer
-     *
-     * This returns the footer
-     *
-     * @see _footer()
-     */
-    public static function footer(): string
-    {
-        return self::_footer();
     }
 
     /**
@@ -381,11 +351,12 @@ class Xml_Data
      */
     public static function index($objects, $object_type, $user, $include = false): string
     {
-        $md5 = md5(serialize($objects));
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
-        $string = "<total_count>" . count($objects) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
+        $string = "<total_count>" . $count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         switch ($object_type) {
             case 'album_artist':
@@ -519,8 +490,9 @@ class Xml_Data
      */
     public static function indexes($objects, $object_type, $user, $full_xml = true, $include = false): string
     {
-        $md5 = md5(serialize($objects));
-        if ((count($objects) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         // you might not want the joined tables for playlists
@@ -545,7 +517,7 @@ class Xml_Data
                         if ($artist->isNew()) {
                             break;
                         }
-                        $albums = static::getAlbumRepository()->getAlbumByArtist($object_id);
+                        $albums = self::getAlbumRepository()->getAlbumByArtist($object_id);
                         $string .= "<artist id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n";
                         foreach ($albums as $album_id) {
                             if ($album_id > 0) {
@@ -603,7 +575,7 @@ class Xml_Data
                     $songs = ($include) ? $playlist->get_items() : [];
                     $string .= "<$object_type id=\"" . $object_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<items>" . (int)$playitem_total . "</items>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<type><![CDATA[" . $playlist->type . "]]></type>\n";
                     foreach ($songs as $song_id) {
-                        if ($song_id['object_type'] == 'song') {
+                        if ($song_id['object_type'] === LibraryItemEnum::SONG) {
                             $string .= "\t\t<playlisttrack id=\"" . $song_id['object_id'] . "\">" . $song_id['track'] . "</playlisttrack>\n";
                         }
                     }
@@ -646,18 +618,22 @@ class Xml_Data
      * This takes an array of object_ids and return XML based on the type of object
      * we want
      *
-     * @param array $searches Array of object_ids (Mixed string|int)
+     * @param array $searches Array of object_ids by object type
+     * @param array $counts Array of counts for each object type
      * @param User $user
      */
-    public static function searches($searches, $user): string
+    public static function searches($searches, $counts, $user): string
     {
         $string = "<search>\n";
 
         // here is where we call the object type
         foreach ($searches as $object_type => $objects) {
+            $count = (isset($counts[$object_type]) && is_int($counts[$object_type]))
+                ? $counts[$object_type]
+                : count($objects);
             switch ($object_type) {
                 case 'artist':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     foreach ($objects as $object_id) {
@@ -669,7 +645,7 @@ class Xml_Data
                     }
                     break;
                 case 'album':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     foreach ($objects as $object_id) {
@@ -688,7 +664,7 @@ class Xml_Data
                     }
                     break;
                 case 'song':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     foreach ($objects as $object_id) {
@@ -708,7 +684,7 @@ class Xml_Data
                     }
                     break;
                 case 'playlist':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     foreach ($objects as $object_id) {
@@ -729,7 +705,7 @@ class Xml_Data
                     $string .= self::shares($objects, $user);
                     break;
                 case 'podcast':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     foreach ($objects as $object_id) {
@@ -740,7 +716,7 @@ class Xml_Data
                     }
                     break;
                 case 'podcast_episode':
-                    if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+                    if (($count > self::$limit || self::$offset > 0) && self::$limit) {
                         $objects = array_splice($objects, self::$offset, self::$limit);
                     }
                     $string .= self::podcast_episodes($objects, $user, false);
@@ -766,8 +742,9 @@ class Xml_Data
      */
     public static function lists($objects): string
     {
-        $string = "<total_count>" . count($objects) . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        $count  = self::$count ?? count($objects);
+        $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
@@ -798,8 +775,9 @@ class Xml_Data
      */
     public static function browses($objects, $parent_id, $parent_type, $child_type, $catalog_id): string
     {
-        $string = "<total_count>" . count($objects) . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        $count  = self::$count ?? count($objects);
+        $string = "<total_count>" . $count . "</total_count>\n<md5>" . md5(serialize($objects)) . "</md5>\n";
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_slice($objects, self::$offset, self::$limit);
         }
         $string .= "<catalog_id>" . $catalog_id . "</catalog_id>\n" .
@@ -826,20 +804,21 @@ class Xml_Data
      *
      * This returns licenses to the user, in a pretty xml document with the information
      *
-     * @param int[] $licenses Licence id's assigned to songs and artists
+     * @param int[] $objects Licence id's assigned to songs and artists
      * @param User $user
      */
-    public static function licenses($licenses, $user): string
+    public static function licenses($objects, $user): string
     {
-        $md5 = md5(serialize($licenses));
-        if ((count($licenses) > self::$limit || self::$offset > 0) && self::$limit) {
-            $licenses = array_splice($licenses, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . Catalog::get_update_info('license', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         $licenseRepository = self::getLicenseRepository();
 
-        foreach ($licenses as $license_id) {
+        foreach ($objects as $license_id) {
             $license = $licenseRepository->findById($license_id);
             if ($license !== null) {
                 $string .= "<license id=\"$license_id\">\n\t<name><![CDATA[" . $license->getName() . "]]></name>\n\t<description><![CDATA[" . $license->getDescription() . "]]></description>\n\t<external_link><![CDATA[" . $license->getLinkFormatted() . "]]></external_link>\n</license>\n";
@@ -854,20 +833,22 @@ class Xml_Data
      *
      * This returns labels to the user, in a pretty xml document with the information
      *
-     * @param int[] $labels
+     * @param int[] $objects
      * @param User $user
      */
-    public static function labels($labels, $user): string
+    public static function labels($objects, $user): string
     {
-        $md5 = md5(serialize($labels));
-        if ((count($labels) > self::$limit || self::$offset > 0) && self::$limit) {
-            $labels = array_splice($labels, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
+
         $string = "<total_count>" . Catalog::get_update_info('label', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         $labelRepository = self::getLabelRepository();
 
-        foreach ($labels as $label_id) {
+        foreach ($objects as $label_id) {
             $label = $labelRepository->findById($label_id);
             if ($label === null) {
                 continue;
@@ -885,19 +866,20 @@ class Xml_Data
      *
      * This returns live_streams to the user, in a pretty xml document with the information
      *
-     * @param int[] $live_streams
+     * @param int[] $objects
      * @param User $user
      * @param bool $full_xml
      */
-    public static function live_streams($live_streams, $user, $full_xml = true): string
+    public static function live_streams($objects, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($live_streams));
-        if ((count($live_streams) > self::$limit || self::$offset > 0) && self::$limit) {
-            $live_streams = array_splice($live_streams, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('live_stream', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
-        foreach ($live_streams as $live_stream_id) {
+        foreach ($objects as $live_stream_id) {
             $live_stream = new Live_Stream($live_stream_id);
 
             $string .= "<live_stream id=\"" . $live_stream_id . "\">\n\t<name><![CDATA[" . $live_stream->get_fullname() . "]]></name>\n\t<url><![CDATA[" . $live_stream->url . "]]></url>\n\t<codec><![CDATA[" . $live_stream->codec . "]]></codec>\n\t<catalog>" . $live_stream->catalog . "</catalog>\n\t<site_url><![CDATA[" . $live_stream->site_url . "]]></site_url>\n</live_stream>\n";
@@ -911,18 +893,19 @@ class Xml_Data
      *
      * This returns genres to the user, in a pretty xml document with the information
      *
-     * @param int[] $tags Genre id's to include
+     * @param int[] $objects Genre id's to include
      * @param User $user
      */
-    public static function genres($tags, $user): string
+    public static function genres($objects, $user): string
     {
-        $md5 = md5(serialize($tags));
-        if ((count($tags) > self::$limit || self::$offset > 0) && self::$limit) {
-            $tags = array_splice($tags, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . Catalog::get_update_info('tag', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
-        foreach ($tags as $tag_id) {
+        foreach ($objects as $tag_id) {
             $tag    = new Tag($tag_id);
             $counts = $tag->count();
             $string .= "<genre id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<live_streams>" . (int) ($counts['live_stream'] ?? 0) . "</live_streams>\n</genre>\n";
@@ -937,22 +920,23 @@ class Xml_Data
      * This takes an array of artists and then returns a pretty xml document with the information
      * we want
      *
-     * @param int[] $artists Artist id's to include
+     * @param int[] $objects Artist id's to include
      * @param array $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function artists($artists, $include, $user, $full_xml = true): string
+    public static function artists($objects, $include, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($artists));
-        if ((count($artists) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $artists = array_splice($artists, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('artist', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
-        Rating::build_cache('artist', $artists);
+        Rating::build_cache('artist', $objects);
 
-        foreach ($artists as $artist_id) {
+        foreach ($objects as $artist_id) {
             $artist = new Artist($artist_id);
             if ($artist->isNew()) {
                 continue;
@@ -965,11 +949,11 @@ class Xml_Data
             $tag_string  = self::genre_string($artist->tags);
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $artist_id . '&object_type=artist';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $artist_id . '&object_type=artist';
 
             // Handle includes
-            $albums = (in_array("albums", $include)) ? self::albums(static::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false) : '';
-            $songs  = (in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByArtist($artist_id), $user, false) : '';
+            $albums = (in_array("albums", $include)) ? self::albums(self::getAlbumRepository()->getAlbumByArtist($artist_id), [], $user, false) : '';
+            $songs  = (in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByArtist($artist_id), $user, false) : '';
 
             $string .= "<artist id=\"" . $artist->id . "\">\n\t<name><![CDATA[" . $artist->get_fullname() . "]]></name>\n\t<prefix><![CDATA[" . $artist->prefix . "]]></prefix>\n\t<basename><![CDATA[" . $artist->name . "]]></basename>\n" . $tag_string . "\t<albums>" . $albums . "</albums>\n\t<albumcount>" . $artist->album_count . "</albumcount>\n\t<songs>" . $songs . "</songs>\n\t<songcount>" . $artist->song_count . "</songcount>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($artist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $artist->mbid . "]]></mbid>\n\t<summary><![CDATA[" . $artist->summary . "]]></summary>\n\t<time><![CDATA[" . $artist->time . "]]></time>\n\t<yearformed>" . (int)$artist->yearformed . "</yearformed>\n\t<placeformed><![CDATA[" . $artist->placeformed . "]]></placeformed>\n</artist>\n";
         } // end foreach artists
@@ -982,24 +966,25 @@ class Xml_Data
      *
      * This echos out a standard albums XML document, it pays attention to the limit
      *
-     * @param int[] $albums Album id's to include
+     * @param int[] $objects Album id's to include
      * @param array|false $include Array of other items to include.
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function albums($albums, $include, $user, $full_xml = true): string
+    public static function albums($objects, $include, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($albums));
-        if ((count($albums) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $albums = array_splice($albums, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('album', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
         // original year (fall back to regular year)
         $original_year = AmpConfig::get('use_original_year');
 
-        Rating::build_cache('album', $albums);
+        Rating::build_cache('album', $objects);
 
-        foreach ($albums as $album_id) {
+        foreach ($objects as $album_id) {
             $album = new Album($album_id);
             if ($album->isNew()) {
                 continue;
@@ -1032,10 +1017,10 @@ class Xml_Data
             }
 
             // Handle includes
-            $songs = ($include && in_array("songs", $include)) ? self::songs(static::getSongRepository()->getByAlbum($album->id), $user, false) : '';
+            $songs = ($include && in_array("songs", $include)) ? self::songs(self::getSongRepository()->getByAlbum($album->id), $user, false) : '';
 
             // Build the Art URL, include session
-            $art_url = AmpConfig::get('web_path') . '/image.php?object_id=' . $album->id . '&object_type=album';
+            $art_url = AmpConfig::get_web_path() . '/image.php?object_id=' . $album->id . '&object_type=album';
             $string .= "\t<time>" . $album->total_duration . "</time>\n\t<year>" . $year . "</year>\n\t<tracks>" . $songs . "</tracks>\n\t<songcount>" . $album->song_count . "</songcount>\n\t<diskcount>" . $album->disk_count . "</diskcount>\n\t<type>" . $album->release_type . "</type>\n" . self::genre_string($album->tags) . "\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($album->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . $rating->get_average_rating() . "</averagerating>\n\t<mbid><![CDATA[" . $album->mbid . "]]></mbid>\n</album>\n";
         } // end foreach
 
@@ -1047,15 +1032,16 @@ class Xml_Data
      *
      * This takes an array of playlist ids and then returns a nice pretty XML document
      *
-     * @param array $playlists Playlist id's to include
+     * @param array $objects Playlist id's to include
      * @param User $user
      * @param bool $songs
      */
-    public static function playlists($playlists, $user, $songs = false): string
+    public static function playlists($objects, $user, $songs = false): string
     {
-        $md5 = md5(serialize($playlists));
-        if ((count($playlists) > self::$limit || self::$offset > 0) && self::$limit) {
-            $playlists = array_slice($playlists, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
 
         $total_count = (AmpConfig::get('hide_search', false))
@@ -1064,7 +1050,7 @@ class Xml_Data
         $string = "<total_count>" . $total_count . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
         // Foreach the playlist ids
-        foreach ($playlists as $playlist_id) {
+        foreach ($objects as $playlist_id) {
             /**
              * Strip smart_ from playlist id and compare to original
              * smartlist = 'smart_1'
@@ -1089,7 +1075,7 @@ class Xml_Data
                 $items          = '';
                 $playlisttracks = $playlist->get_items();
                 foreach ($playlisttracks as $objects) {
-                    if ($objects['object_type'] === 'song') {
+                    if ($objects['object_type'] === LibraryItemEnum::SONG) {
                         $items .= "\t\t<playlisttrack id=\"" . $objects['object_id'] . "\">" . $objects['track'] . "</playlisttrack>\n";
                     }
                 }
@@ -1101,11 +1087,12 @@ class Xml_Data
                 $md5   = null;
             }
 
-            $art_url       = Art::url($playlist->id, $object_type, Core::get_request('auth'));
-            $playlist_name = $playlist->get_fullname();
-            $playlist_user = $playlist->username;
-            $playlist_type = $playlist->type;
-            $last_update   = $playlist->last_update;
+            $art_url           = Art::url($playlist->id, $object_type, Core::get_request('auth'));
+            $playlist_name     = $playlist->get_fullname();
+            $playlist_user     = $playlist->user;
+            $playlist_username = $playlist->username;
+            $playlist_type     = $playlist->type;
+            $last_update       = $playlist->last_update;
 
             $rating          = new Rating($playlist->id, $object_type);
             $user_rating     = $rating->get_user_rating($user->getId());
@@ -1114,7 +1101,7 @@ class Xml_Data
             $has_collaborate = $has_access ?: $playlist->has_collaborate($user);
 
             // Build this element
-            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_user . "]]></owner>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . ($has_access ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . ($has_collaborate ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<md5>" . (string)$md5 . "</md5>\n\t<last_update>" . (string)$last_update . "</last_update>\n</playlist>\n";
+            $string .= "<playlist id=\"" . $playlist_id . "\">\n\t<name><![CDATA[" . $playlist_name . "]]></name>\n\t<owner><![CDATA[" . $playlist_username . "]]></owner>\n\t<user id=\"" . (string)$playlist_user . "\">\n\t\t<username><![CDATA[" . $playlist_username . "]]></username>\n\t</user>\n\t<items>" . $items . "</items>\n\t<type>" . $playlist_type . "</type>\n\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_access>" . ($has_access ? 1 : 0) . "</has_access>\n\t<has_collaborate>" . ($has_collaborate ? 1 : 0) . "</has_collaborate>\n\t<has_art>" . ($playlist->has_art() ? 1 : 0) . "</has_art>\n\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t<rating>" . $user_rating . "</rating>\n\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t<md5>" . (string)$md5 . "</md5>\n\t<last_update>" . (string)$last_update . "</last_update>\n</playlist>\n";
         } // end foreach
 
         return self::output_xml($string);
@@ -1125,18 +1112,19 @@ class Xml_Data
      *
      * This returns shares to the user, in a pretty xml document with the information
      *
-     * @param int[] $shares Share id's to include
+     * @param int[] $objects Share id's to include
      * @param User $user
      */
-    public static function shares($shares, $user): string
+    public static function shares($objects, $user): string
     {
-        $md5 = md5(serialize($shares));
-        if ((count($shares) > self::$limit || self::$offset > 0) && self::$limit) {
-            $shares = array_splice($shares, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . Catalog::get_update_info('share', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
-        foreach ($shares as $share_id) {
+        foreach ($objects as $share_id) {
             $share = new Share($share_id);
             $string .= "<share id=\"$share_id\">\n\t<name><![CDATA[" . $share->getObjectName() . "]]></name>\n\t<user><![CDATA[" . $share->getUserName() . "]]></user>\n\t<allow_stream>" . $share->allow_stream . "</allow_stream>\n\t<allow_download>" . $share->allow_download . "</allow_download>\n\t<creation_date>" . $share->creation_date . "</creation_date>\n\t<lastvisit_date>" . $share->lastvisit_date . "</lastvisit_date>\n\t<object_type><![CDATA[" . $share->object_type . "]]></object_type>\n\t<object_id>" . $share->object_id . "</object_id>\n\t<expire_days>" . $share->expire_days . "</expire_days>\n\t<max_counter>" . $share->max_counter . "</max_counter>\n\t<counter>" . $share->counter . "</counter>\n\t<secret><![CDATA[" . $share->secret . "]]></secret>\n\t<public_url><![CDATA[" . $share->public_url . "]]></public_url>\n\t<description><![CDATA[" . $share->description . "]]></description>\n</share>\n";
         } // end foreach
@@ -1164,8 +1152,11 @@ class Xml_Data
             }
 
             $string .= "<bookmark id=\"$bookmark_id\">\n\t<user><![CDATA[" . $bookmark->getUserName() . "]]></user>\n\t<object_type><![CDATA[" . $bookmark->object_type . "]]></object_type>\n\t<object_id>" . $bookmark->object_id . "</object_id>\n\t<position>" . $bookmark->position . "</position>\n\t<client><![CDATA[" . $bookmark->comment . "]]></client>\n\t<creation_date>" . $bookmark->creation_date . "</creation_date>\n\t<update_date><![CDATA[" . $bookmark->update_date . "]]></update_date>\n";
-            if ($include) {
-                $user = User::get_from_username($bookmark->getUserName());
+            $user = User::get_from_username($bookmark->getUserName());
+            if (
+                $include &&
+                $user !== null
+            ) {
                 switch ($bookmark->object_type) {
                     case 'song':
                         $string .= self::songs([$bookmark->object_id], $user, false);
@@ -1189,18 +1180,19 @@ class Xml_Data
      *
      * This returns catalogs to the user, in a pretty xml document with the information
      *
-     * @param int[] $catalogs group of catalog id's
+     * @param int[] $objects group of catalog id's
      * @param User $user
      */
-    public static function catalogs($catalogs, $user): string
+    public static function catalogs($objects, $user): string
     {
-        $md5 = md5(serialize($catalogs));
-        if ((count($catalogs) > self::$limit || self::$offset > 0) && self::$limit) {
-            $catalogs = array_splice($catalogs, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "<total_count>" . Catalog::get_update_info('catalog', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
-        foreach ($catalogs as $catalog_id) {
+        foreach ($objects as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {
                 break;
@@ -1217,22 +1209,23 @@ class Xml_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param int[] $podcasts Podcast id's to include
+     * @param int[] $objects Podcast id's to include
      * @param User $user
      * @param bool $episodes include the episodes of the podcast //optional
      */
-    public static function podcasts($podcasts, $user, $episodes = false): string
+    public static function podcasts($objects, $user, $episodes = false): string
     {
-        $md5 = md5(serialize($podcasts));
-        if ((count($podcasts) > self::$limit || self::$offset > 0) && self::$limit) {
-            $podcasts = array_splice($podcasts, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
 
         $podcastRepository = self::getPodcastRepository();
 
         $string = "<total_count>" . Catalog::get_update_info('podcast', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n";
 
-        foreach ($podcasts as $podcast_id) {
+        foreach ($objects as $podcast_id) {
             $podcast = $podcastRepository->findById($podcast_id);
             if ($podcast === null) {
                 continue;
@@ -1260,19 +1253,20 @@ class Xml_Data
      *
      * This returns podcasts to the user, in a pretty xml document with the information
      *
-     * @param int[] $podcast_episodes Podcast_Episode id's to include
+     * @param int[] $objects Podcast_Episode id's to include
      * @param User $user
      * @param bool $full_xml whether to return a full XML document or just the node.
      */
-    public static function podcast_episodes($podcast_episodes, $user, $full_xml = true): string
+    public static function podcast_episodes($objects, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($podcast_episodes));
-        if ((count($podcast_episodes) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $podcast_episodes = array_splice($podcast_episodes, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+            $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('podcast_episode', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
-        foreach ($podcast_episodes as $episode_id) {
+        foreach ($objects as $episode_id) {
             $episode = new Podcast_Episode($episode_id);
             if ($episode->isNew()) {
                 continue;
@@ -1282,7 +1276,7 @@ class Xml_Data
             $user_rating = $rating->get_user_rating($user->getId());
             $flag        = new Userflag($episode_id, 'podcast_episode');
             $art_url     = Art::url($episode->podcast, 'podcast', Core::get_request('auth'));
-            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getStateDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
+            $string .= "\t<podcast_episode id=\"$episode_id\">\n\t\t<title><![CDATA[" . $episode->get_fullname() . "]]></title>\n\t\t<name><![CDATA[" . $episode->get_fullname() . "]]></name>\n\t\t<podcast id=\"$episode->podcast\">\n\t\t\t<name><![CDATA[" . $episode->getPodcastName() . "]]></name></podcast>\n\t\t<description><![CDATA[" . $episode->get_description() . "]]></description>\n\t\t<category><![CDATA[" . $episode->getCategory() . "]]></category>\n\t\t<author><![CDATA[" . $episode->getAuthor() . "]]></author>\n\t\t<author_full><![CDATA[" . $episode->getAuthor() . "]]></author_full>\n\t\t<website><![CDATA[" . $episode->getWebsite() . "]]></website>\n\t\t<pubdate><![CDATA[" . $episode->getPubDate()->format(DATE_ATOM) . "]]></pubdate>\n\t\t<state><![CDATA[" . $episode->getState()->toDescription() . "]]></state>\n\t\t<filelength><![CDATA[" . $episode->f_time_h . "]]></filelength>\n\t\t<filesize><![CDATA[" . $episode->getSizeFormatted() . "]]></filesize>\n\t\t<filename><![CDATA[" . $episode->getFileName() . "]]></filename>\n\t\t<mime><![CDATA[" . $episode->mime . "]]></mime>\n\t\t<time>" . (int)$episode->time . "</time>\n\t\t<size>" . (int)$episode->size . "</size>\n\t<bitrate>" . $episode->bitrate . "</bitrate>\n\t<stream_bitrate>" . $episode->bitrate . "</stream_bitrate>\n\t<rate>" . $episode->rate . "</rate>\n\t<mode><![CDATA[" . $episode->mode . "]]></mode>\n\t<channels>" . $episode->channels . "</channels>\n\t\t<public_url><![CDATA[" . $episode->get_link() . "]]></public_url>\n\t\t<url><![CDATA[" . $episode->play_url('', 'api', false, $user->getId(), $user->streamtoken) . "]]></url>\n\t\t<catalog>" . $episode->catalog . "</catalog>\n\t\t<art><![CDATA[" . $art_url . "]]></art>\n\t<has_art>" . ($episode->has_art() ? 1 : 0) . "</has_art>\n\t\t<flag>" . (!$flag->get_flag($user->getId()) ? 0 : 1) . "</flag>\n\t\t\t<rating>" . $user_rating . "</rating>\n\t\t<averagerating>" . (string)$rating->get_average_rating() . "</averagerating>\n\t\t<playcount>" . $episode->total_count . "</playcount>\n\t\t<played>" . $episode->played . "</played>\n\t</podcast_episode>\n";
         } // end foreach
 
         return self::output_xml($string, $full_xml);
@@ -1293,25 +1287,26 @@ class Xml_Data
      *
      * This returns an xml document from an array of song ids.
      * (Spiffy isn't it!)
-     * @param int[] $songs
+     * @param int[] $objects
      * @param User $user
      * @param bool $full_xml
      */
-    public static function songs($songs, $user, $full_xml = true): string
+    public static function songs($objects, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($songs));
-        if ((count($songs) > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
-            $songs = array_slice($songs, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && (self::$limit && $full_xml)) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('song', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
-        Song::build_cache($songs);
+        Song::build_cache($objects);
         Stream::set_session(Core::get_request('auth'));
 
         $playlist_track = 0;
 
         // Foreach the ids!
-        foreach ($songs as $song_id) {
+        foreach ($objects as $song_id) {
             $song = new Song($song_id);
 
             // If the song id is invalid/null
@@ -1382,19 +1377,20 @@ class Xml_Data
      *
      * This builds the xml document for displaying video objects
      *
-     * @param int[] $videos Video id's to include
+     * @param int[] $objects Video id's to include
      * @param User $user
      * @param bool $full_xml
      */
-    public static function videos($videos, $user, $full_xml = true): string
+    public static function videos($objects, $user, $full_xml = true): string
     {
-        $md5 = md5(serialize($videos));
-        if ((count($videos) > self::$limit || self::$offset > 0) && self::$limit) {
-            $videos = array_slice($videos, self::$offset, self::$limit);
+        $count = self::$count ?? count($objects);
+        $md5   = md5(serialize($objects));
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
+            $objects = array_slice($objects, self::$offset, self::$limit);
         }
         $string = ($full_xml) ? "<total_count>" . Catalog::get_update_info('video', $user->id) . "</total_count>\n<md5>" . $md5 . "</md5>\n" : '';
 
-        foreach ($videos as $video_id) {
+        foreach ($objects as $video_id) {
             $video = new Video($video_id);
             if ($video->isNew()) {
                 continue;
@@ -1488,7 +1484,8 @@ class Xml_Data
      */
     public static function users($objects): string
     {
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        $count = self::$count ?? count($objects);
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
         $string = "";
@@ -1508,11 +1505,11 @@ class Xml_Data
      * This handles creating a xml document for a now_playing list
      *
      * @param list<array{
-     *   media: library_item,
-     *   client: User,
-     *   agent: string,
-     *   expire: int
-     *  }> $results
+     *  media: library_item,
+     *  client: User,
+     *  agent: string,
+     *  expire: int
+     * }> $results
      */
     public static function now_playing(array $results): string
     {
@@ -1524,7 +1521,7 @@ class Xml_Data
                 continue;
             }
             $media = $now_playing['media'];
-            $string .= "\t<now_playing id=\"" . $media->getId() . "\">\n" . "\t\t<type><![CDATA[" . (string) ObjectTypeToClassNameMapper::reverseMap(get_class($media)) . "]]></type>\n" . "\t\t<client><![CDATA[" . $now_playing['agent'] . "]]></client>\n" . "\t\t<expire>" . (int) $now_playing['expire'] . "</expire>\n" . "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n" . "\t</now_playing>\n";
+            $string .= "\t<now_playing id=\"" . $media->getId() . "\">\n" . "\t\t<type><![CDATA[" . $media->getMediaType()->value . "]]></type>\n" . "\t\t<client><![CDATA[" . $now_playing['agent'] . "]]></client>\n" . "\t\t<expire>" . (int) $now_playing['expire'] . "</expire>\n" . "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n" . "\t</now_playing>\n";
         }
 
         return self::output_xml($string);
@@ -1542,9 +1539,9 @@ class Xml_Data
         $string = "";
 
         foreach ($shouts as $shout) {
-            $user  = new User($shout->getUserId());
-            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n\t\t<object_type><![CDATA[" . $shout->getObjectType() . "]]></object_type>\n\t\t<object_id><![CDATA[" . $shout->getObjectId() . "]]></object_id>\n";
-            if ($user->isNew() === false) {
+            $user = $shout->getUser();
+            $string .= "\t<shout id=\"" . $shout->getId() . "\">\n\t\t<date>" . $shout->getDate()->getTimestamp() . "</date>\n\t\t<text><![CDATA[" . $shout->getText() . "]]></text>\n\t\t<object_type><![CDATA[" . $shout->getObjectType()->value . "]]></object_type>\n\t\t<object_id><![CDATA[" . $shout->getObjectId() . "]]></object_id>\n";
+            if ($user !== null) {
                 $string .= "\t\t<user id=\"" . $user->getId() . "\">\n\t\t\t<username><![CDATA[" . $user->getUsername() . "]]></username>\n\t\t</user>\n";
             }
             $string .= "\t</shout>\n";
@@ -1607,31 +1604,6 @@ class Xml_Data
     }
 
     /**
-     * rss_feed
-     *
-     * returns xml for rss types that aren't podcasts (Feed generation of plays/albums/etc)
-     *
-     * @param array $data Keyed array of information to RSS'ify
-     * @param string $title RSS feed title
-     * @param int|null $date publish date
-     */
-    public static function rss_feed($data, $title, $date = null): string
-    {
-        $string = "\t<title>" . $title . "</title>\n\t<link>" . AmpConfig::get('web_path') . "</link>\n\t";
-        if ($date !== null) {
-            $string .= "<pubDate>" . date("r", $date) . "</pubDate>\n";
-        }
-
-        // Pass it to the keyed array xml function
-        foreach ($data as $item) {
-            // We need to enclose it in an item tag
-            $string .= self::keyed_array(['item' => $item], true);
-        }
-
-        return self::_header() . $string . self::_footer();
-    }
-
-    /**
      * deleted
      *
      * This takes an array of deleted objects and return XML based on the type of object
@@ -1642,7 +1614,8 @@ class Xml_Data
      */
     public static function deleted($object_type, $objects): string
     {
-        if ((count($objects) > self::$limit || self::$offset > 0) && self::$limit) {
+        $count = self::$count ?? count($objects);
+        if (($count > self::$limit || self::$offset > 0) && self::$limit) {
             $objects = array_splice($objects, self::$offset, self::$limit);
         }
 
@@ -1672,27 +1645,10 @@ class Xml_Data
      *
      * this returns a standard header, there are a few types
      * so we allow them to pass a type if they want to
-     *
-     * @param string $title
      */
-    private static function _header($title = null): string
+    private static function _header(): string
     {
-        switch (self::$type) {
-            case 'xspf':
-                $header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<playlist version = \"1\" xmlns=\"http://xspf.org/ns/0/\">\n<title>" . ($title ?? T_("Ampache XSPF Playlist")) . "</title>\n<creator>" . scrub_out(AmpConfig::get('site_title')) . "</creator>\n<annotation>" . scrub_out(AmpConfig::get('site_title')) . "</annotation>\n<info>" . AmpConfig::get('web_path') . "</info>\n<trackList>\n";
-                break;
-            case 'itunes':
-                $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- XML Generated by Ampache v." . AmpConfig::get('version') . " -->\n";
-                break;
-            case 'rss':
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n <!-- RSS Generated by Ampache v." . AmpConfig::get('version') . " on " . date("r", time()) . "-->\n<rss version=\"2.0\">\n<channel>\n";
-                break;
-            default:
-                $header = "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
-                break;
-        } // end switch
-
-        return $header;
+        return "<?xml version=\"1.0\" encoding=\"" . AmpConfig::get('site_charset') . "\" ?>\n<root>\n";
     }
 
     /**
@@ -1702,22 +1658,7 @@ class Xml_Data
      */
     private static function _footer(): string
     {
-        switch (self::$type) {
-            case 'itunes':
-                $footer = "\t\t</dict>\t\n</dict>\n</plist>\n";
-                break;
-            case 'xspf':
-                $footer = "</trackList>\n</playlist>\n";
-                break;
-            case 'rss':
-                $footer = "\n</channel>\n</rss>\n";
-                break;
-            default:
-                $footer = "\n</root>\n";
-                break;
-        } // end switch on type
-
-        return $footer;
+        return "\n</root>\n";
     }
 
     /**

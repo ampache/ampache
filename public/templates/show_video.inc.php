@@ -24,9 +24,11 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\Movie;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\Model\User;
@@ -35,24 +37,16 @@ use Ampache\Repository\Model\Video;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $video */
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 $fullname = $video->get_fullname() ?? '';
 Ui::show_box_top($fullname, 'box box_video_details'); ?>
 <div class="item_right_info">
 <?php
-$gart = false;
-// The release type is not the video itself, we probably want preview
-if (get_class($video) != Movie::class) {
-    $gart = Art::display('video', $video->id, $fullname, 8, null, false, 'preview');
-}
-if (!$gart) {
-    $gart = Art::display('video', $video->id, $fullname, 7);
-} ?>
+$gart = Art::display('video', $video->id, $fullname, 7); ?>
 <?php if (AmpConfig::get('encode_srt')) { ?>
 <div class="subtitles">
 <?php echo T_('Subtitle'); ?>:
@@ -88,40 +82,40 @@ if (!$gart) {
 <dt><?php echo T_('Action'); ?></dt>
     <dd>
         <?php if (AmpConfig::get('directplay')) { ?>
-            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play', T_('Play'), 'play_video_' . $video->id); ?>
+            <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id, 'play_circle', T_('Play'), 'play_video_' . $video->id); ?>
             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'play_next', T_('Play next'), 'nextplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_video_' . $video->id); ?>
                 <?php } ?>
             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'play_add', T_('Play last'), 'addplay_video_' . $video->id); ?>
+                <?php echo Ajax::button('?page=stream&action=directplay&object_type=video&object_id=' . $video->id . '&append=true', 'low_priority', T_('Play last'), 'addplay_video_' . $video->id); ?>
             <?php } ?>
         <?php } ?>
-        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'add', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
-        <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+        <?php echo Ajax::button('?action=basket&type=video&id=' . $video->id, 'new_window', T_('Add to Temporary Playlist'), 'add_video_' . $video->id); ?>
+        <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('sociable')) { ?>
-                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('comment', T_('Post Shout')); ?></a>
+                <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=video&id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?></a>
             <?php } ?>
         <?php } ?>
-    <?php if (Access::check('interface', 25)) { ?>
+    <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('share')) { ?>
                 <?php echo Share::display_ui('video', $video->id, false); ?>
             <?php } ?>
         <?php } ?>
-        <?php if (Access::check_function('download')) { ?>
-            <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_icon('link', T_('Link')); ?></a>
-            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('download', T_('Download')); ?></a>
+        <?php if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
+            <a class="nohtml" href="<?php echo $video->play_url(); ?>"><?php echo Ui::get_material_symbol('link', T_('Link')); ?></a>
+            <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
         <?php } ?>
-        <?php if (Access::check('interface', 50)) { ?>
+        <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
-                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_icon('statistics', T_('Graphs')); ?></a>
+                <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=video&object_id=<?php echo $video->id; ?>"><?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?></a>
             <?php } ?>
             <a onclick="showEditDialog('video_row', '<?php echo $video->id; ?>', '<?php echo 'edit_video_' . $video->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', '')">
-                <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
             </a>
         <?php } ?>
         <?php if (Catalog::can_remove($video)) { ?>
             <a id="<?php echo 'delete_video_' . $video->id; ?>" href="<?php echo $web_path; ?>/video.php?action=delete&video_id=<?php echo $video->id; ?>">
-                <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+                <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
             </a>
         <?php } ?>
     </dd>
@@ -129,7 +123,7 @@ if (!$gart) {
 $videoprops[T_('Title')]  = scrub_out($fullname);
 $videoprops[T_('Length')] = scrub_out($video->f_time);
 if (get_class($video) != Video::class) {
-    require Ui::find_template('show_partial_' . ObjectTypeToClassNameMapper::reverseMap(get_class($video)) . '.inc.php');
+    require Ui::find_template('show_partial_' . $video->getMediaType()->value . '.inc.php');
 }
 $videoprops[T_('Release Date')]  = scrub_out($video->f_release_date);
 $videoprops[T_('Codec')]         = scrub_out($video->f_codec);
@@ -139,7 +133,7 @@ $videoprops[T_('Audio Bitrate')] = scrub_out($video->f_bitrate);
 $videoprops[T_('Video Bitrate')] = scrub_out($video->f_video_bitrate);
 $videoprops[T_('Frame Rate')]    = scrub_out($video->f_frame_rate);
 $videoprops[T_('Channels')]      = scrub_out((string)$video->channels);
-if (Access::check('interface', 75)) {
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
     $data                       = pathinfo($video->file);
     $videoprops[T_('Path')]     = scrub_out((string)($data['dirname'] ?? ''));
     $videoprops[T_('Filename')] = (isset($data['extension']))

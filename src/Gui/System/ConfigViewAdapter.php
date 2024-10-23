@@ -26,14 +26,10 @@ namespace Ampache\Gui\System;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 
-final class ConfigViewAdapter implements ConfigViewAdapterInterface
+final readonly class ConfigViewAdapter implements ConfigViewAdapterInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer
-    ) {
-        $this->configContainer = $configContainer;
+    public function __construct(private ConfigContainerInterface $configContainer)
+    {
     }
 
     public function isWaveformEnabled(): bool

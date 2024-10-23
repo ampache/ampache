@@ -30,6 +30,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Module\Wanted\MissingArtistRetrieverInterface;
 use Ampache\Module\Wanted\WantedManagerInterface;
 use Ampache\Repository\AlbumRepositoryInterface;
@@ -42,37 +43,37 @@ class Wanted extends database_object
 {
     protected const DB_TABLENAME = 'wanted';
 
-    /* Variables from DB */
-    public int $id              = 0;
-    public ?int $user           = null;
-    public ?int $artist         = null;
+    public int $id = 0;
+
+    public ?int $user = null;
+
+    public ?int $artist = null;
+
     public ?string $artist_mbid = null;
-    public ?string $mbid        = null;
-    public ?string $name        = null;
-    public ?int $year           = null;
+
+    public ?string $mbid = null;
+
+    public ?string $name = null;
+
+    public ?int $year = null;
+
     public int $date;
+
     public int $accepted;
 
-    /**
-     * @var null|string $link
-     */
+    /** @var null|string $link */
     public $link;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
-    /**
-     * @var null|string $f_artist_link
-     */
+
+    /** @var null|string $f_artist_link */
     public $f_artist_link;
-    /**
-     * @var null|string $f_user
-     */
+
+    /** @var null|string $f_user */
     public $f_user;
-    /**
-     * @var array $songs
-     */
+
+    /** @var array $songs */
     public $songs;
 
     /**
@@ -84,10 +85,12 @@ class Wanted extends database_object
         if (!$wanted_id) {
             return;
         }
+
         $info = self::getWantedRepository()->getById((int) $wanted_id);
         if ($info === null) {
             return;
         }
+
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -180,8 +183,8 @@ class Wanted extends database_object
 
                     if (
                         $add &&
-                        (static::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
-                            ($artist !== null && $artist->id && static::getAlbumRepository()->getByName($group->title, $artist->id) === []))
+                        (self::getAlbumRepository()->getByMbidGroup(($group->id)) === [] ||
+                        ($artist !== null && $artist->id && self::getAlbumRepository()->getByName($group->title, $artist->id) === []))
                     ) {
                         $wanted = $wantedRepository->findByMusicBrainzId($group->id);
                         if ($wanted !== null) {
@@ -196,7 +199,7 @@ class Wanted extends database_object
                                 $wanted->artist_mbid = $lookupId;
                             }
 
-                            $wanted->user = $user->getId() ?? null;
+                            $wanted->user = $user?->getId();
                             $wanted->name = $group->title;
                             if (!empty($group->{'first-release-date'})) {
                                 if (strlen((string)$group->{'first-release-date'}) == 4) {
@@ -209,14 +212,14 @@ class Wanted extends database_object
                             }
 
                             $wanted->accepted = 0;
-                            $wanted->link     = AmpConfig::get('web_path') . "/albums.php?action=show_missing&mbid=" . $group->id;
+                            $wanted->link     = AmpConfig::get_web_path() . "/albums.php?action=show_missing&mbid=" . $group->id;
                             if ($artist !== null) {
                                 $wanted->link .= "&artist=" . $wanted->artist;
                             } else {
                                 $wanted->link .= "&artist_mbid=" . $lookupId;
                             }
 
-                            $wanted->f_user        = Core::get_global('user')->get_fullname() ?? '';
+                            $wanted->f_user        = Core::get_global('user')?->get_fullname() ?? '';
                             $wanted->f_link        = "<a href=\"" . $wanted->link . "\" title=\"" . $wanted->name . "\">" . $wanted->name . "</a>";
                             $wanted->f_artist_link = ($artist !== null)
                                 ? $artist->get_f_link()
@@ -229,7 +232,7 @@ class Wanted extends database_object
                                 $wanted->name &&
                                 $wanted->year
                             ) {
-                                static::getWantedManager()->add(
+                                self::getWantedManager()->add(
                                     $user,
                                     $wanted->mbid,
                                     $wanted->artist,
@@ -239,7 +242,6 @@ class Wanted extends database_object
                                 );
                             }
                         }
-
 
                         $results[] = $wanted;
                     }
@@ -255,14 +257,16 @@ class Wanted extends database_object
      */
     public function accept(): void
     {
-        if (!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75)) {
+        if (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER)) {
             $sql = "UPDATE `wanted` SET `accepted` = '1' WHERE `mbid` = ?";
             Dba::write($sql, [$this->mbid]);
             $this->accepted = 1;
 
-            foreach (Plugin::get_plugins('process_wanted') as $plugin_name) {
+            /** @var User $user */
+            $user = Core::get_global('user');
+            foreach (Plugin::get_plugins(PluginTypeEnum::WANTED_LOOKUP) as $plugin_name) {
                 $plugin = new Plugin($plugin_name);
-                if ($plugin->_plugin !== null && $plugin->load(Core::get_global('user'))) {
+                if ($plugin->_plugin !== null && $plugin->load($user)) {
                     debug_event(self::class, 'Using Wanted Process plugin: ' . $plugin_name, 5);
                     $plugin->_plugin->process_wanted($this);
                 }
@@ -277,22 +281,24 @@ class Wanted extends database_object
     {
         if ($this->isNew() === false) {
             $result = '';
-            if ($this->accepted === 0) {
-                if ((!empty(Core::get_global('user')) && Core::get_global('user')->has_access(75))) {
-                    $result .= Ajax::button(
-                        '?page=index&action=accept_wanted&mbid=' . $this->mbid,
-                        'enable',
-                        T_('Accept'),
-                        'wanted_accept_' . $this->mbid
-                    );
-                }
+            if (
+                $this->accepted === 0 &&
+                (Core::get_global('user') instanceof User && Core::get_global('user')->has_access(AccessLevelEnum::MANAGER))
+            ) {
+                $result .= Ajax::button(
+                    '?page=index&action=accept_wanted&mbid=' . $this->mbid,
+                    'enable',
+                    T_('Accept'),
+                    'wanted_accept_' . $this->mbid
+                );
             }
+
             /** @var User|null $user */
-            $user = (!empty(Core::get_global('user'))) ? Core::get_global('user') : null;
+            $user = (Core::get_global('user') instanceof User) ? Core::get_global('user') : null;
             if (
                 $user instanceof User &&
                 (
-                    $user->has_access(AccessLevelEnum::LEVEL_MANAGER) ||
+                    $user->has_access(AccessLevelEnum::MANAGER) ||
                     (
                         $this->mbid !== null &&
                         self::getWantedRepository()->find($this->mbid, $user) &&
@@ -300,12 +306,12 @@ class Wanted extends database_object
                     )
                 )
             ) {
-                $result .= " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'disable', T_('Remove'), 'wanted_remove_' . $this->mbid);
+                $result .= " " . Ajax::button('?page=index&action=remove_wanted&mbid=' . $this->mbid, 'hide_source', T_('Remove'), 'wanted_remove_' . $this->mbid);
             }
 
             return $result;
         } else {
-            return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'add_wanted', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
+            return Ajax::button('?page=index&action=add_wanted&mbid=' . $this->mbid . ($this->artist ? '&artist=' . $this->artist : '&artist_mbid=' . $this->artist_mbid) . '&name=' . urlencode((string)$this->name) . '&year=' . (int) $this->year, 'saved_search', T_('Add to wanted list'), 'wanted_add_' . $this->mbid);
         }
     }
 
@@ -319,7 +325,7 @@ class Wanted extends database_object
 
         try {
             $user            = Core::get_global('user');
-            $preview_plugins = Plugin::get_plugins('get_song_preview');
+            $preview_plugins = Plugin::get_plugins(PluginTypeEnum::SONG_PREVIEW_PROVIDER);
             if (
                 $user instanceof User &&
                 $this->mbid !== null
@@ -341,7 +347,9 @@ class Wanted extends database_object
                 $group = $mbrainz->lookup('release-group', $this->mbid, ['releases']);
                 // Set fresh data
                 $this->name = $group->title;
-                $this->year = (int)date("Y", strtotime($group->{'first-release-date'}));
+                $this->year = (strtotime((string) $group->{'first-release-date'}))
+                    ? (int)date("Y", strtotime((string) $group->{'first-release-date'}))
+                    : null;
 
                 // Load from database if already cached
                 $this->songs = Song_Preview::get_song_previews($this->mbid);
@@ -371,6 +379,7 @@ class Wanted extends database_object
                          * } $release
                          */
                         $release = $mbrainz->lookup('release', $release_mbid, ['recordings']);
+
                         foreach ($release->media as $media) {
                             foreach ($media->tracks as $track) {
                                 $song                = [];
@@ -387,7 +396,7 @@ class Wanted extends database_object
                                     $artist      = new Artist($this->artist);
                                     $artist_name = $artist->name;
                                 } elseif ($this->artist_mbid !== null) {
-                                    $wartist     = self::getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+                                    $wartist     = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
                                     $artist_name = $wartist['name'] ?? '';
                                 } else {
                                     $artist_name = '';
@@ -413,7 +422,7 @@ class Wanted extends database_object
                     }
                 }
             }
-        } catch (Exception $error) {
+        } catch (Exception) {
             $this->songs = [];
         }
 
@@ -432,15 +441,15 @@ class Wanted extends database_object
             $artist              = new Artist($this->artist);
             $this->f_artist_link = $artist->get_f_link();
         } elseif ($this->artist_mbid !== null) {
-            $wartist             = self::getMissingArtistRetriever()->retrieve((string) $this->artist_mbid);
+            $wartist             = self::getMissingArtistRetriever()->retrieve($this->artist_mbid);
             $this->f_artist_link = $wartist['link'] ?? '';
         } else {
             $this->f_artist_link = '';
         }
 
-
         $this->f_link = sprintf(
-            '<a href="/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+            '<a href="%s/albums.php?action=show_missing&mbid=%s&artist=%s&artist_mbid=%s" title="%s">%s</a>',
+            AmpConfig::get_web_path(),
             $this->mbid,
             $this->artist,
             $this->artist_mbid,
@@ -448,7 +457,7 @@ class Wanted extends database_object
             scrub_out($this->name)
         );
 
-        if (isset($this->user)) {
+        if ($this->user !== null) {
             $user         = new User($this->user);
             $this->f_user = $user->get_fullname();
         }

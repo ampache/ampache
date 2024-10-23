@@ -27,6 +27,8 @@ namespace Ampache\Module\Application\Stream;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -43,16 +45,10 @@ use Psr\Log\LoggerInterface;
 
 abstract class AbstractStreamAction implements ApplicationActionInterface
 {
-    private LoggerInterface $logger;
-
-    private ConfigContainerInterface $configContainer;
-
     protected function __construct(
-        LoggerInterface $logger,
-        ConfigContainerInterface $configContainer
+        private readonly LoggerInterface $logger,
+        private readonly ConfigContainerInterface $configContainer
     ) {
-        $this->logger          = $logger;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -62,12 +58,15 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper
     ): bool {
         if (!defined('NO_SESSION')) {
-            /* If we are running a demo, quick while you still can! */
+            /* If we are running a demo, quit while you still can! */
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
                 (
                     $this->configContainer->isAuthenticationEnabled() &&
-                    $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false
+                    $gatekeeper->mayAccess(
+                        AccessTypeEnum::INTERFACE,
+                        AccessLevelEnum::fromTextual(($this->configContainer->get('webplayer_level') ?? 'user'))
+                    ) === false
                 )
             ) {
                 throw new AccessDeniedException();
@@ -79,11 +78,14 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 
     /**
      * @throws ApplicationException
+     *
+     * @param list<array{object_type: LibraryItemEnum, object_id: int}> $mediaIds
      */
     protected function stream(
         array $mediaIds,
         array $urls,
-        string $streamType = ''
+        string $streamType = '',
+        ?string $fileName = null
     ): ?ResponseInterface {
         if ($streamType == 'stream') {
             $streamType = $this->configContainer->get(ConfigurationKeyEnum::PLAYLIST_TYPE);
@@ -91,21 +93,22 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
 
         $this->logger->debug(
             'Stream Type: ' . $streamType . ' Media IDs: ' . json_encode($mediaIds),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         if ($mediaIds !== [] || $urls !== []) {
+            $user = Core::get_global('user');
             if (!defined('NO_SESSION') && $streamType != 'democratic') {
                 if (!User::stream_control($mediaIds)) {
                     $this->logger->warning(
-                        'Stream control failed for user ' . Core::get_global('user')->username,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        'Stream control failed for user ' . $user?->username,
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     throw new AccessDeniedException();
                 }
             }
 
-            if (Core::get_global('user')->id > -1) {
-                Session::update_username(Stream::get_session(), Core::get_global('user')->username);
+            if ($user instanceof User && $user->getId() > -1) {
+                Session::update_username(Stream::get_session(), (string)$user->username);
             }
 
             $playlist = new Stream_Playlist();
@@ -114,24 +117,24 @@ abstract class AbstractStreamAction implements ApplicationActionInterface
             if ($mediaIds !== []) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Media Count: %d', $streamType, count($mediaIds)),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 $playlist->add($mediaIds);
             }
             if (!empty($urls)) {
                 $this->logger->debug(
                     sprintf('Stream Type: %s Loading URL: %s', $streamType, $urls[0]),
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
                 $playlist->add_urls($urls);
             }
 
             // Depending on the stream type, will either generate a redirect or actually do the streaming.
-            $playlist->generate_playlist($streamType);
+            $playlist->generate_playlist($streamType, false, $fileName);
         } else {
             $this->logger->debug(
                 'No item. Ignoring...',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

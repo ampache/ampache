@@ -29,6 +29,7 @@ use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -38,25 +39,19 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Edits a ShoutBox item
  */
-final class EditShoutAction implements ApplicationActionInterface
+final readonly class EditShoutAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'edit_shout';
 
-    private UiInterface $ui;
-
-    private ShoutRepositoryInterface $shoutRepository;
-
     public function __construct(
-        UiInterface $ui,
-        ShoutRepositoryInterface $shoutRepository
+        private UiInterface $ui,
+        private ShoutRepositoryInterface $shoutRepository
     ) {
-        $this->ui              = $ui;
-        $this->shoutRepository = $shoutRepository;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
             throw new AccessDeniedException();
         }
 

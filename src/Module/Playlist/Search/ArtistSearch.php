@@ -30,7 +30,7 @@ use Ampache\Repository\Model\Search;
 
 final class ArtistSearch implements SearchInterface
 {
-    private $subType; // artist, album_artist, song_artist
+    private string $subType; // artist, album_artist, song_artist
 
     /**
      * constructor
@@ -49,7 +49,7 @@ final class ArtistSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user?->getId() ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');

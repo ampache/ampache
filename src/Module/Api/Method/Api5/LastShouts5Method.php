@@ -69,7 +69,7 @@ final class LastShouts5Method
             ? $input['username']
             : null;
 
-        $results = static::getShoutRepository()->getTop($limit, $username);
+        $results = self::getShoutRepository()->getTop($limit, $username);
 
         ob_end_clean();
         switch ($input['api_format']) {

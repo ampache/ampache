@@ -26,23 +26,32 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 
-class AmpachePaypal implements AmpachePluginInterface
+class AmpachePaypal extends AmpachePlugin implements PluginDisplayUserFieldInterface
 {
     public string $name        = 'Paypal';
+
     public string $categories  = 'user';
+
     public string $description = 'PayPal donation button on user page';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370034';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $user;
+
     private $business;
+
     private $currency_code;
 
     /**
@@ -59,14 +68,11 @@ class AmpachePaypal implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', 25, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-        if (!Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', 25, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('paypal_business', T_('PayPal ID'), '', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        return Preference::insert('paypal_currency_code', T_('PayPal Currency Code'), 'USD', AccessLevelEnum::USER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -93,13 +99,12 @@ class AmpachePaypal implements AmpachePluginInterface
     /**
      * display_user_field
      * This display the module in user page
-     * @param library_item|null $libitem
      */
-    public function display_user_field(library_item $libitem = null): void
+    public function display_user_field(?library_item $libitem = null): void
     {
         $name = ($libitem != null) ? $libitem->get_fullname() : (T_('User') . " `" . $this->user->fullname . "` " . T_('on') . " " . AmpConfig::get('site_title'));
-        $lang = substr(AmpConfig::get('lang', 'en_US'), 0, 2);
-        if (empty($lang)) {
+        $lang = substr((string) AmpConfig::get('lang', 'en_US'), 0, 2);
+        if ($lang === '' || $lang === '0') {
             $lang = 'US';
         }
 
@@ -119,23 +124,23 @@ class AmpachePaypal implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $this->user = $user;
         $user->set_preferences();
+
         $data = $user->prefs;
 
-        $this->business = trim($data['paypal_business']);
-        if (!strlen($this->business)) {
+        $this->business = trim((string) $data['paypal_business']);
+        if ($this->business === '') {
             debug_event('paypal.plugin', 'No PayPal ID, user field plugin skipped', 3);
 
             return false;
         }
 
-        $this->currency_code = trim($data['paypal_currency_code']);
-        if (!strlen($this->currency_code)) {
+        $this->currency_code = trim((string) $data['paypal_currency_code']);
+        if ($this->currency_code === '') {
             $this->currency_code = 'USD';
         }
 

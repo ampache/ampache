@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\AmpError;
@@ -33,23 +35,23 @@ use Ampache\Repository\Model\Catalog;
 
 /** @var User $client */
 
-$web_path  = (string)AmpConfig::get('web_path', '');
-$access100 = Access::check('interface', 100); ?>
+$admin_path = AmpConfig::get_web_path('/admin');
+$access100  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN); ?>
 <?php Ui::show_box_top(T_('Editing Existing User')); ?>
 <?php echo AmpError::display('general'); ?>
-<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $web_path . "/admin/users.php"; ?>">
+<form name="update_user" enctype="multipart/form-data" method="post" action="<?php echo $admin_path . "/users.php"; ?>">
     <table class="tabledata">
         <tr>
             <th colspan="2"><?php echo T_('User Properties'); ?></th>
         </tr>
         <tr>
-            <td><?php echo T_('Username'); ?>:</td>
+            <td><?php echo T_('Username'); ?></td>
             <td><input type="text" name="username" maxlength="128" value="<?php echo $client->username; ?>" autocomplete="off" autofocus />
                 <?php echo AmpError::display('username'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Full Name'); ?>:</td>
+            <td><?php echo T_('Full Name'); ?></td>
             <td><input type="text" name="fullname" maxlength="255" value="<?php echo $client->fullname; ?>" />
                 <input type="checkbox" name="fullname_public" value="1" <?php if ($client->fullname_public) {
                     echo "checked";
@@ -58,49 +60,49 @@ $access100 = Access::check('interface', 100); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('E-mail'); ?>:</td>
+            <td><?php echo T_('E-mail'); ?></td>
             <td><input type="text" name="email" maxlength="128" value="<?php echo scrub_out($client->email); ?>" />
                 <?php echo AmpError::display('email'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Website'); ?>:</td>
+            <td><?php echo T_('Website'); ?></td>
             <td><input type="text" name="website" maxlength="255" value="<?php echo scrub_out($client->website); ?>" />
                 <?php echo AmpError::display('website'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('State'); ?>:</td>
+            <td><?php echo T_('State'); ?></td>
             <td><input type="text" name="state" maxlength="64" value="<?php echo scrub_out($client->state); ?>" autocomplete="off" />
                 <?php echo AmpError::display('state'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('City'); ?>:</td>
+            <td><?php echo T_('City'); ?></td>
             <td><input type="text" name="city" maxlength="64" value="<?php echo scrub_out($client->city); ?>" autocomplete="off" />
                 <?php echo AmpError::display('city'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Password'); ?>:</td>
+            <td><?php echo T_('Password'); ?></td>
             <td><input type="password" name="password_1" maxlength="64" value="" autocomplete="new-password" />
                 <?php echo AmpError::display('password'); ?>
             </td>
         </tr>
         <tr>
-            <td><?php echo T_('Confirm Password'); ?>:</td>
+            <td><?php echo T_('Confirm Password'); ?></td>
             <td><input type="password" name="password_2" maxlength="64" value="" autocomplete="new-password" /></td>
         </tr>
         <tr>
-            <td><?php echo T_('User Access Level'); ?>:</td>
+            <td><?php echo T_('User Access Level'); ?></td>
             <td>
-                <?php $var_name = 'on_' . (string)$client->access;
-$on_5                           = '';
-$on_25                          = '';
-$on_50                          = '';
-$on_75                          = '';
-$on_100                         = '';
-switch ($var_name) {
+                <?php $user_access = 'on_' . (string)$client->access;
+$on_5                              = '';
+$on_25                             = '';
+$on_50                             = '';
+$on_75                             = '';
+$on_100                            = '';
+switch ($user_access) {
     case 'on_5':
         $on_5 = 'selected="selected"';
         break;
@@ -129,7 +131,7 @@ switch ($var_name) {
 
 <?php if (AmpConfig::get('catalog_filter')) { ?>
         <tr>
-            <td><?php echo T_('Catalog Filter'); ?>:</td>
+            <td><?php echo T_('Catalog Filter'); ?></td>
             <td><?php
 
     $filters = Catalog::get_catalog_filters();
@@ -157,7 +159,7 @@ switch ($var_name) {
                 if ($client->f_avatar) {
                     echo $client->f_avatar;
                 } ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_avatar&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo AmpConfig::get('max_upload_size'); ?>" />
             </td>
         </tr>
@@ -167,8 +169,8 @@ switch ($var_name) {
         <tr>
             <td>
                 <?php echo T_('API key'); ?>
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new API key')); ?></a>&nbsp;
-                <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>&nbsp;
+                <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
             </td>
             <td>
                 <span>
@@ -182,8 +184,8 @@ switch ($var_name) {
             <td>
                 <?php echo T_('Stream Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new Stream token')); ?></a>&nbsp;
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -198,8 +200,8 @@ switch ($var_name) {
             <td>
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('random', T_('Generate new RSS token')); ?></a>
-                    <a href="<?php echo $web_path; ?>/admin/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_icon('delete', T_('Delete')); ?></a>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
+                    <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
                 <?php } ?>
             </td>
             <td>
@@ -210,23 +212,25 @@ switch ($var_name) {
                 </span>
             </td>
         </tr>
+        <?php if ($client->access !== 100) { ?>
         <tr>
-            <td><?php echo T_('Config Preset'); ?></td>
+            <td><?php echo T_('Config Preset'); ?>&nbsp;<span class="information">(<?php echo T_('This affects all non-admin accounts'); ?>)</span></td>
             <td>
                 <select name="preset">
-                    <option value=""></option>
-                    <option value="democratic"><?php echo T_('Democratic'); ?></option>
-                    <option value="localplay"><?php echo T_('Localplay'); ?></option>
-                    <option value="flash"><?php echo T_('Flash'); ?></option>
-                    <option value="stream"><?php echo T_('Stream'); ?></option>
+                    <option value=""></option>preset
+                    <option value="system"><?php echo T_('System'); ?></option>
+                    <option value="default"><?php echo T_('Default'); ?></option>
+                    <option value="minimalist"><?php echo T_('Minimalist'); ?></option>
+                    <option value="community"><?php echo T_('Community'); ?></option>
                 </select>
             </td>
         </tr>
         <tr>
             <td><?php echo T_('Prevent Preset Override'); ?></td>
-            <td><input type="checkbox" value="1" name="prevent_override" /><span class="information"> <?php echo T_('This affects all non-admin accounts'); ?></span>
+            <td><input type="checkbox" checked="checked" value="1" name="prevent_override" />
             </td>
         </tr>
+        <?php } ?>
         <tr>
             <td><?php echo T_('Clear Stats'); ?></td>
             <td><input type="checkbox" value="1" name="reset_stats" /></td>

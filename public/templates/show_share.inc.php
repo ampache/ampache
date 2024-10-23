@@ -32,14 +32,14 @@ use Ampache\Module\Util\Ui;
 $embed    = $_REQUEST['embed'] ?? false;
 $isShare  = true;
 $playlist = $share->create_fake_playlist();
-$web_path = AmpConfig::get('web_path');
+$web_path = AmpConfig::get_web_path();
 
 require Ui::find_template('show_web_player.inc.php');
 
 if (empty($embed)) {
     echo "<a href='" . $share->public_url . "'>" . T_('Shared by') . ' ' . $share->getUserName() . "</a><br />";
     if ($share->allow_download) {
-        echo "<a href=\"" . $web_path . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . Ui::get_icon('download', T_('Download')) . "</a> ";
+        echo "<a href=\"" . $web_path . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . Ui::get_material_symbol('download', T_('Download')) . "</a> ";
         echo "<a href=\"" . $web_path . "/share.php?action=download&id=" . $share->id . "&secret=" . $share->secret . "\">" . T_('Download') . "</a>";
     }
 }

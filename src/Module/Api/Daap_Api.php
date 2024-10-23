@@ -81,12 +81,10 @@ class Daap_Api
         'daap.songyear',
         'daap.songdatakind',
         'daap.songdataurl',
-        'com.apple.itunes.norm-volume'
+        'com.apple.itunes.norm-volume',
     ];
 
-    /**
-     * @var array<string, array{type: string, code: string}>
-     */
+    /** @var array<string, array{type: string, code: string}> */
     public static array $tags = [];
 
     /**
@@ -236,9 +234,7 @@ class Daap_Api
 
         // Create a new daap session
         $sql = "INSERT INTO `daap_session` (`creationdate`) VALUES (?)";
-        Dba::write($sql, [
-            time()
-        ]);
+        Dba::write($sql, [time()]);
         $sid = Dba::insert_id();
 
         $output = self::tlv('dmap.status', 200);
@@ -255,9 +251,7 @@ class Daap_Api
     {
         // Purge expired sessions
         $sql = "DELETE FROM `daap_session` WHERE `creationdate` < ?";
-        Dba::write($sql, [
-            time() - 1800
-        ]);
+        Dba::write($sql, [time() - 1800]);
 
         self::check_auth($code);
 
@@ -265,9 +259,7 @@ class Daap_Api
             debug_event(self::class, 'Missing session id.', 2);
         } else {
             $sql        = "SELECT * FROM `daap_session` WHERE `id` = ?;";
-            $db_results = Dba::read($sql, [
-                Core::get_get('session-id')
-            ]);
+            $db_results = Dba::read($sql, [Core::get_get('session-id')]);
 
             if (Dba::num_rows($db_results) == 0) {
                 debug_event(self::class, 'Unknown session id `' . Core::get_get('session-id') . '`.', 4);
@@ -300,7 +292,7 @@ class Daap_Api
         }
 
         if (!$authenticated) {
-            debug_event(__CLASS__, 'Authentication failed. Wrong DAAP password?', 3);
+            debug_event(self::class, 'Authentication failed. Wrong DAAP password?', 3);
             if (!empty($code)) {
                 self::createApiError($code, 403);
             }
@@ -316,9 +308,7 @@ class Daap_Api
         self::check_auth();
 
         $sql = "DELETE FROM `daap_session` WHERE `id` = ?;";
-        Dba::write($sql, [
-            $input['session-id']
-        ]);
+        Dba::write($sql, [$input['session-id']]);
 
         self::setHeaders();
         header("HTTP/1.0 204 Logout Successful", true, 204);
@@ -441,8 +431,9 @@ class Daap_Api
                     }
                     $params .= '&transcode_to=' . $type;
                     $className = ObjectTypeToClassNameMapper::map('song');
-                    $media     = new $className($object_id);
-                    $url       = $media->play_url($params, 'api', true, -1);
+                    /** @var Song $media */
+                    $media = new $className($object_id);
+                    $url   = $media->play_url($params, 'api', true, -1);
                     self::follow_stream($url);
 
                     return false;
@@ -475,7 +466,7 @@ class Daap_Api
                         $items    = $playlist->get_items();
                         $song_ids = [];
                         foreach ($items as $item) {
-                            if ($item['object_type'] == 'song') {
+                            if ($item['object_type']->value == 'song') {
                                 $song_ids[] = $item['object_id'];
                             }
                         }

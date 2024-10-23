@@ -30,11 +30,11 @@ use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\Util\UiInterface;
-use Narrowspark\HttpEmitter\SapiEmitter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Slim\ResponseEmitter;
 use Throwable;
 
 final class ApplicationRunner
@@ -81,10 +81,10 @@ final class ApplicationRunner
         try {
             /** @var ApplicationActionInterface $handler */
             $handler = $this->dic->get($handler_name);
-        } catch (ContainerExceptionInterface $e) {
+        } catch (ContainerExceptionInterface) {
             $this->logger->critical(
                 sprintf('No handler found for action "%s"', $action_name),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return;
@@ -92,7 +92,7 @@ final class ApplicationRunner
 
         $this->logger->debug(
             sprintf('Found handler "%s" for action "%s"', $handler_name, $action_name),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         try {
@@ -106,17 +106,17 @@ final class ApplicationRunner
              * This will become the default once the rendering of all actions got converted
              */
             if ($response !== null) {
-                $this->dic->get(SapiEmitter::class)->emit($response);
+                $this->dic->get(ResponseEmitter::class)->emit($response);
             }
-        } catch (AccessDeniedException $e) {
-            $message = $e->getMessage();
+        } catch (AccessDeniedException $error) {
+            $message = $error->getMessage();
 
             $this->logger->warning(
                 $message,
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
-                        __CLASS__,
+                        self::class,
                         get_class($handler)
                     )
                 ]
@@ -125,28 +125,28 @@ final class ApplicationRunner
             $this->ui->accessDenied($message);
 
             return;
-        } catch (ObjectNotFoundException $e) {
+        } catch (ObjectNotFoundException $error) {
             $this->logger->warning(
                 'Requested an object that does not exist',
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '"%s" for "%s"',
-                        __CLASS__,
+                        self::class,
                         get_class($handler)
                     ),
-                    'objectId' => $e->getObjectId()
+                    'objectId' => $error->getObjectId()
                 ]
             );
 
             $this->ui->showObjectNotFound();
-        } catch (Throwable $e) {
+        } catch (Throwable $error) {
             $this->logger->critical(
-                $e->getMessage(),
+                $error->getMessage(),
                 [
                     LegacyLogger::CONTEXT_TYPE => sprintf(
                         '%s:%d',
-                        $e->getFile(),
-                        $e->getLine()
+                        $error->getFile(),
+                        $error->getLine()
                     )
                 ]
             );

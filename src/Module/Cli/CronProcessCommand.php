@@ -82,8 +82,11 @@ final class CronProcessCommand extends Command
 
     public function execute(): void
     {
-        $interactor = $this->app()->io();
+        if ($this->app() === null) {
+            return;
+        }
 
+        $interactor = $this->io();
         if (!$this->configContainer->get('cron_cache')) {
             debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
 
@@ -103,7 +106,6 @@ final class CronProcessCommand extends Command
          * Album::garbage_collection();
          * Artist::garbage_collection();
          * Video::garbage_collection();
-         * Movie::garbage_collection();
          * Art::garbage_collection();
          * Stats::garbage_collection();
          * Rating::garbage_collection();

@@ -84,10 +84,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Podcast_Episode::class;
                     break;
-                case 'clip':
-                case 'tvshow':
-                case 'movie':
-                case 'personal_video':
+                case 'video':
                     $type      = 'video';
                     $file_ids  = Catalog::get_ids_from_folder($folderPath, $type);
                     $className = Video::class;
@@ -158,9 +155,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
             }
             // new files don't have an ID
             if ($addMode == 1) {
-                $options = [
-                    'gather_art' => ($searchArtMode == 1)
-                ];
+                $options = ['gather_art' => ($searchArtMode == 1)];
                 // Look for new files
                 $changed += $catalog->add_files($folderPath, $options);
             }
@@ -188,7 +183,7 @@ final class UpdateSingleCatalogFolder extends AbstractCatalogUpdater implements 
         ob_end_clean();
 
         $interactor->info(
-            $this->cleanBuffer($buffer),
+            $this->cleanBuffer((string)$buffer),
             true
         );
     }

@@ -25,19 +25,26 @@ declare(strict_types=0);
 
 namespace Ampache\Plugin;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampacheflickr implements AmpachePluginInterface
+class Ampacheflickr extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'Flickr';
+
     public string $categories  = 'slideshow';
+
     public string $description = 'Artist photos from Flickr';
+
     public string $url         = 'http://www.flickr.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360045';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -57,11 +64,7 @@ class Ampacheflickr implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('flickr_api_key', T_('Flickr API key'), '', 75, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-
-        return true;
+        return Preference::insert('flickr_api_key', T_('Flickr API key'), '', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -85,7 +88,6 @@ class Ampacheflickr implements AmpachePluginInterface
     /**
      * @param string $search
      * @param string $category
-     * @return array
      */
     public function get_photos($search, $category = 'concert'): array
     {
@@ -109,31 +111,30 @@ class Ampacheflickr implements AmpachePluginInterface
     }
 
     /**
-     * @param $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * gather_arts
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         if (!$limit) {
             $limit = 5;
         }
 
-        $images  = $this->get_photos($options['keyword'], '');
+        $images  = $this->get_photos(($options['keyword'] ?? ''), '');
         $results = [];
         foreach ($images as $image) {
             $title = $this->name;
             if (!empty($image['title'])) {
                 $title .= ' - ' . $image['title'];
             }
+
             $results[] = [
                 'url' => $image['url'],
                 'mime' => 'image/jpeg',
                 'title' => $title
             ];
 
-            if ($limit && count($results) >= $limit) {
+            if (count($results) >= $limit) {
                 break;
             }
         }
@@ -144,20 +145,19 @@ class Ampacheflickr implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['flickr_api_key']))) {
+        if (trim((string) $data['flickr_api_key']) === '') {
             $data                   = [];
             $data['flickr_api_key'] = Preference::get_by_user(-1, 'flickr_api_key');
         }
 
-        if (strlen(trim($data['flickr_api_key']))) {
-            $this->api_key = trim($data['flickr_api_key']);
+        if (strlen(trim((string) $data['flickr_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['flickr_api_key']);
         } else {
             debug_event('flickr.plugin', 'No Flickr api key, photo plugin skipped', 3);
 

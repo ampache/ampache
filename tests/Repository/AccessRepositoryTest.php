@@ -26,6 +26,8 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -82,8 +84,8 @@ class AccessRepositoryTest extends TestCase
     public function testFindByIpReturnsTrueIfEntryForUserExists(): void
     {
         $userIp = '1.2.3.4';
-        $level  = 123;
-        $type   = 'some-type';
+        $level  = AccessLevelEnum::USER;
+        $type   = AccessTypeEnum::STREAM;
         $userId = 666;
 
         $this->connection->expects(static::once())
@@ -93,7 +95,7 @@ class AccessRepositoryTest extends TestCase
                     'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ? AND `user` IN (?, %d)',
                     User::INTERNAL_SYSTEM_USER_ID,
                 ),
-                [inet_pton($userIp), inet_pton($userIp), $level, $type, $userId]
+                [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value, $userId]
             )
             ->willReturn(123);
 
@@ -105,8 +107,8 @@ class AccessRepositoryTest extends TestCase
     public function testFindByIpReturnsFalseForNonProvidedUserId(): void
     {
         $userIp = '1.2.3.4';
-        $level  = 123;
-        $type   = 'some-type';
+        $level  = AccessLevelEnum::USER;
+        $type   = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
@@ -115,7 +117,7 @@ class AccessRepositoryTest extends TestCase
                     'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ? AND `user` = %d',
                     User::INTERNAL_SYSTEM_USER_ID,
                 ),
-                [inet_pton($userIp), inet_pton($userIp), $level, $type]
+                [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value]
             )
             ->willReturn(0);
 
@@ -127,8 +129,8 @@ class AccessRepositoryTest extends TestCase
     public function testFindByIpReturnsFalseForSystemUser(): void
     {
         $userIp = '1.2.3.4';
-        $level  = 123;
-        $type   = 'some-type';
+        $level  = AccessLevelEnum::USER;
+        $type   = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
@@ -137,7 +139,7 @@ class AccessRepositoryTest extends TestCase
                     'SELECT COUNT(`id`) FROM `access_list` WHERE `start` <= ? AND `end` >= ? AND `level` >= ? AND `type` = ? AND `user` = %d',
                     User::INTERNAL_SYSTEM_USER_ID,
                 ),
-                [inet_pton($userIp), inet_pton($userIp), $level, $type]
+                [inet_pton($userIp), inet_pton($userIp), $level->value, $type->value]
             )
             ->willReturn(0);
 
@@ -164,14 +166,14 @@ class AccessRepositoryTest extends TestCase
     {
         $inAddrStart = 'some-ip-start';
         $inAddrEnd   = 'some-ip-end';
-        $type        = 'some-type';
         $userId      = 666;
+        $type        = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
                 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-                [$inAddrStart, $inAddrEnd, $type, $userId]
+                [$inAddrStart, $inAddrEnd, $type->value, $userId]
             )
             ->willReturn(123);
 
@@ -184,14 +186,14 @@ class AccessRepositoryTest extends TestCase
     {
         $inAddrStart = 'some-ip-start';
         $inAddrEnd   = 'some-ip-end';
-        $type        = 'some-type';
+        $type        = AccessTypeEnum::STREAM;
         $userId      = 666;
 
         $this->connection->expects(static::once())
             ->method('fetchOne')
             ->with(
                 'SELECT COUNT(`id`) FROM `access_list` WHERE `start` = ? AND `end` = ? AND `type` = ? AND `user` = ?',
-                [$inAddrStart, $inAddrEnd, $type, $userId]
+                [$inAddrStart, $inAddrEnd, $type->value, $userId]
             )
             ->willReturn(0);
 
@@ -204,16 +206,16 @@ class AccessRepositoryTest extends TestCase
     {
         $inAddrStart = 'some-ip-start';
         $inAddrEnd   = 'some-ip-end';
-        $type        = 'some-type';
         $userId      = 666;
         $name        = 'some-name';
-        $level       = 123;
+        $level       = AccessLevelEnum::USER;
+        $type        = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
                 'INSERT INTO `access_list` (`name`, `level`, `start`, `end`, `user`, `type`) VALUES (?, ?, ?, ?, ?, ?)',
-                [$name, $level, $inAddrStart, $inAddrEnd, $userId, $type]
+                [$name, $level->value, $inAddrStart, $inAddrEnd, $userId, $type->value]
             );
 
         $this->subject->create(
@@ -231,16 +233,16 @@ class AccessRepositoryTest extends TestCase
         $itemId      = 42;
         $inAddrStart = 'some-ip-start';
         $inAddrEnd   = 'some-ip-end';
-        $type        = 'some-type';
         $userId      = 666;
         $name        = 'some-name';
-        $level       = 123;
+        $level       = AccessLevelEnum::USER;
+        $type        = AccessTypeEnum::STREAM;
 
         $this->connection->expects(static::once())
             ->method('query')
             ->with(
                 'UPDATE `access_list` SET `start` = ?, `end` = ?, `level` = ?, `user` = ?, `name` = ?, `type` = ? WHERE `id` = ?',
-                [$inAddrStart, $inAddrEnd, $level, $userId, $name, $type, $itemId]
+                [$inAddrStart, $inAddrEnd, $level->value, $userId, $name, $type->value, $itemId]
             );
 
         $this->subject->update(

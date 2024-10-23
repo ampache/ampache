@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -35,13 +37,12 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 class Stream
 {
-    private static $session;
+    private static string $session = '';
 
     /**
      * set_session
@@ -52,7 +53,7 @@ class Stream
     public static function set_session($sid): void
     {
         if (!empty($sid)) {
-            self::$session = $sid;
+            self::$session = (string)$sid;
         }
     }
 
@@ -99,7 +100,6 @@ class Stream
      * @param string $target
      * @param string $player
      * @param string $media_type
-     * @return string
      */
     public static function get_transcode_format(
         $source,
@@ -280,7 +280,7 @@ class Stream
         }
 
         $argst = AmpConfig::get('encode_args_' . $target);
-        if (!$args) {
+        if (!$argst) {
             debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 
             return [];
@@ -304,8 +304,8 @@ class Stream
      */
     public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song'): string
     {
-        if (!empty(Core::get_global('transcode'))) {
-            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        if (!empty($GLOBALS['transcode'])) {
+            return $GLOBALS['transcode'][$source][$target][$player][$media_type] ?? '';
         }
 
         return '';
@@ -320,7 +320,7 @@ class Stream
      */
     public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
-        if (Core::get_global('transcode') == '') {
+        if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
             $GLOBALS['transcode'] = [];
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
@@ -449,7 +449,7 @@ class Stream
     /**
      * get_image_preview
      * @param Video $media
-     * @return string
+     * @return string|null
      */
     public static function get_image_preview($media): ?string
     {
@@ -509,9 +509,7 @@ class Stream
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event(self::class, 'Transcode command failed to open.', 1);
-            $parray = [
-                'handle' => null
-            ];
+            $parray = ['handle' => null];
         } else {
             $parray = [
                 'process' => $process,
@@ -581,8 +579,14 @@ class Stream
      * @param string $type
      * @param int $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null): void
-    {
+    public static function insert_now_playing(
+        $object_id,
+        $uid,
+        $length,
+        $sid,
+        $type,
+        $previous = null
+    ): void {
         if (!$previous) {
             $previous = time();
         }
@@ -642,12 +646,11 @@ class Stream
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
-        if (!Access::check('interface', 100)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             // We need to check only for users which have allowed view of personal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id && !empty(Core::get_global('user'))) {
-                $current_user = Core::get_global('user')->id;
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+            if (Core::get_global('user') instanceof User) {
+                $current_user = Core::get_global('user')->getId();
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
@@ -719,10 +722,10 @@ class Stream
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
                 break;
             case 'send_clear':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
                 break;
             case 'clear':
             case 'default':
@@ -759,7 +762,7 @@ class Stream
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
-            : AmpConfig::get('web_path');
+            : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }

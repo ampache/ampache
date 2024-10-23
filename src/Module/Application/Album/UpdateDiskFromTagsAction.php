@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Album;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Application\Exception\ObjectNotFoundException;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -57,14 +59,20 @@ final class UpdateDiskFromTagsAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        // Make sure they are a 'power' user at least
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === false) {
+        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
+        $albumDisk   = $this->modelFactory->createAlbumDisk($albumDiskId);
+        if ($albumDisk->isNew()) {
+            throw new ObjectNotFoundException($albumDiskId);
+        }
+
+        // Make sure they are a 'power' user or the object owner
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === false &&
+            $gatekeeper->getUserId() !== $albumDisk->get_user_owner()
+        ) {
             throw new AccessDeniedException();
         }
 
-        $albumDiskId = (int) ($request->getQueryParams()['album_disk'] ?? 0);
-
-        $albumDisk = $this->modelFactory->createAlbumDisk($albumDiskId);
         $albumDisk->format();
 
         $this->ui->showHeader();

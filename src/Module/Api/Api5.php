@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\System\Dba;
@@ -231,7 +233,7 @@ class Api5
                 continue;
             }
             if (!array_key_exists($parameter, $input)) {
-                debug_event(__CLASS__, "'" . $parameter . "' required on " . $method . " function call.", 2);
+                debug_event(self::class, "'" . $parameter . "' required on " . $method . " function call.", 2);
 
                 /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
                 self::error(sprintf(T_('Bad Request: %s'), $parameter), '4710', $method, 'system', $input['api_format']);
@@ -249,18 +251,16 @@ class Api5
      * This function checks the user can perform the function requested
      * 'interface', 100, $user->id
      *
-     * @param string $type
-     * @param int $level
      * @param int $user_id
      * @param string $method
      * @param string $format
      */
-    public static function check_access($type, $level, $user_id, $method, $format = 'xml'): bool
+    public static function check_access(AccessTypeEnum $type, AccessLevelEnum $level, $user_id, $method, $format = 'xml'): bool
     {
         if (!Access::check($type, $level, $user_id)) {
-            debug_event(self::class, $type . " '" . $level . "' required on " . $method . " function call.", 2);
+            debug_event(self::class, $type->value . " '" . $level->value . "' required on " . $method . " function call.", 2);
             /* HINT: Access level, eg 75, 100 */
-            self::error(sprintf(T_('Require: %s'), $level), '4742', $method, 'account', $format);
+            self::error(sprintf(T_('Require: %s'), $level->value), '4742', $method, 'account', $format);
 
             return false;
         }
@@ -283,7 +283,7 @@ class Api5
         $details    = Dba::fetch_assoc($db_results);
 
         // Now we need to quickly get the totals
-        $client    = static::getUserRepository()->findByApiKey(trim($token));
+        $client    = self::getUserRepository()->findByApiKey(trim($token));
         $counts    = Catalog::get_server_counts($client->id ?? 0);
         $playlists = (AmpConfig::get('hide_search', false))
             ? ($counts['playlist'])

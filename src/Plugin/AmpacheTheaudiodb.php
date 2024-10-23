@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\VaInfo;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Artist;
@@ -37,14 +38,20 @@ use Ampache\Module\System\Core;
 use Exception;
 use WpOrg\Requests\Requests;
 
-class AmpacheTheaudiodb implements AmpachePluginInterface
+class AmpacheTheaudiodb extends AmpachePlugin implements PluginGatherArtsInterface
 {
     public string $name        = 'TheAudioDb';
+
     public string $categories  = 'metadata';
+
     public string $description = 'TheAudioDb metadata integration';
+
     public string $url         = 'http://www.theaudiodb.com';
+
     public string $version     = '000003';
+
     public string $min_ampache = '370009';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
@@ -68,14 +75,11 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     public function install(): bool
     {
         // API Key requested in TheAudioDB forum, see http://www.theaudiodb.com/forum/viewtopic.php?f=6&t=8&start=140
-        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', 75, 'string', 'plugins', $this->name)) {
-            return false;
-        }
-        if (!Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name)) {
+        if (!Preference::insert('tadb_api_key', T_('TheAudioDb API key'), '41214789306c4690752dfb', AccessLevelEnum::MANAGER->value, 'string', 'plugins', $this->name)) {
             return false;
         }
 
-        return true;
+        return Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
     }
 
     /**
@@ -100,8 +104,9 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
         if ($from_version == 0) {
             return false;
         }
+
         if ($from_version < (int)$this->version) {
-            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', 25, 'boolean', 'plugins', $this->name);
+            Preference::insert('tadb_overwrite_name', T_('Overwrite Artist names that match an mbid'), '0', AccessLevelEnum::USER->value, 'boolean', 'plugins', $this->name);
         }
 
         return true;
@@ -111,9 +116,8 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
@@ -123,13 +127,14 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
             $data['tadb_overwrite_name'] = Preference::get_by_user(-1, 'tadb_overwrite_name');
         }
 
-        if (strlen(trim($data['tadb_api_key']))) {
-            $this->api_key = trim($data['tadb_api_key']);
+        if (strlen(trim((string) $data['tadb_api_key'])) !== 0) {
+            $this->api_key = trim((string) $data['tadb_api_key']);
         } else {
             debug_event('theaudiodb.plugin', 'No TheAudioDb api key, metadata plugin skipped', 3);
 
             return false;
         }
+
         $this->overwrite_name = (bool)$data['tadb_overwrite_name'];
 
         return true;
@@ -138,11 +143,8 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     /**
      * get_metadata
      * Returns song metadata for what we're passed in.
-     * @param array $gather_types
-     * @param array $media_info
-     * @return array
      */
-    public function get_metadata($gather_types, $media_info): array
+    public function get_metadata(array $gather_types, array $media_info): array
     {
         // Music metadata only
         if (!in_array('music', $gather_types)) {
@@ -182,6 +184,7 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $artists = $this->search_artists($media_info['title']);
                     $release = $artists->artists[0] ?? $release;
                 }
+
                 if ($release !== null) {
                     $results['art']        = $release->strArtistThumb ?? null;
                     $results['title']      = $release->strArtist ?? null;
@@ -199,8 +202,8 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $results['title']            = $track->strTrack ?? null;
                 }
             }
-        } catch (Exception $error) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
         }
 
         return $results;
@@ -210,8 +213,6 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
      * get_external_metadata
      * Update an Artist using theAudioDb
      * @param Label|Artist $object
-     * @param string $object_type
-     * @return bool
      */
     public function get_external_metadata($object, string $object_type): bool
     {
@@ -234,76 +235,55 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
                     $artists = $this->search_artists($object->get_fullname());
                     $release = $artists->artists[0] ?? $release;
                 }
+
                 if ($release !== null) {
-                    debug_event('theaudiodb.plugin', "Updating $object_type: " . $object->get_fullname(), 3);
+                    debug_event('theaudiodb.plugin', sprintf('Updating %s: ', $object_type) . $object->get_fullname(), 3);
                     $data['name'] = $release->strArtist ?? null;
                     // get the biography based on your locale
-                    $locale = explode('_', AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
-                    switch ($locale) {
-                        case 'de':
-                            $data['summary'] = $release->strBiographyDE ?? null;
-                            break;
-                        case 'fr':
-                            $data['summary'] = $release->strBiographyFR ?? null;
-                            break;
-                        case 'cn':
-                            $data['summary'] = $release->strBiographyCN ?? null;
-                            break;
-                        case 'it':
-                            $data['summary'] = $release->strBiographyIT ?? null;
-                            break;
-                        case 'jp':
-                            $data['summary'] = $release->strBiographyJP ?? null;
-                            break;
-                        case 'ru':
-                            $data['summary'] = $release->strBiographyRU ?? null;
-                            break;
-                        case 'es':
-                            $data['summary'] = $release->strBiographyES ?? null;
-                            break;
-                        case 'pt':
-                            $data['summary'] = $release->strBiographyPT ?? null;
-                            break;
-                        case 'se':
-                            $data['summary'] = $release->strBiographySE ?? null;
-                            break;
-                        case 'nl':
-                            $data['summary'] = $release->strBiographyNL ?? null;
-                            break;
-                        case 'hu':
-                            $data['summary'] = $release->strBiographyHU ?? null;
-                            break;
-                        case 'no':
-                            $data['summary'] = $release->strBiographyNO ?? null;
-                            break;
-                        case 'il':
-                            $data['summary'] = $release->strBiographyIL ?? null;
-                            break;
-                        case 'pl':
-                            $data['summary'] = $release->strBiographyPL ?? null;
-                            break;
-                        case 'en':
-                        default:
-                            $data['summary'] = $release->strBiographyEN ?? null;
-                            break;
-                    }
+                    $locale          = explode('_', (string) AmpConfig::get('lang', 'en_US'))[0] ?? 'en';
+                    $data['summary'] = match ($locale) {
+                        'de' => $release->strBiographyDE ?? null,
+                        'fr' => $release->strBiographyFR ?? null,
+                        'cn' => $release->strBiographyCN ?? null,
+                        'it' => $release->strBiographyIT ?? null,
+                        'jp' => $release->strBiographyJP ?? null,
+                        'ru' => $release->strBiographyRU ?? null,
+                        'es' => $release->strBiographyES ?? null,
+                        'pt' => $release->strBiographyPT ?? null,
+                        'se' => $release->strBiographySE ?? null,
+                        'nl' => $release->strBiographyNL ?? null,
+                        'hu' => $release->strBiographyHU ?? null,
+                        'no' => $release->strBiographyNO ?? null,
+                        'il' => $release->strBiographyIL ?? null,
+                        'pl' => $release->strBiographyPL ?? null,
+                        default => $release->strBiographyEN ?? null,
+                    };
                     $data['placeformed'] = $release->strCountry ?? null;
                     $data['yearformed']  = $release->intFormedYear ?? null;
 
                     // when you come in with an mbid you might want to keep the name updated (ignore case)
-                    if ($this->overwrite_name && $object->mbid !== null && VaInfo::is_mbid($object->mbid) && strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())) {
+                    if (
+                        $this->overwrite_name &&
+                        $object->mbid !== null &&
+                        VaInfo::is_mbid($object->mbid) &&
+                        strtolower($data['name'] ?? '') !== strtolower((string)$object->get_fullname())
+                    ) {
                         $name_check     = Artist::update_name_from_mbid($data['name'], $object->mbid);
-                        $object->prefix = $name_check['prefix'];
+                        if (isset($object->prefix)) {
+                            $object->prefix = $name_check['prefix'];
+                        }
+
                         $object->name   = $name_check['name'];
                     }
                 }
             }
-        } catch (Exception $error) {
-            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $error->getMessage(), 1);
+        } catch (Exception $exception) {
+            debug_event('theaudiodb.plugin', 'Error getting metadata: ' . $exception->getMessage(), 1);
 
             return false;
         }
-        if (!empty($data)) {
+
+        if ($data !== []) {
             $object->update($data);
         }
 
@@ -311,16 +291,14 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     }
 
     /**
-     * @param string $type
-     * @param array $options
-     * @param int $limit
-     * @return array
+     * gather_arts
+     * Returns art items for the requested media type
      */
-    public function gather_arts($type, $options = [], $limit = 5): array
+    public function gather_arts(string $type, ?array $options = [], ?int $limit = 5): array
     {
         debug_event('theaudiodb.plugin', 'gather_arts for type `' . $type . '`', 5);
 
-        return array_slice(Art::gather_metadata_plugin($this, $type, $options), 0, $limit);
+        return array_slice(Art::gather_metadata_plugin($this, $type, ($options ?? [])), 0, $limit);
     }
 
     /**
@@ -377,16 +355,6 @@ class AmpacheTheaudiodb implements AmpachePluginInterface
     private function get_album($mbid)
     {
         return $this->api_call('album-mb.php?i=' . $mbid);
-    }
-
-    /**
-     * @param string $artist
-     * @param string $title
-     * @return mixed|null
-     */
-    private function search_track($artist, $title)
-    {
-        return $this->api_call('searchtrack.php?s=' . rawurlencode($artist) . '&t=' . rawurlencode($title));
     }
 
     /**

@@ -99,7 +99,7 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album or AlbumDisk based on album_group preference
      *
-     * @return int[]
+     * @return list<int>|array<string, list<int>>
      */
     public function getByArtist(
         int $artistId,
@@ -111,12 +111,10 @@ interface AlbumRepositoryInterface
      * gets the album ids that this artist is a part of
      * Return Album only
      *
-     * @return int[]
+     * @return list<int>
      */
     public function getAlbumByArtist(
         int $artistId,
-        ?int $catalogId = null,
-        bool $group_release_type = false
     ): array;
 
     /**

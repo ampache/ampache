@@ -27,6 +27,7 @@ namespace Ampache\Module\Authorization\Check;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Core;
@@ -52,8 +53,11 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
      *
      * Everything uses the global 0,5,25,50,75,100 stuff. GLOBALS['user'] is used if no userId is provided
      */
-    public function check(string $type, int $level, ?int $userId = null): bool
-    {
+    public function check(
+        AccessTypeEnum $type,
+        AccessLevelEnum $level,
+        ?int $userId = null
+    ): bool {
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return true;
         }
@@ -71,21 +75,22 @@ final class PrivilegeChecker implements PrivilegeCheckerInterface
             : Core::get_global('user');
 
         // an empty string is an empty global
-        if (!$user instanceof User || $user == '' || $user->id === 0) {
+        if (
+            !$user instanceof User ||
+            $user == '' ||
+            $user->id === 0
+        ) {
             return false;
         }
 
         // Switch on the type
-        switch ($type) {
-            case AccessLevelEnum::TYPE_LOCALPLAY:
-                // Check their localplay_level
-                return $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level ||
-                    $user->access >= AccessLevelEnum::LEVEL_ADMIN;
-            case AccessLevelEnum::TYPE_INTERFACE:
-                // Check their standard user level
-                return ($user->access >= $level);
-            default:
-                return false;
-        }
+        return match ($type) {
+            AccessTypeEnum::LOCALPLAY => (
+                $this->configContainer->get(ConfigurationKeyEnum::LOCALPLAY_LEVEL) >= $level->value ||
+                $user->access >= AccessLevelEnum::ADMIN->value
+            ),
+            AccessTypeEnum::INTERFACE => ($user->access >= $level->value),
+            default => false,
+        };
     }
 }

@@ -26,6 +26,8 @@ declare(strict_types=0);
 namespace Ampache\Module\Api\Method;
 
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Live_Stream;
 use Ampache\Repository\Model\User;
@@ -55,7 +57,7 @@ final class LiveStreamCreateMethod
      */
     public static function live_stream_create(array $input, User $user): bool
     {
-        if (!Api::check_access('interface', 50, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (!Api::check_parameter($input, ['name', 'codec', 'url', 'catalog'], self::ACTION)) {
@@ -63,9 +65,9 @@ final class LiveStreamCreateMethod
         }
         $name       = $input['name'];
         $url        = filter_var(urldecode($input['url']), FILTER_VALIDATE_URL) ?: null;
-        $codec      = preg_replace("/[^a-z]/", "", strtolower($input['codec']));
+        $codec      = (string)preg_replace("/[^a-z]/", "", strtolower($input['codec']));
         $site_url   = (isset($input['site_url'])) ? filter_var(urldecode($input['site_url']), FILTER_VALIDATE_URL) : null;
-        $catalog_id = filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
+        $catalog_id = (int)filter_var($input['catalog'], FILTER_SANITIZE_NUMBER_INT);
 
         // Make sure it's a real catalog
         $catalog = Catalog::create_from_id($catalog_id);

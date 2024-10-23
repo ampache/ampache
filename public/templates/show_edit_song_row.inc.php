@@ -26,19 +26,24 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Metadata\MetadataManagerInterface;
+use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Metadata;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\Tag;
-
-/** @var Song $libitem */
+use Ampache\Repository\Model\User;
 
 global $dic;
 $metadataManager = $dic->get(MetadataManagerInterface::class);
 
 /** @var Song $libitem */
-?>
+
+$current_user = Core::get_global('user');
+$has_access   = $current_user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $current_user->getId());
+$is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_song_<?php echo $libitem->id; ?>" class="edit_dialog_content">
         <table class="tabledata">
@@ -47,7 +52,7 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <td><input type="text" name="title" value="<?php echo scrub_out($libitem->title); ?>" autofocus /></td>
             </tr>
             <?php
-                if (Access::check('interface', 75)) { ?>
+                if ($has_access || $is_owner) { ?>
                 <tr>
                     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
                     <td>
@@ -81,11 +86,11 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 <td class="edit_dialog_content_header"><?php echo T_('MusicBrainz ID'); ?></td>
                 <td>
                     <?php
-                        if (Access::check('interface', 50)) { ?>
+                        if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
                             <input type="text" name="mbid" value="<?php echo $libitem->mbid; ?>" />
                         <?php
                         } else {
-                            echo $libitem->mbid;
+                            echo '<input type="hidden" name="mbid" value="' . $libitem->mbid . '"/>' . $libitem->mbid;
                         } ?>
                 </td>
             </tr>
@@ -132,7 +137,9 @@ $metadataManager = $dic->get(MetadataManagerInterface::class);
                 /** @var Metadata $metadata */
                 $field = $metadata->getField();
                 if (
-                    $field !== null && $field->isPublic() && !in_array($field->getName(), $dismetas)
+                    $field !== null &&
+                    $field->isPublic() &&
+                    !in_array($field->getName(), $dismetas)
                 ) {
                     echo '<tr>' .
                     '<td class="edit_dialog_content_header">' . ucwords(str_replace("_", " ", $field->getName())) . '</td>' .

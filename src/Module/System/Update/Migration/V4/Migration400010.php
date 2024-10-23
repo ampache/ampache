@@ -36,7 +36,7 @@ final class Migration400010 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `search` DROP COLUMN `last_duration`;");
+        Dba::write("ALTER TABLE `search` DROP COLUMN `last_duration`;", [], true);
         $this->updateDatabase("ALTER TABLE `search` ADD COLUMN `last_duration` INT(11) NULL;");
     }
 }

@@ -26,10 +26,13 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessFunctionEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\System\Core;
-use Ampache\Module\Util\Rss\AmpacheRss;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
@@ -48,9 +51,9 @@ use Ampache\Repository\Model\Userflag;
 /** @var string $object_type */
 /** @var GuiGatekeeperInterface $gatekeeper */
 
-$web_path          = (string)AmpConfig::get('web_path', '');
+$web_path          = AmpConfig::get_web_path();
 $show_direct_play  = AmpConfig::get('directplay');
-$show_playlist_add = Access::check('interface', 25);
+$show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $show_similar      = AmpConfig::get('show_similar');
 $directplay_limit  = (int)AmpConfig::get('direct_play_limit', 0);
 $use_label         = AmpConfig::get('label');
@@ -63,21 +66,35 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
+/** @var User $current_user */
 $current_user = Core::get_global('user');
 $f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
 Ui::show_box_top($title, 'info-box'); ?>
 <div class="item_right_info">
     <div class="external_links">
-        <a href="http://www.google.com/search?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('google', T_('Search on Google ...')); ?></a>
-        <a href="https://www.duckduckgo.com/?q=%22<?php echo rawurlencode($f_name); ?>%22" target="_blank"><?php echo Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')); ?></a>
-        <a href="http://en.wikipedia.org/wiki/Special:Search?search=%22<?php echo rawurlencode($f_name); ?>%22&go=Go" target="_blank"><?php echo Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')); ?></a>
-        <a href="http://www.last.fm/search?q=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('lastfm', T_('Search on Last.fm ...')); ?></a>
-    <?php if (!empty($artist->mbid)) { ?>
-        <a href="https://musicbrainz.org/artist/<?php echo $artist->mbid; ?>" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
-    <?php } else { ?>
-        <a href="https://musicbrainz.org/search?query=%22<?php echo rawurlencode($f_name); ?>%22&type=artist" target="_blank"><?php echo Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')); ?></a>
-    <?php } ?>
+<?php if (AmpConfig::get('external_links_google')) {
+    echo "<a href=\"https://www.google.com/search?q=%22" . rawurlencode($f_name) . "%22\" target=\"_blank\">" . Ui::get_icon('google', T_('Search on Google ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_duckduckgo')) {
+    echo "<a href=\"https://www.duckduckgo.com/?q=" . rawurlencode($f_name) . "\" target=\"_blank\">" . Ui::get_icon('duckduckgo', T_('Search on DuckDuckGo ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_wikipedia')) {
+    echo "<a href=\"https://en.wikipedia.org/wiki/Special:Search?search=%22" . rawurlencode($f_name) . "%22&go=Go\" target=\"_blank\">" . Ui::get_icon('wikipedia', T_('Search on Wikipedia ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_lastfm')) {
+    echo "<a href=\"https://www.last.fm/search?q=%22" . rawurlencode($f_name) . "%22&type=artist\" target=\"_blank\">" . Ui::get_icon('lastfm', T_('Search on Last.fm ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_bandcamp')) {
+    echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_name) . "&item_type=b\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_musicbrainz')) {
+    if ($artist->mbid) {
+        echo "<a href=\"https://musicbrainz.org/artist/" . $artist->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    } else {
+        echo "<a href=\"https://musicbrainz.org/search?query=%22" . rawurlencode($f_name) . "%22&type=artist\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
+    }
+} ?>
     </div>
 <?php if (AmpConfig::get('lastfm_api_key')) {
     echo Ajax::observe('window', 'load', Ajax::action('?page=index&action=artist_info&artist=' . $artist->id, 'artist_info')); ?>
@@ -140,51 +157,51 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     } ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_songs&artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_('Show Artist Songs')); ?>
+                <?php echo Ui::get_material_symbol('search', T_('Show Artist Songs')); ?>
                 <?php echo T_('Show Artist Songs'); ?>
             </a>
         </li>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show_all_songs&artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_('Show All')); ?>
+                <?php echo Ui::get_material_symbol('search', T_('Show All')); ?>
                 <?php echo T_('Show All'); ?>
             </a>
         </li>
 <?php } else { ?>
         <li>
             <a href="<?php echo $web_path; ?>/artists.php?action=show&artist=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('view', T_('Show Albums')); ?>
+                <?php echo Ui::get_material_symbol('search', T_('Show Albums')); ?>
                 <?php echo T_('Show Albums'); ?>
             </a>
         </li>
 <?php } ?>
 <?php if ($show_direct_play) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play', T_('Play All'), 'directplay_full_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id, 'play_circle', T_('Play All'), 'directplay_full_' . $artist->id); ?>
         </li>
     <?php if (Stream_Playlist::check_autoplay_next()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&playnext=true', 'play_next', T_('Play All Next'), 'nextplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&playnext=true', 'menu_open', T_('Play All Next'), 'nextplay_artist_' . $artist->id); ?>
         </li>
     <?php } ?>
     <?php if (Stream_Playlist::check_autoplay_append()) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'play_add', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?page=stream&action=directplay&object_type=artist&object_id=' . $artist->id . '&append=true', 'low_priority', T_('Play All Last'), 'addplay_artist_' . $artist->id); ?>
         </li>
     <?php } ?>
 <?php } ?>
 <?php if ($show_playlist_add) { ?>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=artist&id=' . $artist->id, 'add', T_('Add All to Temporary Playlist'), 'add_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=artist&id=' . $artist->id, 'new_window', T_('Add All to Temporary Playlist'), 'add_' . $artist->id); ?>
         </li>
         <li>
-            <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'random', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
+            <?php echo Ajax::button_with_text('?action=basket&type=artist_random&id=' . $artist->id, 'shuffle', T_('Random All to Temporary Playlist'), 'random_' . $artist->id); ?>
         </li>
 <?php } ?>
-<?php if (Access::check('interface', 50)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_tags&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Do you really want to update from tags?'); ?>');">
-                <?php echo Ui::get_icon('file_refresh', T_('Update from tags'));
+                <?php echo Ui::get_material_symbol('sync_alt', T_('Update from tags'));
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
@@ -199,37 +216,42 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (AmpConfig::get('use_rss')) { ?>
         <li>
-            <?php echo AmpacheRss::get_display('podcast', ($current_user->id ?? -1), T_('RSS Feed'), ['object_type' => 'artist', 'object_id' => (string)$artist->id]); ?>
+            <?php echo Ui::getRssLink(
+                RssFeedTypeEnum::LIBRARY_ITEM,
+                $current_user,
+                T_('RSS Feed'),
+                ['object_type' => 'artist', 'object_id' => (string)$artist->id]
+            ); ?>
         </li>
 <?php } ?>
-<?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
+<?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('sociable')) {
         $postshout = "&nbsp;" . T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
-        <?php echo Ui::get_icon('comment', $postshout); ?>
-        <?php echo $postshout; ?>
+        <?php echo Ui::get_material_symbol('comment', $postshout);
+        echo $postshout; ?>
             </a>
         </li>
     <?php }
     }
 global $dic; // @todo remove after refactoring
 $zipHandler = $dic->get(ZipHandlerInterface::class);
-if (Access::check_function('batch_download') && $zipHandler->isZipable('artist')) {
+if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipHandler->isZipable('artist')) {
     $download = "&nbsp;" . T_('Download'); ?>
         <li>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=artist&id=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('batch_download', $download); ?>
+                <?php echo Ui::get_material_symbol('folder_zip', $download); ?>
                 <?php echo $download; ?>
             </a>
         </li>
 <?php }
-if (($owner_id > 0 && $owner_id == $current_user->id) || Access::check('interface', 50)) { ?>
+if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
-                        <?php echo Ui::get_icon('statistics', T_('Graphs')); ?>
-                        <?php echo T_('Graphs'); ?>
+                        <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
+                echo T_('Graphs'); ?>
                     </a>
                 </li>
             <?php }
@@ -239,15 +261,15 @@ if (canEditArtist($artist, $gatekeeper->getUserId())) {
         $t_upload = "&nbsp;" . T_('Upload'); ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/upload.php?artist=<?php echo $artist->id; ?>">
-                        <?php echo Ui::get_icon('upload', $t_upload); ?>
-                        <?php echo $t_upload; ?>
+                        <?php echo Ui::get_material_symbol('upload', $t_upload);
+        echo $t_upload; ?>
                     </a>
                 </li>
             <?php
     } ?>
             <li>
                 <a id="<?php echo 'edit_artist_' . $artist->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $artist->id; ?>', '<?php echo 'edit_artist_' . $artist->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', '')">
-                    <?php echo Ui::get_icon('edit', T_('Edit'));
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit'));
     echo "&nbsp;" . T_('Edit Artist'); ?>
                 </a>
             </li>
@@ -256,7 +278,7 @@ if (Catalog::can_remove($artist)) {
     $delete = T_('Delete'); ?>
         <li>
             <a id="<?php echo 'delete_artist_' . $artist->id; ?>" href="<?php echo $web_path; ?>/artists.php?action=delete&artist_id=<?php echo $artist->id; ?>">
-                <?php echo Ui::get_icon('delete', $delete); ?>
+                <?php echo Ui::get_material_symbol('close', $delete); ?>
                 <?php echo $delete; ?>
             </a>
         </li>

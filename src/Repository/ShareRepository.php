@@ -39,18 +39,12 @@ use DateTimeInterface;
  *
  * Tables: `share`
  */
-final class ShareRepository implements ShareRepositoryInterface
+final readonly class ShareRepository implements ShareRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    private ConfigContainerInterface $configContainer;
-
     public function __construct(
-        DatabaseConnectionInterface $connection,
-        ConfigContainerInterface $configContainer
+        private DatabaseConnectionInterface $connection,
+        private ConfigContainerInterface $configContainer
     ) {
-        $this->connection      = $connection;
-        $this->configContainer = $configContainer;
     }
 
     /**
@@ -99,7 +93,7 @@ final class ShareRepository implements ShareRepositoryInterface
 
         $sql = 'SELECT `id` FROM `share` WHERE ';
 
-        if (!$user->has_access(AccessLevelEnum::LEVEL_MANAGER)) {
+        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
             $sql .= '`user` = ?';
             $params[] = $userId;
         } else {

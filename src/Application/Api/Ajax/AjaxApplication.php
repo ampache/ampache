@@ -43,9 +43,11 @@ use Ampache\Application\Api\Ajax\Handler\StreamAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\TagAjaxHandler;
 use Ampache\Application\Api\Ajax\Handler\UserAjaxHandler;
 use Ampache\Application\ApplicationInterface;
+use Ampache\Module\Application\Exception\AccessDeniedException;
+use Ampache\Module\System\Core;
 use Psr\Container\ContainerInterface;
 
-final class AjaxApplication implements ApplicationInterface
+final readonly class AjaxApplication implements ApplicationInterface
 {
     /** @var array<string, class-string> */
     private const HANDLER_LIST = [
@@ -66,12 +68,9 @@ final class AjaxApplication implements ApplicationInterface
         'user' => UserAjaxHandler::class,
     ];
 
-    private ContainerInterface $dic;
-
     public function __construct(
-        ContainerInterface $dic
+        private ContainerInterface $dic
     ) {
-        $this->dic = $dic;
     }
 
     public function run(): void
@@ -83,11 +82,16 @@ final class AjaxApplication implements ApplicationInterface
             debug_event('ajax.server', 'Called for page: {' . $page . '}', 5);
         }
 
-        $handlerClassName = static::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
+        $user = Core::get_global('user');
+        if ($user === null) {
+            throw new AccessDeniedException();
+        }
+
+        $handlerClassName = self::HANDLER_LIST[$page] ?? DefaultAjaxHandler::class;
 
         /** @var AjaxHandlerInterface $handler */
         $handler = $this->dic->get($handlerClassName);
 
-        $handler->handle();
+        $handler->handle($user);
     }
 }

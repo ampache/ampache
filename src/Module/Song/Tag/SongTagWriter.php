@@ -71,7 +71,7 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing metadata to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $ndata = [];
@@ -149,7 +149,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 $songMeta       = $this->getVorbisMetadata($song);
                 $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
                 $apics          = $result['flac']['PICTURE'] ?? null;
-                //  Update existing vorbiscomments
+                // Update existing vorbiscomments
                 if (!empty($vorbiscomments)) {
                     foreach ($vorbiscomments as $key => $value) {
                         if (isset($songMeta[$key])) {
@@ -254,7 +254,7 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog->get_type() == 'local') {
             $this->logger->debug(
                 sprintf('Writing rating to file %s', $song->file),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             $vainfo = $this->utilityFactory->createVaInfo(
@@ -294,12 +294,12 @@ final class SongTagWriter implements SongTagWriterInterface
                     ];
                     $this->logger->debug(
                         print_r($ndata['Popularimeter'], true),
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             } else {
@@ -319,7 +319,7 @@ final class SongTagWriter implements SongTagWriterInterface
                 } else {
                     $this->logger->debug(
                         'Rating user must have an email address on record.',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -467,8 +467,8 @@ final class SongTagWriter implements SongTagWriterInterface
         $meta['catalognumber'] = $album->catalog_number;
         $meta['original_year'] = $album->original_year;
 
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS) && $user instanceof User) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {
@@ -476,7 +476,7 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -509,8 +509,8 @@ final class SongTagWriter implements SongTagWriterInterface
                 'ownerid' => "http://musicbrainz.org"
             ];
         }
-        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
-            $user      = Core::get_global('user');
+        $user = Core::get_global('user');
+        if ($user instanceof User && $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::RATINGS)) {
             $rating    = new Rating($song->id, 'song');
             $my_rating = $rating->get_user_rating($user->id);
             if (!empty($user->email)) {
@@ -522,7 +522,7 @@ final class SongTagWriter implements SongTagWriterInterface
             } else {
                 $this->logger->debug(
                     'Rating user must have an email address on record.',
-                    [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
             }
         }
@@ -538,7 +538,7 @@ final class SongTagWriter implements SongTagWriterInterface
 
         $album = new Album($song->album);
         $album->format();
-        $meta['original_year'] = $album->original_year;  //TORY
+        $meta['original_year'] = $album->original_year; //TORY
 
         $meta['text'] = [];
         if ($song->album_mbid) {

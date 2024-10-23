@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Update;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
@@ -51,18 +53,18 @@ final class SystemUpdateMethod
     public static function system_update(array $input, User $user): bool
     {
         $updated = false;
-        if (!Api::check_access('interface', 100, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         if (AutoUpdate::is_update_available(true)) {
             // run the update
             AutoUpdate::update_files(true);
-            AutoUpdate::update_dependencies(static::getConfigContainer(), true);
+            AutoUpdate::update_dependencies(self::getConfigContainer(), true);
             Preference::translate_db();
-            // check that the update completed or failed failed.
+            // check that the update completed or failed.
             if (AutoUpdate::is_update_available(true)) {
                 Api::error('Bad Request', ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'system', $input['api_format']);
-                Session::extend($input['auth'], 'api');
+                Session::extend($input['auth'], AccessTypeEnum::API->value);
 
                 return false;
             }
@@ -77,13 +79,13 @@ final class SystemUpdateMethod
                 $updater->update();
 
                 $updated = true;
-            } catch (Update\Exception\UpdateException $e) {
+            } catch (Update\Exception\UpdateException) {
             }
         }
         if ($updated) {
             // there was an update and it was successful
             Api::message('update successful', $input['api_format']);
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
 
             return true;
         }

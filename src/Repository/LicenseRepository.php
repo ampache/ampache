@@ -39,12 +39,8 @@ use PDO;
  */
 final class LicenseRepository extends BaseRepository implements LicenseRepositoryInterface
 {
-    protected DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(protected DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -52,9 +48,11 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
      *
      * @return Generator<int, string>
      */
-    public function getList(): Generator
+    public function getList(bool $show_hidden = true): Generator
     {
-        $result = $this->connection->query('SELECT `id`, `name` FROM `license` ORDER BY `name`');
+        $result = ($show_hidden)
+            ? $this->connection->query('SELECT `id`, `name` FROM `license`;')
+            : $this->connection->query('SELECT `id`, `name` FROM `license` WHERE `order` != 0;');
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             yield (int) $row['id'] => (string) $row['name'];
@@ -101,9 +99,7 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
      */
     protected function getPrototypeParameters(): array
     {
-        return [
-            $this,
-        ];
+        return [$this];
     }
 
     /**
@@ -119,22 +115,24 @@ final class LicenseRepository extends BaseRepository implements LicenseRepositor
 
         if ($license->isNew()) {
             $this->connection->query(
-                'INSERT INTO `license` (`name`, `description`, `external_link`) VALUES (?, ?, ?)',
+                'INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES (?, ?, ?, ?)',
                 [
                     $license->getName(),
                     $license->getDescription(),
-                    $license->getExternalLink()
+                    $license->getExternalLink(),
+                    $license->getOrder(),
                 ]
             );
 
             $result = $this->connection->getLastInsertedId();
         } else {
             $this->connection->query(
-                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ? WHERE `id` = ?',
+                'UPDATE `license` SET `name` = ?, `description` = ?, `external_link` = ?, `order` = ? WHERE `id` = ?',
                 [
                     $license->getName(),
                     $license->getDescription(),
                     $license->getExternalLink(),
+                    $license->getOrder(),
                     $license->getId()
                 ]
             );

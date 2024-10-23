@@ -31,18 +31,16 @@ use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Util\Ui;
+use Ampache\Repository\Model\User;
 
-final class StreamAjaxHandler implements AjaxHandlerInterface
+final readonly class StreamAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
     public function __construct(
-        RequestParserInterface $requestParser
+        private RequestParserInterface $requestParser
     ) {
-        $this->requestParser = $requestParser;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
         $results = [];
         $action  = $this->requestParser->getFromRequest('action');
@@ -52,7 +50,6 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
             case 'set_play_type':
                 // Make sure they have the rights to do this
                 if (!Preference::has_access('play_type')) {
-                    $results['rfc3514'] = '0x1';
                     break;
                 }
 
@@ -62,31 +59,29 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                     case 'democratic':
                         $key = 'allow_' . Core::get_post('type') . '_playback';
                         if (!AmpConfig::get($key)) {
-                            $results['rfc3514'] = '0x1';
                             break 2;
                         }
+
                         $new = Core::get_post('type');
                         break;
                     case 'web_player':
                         $new = 'web_player';
                         break;
                     default:
-                        $results['rfc3514'] = '0x1';
                         break 2;
                 } // end switch
 
                 $current = AmpConfig::get('play_type');
 
                 // Go ahead and update their preference
-                if (Preference::update('play_type', Core::get_global('user')->id, $new)) {
+                if (Preference::update('play_type', (int)(Core::get_global('user')?->getId()), $new)) {
                     AmpConfig::set('play_type', $new, true);
                 }
 
-                if (($new == 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new != 'localplay')) {
+                if (($new === 'localplay' && $current != 'localplay') || ($current == 'localplay' && $new !== 'localplay')) {
                     $results['rightbar'] = Ui::ajax_include('rightbar.inc.php');
                 }
 
-                $results['rfc3514'] = '0x0';
                 break;
             case 'directplay':
                 $object_type = Core::get_request('object_type');
@@ -94,30 +89,37 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 if (is_array($object_id)) {
                     $object_id = implode(',', $object_id);
                 }
+
                 debug_event('stream.ajax', 'Called for ' . $object_type . ': {' . $object_id . '}', 5);
 
                 if (InterfaceImplementationChecker::is_playable_item($object_type)) {
-                    $web_path                     = AmpConfig::get('web_path');
+                    $web_path                     = AmpConfig::get_web_path();
                     $_SESSION['iframe']['target'] = $web_path . '/stream.php?action=play_item&object_type=' . $object_type . '&object_id=' . $object_id;
                     if (array_key_exists('custom_play_action', $_REQUEST)) {
                         $_SESSION['iframe']['target'] .= '&custom_play_action=' . $_REQUEST['custom_play_action'];
                     }
+
                     if (array_key_exists('append', $_REQUEST) && !empty($_REQUEST['append'])) {
                         $_SESSION['iframe']['target'] .= '&append=true';
                     }
+
                     if (array_key_exists('playnext', $_REQUEST) && !empty($_REQUEST['playnext'])) {
                         $_SESSION['iframe']['target'] .= '&playnext=true';
                     }
+
                     if (array_key_exists('subtitle', $_REQUEST) && !empty($_REQUEST['subtitle'])) {
                         $_SESSION['iframe']['subtitle'] = $_REQUEST['subtitle'];
                     } elseif (array_key_exists('iframe', $_SESSION) && array_key_exists('subtitle', $_SESSION['iframe'])) {
                         unset($_SESSION['iframe']['subtitle']);
                     }
+
                     if (AmpConfig::get('play_type') == 'localplay') {
                         $_SESSION['iframe']['target'] .= '&client=' . AmpConfig::get('localplay_controller');
                     }
-                    $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
+
+                    $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
                 }
+
                 break;
             case 'basket':
                 // Go ahead and see if we should clear the playlist here or not,
@@ -130,15 +132,11 @@ final class StreamAjaxHandler implements AjaxHandlerInterface
                 }
 
                 // We need to set the basket up!
-                $web_path                     = AmpConfig::get('web_path');
+                $web_path                     = AmpConfig::get_web_path();
                 $_SESSION['iframe']['target'] = (array_key_exists('playlist_method', $_REQUEST))
                     ? $web_path . '/stream.php?action=basket&playlist_method=' . scrub_out($_REQUEST['playlist_method'])
                     : $web_path . '/stream.php?action=basket';
-                $results['rfc3514'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
+                $results['reloader'] = '<script>' . Core::get_reloadutil() . '(\'' . $web_path . '/util.php\');</script>';
         } // switch on action;
 
         // We always do this

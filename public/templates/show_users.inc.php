@@ -24,6 +24,8 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Api\Ajax;
@@ -31,9 +33,10 @@ use Ampache\Module\User\Following\UserFollowStateRendererInterface;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Browse $browse */
-/** @var array $object_ids */
+/** @var list<int> $object_ids */
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path   = AmpConfig::get_web_path();
+$admin_path = AmpConfig::get_web_path('/admin');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
@@ -42,7 +45,7 @@ if ($browse->is_show_header()) {
   <col id="col_username" />
   <col id="col_lastseen" />
   <col id="col_registrationdate" />
-<?php if (Access::check('interface', 50)) { ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
   <col id="col_activity" />
 <?php if (AmpConfig::get('track_user_ip')) { ?>
   <col id="col_lastip" />
@@ -53,16 +56,16 @@ if ($browse->is_show_header()) {
 </colgroup>
 <thead>
     <tr class="th-top">
-      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " (" . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
+      <th class="cel_username essential persist"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', "(" . T_('Full Name') . ")", 'users_sort_fullname1'); ?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate'); ?></th>
-      <?php if (Access::check('interface', 50)) { ?>
+      <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php } ?>
       <?php } ?>
-      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+      <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow essential"><?php echo T_('Following'); ?></th>
       <?php } ?>
       <th class="cel_action essential"><?php echo T_('Action'); ?></th>
@@ -90,16 +93,16 @@ foreach ($object_ids as $user_id) {
 </tbody>
 <tfoot>
     <tr class="th-bottom">
-      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " ( " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', T_('Full Name'), 'users_sort_fullname1') . ")";?></th>
+      <th class="cel_username"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=username', T_('Username'), 'users_sort_username1'); ?><?php echo " " . Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=fullname', "(" . T_('Full Name') . ")", 'users_sort_fullname1'); ?></th>
       <th class="cel_lastseen"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=last_seen', T_('Last Seen'), 'users_sort_lastseen1'); ?></th>
       <th class="cel_registrationdate"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=user&sort=create_date', T_('Registration Date'), 'users_sort_createdate1'); ?></th>
-      <?php if (Access::check('interface', 50)) { ?>
+      <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
       <th class="cel_activity"><?php echo T_('Activity'); ?></th>
       <?php if (AmpConfig::get('track_user_ip')) { ?>
       <th class="cel_lastip"><?php echo T_('Last IP'); ?></th>
       <?php } ?>
       <?php } ?>
-      <?php if (Access::check('interface', 25) && AmpConfig::get('sociable')) { ?>
+      <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
       <th class="cel_follow"><?php echo T_('Following'); ?></th>
       <?php } ?>
       <th class="cel_action"><?php echo T_('Action'); ?></th>

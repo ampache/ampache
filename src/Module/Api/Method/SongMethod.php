@@ -53,7 +53,7 @@ final class SongMethod
         if (!Api::check_parameter($input, ['filter'], self::ACTION)) {
             return false;
         }
-        $object_id = (int) $input['filter'];
+        $object_id = (int)$input['filter'];
         $song      = new Song($object_id);
         if ($song->isNew()) {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
@@ -65,10 +65,10 @@ final class SongMethod
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
-                echo Json_Data::songs([(int) $object_id], $user, true, false);
+                echo Json_Data::songs([$object_id], $user, true, false);
                 break;
             default:
-                echo Xml_Data::songs([(int) $object_id], $user);
+                echo Xml_Data::songs([$object_id], $user);
         }
 
         return true;

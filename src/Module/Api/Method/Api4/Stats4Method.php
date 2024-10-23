@@ -105,13 +105,13 @@ final class Stats4Method
             case 'forgotten':
                 $newest = $input['filter'] == 'recent';
                 if ($user->isNew()) {
-                    $results = Stats::get_recent($type, $limit, $offset, $newest);
+                    $results = Stats::get_recent($type, $limit, $offset, null, $newest);
                 } else {
                     $results = $user->get_recently_played($type, $limit, $offset, $newest);
                 }
                 break;
             case 'flagged':
-                $results = Userflag::get_latest($type, $user_id, $limit, $offset);
+                $results = Userflag::get_latest($type, $user, $limit, $offset);
                 break;
             case 'random':
             default:
@@ -120,13 +120,13 @@ final class Stats4Method
                         $results = Random::get_default($limit, $user);
                         break;
                     case 'artist':
-                        $results = static::getArtistRepository()->getRandom(
+                        $results = self::getArtistRepository()->getRandom(
                             $user_id,
                             $limit
                         );
                         break;
                     case 'album':
-                        $results = static::getAlbumRepository()->getRandom(
+                        $results = self::getAlbumRepository()->getRandom(
                             $user_id,
                             $limit
                         );
