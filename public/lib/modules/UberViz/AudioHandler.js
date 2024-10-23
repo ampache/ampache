@@ -334,7 +334,7 @@ var AudioHandler = (function() {
         for(var i = 0; i < binCount; i++) {
             waveData[i] = ((timeByteData[i] - 128) /128 )* ControlsHandler.audioParams.volSens;
         }
-        //TODO - cap levels at 1 and -1 ?
+        // TODO - cap levels at 1 and -1 ?
 
         //normalize levelsData from freqByteData
         for(var i = 0; i < levelsCount; i++) {
@@ -348,7 +348,7 @@ var AudioHandler = (function() {
             //make lower levels smaller
             //levelsData[i] *=  1 + (i/levelsCount)/2; //??????
         }
-        //TODO - cap levels at 1?
+        // TODO - cap levels at 1?
 
         //GET AVG LEVEL
         var sum = 0;

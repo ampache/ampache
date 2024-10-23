@@ -35,24 +35,34 @@ final class Migration500002 extends AbstractMigration
 {
     protected array $changelog = [
         'Create `total_count` and `total_skip` to album, artist, song, video and podcast_episode tables',
-        'Fill counts into the columns'
+        'Fill counts into the columns',
     ];
 
     public function migrate(): void
     {
         // tables which usually calculate a count
-        $tables = ['album', 'artist', 'song', 'video', 'podcast_episode'];
+        $tables = [
+            'album',
+            'artist',
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($tables as $type) {
-            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;");
+            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;", [], true);
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_count` int(11) UNSIGNED NOT NULL DEFAULT '0';");
 
             $this->updateDatabase("UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_count`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'stream' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_count` = `object_count`.`total_count` WHERE `$type`.`total_count` != `object_count`.`total_count` AND `$type`.`id` = `object_count`.`object_id`;");
         }
 
         // tables that also have a skip count
-        $tables = ['song', 'video', 'podcast_episode'];
+        $tables = [
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($tables as $type) {
-            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;");
+            Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;", [], true);
             $this->updateDatabase("ALTER TABLE `$type` ADD COLUMN `total_skip` int(11) UNSIGNED NOT NULL DEFAULT '0';");
 
             $this->updateDatabase("UPDATE `$type`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `object_id` FROM `object_count` WHERE `object_count`.`object_type` = '$type' AND `object_count`.`count_type` = 'skip' GROUP BY `object_count`.`object_id`) AS `object_count` SET `$type`.`total_skip` = `object_count`.`total_skip` WHERE `$type`.`total_skip` != `object_count`.`total_skip` AND `$type`.`id` = `object_count`.`object_id`;");

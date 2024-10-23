@@ -26,22 +26,30 @@ declare(strict_types=0);
 namespace Ampache\Plugin;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 
-class AmpacheMatomo implements AmpachePluginInterface
+class AmpacheMatomo extends AmpachePlugin implements PluginDisplayOnFooterInterface
 {
     public string $name        = 'Matomo';
+
     public string $categories  = 'stats';
+
     public string $description = 'Matomo statistics';
+
     public string $url         = '';
+
     public string $version     = '000001';
+
     public string $min_ampache = '370034';
+
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
     private $site_id;
+
     private $matomo_url;
 
     /**
@@ -58,14 +66,11 @@ class AmpacheMatomo implements AmpachePluginInterface
      */
     public function install(): bool
     {
-        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', 100, 'string', 'plugins', 'matomo')) {
-            return false;
-        }
-        if (!Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get('web_path') . '/matomo/', 100, 'string', 'plugins', $this->name)) {
+        if (!Preference::insert('matomo_site_id', T_('Matomo Site ID'), '1', AccessLevelEnum::ADMIN->value, 'string', 'plugins', 'matomo')) {
             return false;
         }
 
-        return true;
+        return Preference::insert('matomo_url', T_('Matomo URL'), AmpConfig::get_web_path() . '/matomo/', AccessLevelEnum::ADMIN->value, 'string', 'plugins', $this->name);
     }
 
     /**
@@ -105,9 +110,10 @@ class AmpacheMatomo implements AmpachePluginInterface
         echo "var u='" . scrub_out($this->matomo_url) . "';\n";
         echo "_paq.push(['setTrackerUrl', u+'matomo.php']);\n";
         echo "_paq.push(['setSiteId', " . scrub_out($this->site_id) . "]);\n";
-        if (Core::get_global('user')->id > 0) {
+        if (Core::get_global('user')?->getId() > 0) {
             echo "_paq.push(['setUserId', '" . Core::get_global('user')->username . "']);\n";
         }
+
         echo "var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];\n";
         echo "g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);\n";
         echo "})();\n";
@@ -119,28 +125,27 @@ class AmpacheMatomo implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
         $data = $user->prefs;
         // load system when nothing is given
-        if (!strlen(trim($data['matomo_site_id'])) || !strlen(trim($data['matomo_url']))) {
-            $data                   = array();
+        if (!strlen(trim((string) $data['matomo_site_id'])) || !strlen(trim((string) $data['matomo_url']))) {
+            $data                   = [];
             $data['matomo_site_id'] = Preference::get_by_user(-1, 'matomo_site_id');
             $data['matomo_url']     = Preference::get_by_user(-1, 'matomo_url');
         }
 
-        $this->site_id = trim($data['matomo_site_id']);
-        if (!strlen($this->site_id)) {
+        $this->site_id = trim((string) $data['matomo_site_id']);
+        if ($this->site_id === '') {
             debug_event('matomo.plugin', 'No Matomo Site ID, user field plugin skipped', 3);
 
             return false;
         }
 
-        $this->matomo_url = trim($data['matomo_url']);
-        if (!strlen($this->matomo_url)) {
+        $this->matomo_url = trim((string) $data['matomo_url']);
+        if ($this->matomo_url === '') {
             debug_event('matomo.plugin', 'No Matomo URL, user field plugin skipped', 3);
 
             return false;

@@ -33,7 +33,7 @@ class easy_captcha_text_math_formula extends easy_captcha
     public $question = "1+1";
     public $solution = "2";
 
-    #-- set up
+    // set up
     public function __construct()
     {
         $this->question = sprintf(self::CAPTCHA_WHATIS_TEXT, $this->create_formula());
@@ -42,25 +42,25 @@ class easy_captcha_text_math_formula extends easy_captcha
         // but I had this code handy already ;) and it's easier to modify
     }
 
-    #-- simple IS-EQUAL check
+    // simple IS-EQUAL check
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
         return (int)$this->solution == (int)$input;
     }
 
-    #-- make new captcha formula string
+    // make new captcha formula string
 
     /**
      * create_formula
      */
     public function create_formula(): string
     {
-        $formula = array(
+        $formula = [
             rand(20, 100) . " / " . rand(2, 10),
             rand(50, 150) . " - " . rand(2, 100),
             rand(2, 100) . " + " . rand(2, 100),
@@ -68,12 +68,12 @@ class easy_captcha_text_math_formula extends easy_captcha
             rand(5, 10) . " * " . rand(5, 10) . " - " . rand(1, 20),
             rand(30, 100) . " + " . rand(5, 99) . " - " . rand(1, 50),
             //    rand(20,100) . " / " . rand(2,10) . " + " . rand(1,50),
-        );
+        ];
 
         return $formula[rand(0, count($formula) - 1)];
     }
 
-    #-- remove non-arithmetic characters
+    // remove non-arithmetic characters
 
     /**
      * @param string $string
@@ -84,11 +84,11 @@ class easy_captcha_text_math_formula extends easy_captcha
         return preg_replace("/[^-+*\/\d]/", "", $string);
     }
 
-    #-- "solve" simple calculations
+    // "solve" simple calculations
 
     /**
      * @param $formula
-     * @return integer
+     * @return int
      */
     public function calculate_formula($formula)
     {
@@ -96,7 +96,7 @@ class easy_captcha_text_math_formula extends easy_captcha
         preg_match("#^(\d+)([-+/*])(\d+)([-+/*])?(\d+)?$#", $this->clean($formula), $uu);
         list($uu, $X, $op1, $Y, $op2, $Z) = $uu;
         if ($Y) {
-            $calc = array(
+            $calc = [
                 '/' => $X / $Y,
                 // PHP+ZendVM catches division by zero already, and CAPTCHA "attacker" would get no advantage herefrom anyhow
                 "*" => $X * $Y,
@@ -105,9 +105,11 @@ class easy_captcha_text_math_formula extends easy_captcha
                 "*-" => $X * $Y - $Z,
                 "+-" => $X + $Y - $Z,
                 "/+" => $X / $Y + $Z,
-            );
+            ];
         }
 
-        return ($calc[$op1 . $op2] ? $calc[$op1 . $op2] : rand(0, 1 << 23));
+        return (isset($calc) && $calc[$op1 . $op2])
+            ? $calc[$op1 . $op2]
+            : rand(0, 1 << 23);
     }
 }

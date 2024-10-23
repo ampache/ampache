@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Artist;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\MockeryTestCase;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
@@ -68,7 +69,6 @@ class UpdateFromTagsActionTest extends MockeryTestCase
         $artist     = $this->mock(Artist::class);
 
         $artistId = 666;
-        $userId   = 24;
         $webPath  = 'some-web-path';
 
         $request->shouldReceive('getQueryPArams')
@@ -87,7 +87,7 @@ class UpdateFromTagsActionTest extends MockeryTestCase
             ->andReturnFalse();
 
         $gatekeeper->shouldReceive('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->once()
             ->andReturnTrue();
 

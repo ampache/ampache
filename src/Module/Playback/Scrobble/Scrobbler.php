@@ -41,21 +41,26 @@ class Scrobbler
     /**
      * Constructor
      * This is the constructer it takes a username and password
-     * @param $api_key
-     * @param string $scheme
-     * @param string $host
-     * @param string $challenge
-     * @param string $secret
+     * @param string $api_key
+     * @param string|null $scheme
+     * @param string|null $host
+     * @param string|null $challenge
+     * @param string|null $secret
      */
-    public function __construct($api_key, $scheme = 'https', $host = '', $challenge = '', $secret = '')
-    {
+    public function __construct(
+        $api_key,
+        $scheme = 'https',
+        $host = '',
+        $challenge = '',
+        $secret = ''
+    ) {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
         $this->host          = $host;
         $this->scheme        = $scheme;
         $this->api_key       = $api_key;
         $this->secret        = $secret;
-        $this->queued_tracks = array();
+        $this->queued_tracks = [];
     }
 
     /**
@@ -64,7 +69,7 @@ class Scrobbler
      * It is the md5 of the <name><value> of all parameter plus API's secret
      * @param array $vars
      */
-    public function get_api_sig($vars = array()): string
+    public function get_api_sig($vars = []): string
     {
         ksort($vars);
         $sig = '';
@@ -72,9 +77,8 @@ class Scrobbler
             $sig .= $name . $value;
         }
         $sig .= $this->secret;
-        $sig = md5($sig);
 
-        return $sig;
+        return md5($sig);
     }
 
     /**
@@ -86,19 +90,19 @@ class Scrobbler
      * @param array $vars
      * @return string|false
      */
-    public function call_url($url, $method = 'GET', $vars = null)
+    public function call_url($url, $method = 'GET', $vars = [])
     {
         // Encode parameters per RFC1738
         $params = http_build_query($vars);
-        $opts   = array(
-            'http' => array(
+        $opts   = [
+            'http' => [
                 'method' => $method,
-                'header' => array(
+                'header' => [
                     'Host: ' . $this->host,
                     'User-Agent: Ampache/' . AmpConfig::get('version')
-                ),
-            )
-        );
+                ],
+            ]
+        ];
         // POST request need parameters in body and additional headers
         if ($method == 'POST') {
             $opts['http']['content']  = $params;
@@ -153,17 +157,19 @@ class Scrobbler
     public function get_session_key($token = null)
     {
         if ($token !== null) {
-            $vars = array(
+            $vars = [
                 'method' => 'auth.getSession',
                 'api_key' => $this->api_key,
                 'token' => $token
-            );
+            ];
             // sign the call
             $sig             = $this->get_api_sig($vars);
             $vars['api_sig'] = $sig;
             // call the getSession API
             $response = $this->call_url('/2.0/', 'GET', $vars);
-            $xml      = simplexml_load_string($response);
+            $xml      = ($response)
+                ? simplexml_load_string($response)
+                : false;
             if ($xml) {
                 $status = (string)$xml['status'];
                 if ($status == 'ok') {
@@ -202,15 +208,21 @@ class Scrobbler
      * @param $length
      * @param $track
      */
-    public function queue_track($artist, $album, $title, $timestamp, $length, $track): bool
-    {
+    public function queue_track(
+        $artist,
+        $album,
+        $title,
+        $timestamp,
+        $length,
+        $track
+    ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
 
             return false;
         }
 
-        $newtrack           = array();
+        $newtrack           = [];
         $newtrack['artist'] = $artist;
         $newtrack['album']  = $album;
         $newtrack['title']  = $title;
@@ -242,7 +254,7 @@ class Scrobbler
 
         // Build the query string (encoded per RFC1738 by the call method)
         $count = 0;
-        $vars  = array();
+        $vars  = [];
         foreach ($this->queued_tracks as $track) {
             // construct array of parameters for each song
             $vars["artist[$count]"]      = $track['artist'];
@@ -264,7 +276,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {
@@ -291,7 +305,7 @@ class Scrobbler
      */
     public function love($is_loved, $artist = '', $title = ''): bool
     {
-        $vars           = array();
+        $vars           = [];
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys
@@ -305,7 +319,9 @@ class Scrobbler
 
         // Call the method and parse response
         $response = $this->call_url('/2.0/', 'POST', $vars);
-        $xml      = simplexml_load_string($response);
+        $xml      = ($response)
+            ? simplexml_load_string($response)
+            : false;
         if ($xml) {
             $status = (string)$xml['status'];
             if ($status == 'ok') {

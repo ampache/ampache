@@ -27,12 +27,12 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Song;
 
-/** @var array $artists */
-/** @var array $songs */
+/** @var list<array{id: null|int, mbid: string, name: string}> $artists */
+/** @var list<array{id: int}> $songs */
 ?>
 
 <?php
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path = AmpConfig::get_web_path();
 $wanted   = AmpConfig::get('wanted');
 if ($artists) { ?>
 <div class="np_group similars">

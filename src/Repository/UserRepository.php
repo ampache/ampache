@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace Ampache\Repository;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Repository\Model\User;
 use Ampache\Module\System\Dba;
+use Ampache\Repository\Model\User;
 
-final class UserRepository implements UserRepositoryInterface
+final readonly class UserRepository implements UserRepositoryInterface
 {
     /**
      * This returns a built user from a rsstoken
@@ -38,9 +38,22 @@ final class UserRepository implements UserRepositoryInterface
     {
         $user       = null;
         $sql        = "SELECT `id` FROM `user` WHERE `rsstoken` = ?";
-        $db_results = Dba::read($sql, array($rssToken));
+        $db_results = Dba::read($sql, [$rssToken]);
         if ($results = Dba::fetch_assoc($db_results)) {
             $user = new User((int) $results['id']);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Finds a user by its id
+     */
+    public function findById(int $id): ?User
+    {
+        $user = new User($id);
+        if ($user->isNew()) {
+            return null;
         }
 
         return $user;
@@ -51,9 +64,10 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function idByUsername(string $username): int
     {
-        if ($username == '-1') {
+        if ($username === '-1') {
             return 0;
         }
+
         $db_results = Dba::read(
             'SELECT `id` FROM `user` WHERE `username` = ?',
             [$username]
@@ -97,7 +111,7 @@ final class UserRepository implements UserRepositoryInterface
         $sql        = 'SELECT `id`, `username`, `email` FROM `user` WHERE `access` != 100;';
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $email_hash = hash('sha256', $row['email']);
+            $email_hash = hash('sha256', (string) $row['email']);
             $user_token = hash('sha256', $row['username'] . $email_hash);
             if ($token === $user_token) {
                 return (int)$row['id'];
@@ -121,7 +135,8 @@ final class UserRepository implements UserRepositoryInterface
         if (User::is_cached($key, $value)) {
             return User::get_from_cache($key, $value);
         }
-        $users = array();
+
+        $users = [];
         $sql   = ($includeDisabled)
             ? 'SELECT `id` FROM `user`;'
             : 'SELECT `id` FROM `user` WHERE `disabled` = \'0\';';
@@ -130,6 +145,7 @@ final class UserRepository implements UserRepositoryInterface
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[] = (int) $results['id'];
         }
+
         User::add_to_cache($key, $value, $users);
 
         return $users;
@@ -149,7 +165,8 @@ final class UserRepository implements UserRepositoryInterface
         if (User::is_cached($key, $value)) {
             return User::get_from_cache($key, $value);
         }
-        $users = array();
+
+        $users = [];
         $sql   = ($includeDisabled)
             ? 'SELECT `id`, `username` FROM `user`;'
             : 'SELECT `id`, `username` FROM `user` WHERE `disabled` = \'0\';';
@@ -158,6 +175,7 @@ final class UserRepository implements UserRepositoryInterface
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[(int) $results['id']] = $results['username'];
         }
+
         User::add_to_cache($key, $value, $users);
 
         return $users;
@@ -169,7 +187,7 @@ final class UserRepository implements UserRepositoryInterface
     public function collectGarbage(): void
     {
         // simple deletion queries.
-        $user_tables = array(
+        $user_tables = [
             'access_list',
             'bookmark',
             'broadcast',
@@ -188,20 +206,22 @@ final class UserRepository implements UserRepositoryInterface
             'user_shout',
             'user_vote',
             'wanted'
-        );
+        ];
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
+
         // reset their data to null if they've made custom changes
-        $user_tables = array(
+        $user_tables = [
             'artist',
             'label'
-        );
+        ];
         foreach ($user_tables as $table_id) {
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";
             Dba::write($sql);
         }
+
         $sql = "UPDATE `song` SET `user_upload` = NULL WHERE `user_upload` IS NOT NULL AND `user_upload` != -1 AND `user_upload` NOT IN (SELECT `id` FROM `user`);";
         Dba::write($sql);
 
@@ -232,7 +252,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         $user       = null;
         $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
-        $db_results = Dba::read($sql, array($username));
+        $db_results = Dba::read($sql, [$username]);
         if ($results = Dba::fetch_assoc($db_results)) {
             $user = new User((int) $results['id']);
         }
@@ -247,7 +267,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         $user       = null;
         $sql        = 'SELECT `id` FROM `user` WHERE `email` = ?';
-        $db_results = Dba::read($sql, array($email));
+        $db_results = Dba::read($sql, [$email]);
         if ($results = Dba::fetch_assoc($db_results)) {
             $user = new User((int) $results['id']);
         }
@@ -264,10 +284,10 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function findByWebsite(string $website): array
     {
-        $website    = rtrim((string)$website, "/");
+        $website    = rtrim($website, "/");
         $sql        = 'SELECT `id` FROM `user` WHERE `website` = ? LIMIT 1';
-        $db_results = Dba::read($sql, array($website));
-        $users      = array();
+        $db_results = Dba::read($sql, [$website]);
+        $users      = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $users[] = (int) $results['id'];
         }
@@ -280,34 +300,36 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function findByApiKey(string $apikey): ?User
     {
-        if (!empty($apikey)) {
+        if ($apikey !== '' && $apikey !== '0') {
             // check for legacy unencrypted apikey
             $sql        = "SELECT `id` FROM `user` WHERE `apikey` = ?";
-            $db_results = Dba::read($sql, array($apikey));
+            $db_results = Dba::read($sql, [$apikey]);
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('id', $results)) {
                 return new User((int) $results['id']);
             }
+
             // check for api sessions
             $sql = (AmpConfig::get('perpetual_api_session'))
                 ? "SELECT `username` FROM `session` WHERE `id` = ? AND (`expire` = 0 OR `expire` > ?) AND type = 'api'"
                 : "SELECT `username` FROM `session` WHERE `id` = ? AND `expire` > ? AND type = 'api'";
-            $db_results = Dba::read($sql, array($apikey, time()));
+            $db_results = Dba::read($sql, [$apikey, time()]);
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('username', $results)) {
                 return User::get_from_username($results['username']);
             }
+
             // check for sha256 hashed apikey for client
             // https://ampache.org/api/
             $sql        = "SELECT `id`, `apikey`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
                 if ($row['apikey'] && $row['username']) {
-                    $key        = hash('sha256', $row['apikey']);
+                    $key        = hash('sha256', (string) $row['apikey']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase == $apikey) {
+                    if ($passphrase === $apikey) {
                         return new User((int) $row['id']);
                     }
                 }
@@ -322,24 +344,25 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function findByStreamToken(string $streamToken): ?User
     {
-        if (!empty($streamToken)) {
+        if ($streamToken !== '' && $streamToken !== '0') {
             // check for legacy unencrypted streamtoken
             $sql        = "SELECT `id` FROM `user` WHERE `streamtoken` = ?";
-            $db_results = Dba::read($sql, array($streamToken));
+            $db_results = Dba::read($sql, [$streamToken]);
             $results    = Dba::fetch_assoc($db_results);
 
             if (array_key_exists('id', $results)) {
                 return new User((int) $results['id']);
             }
+
             // check for sha256 hashed streamtoken for client
             // https://ampache.org/api/
             $sql        = "SELECT `id`, `streamtoken`, `username` FROM `user`";
             $db_results = Dba::read($sql);
             while ($row = Dba::fetch_assoc($db_results)) {
                 if ($row['streamtoken'] && $row['username']) {
-                    $key        = hash('sha256', $row['streamtoken']);
+                    $key        = hash('sha256', (string) $row['streamtoken']);
                     $passphrase = hash('sha256', $row['username'] . $key);
-                    if ($passphrase == $streamToken) {
+                    if ($passphrase === $streamToken) {
                         return new User((int) $row['id']);
                     }
                 }
@@ -390,7 +413,7 @@ final class UserRepository implements UserRepositoryInterface
      */
     public function activateByUsername(string $username): void
     {
-        $sql = "UPDATE `user` SET `disabled`='0' WHERE `username` = ?";
+        $sql = "UPDATE `user` SET `disabled`='0', `validation` = NULL WHERE `username` = ?";
         Dba::write($sql, [$username]);
     }
 
@@ -401,7 +424,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         $sql = "UPDATE `user` SET `rsstoken` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($rssToken, $userId));
+        Dba::write($sql, [$rssToken, $userId]);
     }
 
     /**
@@ -410,7 +433,7 @@ final class UserRepository implements UserRepositoryInterface
     public function updateStreamToken(int $userId, string $userName, string $streamToken): void
     {
         $sql = "UPDATE `user` SET `streamtoken` = ? WHERE `id` = ?";
-        Dba::write($sql, array($streamToken, $userId));
+        Dba::write($sql, [$streamToken, $userId]);
     }
 
     /**
@@ -420,7 +443,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         $sql = "UPDATE `user` SET `apikey` = ? WHERE `id` = ?";
 
-        Dba::write($sql, array($apikey, $userId));
+        Dba::write($sql, [$apikey, $userId]);
     }
 
     /**
@@ -429,7 +452,7 @@ final class UserRepository implements UserRepositoryInterface
     public function retrievePasswordFromUser(int $userId): string
     {
         $sql        = 'SELECT * FROM `user` WHERE `id` = ?';
-        $db_results = Dba::read($sql, array($userId));
+        $db_results = Dba::read($sql, [$userId]);
         $row        = Dba::fetch_assoc($db_results);
 
         return $row['password'] ?? '';

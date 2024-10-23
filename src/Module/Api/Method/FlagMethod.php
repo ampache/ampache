@@ -49,7 +49,7 @@ final class FlagMethod
      * Setting flag to true (1) will set the flag
      * Setting flag to false (0) will remove the flag
      *
-     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season' $type
+     * type = (string) 'song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video' $type
      * id   = (integer) $object_id
      * flag = (integer) 0,1 $flag
      * date = (integer) UNIXTIME() //optional
@@ -71,7 +71,7 @@ final class FlagMethod
         $date      = (int)($input['date'] ?? time());
 
         // confirm the correct data
-        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video', 'tvshow', 'tvshow_season'])) {
+        if (!in_array(strtolower($type), ['song', 'album', 'artist', 'playlist', 'podcast', 'podcast_episode', 'video'])) {
             Api::error(sprintf('Bad Request: %s', $type), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'type', $input['api_format']);
 
             return false;

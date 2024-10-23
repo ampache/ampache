@@ -26,14 +26,15 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Ajax;
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$web_path   = AmpConfig::get_web_path();
+$admin_path = AmpConfig::get_web_path('/admin');
 /** @var Ampache\Repository\Model\Catalog $catalog */
 
 if ($catalog->enabled) {
-    $icon     = 'disable';
+    $icon     = 'unpublished';
     $icontext = T_('Disable');
 } else {
-    $icon     = 'enable';
+    $icon     = 'check_circle';
     $icontext = T_('Enable');
 }
 $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
@@ -44,10 +45,10 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
 <td class="cel_lastclean"><?php echo scrub_out($catalog->f_clean); ?></td>
 <td class="cel_action cel_action_text">
 <?php if (!$catalog->isReady()) { ?>
-    <a href="<?php echo $web_path; ?>/admin/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $catalog->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
+    <a href="<?php echo $admin_path; ?>/catalog.php?action=add_to_catalog&catalogs[]=<?php echo $catalog->id; ?>"><b><?php echo T_('Make it ready ..'); ?></b></a><br />
 <?php } ?>
-<form>
-    <select name="catalog_action_menu">
+<form name="catalog_action_<?php echo $catalog->id; ?>" method="post" action="<?php echo $admin_path; ?>/catalog.php">
+    <select name="action">
 <?php if ($catalog->isReady()) { ?>
         <option value="add_to_catalog"><?php echo T_('Add'); ?></option>
         <option value="update_catalog"><?php echo T_('Verify'); ?></option>
@@ -61,7 +62,10 @@ $button_flip_state_id = 'button_flip_state_' . $catalog->id; ?>
 <?php } ?>
         <option value="show_delete_catalog"><?php echo T_('Delete'); ?></option>
     </select>
-    <input type="button" onClick="NavigateTo('<?php echo $web_path; ?>/admin/catalog.php?action=' + this.form.catalog_action_menu.options[this.form.catalog_action_menu.selectedIndex].value + '&catalogs[]=<?php echo $catalog->id; ?>');" value="<?php echo T_('Go'); ?>">
+    <div class="formValidation">
+        <input class="button" type="submit" value="<?php echo T_('Go'); ?>" />
+        <input type="hidden" name="catalogs[]" value="=<?php echo $catalog->id; ?>" />
+    </div>
     <?php if (AmpConfig::get('catalog_disable')) { ?>
         <span id="<?php echo $button_flip_state_id; ?>">
             <?php echo Ajax::button('?page=catalog&action=flip_state&catalog_id=' . $catalog->id, $icon, $icontext, 'flip_state_' . $catalog->id); ?>

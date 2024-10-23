@@ -48,10 +48,10 @@ class WebDavCatalog extends DAV\Collection
      */
     public function getChildren(): array
     {
-        $children = array();
+        $children = [];
         $catalogs = null;
         if ($this->catalog_id > 0) {
-            $catalogs   = array();
+            $catalogs   = [];
             $catalogs[] = $this->catalog_id;
         }
         $artists = Catalog::get_artists($catalogs);

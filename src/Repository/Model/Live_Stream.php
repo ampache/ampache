@@ -42,34 +42,34 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /* DB based variables */
     public int $id = 0;
-    public ?string $name;
-    public ?string $site_url;
-    public ?string $url;
+
+    public ?string $name = null;
+
+    public ?string $site_url = null;
+
+    public ?string $url = null;
+
     public int $genre;
+
     public int $catalog;
-    public ?string $codec;
+
+    public ?string $codec = null;
 
     public ?string $link = null;
-    /**
-     * @var null|string $f_name
-     */
+
+    /** @var null|string $f_name */
     public $f_name;
 
-    /**
-     * @var null|string $f_link
-     */
+    /** @var null|string $f_link */
     public $f_link;
-    /**
-     * @var null|string $f_name_link
-     */
+
+    /** @var null|string $f_name_link */
     public $f_name_link;
-    /**
-     * @var null|string $f_url_link
-     */
+
+    /** @var null|string $f_url_link */
     public $f_url_link;
-    /**
-     * @var null|string $f_site_url_link
-     */
+
+    /** @var null|string $f_site_url_link */
     public $f_site_url_link;
 
     /**
@@ -82,10 +82,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         if (!$stream_id) {
             return;
         }
+
         $info = $this->get_info($stream_id, static::DB_TABLENAME);
-        if (empty($info)) {
-            return;
-        }
         foreach ($info as $key => $value) {
             $this->$key = $value;
         }
@@ -105,10 +103,8 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * format
      * This takes the normal data from the database and makes it pretty
      * for the users, the new variables are put in f_??? and f_???_link
-     *
-     * @param bool $details
      */
-    public function format($details = true): void
+    public function format(?bool $details = true): void
     {
         unset($details);
         $this->get_f_link();
@@ -119,11 +115,10 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -131,7 +126,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      */
     public function get_fullname(): ?string
     {
-        if (!isset($this->f_name)) {
+        if ($this->f_name === null) {
             $this->f_name = $this->name;
         }
 
@@ -145,7 +140,7 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     {
         // don't do anything if it's formatted
         if ($this->link === null) {
-            $web_path   = AmpConfig::get('web_path');
+            $web_path   = AmpConfig::get_web_path();
             $this->link = $web_path . '/radio.php?action=show&radio=' . $this->id;
         }
 
@@ -158,11 +153,19 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public function get_f_link(): string
     {
         // don't do anything if it's formatted
-        if (!isset($this->f_link)) {
+        if ($this->f_link === null) {
             $this->f_link = "<a href=\"" . $this->get_link() . "\">" . scrub_out($this->get_fullname()) . "</a>";
         }
 
         return $this->f_link;
+    }
+
+    /**
+     * Return a formatted link to the parent object (if appliccable)
+     */
+    public function get_f_parent_link(): ?string
+    {
+        return null;
     }
 
     /**
@@ -198,37 +201,30 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return null;
     }
 
-    /**
-     * @return array
-     */
     public function get_childrens(): array
     {
-        return array();
+        return [];
     }
 
     /**
      * Search for direct children of an object
      * @param string $name
-     * @return array
      */
     public function get_children($name): array
     {
         debug_event(self::class, 'get_children ' . $name, 5);
 
-        return array();
+        return [];
     }
 
     /**
-     * @return list<array{object_type: string, object_id: int}>
+     * @return list<array{object_type: LibraryItemEnum, object_id: int}>
      */
     public function get_medias(?string $filter_type = null): array
     {
-        $medias = array();
+        $medias = [];
         if ($filter_type === null || $filter_type === 'live_stream') {
-            $medias[] = array(
-                'object_type' => 'live_stream',
-                'object_id' => $this->id
-            );
+            $medias[] = ['object_type' => LibraryItemEnum::LIVE_STREAM, 'object_id' => $this->id];
         }
 
         return $medias;
@@ -242,9 +238,6 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         return $this->catalog;
     }
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int
     {
         return null;
@@ -284,16 +277,23 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * This is a static function that takes a key'd array for input
      * it depends on a ID element to determine which radio element it
      * should be updating
-     * @param array $data
-     * @return int|false
      */
-    public function update(array $data)
+    public function update(array $data): ?int
     {
         if (!$data['name']) {
             AmpError::add('general', T_('Name is required'));
         }
 
-        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
+        $allowed_array = [
+            'https',
+            'http',
+            'mms',
+            'mmsh',
+            'mmsu',
+            'mmst',
+            'rtsp',
+            'rtmp',
+        ];
 
         $elements = explode(":", (string)$data['url']);
 
@@ -309,19 +309,13 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
         }
 
         if (AmpError::occurred()) {
-            return false;
+            return null;
         }
 
         $sql = "UPDATE `live_stream` SET `name` = ?, `site_url` = ?, `url` = ?, codec = ? WHERE `id` = ?";
         Dba::write(
             $sql,
-            array(
-                $data['name'] ?? $this->name,
-                $data['site_url'] ?? null,
-                $data['url'] ?? $this->url,
-                strtolower((string)$data['codec']),
-                $this->id
-            )
+            [$data['name'] ?? $this->name, $data['site_url'] ?? null, $data['url'] ?? $this->url, strtolower((string)$data['codec']), $this->id]
         );
 
         return $this->id;
@@ -331,19 +325,28 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * create
      * This is a static function that takes a key'd array for input
      * and if everything is good creates the object.
-     * @param array $data
      */
     public static function create(array $data): ?string
     {
         // Make sure we've got a name and codec
-        if (!strlen((string)$data['name'])) {
+        if ((string)$data['name'] === '') {
             AmpError::add('name', T_('Name is required'));
         }
-        if (!strlen((string)$data['codec'])) {
+
+        if ((string)$data['codec'] === '') {
             AmpError::add('codec', T_('Codec is required (e.g. MP3, OGG...)'));
         }
 
-        $allowed_array = array('https', 'http', 'mms', 'mmsh', 'mmsu', 'mmst', 'rtsp', 'rtmp');
+        $allowed_array = [
+            'https',
+            'http',
+            'mms',
+            'mmsh',
+            'mmsu',
+            'mmst',
+            'rtsp',
+            'rtmp',
+        ];
 
         $elements = explode(":", (string)$data['url']);
 
@@ -370,11 +373,12 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
 
         // If we've made it this far everything must be ok... I hope
         $sql = "INSERT INTO `live_stream` (`name`, `site_url`, `url`, `catalog`, `codec`) VALUES (?, ?, ?, ?, ?)";
-        Dba::write($sql, array($data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])));
+        Dba::write($sql, [$data['name'], $data['site_url'], $data['url'], $catalog->id, strtolower((string)$data['codec'])]);
         $insert_id = Dba::insert_id();
         if (!$insert_id) {
             return null;
         }
+
         Catalog::count_table('live_stream');
 
         return $insert_id;
@@ -384,11 +388,10 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * get_stream_types
      * This is needed by the media interface
      * @param string $player
-     * @return array
      */
     public function get_stream_types($player = null): array
     {
-        return array('native');
+        return ['native'];
     }
 
     /**
@@ -420,11 +423,10 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
      * @param string $target
      * @param string $player
      * @param array $options
-     * @return array
      */
-    public function get_transcode_settings($target = null, $player = null, $options = array()): array
+    public function get_transcode_settings($target = null, $player = null, $options = []): array
     {
-        return array();
+        return [];
     }
 
     /**
@@ -478,5 +480,10 @@ class Live_Stream extends database_object implements Media, library_item, Catalo
     public function get_artist_fullname(): string
     {
         return '';
+    }
+
+    public function getMediaType(): LibraryItemEnum
+    {
+        return LibraryItemEnum::LIVE_STREAM;
     }
 }

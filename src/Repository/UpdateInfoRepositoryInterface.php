@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\UpdateInfoEnum;
+
 interface UpdateInfoRepositoryInterface
 {
     /**
@@ -32,10 +34,10 @@ interface UpdateInfoRepositoryInterface
      *
      * Will return `null` if no item was found
      */
-    public function getValueByKey(string $key): ?string;
+    public function getValueByKey(UpdateInfoEnum $key): ?string;
 
     /**
      * Sets a value using the provided params
      */
-    public function setValue(string $key, string $value): void;
+    public function setValue(UpdateInfoEnum $key, string $value): void;
 }

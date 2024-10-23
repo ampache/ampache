@@ -25,43 +25,29 @@ declare(strict_types=0);
 
 namespace Ampache\Application\Api\Ajax\Handler;
 
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Share\ShareUiLinkRendererInterface;
-use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
-use Ampache\Repository\Model\Playlist;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\LiveStreamRepositoryInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\ModelFactoryInterface;
+use Ampache\Repository\Model\Playlist;
+use Ampache\Repository\Model\User;
 
-final class BrowseAjaxHandler implements AjaxHandlerInterface
+final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 {
-    private RequestParserInterface $requestParser;
-
-    private ModelFactoryInterface $modelFactory;
-
-    private LiveStreamRepositoryInterface $liveStreamRepository;
-
-    private ShareUiLinkRendererInterface $shareUiLinkRenderer;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ModelFactoryInterface $modelFactory,
-        LiveStreamRepositoryInterface $liveStreamRepository,
-        ShareUiLinkRendererInterface $shareUiLinkRenderer
+        private RequestParserInterface $requestParser,
+        private ModelFactoryInterface $modelFactory,
+        private LiveStreamRepositoryInterface $liveStreamRepository,
+        private ShareUiLinkRendererInterface $shareUiLinkRenderer
     ) {
-        $this->requestParser        = $requestParser;
-        $this->modelFactory         = $modelFactory;
-        $this->liveStreamRepository = $liveStreamRepository;
-        $this->shareUiLinkRenderer  = $shareUiLinkRenderer;
     }
 
-    public function handle(): void
+    public function handle(User $user): void
     {
-        if (!Core::is_session_started()) {
-            session_start();
-        }
-
         if (!defined('AJAX_INCLUDE')) {
             return;
         }
@@ -78,12 +64,13 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
         if (array_key_exists('argument', $_REQUEST)) {
             $argument = scrub_in((string) $_REQUEST['argument']);
         }
+
         // hide some of the useless columns in a browse
         if (array_key_exists('hide', $_REQUEST)) {
-            $argument = array('hide' => explode(',', scrub_in((string)$_REQUEST['hide'])));
+            $argument = ['hide' => explode(',', scrub_in((string)$_REQUEST['hide']))];
         }
 
-        $results = array();
+        $results = [];
         $action  = $this->requestParser->getFromRequest('action');
 
         // Switch on the actions
@@ -93,21 +80,25 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 if (array_key_exists('sort', $_REQUEST) && !empty($_REQUEST['sort'])) {
                     $browse->set_sort($_REQUEST['sort']);
                 }
-                // data set by the fileter box (browse_filters.inc.php)
+
+                // data set by the filter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
                     }
+
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
                         $value = (int)($_REQUEST['value'] ?? 0);
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }
+
                         $browse->set_filter($_REQUEST['key'], $value);
                     }
                 }
+
                 // filter box Catalog select
                 if (isset($_REQUEST['catalog'])) {
                     $browse->set_catalog($_SESSION['catalog']);
@@ -120,10 +111,11 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_filter('catalog', null);
                     $_SESSION['catalog'] = null;
                 }
+
                 $browse->set_catalog($_SESSION['catalog']);
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -136,7 +128,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
@@ -147,6 +139,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                 if (check_http_referer() === false) {
                     return;
                 }
+
                 switch ($_REQUEST['type']) {
                     case 'playlist':
                         // Check the perms we need to on this
@@ -164,18 +157,21 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (!$playlist->has_access()) {
                             return;
                         }
+
                         $playlist->delete();
                         $key = 'smartplaylist_row_' . $playlist->id;
                         break;
                     case 'live_stream':
-                        if (empty(Core::get_global('user')) || !Core::get_global('user')->has_access(75)) {
+                        if (!$user->has_access(AccessLevelEnum::MANAGER)) {
                             return;
                         }
+
                         $liveStreamId = (int) Core::get_request('id');
                         $liveStream   = $this->liveStreamRepository->findById($liveStreamId);
                         if ($liveStream !== null) {
                             $this->liveStreamRepository->delete($liveStream);
                         }
+
                         $key = 'live_stream_' . $liveStreamId;
                         break;
                     default:
@@ -188,12 +184,12 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
@@ -216,6 +212,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         if ($value) {
                             $browse->set_start(0);
                         }
+
                         break;
                     case 'use_alpha':
                         $value = ($value == 'true');
@@ -226,6 +223,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         } else {
                             $browse->set_filter('regex_not_match', '');
                         }
+
                         break;
                     case 'grid_view':
                         /**
@@ -240,6 +238,7 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                         if ($value > 0) {
                             $browse->set_offset($value);
                         }
+
                         break;
                     case 'custom':
                         $value = (int)$value;
@@ -249,30 +248,27 @@ final class BrowseAjaxHandler implements AjaxHandlerInterface
                             $pages = ceil($total / $limit);
 
                             if ($value <= $pages) {
-                                $offset = (int)(($value - 1) * $limit);
+                                $offset = ($value - 1) * $limit;
                                 $browse->set_start($offset);
                             }
                         }
+
                         break;
                 }
 
                 ob_start();
-                $browse->show_objects(array(), $argument);
+                $browse->show_objects([], $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
-                $object_type = Core::get_request('object_type');
+                $object_type = LibraryItemEnum::tryFrom(Core::get_request('object_type')) ?? null;
                 $object_id   = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
 
-                if (InterfaceImplementationChecker::is_library_item($object_type) && $object_id > 0) {
+                if ($object_type !== null && $object_id > 0) {
                     echo $this->shareUiLinkRenderer->render($object_type, $object_id);
 
                     return;
                 }
-                break;
-            default:
-                $results['rfc3514'] = '0x1';
-                break;
         } // switch on action;
 
         $browse->store();

@@ -52,7 +52,7 @@ class Random
      */
     public static function artist(): int
     {
-        $user_id = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : null;
+        $user_id = Core::get_global('user')?->getId();
         $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -93,21 +93,14 @@ class Random
      */
     public static function get_single_song($random_type, $user, $object_id = 0): int
     {
-        switch ($random_type) {
-            case 'artist':
-                $song_ids = self::get_artist(1, $user);
-                break;
-            case 'playlist':
-                $song_ids = self::get_playlist($user, $object_id);
-                break;
-            case 'search':
-                $song_ids = self::get_search($user, $object_id);
-                break;
-            default:
-                $song_ids = self::get_default(1, $user);
-        }
+        $song_ids = match ($random_type) {
+            'artist' => self::get_artist(1, $user),
+            'playlist' => self::get_playlist($user, $object_id),
+            'search' => self::get_search($user, $object_id),
+            default => self::get_default(1, $user),
+        };
         $song = array_pop($song_ids);
-        //debug_event(__CLASS__, "get_single_song:" . $song, 5);
+        //debug_event(self::class, "get_single_song:" . $song, 5);
 
         return (int)$song;
     }
@@ -127,7 +120,8 @@ class Random
         if (empty($user)) {
             $user = Core::get_global('user');
         }
-        $user_id = ($user instanceof User) ? $user->id : null;
+
+        $user_id = $user?->getId();
         $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
@@ -287,14 +281,14 @@ class Random
             case 'album':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, static::getSongRepository()->getByAlbum($object_id));
+                    $songs = array_merge($songs, self::getSongRepository()->getByAlbum($object_id));
                 }
 
                 return $songs;
             case 'artist':
                 $songs = [];
                 foreach ($results as $object_id) {
-                    $songs = array_merge($songs, static::getSongRepository()->getByArtist($object_id));
+                    $songs = array_merge($songs, self::getSongRepository()->getByArtist($object_id));
                 }
 
                 return $songs;
@@ -455,7 +449,7 @@ class Random
     public static function get_play_url($object_type, $object_id): string
     {
         $user = Core::get_global('user');
-        $link = Stream::get_base_url(false, $user->streamtoken) . 'uid=' . scrub_out((string)$user->id) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
+        $link = Stream::get_base_url(false, $user?->streamtoken) . 'uid=' . scrub_out((string)($user?->id ?? '')) . '&random=1&random_type=' . scrub_out($object_type) . '&random_id=' . scrub_out((string)$object_id);
 
         return Stream_Url::format($link);
     }

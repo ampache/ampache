@@ -29,7 +29,7 @@ use Exception;
 
 class FileSystem
 {
-    protected $base = null;
+    protected ?string $base = null;
 
     /**
      * @param $path
@@ -42,7 +42,7 @@ class FileSystem
         if (!$temp) {
             throw new Exception('Path does not exist: ' . $path);
         }
-        if ($this->base && strlen($this->base)) {
+        if (!empty($this->base)) {
             if (strpos($temp, $this->base) !== 0) {
                 throw new Exception('Path is not inside base (' . $this->base . '): ' . $temp);
             }
@@ -60,9 +60,8 @@ class FileSystem
     {
         $fs_id = str_replace('/', DIRECTORY_SEPARATOR, $fs_id);
         $fs_id = trim($fs_id, DIRECTORY_SEPARATOR);
-        $fs_id = $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
 
-        return $fs_id;
+        return $this->real($this->base . DIRECTORY_SEPARATOR . $fs_id);
     }
 
     /**
@@ -73,11 +72,13 @@ class FileSystem
     protected function id($path): string
     {
         $path = $this->real($path);
-        $path = substr($path, strlen($this->base));
+        $path = substr($path, strlen((string)$this->base));
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         $path = trim($path, '/');
 
-        return strlen($path) ? $path : '/';
+        return strlen($path)
+            ? $path
+            : '/';
     }
 
     /**
@@ -106,34 +107,40 @@ class FileSystem
         if (!$lst) {
             throw new Exception('Could not list path: ' . $dir);
         }
-        $res = array();
+        $res = [];
         foreach ($lst as $item) {
             if ($item == '.' || $item == '..' || $item === null) {
                 continue;
             }
-            $tmp = preg_match('([^ a-zа-я-_0-9.]+)ui', $item);
+            $tmp = preg_match('([^ a-zа-я-_0-9.()\[\]]+)ui', $item);
             if ($tmp === false || $tmp === 1) {
                 continue;
             }
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-                $res[] = array(
-                    'text' => $item,
-                    'children' => true,
-                    'id' => $this->id($dir . DIRECTORY_SEPARATOR . $item),
-                    'icon' => 'folder'
-                );
+            $fullPath = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($fullPath)) {
+                $res[] = [
+                    'title' => $item,
+                    'key' => $this->id($fullPath),
+                    'lazy' => true
+                ];
             }
         }
-        if ($with_root && $this->id($dir) === '/') {
-            $res = array(
-                array(
-                    'text' => basename($this->base),
+        usort($res, function ($a, $b) {
+            return strcasecmp($a['title'], $b['title']);
+        });
+        if (
+            $with_root &&
+            $this->id($dir) === '/'
+        ) {
+            $res = [
+                [
+                    'title' => basename((string)$this->base),
                     'children' => $res,
-                    'id' => '/',
-                    'icon' => 'folder',
-                    'state' => array('opened' => true, 'disabled' => true)
-                )
-            );
+                    'key' => '/',
+                    'expanded' => true,
+                    'lazy' => true
+                ]
+            ];
         }
 
         return $res;
@@ -147,23 +154,23 @@ class FileSystem
     public function data($fs_id): array
     {
         if (strpos($fs_id, ":")) {
-            $fs_id = array_map(array($this, 'id'), explode(':', $fs_id));
+            $fs_id = array_map([$this, 'id'], explode(':', $fs_id));
 
-            return array(
+            return [
                 'type' => 'multiple',
                 'content' => 'Multiple selected: ' . implode(' ', $fs_id)
-            );
+            ];
         }
         $dir = $this->path($fs_id);
         if (is_dir($dir)) {
-            return array(
+            return [
                 'type' => 'folder',
                 'content' => $fs_id
-            );
+            ];
         }
         if (is_file($dir)) {
             $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
-            $dat = array('type' => $ext, 'content' => '');
+            $dat = ['type' => $ext, 'content' => ''];
             switch ($ext) {
                 /*case 'txt':
                 case 'text':
@@ -222,7 +229,7 @@ class FileSystem
             file_put_contents($dir . DIRECTORY_SEPARATOR . $name, '');
         }
 
-        return array('id' => $this->id($dir . DIRECTORY_SEPARATOR . $name));
+        return ['id' => $this->id($dir . DIRECTORY_SEPARATOR . $name)];
     }
 
     /**
@@ -249,7 +256,7 @@ class FileSystem
         }
         rename($dir, $new);
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 
     /**
@@ -264,8 +271,8 @@ class FileSystem
             throw new Exception('Cannot remove root');
         }
         if (is_dir($dir)) {
-            foreach (array_diff(scandir($dir), array(".", "..")) as $f) {
-                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $f));
+            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
+                $this->remove($this->id($dir . DIRECTORY_SEPARATOR . $file));
             }
             rmdir($dir);
         }
@@ -273,7 +280,7 @@ class FileSystem
             unlink($dir);
         }
 
-        return array('status' => 'OK');
+        return ['status' => 'OK'];
     }
 
     /**
@@ -291,7 +298,7 @@ class FileSystem
         $new = $par . DIRECTORY_SEPARATOR . $new;
         rename($dir, $new);
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 
     /**
@@ -313,14 +320,14 @@ class FileSystem
 
         if (is_dir($dir)) {
             mkdir($new);
-            foreach (array_diff(scandir($dir), array(".", "..")) as $f) {
-                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $f), $this->id($new));
+            foreach (array_diff(scandir($dir), [".", ".."]) as $file) {
+                $this->copy($this->id($dir . DIRECTORY_SEPARATOR . $file), $this->id($new));
             }
         }
         if (is_file($dir)) {
             copy($dir, $new);
         }
 
-        return array('id' => $this->id($new));
+        return ['id' => $this->id($new)];
     }
 }

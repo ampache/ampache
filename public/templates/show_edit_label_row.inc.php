@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Label;
 use Ampache\Module\Authorization\Access;
@@ -31,7 +33,7 @@ use Ampache\Repository\Model\User;
 /** @var Label $libitem */
 
 $current_user = Core::get_global('user');
-$has_access   = $current_user instanceof User && Access::check('interface', 50, $current_user->getId());
+$has_access   = $current_user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $current_user->getId());
 $is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_label_<?php echo $libitem->id; ?>" class="edit_dialog_content">

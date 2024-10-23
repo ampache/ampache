@@ -36,10 +36,10 @@ use Ampache\Module\System\Dba;
  */
 class Catalog_beetsremote extends Catalog
 {
-    protected $version     = '000001';
-    protected $type        = 'beetsremote';
-    protected $description = 'Beets Remote Catalog';
-    protected $listCommand = 'item/query';
+    protected string $version     = '000001';
+    protected string $type        = 'beetsremote';
+    protected string $description = 'Beets Remote Catalog';
+    protected string $listCommand = 'item/query';
 
     protected string $uri = '';
 
@@ -74,7 +74,7 @@ class Catalog_beetsremote extends Catalog
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `catalog_beetsremote` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `uri` VARCHAR(255) COLLATE $collation NOT NULL, `catalog_id` INT(11) NOT NULL) ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
@@ -87,9 +87,9 @@ class Catalog_beetsremote extends Catalog
      */
     public function catalog_fields(): array
     {
-        $fields = array();
+        $fields = [];
 
-        $fields['uri'] = array('description' => T_('Beets Server URI'), 'type' => 'url');
+        $fields['uri'] = ['description' => T_('Beets Server URI'), 'type' => 'url'];
 
         return $fields;
     }
@@ -116,7 +116,7 @@ class Catalog_beetsremote extends Catalog
 
         // Make sure this uri isn't already in use by an existing catalog
         $selectSql  = 'SELECT `id` FROM `catalog_beets` WHERE `uri` = ?';
-        $db_results = Dba::read($selectSql, array($uri));
+        $db_results = Dba::read($selectSql, [$uri]);
 
         if (Dba::num_rows($db_results)) {
             debug_event('beetsremote.catalog', 'Cannot add catalog with duplicate uri ' . $uri, 1);
@@ -126,7 +126,7 @@ class Catalog_beetsremote extends Catalog
         }
 
         $insertSql = 'INSERT INTO `catalog_beetsremote` (`uri`, `catalog_id`) VALUES (?, ?)';
-        Dba::write($insertSql, array($uri, $catalog_id));
+        Dba::write($insertSql, [$uri, $catalog_id]);
 
         return true;
     }

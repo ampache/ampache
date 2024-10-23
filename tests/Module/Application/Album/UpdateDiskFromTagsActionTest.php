@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\Album;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\AlbumDisk;
@@ -66,7 +67,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->willReturn(false);
 
         static::expectException(AccessDeniedException::class);
@@ -87,7 +88,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->willReturn(true);
 
         $request->expects(static::once())
@@ -105,7 +106,7 @@ class UpdateDiskFromTagsActionTest extends TestCase
 
         $gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
             ->willReturn(true);
 
         $albumDisk->expects(static::once())

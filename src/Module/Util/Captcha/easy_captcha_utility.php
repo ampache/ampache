@@ -33,7 +33,7 @@ use Ampache\Module\System\Core;
  */
 class easy_captcha_utility
 {
-    #-- determine usable temp directory
+    // determine usable temp directory
     /**
      * @return mixed
      */
@@ -41,7 +41,7 @@ class easy_captcha_utility
     {
         return current(array_filter( // filter by writability
             array_filter( // filter empty entries
-                array(
+                [
                     $_SERVER['TMPDIR'] ?? null,
                     $_SERVER['REDIRECT_TMPDIR'] ?? null,
                     $_SERVER['TEMP'] ?? null,
@@ -50,32 +50,31 @@ class easy_captcha_utility
                     $_SERVER['TEMPDIR'] ?? null,
                     function_exists("sys_get_temp_dir") ? sys_get_temp_dir() : "",
                     '/tmp'
-                )
+                ]
             ),
             "is_writeable"
         ));
     }
 
-
-    #-- script was called directly
+    // script was called directly
 
     /**
-     * @return boolean
+     * @return bool
      */
     public static function API()
     {
-        #-- load data
+        // load data
         if ($id = Core::get_get(easy_captcha::CAPTCHA_PARAM_ID)) {
-            #-- special case
+            // special case
             if ($id == 'base.js') {
                 easy_captcha_utility::js_base();
             } else {
                 $c       = new easy_captcha($id = null, $ignore_expiration = 1);
                 $expired = !$c->is_valid();
 
-                #-- JS-RPC request, check entered solution on the fly
+                // JS-RPC request, check entered solution on the fly
                 if ($test = $_REQUEST[easy_captcha::CAPTCHA_PARAM_INPUT]) {
-                    #-- check
+                    // check
                     if ($expired || empty($c->image)) {
                         die(easy_captcha_utility::js_header('alert("captcha error: request invalid (wrong storage id) / or expired");'));
                     }
@@ -84,10 +83,10 @@ class easy_captcha_utility
                     }
                     $okay = $c->image->solved($test) || $c->text->solved($test);
 
-                    #-- sendresult
+                    // sendresult
                     easy_captcha_utility::js_rpc($okay);
                 } else {
-                    #-- generate and send image file
+                    // generate and send image file
                     if ($expired) {
                         $type = "image/png";
                         $bin  = easy_captcha_utility::expired_png();
@@ -110,7 +109,7 @@ class easy_captcha_utility
         return false;
     }
 
-    #-- hardwired error img
+    // hardwired error img
 
     /**
      * @return false|string
@@ -120,7 +119,7 @@ class easy_captcha_utility
         return base64_decode("iVBORw0KGgoAAAANSUhEUgAAADwAAAAUAgMAAACsbba6AAAADFBMVEUeEhFcMjGgWFf9jIrTTikpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA3UlEQVQY01XPzwoBcRAH8F9RjpSTm9xR9qQwtnX/latX0DrsA3gC8QDK0QO4bv7UOtmM+x4oZ4X5FQc1hlb41dR8mm/9ZhT/P7X/dDcpZPU3FYft9kWbLuWp4Bgt9v1oGG07Ja8ojfjxQFym02DVmoixkV/m2JI/TUtefR7nD9rkrhkC+6D77/8mUhDvw0ymLPwxf8esghEFRq8hqKcu2iG16Vlun1zYTO7RwCeFyoJqAgC3LQwzYiCokDj0MWRxb+Z6R8mPJb8Q77zlPbuCoJE8a/t7P773uv36tdcTmsXfRycoRJ8AAAAASUVORK5CYII=");
     }
 
-    #-- send base javascript
+    // send base javascript
     public static function js_base()
     {
         $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
@@ -130,7 +129,6 @@ class easy_captcha_utility
         $COLOR_CALC       = "32 +";
         easy_captcha_utility::js_header();
         print<<<END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END
-
 
 /* easy_captcha utility code */
 
@@ -199,11 +197,10 @@ function captcha_check_solution() {
    inf.style.background = "#"+col+col+col;
 }
 
-
 END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
     }
 
-    #-- javascript header (also prevent caching)
+    // javascript header (also prevent caching)
 
     /**
      * @param string $print
@@ -222,8 +219,7 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
         return '';
     }
 
-
-    #-- response javascript
+    // response javascript
 
     /**
      * @param $yes
@@ -235,14 +231,12 @@ END_____BASE__BASE__BASE__BASE__BASE__BASE__BASE__BASE_____END;
         easy_captcha_utility::js_header();
         print<<<END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END
 
-
 // JS-RPC response
 if (1) {
    captcha_rpc = 0;
    var inf = document.getElementById("{$PARAM_INPUT}");
    inf.style.borderColor = $yes ? "#22AA22" : "#AA2222";
 }
-
 
 END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
     }
@@ -261,7 +255,7 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
             $url = $path['path'];
         }
 
-        $path    = array();
+        $path    = [];
         $abspath = substr("$url ", 0, 1) == '/' ? '/' : '';
         $ncomp   = 0;
 
@@ -285,6 +279,8 @@ END_____JSRPC__JSRPC__JSRPC__JSRPC__JSRPC__JSRPC_____END;
 
         $path = $abspath . implode('/', $path);
 
-        return empty($path) ? '.' : $path;
+        return empty($path)
+            ? '.'
+            : $path;
     }
 }

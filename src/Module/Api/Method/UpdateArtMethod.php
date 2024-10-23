@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -59,13 +61,13 @@ final class UpdateArtMethod
             return false;
         }
 
-        if (!Api::check_access('interface', 75, $user->id, self::ACTION, $input['api_format'])) {
+        if (!Api::check_access(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER, $user->id, self::ACTION, $input['api_format'])) {
             return false;
         }
         $type      = (string)$input['type'];
         $object_id = (int)$input['id'];
         $overwrite = array_key_exists('overwrite', $input) && (int)$input['overwrite'] == 0;
-        $art_url   = AmpConfig::get('web_path') . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
+        $art_url   = AmpConfig::get_web_path() . '/image.php?object_id=' . $object_id . '&object_type=' . $type;
 
         // confirm the correct data
         if (!in_array(strtolower($type), ['artist', 'album'])) {

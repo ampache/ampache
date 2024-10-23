@@ -35,14 +35,10 @@ use PDO;
  *
  * Tables: `metadata_field`
  */
-final class MetadataFieldRepository implements MetadataFieldRepositoryInterface
+final readonly class MetadataFieldRepository implements MetadataFieldRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -76,9 +72,7 @@ final class MetadataFieldRepository implements MetadataFieldRepositoryInterface
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata_field` WHERE `id` = ?',
-            [
-                $fieldId
-            ],
+            [$fieldId],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);
@@ -99,9 +93,7 @@ final class MetadataFieldRepository implements MetadataFieldRepositoryInterface
     {
         $result = $this->connection->query(
             'SELECT * FROM `metadata_field` WHERE `name` = ? LIMIT 1',
-            [
-                $name
-            ],
+            [$name],
         );
 
         $result->setFetchMode(PDO::FETCH_CLASS, MetadataField::class, [$this]);

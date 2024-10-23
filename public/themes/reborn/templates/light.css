@@ -24,6 +24,11 @@
    General style rules
    -------------------------- */
 
+:root {
+    color-scheme: light;
+    accent-color: #1990db;
+}
+
 body {
     color: #000;
     background-color: #fff;
@@ -48,6 +53,11 @@ hr {
 
 input[type=password],
 input[type=text],
+input[type=checkbox],
+input[type=radio],
+input[type=url],
+input[type=year],
+select,
 textarea {
     background-color: #f5f5f5;
     background-image: linear-gradient(to top, #eee, #fff);
@@ -124,18 +134,8 @@ input[type=submit]:focus:active {
     box-shadow: 0 18px 18px rgba(30, 30, 30, 0.7);
 }
 
-#sb_Subsearch input[type=text] {
-    border-color: #bbb;
-}
-
 #sb_Subsearch input[type=text]:focus {
-    color: #555;
-    background: rgba(255, 255, 255, 0.9);
     border-color: #1990db;
-}
-
-#headerbox select {
-    color: #555;
 }
 
 /* ------------------------
@@ -149,11 +149,6 @@ input[type=submit]:focus:active {
 #registerPage #maincontainer {
     border: 2px solid rgba(0, 0, 0, 0.15);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
-}
-
-#loginPage #headerlogo,
-#registerPage #headerlogo {
-    background-image: url('../images/ampache-light.png');
 }
 
 #loginPage #loginbox {
@@ -217,6 +212,22 @@ input[type=submit]:focus:active {
     color: #1990db;
 }
 
+#sidebar_home,
+#sidebar_localplay,
+#sidebar_preferences,
+#sidebar_admin,
+#sidebar_logout {
+    color: #000;
+}
+
+#sidebar_home:hover,
+#sidebar_localplay:hover,
+#sidebar_preferences:hover,
+#sidebar_admin:hover,
+#sidebar_logout:hover {
+    color: #52aae4;
+}
+
 #sidebar-content,
 #sidebar-content-light,
 #sidebar-light {
@@ -225,11 +236,20 @@ input[type=submit]:focus:active {
     background-color: #fcfcfc;
 }
 
+#sidebar-light-default {
+    border-color: #d8d8d8;
+    background: #f8f8f8;
+}
+
 /* Tabs content */
 #sidebar-page {
     background-color: #f8f8f8;
     border-color: #d8d8d8;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+}
+
+#sidebar-tabs .active > a {
+    color: #1990db;
 }
 
 #sidebar-tabs .sb2 li h4 {
@@ -251,6 +271,30 @@ input[type=submit]:focus:active {
     border-color: #bbb;
 }
 
+.image-topmenu-album,
+.image-topmenu-artist,
+.image-topmenu-favorite,
+.image-topmenu-logout,
+.image-topmenu-playlist,
+.image-topmenu-radio,
+.image-topmenu-smartlist,
+.image-topmenu-tagcloud,
+.image-topmenu-upload {
+  fill: #1990db;
+}
+
+.image-topmenu-album:hover,
+.image-topmenu-artist:hover,
+.image-topmenu-favorite:hover,
+.image-topmenu-logout:hover,
+.image-topmenu-playlist:hover,
+.image-topmenu-radio:hover,
+.image-topmenu-smartlist:hover,
+.image-topmenu-tagcloud:hover,
+.image-topmenu-upload:hover {
+  fill: #52aae4;
+}
+
 /* Localplay */
 .active_instance {
     border-color: #000;
@@ -264,6 +308,10 @@ input[type=submit]:focus:active {
     border-color: #d8d8d8;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
     color: #000;
+}
+
+#rightbar #rb_action {
+    color: #1990db;
 }
 
 #rightbar #rb_current_playlist li {
@@ -443,7 +491,8 @@ span.fatalerror {
     color: #999;
 }
 
-.item_art .item_art_play .item_art_play_icon {
+.item_art .item_art_play .item_art_play_icon,
+.item_art .item_art_play_150 .item_art_play_icon {
     background-image: url('../images/videoplay.png');
 }
 
@@ -519,6 +568,7 @@ div.jp-video div.jp-interface {
 
 div.jp-title,
 div.jp-playlist {
+    color: black;
     background-color: #d4d4d4;
     border-top: 1px solid #f8f8f8;
 }
@@ -558,6 +608,24 @@ div.jp-playlist li {
 
 .jp-type-playlist .jp-playlist a.jp-playlist-current {
     color: #1990db;
+}
+
+/* ------------------------
+   Wunderbaum tree
+   ------------------------ */
+.wunderbaum {
+    --wb-node-text-color: #000;
+    --wb-background-color: #fff;
+    --wb-alternate-row-color: #eee;
+    --wb-alternate-row-color-hover: var(--wb-hover-color);
+    --wb-focus-border-color: var(--wb-active-color);
+    --wb-drop-source-color: var(--wb-hover-color);
+    --wb-drop-target-color: var(--wb-active-color);
+    --wb-hover-color: hsl(203, 80%, 90%);
+    --wb-active-color: hsl(203, 80%, 80%);
+    --wb-active-hover-color: var(--wb-active-color);
+    --wb-active-color-grayscale: var(--wb-active-color);
+    --wb-active-hover-color-grayscale: var(--wb-active-color);
 }
 
 /* ------------------------

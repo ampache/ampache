@@ -92,7 +92,10 @@ final class AdvancedSearchMethod
         $data['offset'] = 0;
         $data['limit']  = 0;
         $data['type']   = $type;
-        $results        = Search::run($data, $user);
+        $search_sql     = Search::prepare($data, $user);
+        $query          = Search::query($search_sql);
+        $results        = $query['results'];
+        $count          = $query['count'];
         if (empty($results)) {
             Api::empty($type, $input['api_format']);
 
@@ -103,6 +106,7 @@ final class AdvancedSearchMethod
             case 'json':
                 Json_Data::set_offset((int)($input['offset'] ?? 0));
                 Json_Data::set_limit($input['limit'] ?? 0);
+                Json_Data::set_count($count);
                 switch ($type) {
                     case 'album':
                         echo Json_Data::albums($results, [], $user);
@@ -142,6 +146,7 @@ final class AdvancedSearchMethod
             default:
                 Xml_Data::set_offset((int)($input['offset'] ?? 0));
                 Xml_Data::set_limit($input['limit'] ?? 0);
+                Xml_Data::set_count($count);
                 switch ($type) {
                     case 'album':
                         echo Xml_Data::albums($results, [], $user);

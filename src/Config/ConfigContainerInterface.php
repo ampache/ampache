@@ -64,7 +64,7 @@ interface ConfigContainerInterface
     /**
      * Returns the web path
      */
-    public function getWebPath(): string;
+    public function getWebPath(?string $suffix = ''): string;
 
     /**
      * Return a list of types which are zip-able
@@ -77,6 +77,16 @@ interface ConfigContainerInterface
      * Return the path to the composer binary
      */
     public function getComposerBinaryPath(): string;
+
+    /**
+     * Return the path to the composer binary
+     */
+    public function getComposerParameters(): string;
+
+    /**
+     * Return the path to the npm binary
+     */
+    public function getNpmBinaryPath(): string;
 
     /**
      * Check if a certain feature is enabled

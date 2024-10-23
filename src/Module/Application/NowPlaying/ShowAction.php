@@ -70,7 +70,7 @@ final class ShowAction implements ApplicationActionInterface
         ) {
             $this->logger->warning(
                 'Enable use_now_playing_embedded and disable demo mode for this feature',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
@@ -86,7 +86,7 @@ final class ShowAction implements ApplicationActionInterface
 
         if ($nowPlayingCssFile) {
             $css = sprintf(
-                '<link rel="stylesheet" href="%s/%s" type="text/css" media="screen" />',
+                '<link rel="stylesheet" href="%s/%s" type="text/css" media="screen">',
                 $this->configContainer->getWebPath(),
                 $nowPlayingCssFile
             );

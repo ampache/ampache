@@ -27,6 +27,8 @@ namespace Ampache\Module\Api\Edit;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
@@ -62,7 +64,7 @@ final class EditObjectAction extends AbstractEditAction
         ServerRequestInterface $request,
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
-        library_item $libitem,
+        library_item|Share $libitem,
         int $object_id
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
@@ -87,12 +89,16 @@ final class EditObjectAction extends AbstractEditAction
         }
         $this->logger->debug(
             'edit_object: {' . $object_type . '} {' . $object_id . '}',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
         $className = ObjectTypeToClassNameMapper::map((string)$object_type);
         /** @var library_item|Share $libitem */
         $libitem = new $className($_POST['id']);
-        if ($libitem->get_user_owner() === $userId && AmpConfig::get('upload_allow_edit') && !Access::check('interface', 50)) {
+        if (
+            $libitem->get_user_owner() === $userId &&
+            AmpConfig::get('upload_allow_edit') &&
+            !Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+        ) {
             // TODO: improve this uniqueness check
             if (isset($_POST['user'])) {
                 unset($_POST['user']);
@@ -138,7 +144,7 @@ final class EditObjectAction extends AbstractEditAction
             if (filter_var($feedUrl, FILTER_VALIDATE_URL)) {
                 $libitem->setTitle($_POST['title'] ?? $libitem->getTitle())
                     ->setFeedUrl($feedUrl)
-                    ->setWebsite($_POST['website'] ?? $libitem->getWebsite())
+                    ->setWebsite(filter_var(urldecode($_POST['website']), FILTER_VALIDATE_URL) ?: $libitem->getWebsite())
                     ->setDescription($_POST['description'] ?? $libitem->getDescription())
                     ->setLanguage($_POST['language'] ?? $libitem->getLanguage())
                     ->setGenerator($_POST['generator'] ?? $libitem->getGenerator())
@@ -155,9 +161,7 @@ final class EditObjectAction extends AbstractEditAction
 
         xoutput_headers();
 
-        echo (string) xoutput_from_array([
-            'id' => $object_id
-        ]);
+        echo (string) xoutput_from_array(['id' => $object_id]);
 
         return null;
     }
@@ -171,7 +175,7 @@ final class EditObjectAction extends AbstractEditAction
     private function clean_to_existing($labels)
     {
         $array = (is_array($labels)) ? $labels : preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $labels);
-        $ret   = array();
+        $ret   = [];
         if ($array !== false) {
             foreach ($array as $label) {
                 $label = trim((string)$label);
@@ -183,6 +187,8 @@ final class EditObjectAction extends AbstractEditAction
             }
         }
 
-        return (is_array($labels) ? $ret : implode(",", $ret));
+        return (is_array($labels)
+            ? $ret
+            : implode(",", $ret));
     }
 }

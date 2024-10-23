@@ -26,14 +26,15 @@ declare(strict_types=0);
 namespace Ampache\Module\Playback\Localplay\Vlc;
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Repository\Model\Democratic;
 use Ampache\Module\Playback\Localplay\localplay_controller;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Song;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Playback\Stream_Url;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use PDOStatement;
 
 /**
  * This is the class for the VLC Localplay method to remote control
@@ -42,8 +43,8 @@ use PDOStatement;
 class AmpacheVlc extends localplay_controller
 {
     /* Variables */
-    private $version     = 'Beta 0.2';
-    private $description = 'Controls a VLC instance';
+    private string $version     = 'Beta 0.2';
+    private string $description = 'Controls a VLC instance';
 
     /* Constructed variables */
     private $_vlc;
@@ -86,13 +87,13 @@ class AmpacheVlc extends localplay_controller
     {
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
-        $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = (AmpConfig::get('database_engine', 'InnoDB'));
 
         $sql = "CREATE TABLE `localplay_vlc` (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, `name` VARCHAR(128) COLLATE $collation NOT NULL, `owner` INT(11) NOT NULL, `host` VARCHAR(255) COLLATE $collation NOT NULL, `port` INT(11) UNSIGNED NOT NULL, `password` VARCHAR(255) COLLATE $collation NOT NULL, `access` SMALLINT(4) UNSIGNED NOT NULL DEFAULT '0') ENGINE = $engine DEFAULT CHARSET=$charset COLLATE=$collation";
         Dba::query($sql);
 
         // Add an internal preference for the users current active instance
-        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, 25, 'integer', 'internal', 'vlc');
+        Preference::insert('vlc_active', T_('VLC Active Instance'), 0, AccessLevelEnum::USER->value, 'integer', 'internal', 'vlc');
 
         return true;
     }
@@ -116,29 +117,26 @@ class AmpacheVlc extends localplay_controller
      * add_instance
      * This takes key'd data and inserts a new VLC instance
      * @param array $data
-     * @return PDOStatement|bool
      */
-    public function add_instance($data)
+    public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = !empty(Core::get_global('user'))
+        $user_id = Core::get_global('user') instanceof User
             ? Core::get_global('user')->id
             : -1;
 
-        return Dba::query($sql, array($data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id));
+        Dba::query($sql, [$data['name'] ?? null, $data['host'] ?? null, $data['port'] ?? null, $data['password'] ?? null, $user_id]);
     }
 
     /**
      * delete_instance
      * This takes a UID and deletes the instance in question
-     * @param $uid
+     * @param int $uid
      */
-    public function delete_instance($uid): bool
+    public function delete_instance($uid): void
     {
         $sql = "DELETE FROM `localplay_vlc` WHERE `id` = ?";
-        Dba::query($sql, array($uid));
-
-        return true;
+        Dba::query($sql, [$uid]);
     }
 
     /**
@@ -150,7 +148,7 @@ class AmpacheVlc extends localplay_controller
     {
         $sql        = "SELECT * FROM `localplay_vlc` ORDER BY `name`";
         $db_results = Dba::query($sql);
-        $results    = array();
+        $results    = [];
 
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[$row['id']] = $row['name'];
@@ -162,15 +160,13 @@ class AmpacheVlc extends localplay_controller
     /**
      * update_instance
      * This takes an ID and an array of data and updates the instance specified
-     * @param $uid
+     * @param int $uid
      * @param array $data
      */
-    public function update_instance($uid, $data): bool
+    public function update_instance($uid, $data): void
     {
         $sql = "UPDATE `localplay_vlc` SET `host` = ?, `port` = ?, `name` = ?, `password` = ? WHERE `id` = ?";
-        Dba::query($sql, array($data['host'], $data['port'], $data['name'], $data['password'], $uid));
-
-        return true;
+        Dba::query($sql, [$data['host'], $data['port'], $data['name'], $data['password'], $uid]);
     }
 
     /**
@@ -180,11 +176,11 @@ class AmpacheVlc extends localplay_controller
      */
     public function instance_fields(): array
     {
-        $fields             = array();
-        $fields['name']     = array('description' => T_('Instance Name'), 'type' => 'text');
-        $fields['host']     = array('description' => T_('Hostname'), 'type' => 'text');
-        $fields['port']     = array('description' => T_('Port'), 'type' => 'number');
-        $fields['password'] = array('description' => T_('Password'), 'type' => 'password');
+        $fields             = [];
+        $fields['name']     = ['description' => T_('Instance Name'), 'type' => 'text'];
+        $fields['host']     = ['description' => T_('Hostname'), 'type' => 'text'];
+        $fields['port']     = ['description' => T_('Port'), 'type' => 'number'];
+        $fields['password'] = ['description' => T_('Password'), 'type' => 'password'];
 
         return $fields;
     }
@@ -192,14 +188,12 @@ class AmpacheVlc extends localplay_controller
     /**
      * get_instance
      * This returns a single instance and all it's variables
-     * @param string $instance
-     * @return array
      */
-    public function get_instance($instance = ''): array
+    public function get_instance(?string $instance = ''): array
     {
         $instance   = (is_numeric($instance)) ? (int) $instance : (int) AmpConfig::get('vlc_active', 0);
         $sql        = ($instance > 0) ? "SELECT * FROM `localplay_vlc` WHERE `id` = ?" : "SELECT * FROM `localplay_vlc`";
-        $db_results = ($instance > 0) ? Dba::query($sql, array($instance)) : Dba::query($sql);
+        $db_results = ($instance > 0) ? Dba::query($sql, [$instance]) : Dba::query($sql);
 
         return Dba::fetch_assoc($db_results);
     }
@@ -207,12 +201,11 @@ class AmpacheVlc extends localplay_controller
     /**
      * set_active_instance
      * This sets the specified instance as the 'active' one
-     * @param $uid
      */
-    public function set_active_instance($uid): bool
+    public function set_active_instance(int $uid): bool
     {
         $user = Core::get_global('user');
-        if ($user == '') {
+        if (!$user instanceof User) {
             return false;
         }
         Preference::update('vlc_active', $user->id, $uid);
@@ -316,15 +309,14 @@ class AmpacheVlc extends localplay_controller
     /**
      * skip
      * This tells VLC to skip to the specified song
-     * @param $song
      */
-    public function skip($song): bool
+    public function skip(int $track_id): bool
     {
         //vlc skip is based on his playlist track, we convert ampache localplay track to vlc
         //playlist id
         $listtracks = $this->get();
-        foreach($listtracks as $track) {
-            if ($track['id'] == $song) {
+        foreach ($listtracks as $track) {
+            if ($track['id'] == $track_id) {
                 if ($this->_vlc->skip($track['vlid']) === null) {
                     return false;
                 }
@@ -338,7 +330,7 @@ class AmpacheVlc extends localplay_controller
     /**
      * This tells VLC to increase the volume by in vlcplayerclass set amount
      */
-    public function volume_up()
+    public function volume_up(): bool
     {
         return $this->_vlc->volume_up();
     }
@@ -346,7 +338,7 @@ class AmpacheVlc extends localplay_controller
     /**
      * This tells VLC to decrease the volume by vlcplayerclass set amount
      */
-    public function volume_down()
+    public function volume_down(): bool
     {
         return $this->_vlc->volume_down();
     }
@@ -405,9 +397,8 @@ class AmpacheVlc extends localplay_controller
     /**
      * repeat
      * This tells VLC to set the repeating the playlist (i.e. loop) to either on or off
-     * @param $state
      */
-    public function repeat($state): bool
+    public function repeat(bool $state): bool
     {
         if ($this->_vlc->repeat($state) === null) {
             return false;
@@ -419,11 +410,10 @@ class AmpacheVlc extends localplay_controller
     /**
      * random
      * This tells VLC to turn on or off the playing of songs from the playlist in random order
-     * @param $onoff
      */
-    public function random($onoff): bool
+    public function random(bool $state): bool
     {
-        if ($this->_vlc->random($onoff) === null) {
+        if ($this->_vlc->random($state) === null) {
             return false;
         }
 
@@ -445,14 +435,15 @@ class AmpacheVlc extends localplay_controller
         $list = $this->_vlc->get_tracks();
 
         if (!$list) {
-            return array();
+            return [];
         }
-        $songs   = array();
-        $song_id = array();
-        $results = array();
+
+        $songs   = [];
+        $song_id = [];
+        $results = [];
         $counter = 0;
         // here we look if there are song in the playlist when media libary is used
-        if ($list['node']['node'][0]['leaf'][$counter]['attr']['uri']) {
+        if (isset($list['node']['node'][0]['leaf'][$counter]['attr']['uri'])) {
             while (array_key_exists($counter, $list['node']['node'][0]['leaf'])) {
                 $songs[] = htmlspecialchars_decode(
                     $list['node']['node'][0]['leaf'][$counter]['attr']['uri'],
@@ -461,11 +452,11 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node'][0]['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif ($list['node']['node'][0]['leaf']['attr']['uri']) {
+        } elseif (isset($list['node']['node'][0]['leaf']['attr']['uri'])) {
             // if there is only one song look here,and media library is used
             $songs[]   = htmlspecialchars_decode($list['node']['node'][0]['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node'][0]['leaf']['attr']['id'];
-        } elseif ($list['node']['node']['leaf'][$counter]['attr']['uri']) {
+        } elseif (isset($list['node']['node']['leaf'][$counter]['attr']['uri'])) {
             // look for songs when media library isn't used
             while ($list['node']['node']['leaf'][$counter]) {
                 $songs[] = htmlspecialchars_decode(
@@ -475,16 +466,16 @@ class AmpacheVlc extends localplay_controller
                 $song_id[] = $list['node']['node']['leaf'][$counter]['attr']['id'];
                 $counter++;
             }
-        } elseif ($list['node']['node']['leaf']['attr']['uri']) {
+        } elseif (isset($list['node']['node']['leaf']['attr']['uri'])) {
             $songs[]   = htmlspecialchars_decode($list['node']['node']['leaf']['attr']['uri'], ENT_NOQUOTES);
             $song_id[] = $list['node']['node']['leaf']['attr']['id'];
         } else {
-            return array();
+            return [];
         }
 
         $counter = 0;
         foreach ($songs as $key => $entry) {
-            $data = array();
+            $data = [];
 
             /* Required Elements */
             $data['id']    = $counter; // id follows localplay api
@@ -547,6 +538,10 @@ class AmpacheVlc extends localplay_controller
     public function status(): array
     {
         $arrayholder = $this->_vlc->fullstate(); //get status.xml via parser xmltoarray
+        if (!$arrayholder) {
+            return [];
+        }
+
         /* Construct the Array */
         $currentstat = $arrayholder['root']['state']['value'];
         $listtracks  = $this->get();
@@ -561,7 +556,7 @@ class AmpacheVlc extends localplay_controller
             $state = 'pause';
         }
 
-        $array                 = array();
+        $array                 = [];
         $array['track']        = 0;
         $oid                   = '';
 
@@ -569,12 +564,14 @@ class AmpacheVlc extends localplay_controller
         $array['track_artist'] = '';
         $array['track_album']  = '';
         $array['state']        = $state ?? '';
-        $array['volume']       = (int)(((int)($arrayholder['root']['volume']['value']) / 2.6));
-        $array['repeat']       = $arrayholder['root']['repeat']['value'];
-        $array['random']       = $arrayholder['root']['random']['value'];
+        $array['volume']       = ($arrayholder['root']['volume']['value'] > 0)
+            ? (int)(((int)($arrayholder['root']['volume']['value']) / 2.56))
+            : 0;
+        $array['repeat'] = $arrayholder['root']['repeat']['value'];
+        $array['random'] = $arrayholder['root']['random']['value'];
 
-        //api version 1
-        if (array_key_exists('meta-information', $arrayholder['root']['information'])) {
+        // api version 1
+        if (isset($arrayholder['root']['information']['meta-information']['title']['value'])) {
             $ampurl  = htmlspecialchars_decode(
                 $arrayholder['root']['information']['meta-information']['title']['value'],
                 ENT_NOQUOTES
@@ -582,7 +579,7 @@ class AmpacheVlc extends localplay_controller
             $url_data = $this->parse_url($ampurl);
             $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
 
-            foreach($listtracks as $track) {
+            foreach ($listtracks as $track) {
                 if ($track['oid'] == $oid) {
                     $array['track'] = $track['track'];
                     break;
@@ -590,12 +587,11 @@ class AmpacheVlc extends localplay_controller
             }
         }
 
-        //api version 3
-        if (array_key_exists('currentplid', $arrayholder['root'])) {
-            $numtrack = 0 ;
-            $numtrack = (int)$arrayholder['root']['currentplid']['value'];
+        // api version 3
+        if (isset($arrayholder['root']['currentplid'])) {
+            $numtrack = (int)($arrayholder['root']['currentplid']['value'] ?? 0);
 
-            foreach($listtracks as $track) {
+            foreach ($listtracks as $track) {
                 if ($track['vlid'] == $numtrack) {
                     $array['track'] = $track['track'];
                     $oid            = $track['oid'];

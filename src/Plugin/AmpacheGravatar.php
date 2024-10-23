@@ -27,14 +27,20 @@ namespace Ampache\Plugin;
 
 use Ampache\Repository\Model\User;
 
-class AmpacheGravatar implements AmpachePluginInterface
+class AmpacheGravatar extends AmpachePlugin implements PluginGetAvatarUrlInterface
 {
     public string $name        = 'Gravatar';
+
     public string $categories  = 'avatar';
+
     public string $description = 'User\'s avatars with Gravatar';
+
     public string $url         = 'https://gravatar.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360040';
+
     public string $max_ampache = '999999';
 
     /**
@@ -73,13 +79,15 @@ class AmpacheGravatar implements AmpachePluginInterface
     }
 
     /**
-     * @param User $user
-     * @param int $size
+     * get_avatar_url
      */
-    public function get_avatar_url($user, $size = 80): string
+    public function get_avatar_url(User $user, ?int $size = 80): string
     {
         $url = '';
-        if (!empty($user->email)) {
+        if ($user->email !== null &&
+            $user->email !== '' &&
+            $user->email !== '0'
+        ) {
             $url = sprintf(
                 '%s/avatar/%s?s=%d&r=g&d=identicon',
                 $this->url,
@@ -94,9 +102,8 @@ class AmpacheGravatar implements AmpachePluginInterface
     /**
      * load
      * This loads up the data we need into this object, this stuff comes from the preferences.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 

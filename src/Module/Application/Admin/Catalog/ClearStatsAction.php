@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Statistics\Stats;
 use Ampache\Module\Util\UiInterface;
@@ -55,7 +56,7 @@ final class ClearStatsAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         if (
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true
         ) {
             throw new AccessDeniedException();
@@ -64,7 +65,7 @@ final class ClearStatsAction implements ApplicationActionInterface
         $this->ui->showHeader();
 
         Stats::clear();
-        $url   = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $url   = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         $title = T_('No Problem');
         $body  = T_('Catalog statistics have been cleared');
 

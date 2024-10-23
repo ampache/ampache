@@ -36,16 +36,16 @@ final class Migration530012 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_full_index`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_full_index`;", [], true);
         $this->updateDatabase("CREATE INDEX `object_count_full_index` USING BTREE ON `object_count` (`object_type`, `object_id`, `date`, `user`, `agent`, `count_type`);");
 
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_type_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `object_count_type_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`);");
 
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_date_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `object_count_date_IDX` USING BTREE ON `object_count` (`date`, `count_type`);");
 
-        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;");
+        Dba::write("ALTER TABLE `object_count` DROP KEY `object_count_user_IDX`;", [], true);
         $this->updateDatabase("CREATE INDEX `object_count_user_IDX` USING BTREE ON `object_count` (`object_type`, `object_id`, `user`, `count_type`);");
     }
 }

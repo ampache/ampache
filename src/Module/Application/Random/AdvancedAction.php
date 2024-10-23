@@ -55,7 +55,7 @@ final class AdvancedAction implements ApplicationActionInterface
             'show_random.inc.php',
             [
                 'videoRepository' => $this->videoRepository,
-                'object_ids' => array()
+                'object_ids' => []
             ]
         );
         $this->ui->showQueryStats();

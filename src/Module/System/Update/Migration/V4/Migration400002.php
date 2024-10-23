@@ -35,23 +35,25 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration400002 extends AbstractMigration
 {
     protected array $changelog = [
-        'IMPORTANT UPDATE NOTES: This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates',
+        '**IMPORTANT UPDATE NOTES** This is part of a major update to how Ampache handles Albums, Artists and data migration during tag updates',
         'Update album disk support to allow 1 instead of 0 by default',
         'Add barcode catalog_number and original_year to albums',
-        'Drop catalog_number from song_data and use album instead'
+        'Drop catalog_number from song_data and use album instead',
     ];
 
     public function migrate(): void
     {
         Dba::write("UPDATE `album` SET `album`.`disk` = 1 WHERE `album`.`disk` = 0;");
 
-        Dba::write("ALTER TABLE `album` DROP COLUMN `original_year`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `original_year`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `original_year` INT(4) NULL;");
-        Dba::write("ALTER TABLE `album` DROP COLUMN `barcode`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `barcode`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `barcode` varchar(64) NULL;");
-        Dba::write("ALTER TABLE `album` DROP COLUMN `catalog_number`;");
+        Dba::write("ALTER TABLE `album` DROP COLUMN `catalog_number`;", [], true);
         $this->updateDatabase("ALTER TABLE `album` ADD COLUMN `catalog_number` varchar(64) NULL;");
 
-        $this->updateDatabase("ALTER TABLE `song_data` DROP COLUMN `catalog_number`");
+        if (Dba::read('SELECT COUNT(`catalog_number`) from `song_data`;', [], true)) {
+            $this->updateDatabase("ALTER TABLE `song_data` DROP COLUMN `catalog_number`;");
+        }
     }
 }

@@ -36,9 +36,9 @@ final class Migration600040 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `song_data` DROP COLUMN `disksubtitle`');
-        $this->updateDatabase('ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL');
-        Dba::write('ALTER TABLE `album_disk` DROP COLUMN `disksubtitle`');
-        $this->updateDatabase('ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL');
+        Dba::write('ALTER TABLE `song_data` DROP COLUMN `disksubtitle`;', [], true);
+        $this->updateDatabase('ALTER TABLE `song_data` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;');
+        Dba::write('ALTER TABLE `album_disk` DROP COLUMN `disksubtitle`;', [], true);
+        $this->updateDatabase('ALTER TABLE `album_disk` ADD COLUMN `disksubtitle` varchar(255) NULL DEFAULT NULL;');
     }
 }

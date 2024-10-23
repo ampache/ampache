@@ -26,7 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\System;
 
 use Ampache\Config\AmpConfig;
-use Ampache\Module\Util\RequestParser;
+use Ampache\Repository\Model\User;
 use Exception;
 
 /**
@@ -42,11 +42,10 @@ class Core
      * Return a $GLOBAL variable instead of calling directly
      *
      * @param string $variable
-     * @return mixed
      */
-    public static function get_global($variable)
+    public static function get_global($variable): ?User
     {
-        return $GLOBALS[$variable] ?? '';
+        return $GLOBALS[$variable] ?? null;
     }
 
     /**
@@ -160,24 +159,19 @@ class Core
         $expire = time() + $window;
 
         // Register it
-        $_SESSION['forms'][$sid] = array('name' => $name, 'expire' => $expire);
+        $_SESSION['forms'][$sid] = ['name' => $name, 'expire' => $expire];
         if (!isset($_SESSION['forms'][$sid])) {
             debug_event(self::class, "Form $sid not found in session, failed to register!", 2);
         } else {
             debug_event(self::class, "Registered $type form $name with SID $sid and expiration $expire ($window seconds from now)", 5);
         }
 
-        switch ($type) {
-            case 'get':
-                $string = $sid;
-                break;
-            case 'post':
-            default:
-                $string = '<input type="hidden" name="form_validation" value="' . $sid . '" />';
-                break;
-        } // end switch on type
+        // end switch on type
 
-        return $string;
+        return match ($type) {
+            'get' => $sid,
+            default => '<input type="hidden" name="form_validation" value="' . $sid . '" />',
+        };
     }
 
     /**
@@ -187,22 +181,23 @@ class Core
      * Returns a token of the required bytes length, as a string. Returns false
      * if it could not generate a cryptographically secure token.
      * @param int $length
-     * @return string|false
      * @throws Exception
      */
-    public static function gen_secure_token($length)
+    public static function gen_secure_token($length): ?string
     {
-        if (function_exists('random_bytes')) {
+        if ($length < 1) {
+            return null;
+        } elseif (function_exists('random_bytes')) {
             $buffer = random_bytes($length);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $buffer = openssl_random_pseudo_bytes($length);
         } elseif (file_exists('/dev/random') && is_readable('/dev/random')) {
             $buffer = file_get_contents('/dev/random', false, null, -1, $length);
         } else {
-            return false;
+            return null;
         }
 
-        return bin2hex($buffer);
+        return bin2hex((string)$buffer);
     }
 
     /**
@@ -216,10 +211,10 @@ class Core
      */
     public static function image_dimensions($image_data): array
     {
-        $empty = array(
+        $empty = [
             'width' => 0,
             'height' => 0
-        );
+        ];
         if (!function_exists('imagecreatefromstring')) {
             return $empty;
         }
@@ -237,14 +232,17 @@ class Core
 
         $width  = imagesx($image);
         $height = imagesy($image);
-        if (!$width || !$height) {
-            return $empty;
+        if (
+            $width > 1 &&
+            $height > 1
+        ) {
+            return [
+                'width' => $width,
+                'height' => $height
+            ];
         }
 
-        return array(
-            'width' => $width,
-            'height' => $height
-        );
+        return $empty;
     }
 
     /**
@@ -309,7 +307,7 @@ class Core
             }
             $chunksize = 8192;
             while (!feof($filepointer)) {
-                $size += strlen(fread($filepointer, $chunksize));
+                $size += strlen((string)fread($filepointer, $chunksize));
             }
         } elseif ($size < 0) {
             // Handle overflowed integer...
@@ -350,7 +348,7 @@ class Core
             if (version_compare(phpversion(), '5.4.0', '>=')) {
                 return session_status() === PHP_SESSION_ACTIVE;
             } else {
-                return session_id() === '' ? false : true;
+                return !(session_id() === '');
             }
         }
 
@@ -364,7 +362,9 @@ class Core
     {
         $play_type = AmpConfig::get('play_type');
 
-        return ($play_type == "stream" || $play_type == "democratic" || !AmpConfig::get('ajax_load')) ? "reloadUtil" : "reloadDivUtil";
+        return ($play_type == "stream" || $play_type == "democratic" || !AmpConfig::get('ajax_load'))
+            ? "reloadUtil"
+            : "reloadDivUtil";
     }
 
     /**
@@ -372,11 +372,11 @@ class Core
      * @param array $options
      * @return array
      */
-    public static function requests_options($options = array()): array
+    public static function requests_options($options = []): array
     {
         if (!isset($options['proxy'])) {
             if (AmpConfig::get('proxy_host') && AmpConfig::get('proxy_port')) {
-                $proxy   = array();
+                $proxy   = [];
                 $proxy[] = AmpConfig::get('proxy_host') . ':' . AmpConfig::get('proxy_port');
                 if (AmpConfig::get('proxy_user')) {
                     $proxy[] = AmpConfig::get('proxy_user');
@@ -400,17 +400,15 @@ class Core
         }
         if (function_exists('sys_get_temp_dir')) {
             $tmp_dir = sys_get_temp_dir();
+        } elseif (strpos(PHP_OS, 'WIN') === 0) {
+            $tmp_dir = $_ENV['TMP'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = 'C:\Windows\Temp';
+            }
         } else {
-            if (strpos(PHP_OS, 'WIN') === 0) {
-                $tmp_dir = $_ENV['TMP'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = 'C:\Windows\Temp';
-                }
-            } else {
-                $tmp_dir = @$_ENV['TMPDIR'];
-                if (!isset($tmp_dir)) {
-                    $tmp_dir = '/tmp';
-                }
+            $tmp_dir = @$_ENV['TMPDIR'];
+            if (!isset($tmp_dir)) {
+                $tmp_dir = '/tmp';
             }
         }
 

@@ -36,11 +36,11 @@ final class Migration600010 extends AbstractMigration
     public function migrate(): void
     {
         // album was the ungrouped disks so rename those first
-        $this->updateDatabase("UPDATE IGNORE `user_data` SET `key` = 'album_disk' WHERE `key` = 'album'");
+        $this->updateDatabase("UPDATE IGNORE `user_data` SET `key` = 'album_disk' WHERE `key` = 'album';");
 
         // album_group is now the default state
-        $this->updateDatabase("UPDATE IGNORE `user_data` SET `key` = 'album' WHERE `key` = 'album_group'");
+        $this->updateDatabase("UPDATE IGNORE `user_data` SET `key` = 'album' WHERE `key` = 'album_group';");
 
-        $this->updateDatabase("DELETE FROM `user_data` WHERE `key` = 'album_group'");
+        $this->updateDatabase("DELETE FROM `user_data` WHERE `key` = 'album_group';");
     }
 }

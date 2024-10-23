@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,8 +36,8 @@ final class Migration370013 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'iframes'");
+        $this->updateDatabase("DELETE FROM `preference` WHERE `name` = 'iframes';");
 
-        $this->updatePreferences('ajax_load', 'Ajax page load', '1', 25, 'boolean', 'interface');
+        $this->updatePreferences('ajax_load', 'Ajax page load', '1', AccessLevelEnum::USER->value, 'boolean', 'interface');
     }
 }

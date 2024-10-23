@@ -25,9 +25,11 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Application\Admin\Access;
 
+use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
@@ -46,15 +48,19 @@ final class DeleteRecordAction implements ApplicationActionInterface
 
     private AccessRepositoryInterface $accessRepository;
 
+    private ConfigContainerInterface $configContainer;
+
     private RequestParserInterface $requestParser;
 
     public function __construct(
         UiInterface $ui,
         AccessRepositoryInterface $accessRepository,
+        ConfigContainerInterface $configContainer,
         RequestParserInterface $requestParser
     ) {
         $this->ui               = $ui;
         $this->accessRepository = $accessRepository;
+        $this->configContainer  = $configContainer;
         $this->requestParser    = $requestParser;
     }
 
@@ -62,7 +68,7 @@ final class DeleteRecordAction implements ApplicationActionInterface
     {
         if (
             check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
             $this->requestParser->verifyForm('delete_access') === false
         ) {
             throw new AccessDeniedException();
@@ -74,7 +80,7 @@ final class DeleteRecordAction implements ApplicationActionInterface
         $this->ui->showConfirmation(
             T_('No Problem'),
             T_('Your Access List entry has been removed'),
-            'admin/access.php',
+            sprintf('%s/access.php', $this->configContainer->getWebPath('/admin')),
         );
         $this->ui->showQueryStats();
         $this->ui->showFooter();

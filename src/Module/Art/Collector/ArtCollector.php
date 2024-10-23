@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Art\Collector;
 
 use Ampache\Config\ConfigContainerInterface;
+use Ampache\Module\System\Plugin\PluginTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Plugin;
@@ -78,7 +79,7 @@ final class ArtCollector implements ArtCollectorInterface
         if ($options === []) {
             $this->logger->warning(
                 'No options for art search, skipped.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return [];
@@ -90,7 +91,7 @@ final class ArtCollector implements ArtCollectorInterface
             // They don't want art!
             $this->logger->warning(
                 'art_order is empty, skipping art gathering',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return [];
@@ -100,18 +101,20 @@ final class ArtCollector implements ArtCollectorInterface
 
         $this->logger->notice(
             'Searching using:' . json_encode($artOrder),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         if ($limit == 0) {
             $search_limit = $this->configContainer->get('art_search_limit');
-            $limit        = is_null($search_limit) ? static::ART_SEARCH_LIMIT : $search_limit;
+            $limit        = (is_null($search_limit))
+                ? self::ART_SEARCH_LIMIT
+                : $search_limit;
         }
 
         if ($type == 'playlist') {
             $this->logger->notice(
                 "Method used: playlist",
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
             $playlist = new Playlist($art->uid);
 
@@ -122,7 +125,7 @@ final class ArtCollector implements ArtCollectorInterface
             ? Core::get_global('user')
             : new User(-1);
 
-        $plugin_names = Plugin::get_plugins('gather_arts');
+        $plugin_names = Plugin::get_plugins(PluginTypeEnum::ART_RETRIEVER);
         foreach ($artOrder as $method) {
             $data = [];
             if (in_array(strtolower($method), $plugin_names)) {
@@ -138,7 +141,7 @@ final class ArtCollector implements ArtCollectorInterface
                 if ($handlerClassName !== null) {
                     $this->logger->notice(
                         "Method used: $method",
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     /** @var CollectorModuleInterface $handler */
                     $handler = $this->dic->get($handlerClassName);
@@ -151,7 +154,7 @@ final class ArtCollector implements ArtCollectorInterface
                 } else {
                     $this->logger->error(
                         $method . ' not defined',
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                 }
             }
@@ -161,7 +164,7 @@ final class ArtCollector implements ArtCollectorInterface
         }
         $this->logger->notice(
             'found ' . count($results) . ' results',
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         return $results;

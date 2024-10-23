@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Preferences;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Preference;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -62,7 +63,7 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
         if (
             (
                 Core::get_post('method') == 'admin' &&
-                $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN) === false
+                $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false
             ) ||
             !$this->requestParser->verifyForm('update_preference')
         ) {
@@ -77,8 +78,8 @@ final class UpdatePreferencesAction implements ApplicationActionInterface
             $fullname           = T_('Server');
             $_REQUEST['action'] = 'admin';
         } else {
-            $user_id  = Core::get_global('user')->id;
-            $fullname = Core::get_global('user')->fullname;
+            $user_id  = Core::get_global('user')?->getId();
+            $fullname = Core::get_global('user')?->fullname;
         }
 
         /* Update and reset preferences */

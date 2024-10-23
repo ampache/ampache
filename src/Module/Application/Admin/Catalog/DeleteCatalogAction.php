@@ -25,6 +25,7 @@ namespace Ampache\Module\Application\Admin\Catalog;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -59,14 +60,14 @@ final class DeleteCatalogAction implements ApplicationActionInterface
     {
         if (
             check_http_referer() === false ||
-            $gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_MANAGER) === false ||
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false ||
             $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true ||
             !$this->requestParser->verifyForm('delete_catalog')
         ) {
             throw new AccessDeniedException();
         }
         $deleted  = false;
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : array();
+        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : [];
         if (is_array($catalogs) && !empty($catalogs)) {
             $deleted = true;
             // Delete the sucker, we don't need to check perms as that's done above
@@ -80,7 +81,7 @@ final class DeleteCatalogAction implements ApplicationActionInterface
 
         $this->ui->showHeader();
 
-        $next_url = sprintf('%s/admin/catalog.php', $this->configContainer->getWebPath());
+        $next_url = sprintf('%s/catalog.php', $this->configContainer->getWebPath('/admin'));
         if ($deleted) {
             $this->ui->showConfirmation(
                 T_('No Problem'),
@@ -90,7 +91,8 @@ final class DeleteCatalogAction implements ApplicationActionInterface
         } else {
             $this->ui->showConfirmation(
                 T_('There Was a Problem'),
-                T_("There was an error deleting this Catalog"),
+                /* HINT: Artist, Album, Song, Catalog, Video, Catalog Filter */
+                sprintf(T_('Couldn\'t delete this %s'), T_('Catalog')),
                 $next_url
             );
         }

@@ -48,7 +48,7 @@ final class Migration550002 extends AbstractMigration
         // Copy existing filters into individual groups for each user. (if a user only has access to public catalogs they are given the default list)
         $sql        = "SELECT `id`, `username` FROM `user`;";
         $db_results = Dba::read($sql);
-        $user_list  = array();
+        $user_list  = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $user_list[$row['id']] = $row['username'];
         }
@@ -56,7 +56,7 @@ final class Migration550002 extends AbstractMigration
         foreach ($user_list as $key => $value) {
             $group_id   = 0;
             $sql        = 'SELECT `filter_user` FROM `catalog` WHERE `filter_user` = ?;';
-            $db_results = Dba::read($sql, array($key));
+            $db_results = Dba::read($sql, [$key]);
             if (Dba::num_rows($db_results)) {
                 $sql = "INSERT IGNORE INTO `catalog_filter_group` (`name`) VALUES ('" . Dba::escape($value) . "');";
                 Dba::write($sql);
@@ -73,7 +73,7 @@ final class Migration550002 extends AbstractMigration
                     $this->updateDatabase("INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) VALUES ($group_id, $catalog, $enabled);");
                 }
                 $sql = "UPDATE `user` SET `catalog_filter_group` = ? WHERE `id` = ?";
-                Dba::write($sql, array($group_id, $key));
+                Dba::write($sql, [$group_id, $key]);
             }
         }
 
@@ -88,6 +88,6 @@ final class Migration550002 extends AbstractMigration
         $this->updateDatabase("DROP TABLE IF EXISTS `user_catalog`;");
 
         // Drop filter_user but only if the migration has worked
-        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;");
+        Dba::write("ALTER TABLE `catalog` DROP COLUMN `filter_user`;", [], true);
     }
 }

@@ -23,34 +23,45 @@
 
 namespace Ampache\Repository;
 
+use Ampache\Repository\Model\User;
+
 interface UserFollowerRepositoryInterface
 {
     /**
      * Get users following the user
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getFollowers(int $userId): array;
+    public function getFollowers(User $user): array;
 
     /**
      * Get users followed by this user
      *
-     * @return int[]
+     * @return list<int>
      */
-    public function getFollowing(int $userId): array;
+    public function getFollowing(User $user): array;
 
     /**
      * Get if a user is followed by another user
      */
-    public function isFollowedBy(int $userId, int $followingUserId): bool;
+    public function isFollowedBy(
+        User $user,
+        User $followingUser,
+    ): bool;
 
+    /**
+     * Adds an entry for a user following another user
+     */
     public function add(
-        int $userId,
-        int $followingUserId
+        User $user,
+        User $followingUser
     ): void;
 
+    /**
+     * Deletes a user follow-entry
+     */
     public function delete(
-        int $userId,
-        int $followingUserId
+        User $user,
+        User $followingUser
     ): void;
 }

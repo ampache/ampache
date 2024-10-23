@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util\Rss\Surrogate;
 
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Repository\Model\Art;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\playable_item;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -37,22 +37,14 @@ use Generator;
 /**
  * Abstraction layer for creating rss/podcasts from playable-items
  */
-final class PlayableItemRssItemAdapter implements RssItemInterface
+final readonly class PlayableItemRssItemAdapter implements RssItemInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private playable_item $playable;
-
-    private User $user;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        playable_item $playable,
-        User $user
+        private LibraryItemLoaderInterface $libraryItemLoader,
+        private ModelFactoryInterface $modelFactory,
+        private playable_item $playable,
+        private ?User $user
     ) {
-        $this->playable     = $playable;
-        $this->user         = $user;
-        $this->modelFactory = $modelFactory;
     }
 
     /**
@@ -132,9 +124,16 @@ final class PlayableItemRssItemAdapter implements RssItemInterface
     public function getMedias(): Generator
     {
         foreach ($this->playable->get_medias() as $media_info) {
-            $className = ObjectTypeToClassNameMapper::map($media_info['object_type']);
+            $media = $this->libraryItemLoader->load(
+                $media_info['object_type'],
+                $media_info['object_id'],
+                [Song::class, Podcast_Episode::class]
+            );
+
+            if ($media === null) {
+                continue;
+            }
             /** @var Song|Podcast_Episode $media */
-            $media      = new $className($media_info['object_id']);
             $media->format();
 
             $data = [
@@ -154,7 +153,9 @@ final class PlayableItemRssItemAdapter implements RssItemInterface
             if ($media->mime) {
                 $data['type'] = $media->mime;
                 $data['size'] = (string) $media->size;
-                $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                if ($this->user !== null) {
+                    $data['url']  = $media->play_url('', 'api', false, $this->user->getId(), $this->user->streamtoken);
+                }
             }
 
             yield $data;

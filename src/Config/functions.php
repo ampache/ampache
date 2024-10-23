@@ -24,9 +24,10 @@ declare(strict_types=0);
  */
 
 use Ampache\Config\AmpConfig;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\TVShow_Season;
+use Ampache\Repository\Model\User;
 use Ampache\Module\Api\Xml_Data;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
@@ -35,7 +36,9 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Session;
 use Ampache\Module\Util\Ui;
+use Gettext\Loader\MoLoader;
 use Gettext\Translator;
+use Gettext\TranslatorFunctions;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -73,7 +76,7 @@ function scrub_in($input)
     if (!is_array($input)) {
         return stripslashes(htmlspecialchars(strip_tags((string) $input), ENT_NOQUOTES, AmpConfig::get('site_charset')));
     } else {
-        $results = array();
+        $results = [];
         foreach ($input as $item) {
             $results[] = scrub_in((string) $item);
         }
@@ -157,180 +160,80 @@ function get_languages(): array
 
     if (!is_resource($handle)) {
         debug_event('general.lib', 'Error unable to open locale directory', 1);
+
+        return ["en_US" => "English (US)"];
     }
 
-    $results = array();
+    $results = [];
 
     while (false !== ($file = readdir($handle))) {
         $full_file = __DIR__ . '/../../locale/' . $file;
 
-        /* Check to see if it's a directory */
-        if (is_dir($full_file) && substr($file, 0, 1) != '.' && $file != 'base') {
-            switch ($file) {
-                case 'af_ZA':
-                    $name = 'Afrikaans';
-                    break; /* Afrikaans */
-                case 'bg_BG':
-                    $name = '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;';
-                    break; /* Bulgarian */
-                case 'ca_ES':
-                    $name = 'Catal&#224;';
-                    break; /* Catalan */
-                case 'cs_CZ':
-                    $name = '&#x010c;esky';
-                    break; /* Czech */
-                case 'da_DK':
-                    $name = 'Dansk';
-                    break; /* Danish */
-                case 'de_CH':
-                    $name = 'Deutschschweiz';
-                    break; /* German (Switzerland) */
-                case 'de_DE':
-                    $name = 'Deutsch';
-                    break; /* German */
-                case 'el_GR':
-                    $name = 'Greek';
-                    break; /* Greek */
-                case 'en_AU':
-                    $name = 'English (AU)';
-                    break; /* English */
-                case 'en_GB':
-                    $name = 'English (UK)';
-                    break; /* English */
-                case 'en_US':
-                    $name = 'English (US)';
-                    break; /* English */
-                case 'es_AR':
-                    $name = 'Espa&#241;ol (AR)';
-                    break; /* Spanish */
-                case 'es_ES':
-                    $name = 'Espa&#241;ol';
-                    break; /* Spanish */
-                case 'es_MX':
-                    $name = 'Espa&#241;ol (MX)';
-                    break; /* Spanish */
-                case 'et_EE':
-                    $name = 'Eesti';
-                    break; /* Estonian */
-                case 'eu_ES':
-                    $name = 'Euskara';
-                    break; /* Basque */
-                case 'fi_FI':
-                    $name = 'Suomi';
-                    break; /* Finnish */
-                case 'fr_BE':
-                    $name = 'Fran&#231;ais de Belgique ';
-                    break; /* French (Belgium) */
-                case 'fr_FR':
-                    $name = 'Fran&#231;ais';
-                    break; /* French */
-                case 'ga_IE':
-                    $name = 'Gaeilge';
-                    break; /* Irish */
-                case 'gl_ES':
-                    $name = 'Galician';
-                    break; /* Galician (gl_ES) */
-                case 'hi_IN':
-                    $name = 'Hindi';
-                    break; /* Hindi (India) */
-                case 'hu_HU':
-                    $name = 'Magyar';
-                    break; /* Hungarian */
-                case 'id_ID':
-                    $name = 'Indonesia';
-                    break; /* Indonesian */
-                case 'is_IS':
-                    $name = 'Icelandic';
-                    break; /* Icelandic */
-                case 'it_IT':
-                    $name = 'Italiano';
-                    break; /* Italian */
-                case 'ja_JP':
-                    $name = '&#x65e5;&#x672c;&#x8a9e;';
-                    break; /* Japanese */
-                case 'ko_KR':
-                    $name = '&#xd55c;&#xad6d;&#xb9d0;';
-                    break; /* Korean */
-                case 'lt_LT':
-                    $name = 'Lietuvi&#371;';
-                    break; /* Lithuanian */
-                case 'lv_LV':
-                    $name = 'Latvie&#353;u';
-                    break; /* Latvian */
-                case 'nb_NO':
-                    $name = 'Norsk';
-                    break; /* Norwegian */
-                case 'nl_NL':
-                    $name = 'Nederlands';
-                    break; /* Dutch */
-                case 'no_NO':
-                    $name = 'Norsk bokm&#229;l';
-                    break; /* Norwegian */
-                case 'pl_PL':
-                    $name = 'Polski';
-                    break; /* Polish */
-                case 'pt_BR':
-                    $name = 'Portugu&#234;s Brasileiro';
-                    break; /* Portuguese */
-                case 'pt_PT':
-                    $name = 'Portugu&#234;s';
-                    break; /* Portuguese */
-                case 'ro_RO':
-                    $name = 'Rom&#226;n&#259;';
-                    break; /* Romanian */
-                case 'ru_RU':
-                    $name = '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;';
-                    break; /* Russian */
-                case 'sk_SK':
-                    $name = 'Sloven&#269;ina';
-                    break; /* Slovak */
-                case 'sl_SI':
-                    $name = 'Sloven&#353;&#269;ina';
-                    break; /* Slovenian */
-                case 'sr_CS':
-                    $name = 'Srpski';
-                    break; /* Serbian */
-                case 'sv_SE':
-                    $name = 'Svenska';
-                    break; /* Swedish */
-                case 'tr_TR':
-                    $name = 'T&#252;rk&#231;e';
-                    break; /* Turkish */
-                case 'uk_UA':
-                    $name = 'Українська';
-                    break; /* Ukrainian */
-                case 'vi_VN':
-                    $name = 'Ti&#7871;ng Vi&#7879;t';
-                    break; /* Vietnamese */
-                case 'zh_CN':
-                    $name = '&#31616;&#20307;&#20013;&#25991;';
-                    break; /* Chinese (simplified)*/
-                case 'zh_TW':
-                    $name = '&#32321;&#39636;&#20013;&#25991;';
-                    break; /* Chinese (traditional)*/
-                case 'zh-Hant':
-                    $name = '&#32321;&#39636;&#20013;&#25991; (' . $file . ')';
-                    break; /* Chinese (traditional) (zh_Hant)*/
-                case 'zh_SG':
-                    $name = 'Chinese (Singapore)';
-                    break; /* Chinese (Singapore)*/
-                case 'ar_SA':
-                    $name = '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;';
-                    break; /* Arabic (Right to Left RTL) */
-                case 'he_IL':
-                    $name = '&#1506;&#1489;&#1512;&#1497;&#1514;';
-                    break; /* Hebrew (Right to Left RTL) */
-                case 'fa_IR':
-                    $name = '&#1601;&#1575;&#1585;&#1587;&#1610;';
-                    break; /* Farsi (Right to Left RTL) */
-                default:
-                    $name = sprintf(
-                        /* HINT: File */
-                        T_('Unknown %s'),
-                        '(' . $file . ')'
-                    );
-                    break;
-            } // end switch
+        // Check to see if it's a directory
+        if (
+            is_dir($full_file) &&
+            substr($file, 0, 1) != '.' &&
+            $file != 'base'
+        ) {
+            $name = match ($file) {
+                'af_ZA' => 'Afrikaans',
+                'bg_BG' => '&#x0411;&#x044a;&#x043b;&#x0433;&#x0430;&#x0440;&#x0441;&#x043a;&#x0438;',
+                'ca_ES' => 'Catal&#224;',
+                'cs_CZ' => '&#x010c;esky',
+                'da_DK' => 'Dansk',
+                'de_CH' => 'Deutschschweiz',
+                'de_DE' => 'Deutsch',
+                'el_GR' => 'Greek',
+                'en_AU' => 'English (AU)',
+                'en_GB' => 'English (UK)',
+                'en_US' => 'English (US)',
+                'es_AR' => 'Espa&#241;ol (AR)',
+                'es_ES' => 'Espa&#241;ol',
+                'es_MX' => 'Espa&#241;ol (MX)',
+                'et_EE' => 'Eesti',
+                'eu_ES' => 'Euskara',
+                'fi_FI' => 'Suomi',
+                'fr_BE' => 'Fran&#231;ais de Belgique ',
+                'fr_FR' => 'Fran&#231;ais',
+                'ga_IE' => 'Gaeilge',
+                'gl_ES' => 'Galician',
+                'hi_IN' => 'Hindi',
+                'hu_HU' => 'Magyar',
+                'id_ID' => 'Indonesia',
+                'is_IS' => 'Icelandic',
+                'it_IT' => 'Italiano',
+                'ja_JP' => '&#x65e5;&#x672c;&#x8a9e;',
+                'ko_KR' => '&#xd55c;&#xad6d;&#xb9d0;',
+                'lt_LT' => 'Lietuvi&#371;',
+                'lv_LV' => 'Latvie&#353;u',
+                'nb_NO' => 'Norsk',
+                'nl_NL' => 'Nederlands',
+                'no_NO' => 'Norsk bokm&#229;l',
+                'pl_PL' => 'Polski',
+                'pt_BR' => 'Portugu&#234;s Brasileiro',
+                'pt_PT' => 'Portugu&#234;s',
+                'ro_RO' => 'Rom&#226;n&#259;',
+                'ru_RU' => '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;',
+                'sk_SK' => 'Sloven&#269;ina',
+                'sl_SI' => 'Sloven&#353;&#269;ina',
+                'sr_CS' => 'Srpski',
+                'sv_SE' => 'Svenska',
+                'tr_TR' => 'T&#252;rk&#231;e',
+                'uk_UA' => 'Українська',
+                'vi_VN' => 'Ti&#7871;ng Vi&#7879;t',
+                'zh_CN' => '&#31616;&#20307;&#20013;&#25991;',
+                'zh_TW' => '&#32321;&#39636;&#20013;&#25991;',
+                'zh-Hant' => '&#32321;&#39636;&#20013;&#25991; (' . $file . ')',
+                'zh_SG' => 'Chinese (Singapore)',
+                'ar_SA' => '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;',
+                'he_IL' => '&#1506;&#1489;&#1512;&#1497;&#1514;',
+                'fa_IR' => '&#1601;&#1575;&#1585;&#1587;&#1610;',
+                default => sprintf(
+                    /* HINT: File */
+                    T_('Unknown %s'),
+                    '(' . $file . ')'
+                ),
+            }; // end switch
 
             $results[$file] = $name;
         }
@@ -340,9 +243,7 @@ function get_languages(): array
     ksort($results);
 
     // Prepend English (US)
-    $results = array("en_US" => "English (US)") + $results;
-
-    return $results;
+    return ["en_US" => "English (US)"] + $results;
 }
 
 /**
@@ -352,7 +253,7 @@ function get_languages(): array
  */
 function is_rtl($locale): bool
 {
-    return in_array($locale, array("he_IL", "fa_IR", "ar_SA"));
+    return in_array($locale, ["he_IL", "fa_IR", "ar_SA"]);
 }
 
 // Declare apache_request_headers and getallheaders if it don't exists (PHP <= 5.3 + FastCGI)
@@ -362,19 +263,15 @@ if (!function_exists('apache_request_headers')) {
      */
     function apache_request_headers(): array
     {
-        $headers = array();
+        $headers = [];
         foreach ($_SERVER as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
                 $name           = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
                 $headers[$name] = $value;
-            } else {
-                if ($name == "CONTENT_TYPE") {
-                    $headers["Content-Type"] = $value;
-                } else {
-                    if ($name == "CONTENT_LENGTH") {
-                        $headers["Content-Length"] = $value;
-                    }
-                }
+            } elseif ($name == "CONTENT_TYPE") {
+                $headers["Content-Type"] = $value;
+            } elseif ($name == "CONTENT_LENGTH") {
+                $headers["Content-Length"] = $value;
             }
         }
 
@@ -398,7 +295,7 @@ if (!function_exists('getallheaders')) {
 function check_http_referer(): bool
 {
     $referer  = Core::get_server('HTTP_REFERER');
-    $web_path = (string)AmpConfig::get('web_path', '');
+    $web_path = AmpConfig::get_web_path();
     if (
         empty($referer) &&
         empty($web_path)
@@ -460,7 +357,7 @@ function get_datetime($time, $date_format = 'short', $time_format = 'short', $ov
     $locale = AmpConfig::get('lang', 'en_US');
     $format = new IntlDateFormatter($locale, $date_type, $time_type, $timezone, null, $pattern);
 
-    return $format->format($time);
+    return $format->format($time) ?: '';
 }
 
 /**
@@ -498,10 +395,11 @@ function check_config_values($conf): bool
     if (!isset($conf['session_cookiesecure'])) {
         return false;
     }
-    if (isset($conf['debug'])) {
-        if (!isset($conf['log_path'])) {
-            return false;
-        }
+    if (
+        isset($conf['debug']) &&
+        !isset($conf['log_path'])
+    ) {
+        return false;
     }
 
     return true;
@@ -621,7 +519,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
 
     // List of things that should only be displayed if they told us to turn
     // on the firehose
-    $ignores = array(
+    $ignores = [
         // We know var is deprecated, shut up
         'var: Deprecated. Please use the public/private/protected modifiers',
         // getid3 spews errors, yay!
@@ -630,7 +528,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
         'Assigning the return value of new by reference is deprecated',
         // The XML-RPC lib is broken (kinda)
         'used as offset, casting to integer',
-    );
+    ];
 
     foreach ($ignores as $ignore) {
         if (strpos($errstr, $ignore) !== false) {
@@ -669,7 +567,7 @@ function ampache_error_handler(int $errno, string $errstr, string $errfile, int 
  */
 function debug_event($type, $message, $level, $username = ''): bool
 {
-    if (!$username && Core::get_global('user')) {
+    if (!$username && Core::get_global('user') instanceof User) {
         $username = Core::get_global('user')->username;
     }
 
@@ -699,9 +597,9 @@ function debug_event($type, $message, $level, $username = ''): bool
 function catalog_worker($action, $catalogs = null, $options = null): void
 {
     if (AmpConfig::get('ajax_load')) {
-        $sse_url = AmpConfig::get('web_path') . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs));
+        $sse_url = AmpConfig::get_web_path() . "/server/sse.server.php?worker=catalog&action=" . $action . "&catalogs=" . urlencode(json_encode($catalogs) ?: '');
         if ($options) {
-            $sse_url .= "&options=" . urlencode(json_encode($_POST));
+            $sse_url .= "&options=" . urlencode(json_encode($_POST) ?: '');
         }
 
         echo '<script>';
@@ -759,7 +657,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     }
 
     $sql    = "SELECT `album`.`id`, `album`.`name`, `album`.`prefix` FROM `album`";
-    $params = array();
+    $params = [];
     if ($user_id !== null) {
         $sql .= "INNER JOIN `artist` ON `artist`.`id` = `album`.`album_artist` WHERE `album`.`album_artist` IS NOT NULL AND `artist`.`user` = ? ";
         $params[] = $user_id;
@@ -793,7 +691,7 @@ function show_album_select($name, $album_id = 0, $allow_add = false, $song_id = 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ")</script>\n";
     }
 }
 
@@ -819,7 +717,7 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     }
 
     $sql    = "SELECT `id`, LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `name` FROM `artist` ";
-    $params = array();
+    $params = [];
     if ($user_id !== null) {
         $sql .= "WHERE `user` = ? ";
         $params[] = $user_id;
@@ -850,104 +748,8 @@ function show_artist_select($name, $artist_id = 0, $allow_add = false, $song_id 
     echo "</select>\n";
 
     if ($count === 0) {
-        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ");</script>\n";
+        echo "<script>check_inline_song_edit('" . $name . "', " . $song_id . ")</script>\n";
     }
-}
-
-/**
- * show_tvshow_select
- * This is the same as show_album_select except it's *gasp* for tvshows! How
- * inventive!
- * @param string $name
- * @param int $tvshow_id
- * @param bool $allow_add
- * @param int $season_id
- * @param bool $allow_none
- */
-function show_tvshow_select($name, $tvshow_id = 0, $allow_add = false, $season_id = 0, $allow_none = false): void
-{
-    static $tvshow_id_cnt = 0;
-    // Generate key to use for HTML element ID
-    if ($season_id) {
-        $key = $name . "_select_" . $season_id;
-    } else {
-        $key = $name . "_select_c" . ++$tvshow_id_cnt;
-    }
-
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
-    $sql        = "SELECT `id`, `name` FROM `tvshow` ORDER BY `name`";
-    $db_results = Dba::read($sql);
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $selected = '';
-        if ($row['id'] == $tvshow_id) {
-            $selected = "selected=\"selected\"";
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['name']) . "</option>\n";
-    } // end while
-
-    if ($allow_add) {
-        // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
-    }
-
-    echo "</select>\n";
-}
-
-/**
- * @param string $name
- * @param int $season_id
- * @param bool $allow_add
- * @param int $video_id
- * @param bool $allow_none
- */
-function show_tvshow_season_select($name, $season_id, $allow_add = false, $video_id = 0, $allow_none = false): bool
-{
-    if (!$season_id) {
-        return false;
-    }
-    $season = new TVShow_Season($season_id);
-
-    static $season_id_cnt = 0;
-    // Generate key to use for HTML element ID
-    if ($video_id) {
-        $key = $name . "_select_" . $video_id;
-    } else {
-        $key = $name . "_select_c" . ++$season_id_cnt;
-    }
-
-    echo "<select name=\"$name\" id=\"$key\">\n";
-
-    if ($allow_none) {
-        echo "\t<option value=\"-2\"></option>\n";
-    }
-
-    $sql        = "SELECT `id`, `season_number` FROM `tvshow_season` WHERE `tvshow` = ? ORDER BY `season_number`";
-    $db_results = Dba::read($sql, array($season->tvshow));
-
-    while ($row = Dba::fetch_assoc($db_results)) {
-        $selected = '';
-        if ($row['id'] == $season_id) {
-            $selected = "selected=\"selected\"";
-        }
-
-        echo "\t<option value=\"" . $row['id'] . "\" $selected>" . scrub_out($row['season_number']) . "</option>\n";
-    } // end while
-
-    if ($allow_add) {
-        // Append additional option to the end with value=-1
-        echo "\t<option value=\"-1\">" . T_('Add New') . "...</option>\n";
-    }
-
-    echo "</select>\n";
-
-    return true;
 }
 
 /**
@@ -958,31 +760,41 @@ function show_tvshow_season_select($name, $season_id, $allow_add = false, $video
  * @param int $catalog_id
  * @param string $style
  * @param bool $allow_none
- * @param string $filter_type
+ * @param string $gather_types
+ * @param string $catalog_type
  */
-function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $filter_type = ''): void
+function show_catalog_select($name, $catalog_id, $style = '', $allow_none = false, $gather_types = '', $catalog_type = ''): void
 {
     echo "<select name=\"$name\" style=\"$style\">\n";
 
-    $params = array();
+    $params = [];
     $sql    = "SELECT `id`, `name` FROM `catalog` ";
-    if (!empty($filter_type)) {
-        $sql .= "WHERE `gather_types` = ? ";
-        $params[] = $filter_type;
+    $where  = "WHERE";
+    if (!empty($gather_types)) {
+        $sql .= $where . " `gather_types` = ? ";
+        $params[] = $gather_types;
+        $where    = "AND";
+    }
+
+    if (!empty($catalog_type)) {
+        $sql .= $where . " `catalog_type` = ? ";
+        $params[] = $catalog_type;
     }
     $sql .= "ORDER BY `name`;";
     $db_results = Dba::read($sql, $params);
-    $results    = array();
+    $results    = [];
     while ($row = Dba::fetch_assoc($db_results)) {
         $results[] = $row;
     }
 
-    if ($allow_none) {
-        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
-    }
-    if (empty($results) && !empty($filter_type)) {
+    if (
+        empty($results) &&
+        !empty($gather_types)
+    ) {
         /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-        echo "\t<option value=\"\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $filter_type) . "</option>\n";
+        echo "\t<option value=\"-1\" selected=\"selected\">" . sprintf(T_('Not Found: %s'), $gather_types) . "</option>\n";
+    } elseif ($allow_none) {
+        echo "\t<option value=\"-1\">" . T_('None') . "</option>\n";
     }
 
     foreach ($results as $row) {
@@ -1019,7 +831,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
     // Added ID field so we can easily observe this element
     echo "<select name=\"$name\" id=\"$key\">\n";
 
-    $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` ORDER BY `name`";
+    $sql        = "SELECT `id`, `name`, `description`, `external_link` FROM `license` WHERE `order` != 0 ORDER BY `order`";
     $db_results = Dba::read($sql);
 
     while ($row = Dba::fetch_assoc($db_results)) {
@@ -1039,7 +851,7 @@ function show_license_select($name, $license_id = 0, $song_id = 0): void
     } // end while
 
     echo "</select>\n";
-    echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\">" . T_('View License') . "</a>";
+    echo "<a href=\"javascript:show_selected_license_link('" . $key . "');\"><br>" . T_('View License') . " " . Ui::get_material_symbol('exit_to_app') . "</a>";
 }
 
 /**
@@ -1064,7 +876,7 @@ function show_user_select($name, $selected = '', $style = ''): void
             $select_txt = 'selected="selected"';
         }
         // If they don't have a full name, revert to the username
-        $row['fullname'] = $row['fullname'] ? $row['fullname'] : $row['username'];
+        $row['fullname'] = $row['fullname'] ?: $row['username'];
 
         echo "\t<option value=\"" . $row['id'] . "\" $select_txt>" . scrub_out($row['fullname']) . "</option>\n";
     } // end while users
@@ -1117,7 +929,7 @@ function xoutput_from_array($array, $callback = false, $type = '')
 function display_notification($message, $timeout = 5000): void
 {
     echo "<script>";
-    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE)) . "', " . $timeout . ");";
+    echo "displayNotification('" . addslashes(json_encode($message, JSON_UNESCAPED_UNICODE) ?: '') . "', " . $timeout . ");";
     echo "</script>\n";
 }
 
@@ -1131,7 +943,7 @@ function show_now_playing(): void
     Session::garbage_collection();
     Stream::garbage_collection();
 
-    $web_path = AmpConfig::get('web_path');
+    $web_path = AmpConfig::get_web_path();
     $results  = Stream::get_now_playing();
     require_once Ui::find_template('show_now_playing.inc.php');
 }
@@ -1146,9 +958,13 @@ function show_table_render($render = false, $force = false): void
     if ($force || !defined('TABLE_RENDERED')) {
         if (!defined('TABLE_RENDERED')) {
             define('TABLE_RENDERED', 1);
-        } ?>
-        <?php if ($render) { ?>
-            <script>sortPlaylistRender();</script>
+        }
+        if ($render) { ?>
+            <script>
+                $(document).ready(function () {
+                    sortPlaylistRender();
+                });
+            </script>
             <?php
         }
     }
@@ -1163,12 +979,13 @@ function load_gettext(): bool
     $lang   = AmpConfig::get('lang', 'en_US');
     $mopath = __DIR__ . '/../../locale/' . $lang . '/LC_MESSAGES/messages.mo';
 
-    $gettext = new Translator();
     if (file_exists($mopath)) {
-        $translations = Gettext\Translations::fromMoFile($mopath);
-        $gettext->loadTranslations($translations);
+        $loader       = new MoLoader();
+        $translations = $loader->loadFile($mopath);
+        $gettext      = Translator::createFromTranslations($translations);
+
+        TranslatorFunctions::register($gettext);
     }
-    $gettext->register();
 
     return true;
 }
@@ -1189,7 +1006,7 @@ function T_(string $msgid): string
 /**
  * @param string $original
  * @param string $plural
- * @param int|string $value
+ * @param int|string|float $value
  * @return string
  */
 function nT_($original, $plural, $value): string
@@ -1210,7 +1027,7 @@ function nT_($original, $plural, $value): string
  */
 function get_themes(): array
 {
-    $results = array();
+    $results = [];
 
     $lst_files = glob(__DIR__ . '/../../public/themes/*/theme.cfg.php');
     if (!$lst_files) {
@@ -1245,7 +1062,7 @@ function get_themes(): array
  */
 function get_theme($name)
 {
-    static $_mapcache = array();
+    static $_mapcache = [];
 
     if (strlen((string) $name) < 1) {
         return false;
@@ -1299,16 +1116,18 @@ function canEditArtist(
     Artist $artist,
     int $userId
 ): bool {
-    if (AmpConfig::get('upload_allow_edit')) {
-        if ($artist->user !== null && $userId == $artist->user) {
-            return true;
-        }
+    if (
+        AmpConfig::get('upload_allow_edit') &&
+        $artist->user !== null &&
+        $userId == $artist->user
+    ) {
+        return true;
     }
 
     global $dic;
 
     return $dic->get(PrivilegeCheckerInterface::class)->check(
-        AccessLevelEnum::TYPE_INTERFACE,
-        AccessLevelEnum::LEVEL_CONTENT_MANAGER
+        AccessTypeEnum::INTERFACE,
+        AccessLevelEnum::CONTENT_MANAGER
     );
 }

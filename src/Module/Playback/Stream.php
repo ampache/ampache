@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Playback;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast_Episode;
@@ -35,13 +37,12 @@ use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
-use Ampache\Repository\Model\Preference;
 use Ampache\Module\System\Session;
 use Ampache\Repository\Model\User;
 
 class Stream
 {
-    private static $session;
+    private static string $session = '';
 
     /**
      * set_session
@@ -52,7 +53,7 @@ class Stream
     public static function set_session($sid): void
     {
         if (!empty($sid)) {
-            self::$session = $sid;
+            self::$session = (string)$sid;
         }
     }
 
@@ -63,7 +64,7 @@ class Stream
     {
         if (!self::$session) {
             // Generate the session ID.  This is slightly wasteful.
-            $data         = array();
+            $data         = [];
             $data['type'] = 'stream';
             // This shouldn't be done here but at backend endpoint side
             if (Core::get_request('client') !== '') {
@@ -99,7 +100,6 @@ class Stream
      * @param string $target
      * @param string $player
      * @param string $media_type
-     * @return string
      */
     public static function get_transcode_format(
         $source,
@@ -119,7 +119,7 @@ class Stream
         if ($media_type != 'song') {
             $setting_target = 'encode_' . $media_type . '_target';
         }
-        if (!$player && in_array($media_type, array('song', 'podcast_episode'))) {
+        if (!$player && in_array($media_type, ['song', 'podcast_episode'])) {
             $player = 'webplayer';
         }
         // webplayer / api transcode actions
@@ -213,7 +213,7 @@ class Stream
      */
     public static function get_stream_types_for_type(string $type, ?string $player = 'webplayer'): array
     {
-        $types     = array();
+        $types     = [];
         $transcode = AmpConfig::get('transcode_' . $type);
         if ($player !== '') {
             $player_transcode = AmpConfig::get('transcode_player_' . $player . '_' . $type);
@@ -255,14 +255,14 @@ class Stream
         $target = null,
         $player = null,
         $media_type = 'song',
-        $options = array()
+        $options = []
     ): array {
         $target = self::get_transcode_format($source, $target, $player, $media_type);
         $cmd    = AmpConfig::get('transcode_cmd_' . $source) ?? AmpConfig::get('transcode_cmd');
         if (empty($cmd)) {
             debug_event(self::class, 'A valid transcode_cmd is required to transcode', 5);
 
-            return array();
+            return [];
         }
 
         $args = '';
@@ -280,19 +280,19 @@ class Stream
         }
 
         $argst = AmpConfig::get('encode_args_' . $target);
-        if (!$args) {
+        if (!$argst) {
             debug_event(self::class, 'Target format ' . $target . ' is not properly configured', 2);
 
-            return array();
+            return [];
         }
         $args .= ' ' . $argst;
 
         debug_event(self::class, 'Command: ' . $cmd . ' Arguments:' . $args, 5);
 
-        return array(
+        return [
             'format' => $target,
             'command' => $cmd . $args
-        );
+        ];
     }
 
     /**
@@ -304,8 +304,8 @@ class Stream
      */
     public static function get_output_cache($source, $target = null, $player = null, $media_type = 'song'): string
     {
-        if (!empty(Core::get_global('transcode'))) {
-            return Core::get_global('transcode')[$source][$target][$player][$media_type] ?? '';
+        if (!empty($GLOBALS['transcode'])) {
+            return $GLOBALS['transcode'][$source][$target][$player][$media_type] ?? '';
         }
 
         return '';
@@ -320,8 +320,8 @@ class Stream
      */
     public static function set_output_cache($output, $source, $target = null, $player = null, $media_type = 'song'): void
     {
-        if (Core::get_global('transcode') == '') {
-            $GLOBALS['transcode'] = array();
+        if (empty($GLOBALS['transcode']) || !is_array($GLOBALS['transcode'])) {
+            $GLOBALS['transcode'] = [];
         }
         $GLOBALS['transcode'][$source][$target][$player][$media_type] = $output;
     }
@@ -336,12 +336,12 @@ class Stream
      * @param array|string $options
      * @return array|false
      */
-    public static function start_transcode($media, $transcode_settings, $options = array())
+    public static function start_transcode($media, $transcode_settings, $options = [])
     {
         $out_file = false;
         if (is_string($options)) {
             $out_file = $options;
-            $options  = array();
+            $options  = [];
         }
         // Bail out early if we're unutterably broken
         if (empty($transcode_settings)) {
@@ -357,11 +357,11 @@ class Stream
 
         // Finalise the command line
         $command    = $transcode_settings['command'];
-        $string_map = array(
+        $string_map = [
             '%FILE%' => $song_file,
             '%SAMPLE%' => $bit_rate, // Deprecated
             '%BITRATE%' => $bit_rate
-        );
+        ];
         $string_map['%MAXBITRATE%'] = (isset($options['maxbitrate']))
             ? $options['maxbitrate']
             : 8000;
@@ -398,10 +398,10 @@ class Stream
             debug_event(self::class, 'Final command is ' . $command, 4);
             shell_exec($command);
 
-            return array();
+            return [];
         }
 
-        return self::start_process($command, array('format' => $transcode_settings['format']));
+        return self::start_process($command, ['format' => $transcode_settings['format']]);
     }
 
     /**
@@ -411,7 +411,7 @@ class Stream
     private static function scrub_arg($arg): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            return '"' . str_replace(array('"', '%'), array('', ''), $arg) . '"';
+            return '"' . str_replace(['"', '%'], ['', ''], $arg) . '"';
         } else {
             return "'" . str_replace("'", "'\\''", $arg) . "'";
         }
@@ -449,7 +449,7 @@ class Stream
     /**
      * get_image_preview
      * @param Video $media
-     * @return string
+     * @return string|null
      */
     public static function get_image_preview($media): ?string
     {
@@ -459,10 +459,10 @@ class Stream
 
         if (AmpConfig::get('transcode_cmd') && AmpConfig::get('transcode_input') && AmpConfig::get('encode_get_image')) {
             $command    = AmpConfig::get('transcode_cmd') . ' ' . AmpConfig::get('transcode_input') . ' ' . AmpConfig::get('encode_get_image');
-            $string_map = array(
+            $string_map = [
                 '%FILE%' => self::scrub_arg($media->file),
                 '%TIME%' => $frame
-            );
+            ];
             foreach ($string_map as $search => $replace) {
                 $command = str_replace($search, $replace, $command, $ret);
                 if ($ret === null) {
@@ -491,14 +491,14 @@ class Stream
      * @param array $settings
      * @return array
      */
-    private static function start_process($command, $settings = array()): array
+    private static function start_process($command, $settings = []): array
     {
         debug_event(self::class, "Transcode command: " . $command, 3);
 
-        $descriptors = array(1 => array('pipe', 'w'));
+        $descriptors = [1 => ['pipe', 'w']];
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
-            $descriptors[2] = array('pipe', 'w');
+            $descriptors[2] = ['pipe', 'w'];
             $cmdPrefix      = "exec ";
         } else {
             $cmdPrefix = "start /B ";
@@ -509,15 +509,13 @@ class Stream
         $process = proc_open($cmdPrefix . $command, $descriptors, $pipes);
         if ($process === false) {
             debug_event(self::class, 'Transcode command failed to open.', 1);
-            $parray = array(
-                'handle' => null
-            );
+            $parray = ['handle' => null];
         } else {
-            $parray = array(
+            $parray = [
                 'process' => $process,
                 'handle' => $pipes[1],
                 'stderr' => $pipes[2]
-            );
+            ];
 
             if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
                 stream_set_blocking($pipes[2], false); // Be sure stderr is non-blocking
@@ -581,14 +579,20 @@ class Stream
      * @param string $type
      * @param int $previous
      */
-    public static function insert_now_playing($object_id, $uid, $length, $sid, $type, $previous = null): void
-    {
+    public static function insert_now_playing(
+        $object_id,
+        $uid,
+        $length,
+        $sid,
+        $type,
+        $previous = null
+    ): void {
         if (!$previous) {
             $previous = time();
         }
         // Ensure that this client only has a single row
         $sql = "REPLACE INTO `now_playing` (`id`, `object_id`, `object_type`, `user`, `expire`, `insertion`) VALUES (?, ?, ?, ?, ?, ?)";
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous));
+        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid, (int) (time() + (int) $length), $previous]);
     }
 
     /**
@@ -604,7 +608,7 @@ class Stream
     {
         // Clear the now playing entry for this item
         $sql = "DELETE FROM `now_playing` WHERE `id` = ? AND `object_id` = ? AND `object_type` = ? AND `user` = ?;";
-        Dba::write($sql, array($sid, $object_id, strtolower((string) $type), $uid));
+        Dba::write($sql, [$sid, $object_id, strtolower((string) $type), $uid]);
     }
 
     /**
@@ -642,19 +646,18 @@ class Stream
         }
         $sql .= "WHERE `np`.`object_type` IN ('song', 'video') ";
 
-        if (!Access::check('interface', 100)) {
+        if (!Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) {
             // We need to check only for users which have allowed view of personal info
-            $personal_info_id = Preference::id_from_name('allow_personal_info_now');
-            if ($personal_info_id && !empty(Core::get_global('user'))) {
-                $current_user = Core::get_global('user')->id;
-                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`preference`='$personal_info_id' AND `value`='1') OR `user`='$current_user'))) ";
+            if (Core::get_global('user') instanceof User) {
+                $current_user = Core::get_global('user')->getId();
+                $sql .= "AND (`np`.`user` IN (SELECT `user` FROM `user_preference` WHERE ((`name`='allow_personal_info_now' AND `value`='1') OR `user`='$current_user'))) ";
             }
         }
         $sql .= "ORDER BY `np`.`expire` DESC";
         //debug_event(self::class, 'get_now_playing ' . $sql, 5);
 
         $db_results = Dba::read($sql);
-        $results    = array();
+        $results    = [];
         while ($row = Dba::fetch_assoc($db_results)) {
             $className = ObjectTypeToClassNameMapper::map($row['object_type']);
             /** @var Song|Video $media */
@@ -669,12 +672,12 @@ class Stream
                     continue;
                 }
                 $media->format();
-                $results[] = array(
+                $results[] = [
                     'media' => $media,
                     'client' => $client,
                     'agent' => $row['agent'],
                     'expire' => (int) $row['expire']
-                );
+                ];
             }
         } // end while
 
@@ -691,7 +694,7 @@ class Stream
     public static function check_lock_media($media_id, $type): bool
     {
         $sql        = "SELECT `object_id` FROM `now_playing` WHERE `object_id` = ? AND `object_type` = ?";
-        $db_results = Dba::read($sql, array($media_id, $type));
+        $db_results = Dba::read($sql, [$media_id, $type]);
 
         if (Dba::num_rows($db_results)) {
             debug_event(self::class, 'Unable to play media currently locked by another user', 3);
@@ -719,10 +722,10 @@ class Stream
 
         switch (AmpConfig::get('playlist_method')) {
             case 'send':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket';
                 break;
             case 'send_clear':
-                $_SESSION['iframe']['target'] = AmpConfig::get('web_path') . '/stream.php?action=basket&playlist_method=clear';
+                $_SESSION['iframe']['target'] = AmpConfig::get_web_path() . '/stream.php?action=basket&playlist_method=clear';
                 break;
             case 'clear':
             case 'default':
@@ -759,7 +762,7 @@ class Stream
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
-            : AmpConfig::get('web_path');
+            : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }

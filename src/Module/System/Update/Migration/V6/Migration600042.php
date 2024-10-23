@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V6;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -35,6 +36,6 @@ final class Migration600042 extends AbstractMigration
 
     public function migrate(): void
     {
-        $this->updatePreferences('bookmark_latest', 'Only keep the latest media bookmark', '0', 25, 'boolean', 'options');
+        $this->updatePreferences('bookmark_latest', 'Only keep the latest media bookmark', '0', AccessLevelEnum::USER->value, 'boolean', 'options');
     }
 }

@@ -28,11 +28,11 @@ namespace Ampache\Module\Application\Admin\Shout;
 use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Application\Exception\ObjectNotFoundException;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\library_item;
-use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Shoutbox;
 use Ampache\Repository\Model\User;
 use Ampache\Repository\ShoutRepositoryInterface;
@@ -43,8 +43,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class ShowEditActionTest extends TestCase
 {
     private UiInterface&MockObject $ui;
-
-    private ModelFactoryInterface&MockObject $modelFactory;
 
     private ShoutObjectLoaderInterface&MockObject $shoutObjectLoader;
 
@@ -59,13 +57,11 @@ class ShowEditActionTest extends TestCase
     protected function setUp(): void
     {
         $this->ui                = $this->createMock(UiInterface::class);
-        $this->modelFactory      = $this->createMock(ModelFactoryInterface::class);
         $this->shoutObjectLoader = $this->createMock(ShoutObjectLoaderInterface::class);
         $this->shoutRepository   = $this->createMock(ShoutRepositoryInterface::class);
 
         $this->subject = new ShowEditAction(
             $this->ui,
-            $this->modelFactory,
             $this->shoutObjectLoader,
             $this->shoutRepository,
         );
@@ -80,7 +76,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(false);
 
         $this->subject->run($this->request, $this->gatekeeper);
@@ -90,7 +86,7 @@ class ShowEditActionTest extends TestCase
     {
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         static::expectException(ObjectNotFoundException::class);
@@ -106,7 +102,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -126,15 +122,13 @@ class ShowEditActionTest extends TestCase
     public function testRunErrorsIfShoutUserWasNotFound(): void
     {
         $shoutId = 666;
-        $userId  = 42;
 
         $shout       = $this->createMock(Shoutbox::class);
         $libraryItem = $this->createMock(library_item::class);
-        $user        = $this->createMock(User::class);
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -152,17 +146,8 @@ class ShowEditActionTest extends TestCase
             ->willReturn($libraryItem);
 
         $shout->expects(static::once())
-            ->method('getUserId')
-            ->willReturn($userId);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
-            ->willReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(true);
+            ->method('getUser')
+            ->willReturn(null);
 
         static::expectException(ObjectNotFoundException::class);
 
@@ -172,7 +157,6 @@ class ShowEditActionTest extends TestCase
     public function testRunRenders(): void
     {
         $shoutId = 666;
-        $userId  = 42;
 
         $shout       = $this->createMock(Shoutbox::class);
         $libraryItem = $this->createMock(library_item::class);
@@ -180,7 +164,7 @@ class ShowEditActionTest extends TestCase
 
         $this->gatekeeper->expects(static::once())
             ->method('mayAccess')
-            ->with(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_ADMIN)
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)
             ->willReturn(true);
 
         $this->request->expects(static::once())
@@ -198,17 +182,8 @@ class ShowEditActionTest extends TestCase
             ->willReturn($libraryItem);
 
         $shout->expects(static::once())
-            ->method('getUserId')
-            ->willReturn($userId);
-
-        $this->modelFactory->expects(static::once())
-            ->method('createUser')
-            ->with($userId)
+            ->method('getUser')
             ->willReturn($user);
-
-        $user->expects(static::once())
-            ->method('isNew')
-            ->willReturn(false);
 
         $this->ui->expects(static::once())
             ->method('showHeader');

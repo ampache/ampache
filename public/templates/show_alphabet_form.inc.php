@@ -25,8 +25,11 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 
+/** @var string $action */
+/** @var string $text */
+/** @var string $match */
 ?>
-<form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get('web_path') . "/$action"; ?>" enctype="multipart/form-data">
+<form style="display:inline;" name="f" method="get" action="<?php echo AmpConfig::get_web_path() . "/$action"; ?>" enctype="multipart/form-data">
     <label for="match" accesskey="S"><?php echo $text; ?></label>
     <input type="text" id="match" name="match" value="<?php echo $match; ?>" />
     <input type="hidden" name="action" value="<?php echo scrub_out((string)filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS)); ?>">

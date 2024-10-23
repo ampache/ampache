@@ -100,7 +100,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         }
 
         $catalogs      = Catalog::get_catalogs();
-        $catalog_array = array();
+        $catalog_array = [];
         foreach ($catalogs as $catalog_id) {
             $catalog_status             = (int)filter_input(INPUT_POST, 'catalog_' . $catalog_id, FILTER_SANITIZE_NUMBER_INT);
             $catalog_array[$catalog_id] = $catalog_status;
@@ -113,7 +113,7 @@ final class UpdateFilterAction extends AbstractFilterAction
         $this->ui->showConfirmation(
             T_('Filter Updated'),
             sprintf(T_('%1$s has been updated'), $filter_name),
-            sprintf('%s/admin/filter.php', $this->configContainer->getWebPath())
+            sprintf('%s/filter.php', $this->configContainer->getWebPath('/admin'))
         );
 
         $this->ui->showQueryStats();

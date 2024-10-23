@@ -43,7 +43,7 @@ class WebPlayer
      */
     public static function is_playlist_radio($playlist): bool
     {
-        $radios = array();
+        $radios = [];
 
         foreach ($playlist->urls as $item) {
             if ($item->type == "radio") {
@@ -91,25 +91,24 @@ class WebPlayer
      */
     protected static function get_types($item, $urlinfo, $transcode_cfg, $force_type = ''): array
     {
-        $types = array('real' => 'mp3', 'player' => '');
+        $types = ['real' => 'mp3', 'player' => ''];
 
         if ($item->codec && array_key_exists('type', $urlinfo)) {
             $transcode = self::can_transcode($urlinfo['type'], $item->codec, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $item->codec, $transcode);
         } elseif ($media = self::get_media_object($urlinfo)) {
+            /** @var Video|Podcast_Episode|Song|Song_Preview $media */
             $transcode = self::can_transcode(strtolower(get_class($media)), $media->type, $types, $urlinfo, $transcode_cfg, $force_type);
             $types     = self::get_media_types($urlinfo, $types, $media->type, $transcode);
+        } elseif ($item->type == 'live_stream') {
+            $types['real'] = $item->codec;
+            if ($types['real'] == "ogg" || $types['real'] == "opus") {
+                $types['player'] = "oga";
+            }
         } else {
-            if ($item->type == 'live_stream') {
-                $types['real'] = $item->codec;
-                if ($types['real'] == "ogg" || $types['real'] == "opus") {
-                    $types['player'] = "oga";
-                }
-            } else {
-                $ext = pathinfo($item->url, PATHINFO_EXTENSION);
-                if (!empty($ext)) {
-                    $types['real'] = $ext;
-                }
+            $ext = pathinfo($item->url, PATHINFO_EXTENSION);
+            if (!empty($ext)) {
+                $types['real'] = $ext;
             }
         }
 
@@ -156,23 +155,17 @@ class WebPlayer
         if ($urlinfo['type'] == 'song' || $urlinfo['type'] == 'podcast_episode') {
             if ($types['real'] == "ogg" || $types['real'] == "opus") {
                 $types['player'] = "oga";
-            } else {
-                if ($types['real'] == "mp4") {
-                    $types['player'] = "m4a";
-                }
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4a";
             }
         }
         if ($urlinfo['type'] == 'video') {
             if ($types['real'] == "ogg") {
                 $types['player'] = "ogv";
-            } else {
-                if ($types['real'] == "webm") {
-                    $types['player'] = "webmv";
-                } else {
-                    if ($types['real'] == "mp4") {
-                        $types['player'] = "m4v";
-                    }
-                }
+            } elseif ($types['real'] == "webm") {
+                $types['player'] = "webmv";
+            } elseif ($types['real'] == "mp4") {
+                $types['player'] = "m4v";
             }
         }
 
@@ -188,17 +181,34 @@ class WebPlayer
      * @param string $force_type
      * @param array $transcode_cfg
      */
-    public static function can_transcode($media_type, $file_type, $types, $urlinfo, $transcode_cfg, $force_type = ''): bool
-    {
+    public static function can_transcode(
+        $media_type,
+        $file_type,
+        $types,
+        $urlinfo,
+        $transcode_cfg,
+        $force_type = ''
+    ): bool {
         $transcode = false;
 
         // Check transcode is required
         $valid_types = Stream::get_stream_types_for_type($file_type);
-        if ($transcode_cfg == 'always' || !empty($force_type) || !in_array('native', $valid_types) || ($types['real'] != $file_type && (!AmpConfig::get('webplayer_flash') || $urlinfo['type'] != 'song'))) {
+        if (
+            $transcode_cfg == 'always' ||
+            !empty($force_type) ||
+            !in_array('native', $valid_types) ||
+            (
+                $types['real'] != $file_type &&
+                (
+                    !AmpConfig::get('webplayer_flash') ||
+                    $urlinfo['type'] != 'song'
+                )
+            )
+        ) {
             if ($transcode_cfg == 'always' || ($transcode_cfg != 'never' && in_array('transcode', $valid_types))) {
                 // Transcode forced from client side
                 if (!empty($force_type) && AmpConfig::get('transcode_player_customize')) {
-                    debug_event(__class__, "Forcing type to {{$force_type}}", 5);
+                    debug_event(self::class, "Forcing type to {{$force_type}}", 5);
                     // Transcode only if excepted type available
                     $transcode_settings = Stream::get_transcode_settings_for_media($file_type, $force_type, 'webplayer', $media_type);
                     if (!empty($transcode_settings)) {
@@ -272,8 +282,8 @@ class WebPlayer
      */
     public static function get_media_js_param($item, $transcode_cfg, $force_type = ''): string
     {
-        $json = array();
-        foreach (array('title', 'author') as $member) {
+        $json = [];
+        foreach (['title', 'author'] as $member) {
             if ($member == "author") {
                 $kmember = "artist";
             } else {
@@ -292,7 +302,7 @@ class WebPlayer
             ? $url_data['type']
             : $item->type;
 
-        //debug_event(__class__, "get_media_js_param: " . print_r($item, true), 3);
+        //debug_event(self::class, "get_media_js_param: " . print_r($item, true), 3);
         if ($media != null) {
             /** @var Live_Stream|Podcast_Episode|Song|Song_Preview|Video $media */
             if ($url_data['type'] == 'song' && $media instanceof Song) {
@@ -313,15 +323,15 @@ class WebPlayer
                 $json['r128_album_gain']       = $media->r128_album_gain;
                 $json['duration']              = $media->time;
 
-                // this should probably only be in songs
-                if ($media->type != $types['real']) {
-                    $pos = strrpos($url, '&');
-                    if ($pos !== false) {
-                        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
-                    } else {
-                        $url .= '&transcode_to=' . $types['real'];
-                    }
-                }
+                // this should probably only be in songs todo i think this should be removed...
+                //if ($media->type != $types['real']) {
+                //    $pos = strrpos($url, '&');
+                //    if ($pos !== false) {
+                //        $url = substr($url, 0, $pos) . '&transcode_to=' . $types['real'] . '&' . substr($url, $pos + 1);
+                //    } else {
+                //        $url .= '&transcode_to=' . $types['real'];
+                //    }
+                //}
             }
             $json['media_id']   = $media->id;
             $json['media_type'] = $url_data['type'];
@@ -360,7 +370,7 @@ class WebPlayer
         if ($item->image_url) {
             $json['poster'] = $item->image_url;
         }
-        //debug_event(__class__, "get_media_js_param: " . print_r($json, true), 3);
+        //debug_event(self::class, "get_media_js_param: " . print_r($json, true), 3);
 
         return json_encode($json) ?: '';
     }

@@ -64,11 +64,9 @@ final class LiveStreamQuery implements QueryInterface
         'user_flag_rating',
     ];
 
-    /** @var string */
-    protected $select = "`live_stream`.`id`";
+    protected string $select = "`live_stream`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `live_stream` ";
+    protected string $base = "SELECT %%SELECT%% FROM `live_stream` ";
 
     /**
      * get_select

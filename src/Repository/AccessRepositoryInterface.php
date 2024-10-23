@@ -24,6 +24,8 @@
 namespace Ampache\Repository;
 
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Traversable;
 
 /**
@@ -43,8 +45,8 @@ interface AccessRepositoryInterface
      */
     public function findByIp(
         string $userIp,
-        int $level,
-        string $type,
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
         ?int $userId
     ): bool;
 
@@ -60,7 +62,7 @@ interface AccessRepositoryInterface
     public function exists(
         string $inAddrStart,
         string $inAddrEnd,
-        string $type,
+        AccessTypeEnum $type,
         int $userId
     ): bool;
 
@@ -71,16 +73,14 @@ interface AccessRepositoryInterface
      * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
-     * @param string $type Access type
      */
     public function create(
         string $startIp,
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void;
 
     /**
@@ -91,8 +91,6 @@ interface AccessRepositoryInterface
      * @param string $endIp The end-ip in in-addr notation
      * @param string $name Name of the acl
      * @param int $userId Designated user id (or -1 if none)
-     * @param int $level Access level
-     * @param string $type Access type
      */
     public function update(
         int $accessId,
@@ -100,7 +98,7 @@ interface AccessRepositoryInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void;
 }

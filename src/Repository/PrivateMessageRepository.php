@@ -35,18 +35,12 @@ use Ampache\Repository\Model\User;
  *
  * Table: `user_pvmsg`
  */
-final class PrivateMessageRepository implements PrivateMessageRepositoryInterface
+final readonly class PrivateMessageRepository implements PrivateMessageRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
     ) {
-        $this->modelFactory = $modelFactory;
-        $this->connection   = $connection;
     }
 
     /**

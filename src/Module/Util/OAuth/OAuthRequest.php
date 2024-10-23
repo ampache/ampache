@@ -46,9 +46,12 @@ class OAuthRequest
      * @param $http_url
      * @param $parameters
      */
-    public function __construct($http_method, $http_url, $parameters = null)
-    {
-        $parameters = ($parameters) ? $parameters : array();
+    public function __construct(
+        $http_method,
+        $http_url,
+        $parameters = null
+    ) {
+        $parameters = ($parameters) ? $parameters : [];
         $parameters = array_merge(OAuthUtil::parse_parameters(parse_url(
             $http_url,
             PHP_URL_QUERY
@@ -103,8 +106,8 @@ class OAuthRequest
 
     /**
      * pretty much a helper function to set up the request
-     * @param $consumer
-     * @param string $token
+     * @param OAuthConsumer $consumer
+     * @param string|null $token
      * @param string $http_method
      * @param string $http_url
      * @param array $parameters
@@ -112,13 +115,13 @@ class OAuthRequest
      */
     public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
     {
-        $parameters = ($parameters) ? $parameters : array();
-        $defaults   = array(
+        $parameters = ($parameters) ? $parameters : [];
+        $defaults   = [
             "oauth_version" => OAuthRequest::$version,
             "oauth_nonce" => OAuthRequest::generate_nonce(),
             "oauth_timestamp" => OAuthRequest::generate_timestamp(),
             "oauth_consumer_key" => $consumer->key
-        );
+        ];
         if ($token) {
             $defaults['oauth_token'] = $token->key;
         }
@@ -140,7 +143,7 @@ class OAuthRequest
             if (is_scalar($this->parameters[$name])) {
                 // This is the first duplicate, so transform scalar (string)
                 // into an array so we can add the duplicates
-                $this->parameters[$name] = array($this->parameters[$name]);
+                $this->parameters[$name] = [$this->parameters[$name]];
             }
 
             $this->parameters[$name][] = $value;
@@ -200,11 +203,11 @@ class OAuthRequest
      */
     public function get_signature_base_string(): string
     {
-        $parts = array(
+        $parts = [
             $this->get_normalized_http_method(),
             $this->get_normalized_http_url(),
             $this->get_signable_parameters()
-        );
+        ];
 
         $parts = OAuthUtil::urlencode_rfc3986($parts);
 

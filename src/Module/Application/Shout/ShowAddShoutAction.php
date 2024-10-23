@@ -28,11 +28,11 @@ namespace Ampache\Module\Application\Shout;
 use Ampache\Module\Shout\ShoutObjectLoaderInterface;
 use Ampache\Module\Shout\ShoutRendererInterface;
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\Song;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\AmpError;
-use Ampache\Module\Util\ObjectTypeToClassNameMapper;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\ShoutRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -49,6 +49,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
     private ShoutRepositoryInterface $shoutRepository;
 
     private ShoutRendererInterface $shoutRenderer;
+
     private ShoutObjectLoaderInterface $shoutObjectLoader;
 
     public function __construct(
@@ -67,7 +68,7 @@ final class ShowAddShoutAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        $object_type = $this->requestParser->getFromRequest('type');
+        $object_type = LibraryItemEnum::from($this->requestParser->getFromRequest('type'));
         $object_id   = (int)$this->requestParser->getFromRequest('id');
 
         // Get our object first
@@ -90,8 +91,8 @@ final class ShowAddShoutAction implements ApplicationActionInterface
         if (get_class($object) === Song::class) {
             $data = $this->requestParser->getFromRequest('offset');
         }
-        $object_type = ObjectTypeToClassNameMapper::reverseMap(get_class($object));
-        $shouts      = $this->shoutRepository->getBy($object_type, $object->getId());
+
+        $shouts = $this->shoutRepository->getBy($object_type, $object->getId());
 
         // Now go ahead and display the page where we let them add a comment etc
         $this->ui->show(

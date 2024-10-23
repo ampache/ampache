@@ -30,14 +30,20 @@ use Ampache\Repository\Model\User;
 use Ampache\Module\System\Core;
 use WpOrg\Requests\Requests;
 
-class Ampachechartlyrics implements AmpachePluginInterface
+class Ampachechartlyrics extends AmpachePlugin implements PluginGetLyricsInterface
 {
     public string $name        = 'ChartLyrics';
+
     public string $categories  = 'lyrics';
+
     public string $description = 'Get lyrics from ChartLyrics';
+
     public string $url         = 'http://www.chartlyrics.com';
+
     public string $version     = '000001';
+
     public string $min_ampache = '360022';
+
     public string $max_ampache = '999999';
 
     /**
@@ -79,9 +85,8 @@ class Ampachechartlyrics implements AmpachePluginInterface
      * load
      * This is a required plugin function; here it populates the prefs we
      * need for this object.
-     * @param User $user
      */
-    public function load($user): bool
+    public function load(User $user): bool
     {
         $user->set_preferences();
 
@@ -91,26 +96,25 @@ class Ampachechartlyrics implements AmpachePluginInterface
     /**
      * get_lyrics
      * This will look web services for a song lyrics.
-     * @param Song $song
-     * @return array|false
      */
-    public function get_lyrics($song)
+    public function get_lyrics(Song $song): ?array
     {
         $base    = 'http://api.chartlyrics.com/apiv1.asmx/';
-        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode((string)$song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
-        $request = Requests::get($uri, array(), Core::requests_options());
+        $uri     = $base . 'SearchLyricDirect?artist=' . urlencode($song->get_artist_fullname()) . '&song=' . urlencode((string)$song->title);
+        $request = Requests::get($uri, [], Core::requests_options());
         if ($request->status_code == 200) {
             $xml = simplexml_load_string($request->body);
-            if ($xml) {
-                if (!empty($xml->Lyric)) {
-                    return array(
-                        'text' => nl2br($xml->Lyric),
-                        'url' => $xml->LyricUrl
-                    );
-                }
+            if (
+                $xml &&
+                !empty($xml->Lyric)
+            ) {
+                return [
+                    'text' => nl2br($xml->Lyric),
+                    'url' => $xml->LyricUrl
+                ];
             }
         }
 
-        return false;
+        return null;
     }
 }

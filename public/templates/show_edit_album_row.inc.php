@@ -23,6 +23,8 @@ declare(strict_types=0);
  *
  */
 
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -34,7 +36,7 @@ use Ampache\Repository\Model\User;
 /** @var Album $libitem */
 
 $current_user = Core::get_global('user');
-$has_access   = $current_user instanceof User && Access::check('interface', 75, $current_user->getId());
+$has_access   = $current_user instanceof User && Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER, $current_user->getId());
 $is_owner     = $current_user instanceof User && $current_user->getId() == $libitem->get_user_owner(); ?>
 <div>
     <form method="post" id="edit_album_<?php echo $libitem->id; ?>" class="edit_dialog_content">
@@ -61,7 +63,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             <?php if (!empty($libitem->album_artists) && count($libitem->album_artists) > 1) { ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Additional Artists'); ?></td>
-                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, array($libitem->album_artist))); ?></td>
+                <td><?php echo Artist::get_display(array_diff($libitem->album_artists, [$libitem->album_artist])); ?></td>
             </tr>
             <?php } ?>
             <tr>

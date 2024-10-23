@@ -33,9 +33,7 @@ final class ArtCollectorTypeEnum
     public const FOLDER      = 'folder';
     public const META_TAGS   = 'tags';
 
-    /**
-     * @var CollectorModuleInterface[]
-     */
+    /** @var array<string, class-string<CollectorModuleInterface>> */
     public const TYPE_CLASS_MAP = [
         self::GOOGLE => GoogleCollectorModule::class,
         self::MUSICBRAINZ => MusicbrainzCollectorModule::class,

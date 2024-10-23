@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Playlist;
 
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Catalog;
@@ -56,7 +57,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
         /* Check rights */
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_USER) === false) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) === false) {
             throw new AccessDeniedException();
         }
         $this->ui->showHeader();
@@ -64,7 +65,7 @@ final class CreatePlaylistAction implements ApplicationActionInterface
         // Make sure we have a unique name
         $playlist_name = (isset($_POST['playlist_name']))
             ? htmlspecialchars_decode($this->requestParser->getFromPost('playlist_name'))
-            : Core::get_global('user')->username . ' - ' . get_datetime(time());
+            : Core::get_global('user')?->username . ' - ' . get_datetime(time());
         // keep the same public/private type as the search
         $playlist_type = (isset($_POST['playlist_type']))
             ? $this->requestParser->getFromPost('playlist_type')

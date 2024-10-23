@@ -46,8 +46,8 @@ interface AccessListManagerInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type
+        AccessLevelEnum $level,
+        AccessTypeEnum $type
     ): void;
 
     /**
@@ -64,8 +64,8 @@ interface AccessListManagerInterface
         string $endIp,
         string $name,
         int $userId,
-        int $level,
-        string $type,
-        string $additionalType
+        AccessLevelEnum $level,
+        AccessTypeEnum $type,
+        AccessTypeEnum $additionalType
     ): void;
 }

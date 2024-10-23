@@ -36,7 +36,7 @@ final class Migration400012 extends AbstractMigration
 
     public function migrate(): void
     {
-        Dba::write("ALTER TABLE `user` DROP COLUMN `rsstoken`;");
+        Dba::write("ALTER TABLE `user` DROP COLUMN `rsstoken`;", [], true);
         $this->updateDatabase("ALTER TABLE `user` ADD COLUMN `rsstoken` varchar(255) NULL;");
     }
 }

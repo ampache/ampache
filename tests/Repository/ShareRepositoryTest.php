@@ -92,7 +92,7 @@ class ShareRepositoryTest extends TestCase
 
         $user->expects(static::once())
             ->method('has_access')
-            ->with(AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessLevelEnum::MANAGER)
             ->willReturn(false);
         $user->expects(static::once())
             ->method('getId')
@@ -131,7 +131,7 @@ class ShareRepositoryTest extends TestCase
 
         $user->expects(static::once())
             ->method('has_access')
-            ->with(AccessLevelEnum::LEVEL_MANAGER)
+            ->with(AccessLevelEnum::MANAGER)
             ->willReturn(true);
         $user->expects(static::once())
             ->method('getId')

@@ -33,46 +33,46 @@ final class ExternalAuthenticator implements AuthenticatorInterface
     {
         $authenticator = AmpConfig::get('external_authenticator');
         if (!$authenticator) {
-            return array(
+            return [
                 'success' => false,
                 'error' => 'No external authenticator configured'
-            );
+            ];
         }
 
         // FIXME: should we do input sanitization?
-        $proc = proc_open($authenticator, array(
-            0 => array('pipe', 'r'),
-            1 => array('pipe', 'w'),
-            2 => array('pipe', 'w')
-        ), $pipes);
+        $proc = proc_open($authenticator, [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $pipes);
 
         if (is_resource($proc)) {
             fwrite($pipes[0], $username . "\n" . $password . "\n");
             fclose($pipes[0]);
             fclose($pipes[1]);
             if ($stderr = fread($pipes[2], 8192)) {
-                debug_event(__CLASS__, "external_auth fread error: " . $stderr, 3);
+                debug_event(self::class, "external_auth fread error: " . $stderr, 3);
             }
             fclose($pipes[2]);
         } else {
-            return array(
+            return [
                 'success' => false,
                 'error' => 'Failed to run external authenticator'
-            );
+            ];
         }
 
         if (proc_close($proc) == 0) {
-            return array(
+            return [
                 'success' => true,
                 'type' => 'external',
                 'username' => $username
-            );
+            ];
         }
 
-        return array(
+        return [
             'success' => false,
             'error' => 'The external authenticator did not accept the login'
-        );
+        ];
     }
 
     public function postAuth(): ?array

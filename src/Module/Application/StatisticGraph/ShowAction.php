@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\StatisticGraph;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Application\ApplicationActionInterface;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Session;
@@ -62,8 +63,8 @@ final class ShowAction implements ApplicationActionInterface
     {
         // Check to see if they've got an interface session or a valid API session
         if (
-            !Session::exists('interface', $_COOKIE[$this->configContainer->getSessionName()]) &&
-            !Session::exists('api', $_REQUEST['auth'] ?? '')
+            !Session::exists(AccessTypeEnum::INTERFACE->value, $_COOKIE[$this->configContainer->getSessionName()]) &&
+            !Session::exists(AccessTypeEnum::API->value, $_REQUEST['auth'] ?? '')
         ) {
             $this->logger->warning(
                 sprintf(
@@ -71,7 +72,7 @@ final class ShowAction implements ApplicationActionInterface
                     $_COOKIE[$this->configContainer->getSessionName()],
                     $_REQUEST['auth']
                 ),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;
@@ -83,7 +84,7 @@ final class ShowAction implements ApplicationActionInterface
         ) {
             $this->logger->warning(
                 'Access denied, statistical graph disabled.',
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
             return null;

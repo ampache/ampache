@@ -24,6 +24,7 @@ declare(strict_types=1);
  */
 
 use Ampache\Module\Application\ApplicationRunner;
+use Ampache\Module\Application\Update\ClearAction;
 use Ampache\Module\Application\Update\ShowAction;
 use Ampache\Module\Application\Update\UpdateAction;
 use Ampache\Module\Application\Update\UpdatePluginsAction;
@@ -42,6 +43,7 @@ $dic = require __DIR__ . '/../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
+        ClearAction::REQUEST_KEY => ClearAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
         UpdateAction::REQUEST_KEY => UpdateAction::class,
         UpdatePluginsAction::REQUEST_KEY => UpdatePluginsAction::class,

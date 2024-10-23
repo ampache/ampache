@@ -30,14 +30,10 @@ use Ampache\Repository\Model\Bookmark;
 use Ampache\Repository\Model\User;
 use DateTimeInterface;
 
-final class BookmarkRepository implements BookmarkRepositoryInterface
+final readonly class BookmarkRepository implements BookmarkRepositoryInterface
 {
-    private DatabaseConnectionInterface $connection;
-
-    public function __construct(
-        DatabaseConnectionInterface $connection
-    ) {
-        $this->connection = $connection;
+    public function __construct(private DatabaseConnectionInterface $connection)
+    {
     }
 
     /**
@@ -49,9 +45,7 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
 
         $result = $this->connection->query(
             'SELECT `id` FROM `bookmark` WHERE `user` = ?',
-            [
-                $user->getId()
-            ]
+            [$user->getId()]
         );
 
         while ($rowId = $result->fetchColumn()) {
@@ -87,9 +81,7 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
     {
         $this->connection->query(
             'DELETE FROM `bookmark` WHERE `id` = ?',
-            [
-                $bookmarkId
-            ]
+            [$bookmarkId]
         );
     }
 
@@ -98,7 +90,11 @@ final class BookmarkRepository implements BookmarkRepositoryInterface
      */
     public function collectGarbage(): void
     {
-        $types = ['song', 'video', 'podcast_episode'];
+        $types = [
+            'song',
+            'video',
+            'podcast_episode'
+        ];
         foreach ($types as $type) {
             $this->connection->query(
                 sprintf(

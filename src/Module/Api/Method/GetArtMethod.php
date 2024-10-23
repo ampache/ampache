@@ -27,6 +27,7 @@ namespace Ampache\Module\Api\Method;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Api\Exception\ErrorCodeEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Playlist;
 use Ampache\Repository\Model\Search;
@@ -84,7 +85,7 @@ final class GetArtMethod
             $smartlist = new Search($object_id, 'song', $user);
             $listitems = $smartlist->get_items();
             $item      = $listitems[array_rand($listitems)];
-            $art       = new Art($item['object_id'], $item['object_type']);
+            $art       = new Art($item['object_id'], $item['object_type']->value);
             if (!Art::has_db($object_id, 'song')) {
                 $song = new Song($item['object_id']);
                 $art  = new Art($song->album, 'album');
@@ -116,7 +117,7 @@ final class GetArtMethod
             header('Content-type: ' . $art->raw_mime);
             header('Content-Length: ' . strlen((string) $art->raw));
             echo $art->raw;
-            Session::extend($input['auth'], 'api');
+            Session::extend($input['auth'], AccessTypeEnum::API->value);
 
             return true;
         }

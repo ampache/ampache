@@ -38,9 +38,9 @@ class easy_captcha_dxy_spike
      */
     public function dxy($x, $y)
     {
-        #-- centre spike
+        // centre spike
         $y += 0.0;
 
-        return array($x, $y);
+        return [$x, $y];
     }
 }

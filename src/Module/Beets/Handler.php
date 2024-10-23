@@ -30,13 +30,11 @@ namespace Ampache\Module\Beets;
  */
 abstract class Handler
 {
-    /**
-     * Seperator between command and arguments
-     * @var string
-     */
-    protected $commandSeperator;
-    private $handler;
-    private $handlerCommand;
+    /** Seperator between command and arguments */
+    protected string $commandSeperator;
+    private Catalog $handler;
+    private string $handlerCommand;
+    protected array $fieldMapping = [];
 
     /**
      * Starts a command
@@ -44,10 +42,9 @@ abstract class Handler
     abstract public function start(string $command): void;
 
     /**
-     * @param Catalog $handler
-     * @param string $command
+     * setHandler
      */
-    public function setHandler(Catalog $handler, $command): void
+    public function setHandler(Catalog $handler, string $command): void
     {
         $this->handler        = $handler;
         $this->handlerCommand = $command;
@@ -55,12 +52,10 @@ abstract class Handler
 
     /**
      * Call function from the dispatcher e.g. to store the new song
-     * @param mixed $data
-     * @return mixed
      */
-    protected function dispatch($data)
+    protected function dispatch(array $data): void
     {
-        return call_user_func(array($this->handler, $this->handlerCommand), $data);
+        call_user_func([$this->handler, $this->handlerCommand], $data);
     }
 
     /**
@@ -88,9 +83,7 @@ abstract class Handler
      */
     public function getTimedCommand($command, $tag, $time): string
     {
-        $commandParts = array(
-            $command
-        );
+        $commandParts = [$command];
         if ($time > 0) {
             $commandParts[] = $tag . ':' . date('Y-m-d', $time) . '..';
         } else {

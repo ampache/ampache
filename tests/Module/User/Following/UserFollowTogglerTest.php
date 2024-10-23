@@ -25,26 +25,24 @@ declare(strict_types=1);
 
 namespace Ampache\Module\User\Following;
 
-use Mockery;
-use Ampache\MockeryTestCase;
 use Ampache\Module\User\Activity\UserActivityPosterInterface;
+use Ampache\Repository\Model\User;
 use Ampache\Repository\UserFollowerRepositoryInterface;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class UserFollowTogglerTest extends MockeryTestCase
+class UserFollowTogglerTest extends TestCase
 {
-    /** @var UserFollowerRepositoryInterface|MockInterface|null */
-    private MockInterface $userFollowerRepository;
+    private UserFollowerRepositoryInterface&MockObject $userFollowerRepository;
 
-    /** @var UserActivityPosterInterface|MockInterface|null */
-    private MockInterface $userActivityPoster;
+    private UserActivityPosterInterface&MockObject $userActivityPoster;
 
-    private ?UserFollowToggler $subject;
+    private UserFollowToggler $subject;
 
     protected function setUp(): void
     {
-        $this->userFollowerRepository = $this->mock(UserFollowerRepositoryInterface::class);
-        $this->userActivityPoster     = $this->mock(UserActivityPosterInterface::class);
+        $this->userFollowerRepository = $this->createMock(UserFollowerRepositoryInterface::class);
+        $this->userActivityPoster     = $this->createMock(UserActivityPosterInterface::class);
 
         $this->subject = new UserFollowToggler(
             $this->userFollowerRepository,
@@ -54,43 +52,54 @@ class UserFollowTogglerTest extends MockeryTestCase
 
     public function testToggleStartsFollowing(): void
     {
+        $user          = $this->createMock(User::class);
+        $followingUser = $this->createMock(User::class);
+
         $userId          = 666;
         $followingUserId = 42;
 
-        $this->userFollowerRepository->shouldReceive('isFollowedBy')
-            ->with($userId, $followingUserId)
-            ->once()
-            ->andReturnFalse();
-        $this->userFollowerRepository->shouldReceive('add')
-            ->with($userId, $followingUserId)
-            ->once();
+        $user->expects(static::once())
+            ->method('getId')
+            ->willReturn($userId);
 
-        $this->userActivityPoster->shouldReceive('post')
-            ->with($followingUserId, 'follow', 'user', $userId, Mockery::type('int'))
-            ->once();
+        $followingUser->expects(static::once())
+            ->method('getId')
+            ->willReturn($followingUserId);
+
+        $this->userFollowerRepository->expects(static::once())
+            ->method('isFollowedBy')
+            ->with($user, $followingUser)
+            ->willReturn(false);
+        $this->userFollowerRepository->expects(static::once())
+            ->method('add')
+            ->with($user, $followingUser);
+
+        $this->userActivityPoster->expects(static::once())
+            ->method('post')
+            ->with($followingUserId, 'follow', 'user', $userId, self::isType('int'));
 
         $this->subject->toggle(
-            $userId,
-            $followingUserId
+            $user,
+            $followingUser
         );
     }
 
     public function testToggleStopsFollowing(): void
     {
-        $userId          = 666;
-        $followingUserId = 42;
+        $user          = $this->createMock(User::class);
+        $followingUser = $this->createMock(User::class);
 
-        $this->userFollowerRepository->shouldReceive('isFollowedBy')
-            ->with($userId, $followingUserId)
-            ->once()
-            ->andReturnTrue();
-        $this->userFollowerRepository->shouldReceive('delete')
-            ->with($userId, $followingUserId)
-            ->once();
+        $this->userFollowerRepository->expects(static::once())
+            ->method('isFollowedBy')
+            ->with($user, $followingUser)
+            ->willReturn(true);
+        $this->userFollowerRepository->expects(static::once())
+            ->method('delete')
+            ->with($user, $followingUser);
 
         $this->subject->toggle(
-            $userId,
-            $followingUserId
+            $user,
+            $followingUser
         );
     }
 }

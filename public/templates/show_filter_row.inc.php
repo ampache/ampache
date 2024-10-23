@@ -25,9 +25,11 @@ declare(strict_types=0);
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Authorization\Access;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\Ui;
 
-$web_path = (string)AmpConfig::get('web_path', '');
+$admin_path = AmpConfig::get_web_path('/admin');
 /** @var array $filter */
 /** @var int $num_users */
 /** @var int $num_catalogs */
@@ -36,13 +38,13 @@ $web_path = (string)AmpConfig::get('web_path', '');
 <td class="cel_num_users"><?php echo $num_users; ?></td>
 <td class="cel_num_catalogs"><?php echo $num_catalogs; ?></td>
 <td class="cel_action">
-<?php if (Access::check('interface', 100)) { ?>
-        <a href="<?php echo $web_path; ?>/admin/filter.php?action=show_edit&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
-            <?php echo Ui::get_icon('edit', T_('Edit')); ?>
+<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
+        <a href="<?php echo $admin_path; ?>/filter.php?action=show_edit&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
+            <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
         <?php if ($filter['id'] > 0) { ?>
-           <a href="<?php echo $web_path; ?>/admin/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
-               <?php echo Ui::get_icon('delete', T_('Delete')); ?>
+           <a href="<?php echo $admin_path; ?>/filter.php?action=delete&filter_id=<?php echo $filter['id']; ?>&filter_name=<?php echo urlencode($filter['name']); ?>">
+               <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
            </a>
         <?php } ?>
     <?php } ?>

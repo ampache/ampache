@@ -35,18 +35,12 @@ use Generator;
  *
  * Tables: `podcast`, `podcast_episode`, `deleted_podcast_episodes`
  */
-final class PodcastRepository implements PodcastRepositoryInterface
+final readonly class PodcastRepository implements PodcastRepositoryInterface
 {
-    private ModelFactoryInterface $modelFactory;
-
-    private DatabaseConnectionInterface $connection;
-
     public function __construct(
-        ModelFactoryInterface $modelFactory,
-        DatabaseConnectionInterface $connection
+        private ModelFactoryInterface $modelFactory,
+        private DatabaseConnectionInterface $connection
     ) {
-        $this->modelFactory    = $modelFactory;
-        $this->connection      = $connection;
     }
 
     /**
@@ -73,9 +67,7 @@ final class PodcastRepository implements PodcastRepositoryInterface
     ): ?Podcast {
         $podcastId = $this->connection->fetchOne(
             'SELECT `id` FROM `podcast` WHERE `feed` = ?',
-            [
-                $feedUrl
-            ]
+            [$feedUrl]
         );
 
         if ($podcastId !== false) {

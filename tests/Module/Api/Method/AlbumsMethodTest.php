@@ -105,15 +105,27 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([]);
 
+        $output->shouldReceive('setOffset')
+            ->with($offset)
+            ->once();
+
+        $output->shouldReceive('setLimit')
+            ->with($limit)
+            ->once();
+
+        $browse->shouldReceive('get_total')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(0);
+        $output->shouldReceive('setCount')
+            ->with(0)
+            ->once();
+
         $output->shouldReceive('albums')
             ->with(
                 [],
                 $include,
-                $user,
-                true,
-                true,
-                $limit,
-                $offset
+                $user
             )
             ->once()
             ->andReturn($result);
@@ -137,8 +149,6 @@ class AlbumsMethodTest extends MockeryTestCase
                 [
                     'exact' => true,
                     'include' => $include,
-                    'limit' => $limit,
-                    'offset' => $offset,
                 ],
                 $user
             )
@@ -159,8 +169,6 @@ class AlbumsMethodTest extends MockeryTestCase
 
         $result  = 'some-result';
         $include = [123, 456];
-        $limit   = 42;
-        $offset  = 33;
 
         $this->modelFactory->shouldReceive('createBrowse')
             ->with(null, false)
@@ -193,15 +201,27 @@ class AlbumsMethodTest extends MockeryTestCase
             ->once()
             ->andReturn([$album]);
 
+        $output->shouldReceive('setOffset')
+            ->with(0)
+            ->once();
+
+        $output->shouldReceive('setLimit')
+            ->with(0)
+            ->once();
+
+        $browse->shouldReceive('get_total')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(1);
+        $output->shouldReceive('setCount')
+            ->with(1)
+            ->once();
+
         $output->shouldReceive('albums')
             ->with(
                 [$album],
                 $include,
-                $user,
-                true,
-                true,
-                $limit,
-                $offset
+                $user
             )
             ->once()
             ->andReturn($result);
@@ -225,8 +245,6 @@ class AlbumsMethodTest extends MockeryTestCase
                 [
                     'exact' => true,
                     'include' => $include,
-                    'limit' => $limit,
-                    'offset' => $offset,
                 ],
                 $user
             )

@@ -25,42 +25,37 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Rss;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
-use Ampache\Module\Util\RequestParserInterface;
-use Ampache\Module\Util\Rss\AmpacheRssInterface;
+use Ampache\Module\Util\Rss\RssFeedTypeFactoryInterface;
+use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
+use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\Artist;
+use Ampache\Repository\Model\LibraryItemEnum;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
+use Ampache\Repository\Model\Podcast;
+use Ampache\Repository\UserRepositoryInterface;
+use PhpTal\PHPTAL;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 
-final class ShowAction implements ApplicationActionInterface
+final readonly class ShowAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'show';
 
-    private RequestParserInterface $requestParser;
-
-    private ConfigContainerInterface $configContainer;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    private StreamFactoryInterface $streamFactory;
-    private AmpacheRssInterface $ampacheRss;
-
     public function __construct(
-        RequestParserInterface $requestParser,
-        ConfigContainerInterface $configContainer,
-        ResponseFactoryInterface $responseFactory,
-        StreamFactoryInterface $streamFactory,
-        AmpacheRssInterface $ampacheRss
+        private ConfigContainerInterface $configContainer,
+        private ResponseFactoryInterface $responseFactory,
+        private UserRepositoryInterface $userRepository,
+        private TalFactoryInterface $talFactory,
+        private RssFeedTypeFactoryInterface $rssFeedTypeFactory,
+        private LibraryItemLoaderInterface $libraryItemLoader,
     ) {
-        $this->requestParser   = $requestParser;
-        $this->configContainer = $configContainer;
-        $this->responseFactory = $responseFactory;
-        $this->streamFactory   = $streamFactory;
-        $this->ampacheRss      = $ampacheRss;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -73,35 +68,52 @@ final class ShowAction implements ApplicationActionInterface
             return null;
         }
 
-        $type     = $this->requestParser->getFromRequest('type');
-        $rsstoken = $this->requestParser->getFromRequest('rsstoken');
-        $params   = null;
+        $queryParams = $request->getQueryParams();
 
-        if ($type === 'podcast') {
-            $params                = [];
-            $params['object_type'] = $this->requestParser->getFromRequest('object_type');
-            $params['object_id']   = (int) $this->requestParser->getFromRequest('object_id');
-            if (empty($params['object_id'])) {
+        $type     = RssFeedTypeEnum::tryFrom($queryParams['type'] ?? '') ?? RssFeedTypeEnum::NOW_PLAYING;
+        $rssToken = $queryParams['rsstoken'] ?? '';
+
+        $user = $this->userRepository->getByRssToken($rssToken);
+
+        if ($type === RssFeedTypeEnum::LIBRARY_ITEM) {
+            $item = $this->libraryItemLoader->load(
+                LibraryItemEnum::from($queryParams['object_type'] ?? ''),
+                (int) ($queryParams['object_id'] ?? 0),
+                [Album::class, Artist::class, Podcast::class]
+            );
+
+            if ($item === null) {
                 return null;
             }
+
+            $handler = $this->rssFeedTypeFactory->createLibraryItemFeed($user, $item);
+        } else {
+            $handler = match ($type) {
+                default => $this->rssFeedTypeFactory->createNowPlayingFeed(),
+                RssFeedTypeEnum::RECENTLY_PLAYED => $this->rssFeedTypeFactory->createRecentlyPlayedFeed($user),
+                RssFeedTypeEnum::LATEST_ALBUM => $this->rssFeedTypeFactory->createLatestAlbumFeed($user),
+                RssFeedTypeEnum::LATEST_ARTIST => $this->rssFeedTypeFactory->createLatestArtistFeed($user),
+                RssFeedTypeEnum::LATEST_SHOUT => $this->rssFeedTypeFactory->createLatestShoutFeed(),
+            };
         }
 
-        return $this->responseFactory->createResponse()
+        $tal = $this->talFactory->createPhpTal();
+        $tal->setOutputMode(PHPTAL::XML);
+        $tal->setEncoding(AmpConfig::get('site_charset'));
+
+        $handler->configureTemplate($tal);
+
+        $response = $this->responseFactory->createResponse()
             ->withHeader(
                 'Content-Type',
                 sprintf(
                     'application/xml; charset=%s',
                     $this->configContainer->get(ConfigurationKeyEnum::SITE_CHARSET)
                 )
-            )
-            ->withBody(
-                $this->streamFactory->createStream(
-                    $this->ampacheRss->get_xml(
-                        $rsstoken,
-                        $type,
-                        $params
-                    )
-                )
             );
+
+        $response->getBody()->write($tal->execute());
+
+        return $response;
     }
 }

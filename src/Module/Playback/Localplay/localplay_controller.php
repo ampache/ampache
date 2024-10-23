@@ -25,6 +25,8 @@ namespace Ampache\Module\Playback\Localplay;
 
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Playback\Stream_Url;
+use Ampache\Repository\Model\library_item;
+use Ampache\Repository\Model\Media;
 
 /**
  * localplay_controller Class
@@ -37,34 +39,54 @@ abstract class localplay_controller
     // Required Functions
     /**
      * @param Stream_Url $url
-     * @return mixed
      */
-    abstract public function add_url(Stream_Url $url); // Takes an array of song_ids
+    abstract public function add_url(Stream_Url $url): bool; // Takes an array of song_ids
 
     /**
      * Takes a single object_id and removes it from the playlist
      * @param int $object_id
-     * @return mixed
      */
-    abstract public function delete_track($object_id);
+    abstract public function delete_track($object_id): bool;
 
-    abstract public function play();
+    abstract public function play(): bool;
 
-    abstract public function stop();
+    abstract public function stop(): bool;
 
-    abstract public function get();
+    abstract public function clear_playlist(): bool;
 
-    abstract public function connect();
+    abstract public function get_instance(?string $instance = ''): array;
 
-    abstract public function get_version(); // Returns the version of this plugin
+    abstract public function next(): bool;
+
+    abstract public function pause(): bool;
+
+    abstract public function prev(): bool;
+
+    abstract public function random(bool $state): bool;
+
+    abstract public function repeat(bool $state): bool;
+
+    abstract public function skip(int $track_id): bool;
+
+    abstract public function volume(int $volume): bool;
+
+    abstract public function volume_down(): bool;
+
+    abstract public function volume_up(): bool;
+
+    abstract public function get(): array;
+
+    abstract public function connect(): bool;
+
+    abstract public function get_version(): string; // Returns the version of this plugin
 
     abstract public function get_description(): string; // Returns the description
 
-    abstract public function is_installed(); // Returns an boolean t/f
+    abstract public function is_installed(): bool;
 
-    abstract public function install();
+    abstract public function install(): bool;
 
-    abstract public function uninstall();
+    abstract public function uninstall(): bool;
 
     abstract public function status(): array;
 
@@ -72,32 +94,25 @@ abstract class localplay_controller
 
     /**
      * @param $data
-     * @return mixed
      */
-    abstract public function add_instance($data);
+    abstract public function add_instance($data): void;
 
     /**
-     * @param $uid
-     * @return mixed
+     * @param int $uid
      */
-    abstract public function delete_instance($uid);
+    abstract public function delete_instance($uid): void;
 
     /**
-     * @param $uid
+     * @param int $uid
      * @param array $data
-     * @return mixed
      */
-    abstract public function update_instance($uid, $data);
+    abstract public function update_instance($uid, $data): void;
 
-    abstract public function get_instances();
+    abstract public function get_instances(): array;
 
     abstract public function instance_fields(): array;
 
-    /**
-     * @param $uid
-     * @return mixed
-     */
-    abstract public function set_active_instance($uid);
+    abstract public function set_active_instance(int $uid): bool;
 
     abstract public function get_active_instance();
 
@@ -115,9 +130,11 @@ abstract class localplay_controller
             return $object;
         }
 
+        /** @var Media $class */
         $class = get_class($object);
 
-        return call_user_func(array($class, 'play_url'), $object->id);
+        /** @var library_item $object */
+        return call_user_func([$class, 'play_url'], $object->getId());
     }
 
     /**
@@ -136,39 +153,38 @@ abstract class localplay_controller
      * parse_url
      * This takes an Ampache URL and then returns the 'primary' part of it
      * So that it's easier for Localplay modules to return valid song information
-     * @param $url
-     * @return array
+     * @param string $url
      */
     public function parse_url($url): array
     {
         // Define possible 'primary' keys
-        $primary_array = array('oid', 'demo_id', 'random');
-        $data          = array();
+        $primary_array = ['oid', 'demo_id', 'random'];
+        $data          = [];
 
         //beautiful urls need their own parsing as parse_url will find nothing.
         if (AmpConfig::get('stream_beautiful_url')) {
             preg_match('/oid[\=|\/](.*?)[\&|\/]/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
-                return array(
+                return [
                     'primary_key' => 'oid',
                     'oid' => $match[1]
-                );
+                ];
             }
             preg_match('/demo_id.(.*)/', $url, $match);
             if (array_key_exists(1, $match) && $match[1]) {
-                return array(
+                return [
                     'primary_key' => 'demo_id',
                     'oid' => $match[1]
-                );
+                ];
             }
             preg_match_all('#\b(random_id|random_type)=([^&]*)#', $url, $match);
             if (array_key_exists(1, $match) && $match[1] && array_key_exists(2, $match) && $match[2]) {
                 $result = array_combine($match[1], $match[2]);
 
-                return array(
+                return [
                     'primary_key' => $result['random_type'],
                     'oid' => $result['random_id']
-                );
+                ];
             }
         }
         $variables = parse_url($url, PHP_URL_QUERY);

@@ -68,14 +68,12 @@ final class GoogleCollectorModule implements CollectorModuleInterface
 
         $this->logger->debug(
             'Search url: ' . $url,
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
 
         try {
             // Need this to not be considered as a bot (are we? ^^)
-            $headers = [
-                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
-            ];
+            $headers = ['User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',];
 
             $query = Requests::get($url, $headers, Core::requests_options());
             $html  = $query->body;
@@ -89,10 +87,10 @@ final class GoogleCollectorModule implements CollectorModuleInterface
 
                     $this->logger->debug(
                         'Found image at: ' . $match,
-                        [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
                     $results = pathinfo($match);
-                    $test    = $results['extension'];
+                    $test    = $results['extension'] ?? '';
                     $pos     = strpos($test, '?');
                     if ($pos > 0) {
                         $results['extension'] = substr($test, 0, $pos);
@@ -104,7 +102,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
                     $mime = 'image/';
                     $mime .= $results['extension'] ?? 'jpg';
 
-                    $images[] = array('url' => $match, 'mime' => $mime, 'title' => 'Google');
+                    $images[] = ['url' => $match, 'mime' => $mime, 'title' => 'Google'];
                     if ($limit > 0 && count($images) >= $limit) {
                         break;
                     }
@@ -113,7 +111,7 @@ final class GoogleCollectorModule implements CollectorModuleInterface
         } catch (Exception $error) {
             $this->logger->error(
                 'Error getting google images: ' . $error->getMessage(),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
 

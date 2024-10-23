@@ -29,13 +29,17 @@ use Ampache\Module\Podcast\Feed\FeedLoader;
 use Ampache\Module\Podcast\Feed\FeedLoaderInterface;
 
 use function DI\autowire;
+use function DI\get;
 
 return [
-    PodcastSyncerInterface::class => autowire(PodcastSyncer::class),
+    PodcastSyncerInterface::class => autowire(PodcastSyncer::class)
+        ->constructorParameter(
+            'podcastEpisodeDownloader',
+            get(PodcastEpisodeDownloader::class)
+        ),
     PodcastCreatorInterface::class => autowire(PodcastCreator::class),
     FeedLoaderInterface::class => autowire(FeedLoader::class),
     PodcastFolderProviderInterface::class => autowire(PodcastFolderProvider::class),
-    PodcastEpisodeDownloaderInterface::class => autowire(PodcastEpisodeDownloader::class),
     PodcastDeleterInterface::class => autowire(PodcastDeleter::class),
     Exchange\PodcastExporterInterface::class => autowire(Exchange\PodcastOpmlExporter::class),
     Exchange\PodcastOpmlLoaderInterface::class => autowire(Exchange\PodcastOpmlLoader::class),

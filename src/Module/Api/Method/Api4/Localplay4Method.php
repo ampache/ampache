@@ -30,6 +30,7 @@ use Ampache\Module\Api\Api4;
 use Ampache\Module\Api\Xml4_Data;
 use Ampache\Module\Playback\Localplay\LocalPlay;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Repository\Model\LibraryItemEnum;
 use Ampache\Repository\Model\User;
 
 /**
@@ -57,7 +58,7 @@ final class Localplay4Method
         }
         unset($user);
         // Load their Localplay instance
-        $localplay = new Localplay(AmpConfig::get('localplay_controller'));
+        $localplay = new Localplay(AmpConfig::get('localplay_controller', ''));
         if (empty($localplay->type) || !$localplay->connect()) {
             Api4::message('error', T_('Error Unable to connect to localplay controller'), '405', $input['api_format']);
 
@@ -70,8 +71,9 @@ final class Localplay4Method
             case 'add':
                 // for add commands get the object details
                 $object_id = (int)($input['oid'] ?? 0);
-                $type      = $input['type'] ? (string) $input['type'] : 'Song';
-                if (!AmpConfig::get('allow_video') && $type == 'Video') {
+                $type      = LibraryItemEnum::tryFrom((string) ($input['type'] ?? '')) ?? LibraryItemEnum::SONG;
+
+                if (!AmpConfig::get('allow_video') && $type === LibraryItemEnum::VIDEO) {
                     Api4::message('error', T_('Access Denied: allow_video is not enabled.'), '400', $input['api_format']);
 
                     return false;

@@ -46,7 +46,7 @@ final class Users5Method
      */
     public static function users(array $input, User $user): bool
     {
-        $results = static::getUserRepository()->getValid();
+        $results = self::getUserRepository()->getValid();
         if (empty($results)) {
             Api5::empty('user', $input['api_format']);
 

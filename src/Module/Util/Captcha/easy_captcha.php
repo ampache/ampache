@@ -33,39 +33,39 @@ class easy_captcha
 {
     public const CAPTCHA_BASE_URL = '/captcha/captcha.php';
 
-    public const CAPTCHA_PERSISTENT = 1;     // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
+    public const CAPTCHA_PERSISTENT = 1; // cookie-pass after it's solved once (does not work if headers were already sent on innovocation of captcha::solved() check)
 
-    public const CAPTCHA_NEW_URLS = 0;       // force captcha only when URLs submitted
+    public const CAPTCHA_NEW_URLS = 0; // force captcha only when URLs submitted
 
-    public const CAPTCHA_AJAX = 1;           // visual feedback while entering letters
+    public const CAPTCHA_AJAX = 1; // visual feedback while entering letters
 
-    public const CAPTCHA_LOG = 0;            // create /tmp/captcha/log file
+    public const CAPTCHA_LOG = 0; // create /tmp/captcha/log file
 
-    public const CAPTCHA_NOTEXT = 0;         // disables the accessible text/math riddle
+    public const CAPTCHA_NOTEXT = 0; // disables the accessible text/math riddle
 
-    public const CAPTCHA_IMAGE_TYPE = 1;     // 1=wave, 2=whirly
+    public const CAPTCHA_IMAGE_TYPE = 1; // 1=wave, 2=whirly
 
-    public const CAPTCHA_IMAGE_SIZE = '200x60';  // randomly adapted a little
+    public const CAPTCHA_IMAGE_SIZE = '200x60'; // randomly adapted a little
 
     public const CAPTCHA_INPUT_STYLE = "height:46px; font-size:34px; font-weight:500;";
 
-    public const CAPTCHA_PIXEL = 1;          // set to 2 for smoother 2x2 grayscale pixel transform
+    public const CAPTCHA_PIXEL = 1; // set to 2 for smoother 2x2 grayscale pixel transform
 
-    public const CAPTCHA_ONCLICK_HIRES = 1;  // use better/slower drawing mode on reloading
+    public const CAPTCHA_ONCLICK_HIRES = 1; // use better/slower drawing mode on reloading
 
-    public const CAPTCHA_FUZZY = 0.65;       // easier solving: accept 1 or 2 misguessed letters
+    public const CAPTCHA_FUZZY = 0.65; // easier solving: accept 1 or 2 misguessed letters
 
-    public const CAPTCHA_MIN_CHARS = 5;      // how many letters to use
+    public const CAPTCHA_MIN_CHARS = 5; // how many letters to use
 
     public const CAPTCHA_MAX_CHARS = 7;
 
-    public const CAPTCHA_TIMEOUT = 5000;     // (in seconds/2) = 3:00 hours to solve a displayed captcha
+    public const CAPTCHA_TIMEOUT = 5000; // (in seconds/2) = 3:00 hours to solve a displayed captcha
 
     public const CAPTCHA_PARAM_ID = '__ec_i';
 
     public const CAPTCHA_PARAM_INPUT = '__ec_s';
 
-    public const CAPTCHA_BGCOLOR = 0xFFFFFF;   // initial background color (non-inverse, white)
+    public const CAPTCHA_BGCOLOR = 0xFFFFFF; // initial background color (non-inverse, white)
 
     public const CAPTCHA_SALT = ',e?c:7<';
 
@@ -92,88 +92,84 @@ class easy_captcha
     public $text;
     public $tries;
 
-    #-- init data
+    // init data
     /**
      * easy_captcha constructor.
      * @param $captcha_id
-     * @param integer $ignore_expiration
+     * @param int $ignore_expiration
      */
     public function __construct(
         $captcha_id = null,
         $ignore_expiration = 0
     ) {
-
-        #-- load
+        // load
         if (($this->id = $captcha_id) || ($this->id = preg_replace("/[^-,.\w]+/", "", $_REQUEST[self::CAPTCHA_PARAM_ID] ?? ''))) {
             $this->load();
         }
 
-        #-- create new
+        // create new
         if (empty($this->id) || !$ignore_expiration && !$this->is_valid() && $this->log("new()", "EXPIRED", "regenerating store")) {
             $this->generate();
         }
     }
 
-
-    #-- create solutions
+    // create solutions
     public function generate()
     {
-
-        #-- init
+        // init
         srand();
         if ($this->id) {
             $this->prev[] = $this->id;
         }
         $this->id = $this->new_id();
 
-        #-- meta information
+        // meta information
         $this->created      = time();
         $this->expires      = $this->created + self::CAPTCHA_TIMEOUT;
 
-        #-- captcha processing info
+        // captcha processing info
         $this->sent       = 0;
         $this->tries      = 5; // 5
         $this->ajax_tries = 25; // 25
         $this->passed     = 0;
         $this->maxpasses  = 2; // 2
         $this->failures   = 0;
-        $this->shortcut   = array();
+        $this->shortcut   = [];
         $this->grant      = 0; // unchecked access
 
-        #-- mk IMAGE/GRAPHIC
+        // mk IMAGE/GRAPHIC
         $this->image = (self::CAPTCHA_IMAGE_TYPE <= 1) ? new easy_captcha_graphic_image_waved() : new easy_captcha_graphic_image_disturbed();
         //$this->image = new easy_captcha_graphic_cute_ponys();
 
-        #-- mk MATH/TEXT riddle
+        // mk MATH/TEXT riddle
         $this->text = (self::CAPTCHA_NOTEXT >= 1) ? new easy_captcha_text_disable() : new easy_captcha_text_math_formula();
         //$this->text = new easy_captcha_text_riddle();
 
-        #-- process granting cookie
+        // process granting cookie
         if (self::CAPTCHA_PERSISTENT) {
             $this->shortcut[] = new easy_captcha_persistent_grant();
         }
 
-        #-- spam-check: no URLs submitted
+        // spam-check: no URLs submitted
         if (self::CAPTCHA_NEW_URLS) {
             $this->shortcut[] = new easy_captcha_spamfree_no_new_urls();
         }
 
-        #-- store record
+        // store record
         $this->save();
     }
 
-    #-- examine if captcha data is fresh
+    // examine if captcha data is fresh
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function is_valid()
     {
         return isset($this->id) && ($this->created) && ($this->expires > time()) && ($this->tries > 0) && ($this->failures < 500) && ($this->passed < $this->maxpasses) || $this->delete() || $this->log("is_valid", "EXPIRED", "and deleted") && false;
     }
 
-
-    #-- new captcha tracking/storage id
+    // new captcha tracking/storage id
 
     /**
      * @return string
@@ -183,25 +179,24 @@ class easy_captcha
         return "ec." . time() . "." . md5($_SERVER["SERVER_NAME"] . self::CAPTCHA_SALT . rand(0, 1 << 30));
     }
 
-
-    #-- check backends for correctness of solution
+    // check backends for correctness of solution
 
     /**
      * @param $input
-     * @return boolean
+     * @return bool
      */
     public function solved($input = null)
     {
         $okay = false;
 
-        #-- failure
+        // failure
         if ((0 >= $this->tries--) || !$this->is_valid()) {
             // log, this is either a frustrated user or a bot knocking
             $this->log("::solved", "INVALID", "tries exhausted ($this->tries) or expired(?) captcha");
         } elseif ($this->sent) {
             $input = $_REQUEST[self::CAPTCHA_PARAM_INPUT]; // might be empty string
 
-            #-- check individual modules
+            // check individual modules
             $okay = $this->grant;
             foreach ($this->shortcut as $test) {
                 $okay = $okay || $test->solved($input); // cookie & nourls
@@ -209,7 +204,7 @@ class easy_captcha
             $okay = $okay // either letters or math formula submitted
                 || isset($this->image) && $this->image->solved($input) || isset($this->text) && $this->text->solved($input);
 
-            #-- update state
+            // update state
             if ($okay) {
                 $this->passed++;
                 $this->log(
@@ -218,7 +213,7 @@ class easy_captcha
                     "captcha passed ($input) for image({$this->image->solution}) and text({$this->text->solution})"
                 );
 
-                #-- set cookie on success
+                // set cookie on success
                 if (self::CAPTCHA_PERSISTENT) {
                     $this->shortcut[0/*FIXME*/]->grant();
                     $this->log("::solved", "PERSISTENT", "cookie granted");
@@ -234,18 +229,18 @@ class easy_captcha
         }
 
         if (!$this->is_valid() /*&& !$this->delete()*/) {
-            #-- remove if done
+            // remove if done
             $this->generate(); // ensure object instance can be reused - for quirky form processing logic
         } else {
-            #-- store state/result
+            // store state/result
             $this->save();
         }
 
-        #-- return result
+        // return result
         return ($okay);
     }
 
-    #-- combines ->image and ->text data into form fields
+    // combines ->image and ->text data into form fields
 
     /**
      * @param string $add_text
@@ -253,23 +248,22 @@ class easy_captcha
      */
     public function form($add_text = "&rarr;&nbsp;")
     {
-
-        #-- store object data
+        // store object data
         $this->sent++;
         $this->save();
 
-        #-- check for errors
-        $errors = array(
+        // check for errors
+        $errors = [
             "invalid object created" => !$this->is_valid(),
             "captcha_id storage could not be saved" => !$this->saved,
             "no ->id present" => empty($this->id),
             "no ->created timestamp" => empty($this->created),
-        );
+        ];
         if (array_sum($errors)) {
             return '<div id="captcha" class="error">*' . implode("<br>*", array_keys(array_filter($errors))) . '</div>';
         }
 
-        #-- prepare output vars
+        // prepare output vars
         $p_id       = self::CAPTCHA_PARAM_ID;
         $p_input    = self::CAPTCHA_PARAM_INPUT;
         $base_url   = self::CAPTCHA_BASE_URL . '?' . self::CAPTCHA_PARAM_ID . '=';
@@ -282,20 +276,20 @@ class easy_captcha
         $javascript = self::CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" id="captcha_ajax_1"></script>' : '';
         $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
 
-        #-- assemble
+        // assemble
         $HTML = //'<script>if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations
             '<div id="captcha" class="captcha">' . $error . '<input type="hidden" id="' . $p_id . '" name="' . $p_id . '" value="' . $id . '" />' . '<img src="' . $img_url . '&" width="' . $this->image->width . '" height="' . $this->image->height . '" alt="' . $alt_text . '" ' . $onClick . ' title="' . self::CAPTCHA_REDRAW_TEXT . '" />' . '&nbsp;' . $add_text . '<input title="' . self::CAPTCHA_PROMPT_TEXT . '" type="text" ' . $onKeyDown . ' id="' . $p_input . '" name="' . $p_input . '" value="' . (isset($_REQUEST[$p_input]) ? htmlentities($_REQUEST[$p_input]) : "") . '" size="8" style="' . self::CAPTCHA_INPUT_STYLE . '" />' . $javascript . '</div>';
 
         return ($HTML);
     }
 
-    #-- noteworthy stuff goes here
+    // noteworthy stuff goes here
 
     /**
      * @param $error
      * @param $category
      * @param $message
-     * @return boolean
+     * @return bool
      */
     public function log($error, $category, $message)
     {
@@ -308,11 +302,10 @@ class easy_captcha
             );
         }
 
-        return (true);   // for if-chaining
+        return (true); // for if-chaining
     }
 
-
-    #-- load object from saved captcha tracking data
+    // load object from saved captcha tracking data
     public function load()
     {
         $filepath = $this->data_file();
@@ -326,7 +319,7 @@ class easy_captcha
         }
     }
 
-    #-- save $this captcha state
+    // save $this captcha state
     public function save()
     {
         $this->straighten_temp_dir();
@@ -337,10 +330,10 @@ class easy_captcha
         }
     }
 
-    #-- remove $this data file
+    // remove $this data file
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function delete()
     {
@@ -355,10 +348,10 @@ class easy_captcha
             unset($this->{$name});
         }
 
-        return (false);  // far if-chaining in ->is_valid()
+        return (false); // far if-chaining in ->is_valid()
     }
 
-    #-- clean-up or init temporary directory
+    // clean-up or init temporary directory
     public function straighten_temp_dir()
     {
         // create dir
@@ -378,10 +371,10 @@ class easy_captcha
         }
     }
 
-    #-- where's the storage?
+    // where's the storage?
 
     /**
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      */
     public function data_file($object_id = null)
@@ -391,15 +384,15 @@ class easy_captcha
 
     private function getTempDir(): string
     {
-        return easy_captcha_utility::tmp() . "/captcha/";    // storage directory for captcha handles
+        return easy_captcha_utility::tmp() . "/captcha/"; // storage directory for captcha handles
     }
 
-    #-- unreversable hash from passphrase, with time() slice encoded
+    // unreversable hash from passphrase, with time() slice encoded
 
     /**
      * @param $text
-     * @param integer $dtime
-     * @param integer $length
+     * @param int $dtime
+     * @param int $length
      * @return string
      */
     public function hash($text, $dtime = 0, $length = 1)

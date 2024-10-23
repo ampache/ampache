@@ -30,14 +30,13 @@ use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\User;
 
 /** @var Browse $browse */
-/** @var array $object_ids */
 
 if (!Core::is_session_started()) {
     session_start();
 }
 $browse_type     = $browse->get_type();
 $browse_filters  = Browse::get_allowed_filters($browse_type);
-$allowed_filters = array('starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art');
+$allowed_filters = ['starts_with', 'minimum_count', 'rated', 'unplayed', 'playlist_type', 'object_type', 'catalog', 'show_art'];
 if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_filters))) { ?>
 <li>
     <h4><?php echo T_('Filters'); ?></h4>
@@ -74,7 +73,7 @@ if (!empty($browse_filters) && !empty(array_intersect($browse_filters, $allowed_
             <label id="catalogLabel" for="catalog_select"><?php echo T_('Catalog'); ?></label><br />
             <select id="catalog_select" name="catalog_key">
                 <option value="0"><?php echo T_('All'); ?></option>
-                <?php $results = array();
+                <?php $results = [];
         $catalogs              = implode(',', User::get_user_catalogs($_SESSION['userdata']['uid']));
         if (!empty($catalogs)) {
             // Only show the catalogs this user is allowed to access

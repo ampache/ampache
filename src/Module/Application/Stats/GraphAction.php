@@ -27,19 +27,21 @@ namespace Ampache\Module\Application\Stats;
 
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class GraphAction extends AbstractGraphRendererAction
+final readonly class GraphAction extends AbstractGraphRendererAction
 {
     public const REQUEST_KEY = 'graph';
 
-    private UiInterface $ui;
-
     public function __construct(
-        UiInterface $ui
+        private UiInterface $ui,
+        LibraryItemLoaderInterface $libraryItemLoader
     ) {
-        $this->ui = $ui;
+        parent::__construct(
+            $libraryItemLoader
+        );
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface

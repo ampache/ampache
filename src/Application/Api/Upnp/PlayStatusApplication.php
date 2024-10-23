@@ -57,6 +57,7 @@ final class PlayStatusApplication implements ApplicationInterface
             echo ".";
             sleep(1);
         }
+
         echo "STATE = " . $state . "\n";
 
         // If the song was played and then finished, start to play next song in list.

@@ -46,7 +46,7 @@ final class Users4Method
      */
     public static function users(array $input, User $user): bool
     {
-        $results = static::getUserRepository()->getValid();
+        $results = self::getUserRepository()->getValid();
         if (empty($results)) {
             Api4::message('error', 'No Results', '404', $input['api_format']);
 

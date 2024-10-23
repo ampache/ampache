@@ -35,14 +35,14 @@ final class Migration600016 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `object_type_IDX` to artist_map table',
-        'Add `object_type_IDX` to catalog_map table'
+        'Add `object_type_IDX` to catalog_map table',
     ];
 
     public function migrate(): void
     {
-        Dba::write('ALTER TABLE `album_map` DROP KEY `object_type_IDX`');
-        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`)');
-        Dba::write('ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`');
-        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`)');
+        Dba::write('ALTER TABLE `album_map` DROP KEY `object_type_IDX`;', [], true);
+        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `album_map` (`object_type`);');
+        Dba::write('ALTER TABLE `catalog_map` DROP KEY `object_type_IDX`;', [], true);
+        $this->updateDatabase('CREATE INDEX `object_type_IDX` USING BTREE ON `catalog_map` (`object_type`);');
     }
 }

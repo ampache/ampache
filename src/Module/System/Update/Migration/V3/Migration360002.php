@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\System\Update\Migration\V3;
 
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 /**
@@ -37,13 +38,13 @@ final class Migration360002 extends AbstractMigration
         'Change Tables to FULLTEXT() for improved searching',
         'Increase Filename lengths to 4096',
         'Remove useless KEY reference from ACL and Catalog tables',
-        'Add new Remote User / Remote Password fields to Catalog'
+        'Add new Remote User / Remote Password fields to Catalog',
     ];
 
     public function migrate(): void
     {
         // Drop the key from catalog and ACL
-        $sql_array = array(
+        $sql_array = [
             "ALTER TABLE `catalog` DROP COLUMN `key`",
             "ALTER TABLE `access_list` DROP COLUMN `key`",
             "ALTER TABLE `catalog` ADD COLUMN `remote_username` VARCHAR (255) AFTER `catalog_type`",
@@ -54,13 +55,13 @@ final class Migration360002 extends AbstractMigration
             "ALTER TABLE `artist` ADD FULLTEXT(`name`)",
             "ALTER TABLE `album` ADD FULLTEXT(`name`)",
             "ALTER TABLE `song` ADD FULLTEXT(`title`)"
-        );
+        ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);
         }
 
         // Now add in the min_object_count preference and the random_method
-        $this->updatePreferences('bandwidth', 'Bandwidth', '50', 5, 'integer', 'interface');
-        $this->updatePreferences('features', 'Features', '50', 5, 'integer', 'interface');
+        $this->updatePreferences('bandwidth', 'Bandwidth', '50', AccessLevelEnum::GUEST->value, 'integer', 'interface');
+        $this->updatePreferences('features', 'Features', '50', AccessLevelEnum::GUEST->value, 'integer', 'interface');
     }
 }

@@ -59,7 +59,7 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
 
         $this->logger->notice(
             sprintf('Updating apikey for %d', $userId),
-            [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+            [LegacyLogger::CONTEXT_TYPE => self::class]
         );
     }
 
@@ -72,6 +72,8 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
         try {
             $rsstoken = bin2hex(random_bytes(32));
             $userId   = $user->getId();
+            // set on the object so we can use it right away
+            $user->rsstoken = $rsstoken;
 
             $this->userRepository->updateRssToken(
                 $userId,
@@ -80,12 +82,12 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
 
             $this->logger->notice(
                 sprintf('Updating rsstoken for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         } catch (Exception $error) {
             $this->logger->error(
                 sprintf('Could not generate random_bytes: %s', $error->getMessage()),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
     }
@@ -109,12 +111,12 @@ final class UserKeyGenerator implements UserKeyGeneratorInterface
 
             $this->logger->notice(
                 sprintf('Updating streamtoken for %d', $userId),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         } catch (Exception $error) {
             $this->logger->error(
                 sprintf('Could not generate random_bytes: %s', $error->getMessage()),
-                [LegacyLogger::CONTEXT_TYPE => __CLASS__]
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
         }
     }

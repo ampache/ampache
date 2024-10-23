@@ -30,33 +30,27 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\Util\UiInterface;
+use Ampache\Repository\Model\LibraryItemLoaderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ShowAction extends AbstractGraphRendererAction
+final readonly class ShowAction extends AbstractGraphRendererAction
 {
     public const REQUEST_KEY = 'show';
 
-    private UiInterface $ui;
-
-    private ConfigContainerInterface $configContainer;
-
-    private GuiFactoryInterface $guiFactory;
-
-    private TalFactoryInterface $talFactory;
-
     public function __construct(
-        UiInterface $ui,
-        ConfigContainerInterface $configContainer,
-        GuiFactoryInterface $guiFactory,
-        TalFactoryInterface $talFactory
+        private UiInterface $ui,
+        private ConfigContainerInterface $configContainer,
+        private GuiFactoryInterface $guiFactory,
+        private TalFactoryInterface $talFactory,
+        LibraryItemLoaderInterface $libraryItemLoader
     ) {
-        $this->ui              = $ui;
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
-        $this->talFactory      = $talFactory;
+        parent::__construct(
+            $libraryItemLoader,
+        );
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -68,7 +62,7 @@ final class ShowAction extends AbstractGraphRendererAction
         // Temporary workaround to avoid sorting on custom base requests
         define('NO_BROWSE_SORTING', true);
 
-        if ($gatekeeper->mayAccess(AccessLevelEnum::TYPE_INTERFACE, AccessLevelEnum::LEVEL_CONTENT_MANAGER) === true) {
+        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) === true) {
             $this->ui->showBoxTop(T_('Statistics'), 'box box_stats');
 
             echo $this->talFactory

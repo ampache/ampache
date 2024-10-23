@@ -30,18 +30,10 @@ use PhpTal\PHPTAL;
 use PhpTal\PhpTalInterface;
 use PhpTal\TranslationServiceInterface;
 
-final class TalFactory implements TalFactoryInterface
+final readonly class TalFactory implements TalFactoryInterface
 {
-    private ConfigContainerInterface $configContainer;
-
-    private GuiFactoryInterface $guiFactory;
-
-    public function __construct(
-        ConfigContainerInterface $configContainer,
-        GuiFactoryInterface $guiFactory
-    ) {
-        $this->configContainer = $configContainer;
-        $this->guiFactory      = $guiFactory;
+    public function __construct(private ConfigContainerInterface $configContainer, private GuiFactoryInterface $guiFactory)
+    {
     }
 
     public function createPhpTal(): PhpTalInterface

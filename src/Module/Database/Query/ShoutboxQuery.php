@@ -40,11 +40,9 @@ final class ShoutboxQuery implements QueryInterface
         'object_type',
     ];
 
-    /** @var string */
-    protected $select = "`user_shout`.`id`";
+    protected string $select = "`user_shout`.`id`";
 
-    /** @var string */
-    protected $base = "SELECT %%SELECT%% FROM `user_shout` ";
+    protected string $base = "SELECT %%SELECT%% FROM `user_shout` ";
 
     /**
      * get_select

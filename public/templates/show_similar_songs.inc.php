@@ -26,6 +26,8 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
+use Ampache\Module\Authorization\AccessLevelEnum;
+use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Repository\Model\Rating;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -39,7 +41,7 @@ use Ampache\Module\Authorization\GatekeeperFactoryInterface;
 /** @var array $hide_columns */
 /** @var string $argument_param */
 
-$web_path     = (string)AmpConfig::get('web_path', '');
+$web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = true;
@@ -51,7 +53,7 @@ $hide_year    = in_array('cel_year', $hide_columns);
 $hide_drag    = in_array('cel_drag', $hide_columns);
 $show_license = AmpConfig::get('licensing') && AmpConfig::get('show_license');
 ?>
-<table id="top_tracks_<?php echo $artist->id; ?>" class="tabledata striped-rows">
+<table id="similar_songs" class="tabledata striped-rows">
     <thead>
     <tr class="th-top">
         <th class="cel_play essential"></th>
@@ -101,7 +103,7 @@ foreach ($object_ids as $song_id) {
 
             <tr id="song_<?php echo $libitem->id; ?>">
                 <?php
-        if ($libitem->enabled || Access::check('interface', 50)) {
+        if ($libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
             $content = $talFactory->createTalView()
                 ->setContext('USER_IS_REGISTERED', User::is_registered())
                 ->setContext('USING_RATINGS', User::is_registered() && (AmpConfig::get('ratings')))
@@ -133,10 +135,3 @@ foreach ($object_ids as $song_id) {
         <?php } ?>
     </tbody>
 </table>
-
-<script>
-    var index = 1;
-    var indexes = $("#similar_songs_<?php echo $artist->id; ?> .cel_play_content").each(function() {
-        $(this).html(index++);
-    });
-</script>

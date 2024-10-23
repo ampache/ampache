@@ -28,7 +28,6 @@ use Ahc\Cli\IO\Interactor;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Database\DatabaseConnectionInterface;
 use Ampache\Module\Database\Exception\DatabaseException;
-use Ampache\Module\System\Dba;
 use Ampache\Module\System\LegacyLogger;
 use Ampache\Module\System\Update\Exception\UpdateFailedException;
 use Ampache\Module\System\Update\Migration\MigrationInterface;
@@ -86,92 +85,6 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
-        if ($currentVersion >= 700020) {
-            // Migration\V7\Migration700020
-            Dba::write("ALTER TABLE `user_preference` DROP KEY `unique_name`;");
-        }
-
-        if ($currentVersion >= 700019) {
-            // Migration\V7\Migration700019
-            if (
-                !Preference::delete('api_always_download')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700016) {
-            // Migration\V7\Migration700016
-            if (
-                !Preference::delete('sidebar_order_browse') ||
-                !Preference::delete('sidebar_order_dashboard') ||
-                !Preference::delete('sidebar_order_video') ||
-                !Preference::delete('sidebar_order_playlist') ||
-                !Preference::delete('sidebar_order_search') ||
-                !Preference::delete('sidebar_order_information')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700015) {
-            // Migration\V7\Migration700015
-            if (
-                !Preference::delete('index_dashboard_form')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700014) {
-            if (Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
-                // Migration\V7\Migration700005
-                if (!Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")) {
-                    throw new UpdateFailedException();
-                }
-            }
-        }
-
-        if ($currentVersion >= 700012) {
-            // Migration\V7\Migration700012
-            if (
-                !Preference::delete('custom_logo_user')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700006) {
-            // Migration\V7\Migration700006
-            if (!Preference::insert('home_recently_played_all', 'Show all media types in Recently Played', '1', 25, 'bool', 'interface', 'home', true)) {
-                throw new UpdateFailedException();
-            }
-        }
-
-        if ($currentVersion >= 700005) {
-            if (Dba::read('SELECT SUM(`last_count`) from `playlist`;')) {
-                // Migration\V7\Migration700005
-                if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")) {
-                    throw new UpdateFailedException();
-                }
-            }
-        }
-
-        if ($currentVersion >= 700001) {
-            // Migration\V7\Migration700001
-            if (
-                !Preference::delete('sidebar_hide_switcher') ||
-                !Preference::delete('sidebar_hide_browse') ||
-                !Preference::delete('sidebar_hide_dashboard') ||
-                !Preference::delete('sidebar_hide_video') ||
-                !Preference::delete('sidebar_hide_search') ||
-                !Preference::delete('sidebar_hide_playlist') ||
-                !Preference::delete('sidebar_hide_information')
-            ) {
-                throw new UpdateFailedException();
-            }
-        }
-
         $this->logger->notice(
             sprintf('Successful rollback to update %s', (string)Versions::MAXIMUM_UPDATABLE_VERSION),
             [LegacyLogger::CONTEXT_TYPE => self::class]
@@ -228,18 +141,16 @@ final class UpdateRunner implements UpdateRunnerInterface
 
         foreach ($updates as $update) {
             $migration = $update['migration'];
-            if ($interactor !== null) {
-                $interactor->info(
-                    get_class($migration),
-                    true
-                );
-            }
+            $interactor?->info(
+                get_class($migration),
+                true
+            );
 
             $migration->setInteractor($interactor);
 
             try {
                 $migration->migrate();
-            } catch (Throwable $e) {
+            } catch (Throwable) {
                 throw new UpdateFailedException();
             }
 
@@ -287,26 +198,25 @@ final class UpdateRunner implements UpdateRunnerInterface
      */
     public function runTableCheck(
         Traversable $updates,
-        bool $migrate = false
+        bool $migrate = false,
+        int $build = 0
     ): Generator {
         $collation = $this->configContainer->get('database_collation') ?? 'utf8mb4_unicode_ci';
         $charset   = $this->configContainer->get('database_charset') ?? 'utf8mb4';
-        $engine    = ($charset === 'utf8mb4') ? 'InnoDB' : 'MYISAM';
+        $engine    = $this->configContainer->get('database_engine') ?? 'InnoDB';
 
         foreach ($updates as $update) {
-            $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine);
+            $tableMigrations = $update['migration']->getTableMigrations($collation, $charset, $engine, $build);
 
             foreach ($tableMigrations as $tableName => $migrationSql) {
                 try {
                     $this->connection->query(sprintf('DESCRIBE `%s`', $tableName));
 
                     continue;
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $this->logger->warning(
                         'Missing table: ' . $tableName,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     if (!$migrate) {
@@ -318,14 +228,12 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 try {
                     $this->connection->query($migrationSql);
-                } catch (DatabaseException $e) {
+                } catch (DatabaseException) {
                     $error = sprintf('Failed creating missing table: %s', $tableName);
 
                     $this->logger->critical(
                         $error,
-                        [
-                            LegacyLogger::CONTEXT_TYPE => self::class
-                        ]
+                        [LegacyLogger::CONTEXT_TYPE => self::class]
                     );
 
                     throw new UpdateFailedException($error);
@@ -333,9 +241,7 @@ final class UpdateRunner implements UpdateRunnerInterface
 
                 $this->logger->critical(
                     sprintf('Created missing table: %s', $tableName),
-                    [
-                        LegacyLogger::CONTEXT_TYPE => self::class
-                    ]
+                    [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
 
                 yield $tableName;

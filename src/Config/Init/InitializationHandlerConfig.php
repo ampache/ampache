@@ -34,9 +34,9 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '6.6.3'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '71';
-    private const STRUCTURE      = 'public';  // Project release is using either the public html folder or squashed structure
+    private const VERSION        = '7.0.0'; // AMPACHE_VERSION
+    private const CONFIG_VERSION = '75';
+    private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
 
@@ -51,21 +51,21 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
     public function init(): void
     {
         // Check to make sure the config file exists. If it doesn't then go ahead and
-        if (file_exists(static::CONFIG_FILE_PATH) === false) {
+        if (file_exists(self::CONFIG_FILE_PATH) === false) {
             throw new ConfigFileNotFoundException();
         }
 
         // Make sure the config file is set up and parsable
-        $results = parse_ini_file(static::CONFIG_FILE_PATH);
+        $results = parse_ini_file(self::CONFIG_FILE_PATH);
 
         if ($results === false) {
             throw new ConfigFileNotParsableException();
         }
 
         /** This is the version.... fluff nothing more... */
-        $results['version']            = static::VERSION;
-        $results['int_config_version'] = static::CONFIG_VERSION;
-        $results['structure']          = static::STRUCTURE;
+        $results['version']            = self::VERSION;
+        $results['int_config_version'] = self::CONFIG_VERSION;
+        $results['structure']          = self::STRUCTURE;
         $results['phpversion']         = substr(phpversion(), 0, 3);
 
         $protocol = (make_bool($results['force_ssl'] ?? false) || $this->environment->isSsl() === true)
@@ -121,7 +121,7 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
             $results['date_timezone'] = date_default_timezone_get();
         }
         if (!empty($results['date_timezone'])) {
-            $listIdentifiers = DateTimeZone::listIdentifiers() ?? array();
+            $listIdentifiers = DateTimeZone::listIdentifiers();
             if (!empty($listIdentifiers) && !in_array($results['date_timezone'], $listIdentifiers)) {
                 $results['date_timezone'] = "UTC";
             }

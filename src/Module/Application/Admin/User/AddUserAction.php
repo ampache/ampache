@@ -27,6 +27,7 @@ namespace Ampache\Module\Application\Admin\User;
 
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
+use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
@@ -85,8 +86,10 @@ final class AddUserAction extends AbstractUserAction
         $username             = scrub_in(htmlspecialchars($body['username'] ?? '', ENT_NOQUOTES));
         $fullname             = scrub_in(htmlspecialchars($body['fullname'] ?? '', ENT_NOQUOTES));
         $email                = scrub_in((string) filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
-        $website              = scrub_in(htmlspecialchars($body['website'] ?? '', ENT_NOQUOTES));
-        $access               = (int) scrub_in(htmlspecialchars($body['access'] ?? '', ENT_NOQUOTES));
+        $website              = (isset($body['website']))
+            ? filter_var(urldecode($body['website']), FILTER_VALIDATE_URL) ?: ''
+            : '';
+        $access               = AccessLevelEnum::tryFrom((int) ($body['access'] ?? 0)) ?? AccessLevelEnum::USER;
         $catalog_filter_group = (int) scrub_in(htmlspecialchars($body['catalog_filter_group'] ?? '', ENT_NOQUOTES));
         $pass1                = Core::get_post('password_1');
         $pass2                = Core::get_post('password_2');
@@ -136,7 +139,7 @@ final class AddUserAction extends AbstractUserAction
         $user->upload_avatar();
 
         $useraccess = '';
-        switch ($access) {
+        switch ($access->value) {
             case 5:
                 $useraccess = T_('Guest');
                 break;
@@ -157,7 +160,7 @@ final class AddUserAction extends AbstractUserAction
             T_('New User Added'),
             /* HINT: %1 Username, %2 Access (Guest, User, Admin) */
             sprintf(T_('%1$s has been created with an access level of %2$s'), $username, $useraccess),
-            sprintf('%s/admin/users.php', $this->configContainer->getWebPath())
+            sprintf('%s/users.php', $this->configContainer->getWebPath('/admin'))
         );
 
         $this->ui->showQueryStats();

@@ -38,21 +38,21 @@ final class PlaylistSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user->id ?? -1;
+        $search_user_id     = $search->search_user?->getId() ?? -1;
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
 
-        $where      = array();
-        $table      = array();
-        $join       = array();
-        $group      = array();
-        $having     = array();
-        $parameters = array();
+        $where      = [];
+        $table      = [];
+        $join       = [];
+        $group      = [];
+        $having     = [];
+        $parameters = [];
 
         foreach ($search->rules as $rule) {
             $type     = $search->get_rule_type($rule[0]);
-            $operator = array();
+            $operator = [];
             if ($type === null) {
                 continue;
             }
@@ -120,7 +120,7 @@ final class PlaylistSearch implements SearchInterface
         $group_sql  = implode(',', $group);
         $having_sql = implode(" $sql_logic_operator ", $having);
 
-        return array(
+        return [
             'base' => 'SELECT DISTINCT(`playlist`.`id`), `playlist`.`name` FROM `playlist`',
             'join' => $join,
             'where' => $where,
@@ -130,6 +130,6 @@ final class PlaylistSearch implements SearchInterface
             'group_sql' => $group_sql,
             'having_sql' => $having_sql,
             'parameters' => $parameters
-        );
+        ];
     }
 }

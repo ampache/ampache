@@ -33,17 +33,14 @@ namespace Ampache\Repository\Model;
 interface library_item extends playable_item
 {
     public function getId(): int;
+
     public function isNew(): bool;
 
     /**
      * Get item keywords for metadata searches.
-     * @return array
      */
     public function get_keywords(): array;
 
-    /**
-     * @return int|null
-     */
     public function get_user_owner(): ?int;
 
     public function get_default_art_kind(): string;
@@ -61,8 +58,12 @@ interface library_item extends playable_item
     public function display_art($thumb = 2, $force = false): void;
 
     /**
-     * @param array $data
-     * @return int|false
+     * update
      */
-    public function update(array $data);
+    public function update(array $data): ?int;
+
+    /**
+     * Returns the media-type of the library-item
+     */
+    public function getMediaType(): LibraryItemEnum;
 }
