@@ -98,7 +98,7 @@ class AccessListItemTest extends MockeryTestCase
         $user->fullname = $userFullName;
         $user->username = $userName;
 
-        $this->access->user = (string)$userId;
+        $this->access->user = $userId;
 
         $this->modelFactory->shouldReceive('createUser')
             ->with($userId)
