@@ -82,7 +82,6 @@ class UpdateDiskFromTagsActionTest extends TestCase
         $albumDisk  = $this->createMock(AlbumDisk::class);
 
         $albumDiskId = 666;
-        $userId      = 24;
         $webPath     = 'some-web-path';
         $catalogId   = 123;
 
