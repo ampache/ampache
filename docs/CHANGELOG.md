@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Ampache 7.0.1
+
+### Fixed
+
+* Action buttons using songs for other media types in recently played all
+* Clear session preferences when installing plugins so they appear right away
+* Extra closing div on shout home plugin
+* Fail preference insert if the new id isn't a valid int
+* Garbage collect invalid user preferencess (0 preference id)
+
 ## Ampache 7.0.0
 
 Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
@@ -110,7 +120,7 @@ I want to just thank everyone who has helped over the last year on this version 
 
 ### Removed
 
-* Support for PHP greater than 8.2
+* Support for PHP versions less than 8.2
 * Unused stream actions
 * Old composer files
 * Unused PNG icons
