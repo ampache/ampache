@@ -621,8 +621,12 @@ class Preference extends database_object
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
-
         if (!$db_results) {
+            return false;
+        }
+
+        $pref_id = Dba::insert_id();
+        if (!$pref_id) {
             return false;
         }
 
@@ -632,7 +636,6 @@ class Preference extends database_object
             $ampacheSeven = false;
         }
 
-        $pref_id = Dba::insert_id();
         if ($ampacheSeven) {
             $params = [$pref_id, $name, $default];
             $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
@@ -648,8 +651,8 @@ class Preference extends database_object
 
         if ($category !== "system") {
             $sql = ($ampacheSeven)
-                ? "INSERT IGNORE INTO `user_preference` (`user`, `preference`, `name`, `value`) SELECT `user`.`id`, ?, ?, ? FROM `user`;"
-                : "INSERT IGNORE INTO `user_preference` (`user`, `preference`, `value`) SELECT `user`.`id`, ?, ? FROM `user`;";
+                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) SELECT `user`.`id`, ?, ?, ? FROM `user`;"
+                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) SELECT `user`.`id`, ?, ? FROM `user`;";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
