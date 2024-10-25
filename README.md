@@ -8,9 +8,7 @@
 
 ## News
 
-Ampache6 is [here!](https://github.com/ampache/ampache/releases/)
-
-Ampache7 development has almost completed
+Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
 
 Information and changes for this major release are being recorded in the wiki [here](https://github.com/ampache/ampache/wiki/ampache7-for-admins).
 
@@ -31,8 +29,8 @@ presents an already organised collection in a useful way. It assumes
 that you know best how to manage your files and are capable of
 choosing a suitable method for doing so.
 
-* Check out [Ampache 6 for Admins](https://github.com/ampache/ampache/wiki/ampache6-details)
-* As well as [Ampache 6 for Users](https://github.com/ampache/ampache/wiki/ampache6-for-users)
+* Check out [Ampache 7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins)
+* As well as [Ampache 7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users)
 
 ## Recommended Version
 

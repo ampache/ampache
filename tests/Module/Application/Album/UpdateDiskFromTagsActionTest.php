@@ -100,6 +100,15 @@ class UpdateDiskFromTagsActionTest extends TestCase
             ->willReturn($albumDisk);
 
         $albumDisk->expects(static::once())
+            ->method('isNew')
+            ->willReturn(false);
+
+        $gatekeeper->expects(static::once())
+            ->method('mayAccess')
+            ->with(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)
+            ->willReturn(true);
+
+        $albumDisk->expects(static::once())
             ->method('format');
         $albumDisk->expects(static::once())
             ->method('getCatalogId')
