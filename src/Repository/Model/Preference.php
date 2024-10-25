@@ -638,7 +638,7 @@ class Preference extends database_object
             $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
         } else {
             $params = [$pref_id, $default];
-            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, ?);";
+            $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES (-1, ?, ?);";
         }
 
         $db_results = Dba::write($sql, $params);
@@ -648,8 +648,8 @@ class Preference extends database_object
 
         if ($category !== "system") {
             $sql = ($ampacheSeven)
-                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);"
-                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) (SELECT `user`.`id`, ?, ? FROM `user`);";
+                ? "INSERT IGNORE INTO `user_preference` (`user`, `preference`, `name`, `value`) SELECT `user`.`id`, ?, ?, ? FROM `user`;"
+                : "INSERT IGNORE INTO `user_preference` (`user`, `preference`, `value`) SELECT `user`.`id`, ?, ? FROM `user`;";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
@@ -657,6 +657,9 @@ class Preference extends database_object
         }
 
         debug_event(self::class, 'Inserted preference: ' . $name, 3);
+
+        // clear current user preferences
+        Preference::clear_from_session();
 
         return true;
     }
