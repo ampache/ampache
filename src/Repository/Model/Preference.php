@@ -626,7 +626,10 @@ class Preference extends database_object
         }
 
         $pref_id = Dba::insert_id();
-        if (!$pref_id) {
+        if (
+            !$pref_id ||
+            (int)$pref_id < 1
+        ) {
             return false;
         }
 
