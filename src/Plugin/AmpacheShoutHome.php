@@ -114,8 +114,8 @@ class AmpacheShoutHome extends AmpachePlugin implements PluginDisplayHomeInterfa
     {
         if (AmpConfig::get('sociable')) {
             $divString = ($this->order > 0)
-                ? '<div id="shout_objects" style="order: ' . $this->order . '"></br>'
-                : '<div id="shout_objects"></div></br>';
+                ? '<div id="shout_objects" style="order: ' . $this->order . '">'
+                : '<div id="shout_objects">';
             echo $divString;
             $shouts = iterator_to_array(
                 self::getShoutRepository()->getTop((int) $this->maxitems)

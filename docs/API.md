@@ -17,7 +17,7 @@ All dates in the API calls should be passed as [ISO 8601](http://en.wikipedia.or
 
 ## News
 
-Ampache 7 development has started!
+Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
 
 The good news is that API6 will remain as the primary API for the next major version. This means **NO** breaking changes for the API!
 
