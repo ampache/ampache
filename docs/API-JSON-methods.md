@@ -3425,12 +3425,13 @@ Downloads a given media file. set format=raw to download the full file
 
 **NOTE** search and playlist will only download a random object from the list
 
-| Input     | Type    | Description                                                | Optional |
-|-----------|---------|------------------------------------------------------------|---------:|
-| 'id'      | integer | $object_id                                                 |       NO |
-| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
-| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)    |      YES |
-| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
+| Input     | Type    | Description                                                                    | Optional |
+|-----------|---------|--------------------------------------------------------------------------------|---------:|
+| 'id'      | integer | $object_id                                                                     |       NO |
+| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`                                |       NO |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)                        |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format)                     |      YES |
+| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
 
 * return file (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)
@@ -3455,14 +3456,15 @@ Streams a given media file. Takes the file id in parameter with optional max bit
 
 **NOTE** search and playlist will only stream a random object from the list
 
-| Input     | Type    | Description                                                | Optional |
-|-----------|---------|------------------------------------------------------------|---------:|
-| 'id'      | integer | $object_id                                                 |       NO |
-| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`            |       NO |
-| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)    |      YES |
-| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format) |      YES |
-| 'offset'  | integer | Return results starting from this index position           |      YES |
-| 'length'  | boolean | `0`, `1`                                                   |      YES |
+| Input     | Type    | Description                                                                    | Optional |
+|-----------|---------|--------------------------------------------------------------------------------|---------:|
+| 'id'      | integer | $object_id                                                                     |       NO |
+| 'type'    | string  | `song`, `podcast_episode`, `search`, `playlist`                                |       NO |
+| 'bitrate' | integer | max bitrate for transcoding in bytes (e.g 192000=192Kb)                        |      YES |
+| 'format'  | string  | `mp3`, `ogg`, `raw`, etc (raw returns the original format)                     |      YES |
+| 'offset'  | integer | Return results starting from this index position                               |      YES |
+| 'length'  | boolean | `0`, `1`                                                                       |      YES |
+| 'stats'   | boolean | `0`, `1`, if false disable stat recording when playing the object (default: 1) |      YES |
 
 * return file (HTTP 200 OK)
 * throws (HTTP 400 Bad Request)
