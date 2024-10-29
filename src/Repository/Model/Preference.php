@@ -735,12 +735,6 @@ class Preference extends database_object
                 case 'show_lyrics':
                     Dba::write($pref_sql, [69, 'show_lyrics', '0', T_('Show lyrics'), 0, 'boolean', 'interface', 'player']);
                     break;
-                case 'mpd_active':
-                    Dba::write($pref_sql, [70, 'mpd_active', '0', T_('MPD Active Instance'), 25, 'integer', 'internal', 'mpd']);
-                    break;
-                case 'httpq_active':
-                    Dba::write($pref_sql, [71, 'httpq_active', '0', T_('httpQ Active Instance'), 25, 'integer', 'internal', 'httpq']);
-                    break;
                 case 'lastfm_grant_link':
                     Dba::write($pref_sql, [77, 'lastfm_grant_link', '', T_('Last.FM Grant URL'), 25, 'string', 'internal', 'lastfm']);
                     break;
@@ -1058,6 +1052,13 @@ class Preference extends database_object
                     break;
                 case 'api_always_download':
                     Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', 25, 'boolean', 'options', 'api']);
+                    break;
+                case 'api_enable_7':
+                case 'httpq_active':
+                case 'mpd_active':
+                case 'upnp_active':
+                case 'vlc_active':
+                case 'xbmc_active':
                     break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
