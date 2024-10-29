@@ -334,11 +334,7 @@ final class DefaultAction implements ApplicationActionInterface
             ) {
                 // admins need to know if an update is available
                 AutoUpdate::is_update_available();
-                // Make sure all default preferences are set
-                Preference::set_defaults();
             }
-            // fix preferences that are missing for user
-            User::fix_preferences($user->id);
 
             /* Make sure they are actually trying to get to this site and don't try
              * to redirect them back into an admin section
