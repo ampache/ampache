@@ -2,13 +2,22 @@
 
 ## Ampache 7.0.1
 
+### Added
+
+* Database 701001
+  * Add preference id and name indexes to the `user_preference` table
+
+### Removed
+
+* Stop rebuilding preferences all the time. (This is now fixed up on insert/delete)
+
 ### Fixed
 
 * Action buttons using songs for other media types in recently played all
 * Clear session preferences when installing plugins so they appear right away
 * Extra closing div on shout home plugin
 * Fail preference insert if the new id isn't a valid int
-* Garbage collect invalid user preferencess (0 preference id)
+* Garbage collect invalid user preferences (0 preference id)
 
 ## Ampache 7.0.0
 
