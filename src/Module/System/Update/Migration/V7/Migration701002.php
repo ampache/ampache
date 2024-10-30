@@ -26,7 +26,7 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\System\Update\Migration\AbstractMigration;
 
-final class Migration701001 extends AbstractMigration
+final class Migration701002 extends AbstractMigration
 {
     protected array $changelog = ['Convert `custom_text_footer` into a system preference'];
 
