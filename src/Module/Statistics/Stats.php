@@ -920,6 +920,7 @@ class Stats
     public static function get_recently_played(?int $user_id, $count_type = 'stream', $object_type = null, $user_only = false): array
     {
         $limit         = AmpConfig::get('popular_threshold', 10);
+        $geolocation   = AmpConfig::get('geolocation', false);
         $access100     = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
         $object_string = (empty($object_type) || !in_array($object_type, ['album', 'album_disk', 'artist', 'catalog', 'tag', 'label', 'live_stream', 'playlist', 'podcast', 'podcast_episode', 'search', 'song', 'user', 'video']))
             ? "'song', 'live_stream', 'podcast_episode', 'video'"
@@ -940,7 +941,12 @@ class Stats
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (empty($row['geo_name']) && !empty($row['geo_latitude']) && !empty($row['geo_longitude'])) {
+            if (
+                $geolocation &&
+                empty($row['geo_name']) &&
+                !empty($row['geo_latitude']) &&
+                !empty($row['geo_longitude'])
+            ) {
                 $row['geo_name'] = Stats::get_cached_place_name((float)$row['geo_latitude'], (float)$row['geo_longitude']);
             }
             $results[] = $row;
