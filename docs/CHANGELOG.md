@@ -6,7 +6,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 ### Added
 
-* Validate url input on Custom url preferences
+* Validate URL input on Custom url preferences
   * `custom_favicon` (Custom URL - Favicon)
   * `custom_login_background` (Custom URL - Login page background)
   * `custom_login_logo` (Custom URL - Login page logo)
@@ -17,6 +17,13 @@ Fixed some slowdowns due to preference name and location look ups happening for 
   * Add preference id and name indexes to the `user_preference` table
   * Convert `custom_text_footer` into a system preference
 
+### Changed
+
+* Fail preference insert if the new id isn't a valid int
+* Ensure URL preferences are input as a valid URL
+* Remove access to `custom_text_footer` preference for users
+* Update Composer requirements
+
 ### Removed
 
 * Stop rebuilding preferences all the time. (This is now fixed up on insert/delete)
@@ -26,7 +33,6 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Action buttons using songs for other media types in recently played all
 * Clear session preferences when installing plugins so they appear right away
 * Extra closing div on shout home plugin
-* Fail preference insert if the new id isn't a valid int
 * Garbage collect invalid user preferences (0 preference id)
 * Stats module checking for place names when the data is missing
 * Respect geolocation setting in stats calls and only check valid data
