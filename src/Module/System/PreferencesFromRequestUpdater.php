@@ -82,6 +82,15 @@ final class PreferencesFromRequestUpdater implements PreferencesFromRequestUpdat
 
             // Some preferences require some extra checks to be performed
             switch ($name) {
+                case 'custom_favicon':
+                case 'custom_login_background':
+                case 'custom_login_logo':
+                case 'custom_logo':
+                case 'custom_text_footer':
+                case 'custom_blankalbum':
+                case 'custom_blankmovie':
+                    $value = filter_var(urldecode($value), FILTER_VALIDATE_URL) ?: null;
+                    break;
                 case 'transcode_bitrate':
                     $value = (string) Stream::validate_bitrate($value);
                     break;
