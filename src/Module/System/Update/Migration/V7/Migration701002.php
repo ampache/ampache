@@ -33,6 +33,7 @@ final class Migration701002 extends AbstractMigration
     public function migrate(): void
     {
         $this->updateDatabase("UPDATE `preference` SET `category` = 'system' WHERE `name` = 'custom_text_footer';");
+        $this->updateDatabase("UPDATE `preference` SET `subcategory` = 'interface' WHERE `name` = 'custom_text_footer';");
         $this->updateDatabase("DELETE FROM `user_preference` WHERE `name` = 'custom_text_footer' AND `user` != -1;");
     }
 }
