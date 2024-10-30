@@ -51,7 +51,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
                 $action     = 'confirm_uninstall_catalog_type';
                 $action_txt = T_('Disable');
             } else {
-                $action     = 'install_catalog_type';
+                $action     = 'confirm_install_catalog_type';
                 $action_txt = T_('Activate');
             } ?>
         <tr>

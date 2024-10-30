@@ -28,6 +28,7 @@ namespace Ampache\Module\Application\PrivateMessage;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -54,16 +55,20 @@ final class AddMessageAction implements ApplicationActionInterface
 
     private ModelFactoryInterface $modelFactory;
 
+    private RequestParserInterface $requestParser;
+
     public function __construct(
         ConfigContainerInterface $configContainer,
         UiInterface $ui,
         PrivateMessageCreatorInterface $privateMessageCreator,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        RequestParserInterface $requestParser
     ) {
         $this->configContainer       = $configContainer;
         $this->ui                    = $ui;
         $this->privateMessageCreator = $privateMessageCreator;
         $this->modelFactory          = $modelFactory;
+        $this->requestParser         = $requestParser;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -74,6 +79,11 @@ final class AddMessageAction implements ApplicationActionInterface
         ) {
             throw new AccessDeniedException('Access Denied: sociable features are not enabled.');
         }
+
+        if (!$this->requestParser->verifyForm('add_pvmsg')) {
+            throw new AccessDeniedException();
+        }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::DEMO_MODE) === true) {
             return null;
         }

@@ -330,7 +330,7 @@ class Preference extends database_object
      * This updates a single preference from the given name or id
      * @param string|int $preference
      * @param int $user_id
-     * @param array|string|int|bool|SimpleXMLElement $value
+     * @param array|string|int|bool|SimpleXMLElement|null $value
      * @param bool $applytoall
      * @param bool $applytodefault
      */
@@ -1009,7 +1009,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [137, 'custom_favicon', '', T_('Custom URL - Favicon'), AccessLevelEnum::MANAGER->value,'string', 'interface', 'custom']);
                     break;
                 case 'custom_text_footer':
-                    Dba::write($pref_sql, [138, 'custom_text_footer', '', T_('Custom text footer'), AccessLevelEnum::MANAGER->value,'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [138, 'custom_text_footer', '', T_('Custom text footer'), AccessLevelEnum::MANAGER->value,'string', 'system', 'interface']);
                     break;
                 case 'webdav_backend':
                     Dba::write($pref_sql, [139, 'webdav_backend', '0', T_('Use WebDAV backend'), AccessLevelEnum::ADMIN->value,'boolean', 'system', 'backend']);
