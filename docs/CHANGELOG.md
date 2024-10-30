@@ -29,6 +29,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Fail preference insert if the new id isn't a valid int
 * Garbage collect invalid user preferences (0 preference id)
 * Stats module checking for place names when the data is missing
+* Respect geolocation setting in stats calls and only check valid data
 
 ## Ampache 7.0.0
 
