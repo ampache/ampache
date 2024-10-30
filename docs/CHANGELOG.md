@@ -6,6 +6,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 ### Added
 
+* Translations 2024-10-30
 * Validate URL input on Custom url preferences
   * `custom_favicon` (Custom URL - Favicon)
   * `custom_login_background` (Custom URL - Login page background)
