@@ -940,7 +940,7 @@ class Stats
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            if (empty($row['geo_name']) && array_key_exists('geo_latitude', $row) && array_key_exists('geo_longitude', $row)) {
+            if (empty($row['geo_name']) && !empty($row['geo_latitude']) && !empty($row['geo_longitude'])) {
                 $row['geo_name'] = Stats::get_cached_place_name((float)$row['geo_latitude'], (float)$row['geo_longitude']);
             }
             $results[] = $row;
