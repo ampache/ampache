@@ -118,8 +118,8 @@ foreach ($data as $row) {
                 $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
         }
-        $media->format();
-        $object_type = $media->getMediaType()->value; ?>
+
+        $object_type = $row['object_type']; ?>
             <tr>
                 <td class="cel_play">
                     <span class="cel_play_content">&nbsp;</span>
