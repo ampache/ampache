@@ -2,6 +2,8 @@
 
 ## Ampache 7.0.1
 
+Fixed some slowdowns due to preference name and location look ups happening for no reason.
+
 ### Added
 
 * Database 701001
@@ -18,6 +20,7 @@
 * Extra closing div on shout home plugin
 * Fail preference insert if the new id isn't a valid int
 * Garbage collect invalid user preferences (0 preference id)
+* Stats module checking for place names when the data is missing
 
 ## Ampache 7.0.0
 
