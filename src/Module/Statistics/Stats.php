@@ -238,18 +238,10 @@ class Stats
             return false;
         }
 
-        $latitude  = null;
-        $longitude = null;
-        $geoname   = null;
-        if (isset($location['latitude'])) {
-            $latitude = $location['latitude'];
-        }
-        if (isset($location['longitude'])) {
-            $longitude = $location['longitude'];
-        }
-        if (isset($location['name'])) {
-            $geoname = $location['name'];
-        }
+        $latitude  = $location['latitude'] ?? null;
+        $longitude = $location['longitude'] ?? null;
+        $geoname   = $location['name'] ?? null;
+
         // allow setting date for scrobbles
         if (!is_numeric($date)) {
             $date = time();
