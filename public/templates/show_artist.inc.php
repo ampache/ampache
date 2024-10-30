@@ -151,6 +151,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             $sort  = $original_year;
             $order = 'DESC';
             break;
+        case 'default':
         default:
             $sort  = 'name_' . $original_year;
             $order = 'ASC';

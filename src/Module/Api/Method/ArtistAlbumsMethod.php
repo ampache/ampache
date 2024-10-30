@@ -86,6 +86,7 @@ final class ArtistAlbumsMethod
                 $sort  = $original_year;
                 $order = 'DESC';
                 break;
+            case 'default':
             default:
                 $sort  = 'name_' . $original_year;
                 $order = 'ASC';
