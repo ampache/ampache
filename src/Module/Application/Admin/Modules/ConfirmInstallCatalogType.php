@@ -35,9 +35,9 @@ use Ampache\Module\Util\UiInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-final class ConfirmUninstallCatalogType implements ApplicationActionInterface
+final class ConfirmInstallCatalogType implements ApplicationActionInterface
 {
-    public const REQUEST_KEY = 'confirm_uninstall_catalog_type';
+    public const REQUEST_KEY = 'confirm_install_catalog_type';
 
     private UiInterface $ui;
 
@@ -61,14 +61,14 @@ final class ConfirmUninstallCatalogType implements ApplicationActionInterface
 
         $type = scrub_in((string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS));
         $url  = sprintf(
-            '%s/modules.php?action=uninstall_catalog_type&type=%s',
+            '%s/modules.php?action=install_catalog_type&type=%s',
             $this->configContainer->getWebPath('/admin'),
             $type
         );
         $title = T_('Are You Sure?');
-        $body  = T_('This will disable the Catalog module');
+        $body  = '';
 
-        $this->ui->showConfirmation($title, $body, $url, 1, 'uninstall_catalog_type');
+        $this->ui->showConfirmation($title, $body, $url, 1, 'install_catalog_type');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();

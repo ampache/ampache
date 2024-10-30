@@ -68,7 +68,7 @@ final class ConfirmUninstallLocalplayAction implements ApplicationActionInterfac
         $title = T_('Are You Sure?');
         $body  = T_('This will disable the Localplay module');
 
-        $this->ui->showConfirmation($title, $body, $url, 1);
+        $this->ui->showConfirmation($title, $body, $url, 1, 'uninstall_localplay');
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
