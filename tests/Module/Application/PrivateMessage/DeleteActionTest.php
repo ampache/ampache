@@ -32,6 +32,7 @@ use Ampache\Module\Application\Exception\AccessDeniedException;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Module\Util\UiInterface;
 use Mockery\MockInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,16 +45,21 @@ class DeleteActionTest extends MockeryTestCase
     /** @var UiInterface|MockInterface|null */
     private MockInterface $ui;
 
+    /** @var RequestParserInterface|MockInterface|null */
+    private MockInterface $requestParser;
+
     private ?DeleteAction $subject;
 
     protected function setUp(): void
     {
         $this->configContainer = $this->mock(ConfigContainerInterface::class);
         $this->ui              = $this->mock(UiInterface::class);
+        $this->requestParser   = $this->mock(RequestParserInterface::class);
 
         $this->subject = new DeleteAction(
             $this->configContainer,
-            $this->ui
+            $this->ui,
+            $this->requestParser
         );
     }
 
@@ -106,6 +112,9 @@ class DeleteActionTest extends MockeryTestCase
             ->with(ConfigurationKeyEnum::SOCIABLE)
             ->once()
             ->andReturnTrue();
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with($this->getValidationFormName())
+            ->andReturnTrue();
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DEMO_MODE)
             ->once()
@@ -133,6 +142,9 @@ class DeleteActionTest extends MockeryTestCase
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::SOCIABLE)
             ->once()
+            ->andReturnTrue();
+        $this->requestParser->shouldReceive('verifyForm')
+            ->with($this->getValidationFormName())
             ->andReturnTrue();
         $this->configContainer->shouldReceive('isFeatureEnabled')
             ->with(ConfigurationKeyEnum::DEMO_MODE)
@@ -178,5 +190,10 @@ class DeleteActionTest extends MockeryTestCase
         $this->assertNull(
             $this->subject->run($request, $gatekeeper)
         );
+    }
+
+    protected function getValidationFormName(): string
+    {
+        return 'delete_message';
     }
 }
