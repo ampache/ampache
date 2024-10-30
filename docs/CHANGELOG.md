@@ -6,8 +6,16 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 
 ### Added
 
-* Database 701001
+* Validate url input on Custom url preferences
+  * `custom_favicon` (Custom URL - Favicon)
+  * `custom_login_background` (Custom URL - Login page background)
+  * `custom_login_logo` (Custom URL - Login page logo)
+  * `custom_logo` (Custom URL - Logo)
+  * `custom_blankalbum` (Custom blank album default image)
+  * `custom_blankmovie` (Custom blank video default image)
+* Database 701002
   * Add preference id and name indexes to the `user_preference` table
+  * Convert `custom_text_footer` into a system preference
 
 ### Removed
 
