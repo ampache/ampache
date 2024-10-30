@@ -66,7 +66,7 @@ final class ConfirmInstallLocalplayAction implements ApplicationActionInterface
             $type
         );
         $title = T_('Are You Sure?');
-        $body  = T_('This will disable the Localplay module');
+        $body  = '';
 
         $this->ui->showConfirmation($title, $body, $url, 1, 'install_localplay');
 

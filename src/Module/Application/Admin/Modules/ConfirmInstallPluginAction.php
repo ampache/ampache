@@ -66,7 +66,7 @@ final class ConfirmInstallPluginAction implements ApplicationActionInterface
             $plugin
         );
         $title = T_('Are You Sure?');
-        $body  = T_('This will disable the Plugin and remove your settings');
+        $body  = '';
 
         $this->ui->showConfirmation($title, $body, $url, 1, 'install_plugin');
 
