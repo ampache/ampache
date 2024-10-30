@@ -57,12 +57,16 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 if (AmpConfig::get('geolocation')) {
                     if ($user->id > 0) {
                         $name = $_REQUEST['name'] ?? null;
-                        if (empty($name)) {
-                            $latitude  = (float)($_REQUEST['latitude'] ?? 0);
-                            $longitude = (float)($_REQUEST['longitude'] ?? 0);
+                        if (
+                            empty($name) &&
+                            !empty($_REQUEST['latitude']) &&
+                            !empty($_REQUEST['longitude'])
+                        ) {
+                            $latitude  = (float)$_REQUEST['latitude'];
+                            $longitude = (float)$_REQUEST['longitude'];
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if ($name === null || $name === '' || $name === '0') {
+                            if (empty($name)) {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                     if (!empty($name)) {
@@ -73,7 +77,11 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
 
                             // Better to check for bugged values here and keep previous user good location
                             // Someone listing music at 0.0,0.0 location would need a waterproof music player btw
-                            if ($latitude > 0 && $longitude > 0) {
+                            if (
+                                !empty($name) &&
+                                $latitude > 0 &&
+                                $longitude > 0
+                            ) {
                                 Session::update_geolocation((string)session_id(), $latitude, $longitude, $name);
                             }
                         }
