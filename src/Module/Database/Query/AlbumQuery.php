@@ -61,6 +61,7 @@ final class AlbumQuery implements QueryInterface
     protected array $sorts = [
         'id',
         'album_artist',
+        'album_artist_title',
         'artist',
         'barcode',
         'catalog',
