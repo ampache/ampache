@@ -71,7 +71,7 @@ $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
 $album_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', $album_text, 'album_sort_name');
-$artist_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_artist', $artist_text, 'album_sort_artist');
+$artist_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_artist_title', $artist_text, 'album_sort_artist');
 $songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', $songs_text, 'album_sort_song_count');
 $year_link   = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . $year_sort, $year_text, 'album_sort_year');
 $count_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=total_count', $count_text, 'album_sort_total_count');
