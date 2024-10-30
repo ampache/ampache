@@ -204,7 +204,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check('interface', 25)) { ?>
     <?php if (AmpConfig::get('sociable')) {
-        $postshout = "&nbsp;" . T_('Post Shout'); ?>
+        $postshout = T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
         <?php echo Ui::get_icon('comment', $postshout); ?>
