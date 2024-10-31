@@ -279,7 +279,7 @@ final class AlbumDiskQuery implements QueryInterface
                 );
                 break;
             case 'album_artist_album_sort':
-                $sql = "`artist`.`name` $order, `album`.`name` $order, `album_disk`.`disk`";
+                $sql = "`artist`.`name` $order, ";
                 // sort the albums by arist AND default sort
                 $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
                 $sort_type     = AmpConfig::get('album_sort');
@@ -302,7 +302,7 @@ final class AlbumDiskQuery implements QueryInterface
                         break;
                     case 'default':
                     default:
-                        $sql .= '`album`.`name` ' . $order . ', `album`' . `' . $original_year . '`;
+                        $sql .= '`album`.`name` ' . $order . ', `album_disk`.`disk`, `album`' . `' . $original_year . '`;
                 }
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
