@@ -254,7 +254,7 @@ div#autoupdate > span {
    Main
    -------------------------- */
 #maincontainer {
-    height: 100%;
+    min-height: 85%;
     position: relative;
     width: 100%;
     z-index: 1;
