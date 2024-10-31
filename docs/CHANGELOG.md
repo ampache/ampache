@@ -7,6 +7,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 ### Added
 
 * Translations 2024-10-30
+* Album query sort `album_artist_title` (Sort by artist name then album title)
 * Validate URL input on Custom url preferences
   * `custom_favicon` (Custom URL - Favicon)
   * `custom_login_background` (Custom URL - Login page background)
@@ -24,6 +25,7 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Ensure URL preferences are input as a valid URL
 * Remove access to `custom_text_footer` preference for users
 * Update Composer requirements
+* Move JS for the sidebar back into the PHP template. (For now)
 
 ### Removed
 
@@ -37,6 +39,11 @@ Fixed some slowdowns due to preference name and location look ups happening for 
 * Garbage collect invalid user preferences (0 preference id)
 * Stats module checking for place names when the data is missing
 * Respect geolocation setting in stats calls and only check valid data
+* Align 'Post Shout' and 'Graphs' text on artist page
+* Missing 'default' string for album_sort (Should match on default but be explicit)
+* Double `/` in JS url
+* Sidebar cookie, JavaScript and visual state were a bit of a disaster
+* Look for the expanded class in the sidebar before toggling collapse
 
 ## Ampache 7.0.0
 
