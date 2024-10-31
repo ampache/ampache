@@ -61,6 +61,7 @@ final class AlbumQuery implements QueryInterface
     protected array $sorts = [
         'id',
         'album_artist',
+        'album_artist_title',
         'artist',
         'barcode',
         'catalog',
@@ -266,6 +267,10 @@ final class AlbumQuery implements QueryInterface
                     '`artist`.`id`',
                     100
                 );
+                break;
+            case 'album_artist_title':
+                $sql = "`artist`.`name` $order, `album`.`name`";
+                $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist':
                 $sql = "`artist`.`name`";

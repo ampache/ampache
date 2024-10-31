@@ -39,8 +39,14 @@ use Ampache\Module\Util\Ui;
 $server_allow = AmpConfig::get('allow_localplay_playback');
 $controller   = AmpConfig::get('localplay_controller');
 $access_check = Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::GUEST);
-if ($server_allow && $controller && $access_check) { ?>
-<?php
+if ($server_allow && $controller && $access_check) {
+    // expanded by default
+    $state_localplay_info = (($_COOKIE['sb_localplay_info'] ?? 'expanded') == 'expanded')
+        ? 'expanded'
+        : 'collapsed';
+    $state_localplay_instance = (($_COOKIE['sb_localplay_instance'] ?? 'expanded') == 'expanded')
+        ? 'expanded'
+        : 'collapsed';
     // Little bit of work to be done here
     $localplay        = new LocalPlay(AmpConfig::get('localplay_controller', ''));
     $current_instance = $localplay->current_instance();
@@ -55,9 +61,9 @@ if ($server_allow && $controller && $access_check) { ?>
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo $t_localplay; ?></span>
-          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_info', 'header-img ' . ((isset($_COOKIE['sb_localplay_info'])) ? $_COOKIE['sb_localplay_info'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_info', 'header-img ' . $state_localplay_info); ?>
       </h4>
-    <ul class="sb3" id="sb_localplay_info">
+    <ul class="sb3" id="sb_localplay_info" <?php echo ($state_localplay_info == 'collapsed') ? 'style="display: none;"' : ''; ?>>
 <?php if (Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::MANAGER)) { ?>
     <li id="sb_localplay_info_add_instance"><a href="<?php echo $web_path; ?>/localplay.php?action=show_add_instance"><?php echo T_('Add Instance'); ?></a></li>
     <li id="sb_localplay_info_show_instances"><a href="<?php echo $web_path; ?>/localplay.php?action=show_instances"><?php echo T_('Show Instances'); ?></a></li>
@@ -69,9 +75,9 @@ if ($server_allow && $controller && $access_check) { ?>
   <li>
     <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('Active Instance'); ?></span>
-          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_instance', 'header-img ' . ((isset($_COOKIE['sb_localplay_instance'])) ? $_COOKIE['sb_localplay_instance'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'localplay_instance', 'header-img ' . $state_localplay_instance); ?>
     </h4>
-    <ul class="sb3" id="sb_localplay_instance">
+    <ul class="sb3" id="sb_localplay_instance" <?php echo ($state_localplay_instance == 'collapsed') ? 'style="display: none;"' : ''; ?>>
       <li id="sb_localplay_instance_none"<?php echo $class; ?>><?php echo Ajax::text('?page=localplay&action=set_instance&instance=0', T_('None'), 'localplay_instance_none'); ?></li>
     <?php
         // Requires a little work.. :(

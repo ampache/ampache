@@ -853,7 +853,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [82, 'now_playing_per_user', '1', T_('Now Playing filtered per user'), AccessLevelEnum::CONTENT_MANAGER->value,'boolean', 'interface', 'home']);
                     break;
                 case 'album_sort':
-                    Dba::write($pref_sql, [83, 'album_sort', '0', T_('Album - Default sort'), AccessLevelEnum::USER->value,'string', 'interface', 'library']);
+                    Dba::write($pref_sql, [83, 'album_sort', 'default', T_('Album - Default sort'), AccessLevelEnum::USER->value,'string', 'interface', 'library']);
                     break;
                 case 'show_played_times':
                     Dba::write($pref_sql, [84, 'show_played_times', '0', T_('Show # played'), AccessLevelEnum::USER->value,'string', 'interface', 'browse']);
