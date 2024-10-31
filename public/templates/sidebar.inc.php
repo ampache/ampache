@@ -189,9 +189,11 @@ $t_logout          = T_('Log out'); ?>
         // Finds the elements and if the cookie is collapsed, it collapsed the found element.
         for (var key in result) {
             if ($("#" + key).length && result[key] == "collapsed") {
-                $("#" + key).removeClass("expanded");
-                $("#" + key).addClass("collapsed");
-                $("#" + key).parent().next().slideToggle(0);
+                if ($("#" + key).hasClass("expanded")) {
+                    $("#" + key).removeClass("expanded");
+                    $("#" + key).addClass("collapsed");
+                    $("#" + key).parent().next().slideToggle(0);
+                }
             }
         }
     });
