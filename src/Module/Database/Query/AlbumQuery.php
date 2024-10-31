@@ -294,7 +294,7 @@ final class AlbumQuery implements QueryInterface
                         break;
                     case 'default':
                     default:
-                        $sql .= '`album`.`name`, ' . $order . `album` . `' . $original_year . '`;
+                        $sql .= '`album`.`name` ' . $order . ', `album`' . `' . $original_year . '`;
                 }
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
