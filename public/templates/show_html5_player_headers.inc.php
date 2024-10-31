@@ -592,7 +592,7 @@ if ($iframed) { ?>
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
             if (typeof jpuqid === 'undefined' || (typeof jpuqid !== 'undefined' && event.newValue != jpuqid)) {
-                if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
+                if (typeof $("#jquery_jplayer_1").data("jPlayer") !== 'undefined' && !$("#jquery_jplayer_1").data("jPlayer").status.paused) {
                     $("#jquery_jplayer_1").data("jPlayer").pause();
                 }
             }
