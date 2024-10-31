@@ -118,18 +118,19 @@ foreach ($data as $row) {
                 $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
         }
-        $media->format(); ?>
+
+        $object_type = $row['object_type']; ?>
             <tr>
                 <td class="cel_play">
                     <span class="cel_play_content">&nbsp;</span>
                     <div class="cel_play_hover">
                         <?php if (AmpConfig::get('directplay')) { ?>
-                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId(), 'play_circle', T_('Play'), 'play_song_' . $count . '_' . $media->getId()); ?>
+                            <?php echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $media->getId(), 'play_circle', T_('Play'), 'play_' . $object_type . '_' . $count . '_' . $media->getId()); ?>
                             <?php if (Stream_Playlist::check_autoplay_next()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_song_' . $count . '_' . $media->getId()); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $media->getId() . '&playnext=true', 'menu_open', T_('Play next'), 'nextplay_' . $object_type . '_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                             <?php if (Stream_Playlist::check_autoplay_append()) { ?>
-                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=song&object_id=' . $media->getId() . '&append=true', 'low_priority', T_('Play last'), 'addplay_song_' . $count . '_' . $media->getId()); ?>
+                                <?php echo Ajax::button('?page=stream&action=directplay&object_type=' . $object_type . '&object_id=' . $media->getId() . '&append=true', 'low_priority', T_('Play last'), 'addplay_' . $object_type . '_' . $count . '_' . $media->getId()); ?>
                             <?php } ?>
                         <?php } ?>
                     </div>

@@ -4396,11 +4396,6 @@ parameters:
 			path: src/Module/Authentication/Authenticator/LdapAuthenticator.php
 
 		-
-			message: "#^Function pam_auth invoked with 2 parameters, 3\\-5 required\\.$#"
-			count: 1
-			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Authentication\\\\Authenticator\\\\PamAuthenticator\\:\\:auth\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Authentication/Authenticator/PamAuthenticator.php
@@ -5636,11 +5631,6 @@ parameters:
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Localplay\\\\Upnp\\\\UPnPPlayer\\:\\:CallAsyncURL\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Localplay/Upnp/UPnPPlayer.php
@@ -6567,11 +6557,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:info\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Module/System/LegacyLogger.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\System\\\\LegacyLogger\\:\\:log\\(\\) has parameter \\$level with no type specified\\.$#"
 			count: 1
 			path: src/Module/System/LegacyLogger.php
 

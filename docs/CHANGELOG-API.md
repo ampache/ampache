@@ -33,7 +33,6 @@ This update has counting updates to allow faster responses on larger results
     * advanced_search
     * search_songs
 
-
 ### Changed
 
 * Rename API-CHANGELOG.md => CHANGELOG-API.md

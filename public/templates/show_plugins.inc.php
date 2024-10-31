@@ -49,7 +49,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
                 ? Plugin::get_plugin_version($plugin->_plugin->name)
                 : 0;
             if ($installed_version == 0) {
-                $action = "<a href=\"" . $admin_path . "/modules.php?action=install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
+                $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_install_plugin&plugin=" . scrub_out($plugin_name) . "\">" .
                                 T_('Activate') . "</a>";
             } else {
                 $action = "<a href=\"" . $admin_path . "/modules.php?action=confirm_uninstall_plugin&plugin=" . scrub_out($plugin_name) . "\">" .

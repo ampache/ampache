@@ -330,7 +330,7 @@ class Preference extends database_object
      * This updates a single preference from the given name or id
      * @param string|int $preference
      * @param int $user_id
-     * @param array|string|int|bool|SimpleXMLElement $value
+     * @param array|string|int|bool|SimpleXMLElement|null $value
      * @param bool $applytoall
      * @param bool $applytodefault
      */
@@ -621,8 +621,15 @@ class Preference extends database_object
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
-
         if (!$db_results) {
+            return false;
+        }
+
+        $pref_id = Dba::insert_id();
+        if (
+            !$pref_id ||
+            (int)$pref_id < 1
+        ) {
             return false;
         }
 
@@ -632,13 +639,12 @@ class Preference extends database_object
             $ampacheSeven = false;
         }
 
-        $pref_id = Dba::insert_id();
         if ($ampacheSeven) {
             $params = [$pref_id, $name, $default];
             $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES (-1, ?, ?, ?)";
         } else {
             $params = [$pref_id, $default];
-            $sql    = "INSERT INTO `user_preference` VALUES (-1, ?, ?);";
+            $sql    = "INSERT INTO `user_preference` (`user`, `preference`, `value`) VALUES (-1, ?, ?);";
         }
 
         $db_results = Dba::write($sql, $params);
@@ -648,8 +654,8 @@ class Preference extends database_object
 
         if ($category !== "system") {
             $sql = ($ampacheSeven)
-                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) (SELECT `user`.`id`, ?, ?, ? FROM `user`);"
-                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) (SELECT `user`.`id`, ?, ? FROM `user`);";
+                ? "INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) SELECT `user`.`id`, ?, ?, ? FROM `user`;"
+                : "INSERT INTO `user_preference` (`user`, `preference`, `value`) SELECT `user`.`id`, ?, ? FROM `user`;";
             $db_results = Dba::write($sql, $params);
             if (!$db_results) {
                 return false;
@@ -657,6 +663,9 @@ class Preference extends database_object
         }
 
         debug_event(self::class, 'Inserted preference: ' . $name, 3);
+
+        // clear current user preferences
+        Preference::clear_from_session();
 
         return true;
     }
@@ -844,7 +853,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [82, 'now_playing_per_user', '1', T_('Now Playing filtered per user'), AccessLevelEnum::CONTENT_MANAGER->value,'boolean', 'interface', 'home']);
                     break;
                 case 'album_sort':
-                    Dba::write($pref_sql, [83, 'album_sort', '0', T_('Album - Default sort'), AccessLevelEnum::USER->value,'string', 'interface', 'library']);
+                    Dba::write($pref_sql, [83, 'album_sort', 'default', T_('Album - Default sort'), AccessLevelEnum::USER->value,'string', 'interface', 'library']);
                     break;
                 case 'show_played_times':
                     Dba::write($pref_sql, [84, 'show_played_times', '0', T_('Show # played'), AccessLevelEnum::USER->value,'string', 'interface', 'browse']);
@@ -1000,7 +1009,7 @@ class Preference extends database_object
                     Dba::write($pref_sql, [137, 'custom_favicon', '', T_('Custom URL - Favicon'), AccessLevelEnum::MANAGER->value,'string', 'interface', 'custom']);
                     break;
                 case 'custom_text_footer':
-                    Dba::write($pref_sql, [138, 'custom_text_footer', '', T_('Custom text footer'), AccessLevelEnum::MANAGER->value,'string', 'interface', 'custom']);
+                    Dba::write($pref_sql, [138, 'custom_text_footer', '', T_('Custom text footer'), AccessLevelEnum::MANAGER->value,'string', 'system', 'interface']);
                     break;
                 case 'webdav_backend':
                     Dba::write($pref_sql, [139, 'webdav_backend', '0', T_('Use WebDAV backend'), AccessLevelEnum::ADMIN->value,'boolean', 'system', 'backend']);

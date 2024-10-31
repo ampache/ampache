@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Plugin;
+use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\User;
 use Ampache\Module\Application\ApplicationActionInterface;
 use Ampache\Module\Application\Exception\AccessDeniedException;
@@ -66,7 +67,10 @@ final class InstallPluginAction implements ApplicationActionInterface
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
     {
-        if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false) {
+        if (
+            $gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN) === false ||
+            !$this->requestParser->verifyForm('install_plugin')
+        ) {
             throw new AccessDeniedException();
         }
 
@@ -104,6 +108,8 @@ final class InstallPluginAction implements ApplicationActionInterface
 
             return null;
         }
+
+        Preference::clear_from_session();
 
         // Don't trust the plugin to this stuff
         User::rebuild_all_preferences();

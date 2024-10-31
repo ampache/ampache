@@ -1,5 +1,50 @@
 # CHANGELOG
 
+## Ampache 7.0.1
+
+Fixed some slowdowns due to preference name and location look ups happening for no reason.
+
+### Added
+
+* Translations 2024-10-30
+* Album query sort `album_artist_title` (Sort by artist name then album title)
+* Validate URL input on Custom url preferences
+  * `custom_favicon` (Custom URL - Favicon)
+  * `custom_login_background` (Custom URL - Login page background)
+  * `custom_login_logo` (Custom URL - Login page logo)
+  * `custom_logo` (Custom URL - Logo)
+  * `custom_blankalbum` (Custom blank album default image)
+  * `custom_blankmovie` (Custom blank video default image)
+* Database 701002
+  * Add preference id and name indexes to the `user_preference` table
+  * Convert `custom_text_footer` into a system preference
+
+### Changed
+
+* Fail preference insert if the new id isn't a valid int
+* Ensure URL preferences are input as a valid URL
+* Remove access to `custom_text_footer` preference for users
+* Update Composer requirements
+* Move JS for the sidebar back into the PHP template. (For now)
+
+### Removed
+
+* Stop rebuilding preferences all the time. (This is now fixed up on insert/delete)
+
+### Fixed
+
+* Action buttons using songs for other media types in recently played all
+* Clear session preferences when installing plugins so they appear right away
+* Extra closing div on shout home plugin
+* Garbage collect invalid user preferences (0 preference id)
+* Stats module checking for place names when the data is missing
+* Respect geolocation setting in stats calls and only check valid data
+* Align 'Post Shout' and 'Graphs' text on artist page
+* Missing 'default' string for album_sort (Should match on default but be explicit)
+* Double `/` in JS url
+* Sidebar cookie, JavaScript and visual state were a bit of a disaster
+* Look for the expanded class in the sidebar before toggling collapse
+
 ## Ampache 7.0.0
 
 Information and changes for this major release are recorded in the wiki. [Ampache7 for Admins](https://github.com/ampache/ampache/wiki/ampache7-for-admins) and [Ampache7 for Users](https://github.com/ampache/ampache/wiki/ampache7-for-users).
@@ -110,7 +155,7 @@ I want to just thank everyone who has helped over the last year on this version 
 
 ### Removed
 
-* Support for PHP greater than 8.2
+* Support for PHP versions less than 8.2
 * Unused stream actions
 * Old composer files
 * Unused PNG icons

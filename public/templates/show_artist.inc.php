@@ -151,6 +151,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             $sort  = $original_year;
             $order = 'DESC';
             break;
+        case 'default':
         default:
             $sort  = 'name_' . $original_year;
             $order = 'ASC';
@@ -226,11 +227,11 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
 <?php } ?>
 <?php if (!AmpConfig::get('use_auth') || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('sociable')) {
-        $postshout = "&nbsp;" . T_('Post Shout'); ?>
+        $postshout = T_('Post Shout'); ?>
         <li>
             <a href="<?php echo $web_path; ?>/shout.php?action=show_add_shout&type=artist&id=<?php echo $artist->id; ?>">
-        <?php echo Ui::get_material_symbol('comment', $postshout);
-        echo $postshout; ?>
+                <?php echo Ui::get_material_symbol('comment', $postshout); ?>
+                <?php echo $postshout; ?>
             </a>
         </li>
     <?php }
@@ -250,8 +251,8 @@ if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(Acce
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">
-                        <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs'));
-                echo T_('Graphs'); ?>
+                        <?php echo Ui::get_material_symbol('bar_chart', T_('Graphs')); ?>
+                        <?php echo T_('Graphs'); ?>
                     </a>
                 </li>
             <?php }

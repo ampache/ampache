@@ -106,8 +106,7 @@ foreach ($data as $row) {
                 $interval    = floor($interval / 315569260);
                 $time_string = sprintf(nT_('%d decade ago', '%d decades ago', $interval), $interval);
             }
-        }
-        $song->format(); ?>
+        } ?>
             <tr>
                 <td class="cel_play">
                     <span class="cel_play_content">&nbsp;</span>

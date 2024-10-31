@@ -52,7 +52,7 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
                 $action     = 'confirm_uninstall_localplay';
                 $action_txt = T_('Disable');
             } else {
-                $action     = 'install_localplay';
+                $action     = 'confirm_install_localplay';
                 $action_txt = T_('Enable');
             } ?>
         <tr>

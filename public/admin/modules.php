@@ -23,6 +23,9 @@ declare(strict_types=1);
  *
  */
 
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallCatalogType;
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallLocalplayAction;
+use Ampache\Module\Application\Admin\Modules\ConfirmInstallPluginAction;
 use Ampache\Module\Application\Admin\Modules\ConfirmUninstallCatalogType;
 use Ampache\Module\Application\Admin\Modules\ConfirmUninstallLocalplayAction;
 use Ampache\Module\Application\Admin\Modules\ConfirmUninstallPluginAction;
@@ -47,15 +50,18 @@ $dic = require __DIR__ . '/../../src/Config/Init.php';
 $dic->get(ApplicationRunner::class)->run(
     $dic->get(ServerRequestCreatorInterface::class)->fromGlobals(),
     [
-        InstallLocalplayAction::REQUEST_KEY => InstallLocalplayAction::class,
         ShowAction::REQUEST_KEY => ShowAction::class,
-        InstallCatalogTypeAction::REQUEST_KEY => InstallCatalogTypeAction::class,
-        ConfirmUninstallLocalplayAction::REQUEST_KEY => ConfirmUninstallLocalplayAction::class,
+        ConfirmInstallCatalogType::REQUEST_KEY => ConfirmInstallCatalogType::class,
+        ConfirmInstallLocalplayAction::REQUEST_KEY => ConfirmInstallLocalplayAction::class,
+        ConfirmInstallPluginAction::REQUEST_KEY => ConfirmInstallPluginAction::class,
         ConfirmUninstallCatalogType::REQUEST_KEY => ConfirmUninstallCatalogType::class,
+        ConfirmUninstallLocalplayAction::REQUEST_KEY => ConfirmUninstallLocalplayAction::class,
+        ConfirmUninstallPluginAction::REQUEST_KEY => ConfirmUninstallPluginAction::class,
+        InstallLocalplayAction::REQUEST_KEY => InstallLocalplayAction::class,
+        InstallPluginAction::REQUEST_KEY => InstallPluginAction::class,
+        InstallCatalogTypeAction::REQUEST_KEY => InstallCatalogTypeAction::class,
         UninstallLocalplayAction::REQUEST_KEY => UninstallLocalplayAction::class,
         UninstallCatalogTypeAction::REQUEST_KEY => UninstallCatalogTypeAction::class,
-        InstallPluginAction::REQUEST_KEY => InstallPluginAction::class,
-        ConfirmUninstallPluginAction::REQUEST_KEY => ConfirmUninstallPluginAction::class,
         UninstallPluginAction::REQUEST_KEY => UninstallPluginAction::class,
         UpgradePluginAction::REQUEST_KEY => UpgradePluginAction::class,
         ShowPluginsAction::REQUEST_KEY => ShowPluginsAction::class,

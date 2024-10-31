@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ampache\n"
 "Report-Msgid-Bugs-To: https://www.transifex.com/projects/p/ampache/\n"
-"POT-Creation-Date: 2024-10-08 08:57+1000\n"
+"POT-Creation-Date: 2024-10-11 10:25+1000\n"
 "PO-Revision-Date: 2015-05-12 16:07+0000\n"
 "Last-Translator: Frederik Gschaider <frederik.gschaider@gmail.com>, 2022\n"
 "Language-Team: German (Germany) (http://app.transifex.com/ampache/ampache/language/de_DE/)\n"
@@ -72,7 +72,7 @@ msgstr "Katalog"
 #: ../../public/templates/show_export.inc.php:40
 #: ../../public/templates/show_mail_users.inc.php:39
 #: ../../public/templates/show_random.inc.php:86
-#: ../../src/Config/functions.php:869
+#: ../../src/Config/functions.php:867
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:53
 #: ../../src/Module/Application/Admin/Access/Lib/AccessListItem.php:76
 msgid "All"
@@ -226,11 +226,11 @@ msgstr "Aus Liebe zur Musik"
 #: ../../public/templates/error_page.inc.php:59
 #: ../../public/templates/test_error_page.inc.php:57
 #: ../../src/Config/functions.php:471
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:122
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:92
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:130
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:90
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:80
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:173
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:91
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:89
 #: ../../src/Repository/Model/Catalog.php:2318
 msgid "Error"
 msgstr "Fehler"
@@ -480,7 +480,7 @@ msgid "Loading"
 msgstr "Lade"
 
 #: ../../public/templates/header.inc.php:258
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:64
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:63
 msgid "Your Ampache config file is out of date!"
 msgstr "Deine Ampache Konfigurationsdatei ist veraltet! "
 
@@ -1318,7 +1318,7 @@ msgid "Generate new RSS token"
 msgstr "Erstelle neues RSS Token"
 
 #: ../../public/templates/show_account.inc.php:145
-#: ../../public/templates/show_edit_user.inc.php:216
+#: ../../public/templates/show_edit_user.inc.php:234
 #: ../../public/templates/show_manage_catalogs.inc.php:54
 msgid "Clear Stats"
 msgstr "Statistiken löschen"
@@ -1885,7 +1885,7 @@ msgstr "Gefunden"
 #: ../../public/templates/show_search_row.inc.php:67
 #: ../../public/templates/show_video.inc.php:54
 #: ../../public/templates/sidebar_localplay.inc.php:75
-#: ../../src/Config/functions.php:790 ../../src/Module/Util/Ui.php:962
+#: ../../src/Config/functions.php:796 ../../src/Module/Util/Ui.php:962
 #: ../../src/Module/Util/Ui.php:1023
 #: ../../src/Repository/Model/Democratic.php:634
 msgid "None"
@@ -1994,10 +1994,10 @@ msgstr "Musiklizenz"
 
 #: ../../public/templates/show_add_upload.inc.php:339
 #: ../../public/templates/show_test_table.inc.php:44
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:80
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:71
-#: ../../src/Module/Cli/SortFilesCommand.php:72
-#: ../../src/Module/Cli/UpdateDbCommand.php:96
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:79
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:69
+#: ../../src/Module/Cli/SortFilesCommand.php:70
+#: ../../src/Module/Cli/UpdateDbCommand.php:94
 msgid "WARNING"
 msgstr "WARNUNG"
 
@@ -2186,6 +2186,8 @@ msgstr "Benutzer hinzufügen"
 #: ../../src/Module/Catalog/Catalog_remote.php:136
 #: ../../src/Module/Catalog/Catalog_subsonic.php:134
 #: ../../src/Module/Cli/AdminAddUserCommand.php:55
+#: ../../src/Module/Cli/AdminListUsersCommand.php:44
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:44
 #: ../../src/Module/Playback/Localplay/Xbmc/AmpacheXbmc.php:189
 #: ../../src/Module/User/Registration.php:67
 #: ../../src/Module/User/Registration.php:88
@@ -2754,7 +2756,7 @@ msgstr "Wähle ein neues Cover"
 
 #: ../../public/templates/show_arts.inc.php:72
 #: ../../public/templates/show_ip_history.inc.php:73
-#: ../../src/Repository/Model/User.php:1037
+#: ../../src/Repository/Model/User.php:1041
 msgid "Invalid"
 msgstr "Ungültig"
 
@@ -2914,8 +2916,8 @@ msgstr "Beschreibung"
 #: ../../public/templates/show_plugins.inc.php:39
 #: ../../public/templates/show_plugins.inc.php:83
 #: ../../src/Gui/System/UpdateViewAdapter.php:120
-#: ../../src/Module/Cli/ShowVersionCommand.php:39
-#: ../../src/Module/Cli/ShowVersionCommand.php:44
+#: ../../src/Module/Cli/ShowVersionCommand.php:38
+#: ../../src/Module/Cli/ShowVersionCommand.php:43
 msgid "Version"
 msgstr "Version"
 
@@ -3482,7 +3484,38 @@ msgstr ""
 msgid "Other Options"
 msgstr "Sonstige Optionen"
 
+#: ../../public/templates/show_edit_user.inc.php:217
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:40
+msgid "Config Preset"
+msgstr "Standardeinstellungen"
+
+#: ../../public/templates/show_edit_user.inc.php:221
+#: ../../public/templates/show_install_config.inc.php:132
+#: ../../public/templates/show_manage_democratic.inc.php:42
+#: ../../src/Module/Util/Ui.php:1238 ../../src/Module/Util/Ui.php:1254
+#: ../../src/Module/Util/Ui.php:1277
+msgid "Default"
+msgstr "Standard"
+
 #: ../../public/templates/show_edit_user.inc.php:222
+#: ../../public/templates/show_install_config.inc.php:137
+msgid "Minimalist"
+msgstr "Minimal"
+
+#: ../../public/templates/show_edit_user.inc.php:223
+#: ../../public/templates/show_install_config.inc.php:142
+msgid "Community"
+msgstr "Community"
+
+#: ../../public/templates/show_edit_user.inc.php:228
+msgid "Prevent Preset Override"
+msgstr ""
+
+#: ../../public/templates/show_edit_user.inc.php:229
+msgid "This affects all non-admin accounts"
+msgstr ""
+
+#: ../../public/templates/show_edit_user.inc.php:240
 msgid "Update User"
 msgstr "Benutzer aktualisieren"
 
@@ -4030,29 +4063,14 @@ msgid ""
 msgstr "Konfiguriere Ampache für deinen Anwendungsfall. Features werden automatisch aktiviert und deaktiviert."
 
 #: ../../public/templates/show_install_config.inc.php:132
-#: ../../public/templates/show_manage_democratic.inc.php:42
-#: ../../src/Module/Util/Ui.php:1238 ../../src/Module/Util/Ui.php:1254
-#: ../../src/Module/Util/Ui.php:1277
-msgid "Default"
-msgstr "Standard"
-
-#: ../../public/templates/show_install_config.inc.php:132
 msgid "Ampache is configured for personal use with the best features."
 msgstr "Ampache wurde für die persönliche Nutzung, mit den umfangreichsten Features, konfiguriert."
-
-#: ../../public/templates/show_install_config.inc.php:137
-msgid "Minimalist"
-msgstr "Minimal"
 
 #: ../../public/templates/show_install_config.inc.php:137
 msgid ""
 "Only essential features are enabled to simply stream your music from the Web"
 " Interface."
 msgstr "Nur die wichtigsten Features, zum streamen deiner Musik über das Web Interface, werden eingerichtet."
-
-#: ../../public/templates/show_install_config.inc.php:142
-msgid "Community"
-msgstr "Community"
 
 #: ../../public/templates/show_install_config.inc.php:142
 msgid ""
@@ -4290,7 +4308,7 @@ msgstr "Agent"
 #: ../../src/Repository/Model/playlist_object.php:98
 #: ../../src/Repository/Model/playlist_object.php:101
 #: ../../src/Repository/Model/Preference.php:375
-#: ../../src/Repository/Model/User.php:1021
+#: ../../src/Repository/Model/User.php:1025
 #: ../../src/Repository/Model/Video.php:822
 msgid "Unknown"
 msgstr "Unbekannt"
@@ -4453,7 +4471,9 @@ msgstr "Ihnen selbst"
 #: ../../src/Module/Api/Edit/ShowEditObjectAction.php:72
 #: ../../src/Module/System/Update/Migration/V5/Migration500013.php:67
 #: ../../src/Module/System/Update/Migration/V5/Migration500013.php:68
-#: ../../src/Repository/Model/User.php:1283
+#: ../../src/Repository/Model/User.php:492
+#: ../../src/Repository/Model/User.php:895
+#: ../../src/Repository/Model/User.php:1287
 msgid "System"
 msgstr "System"
 
@@ -4752,7 +4772,7 @@ msgstr "Für alle anwenden"
 #: ../../public/templates/show_preference_box.inc.php:59
 #: ../../public/templates/show_preference_box.inc.php:130
 #: ../../src/Module/Cli/AdminAddUserCommand.php:51
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:42
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:40
 msgid "Access Level"
 msgstr "Berechtigungsebene"
 
@@ -5065,7 +5085,7 @@ msgid "Do you really want to delete this Tag?"
 msgstr "Möchtest Du diesen Tag wirklich löschen?"
 
 #: ../../public/templates/show_tagcloud.inc.php:92
-#: ../../src/Repository/Model/User.php:1039
+#: ../../src/Repository/Model/User.php:1043
 msgid "Not Enough Data"
 msgstr "Nicht genügend Informationen"
 
@@ -5385,7 +5405,7 @@ msgstr "Der Validierungsschlüssel ist ungültig"
 #: ../../src/Repository/Model/Catalog.php:944
 #: ../../src/Repository/Model/Catalog.php:947
 #: ../../src/Repository/Model/Catalog.php:950
-#: ../../src/Repository/Model/User.php:1015
+#: ../../src/Repository/Model/User.php:1019
 msgid "Never"
 msgstr "Niemals"
 
@@ -5753,7 +5773,7 @@ msgstr "Neu hinzufügen"
 
 #. HINT: Requested object string/id/type ("album", "myusername", "some song
 #. title", 1298376)
-#: ../../src/Config/functions.php:798
+#: ../../src/Config/functions.php:794
 #: ../../src/Module/Api/Method/Api5/AlbumSongs5Method.php:63
 #: ../../src/Module/Api/Method/Api5/Artist5Method.php:60
 #: ../../src/Module/Api/Method/Api5/ArtistAlbums5Method.php:59
@@ -5812,7 +5832,7 @@ msgstr "Neu hinzufügen"
 msgid "Not Found: %s"
 msgstr "Nicht gefunden: %s"
 
-#: ../../src/Config/functions.php:855
+#: ../../src/Config/functions.php:853
 msgid "View License"
 msgstr "Lizenz ansehen"
 
@@ -5913,10 +5933,10 @@ msgid "Art files written: %d"
 msgstr "Cover geschrieben: %d"
 
 #: ../../src/Module/Api/Api4.php:192
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:67
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:87
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:66
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:86
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:65
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:85
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:64
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:84
 msgid "Missing mandatory parameter"
 msgstr "Benötigter Parameter fehlt"
 
@@ -6471,7 +6491,7 @@ msgstr "ACL ist schon vorhanden"
 #: ../../src/Module/Application/Admin/User/GenerateApiKeyAction.php:91
 #: ../../src/Module/Application/Admin/User/GenerateRssTokenAction.php:91
 #: ../../src/Module/Application/Admin/User/GenerateStreamTokenAction.php:91
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:188
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:202
 #: ../../src/Module/Application/Album/ConfirmDeleteAction.php:92
 #: ../../src/Module/Application/Art/ClearArtAction.php:73
 #: ../../src/Module/Application/Art/FindArtAction.php:118
@@ -6593,7 +6613,7 @@ msgstr "Der Katalog wurde gelöscht"
 #: ../../src/Module/Application/Admin/Modules/InstallPluginAction.php:98
 #: ../../src/Module/Application/Admin/User/ConfirmDeleteAction.php:95
 #: ../../src/Module/Application/Admin/User/ConfirmDisableAction.php:96
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:177
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:185
 #: ../../src/Module/Application/Album/ConfirmDeleteAction.php:98
 #: ../../src/Module/Application/Art/FindArtAction.php:124
 #: ../../src/Module/Application/Artist/ConfirmDeleteAction.php:98
@@ -6819,23 +6839,23 @@ msgid ""
 msgstr "Deine Datenbank und die zugehörigen Tabellen wurden aktualisiert um dem eingestellten Zeichensatz zu entsprechen."
 
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:100
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:109
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:117
 msgid "Your Passwords don't match"
 msgstr "Die eingegebenen Passwörter stimmen nicht überein"
 
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:104
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:104
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:112
 msgid "A Username is required"
 msgstr "Ein Benutzername wird benötigt"
 
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:109
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:106
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:114
 #: ../../src/Module/Application/Register/AddUserAction.php:163
 msgid "That Username already exists"
 msgstr "Der Benutzername ist schon vorhanden"
 
 #: ../../src/Module/Application/Admin/User/AddUserAction.php:117
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:114
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:122
 msgid "You entered an invalid e-mail address"
 msgstr "Deine eingegebene E-Mail-Adresse ist ungültig"
 
@@ -6934,14 +6954,14 @@ msgstr ""
 msgid "%s IP History"
 msgstr "%s IP Historie"
 
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:180
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:188
 #, php-format
 msgid ""
 "Please check your image is within the minimum %1$s and maximum %2$s "
 "dimensions"
 msgstr "Bitte stelle sicher, dass das Bild mindestens %1$s und maximal %2$s Pixel groß ist"
 
-#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:189
+#: ../../src/Module/Application/Admin/User/UpdateUserAction.php:203
 #, php-format
 msgid "%s (%s) updated"
 msgstr "%s (%s) aktualisiert"
@@ -7264,8 +7284,8 @@ msgid "You must enter a password"
 msgstr "Du musst ein Passwort eingeben"
 
 #: ../../src/Module/Application/Register/AddUserAction.php:159
-#: ../../src/Module/System/InstallationHelper.php:460
-#: ../../src/Repository/Model/User.php:495
+#: ../../src/Module/System/InstallationHelper.php:461
+#: ../../src/Repository/Model/User.php:498
 msgid "Passwords do not match"
 msgstr "Fehler: Die eingegebenen Passwörter stimmen nicht überein"
 
@@ -7571,7 +7591,7 @@ msgstr "URI"
 
 #: ../../src/Module/Catalog/Catalog_remote.php:181
 #: ../../src/Module/Catalog/Catalog_subsonic.php:179
-#: ../../src/Module/System/InstallationHelper.php:454
+#: ../../src/Module/System/InstallationHelper.php:455
 msgid "No username or password was specified"
 msgstr "Es wurde kein Benutzername und/oder Passwort angegeben"
 
@@ -7585,36 +7605,38 @@ msgstr "Dieser Pfad gehört schon zu dem bereits existierenden entfernten Katalo
 msgid "Running Remote Update"
 msgstr "Bearbeite entfernte Aktualisierung"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:260
+#: ../../src/Module/Catalog/Catalog_remote.php:249
+#: ../../src/Module/Catalog/Catalog_remote.php:264
+#: ../../src/Module/Catalog/Catalog_remote.php:268
 msgid "Failed to connect to the remote server"
 msgstr "Bei der Verbindung zum entfernten Server ist ein Fehler aufgetreten"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:295
+#: ../../src/Module/Catalog/Catalog_remote.php:303
 msgid "Remote Catalog Updated"
 msgstr "Der entfernte Katalog wurde aktualisiert"
 
 #. HINT: count of songs found
-#: ../../src/Module/Catalog/Catalog_remote.php:297
+#: ../../src/Module/Catalog/Catalog_remote.php:305
 #, php-format
 msgid "%s song was found"
 msgid_plural "%s songs were found"
 msgstr[0] "%s Song gefunden"
 msgstr[1] "%s Songs gefunden"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:379
+#: ../../src/Module/Catalog/Catalog_remote.php:387
 #: ../../src/Module/Catalog/Catalog_subsonic.php:306
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:81
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:86
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:79
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:85
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:133
 #: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:193
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:77
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:80
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:75
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:78
 #: ../../src/Repository/Model/Catalog.php:2316
 #: ../../src/Repository/Model/Search.php:728
 msgid "Updated"
 msgstr "Aktualisiert"
 
-#: ../../src/Module/Catalog/Catalog_remote.php:379
+#: ../../src/Module/Catalog/Catalog_remote.php:387
 msgid "Completed updating remote Catalog(s)."
 msgstr "Die Aktualisierung der/des entfernten Kataloge(s) ist abgeschlossen."
 
@@ -7864,7 +7886,7 @@ msgstr "Entferne Datei: \"%s\""
 
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFile.php:118
 #: ../../src/Module/Catalog/Update/UpdateSingleCatalogFolder.php:124
-#: ../../src/Module/Cli/PrintTagsCommand.php:62
+#: ../../src/Module/Cli/PrintTagsCommand.php:60
 #, php-format
 msgid "Reading File: \"%s\""
 msgstr "Lese Datei: \"%s\""
@@ -7910,56 +7932,69 @@ msgstr "Benutzer mit Zugriffslevel %s, Benutzername %s und Passwort %s erstellt"
 msgid "User creation failed"
 msgstr "Die Erstellung des Benutzers ist fehlgeschlagen!"
 
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:37
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:47
-msgid "Reset preference values for users"
+#: ../../src/Module/Cli/AdminListUsersCommand.php:38
+msgid "Users List"
 msgstr ""
 
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:39
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:48
-#: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:53
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:39
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:39
-#: ../../src/Module/Cli/HtaccessCommand.php:48
-msgid "Execute the update"
-msgstr "Die Aktualisierung ausführen"
-
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:40
+#: ../../src/Module/Cli/AdminListUsersCommand.php:43
 #: ../../src/Module/Cli/ExportPlaylistCommand.php:44
 msgid "User ID"
 msgstr "Benutzer ID"
 
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:43
-msgid "Config Preset"
-msgstr "Standardeinstellungen"
+#: ../../src/Module/Cli/AdminListUsersCommand.php:45
+msgid "Find a User with the name `some-user`"
+msgstr ""
 
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:62
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:71
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:62
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:61
+#: ../../src/Module/Cli/AdminListUsersCommand.php:66
+#: ../../src/Module/Cli/AdminListUsersCommand.php:80
+#, php-format
+msgid "%s (%d)"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:35
+msgid "Reset preference values for users"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:37
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:47
+#: ../../src/Module/Cli/AdminUpdateDatabaseCommand.php:53
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:37
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:37
+#: ../../src/Module/Cli/HtaccessCommand.php:48
+msgid "Execute the update"
+msgstr "Die Aktualisierung ausführen"
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:45
+msgid "Reset preferences for some-user to default values"
+msgstr ""
+
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:60
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:70
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:60
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:59
 msgid "Running in Test Mode. Use -e|--execute to update"
 msgstr ""
 
-#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:72
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:75
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:66
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:71
-#: ../../src/Module/Cli/UpdateDbCommand.php:91
+#: ../../src/Module/Cli/AdminResetPreferencesCommand.php:70
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:74
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:64
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:69
+#: ../../src/Module/Cli/UpdateDbCommand.php:89
 msgid "No changes have been made"
 msgstr "Es wurden keinen Veränderungen vorgenommen"
 
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:43
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:42
 msgid "Update the Ampache config file"
 msgstr ""
 
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:49
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:48
 msgid "Update the config file"
 msgstr ""
 
-#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:80
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:71
-#: ../../src/Module/Cli/SortFilesCommand.php:72
-#: ../../src/Module/Cli/UpdateDbCommand.php:96
+#: ../../src/Module/Cli/AdminUpdateConfigFileCommand.php:79
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:69
+#: ../../src/Module/Cli/SortFilesCommand.php:70
+#: ../../src/Module/Cli/UpdateDbCommand.php:94
 msgid "Running in Write Mode. Make sure you've tested first!"
 msgstr "Schreibmodus! Hoffentlich hast du vorher einen Testlauf gestartet!"
 
@@ -8022,121 +8057,121 @@ msgstr "Die folgenden Aktualisierungen müssen eingespielt werden:"
 msgid "No update needed"
 msgstr "Es wird keine Aktualisierung benötigt"
 
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:37
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:40
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:35
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:38
 #: ../../src/Repository/Model/Plugin.php:388
 msgid "Update Plugins automatically"
 msgstr ""
 
-#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:55
+#: ../../src/Module/Cli/AdminUpdatePluginsCommand.php:53
 #: ../../src/Module/System/AutoUpdate.php:388
 #: ../../src/Repository/Model/Plugin.php:386
 msgid "Update available"
 msgstr "Eine Aktualisierung ist verfügbar"
 
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:37
-#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:46
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:35
+#: ../../src/Module/Cli/AdminUpdatePreferenceAccessLevelCommand.php:44
 msgid "Update Preference Access Level"
 msgstr ""
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:43
+#: ../../src/Module/Cli/ArtCleanupCommand.php:42
 msgid "Remove art which does not fit to the settings"
 msgstr "Entferne Bilder, die nicht zu den Einstellungen passen"
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:75
+#: ../../src/Module/Cli/ArtCleanupCommand.php:73
 msgid ""
 "Error: A minimum OR maximum height/width must be specified in the config"
 msgstr "Fehler: In der Konfiguration muss eine minimale ODER maximale Höhe/Breite angegeben werden."
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:79
+#: ../../src/Module/Cli/ArtCleanupCommand.php:77
 msgid "Minimum Dimensions: album_art_min_width AND album_art_min_height"
 msgstr "Minimale Abmessungen: album_art_min_width UND album_art_min_height"
 
-#: ../../src/Module/Cli/ArtCleanupCommand.php:83
+#: ../../src/Module/Cli/ArtCleanupCommand.php:81
 msgid "Maximum Dimensions: album_art_max_width AND album_art_max_height"
 msgstr "Maximale Abmessungen: album_art_max_width UND album_art_max_height"
 
-#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:42
+#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:41
 msgid "Run art size calculation"
 msgstr "Starte Bildgrößenberechnung"
 
-#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:56
+#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:54
 msgid "Started art size calculation"
 msgstr "Bildgrößenberechnung wurde gestartet"
 
-#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:85
+#: ../../src/Module/Cli/ArtSizeCalculationCommand.php:83
 msgid "Finished art size calculation"
 msgstr "Bildgrößenberechnung ist fertig"
 
-#: ../../src/Module/Cli/BroadcastCommand.php:40
+#: ../../src/Module/Cli/BroadcastCommand.php:39
 msgid "Run a UPnP broadcast"
 msgstr "Starte einen UPnP Broadcast"
 
-#: ../../src/Module/Cli/BroadcastCommand.php:54
+#: ../../src/Module/Cli/BroadcastCommand.php:52
 msgid "Starting broadcasts..."
 msgstr "Starte Broadcast..."
 
-#: ../../src/Module/Cli/BroadcastCommand.php:60
+#: ../../src/Module/Cli/BroadcastCommand.php:58
 msgid "UPnP broadcast... "
 msgstr "UPnP Broadcast..."
 
-#: ../../src/Module/Cli/BroadcastCommand.php:65
+#: ../../src/Module/Cli/BroadcastCommand.php:63
 #: ../../src/Module/System/AutoUpdate.php:422
 #: ../../src/Module/System/AutoUpdate.php:471
 msgid "Done"
 msgstr "Erledigt"
 
-#: ../../src/Module/Cli/BroadcastCommand.php:70
+#: ../../src/Module/Cli/BroadcastCommand.php:68
 msgid "UPnP backend disabled. Broadcast skipped."
 msgstr "UPnP Backend ist deaktiviert. Broadcast wurde überspringen."
 
-#: ../../src/Module/Cli/CacheProcessCommand.php:40
+#: ../../src/Module/Cli/CacheProcessCommand.php:39
 msgid "Run the cache process"
 msgstr "Cache Prozess starten"
 
-#: ../../src/Module/Cli/CacheProcessCommand.php:54
-#: ../../src/Module/Cli/ComputeCacheCommand.php:54
+#: ../../src/Module/Cli/CacheProcessCommand.php:52
+#: ../../src/Module/Cli/ComputeCacheCommand.php:51
 msgid "Start cache process"
 msgstr "Cacheverarbeitung beginnen"
 
-#: ../../src/Module/Cli/CacheProcessCommand.php:66
-#: ../../src/Module/Cli/ComputeCacheCommand.php:62
+#: ../../src/Module/Cli/CacheProcessCommand.php:64
+#: ../../src/Module/Cli/ComputeCacheCommand.php:59
 msgid "Completed cache process"
 msgstr "Cacheverarbeitung beendet"
 
-#: ../../src/Module/Cli/ComputeCacheCommand.php:39
+#: ../../src/Module/Cli/ComputeCacheCommand.php:38
 msgid "Update the object cache tables"
 msgstr "Aktualisiere Tabellen des Objektcaches"
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:39
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:38
 msgid "Convert filenames using a charset"
 msgstr "Dateinamen anhand eines Zeichensatzes umwandeln"
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:44
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:43
 msgid "Enables `fire-and-forget`-mode (Disables prompting on rename)"
 msgstr "Aktiviert \"fire-and-forget\"-Modus (Deaktiviert ein Nachfragen bei Umbenennungen)"
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:45
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:44
 msgid "The destination charset"
 msgstr "Der Zielzeichensatz"
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:46
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:45
 msgid "Convert filenames to utf8"
 msgstr "Dateinamen nach UTF-8 umwandeln"
 
-#: ../../src/Module/Cli/ConvertFileNamesCommand.php:61
+#: ../../src/Module/Cli/ConvertFileNamesCommand.php:59
 msgid "php-iconv is required for this functionality, quitting"
 msgstr "PHP - Modul \"Iconv\" wird für diese Funktion benötigt, breche ab!"
 
-#: ../../src/Module/Cli/CronProcessCommand.php:72
+#: ../../src/Module/Cli/CronProcessCommand.php:71
 msgid "Run the cron process"
 msgstr "Cron-Prozess starten"
 
-#: ../../src/Module/Cli/CronProcessCommand.php:96
+#: ../../src/Module/Cli/CronProcessCommand.php:94
 msgid "Cron cache not enabled"
 msgstr "Cron-Cache nicht aktiviert"
 
-#: ../../src/Module/Cli/CronProcessCommand.php:159
+#: ../../src/Module/Cli/CronProcessCommand.php:157
 msgid "Cron process finished"
 msgstr "Cron-Prozess beendet"
 
@@ -8160,20 +8195,20 @@ msgstr "Album Art Dump Starten"
 msgid "Album Art Dump Complete"
 msgstr "Löschen von Album-Covern fertiggestellt"
 
-#: ../../src/Module/Cli/ExportArtCommand.php:50
-#: ../../src/Module/Cli/ExportArtCommand.php:58
+#: ../../src/Module/Cli/ExportArtCommand.php:49
+#: ../../src/Module/Cli/ExportArtCommand.php:57
 msgid "Export all database art to local_metadata_dir"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportArtCommand.php:57
+#: ../../src/Module/Cli/ExportArtCommand.php:56
 msgid "Clear the database image when the local file exists"
 msgstr ""
 
-#: ../../src/Module/Cli/ExportArtCommand.php:70
+#: ../../src/Module/Cli/ExportArtCommand.php:68
 msgid "Start Art Dump"
 msgstr "Art Dump Starten"
 
-#: ../../src/Module/Cli/ExportArtCommand.php:94
+#: ../../src/Module/Cli/ExportArtCommand.php:92
 msgid "Art Dump Complete"
 msgstr "Art Dump fertiggestellt"
 
@@ -8278,29 +8313,29 @@ msgstr "Neuer Pfad"
 msgid "Update the path of `some-catalog` to /new/path"
 msgstr "Den Pfad von `beliebigem-Katalog` auf /neuen/Pfad aktualisieren"
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:43
+#: ../../src/Module/Cli/PrintTagsCommand.php:42
 msgid "Print file tags"
 msgstr ""
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:48
+#: ../../src/Module/Cli/PrintTagsCommand.php:47
 #: ../../src/Module/Cli/UpdateCatalogFileCommand.php:48
 msgid "File Path"
 msgstr "Dateipfad"
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:49
+#: ../../src/Module/Cli/PrintTagsCommand.php:48
 msgid "Print tags"
 msgstr "Tags ausgeben"
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:93
+#: ../../src/Module/Cli/PrintTagsCommand.php:91
 #, php-format
 msgid "Using: %1$s AND %2$s for file pattern matching"
 msgstr "Verwendung: %1$s UND %2$s für Datei-Übereinstimmungen"
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:104
+#: ../../src/Module/Cli/PrintTagsCommand.php:102
 msgid "Raw results:"
 msgstr "Unbearbeitete Ergebnisse:"
 
-#: ../../src/Module/Cli/PrintTagsCommand.php:117
+#: ../../src/Module/Cli/PrintTagsCommand.php:115
 #, php-format
 msgid "Final results seen by Ampache using %s:"
 msgstr "Ergebnisse wie sie in Ampache angezeigt werden, bei der Verwendung von %s:"
@@ -8317,59 +8352,59 @@ msgstr "Listening-Port, Standard: 8100"
 msgid "Run the websocket on port 8888"
 msgstr "Websocket auf Port 8888 starten"
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:39
+#: ../../src/Module/Cli/SongCleanupCommand.php:38
 msgid "Delete disabled songs"
 msgstr "Deaktivierte Songs löschen"
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:44
-#: ../../src/Module/Cli/SortFilesCommand.php:44
-#: ../../src/Module/Cli/UpdateDbCommand.php:50
+#: ../../src/Module/Cli/SongCleanupCommand.php:43
+#: ../../src/Module/Cli/SortFilesCommand.php:43
+#: ../../src/Module/Cli/UpdateDbCommand.php:49
 msgid "Disables dry-run"
 msgstr ""
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:45
+#: ../../src/Module/Cli/SongCleanupCommand.php:44
 msgid "Show a list of disabled songs"
 msgstr "Liste der deaktivierten Songs anzeigen"
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:61
+#: ../../src/Module/Cli/SongCleanupCommand.php:59
 msgid "The following songs would be deleted:"
 msgstr "Die folgenden Songs würden gelöscht werden:"
 
-#: ../../src/Module/Cli/SongCleanupCommand.php:66
+#: ../../src/Module/Cli/SongCleanupCommand.php:64
 msgid "The following songs have been deleted:"
 msgstr "Die folgenden Songs wurden gelöscht:"
 
-#: ../../src/Module/Cli/SortFilesCommand.php:39
+#: ../../src/Module/Cli/SortFilesCommand.php:38
 msgid "Sort songs files"
 msgstr "Songdateien sortieren"
 
-#: ../../src/Module/Cli/SortFilesCommand.php:45
+#: ../../src/Module/Cli/SortFilesCommand.php:44
 msgid "Rename files and keep them in the current folder"
 msgstr ""
 
-#: ../../src/Module/Cli/SortFilesCommand.php:46
+#: ../../src/Module/Cli/SortFilesCommand.php:45
 msgid "Limit how many moves to allow before stopping"
 msgstr ""
 
-#: ../../src/Module/Cli/SortFilesCommand.php:47
+#: ../../src/Module/Cli/SortFilesCommand.php:46
 msgid "Replace all Windows-incompatible characters with an underscore"
 msgstr ""
 
-#: ../../src/Module/Cli/SortFilesCommand.php:48
+#: ../../src/Module/Cli/SortFilesCommand.php:47
 msgid "Sets the default name for `Various Artists`"
 msgstr "Legt den Standardnamen für `Various Artists` fest"
 
-#: ../../src/Module/Cli/SortFilesCommand.php:49
+#: ../../src/Module/Cli/SortFilesCommand.php:48
 #: ../../src/Module/Cli/UpdateCatalogCommand.php:53
 msgid "Name of Catalog (optional)"
 msgstr "Katalogname (Optional)"
 
-#: ../../src/Module/Cli/SortFilesCommand.php:50
+#: ../../src/Module/Cli/SortFilesCommand.php:49
 msgid "Sort song files"
 msgstr "Songdateien sortieren"
 
-#: ../../src/Module/Cli/SortFilesCommand.php:67
-#: ../../src/Module/Cli/UpdateDbCommand.php:87
+#: ../../src/Module/Cli/SortFilesCommand.php:65
+#: ../../src/Module/Cli/UpdateDbCommand.php:85
 msgid "Running in Test Mode. Use -x to execute"
 msgstr "Ausführung im Testmodus. Benutze -x zum anwenden"
 
@@ -8442,30 +8477,30 @@ msgstr ""
 msgid "Perform catalog actions for a single folder"
 msgstr ""
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:44
+#: ../../src/Module/Cli/UpdateDbCommand.php:43
 msgid "Update the database collation and charset"
 msgstr "Die Kollation und den Zeichensatz der Datenbank aktualisieren"
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:51
+#: ../../src/Module/Cli/UpdateDbCommand.php:50
 msgid "Update the database"
 msgstr "Datenbank aktualisieren"
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:69
+#: ../../src/Module/Cli/UpdateDbCommand.php:67
 msgid ""
 "This script makes changes to your database based on your config settings"
 msgstr "Dieses Skript verändert deine Datenbank aufgrund der Einstellungen in deiner Konfigurationsdatei."
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:73
+#: ../../src/Module/Cli/UpdateDbCommand.php:71
 #, php-format
 msgid "Target charset: %s"
 msgstr "Ziel-Zeichensatz: %s"
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:77
+#: ../../src/Module/Cli/UpdateDbCommand.php:75
 #, php-format
 msgid "Target collation: %s"
 msgstr "Ziel-Kollation: %s"
 
-#: ../../src/Module/Cli/UpdateDbCommand.php:81
+#: ../../src/Module/Cli/UpdateDbCommand.php:79
 #, php-format
 msgid "Table engine: %s"
 msgstr "Tabellen-Engine: %s"
@@ -8697,7 +8732,7 @@ msgid "Updating npm build with `"
 msgstr ""
 
 #: ../../src/Module/System/InstallationHelper.php:102
-#: ../../src/Module/System/InstallationHelper.php:399
+#: ../../src/Module/System/InstallationHelper.php:400
 msgid "Invalid configuration settings"
 msgstr "Ungültige Konfigurationseinstellungen."
 
@@ -8714,8 +8749,8 @@ msgid "Existing database was detected, unable to continue the installation"
 msgstr "Die Datenbank existiert bereits. Die Installation kann so leider nicht fortgesetzt werden"
 
 #: ../../src/Module/System/InstallationHelper.php:196
-#: ../../src/Module/System/InstallationHelper.php:413
-#: ../../src/Module/System/InstallationHelper.php:421
+#: ../../src/Module/System/InstallationHelper.php:414
+#: ../../src/Module/System/InstallationHelper.php:422
 msgid "Config file is not writable"
 msgstr "Die Konfigurationsdatei kann nicht beschrieben werden"
 
@@ -8751,34 +8786,34 @@ msgstr "Der Datenbankbenutzer \"%1$s\" und die erforderlichen Rechte für den Zu
 msgid "Unable to grant permissions to \"%1$s\" for the user \"%2$s\" on \"%3$s\": %4$s"
 msgstr "Es ist nicht möglich die Berechtigungen dem Benutzer %2$s die Berechtigungen für die Datenbank %1$s auf dem Host %3$s zu erteilen. Fehlerdetails: %4$s"
 
-#: ../../src/Module/System/InstallationHelper.php:337
-#: ../../src/Module/System/InstallationHelper.php:344
+#: ../../src/Module/System/InstallationHelper.php:338
+#: ../../src/Module/System/InstallationHelper.php:345
 msgid "Unable to open ampache.sql"
 msgstr ""
 
-#: ../../src/Module/System/InstallationHelper.php:406
+#: ../../src/Module/System/InstallationHelper.php:407
 msgid ""
 "Connection to the database failed: Check hostname, username and password"
 msgstr "Die Verbindung zur Datenbank konnte nicht hergestellt werden. Bitte überprüfe den Hostnamen, den Benutzernamen und das Passwort."
 
-#: ../../src/Module/System/InstallationHelper.php:426
+#: ../../src/Module/System/InstallationHelper.php:427
 msgid "Failed writing config file"
 msgstr "Es ist ein Fehler beim Schreiben der Konfigurationsdatei aufgetreten."
 
 #. HINT: Database error message
-#: ../../src/Module/System/InstallationHelper.php:467
+#: ../../src/Module/System/InstallationHelper.php:468
 #, php-format
 msgid "Connection to the database failed: %s"
 msgstr "Verbindung zur Datenbank nicht möglich. Fehlerdetails: %s"
 
 #. HINT: Database error message
-#: ../../src/Module/System/InstallationHelper.php:474
+#: ../../src/Module/System/InstallationHelper.php:475
 #, php-format
 msgid "Database select failed: %s"
 msgstr "Datenbank konnte nicht gewählt werden. Grund: %s"
 
 #. HINT: Database error message
-#: ../../src/Module/System/InstallationHelper.php:482
+#: ../../src/Module/System/InstallationHelper.php:483
 #, php-format
 msgid "Administrative user creation failed: %s"
 msgstr "Der Administrative Datenbankbenutzer konnte nicht erstellt werden. Fehlerinformationen: %s"
@@ -10892,11 +10927,11 @@ msgstr "Freigabe bearbeiten"
 msgid "Track MusicBrainzID"
 msgstr "MusicBrainz Track-ID"
 
-#: ../../src/Repository/Model/User.php:491
+#: ../../src/Repository/Model/User.php:494
 msgid "Username is required"
 msgstr ""
 
-#: ../../src/Repository/Model/User.php:1303
+#: ../../src/Repository/Model/User.php:1307
 msgid "User avatar"
 msgstr "Profilbild"
 
