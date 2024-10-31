@@ -84,6 +84,7 @@ final class AlbumDiskAction implements ApplicationActionInterface
             case 'year_desc':
                 $browse->set_sort($year_sort, 'DESC');
                 break;
+            case 'default':
             default:
                 $browse->set_sort('name_' . $year_sort, 'ASC');
         }

@@ -34,7 +34,24 @@ use Ampache\Module\Util\Ui;
 
 /** @var string $web_path */
 /** @var string $admin_path */
-/** @var string $t_expander */ ?>
+/** @var string $t_expander */
+
+// expanded by default
+$state_admin_catalogs = (($_COOKIE['sb_admin_catalogs'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_admin_users = (($_COOKIE['sb_admin_users'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_admin_access = (($_COOKIE['sb_admin_access'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_admin_modules = (($_COOKIE['sb_admin_modules'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_admin_server = (($_COOKIE['sb_admin_server'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed'; ?>
 <ul class="sb2" id="sb_admin">
     <?php if (AmpConfig::get('browse_filter')) {
         echo "<li>";
@@ -45,9 +62,9 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Catalogs'); ?></span>
-        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_catalogs', 'header-img ' . ((isset($_COOKIE['sb_admin_catalogs'])) ? $_COOKIE['sb_admin_catalogs'] : 'expanded')); ?>
+        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_catalogs', 'header-img ' . $state_admin_catalogs); ?>
     </h4>
-    <ul class="sb3" id="sb_admin_catalogs">
+    <ul class="sb3" id="sb_admin_catalogs" <?php echo ($state_admin_catalogs == 'collapsed') ? 'style="display: none;"' : ''; ?>>
       <li id="sb_admin_catalogs_Add"><a href="<?php echo $admin_path; ?>/catalog.php?action=show_add_catalog"><?php echo T_('Add Catalog'); ?></a></li>
       <li id="sb_admin_catalogs_Show"><a href="<?php echo $admin_path; ?>/catalog.php?action=show_catalogs"><?php echo T_('Show Catalogs'); ?></a></li>
       <li id="sb_admin_ot_ExportCatalog"><a href="<?php echo $admin_path; ?>/export.php"><?php echo T_('Export Catalog'); ?></a></li>
@@ -64,9 +81,9 @@ use Ampache\Module\Util\Ui;
   <li>
       <h4 class="header">
           <span class="sidebar-header-title"><?php echo T_('User Tools'); ?></span>
-          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_users', 'header-img ' . ((isset($_COOKIE['sb_admin_users'])) ? $_COOKIE['sb_admin_users'] : 'expanded')); ?>
+          <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_users', 'header-img ' . $state_admin_users); ?>
       </h4>
-      <ul class="sb3" id="sb_admin_users">
+      <ul class="sb3" id="sb_admin_users" <?php echo ($state_admin_users == 'collapsed') ? 'style="display: none;"' : ''; ?>>
         <li id="sb_admin_users_AddUser"><a href="<?php echo $admin_path; ?>/users.php?action=show_add_user"><?php echo T_('Add User'); ?></a></li>
         <li id="sb_admin_users_BrowseUsers"><a href="<?php echo $admin_path; ?>/users.php"><?php echo T_('Browse Users'); ?></a></li>
         <?php if (Mailer::is_mail_enabled()) { ?>
@@ -86,9 +103,9 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
       <span class="sidebar-header-title"><?php echo T_('Access Control'); ?></span>
-      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_access', 'header-img ' . ((isset($_COOKIE['sb_admin_access'])) ? $_COOKIE['sb_admin_access'] : 'expanded')); ?>
+      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_access', 'header-img ' . $state_admin_access); ?>
     </h4>
-    <ul class="sb3" id="sb_admin_access">
+    <ul class="sb3" id="sb_admin_access" <?php echo ($state_admin_access == 'collapsed') ? 'style="display: none;"' : ''; ?>>
       <li id="sb_admin_access_AddAccess"><a href="<?php echo $admin_path; ?>/access.php?action=show_add_advanced"><?php echo T_('Add ACL'); ?></a></li>
       <li id="sb_admin_access_ShowAccess"><a href="<?php echo $admin_path; ?>/access.php"><?php echo T_('Show ACL(s)'); ?></a></li>
     </ul>
@@ -96,9 +113,9 @@ use Ampache\Module\Util\Ui;
     <li>
       <h4 class="header">
         <span class="sidebar-header-title"><?php echo T_('Modules'); ?></span>
-        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_modules', 'header-img ' . ((isset($_COOKIE['sb_admin_modules'])) ? $_COOKIE['sb_admin_modules'] : 'expanded')); ?>
+        <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_modules', 'header-img ' . $state_admin_modules); ?>
       </h4>
-      <ul class="sb3" id="sb_admin_modules">
+      <ul class="sb3" id="sb_admin_modules" <?php echo ($state_admin_modules == 'collapsed') ? 'style="display: none;"' : ''; ?>>
         <li id="sb_admin_modules_localplay"><a href="<?php echo $admin_path; ?>/modules.php?action=show_localplay"><?php echo T_('Localplay Controllers'); ?></a></li>
         <li id="sb_admin_modules_catalog_types"><a href="<?php echo $admin_path; ?>/modules.php?action=show_catalog_types"><?php echo T_('Catalog Types'); ?></a></li>
         <li id="sb_admin_modules_plugins"><a href="<?php echo $admin_path; ?>/modules.php?action=show_plugins"><?php echo T_('Manage Plugins'); ?></a></li>
@@ -107,9 +124,9 @@ use Ampache\Module\Util\Ui;
   <li>
     <h4 class="header">
       <span class="sidebar-header-title"><?php echo T_('Server Config'); ?></span>
-      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_server', 'header-img ' . ((isset($_COOKIE['sb_admin_server'])) ? $_COOKIE['sb_admin_server'] : 'expanded')); ?>
+      <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'admin_server', 'header-img ' . $state_admin_server); ?>
     </h4>
-    <ul class="sb3" id="sb_admin_server">
+    <ul class="sb3" id="sb_admin_server" <?php echo ($state_admin_server == 'collapsed') ? 'style="display: none;"' : ''; ?>>
       <li id="sb_admin_ot_Debug"><a href="<?php echo $admin_path; ?>/system.php?action=show_debug"><?php echo T_('Ampache Debug'); ?></a></li>
     <?php $categories = Preference::get_categories();
       foreach ($categories as $name) {
