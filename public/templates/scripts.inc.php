@@ -57,7 +57,7 @@ if (file_exists($manifest)) {
     <script type="module" src="http://localhost:5177/@vite/client" crossorigin></script>
     <script type="module" src="http://localhost:5177/src/js/main.js" crossorigin></script>
 <?php elseif ($entrypoint): ?>
-    <script type="module" src="<?php echo "{$web_path}/dist/{$entrypoint['url']}" ?>" crossorigin></script>
+    <script type="module" src="<?php echo "{$web_path}/dist{$entrypoint['url']}" ?>" crossorigin></script>
 <?php else: ?>
     <script>console.warn("No vite manifest file was found")</script>
 <?php endif; ?>
