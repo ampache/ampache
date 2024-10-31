@@ -86,20 +86,20 @@ $albumString     = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
 // expanded by default
-$state_home_browse = (isset($_COOKIE['sb_home_browse']) && $_COOKIE['sb_home_browse'] == 'collapsed')
-    ? 'collapsed'
-    : 'expanded';
-$state_home_search = (isset($_COOKIE['sb_home_search']) && $_COOKIE['sb_home_search'] == 'collapsed')
-    ? 'collapsed'
-    : 'expanded';
-$state_home_playlist = (isset($_COOKIE['sb_home_playlist']) && $_COOKIE['sb_home_playlist'] == 'collapsed')
-    ? 'collapsed'
-    : 'expanded';
-// collapsed by default
-$state_home_dashboard = (!isset($_COOKIE['sb_home_dashboard']) || $_COOKIE['sb_home_dashboard'] == 'expanded')
+$state_home_browse = (($_COOKIE['sb_home_browse'] ?? 'expanded') == 'expanded')
     ? 'expanded'
     : 'collapsed';
-$state_home_information = (!isset($_COOKIE['sb_home_information']) || $_COOKIE['sb_home_information'] == 'expanded')
+$state_home_search = (($_COOKIE['sb_home_search'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_home_playlist = (($_COOKIE['sb_home_playlist'] ?? 'expanded') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+// collapsed by default
+$state_home_dashboard = (($_COOKIE['sb_home_dashboard'] ?? 'collapsed') == 'expanded')
+    ? 'expanded'
+    : 'collapsed';
+$state_home_information = (($_COOKIE['sb_home_information'] ?? 'collapsed') == 'expanded')
     ? 'expanded'
     : 'collapsed';
 // sidebar CSS order
