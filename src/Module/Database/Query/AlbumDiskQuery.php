@@ -275,6 +275,10 @@ final class AlbumDiskQuery implements QueryInterface
                     100
                 );
                 break;
+            case 'album_artist_title':
+                $sql = "`artist`.`name` $order, `album`.`name` $order, `album_disk`.`disk`";
+                $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                break;
             case 'album_artist':
                 $sql = "`artist`.`name`";
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
