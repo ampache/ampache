@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
@@ -61,6 +62,7 @@ final class AlbumQuery implements QueryInterface
     protected array $sorts = [
         'id',
         'album_artist',
+        'album_artist_album_sort',
         'album_artist_title',
         'artist',
         'barcode',
@@ -267,6 +269,34 @@ final class AlbumQuery implements QueryInterface
                     '`artist`.`id`',
                     100
                 );
+                break;
+            case 'album_artist_album_sort':
+                $sql = "`artist`.`name` $order, ";
+                // sort the albums by arist AND default sort
+                $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+                $sort_type     = AmpConfig::get('album_sort');
+                switch ($sort_type) {
+                    case 'name_asc':
+                        $sql .= '`album`.`name`';
+                        $order = 'ASC';
+                        break;
+                    case 'name_desc':
+                        $sql .= '`album`.`name`';
+                        $order = 'DESC';
+                        break;
+                    case 'year_asc':
+                        $sql .= '`album`.`' . $original_year . '`';
+                        $order = 'ASC';
+                        break;
+                    case 'year_desc':
+                        $sql .= '`album`.`' . $original_year . '`';
+                        $order = 'DESC';
+                        break;
+                    case 'default':
+                    default:
+                    $sql .= '`album`.`name`, ' . $order . `album`.`' . $original_year . '`;
+                }
+                $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
                 break;
             case 'album_artist_title':
                 $sql = "`artist`.`name` $order, `album`.`name`";
