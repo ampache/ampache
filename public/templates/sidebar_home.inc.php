@@ -126,7 +126,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
     if ($text !== '_ac') {
         ${$text} = ' selected="selected"';
     } ?>
-        <ul class="sb3" id="sb_home_browse">
+        <ul class="sb3" id="sb_home_browse" <?php echo ($state_home_browse == 'collapsed') ? 'style="display: none;"' : ''; ?>>
             <li id="sb_home_browse_songTitle"><a href="<?php echo $web_path; ?>/browse.php?action=song"><?php echo $t_songs; ?></a></li>
             <li id="sb_home_browse_album"><a href="<?php echo $web_path; ?>/browse.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
 <?php if ($showArtist) { ?>
@@ -167,7 +167,7 @@ if (
             <span class="sidebar-header-title"><?php echo $t_dashboards; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_dashboard', 'header-img ' . $state_home_dashboard); ?>
         </h4>
-        <ul class="sb3" id="sb_home_dashboard">
+        <ul class="sb3" id="sb_home_dashboard" <?php echo ($state_home_dashboard == 'collapsed') ? 'style="display: none;"' : ''; ?>>
             <li id="sb_home_dashboard_albums"><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
             <li id="sb_home_dashboard_artists"><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo $t_artists; ?></a></li>
     <?php if ($access25) { ?>
@@ -191,7 +191,7 @@ if (
             <span class="sidebar-header-title"><?php echo $t_search; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_search', 'header-img ' . $state_home_search); ?>
         </h4>
-        <ul class="sb3" id="sb_home_search">
+        <ul class="sb3" id="sb_home_search" <?php echo ($state_home_search == 'collapsed') ? 'style="display: none;"' : ''; ?>>
           <li id="sb_home_search_song"><a href="<?php echo $web_path; ?>/search.php?type=song"><?php echo $t_songs; ?></a></li>
           <li id="sb_home_search_album"><a href="<?php echo $web_path; ?>/search.php?type=<?php echo $albumString; ?>"><?php echo $t_albums; ?></a></li>
           <li id="sb_home_search_artist"><a href="<?php echo $web_path; ?>/search.php?type=artist"><?php echo $t_artists; ?></a></li>
@@ -222,7 +222,7 @@ if (
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_playlist', 'header-img ' . $state_home_playlist); ?>
         </h4>
     <?php if (AmpConfig::get('home_now_playing') || $allowDemocratic || $access50) { ?>
-        <ul class="sb3" id="sb_home_playlist">
+        <ul class="sb3" id="sb_home_playlist" <?php echo ($state_home_playlist == 'collapsed') ? 'style="display: none;"' : ''; ?>>
             <li id="sb_home_playlist_playlist"><a href="<?php echo $web_path; ?>/browse.php?action=playlist"><?php echo $t_playlists; ?></a></li>
             <li id="sb_home_playlist_smartPlaylist"><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo $t_smartPlaylists; ?></a></li>
         <?php if ($allowDemocratic) { ?>
@@ -244,7 +244,7 @@ if (
             <span class="sidebar-header-title"><?php echo $t_information; ?></span>
             <?php echo Ui::get_material_symbol('chevron_right', $t_expander, 'home_information', 'header-img ' . $state_home_information); ?>
         </h4>
-        <ul class="sb3" id="sb_home_information">
+        <ul class="sb3" id="sb_home_information" <?php echo ($state_home_information == 'collapsed') ? 'style="display: none;"' : ''; ?>>
             <li id="sb_home_information_recent"><a href="<?php echo $web_path; ?>/stats.php?action=recent_<?php echo $albumString; ?>"><?php echo $t_recent; ?></a></li>
             <li id="sb_home_information_newest"><a href="<?php echo $web_path; ?>/stats.php?action=newest_<?php echo $albumString; ?>"><?php echo $t_newest; ?></a></li>
             <li id="sb_home_information_popular"><a href="<?php echo $web_path; ?>/stats.php?action=popular_<?php echo $albumString; ?>"><?php echo $t_popular; ?></a></li>
