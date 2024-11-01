@@ -732,7 +732,7 @@ class Search extends playlist_object
                 $this->getLicenseRepository()->getList(false)
             );
             $this->_add_type_select('license', T_('Music License'), 'boolean_numeric', $licenses, $t_file_data);
-            $this->_add_type_boolean('no_genre', T_('No License'), 'is_true', $t_genre);
+            $this->_add_type_boolean('no_license', T_('No License'), 'is_true', $t_file_data);
         }
 
         $this->_add_type_numeric('recent_added', T_('Recently added'), 'recent_added', $t_file_data);
