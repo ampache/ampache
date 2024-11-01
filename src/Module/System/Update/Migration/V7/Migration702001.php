@@ -48,22 +48,27 @@ final class Migration702001 extends AbstractMigration
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY', NULL, 'https://creativecommons.org/licenses/by/4.0/', ?);", [$count]);
             $count++;
         }
+
         if (!Dba::read('SELECT `external_link` FROM `license` WHERE external_link = ?;', ['https://creativecommons.org/licenses/by-nc/4.0/'], true)) {
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/4.0/' ,?);", [$count]);
             $count++;
         }
+
         if (!Dba::read('SELECT `external_link` FROM `license` WHERE external_link = ?;', ['https://creativecommons.org/licenses/by-nc-nd/4.0/'], true)) {
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/4.0/', ?);", [$count]);
             $count++;
         }
+
         if (!Dba::read('SELECT `external_link` FROM `license` WHERE external_link = ?;', ['https://creativecommons.org/licenses/by-nc-sa/4.0/'], true)) {
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/4.0/', ?);", [$count]);
             $count++;
         }
+
         if (!Dba::read('SELECT `external_link` FROM `license` WHERE external_link = ?;', ['https://creativecommons.org/licenses/by-nd/4.0/'], true)) {
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/4.0/', ?);", [$count]);
             $count++;
         }
+
         if (!Dba::read('SELECT `external_link` FROM `license` WHERE external_link = ?;', ['https://creativecommons.org/licenses/by-sa/4.0/'], true)) {
             $this->updateDatabase("INSERT INTO `license` (`name`, `description`, `external_link`, `order`) VALUES ('CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/4.0/', ?);", [$count]);
         }
