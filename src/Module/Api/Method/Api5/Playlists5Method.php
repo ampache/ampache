@@ -71,9 +71,7 @@ final class Playlists5Method
         }
 
         // hide playlists starting with the user string (if enabled)
-        $hide_string = ($type === 'playlist')
-            ? str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists'))) :
-            '';
+        $hide_string = str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists')));
         if (!empty($hide_string)) {
             $browse->set_filter('not_starts_with', $hide_string);
         }
