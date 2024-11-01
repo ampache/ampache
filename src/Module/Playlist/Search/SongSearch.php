@@ -180,6 +180,9 @@ final class SongSearch implements SearchInterface
                     $where[]      = "`song`.`$rule[0]` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'no_license':
+                    $where[]      = "`song`.`license` IS NULL";
+                    break;
                 case 'comment':
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {
