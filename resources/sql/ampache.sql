@@ -18,9 +18,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 192.168.1.9
--- Generation Time: Oct 17, 2024 at 03:09 AM
+-- Generation Time: Nov 01, 2024 at 02:40 AM
 -- Server version: 11.4.3-MariaDB-1
--- PHP Version: 8.2.24
+-- PHP Version: 8.3.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -553,7 +553,7 @@ CREATE TABLE IF NOT EXISTS `license` (
   `external_link` varchar(256) DEFAULT NULL,
   `order` smallint(4) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `license`
@@ -561,12 +561,12 @@ CREATE TABLE IF NOT EXISTS `license` (
 
 INSERT INTO `license` (`id`, `name`, `description`, `external_link`, `order`) VALUES
 (1, '0 - default', NULL, '', 1),
-(2, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/3.0/', 2),
-(3, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/', 3),
-(4, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/', 4),
-(5, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/', 5),
-(6, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/', 6),
-(7, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/', 7),
+(2, 'CC BY 3.0', NULL, 'https://creativecommons.org/licenses/by/3.0/', 2),
+(3, 'CC BY NC 3.0', NULL, 'https://creativecommons.org/licenses/by-nc/3.0/', 3),
+(4, 'CC BY NC ND 3.0', NULL, 'https://creativecommons.org/licenses/by-nc-nd/3.0/', 4),
+(5, 'CC BY NC SA 3.0', NULL, 'https://creativecommons.org/licenses/by-nc-sa/3.0/', 5),
+(6, 'CC BY ND 3.0', NULL, 'https://creativecommons.org/licenses/by-nd/3.0/', 6),
+(7, 'CC BY SA 3.0', NULL, 'https://creativecommons.org/licenses/by-sa/3.0/', 7),
 (8, 'Licence Art Libre', NULL, 'http://artlibre.org/licence/lal/', 8),
 (9, 'Yellow OpenMusic', NULL, 'http://openmusic.linuxtag.org/yellow.html', 9),
 (10, 'Green OpenMusic', NULL, 'http://openmusic.linuxtag.org/green.html', 10),
@@ -574,6 +574,12 @@ INSERT INTO `license` (`id`, `name`, `description`, `external_link`, `order`) VA
 (12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL', 12),
 (13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html', 13),
 (14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14);
+(15, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/4.0/', 15),
+(16, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/4.0/', 16),
+(17, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/4.0/', 17),
+(18, 'CC BY NC SA', NULL, 'https://creativecommons.org/licenses/by-nc-sa/4.0/', 18),
+(19, 'CC BY ND', NULL, 'https://creativecommons.org/licenses/by-nd/4.0/', 19),
+(20, 'CC BY SA', NULL, 'https://creativecommons.org/licenses/by-sa/4.0/', 20);
 
 -- --------------------------------------------------------
 
@@ -943,7 +949,7 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (135, 'upload_allow_remove', '1', 'Allow users to remove uploaded songs', 100, 'boolean', 'system', 'upload'),
 (136, 'custom_login_logo', '', 'Custom URL - Login page logo', 75, 'string', 'interface', 'custom'),
 (137, 'custom_favicon', '', 'Custom URL - Favicon', 75, 'string', 'interface', 'custom'),
-(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'interface', 'custom'),
+(138, 'custom_text_footer', '', 'Custom text footer', 75, 'string', 'system', 'interface'),
 (139, 'webdav_backend', '0', 'Use WebDAV backend', 100, 'boolean', 'system', 'backend'),
 (140, 'notify_email', '0', 'Allow E-mail notifications', 25, 'boolean', 'options', NULL),
 (141, 'theme_color', 'dark', 'Theme color', 0, 'special', 'interface', 'theme'),
@@ -1425,7 +1431,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '700029'),
+('db_version', '702001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1575,7 +1581,9 @@ CREATE TABLE IF NOT EXISTS `user_preference` (
   `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_name` (`user`,`name`),
   KEY `user` (`user`),
-  KEY `preference` (`preference`)
+  KEY `preference` (`preference`),
+  KEY `user_name_IDX` (`user`,`name`) USING BTREE,
+  KEY `user_preference_IDX` (`user`,`preference`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
