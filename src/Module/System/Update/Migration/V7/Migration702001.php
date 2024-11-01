@@ -30,7 +30,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 final class Migration702001 extends AbstractMigration
 {
     protected array $changelog = [
-        'Update cCreative Commons 3.0 licenses with a version suffix',
+        'Update Creative Commons 3.0 licenses with a version suffix',
         'Add Creative Commons 4.0 licenses if their `external_link` doesn\'t exist',
     ];
 
