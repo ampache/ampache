@@ -147,6 +147,7 @@ if ($is_session) {
 <?php } ?>
 <?php Ui::show_box_bottom(); ?>
                 </div> <!-- End headerbox -->
+                <?php echo $ui_fixed ? '<div id="ajax-loading">'. T_('Loading') . ' . . .</div>' : ''; ?>
             </div><!-- End header -->
 
 <?php if (AmpConfig::get('topmenu')) { ?>
@@ -221,7 +222,7 @@ $isCollapsed  = (
             </div>
 
             <!-- Tiny little div, used to cheat the system -->
-            <div id="ajax-loading"><?php echo T_('Loading') . ' . . .'; ?></div>
+            <?php echo $ui_fixed ? '' : '<div id="ajax-loading">'. T_('Loading') . ' . . .</div>'; ?>
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
