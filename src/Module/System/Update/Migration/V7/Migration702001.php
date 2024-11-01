@@ -37,7 +37,7 @@ final class Migration702001 extends AbstractMigration
     public function migrate(): void
     {
         // add suffix for 3.0 licenses
-        $this->updateDatabase("UPDATE `license` SET `name` = CONCAT(`name`, ' 3.0') WHERE `external_link` LIKE '%://creativecommons.org/licenses/%/3.0/' AND `name` NOT LIKE '% 3.0';");
+        $this->updateDatabase("UPDATE `license` SET `name` = CONCAT(`name`, ' 3.0') WHERE `external_link` LIKE '%://creativecommons.org/licenses/%/3.0/%' AND `name` NOT LIKE '% 3.0';");
 
         // get order and add from there
         $order   = Dba::read("SELECT MAX(`order`) AS `order` FROM license;", [], true);
