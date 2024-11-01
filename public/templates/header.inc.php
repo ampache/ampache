@@ -49,6 +49,7 @@ $site_title        = scrub_out(AmpConfig::get('site_title'));
 $site_social       = AmpConfig::get('sociable');
 $site_ajax         = AmpConfig::get('ajax_load');
 $htmllang          = str_replace("_", "-", $site_lang);
+$ui_fixed          = AmpConfig::get('ui_fixed');
 $_SESSION['login'] = false;
 $current_user      = Core::get_global('user');
 $logo_url          = ($current_user instanceof User && Preference::get_by_user($current_user->getId(), 'custom_logo_user'))
@@ -112,7 +113,7 @@ $albumString = (AmpConfig::get('album_group'))
         <div id="reloader" style="display:none;"></div>
         <div id="notification" class="notification-out"><?php echo Ui::get_material_symbol('info', T_('Information')); ?><span id="notification-content"></span></div>
         <div id="maincontainer">
-            <div id="header" class="header-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>"><!-- This is the header -->
+            <div id="header" class="header-<?php echo $ui_fixed ? 'fixed' : 'float'; ?>"><!-- This is the header -->
                 <h1 id="headerlogo">
                   <a href="<?php echo $web_path; ?>/index.php">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo $site_title; ?>" alt="<?php echo $site_title; ?>">
@@ -149,7 +150,7 @@ if ($is_session) {
             </div><!-- End header -->
 
 <?php if (AmpConfig::get('topmenu')) { ?>
-            <div id="topmenu_container" class="topmenu_container-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+            <div id="topmenu_container" class="topmenu_container-<?php echo $ui_fixed ? 'fixed' : 'float'; ?>">
                 <div class="topmenu_item">
                     <a href="<?php echo $web_path; ?>/index.php">
                         <?php echo Ui::get_image('topmenu-home', $t_home); ?>
@@ -201,7 +202,7 @@ $isCollapsed  = (
     ($sidebarLight && (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] != "expanded")) ||
     (isset($_COOKIE['sidebar_state']) && $_COOKIE['sidebar_state'] == "collapsed")
 ); ?>
-            <div id="sidebar" class="sidebar-<?php echo AmpConfig::get('ui_fixed') ? 'fixed' : 'float'; ?>">
+            <div id="sidebar" class="sidebar-<?php echo $ui_fixed ? 'fixed' : 'float'; ?>">
             <?php if (!$hideSwitcher) {
                 echo '<div id="sidebar-header" class="' . ($isCollapsed ? 'sidebar-header-collapsed' : '') . '" >';
                 echo '<span id="sidebar-header-content"></span>';
@@ -224,7 +225,7 @@ $isCollapsed  = (
             <div id="util_div" style="display:none;"></div>
             <iframe name="util_iframe" id="util_iframe" style="display:none;" src="<?php echo $web_path; ?>/util.php"></iframe>
 
-            <div id="content" class="content-<?php echo AmpConfig::get('ui_fixed') ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
+            <div id="content" class="content-<?php echo $ui_fixed ? (AmpConfig::get('topmenu') ? 'fixed-topmenu' : 'fixed') : 'float'; ?> <?php echo (!$count_temp_playlist || AmpConfig::get('play_type') == 'localplay') ? '' : 'content-right-wild';
 echo $isCollapsed ? ' content-left-wild' : ''; ?>">
 
                 <?php if ($access100) {
