@@ -302,7 +302,7 @@ class Preference extends database_object
         }
 
         if (parent::is_cached('get_by_user_isAmpache7', 0)) {
-	    $ampacheSeven = parent::get_from_cache('get_by_user_isAmpache7', 0);
+            $ampacheSeven = parent::get_from_cache('get_by_user_isAmpache7', 0);
         } else {
             $ampacheSeven = true;
             if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
@@ -310,7 +310,7 @@ class Preference extends database_object
                 $pref_name    = self::id_from_name($pref_name);
             }
             parent::add_to_cache('get_by_user_isAmpache7', 0, $ampacheSeven);
-	}
+        }
 
         $sql = ($ampacheSeven)
             ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?"
