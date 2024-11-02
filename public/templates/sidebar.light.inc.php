@@ -57,7 +57,7 @@ $sidebarLightString = AmpConfig::get('sidebar_light') && AmpConfig::get('sidebar
     : 'sidebar-light'; ?>
 <ul id="<?php echo $sidebarLightString; ?>">
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=artist"><?php echo Ui::get_image('topmenu-artist', $t_artists); ?><br /><?php echo $t_artists; ?></a></li>
-    <li><a href="<?php echo $web_path; ?>/mashup.php?action=album"><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/mashup.php?action=<?php echo $albumString; ?>""><?php echo Ui::get_image('topmenu-album', $t_albums); ?><br /><?php echo $t_albums; ?></a></li>
     <li><a href="<?php echo $web_path; ?>/mashup.php?action=playlist"><?php echo Ui::get_image('topmenu-playlist', $t_playlists); ?><br /><?php echo $t_playlists; ?></a></li>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-smartlist', $t_smartlists); ?><br /><?php echo $t_smartlists; ?></a></li>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres; ?></a></li>
