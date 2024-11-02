@@ -301,15 +301,15 @@ class Preference extends database_object
             return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
         }
 
-        if (parent::is_cached('get_by_user_isAmpache7', 0)) {
-            $ampacheSeven = parent::get_from_cache('get_by_user_isAmpache7', 0);
+        if (parent::is_cached('get_by_user_isAmpache7', 1)) {
+            $ampacheSeven = parent::get_from_cache('get_by_user_isAmpache7', 1);
         } else {
             $ampacheSeven = true;
             if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
                 $ampacheSeven = false;
                 $pref_name    = self::id_from_name($pref_name);
             }
-            parent::add_to_cache('get_by_user_isAmpache7', 0, $ampacheSeven);
+            parent::add_to_cache('get_by_user_isAmpache7', 1, $ampacheSeven);
         }
 
         $sql = ($ampacheSeven)
