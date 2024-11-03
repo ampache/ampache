@@ -299,7 +299,7 @@ class Preference extends database_object
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
-            return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id));
+            return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id)[0]);
         }
 
         $column_name = 'name'; // Ampache 7
@@ -328,7 +328,7 @@ class Preference extends database_object
 
         // Now cache all of them
         foreach ($pref as $k => $v) {
-            parent::add_to_cache('get_by_user-' . $k, $user_id, $v);
+            parent::add_to_cache('get_by_user-' . $k, $user_id, [$v]);
         }
 
         // Handle if a parameters is missing
