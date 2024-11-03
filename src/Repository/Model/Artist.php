@@ -375,10 +375,15 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($artist_id === 0) {
             return '';
         }
+        if (database_object::is_cached('artist_fullname_by_id', $artist_id)) {
+            return database_object::get_from_cache('artist_fullname_by_id', $artist_id)[0];
+        }
 
         $sql        = "SELECT LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, [$artist_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('artist_fullname_by_id', $artist_id, [$row['f_name']]);
+
             return $row['f_name'];
         }
 
