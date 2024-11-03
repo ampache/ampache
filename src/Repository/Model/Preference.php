@@ -370,7 +370,7 @@ class Preference extends database_object
         }
 
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
         }
 
@@ -437,7 +437,7 @@ class Preference extends database_object
     public static function update_all($preference, $value): bool
     {
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
             $preference   = self::id_from_name($preference);
         }
@@ -622,7 +622,7 @@ class Preference extends database_object
         }
 
         // Work around ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
-        $sql = (!Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true))
+        $sql = (!Dba::read('SELECT `catagory` from `preference` limit 1;', [], true))
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
@@ -640,7 +640,7 @@ class Preference extends database_object
 
         // Check for databases < Ampache\Module\System\Update\Migration\V7\Migration700020
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
         }
 
@@ -2020,7 +2020,7 @@ class Preference extends database_object
         }
 
         /* Get Global Preferences */
-        $sql = (!Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true))
+        $sql = (!Dba::read('SELECT `catagory` from `preference` limit 1;', [], true))
             ? "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`category`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`category` !='system'"
             : "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory` !='system'";
         $db_results = Dba::read($sql, [$user_id]);
