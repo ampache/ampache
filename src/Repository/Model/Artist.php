@@ -375,6 +375,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
         if ($artist_id === 0) {
             return '';
         }
+
         if (database_object::is_cached('artist_fullname_by_id', $artist_id)) {
             return database_object::get_from_cache('artist_fullname_by_id', $artist_id)[0];
         }

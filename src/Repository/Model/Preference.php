@@ -327,12 +327,15 @@ class Preference extends database_object
         $pref = array_replace($pref_default, $pref_user);
 
         // Now cache all of them
-        foreach ($pref as $k => $v) {
-            parent::add_to_cache('get_by_user-' . $k, $user_id, [$v]);
+        foreach ($pref as $key => $value) {
+            parent::add_to_cache('get_by_user-' . $key, $user_id, [$value]);
         }
 
         // Handle if a parameters is missing
-        if (!array_key_exists($pref_name, $pref)) {
+        if (
+            empty($pref_name) ||
+            !array_key_exists($pref_name, $pref)
+        ) {
             debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- this preference is missing, return default value', 5);
 
             return '';

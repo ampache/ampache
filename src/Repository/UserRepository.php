@@ -253,6 +253,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         if ($username === '-1') {
             return new User(-1);
         }
+
         $user       = null;
         $sql        = 'SELECT `id` FROM `user` WHERE `username` = ?';
         $db_results = Dba::read($sql, [$username]);
