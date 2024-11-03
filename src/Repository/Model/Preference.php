@@ -288,6 +288,7 @@ class Preference extends database_object
     /**
      * get_by_user
      * Return a preference for specific user identifier
+     * Get all preference the first time and add them to the cache
      * @param int $user_id
      * @param string $pref_name
      * @return int|string|null
@@ -298,31 +299,49 @@ class Preference extends database_object
     {
         //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '}...', 5);
         if (parent::is_cached('get_by_user-' . $pref_name, $user_id)) {
-            return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id))['value'];
+            return (parent::get_from_cache('get_by_user-' . $pref_name, $user_id)[0]);
         }
 
-        $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
-            $ampacheSeven = false;
+        $column_name = 'name'; // Ampache 7
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
+            $column_name  = 'preference'; // Backward compatibility for Ampache < 7
             $pref_name    = self::id_from_name($pref_name);
         }
+        //debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- no cache, need to do one', 5);
 
-        $sql = ($ampacheSeven)
-            ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user` = ?"
-            : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user` = ?";
-        $db_results = Dba::read($sql, [$pref_name, $user_id]);
-        if (Dba::num_rows($db_results) < 1) {
-            $sql = ($ampacheSeven)
-                ? "SELECT `value` FROM `user_preference` WHERE `name` = ? AND `user`='-1'"
-                : "SELECT `value` FROM `user_preference` WHERE `preference` = ? AND `user`='-1'";
-            $db_results = Dba::read($sql, [$pref_name]);
+        // Get default preferences from user -1
+        $db_results  = Dba::read("SELECT * FROM `user_preference` WHERE `user` = '-1' order by `$column_name`;");
+        $pref_default=[];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $pref_default[ $row[$column_name] ] = $row['value'];
         }
 
-        $data = Dba::fetch_assoc($db_results);
+        // Get user specific preferences
+        $db_results = Dba::read("SELECT * FROM `user_preference` WHERE `user` = ? order by `$column_name`;", [ $user_id ]);
+        $pref_user  =[];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $pref_user[ $row[$column_name] ] = $row['value'];
+        }
 
-        parent::add_to_cache('get_by_user-' . $pref_name, $user_id, $data);
+        // Merge them (override default with user-specific preference)
+        $pref = array_replace($pref_default, $pref_user);
 
-        return $data['value'] ?? '';
+        // Now cache all of them
+        foreach ($pref as $key => $value) {
+            parent::add_to_cache('get_by_user-' . $key, $user_id, [$value]);
+        }
+
+        // Handle if a parameters is missing
+        if (
+            empty($pref_name) ||
+            !array_key_exists($pref_name, $pref)
+        ) {
+            debug_event(self::class, 'Getting preference {' . $pref_name . '} for user identifier {' . $user_id . '} -- this preference is missing, return default value', 5);
+
+            return '';
+        }
+
+        return $pref[$pref_name];
     }
 
     /**
@@ -365,7 +384,7 @@ class Preference extends database_object
         }
 
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
         }
 
@@ -432,7 +451,7 @@ class Preference extends database_object
     public static function update_all($preference, $value): bool
     {
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
             $preference   = self::id_from_name($preference);
         }
@@ -617,7 +636,7 @@ class Preference extends database_object
         }
 
         // Work around ampache 5 preference insert < Ampache\Module\System\Update\Migration\V6\Migration600051
-        $sql = (!Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true))
+        $sql = (Dba::read('SELECT `category` from `preference` limit 1;', [], true))
             ? "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `category`, `subcategory`) VALUES (?, ?, ?, ?, ?, ?, ?)"
             : "INSERT INTO `preference` (`name`, `description`, `value`, `level`, `type`, `catagory`, `subcatagory`) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $db_results = Dba::write($sql, [$name, $description, $default, (int)$level, $type, $category, $subcategory]);
@@ -635,7 +654,7 @@ class Preference extends database_object
 
         // Check for databases < Ampache\Module\System\Update\Migration\V7\Migration700020
         $ampacheSeven = true;
-        if (!Dba::read('SELECT COUNT(`name`) from `user_preference`;', [], true)) {
+        if (!Dba::read('SELECT `name` from `user_preference` limit 1;', [], true)) {
             $ampacheSeven = false;
         }
 
@@ -2015,7 +2034,7 @@ class Preference extends database_object
         }
 
         /* Get Global Preferences */
-        $sql = (!Dba::read('SELECT COUNT(`catagory`) from `preference`;', [], true))
+        $sql = (Dba::read('SELECT `category` from `preference` limit 1;', [], true))
             ? "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`category`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`category` !='system'"
             : "SELECT `preference`.`name`, `user_preference`.`value`, `syspref`.`value` AS `system_value` FROM `preference` LEFT JOIN `user_preference` `syspref` ON `syspref`.`preference`=`preference`.`id` AND `syspref`.`user`='-1' AND `preference`.`catagory`='system' LEFT JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` AND `user_preference`.`user` = ? AND `preference`.`catagory` !='system'";
         $db_results = Dba::read($sql, [$user_id]);

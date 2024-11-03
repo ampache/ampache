@@ -328,12 +328,18 @@ class Art extends database_object
      */
     public static function has_db($object_id, $object_type, $kind = 'default'): bool
     {
+        if (database_object::is_cached('art_has_db_' . $object_type, $object_id)) {
+            $nb_img = database_object::get_from_cache('art_has_db_' . $object_type, $object_id)[0];
+
+            return ($nb_img > 0);
+        }
         $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, [$object_type, $object_id, $kind]);
         $nb_img     = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
             $nb_img = $results['nb_img'];
         }
+        database_object::add_to_cache('art_has_db_' . $object_type, $object_id, [$nb_img]);
 
         return ($nb_img > 0);
     }
