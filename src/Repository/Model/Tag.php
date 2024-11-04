@@ -196,7 +196,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
 
-        $uid = $user === true ? (int)(Core::get_global('user')?->getId()) : (int)($user);
+        $uid = ($user === true)
+            ? (int)(Core::get_global('user')?->getId())
+            : (int)($user);
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (($tag_id = self::tag_exists($cleaned_value)) === 0) {

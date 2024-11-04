@@ -125,7 +125,7 @@ class AmpacheMpd extends localplay_controller
     public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = Core::get_global('user') instanceof User
+        $user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : -1;
 

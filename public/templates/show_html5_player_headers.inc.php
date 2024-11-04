@@ -19,7 +19,7 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
 $iframed   = $iframed ?? false;
 $isShare   = $isShare ?? false;
 $isLight   = (AmpConfig::get('theme_color', 'dark') == 'light');
-$highlight = $isLight
+$highlight = ($isLight)
     ? 'blue'
     : 'orange';
 $jpinterface = ($isLight)
