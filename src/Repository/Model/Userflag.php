@@ -392,22 +392,17 @@ class Userflag extends database_object
         );
 
         if ($userflag->get_flag()) {
-            $text = Ajax::text(
-                $base_url . '&userflag=0',
-                '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type,
-                '',
-                'userflag_true'
-            );
+            $action = $base_url . '&userflag=0';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite-fill';
+            $alt    = T_('Unfavorite');
         } else {
-            $text = Ajax::text(
-                $base_url . '&userflag=1',
-                '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type,
-                '',
-                'userflag_false'
-            );
+            $action = $base_url . '&userflag=1';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite';
+            $alt    = T_('Favorite');
         }
+        $text = Ajax::button($action, $icon, $alt, $source, '');
 
         return sprintf('<span class="userflag">%s</span>', $text);
     }
