@@ -195,7 +195,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Newest') . "&nbsp" . Ajax::button('?page=index&action=dashboard_newest&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'newest', 'dashboard_newest'), 'newest');
             echo '<div id="dashboard_newest">';
-            $browse     = new Browse();
+            $browse = new Browse();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -212,7 +212,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Recent') . "&nbsp" . Ajax::button('?page=index&action=dashboard_recent&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'recent', 'dashboard_recent'), 'recent');
             echo '<div id="dashboard_recent">';
-            $browse     = new Browse();
+            $browse = new Browse();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -229,7 +229,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         if ($object_ids !== []) {
             Ui::show_box_top(T_('Trending') . "&nbsp" . Ajax::button('?page=index&action=dashboard_trending&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'trending', 'dashboard_trending'), 'trending');
             echo '<div id="dashboard_trending">';
-            $browse     = new Browse();
+            $browse = new Browse();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
@@ -248,7 +248,7 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
             $object_ids = array_slice($object_ids, 0, $limit);
             Ui::show_box_top(T_('Popular') . "&nbsp" . Ajax::button('?page=index&action=dashboard_popular&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'popular', 'dashboard_popular'), 'popular');
             echo '<div id="dashboard_popular">';
-            $browse     = new Browse();
+            $browse = new Browse();
             $browse->set_type($object_type);
             $browse->set_use_filters(false);
             $browse->set_show_header(false);
