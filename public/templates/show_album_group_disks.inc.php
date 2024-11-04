@@ -98,6 +98,9 @@ if (AmpConfig::get('external_links_lastfm')) {
 if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
+if (AmpConfig::get('external_links_discogs')) {
+    echo "<a href=\https://www.discogs.com/search/?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+}
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($album->mbid) {
         echo "<a href=\"https://musicbrainz.org/release/" . $album->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";

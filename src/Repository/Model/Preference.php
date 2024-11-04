@@ -1305,6 +1305,7 @@ class Preference extends database_object
             'download' => T_('Allow Downloads'),
             'extended_playlist_links' => T_('Show extended links for playlist media'),
             'external_links_google' => T_('Show Google search icon on library items'),
+            'external_links_discogs' => T_('Show Discogs search icon on library items'),
             'external_links_duckduckgo' => T_('Show DuckDuckGo search icon on library items'),
             'external_links_wikipedia' => T_('Show Wikipedia search icon on library items'),
             'external_links_lastfm' => T_('Show Last.fm search icon on library items'),
