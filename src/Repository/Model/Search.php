@@ -882,6 +882,7 @@ class Search extends playlist_object
         $this->_add_type_text('version', T_('Release Comment'), $t_album_data);
         $this->_add_type_text('barcode', T_('Barcode'), $t_album_data);
         $this->_add_type_text('catalog_number', T_('Catalog Number'), $t_album_data);
+        $this->_add_type_numeric('disk_count', T_('Disk Count'), 'numeric', $t_album_data);
         $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric', $t_album_data);
 
         $t_ratings = T_('Ratings');
