@@ -274,15 +274,24 @@ class Plugin
      */
     public static function get_plugin_version(string $plugin_name): int
     {
-        $name       = Dba::escape('Plugin_' . $plugin_name);
-        $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key` = ?";
-        $db_results = Dba::read($sql, [$name]);
+        $name = 'Plugin_' . $plugin_name;
+        if (database_object::is_cached('plugin_version_update_info', 1)) {
+            $cache = database_object::get_from_cache('plugin_version_update_info', 1);
 
-        if ($results = Dba::fetch_assoc($db_results)) {
-            return (int)$results['value'];
+            return (int)($cache[$name] ?? 0);
+        } else {
+            $sql        = "SELECT `key`, `value` FROM `update_info`;";
+            $db_results = Dba::read($sql, [$name]);
+
+            $results=[];
+            while ($row = Dba::fetch_assoc($db_results)) {
+                $results[$row['key']] = $row['value'];
+            }
+
+            database_object::add_to_cache('plugin_version_update_info', 1, $results);
+
+            return (int)($results[$name] ?? 0);
         }
-
-        return 0;
     }
 
     /**
@@ -339,11 +348,17 @@ class Plugin
      */
     public function get_ampache_db_version(): string
     {
+        if (database_object::is_cached('plugin_version_db_version', 1)) {
+            return database_object::get_from_cache('plugin_version_db_version', 1)[0];
+        }
+
         $sql        = "SELECT `key`, `value` FROM `update_info` WHERE `key`='db_version'";
         $db_results = Dba::read($sql);
         $results    = Dba::fetch_assoc($db_results);
+        $version    = (string)($results['value'] ?? '');
+        database_object::add_to_cache('plugin_version_db_version', 1, [$version]);
 
-        return (string)($results['value'] ?? '');
+        return $version;
     }
 
     /**
@@ -361,6 +376,7 @@ class Plugin
 
         $sql = "REPLACE INTO `update_info` SET `key` = ?, `value` = ?";
         Dba::write($sql, [$name, $version]);
+        database_object::remove_from_cache('plugin_version_update_info', 1);
     }
 
     /**
@@ -376,6 +392,7 @@ class Plugin
         $name = Dba::escape('Plugin_' . $this->_plugin->name);
         $sql  = sprintf('DELETE FROM `update_info` WHERE `key`=\'%s\'', $name);
         Dba::write($sql);
+        database_object::remove_from_cache('plugin_version_update_info', 1);
     }
 
     /**

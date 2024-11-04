@@ -48,7 +48,7 @@ $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 $is_table     = $browse->is_grid_view();
 $is_group     = AmpConfig::get('album_group');
-$albumString  = $is_group
+$albumString  = ($is_group)
     ? 'album'
     : 'album_disk';
 // hide columns you don't always need

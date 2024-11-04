@@ -107,6 +107,14 @@ final class ListMethod
             $browse->set_type($type);
         }
 
+        // hide playlists starting with the user string (if enabled)
+        $hide_string = ($type === 'playlist')
+            ? str_replace('%', '\%', str_replace('_', '\_', (string)Preference::get_by_user($user->id, 'api_hidden_playlists'))) :
+            '';
+        if (!empty($hide_string)) {
+            $browse->set_filter('not_starts_with', $hide_string);
+        }
+
         $browse->set_sort_order(html_entity_decode((string)($input['sort'] ?? '')), ['name', 'ASC']);
 
         $method = (array_key_exists('exact', $input) && (int)$input['exact'] == 1) ? 'exact_match' : 'alpha_match';
