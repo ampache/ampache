@@ -62,7 +62,7 @@ final class Gatekeeper implements GatekeeperInterface
     {
         $userName = $this->request->getQueryParams()['user'] ?? null;
 
-        return $userName !== null
+        return ($userName !== null)
             ? $this->userRepository->findByUsername((string) $userName)
             : $this->userRepository->findByApiKey($this->getAuth());
     }

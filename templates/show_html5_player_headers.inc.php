@@ -19,7 +19,7 @@ $cookie_string = (make_bool(AmpConfig::get('cookie_secure')))
 $iframed   = $iframed ?? false;
 $isShare   = $isShare ?? false;
 $isLight   = (AmpConfig::get('theme_color', 'dark') == 'light');
-$highlight = $isLight
+$highlight = ($isLight)
     ? 'blue'
     : 'orange';
 $jpinterface = ($isLight)
@@ -592,7 +592,7 @@ if ($iframed) { ?>
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
             if (typeof jpuqid === 'undefined' || (typeof jpuqid !== 'undefined' && event.newValue != jpuqid)) {
-                if (!$("#jquery_jplayer_1").data("jPlayer").status.paused) {
+                if (typeof $("#jquery_jplayer_1").data("jPlayer") !== 'undefined' && !$("#jquery_jplayer_1").data("jPlayer").status.paused) {
                     $("#jquery_jplayer_1").data("jPlayer").pause();
                 }
             }

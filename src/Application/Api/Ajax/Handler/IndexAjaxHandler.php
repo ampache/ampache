@@ -382,6 +382,83 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['recently_played'] = ob_get_clean();
                 break;
+            case 'dashboard_random':
+            case 'dashboard_newest':
+            case 'dashboard_recent':
+            case 'dashboard_trending':
+            case 'dashboard_popular':
+                $limit       = $_REQUEST['limit'];
+                $object_type = $_REQUEST['object_type'];
+                $threshold   = $_REQUEST['threshold'];
+                ob_start();
+                $object_ids = ($action === 'dashboard_random')
+                    ? $this->albumRepository->getRandom($user->id, $limit)
+                    : [];
+                if ($object_ids !== []) {
+                    $browse = new Browse();
+                    $browse->set_type($object_type);
+                    $browse->set_use_filters(false);
+                    $browse->set_show_header(false);
+                    $browse->set_grid_view(false, false);
+                    $browse->set_mashup(true);
+                    $browse->show_objects($object_ids);
+                }
+
+                $object_ids = ($action === 'dashboard_newest')
+                    ? Stats::get_newest($object_type, $limit, 0, 0, $user)
+                    : [];
+                if ($object_ids !== []) {
+                    $browse = new Browse();
+                    $browse->set_type($object_type);
+                    $browse->set_use_filters(false);
+                    $browse->set_show_header(false);
+                    $browse->set_grid_view(false, false);
+                    $browse->set_mashup(true);
+                    $browse->show_objects($object_ids);
+                }
+
+                $object_ids = ($action === 'dashboard_recent')
+                    ? Stats::get_recent($object_type, $limit)
+                    : [];
+                if ($object_ids !== []) {
+                    $browse = new Browse();
+                    $browse->set_type($object_type);
+                    $browse->set_use_filters(false);
+                    $browse->set_show_header(false);
+                    $browse->set_grid_view(false, false);
+                    $browse->set_mashup(true);
+                    $browse->show_objects($object_ids);
+                }
+
+                $object_ids = ($action === 'dashboard_trending')
+                    ? Stats::get_top($object_type, $limit, $threshold)
+                    : [];
+                if ($object_ids !== []) {
+                    $browse = new Browse();
+                    $browse->set_type($object_type);
+                    $browse->set_use_filters(false);
+                    $browse->set_show_header(false);
+                    $browse->set_grid_view(false, false);
+                    $browse->set_mashup(true);
+                    $browse->show_objects($object_ids);
+                }
+
+                $object_ids = ($action === 'dashboard_popular')
+                    ? Stats::get_top($object_type, 100, $threshold, 0, $user)
+                    : [];
+                if ($object_ids !== []) {
+                    shuffle($object_ids);
+                    $object_ids = array_slice($object_ids, 0, $limit);
+                    $browse     = new Browse();
+                    $browse->set_type($object_type);
+                    $browse->set_use_filters(false);
+                    $browse->set_show_header(false);
+                    $browse->set_grid_view(false, false);
+                    $browse->set_mashup(true);
+                    $browse->show_objects($object_ids);
+                }
+                $results[$action] = ob_get_clean();
+                break;
             case 'sidebar':
                 switch ($_REQUEST['button']) {
                     case 'home':

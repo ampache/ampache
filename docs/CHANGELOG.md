@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Ampache 7.0.2
+
+### Added
+
+* Album and album_disk browse `album_artist_album_sort` (Sort by artist then the default sort)
+* Album_disk query sort `album_artist_title` (Sort by artist name then album title)
+
+### Fixed
+
+* Secondary tab jplayer not checking the player is loaded on pause check
+
 ## Ampache 7.0.1
 
 Fixed some slowdowns due to preference name and location look ups happening for no reason.

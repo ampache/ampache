@@ -1,5 +1,20 @@
 # API CHANGELOG
 
+## API 6.6.5
+
+Merge update from Ampache7.
+
+### Fixed
+
+* API6
+  * get_indexes: Respect 'api_hidden_playlists'
+  * index: Respect 'api_hidden_playlists'
+  * list: Respect 'api_hidden_playlists'
+  * playlists: Respect 'api_hidden_playlists'
+* API5
+  * get_indexes: Respect 'api_hidden_playlists'
+  * playlists: Respect 'api_hidden_playlists'
+
 ## API 6.6.4
 
 Merge update from Ampache7.
