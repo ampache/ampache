@@ -249,7 +249,7 @@ final class AlbumSearch implements SearchInterface
                     $parameters[] = $input;
                     break;
                 case 'disk_count':
-                    $where[]      = "`album_disk`.`disk_count` $operator_sql ?";
+                    $where[]      = "`album`.`disk_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
