@@ -7,7 +7,6 @@
 * Album and album_disk browse `album_artist_album_sort`. (Sort by artist then the default sort)
 * Album_disk query sort `album_artist_title`. (Sort by artist name then album title)
 * Discogs search icon to valid library items
-* Browse `album_artist_album_sort` added to artist pages. (Sort by artist name then default album sort)
 * Add `no_license` to song search
 * Add refresh icons to each dashboard page row
 * Add refresh icons to each home dashboard plugin page row
