@@ -38,15 +38,15 @@ use Ampache\Module\Util\Ui;
 
 class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInterface
 {
-    public string $name        = 'Home Dashboard';
+    public string $name = 'Home Dashboard';
 
-    public string $categories  = 'home';
+    public string $categories = 'home';
 
     public string $description = 'Show Album dashboard sections on the homepage';
 
-    public string $url         = '';
+    public string $url = '';
 
-    public string $version     = '000002';
+    public string $version = '000002';
 
     public string $min_ampache = '370021';
 
@@ -169,8 +169,8 @@ class AmpacheHomeDashboard extends AmpachePlugin implements PluginDisplayHomeInt
         $threshold   = AmpConfig::get('stats_threshold', 7);
         $limit       = $this->maxitems;
         $object_type = (AmpConfig::get('album_group'))
-        ? 'album'
-        : 'album_disk';
+            ? 'album'
+            : 'album_disk';
 
         $object_ids = ($this->random)
             ? $this->getAlbumRepository()->getRandom($this->user->getId(), $limit)

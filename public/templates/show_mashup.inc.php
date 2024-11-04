@@ -31,9 +31,9 @@ use Ampache\Repository\Model\User;
 /** @var string $object_type */
 /** @var User $user */
 
-$threshold      = AmpConfig::get('stats_threshold', 7);
-$limit          = (int)AmpConfig::get('popular_threshold', 10);
-$web_path       = AmpConfig::get_web_path();
+$threshold = AmpConfig::get('stats_threshold', 7);
+$limit     = (int)AmpConfig::get('popular_threshold', 10);
+$web_path  = AmpConfig::get_web_path();
 
 require_once Ui::find_template('show_form_mashup.inc.php');
 
@@ -94,7 +94,7 @@ if (!empty($object_ids)) {
     Ui::show_box_top(T_('Popular') . "&nbsp" . Ajax::button('?page=index&action=dashboard_popular&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'popular', 'dashboard_popular'), 'popular');
     echo "</a>";
     echo '<div id="dashboard_popular">';
-    $browse     = new Browse();
+    $browse = new Browse();
     $browse->set_type($object_type);
     $browse->set_show_header(false);
     $browse->set_grid_view(false, false);
