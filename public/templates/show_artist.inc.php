@@ -89,7 +89,7 @@ if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_name) . "&item_type=b\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\https://www.discogs.com/search/?q=" . rawurlencode($f_name) . "&type=artist\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode($f_name) . "&type=artist\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($artist->mbid) {

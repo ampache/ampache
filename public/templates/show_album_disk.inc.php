@@ -96,7 +96,7 @@ if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\https://www.discogs.com/search/?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($albumDisk->mbid) {
