@@ -68,12 +68,14 @@ use Ampache\Repository\Model\Userflag;
 
 <?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
     <td class="cel_ratings">
-        <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">
-            <?php echo Rating::show($libitem->getId(), 'search'); ?>
-        </span>
-        <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_search">
-            <?php echo Userflag::show($libitem->getId(), 'search'); ?>
-        </span>
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">
+                <?php echo Rating::show($libitem->getId(), 'search'); ?>
+            </span>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_search">
+                <?php echo Userflag::show($libitem->getId(), 'search'); ?>
+            </span>
+        </div>
     </td>
 <?php } ?>
 <td class="cel_owner"><?php echo scrub_out($libitem->username); ?></td>

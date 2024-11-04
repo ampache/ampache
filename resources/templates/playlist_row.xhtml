@@ -29,8 +29,10 @@
     <td class="cel_type" tal:content="structure PLAYLIST/getType">TYPE</td>
     <td class="cel_medias" tal:content="structure PLAYLIST/getMediaCount">COUNT</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
-        <span class="cel_rating" id="rating_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getRating">RATING</span>
-        <span class="cel_userflag" id="userflag_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getUserFlags">USERFLAGS</span>
+        <div class="rating">
+            <span class="cel_rating" id="rating_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${PLAYLIST/getId}_playlist" tal:content="structure PLAYLIST/getUserFlags">USERFLAGS</span>
+        </div>
     </td>
     <td class="cel_owner" tal:content="structure PLAYLIST/getUsername">OWNER</td>
     <td class="cel_action">

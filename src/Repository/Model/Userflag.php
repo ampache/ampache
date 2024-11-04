@@ -404,7 +404,7 @@ class Userflag extends database_object
         }
         $text = Ajax::button($action, $icon, $alt, $source, '');
 
-        return sprintf('<span class="userflag">%s</span>', $text);
+        return $text;
     }
 
     /**

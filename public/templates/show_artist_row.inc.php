@@ -95,12 +95,14 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
-                    <?php echo Rating::show($libitem->id, 'artist'); ?>
-                </span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
-                    <?php echo Userflag::show($libitem->id, 'artist'); ?>
-                </span>
+                <div class="rating">
+                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
+                        <?php echo Rating::show($libitem->id, 'artist'); ?>
+                    </span>
+                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
+                        <?php echo Userflag::show($libitem->id, 'artist'); ?>
+                    </span>
+                </div>
             <?php } ?>
         </td>
     <?php } ?>

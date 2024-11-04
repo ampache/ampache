@@ -58,8 +58,10 @@
     </tal:block>
     <tal:block tal:condition="USING_RATINGS">
         <td class="cel_ratings">
-            <span class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
-            <span class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
+            <div class="rating">
+                <span class="cel_rating" id="rating_${SONG/getId}_song" tal:content="structure SONG/getRating">RATING</span>
+                <span class="cel_userflag" id="userflag_${SONG/getId}_song" tal:content="structure SONG/getUserFlags">USERFLAGS</span>
+            </div>
         </td>
     </tal:block>
     <td class="cel_action">
