@@ -28,7 +28,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration702002 extends AbstractMigration
 {
-    protected array $changelog = ['Add user preferences to show/hide external search links on object pages.'];
+    protected array $changelog = ['Add user preferences to show/hide Discogs search links on object pages.'];
 
     public function migrate(): void
     {

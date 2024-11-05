@@ -866,6 +866,17 @@ class Song extends database_object implements
     }
 
     /**
+     * get_album_disk_subtitle
+     * gets the disk subtitle allows passing of id
+     */
+    public function get_album_disk_subtitle(): ?string
+    {
+        $albumDisk = new AlbumDisk((int)$this->get_album_disk());
+
+        return $albumDisk->disksubtitle;
+    }
+
+    /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
      * @param int $album_id
@@ -1170,8 +1181,7 @@ class Song extends database_object implements
     public function update(array $data): int
     {
         foreach ($data as $key => $value) {
-            debug_event(self::class, $key . '=' . $value, 5);
-
+            //debug_event(self::class, $key . '=' . $value, 5);
             switch ($key) {
                 case 'artist_name':
                     // Create new artist name and id
@@ -1205,20 +1215,30 @@ class Song extends database_object implements
                         self::update_album($new_album_id, $this->id, $old_album_id);
                     }
                     break;
-                case 'year':
-                case 'title':
-                case 'track':
-                case 'mbid':
-                case 'license':
+                case 'disk':
+                    // Check to see if it needs to be updated
+                    if ($value != $this->disk) {
+                        // create the album_disk (if missing)
+                        AlbumDisk::check($this->album, $value, $this->catalog, $this->get_album_disk_subtitle());
+
+                        self::update_disk($value, $this->id);
+                        $this->disk = $value;
+                    }
+                    break;
+                case 'bitrate':
+                case 'comment':
                 case 'composer':
                 case 'label':
                 case 'language':
-                case 'comment':
-                case 'publisher':
-                case 'bitrate':
-                case 'rate':
+                case 'license':
+                case 'mbid':
                 case 'mode':
+                case 'publisher':
+                case 'rate':
                 case 'size':
+                case 'title':
+                case 'track':
+                case 'year':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         /**
@@ -1274,6 +1294,17 @@ class Song extends database_object implements
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, [$new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
+    }
+
+    /**
+     * update_disk
+     * update the disk tag
+     * @param int $new_disk
+     * @param int $song_id
+     */
+    public static function update_disk($new_disk, $song_id): void
+    {
+        self::_update_item('disk', $new_disk, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**

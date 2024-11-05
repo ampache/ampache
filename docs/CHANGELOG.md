@@ -1,15 +1,44 @@
 # CHANGELOG
 
-## Ampache 7.0.2
+## Ampache 7.1.0
 
 ### Added
 
-* Album and album_disk browse `album_artist_album_sort` (Sort by artist then the default sort)
-* Album_disk query sort `album_artist_title` (Sort by artist name then album title)
+* Album and album_disk browse `album_artist_album_sort`. (Sort by artist then the default sort)
+* Album_disk query sort `album_artist_title`. (Sort by artist name then album title)
+* Discogs search icon to valid library items
+* Add `no_license` to song search
+* Add refresh icons to each dashboard page row
+* Add refresh icons to each home dashboard plugin page row
+* Update Creative Commons 3.0 licenses and include 4.0 versions
+* Debug messages from cron process
+* Allow editing album_disk objects directly
+  * If you edit `disk` number the songs with the disk number will also be updated
+  * Edit `disksubtitle` and update album_disk
+  * Check for album_disk when updating song `disk` value
+  * Garbage collect orphaned album_disks
+* Add album_disk edit links to each disk on group pages
+* Allow editing song `disk`
+* Database 702002
+  * Update Creative Commons 3.0 licenses with a version suffix
+  * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
+  * Add user preferences to show/hide Discogs links on object pages
+
+### Changed
+
+* Convert `custom_text_footer` to a system preference
+* Updating album_disk `disk` number will migrate matching song disks to the new value
 
 ### Fixed
 
 * Secondary tab jplayer not checking the player is loaded on pause check
+* Loading text is in the wrong spot when using a fixed header theme
+* Light sidebar album link didn't respect `album_group`
+* Album display when you have 0 disks
+* Searching with `catalog_filter` enabled would return nothing for System user
+* Speed up preference lookups and compatability checks
+* Art link on album_disk objects pointed to the album
+* Make sure a user is set in the album page templates
 
 ## Ampache 7.0.1
 
@@ -90,7 +119,7 @@ I want to just thank everyone who has helped over the last year on this version 
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
 * Browse
-  * Sort by play count (`total_count`) for podcast, podcast_episode and video 
+  * Sort by play count (`total_count`) for podcast, podcast_episode and video
   * Add `country` and `active` sort to label
   * Add `rating` sort to live_stream and video
   * Add `id` browse to all types

@@ -34,7 +34,7 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '7.0.2'; // AMPACHE_VERSION
+    private const VERSION        = '7.1.0'; // AMPACHE_VERSION
     private const CONFIG_VERSION = '75';
     private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
