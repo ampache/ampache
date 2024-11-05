@@ -609,6 +609,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function update(array $data): int
     {
+        //debug_event(self::class, "update: " . print_r($data, true), 4);
         $album_id     = $this->album->update($data);
         $disk         = (int)($data['disk'] ?? $this->disk);
         $catalog      = $data['catalog'] ?? $this->catalog;
