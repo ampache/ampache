@@ -209,7 +209,7 @@ if (AmpConfig::get('sociable') && !empty($owner_id)) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if ((!empty($owner_id) && $owner_id === ($current_user->getId() ?? null)) || $access50) {
+        <?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
