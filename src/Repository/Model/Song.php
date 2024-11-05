@@ -1205,6 +1205,7 @@ class Song extends database_object implements
                         self::update_album($new_album_id, $this->id, $old_album_id);
                     }
                     break;
+                case 'disk':
                 case 'year':
                 case 'title':
                 case 'track':
@@ -1274,6 +1275,17 @@ class Song extends database_object implements
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, [$new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
+    }
+
+    /**
+     * update_disk
+     * update the disk tag
+     * @param int $new_disk
+     * @param int $song_id
+     */
+    public static function update_disk($new_disk, $song_id): void
+    {
+        self::_update_item('disk', $new_disk, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
