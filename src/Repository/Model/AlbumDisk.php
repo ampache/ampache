@@ -211,12 +211,26 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param int $catalog_id
      * @param null|string $disksubtitle
      */
-    public static function check($album_id, $disk, $catalog_id, $disksubtitle): void
+    public static function check($album_id, $disk, $catalog_id, $disksubtitle): int
     {
+        // check if the album_disk exists
+        $db_results = (!empty($disksubtitle))
+            ? Dba::read("SELECT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
+            : Dba::read("SELECT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?;", [$album_id, $disk, $catalog_id]);
+        $row = Dba::fetch_assoc($db_results);
+        if (isset($row['id'])) {
+            return $row['id'];
+        }
+
         // create the album_disk (if missing)
-        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?)";
-        Dba::write($sql, [$album_id, $disk, $catalog_id]);
-        // count a new song on the disk right away
+        $db_results = Dba::write("INSERT INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?);", [$album_id, $disk, $catalog_id]);
+        if (!$db_results) {
+            return 0;
+        }
+
+        $album_id = Dba::insert_id();
+
+        // count a new song on the new disk right away
         $sql = "UPDATE `album_disk` SET `song_count` = `song_count` + 1 WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
         Dba::write($sql, [$album_id, $disk, $catalog_id]);
         if (!empty($disksubtitle)) {
@@ -224,6 +238,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?";
             Dba::write($sql, [$disksubtitle, $album_id, $disk, $catalog_id]);
         }
+
+        return $album_id;
     }
 
     /**
@@ -576,7 +592,11 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function update(array $data): int
     {
-        return $this->id;
+        $album_id     = $this->album->update($data);
+        $disk         = (int)($data['disk'] ?? $this->disk);
+        $disksubtitle = $data['disksubtitle'] ?? $this->disksubtitle;
+
+        return self::check($album_id, $disk, $this->catalog, $disksubtitle);
     }
 
     /**

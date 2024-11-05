@@ -93,10 +93,6 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 </td>
             </tr>
             <tr>
-                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
-                <td><input type="text" name="disk" value="<?php echo $libitem->disk; ?>" /></td>
-            </tr>
-            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Type'); ?></td>
                 <td><input type="text" name="release_type" value="<?php echo $libitem->release_type; ?>" /></td>
             </tr>
@@ -107,6 +103,14 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Release Comment'); ?></td>
                 <td><input type="text" name="version" value="<?php echo $libitem->version; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
+                <td><input type="text" name="disk" value="<?php echo $libitem->disk; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk Subtitle'); ?></td>
+                <td><input type="text" name="disksubtitle" value="<?php echo $libitem->disksubtitle; ?>" /></td>
             </tr>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number'); ?></td>
