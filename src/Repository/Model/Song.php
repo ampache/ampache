@@ -866,6 +866,17 @@ class Song extends database_object implements
     }
 
     /**
+     * get_album_disk_subtitle
+     * gets the disk subtitle allows passing of id
+     */
+    public function get_album_disk_subtitle(): ?string
+    {
+        $albumDisk = new AlbumDisk((int)$this->get_album_disk());
+
+        return $albumDisk->disksubtitle;
+    }
+
+    /**
      * get_album_catalog_number
      * gets the catalog_number of $this->album, allows passing of id
      * @param int $album_id
@@ -1206,20 +1217,29 @@ class Song extends database_object implements
                     }
                     break;
                 case 'disk':
-                case 'year':
-                case 'title':
-                case 'track':
-                case 'mbid':
-                case 'license':
+                    // Check to see if it needs to be updated
+                    if ($value != $this->disk) {
+                        // create the album_disk (if missing)
+                        AlbumDisk::check($this->album, $value, $this->catalog, $this->get_album_disk_subtitle());
+
+                        self::update_disk($value, $this->id);
+                        $this->disk = $value;
+                    }
+                    break;
+                case 'bitrate':
+                case 'comment':
                 case 'composer':
                 case 'label':
                 case 'language':
-                case 'comment':
-                case 'publisher':
-                case 'bitrate':
-                case 'rate':
+                case 'license':
+                case 'mbid':
                 case 'mode':
+                case 'publisher':
+                case 'rate':
                 case 'size':
+                case 'title':
+                case 'track':
+                case 'year':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         /**

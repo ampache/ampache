@@ -212,12 +212,12 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param null|string $disksubtitle
      * @param null|int $current_id
      */
-    public static function check($album_id, $disk, $catalog_id, $disksubtitle, $current_id = null): int
+    public static function check($album_id, $disk, $catalog_id, $disksubtitle = null, $current_id = null): int
     {
         // check if the album_disk exists
         $db_results = (!empty($disksubtitle))
             ? Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
-            : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?;", [$album_id, $disk, $catalog_id]);
+            : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` IS NULL;", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
             return (int)$row['id'];
