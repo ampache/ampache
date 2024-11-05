@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
@@ -48,9 +49,10 @@ global $dic;
 /** @var bool $isAlbumEditable */
 /** @var User $current_user */
 
-$zipHandler = $dic->get(ZipHandlerInterface::class);
-$batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
-$zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
+$current_user = $current_user ?? Core::get_global('user');
+$zipHandler   = $dic->get(ZipHandlerInterface::class);
+$batch_dl     = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
+$zip_albumD   = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
 $web_path = AmpConfig::get_web_path();
 
