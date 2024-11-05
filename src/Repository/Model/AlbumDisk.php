@@ -230,7 +230,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
         // update existing ID
         if ($current_id) {
-            $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id`` = ?;", [$current_id]);
+            $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id` = ?;", [$current_id]);
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
                 // alter the existing disk after editing
