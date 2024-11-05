@@ -235,7 +235,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 </li>
             <?php } ?>
             <li>
-                <a id="<?php echo 'edit_album_' . $albumDisk->album_id; ?>" onclick="showEditDialog('album_row', '<?php echo $albumDisk->album_id; ?>', '<?php echo 'edit_album_' . $albumDisk->album_id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+                <a id="<?php echo 'edit_album_disk_' . $albumDisk->getId(); ?>" onclick="showEditDialog('album_disk_row', '<?php echo $albumDisk->getId(); ?>', '<?php echo 'edit_album_disk_' . $albumDisk->getId(); ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit'));
             echo "&nbsp;" . T_('Edit Album'); ?>
                 </a>
