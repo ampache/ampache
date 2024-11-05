@@ -309,6 +309,11 @@ foreach ($album->getDisks() as $album_disk) {
             echo Share::display_ui('album_disk', $album_disk->id, false);
         }
     }
+    if ($isAlbumEditable) { ?>
+        <a id="<?php echo 'edit_album_disk_' . $album_disk->id; ?>" onclick="showEditDialog('album_disk_row', '<?php echo $album_disk->id; ?>', '<?php echo 'edit_album_disk_' . $album_disk->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+                </a>
+    <?php }
     if ($zip_albumD) { ?>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('folder_zip', T_('Download')); ?></a>
         <?php } ?>
