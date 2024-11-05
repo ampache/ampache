@@ -131,7 +131,7 @@ sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_c
 
 <?php
 $owner_id = $albumDisk->get_user_owner();
-if (AmpConfig::get('sociable') && $owner_id > 0) {
+if (AmpConfig::get('sociable') && !empty($owner_id)) {
     $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
     <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
@@ -209,7 +209,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
+        <?php if ((!empty($owner_id) && $owner_id === ($current_user->getId() ?? null)) || $access50) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
