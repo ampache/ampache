@@ -138,6 +138,7 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
             </tr>
         </table>
         <input type="hidden" name="id" value="<?php echo $libitem->id; ?>" />
+        <input type="hidden" name="catalog" value="<?php echo $libitem->catalog; ?>" />
         <input type="hidden" name="type" value="album_disk_row" />
     </form>
 </div>
