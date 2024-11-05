@@ -210,8 +210,9 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      * @param int $disk
      * @param int $catalog_id
      * @param null|string $disksubtitle
+     * @param null|int $current_id
      */
-    public static function check($album_id, $disk, $catalog_id, $disksubtitle): int
+    public static function check($album_id, $disk, $catalog_id, $disksubtitle, $current_id = null): int
     {
         // check if the album_disk exists
         $db_results = (!empty($disksubtitle))
@@ -219,7 +220,23 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             : Dba::read("SELECT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?;", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
-            return $row['id'];
+            return (int)$row['id'];
+        }
+
+        // update existing ID
+        if ($current_id) {
+            $db_results = Dba::read("SELECT * FROM `album_disk` WHERE `id`` = ?;", [$current_id]);
+            $row        = Dba::fetch_assoc($db_results);
+            if (isset($row['id'])) {
+                // alter the existing disk after editing
+                Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $current_id, $disksubtitle]);
+                if ($row['disk'] !== $disk) {
+                    // Update songs when you edit an album_disk object
+                    Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
+                }
+
+                return $current_id;
+            }
         }
 
         // create the album_disk (if missing)
@@ -597,7 +614,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         $catalog      = $data['catalog'] ?? $this->catalog;
         $disksubtitle = $data['disksubtitle'] ?? $this->disksubtitle;
 
-        return self::check($album_id, $disk, $catalog, $disksubtitle);
+        return self::check($album_id, $disk, $catalog, $disksubtitle, $this->id);
     }
 
     /**
