@@ -76,6 +76,10 @@ final class EditObjectAction extends AbstractEditAction
             return $data;
         };
 
+        if (!isset($_POST['id'])) {
+            return null;
+        }
+
         $user   = $gatekeeper->getUser();
         $userId = ($user)
             ? $user->getId()
