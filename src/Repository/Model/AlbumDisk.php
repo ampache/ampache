@@ -220,11 +220,6 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ?;", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
-            if ($current_id && $row['disk'] !== $disk) {
-                // Update songs when you edit an album_disk object
-                Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
-            }
-
             return (int)$row['id'];
         }
 
