@@ -462,10 +462,10 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function get_parent(): ?array
     {
-        if ($this->album_id !== 0) {
+        if (!empty($this->album_artist)) {
             return [
                 'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $this->album_id
+                'object_id' => (int) $this->album_artist,
             ];
         }
 

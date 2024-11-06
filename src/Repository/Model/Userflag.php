@@ -299,8 +299,8 @@ class Userflag extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user !== null) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user->getId());
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
         }
 
         if ($input_type == 'album_artist') {
