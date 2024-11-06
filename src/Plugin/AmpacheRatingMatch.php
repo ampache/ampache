@@ -28,6 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -199,7 +200,29 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 }
             }
 
-            if ($rating->type == 'album') { // TODO missing album_disk
+            if ($rating->type == 'album_disk') {
+                $album_disk = new AlbumDisk($rating->id);
+                // rate the album when the disk count is 1
+                if ($album_disk->disk_count == 1) {
+                    $rAlbum       = new Rating($album_disk->album_id, 'album');
+                    $rating_album = $rAlbum->get_user_rating($this->user->id);
+                    if ($rating_album < $new_rating) {
+                        $rAlbum->set_rating($new_rating, $this->user->id);
+                    }
+                }
+
+                if ($album_disk->album_artist) {
+                    // rate all the album artists (If there are more than one)
+                    foreach (Album::get_parent_array($album_disk->album_id, $album_disk->album_artist) as $artist_id) {
+                        $rArtist       = new Rating($artist_id, 'artist');
+                        $rating_artist = $rArtist->get_user_rating($this->user->id);
+                        if ($rating_artist <= $new_rating) {
+                            $rArtist->set_rating($new_rating, $this->user->id);
+                        }
+                    }
+                }
+            }
+            if ($rating->type == 'album') {
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
                 $rating_album = $rAlbum->get_user_rating($this->user->id);

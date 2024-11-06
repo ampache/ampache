@@ -252,7 +252,7 @@ class Rating extends database_object
     public static function get_highest_sql($input_type, $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
-        $user_id = (int)($user_id);
+        $user_id = (int)($user_id ?? -1);
         $sql     = "SELECT MAX(`rating`.`id`) AS `table_id`, MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count` FROM `rating`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
@@ -263,7 +263,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($input_type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
+        if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user_id);
         }
 
@@ -419,8 +419,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user !== null) {
-            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user->getId());
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user?->getId() ?? -1);
         }
 
         if ($input_type == 'album_artist') {

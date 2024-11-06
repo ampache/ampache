@@ -613,12 +613,12 @@ class Stats
      */
     public static function get_object_history($time, $newest = true): array
     {
-        $user_id = Core::get_global('user')?->getId() ?? 0;
+        $user_id = Core::get_global('user')?->getId() ?? -1;
         $order   = ($newest) ? 'DESC' : 'ASC';
         $sql     = (AmpConfig::get('catalog_disable'))
             ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
             : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
-        $sql .= (AmpConfig::get('catalog_filter') && $user_id > 0)
+        $sql .= (AmpConfig::get('catalog_filter'))
             ? " AND" . Catalog::get_user_filter('song', $user_id) . "ORDER BY `object_count`.`date` " . $order
             : "ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, [$user_id, $time]);

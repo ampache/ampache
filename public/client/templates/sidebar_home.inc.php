@@ -215,7 +215,7 @@ if (
 <?php if (
     $access25 &&
     !AmpConfig::get('sidebar_hide_playlist', false)
-) {  ?>
+) { ?>
     <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
