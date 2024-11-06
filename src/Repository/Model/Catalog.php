@@ -743,7 +743,7 @@ abstract class Catalog extends database_object
         $system = ($user_id < 0);
         switch ($type) {
             case "album":
-                case "album_disk":
+            case "album_disk":
             case "song":
             case "video":
             case "podcast":
@@ -1011,13 +1011,11 @@ abstract class Catalog extends database_object
         }
 
         if (AmpConfig::get('catalog_filter')) {
-            if ($user_id > 0) {
+            if ($user_id > 1) {
+                $sql .= $join . ' `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0) ';
+            } else {
                 $sql .= $join . self::get_user_filter('catalog', $user_id);
                 $join = 'AND';
-            }
-
-            if ($user_id == -1) {
-                $sql .= $join . ' `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0) ';
             }
         }
 

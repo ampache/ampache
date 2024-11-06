@@ -141,10 +141,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         int $albumDiskId
     ): array {
         $user   = Core::get_global('user');
-        $userId = $user?->getId();
+        $userId = $user?->getId() ?? -1;
         $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if (AmpConfig::get('catalog_filter') && $user instanceof User && $user->getId() > 0) {
-            $sql .= "AND" . Catalog::get_user_filter('song', $user->getId()) . " ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', $userId) . " ";
         }
 
         $sql .= "ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
@@ -169,8 +169,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
-            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')?->id ?? -1) . " ";
         }
 
         $sql .= 'ORDER BY RAND()';
@@ -195,8 +195,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $sql = (AmpConfig::get('catalog_disable'))
             ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `album_disk`.`id` = ? AND `catalog`.`enabled` = '1' "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
-        if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
-            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')->id) . " ";
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')?->id ?? -1) . " ";
         }
 
         $sql .= 'ORDER BY RAND()';
