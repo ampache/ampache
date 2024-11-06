@@ -31,7 +31,6 @@ use Ampache\Module\System\Core;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Catalog;
-use Ampache\Repository\Model\User;
 
 final readonly class AlbumRepository implements AlbumRepositoryInterface
 {

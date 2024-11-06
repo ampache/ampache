@@ -4,21 +4,25 @@
 
 ### Added
 
-* Album and album_disk browse `album_artist_album_sort`. (Sort by artist then the default sort)
-* Album_disk query sort `album_artist_title`. (Sort by artist name then album title)
+* Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
+* AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
 * Discogs search icon to valid library items
 * Add `no_license` to song search
 * Add refresh icons to each dashboard page row
 * Add refresh icons to each home dashboard plugin page row
 * Update Creative Commons 3.0 licenses and include 4.0 versions
 * Debug messages from cron process
-* Allow editing album_disk objects directly
+* Add Album name to song search in top bar and expand the list
+* Debug warnings on searches with no rules
+* Allow editing AlbumDisk objects directly
   * If you edit `disk` number the songs with the disk number will also be updated
-  * Edit `disksubtitle` and update album_disk
-  * Check for album_disk when updating song `disk` value
-  * Garbage collect orphaned album_disks
-* Add album_disk edit links to each disk on group pages
+  * Edit `disksubtitle` and update AlbumDisk
+  * Check for AlbumDisk when updating song `disk` value
+  * Garbage collect orphaned AlbumDisks
+* Add AlbumDisk edit links to each disk on group pages
 * Allow editing song `disk`
+* Plugin
+  * RatingMatch set the rating for Albums on single AlbumDisk objects
 * Database 702002
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
@@ -27,7 +31,10 @@
 ### Changed
 
 * Convert `custom_text_footer` to a system preference
-* Updating album_disk `disk` number will migrate matching song disks to the new value
+* Updating AlbumDisk `disk` number will migrate matching song disks to the new value
+* Load Ampache CSS after 3rd party components
+* Search
+  * AlbumDisk searches look for the disk rating
 
 ### Fixed
 
@@ -36,9 +43,17 @@
 * Light sidebar album link didn't respect `album_group`
 * Album display when you have 0 disks
 * Searching with `catalog_filter` enabled would return nothing for System user
+* Guest user access to dashboard items when using `catalog_filter`
 * Speed up preference lookups and compatability checks
-* Art link on album_disk objects pointed to the album
+* Art link on AlbumDisk objects pointed to the album
 * Make sure a user is set in the album page templates
+* Hide search action buttons on smartlists when the user is a guest
+* Incorrect get_parent for Albums and AlbumDisks
+* Search
+  * AlbumDisk searches not looking for the AlbumDisk rating
+  * SongSearch not checking `album_group` setting for `albumrating`
+* SubSonic
+  * Trying to add duplication XML art attribute
 
 ## Ampache 7.0.1
 
