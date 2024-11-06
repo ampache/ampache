@@ -184,6 +184,7 @@ final readonly class SearchAjaxHandler implements AjaxHandlerInterface
                             'value' => scrub_out($song->title),
                             'rels' => scrub_out($song->get_artist_fullname()),
                             'image' => (string)Art::url($art_object, $art_type, null, 10),
+                            'album' => $song->get_album_fullname(),
                         ];
                     }
                 }

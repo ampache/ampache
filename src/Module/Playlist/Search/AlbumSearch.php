@@ -122,6 +122,7 @@ final class AlbumSearch implements SearchInterface
                         : "";
                     break;
                 case 'myrating':
+                case 'albumrating':
                 case 'artistrating':
                     // combine these as they all do the same thing just different tables
                     $looking = str_replace('rating', '', $rule[0]);
@@ -246,6 +247,10 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'played_times':
                     $where[]      = "`album`.`total_count` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'disk_count':
+                    $where[]      = "`album`.`disk_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
                 case 'song_count':
@@ -441,6 +446,9 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'duplicate_tracks':
                     $where[] = "`album`.`id` IN (SELECT `album` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
+                    break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
                     break;
             } // switch on ruletype album
         } // foreach rule

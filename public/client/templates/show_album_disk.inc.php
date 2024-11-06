@@ -30,6 +30,7 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
@@ -48,9 +49,10 @@ global $dic;
 /** @var bool $isAlbumEditable */
 /** @var User $current_user */
 
-$zipHandler = $dic->get(ZipHandlerInterface::class);
-$batch_dl   = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
-$zip_albumD = $batch_dl && $zipHandler->isZipable('album_disk');
+$current_user = $current_user ?? Core::get_global('user');
+$zipHandler   = $dic->get(ZipHandlerInterface::class);
+$batch_dl     = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
+$zip_albumD   = $batch_dl && $zipHandler->isZipable('album_disk');
 // Title for this album
 $web_path = AmpConfig::get_web_path('/client');
 
@@ -129,7 +131,7 @@ sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_c
 
 <?php
 $owner_id = $albumDisk->get_user_owner();
-if (AmpConfig::get('sociable') && $owner_id > 0) {
+if (AmpConfig::get('sociable') && !empty($owner_id)) {
     $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
     <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
@@ -207,7 +209,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
+<?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">
@@ -235,7 +237,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
                 </li>
             <?php } ?>
             <li>
-                <a id="<?php echo 'edit_album_' . $albumDisk->album_id; ?>" onclick="showEditDialog('album_row', '<?php echo $albumDisk->album_id; ?>', '<?php echo 'edit_album_' . $albumDisk->album_id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+                <a id="<?php echo 'edit_album_disk_' . $albumDisk->getId(); ?>" onclick="showEditDialog('album_disk_row', '<?php echo $albumDisk->getId(); ?>', '<?php echo 'edit_album_disk_' . $albumDisk->getId(); ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
                     <?php echo Ui::get_material_symbol('edit', T_('Edit'));
             echo "&nbsp;" . T_('Edit Album'); ?>
                 </a>

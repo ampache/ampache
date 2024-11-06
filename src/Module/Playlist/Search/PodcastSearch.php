@@ -192,6 +192,9 @@ final class PodcastSearch implements SearchInterface
                     $parameters[]            = $input;
                     $join['podcast_episode'] = true;
                     break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
+                    break;
             } // switch on ruletype
         } // foreach rule
 

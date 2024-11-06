@@ -56,8 +56,8 @@
 
         <a
                 tal:condition="ALBUMDISK/isEditable"
-                id="edit_album_${ALBUMDISK/getAlbumId}"
-                onclick="showEditDialog('album_row', '${ALBUMDISK/getAlbumId}', 'edit_album_${ALBUMDISK/getAlbumId}', '${ALBUMDISK/getEditButtonTitle}', 'album_disk_')"
+                id="edit_album_disk_${ALBUMDISK/getId}"
+                onclick="showEditDialog('album_disk_row', '${ALBUMDISK/getId}', 'edit_album_disk_${ALBUMDISK/getId}', '${ALBUMDISK/getEditButtonTitle}', 'album_disk_')"
                 tal:content="structure ALBUMDISK/getEditIcon"
         >EDIT</a>
 
