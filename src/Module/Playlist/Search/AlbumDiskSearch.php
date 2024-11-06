@@ -127,7 +127,7 @@ final class AlbumDiskSearch implements SearchInterface
                     $albumString = (AmpConfig::get('album_group'))
                         ? 'album'
                         : 'album_disk';
-                        // combine these as they all do the same thing just different tables
+                    // combine these as they all do the same thing just different tables
                     $looking = str_replace('rating', '', $rule[0]);
                     $column  = ($looking == 'my' || $looking == 'album') ? '`' . $albumString . '`.`id`' : '`album_map`.`object_id`';
                     $my_type = ($looking == 'my' || $looking == 'album') ? $albumString : $looking;
