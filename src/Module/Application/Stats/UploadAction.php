@@ -66,7 +66,7 @@ final class UploadAction implements ApplicationActionInterface
         define('NO_BROWSE_SORTING', true);
 
         $this->ui->showBoxTop(T_('Uploads'));
-        $user_id = Core::get_global('user')?->getId() ?? 0;
+        $user_id = Core::get_global('user')?->getId() ?? -1;
         $browse  = $this->modelFactory->createBrowse();
         $browse->set_type(
             'song',

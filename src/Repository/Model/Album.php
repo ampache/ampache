@@ -762,9 +762,9 @@ class Album extends database_object implements library_item, CatalogItemInterfac
      */
     public function get_parent(): ?array
     {
-        if ($this->artist_count === 1) {
+        if (!empty($this->album_artist)) {
             return [
-                'object_type' => LibraryItemEnum::ALBUM,
+                'object_type' => LibraryItemEnum::ARTIST,
                 'object_id' => (int) $this->album_artist,
             ];
         }
