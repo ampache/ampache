@@ -80,6 +80,9 @@ final class LabelSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
+                    break;
             } // switch on ruletype
         } // foreach rule
 
