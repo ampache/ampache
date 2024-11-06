@@ -360,8 +360,43 @@ final class SongSearch implements SearchInterface
                         : "";
                     $join['artist'] = true;
                     break;
-                case 'myrating':
                 case 'albumrating':
+                    $my_type     = 'album';
+                    $albumString = (AmpConfig::get('album_group'))
+                        ? 'album'
+                        : 'album_disk';
+                    $join_col = (AmpConfig::get('album_group'))
+                        ? '`song`.`album`'
+                        : '`album_disk`.`album_id`';
+                    if ($input == 0 && $operator_sql == '>=') {
+                        break;
+                    }
+                    if ($input == 0 && $operator_sql == '<') {
+                        $input        = -1;
+                        $operator_sql = '=';
+                    }
+                    if ($input == 0 && $operator_sql == '<>') {
+                        $input        = 1;
+                        $operator_sql = '>=';
+                    }
+                    if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
+                        $where[] = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL";
+                    } elseif (in_array($operator_sql, ['<>', '<', '<=', '!='])) {
+                        $where[]      = "(`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL)";
+                        $parameters[] = $input;
+                    } else {
+                        $where[]      = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ?";
+                        $parameters[] = $input;
+                    }
+                    // rating once per user
+                    if (!array_key_exists('rating', $table)) {
+                        $table['rating'] = '';
+                    }
+                    $table['rating'] .= (!strpos((string) $table['rating'], "rating_" . $my_type . "_" . $search_user_id))
+                        ? "LEFT JOIN (SELECT `object_id`, `object_type`, `rating` FROM `rating` WHERE `user` = " . $search_user_id . " AND `object_type`='$albumString') AS `rating_" . $my_type . "_" . $search_user_id . "` ON `rating_" . $my_type . "_" . $search_user_id . "`.`object_id` = $join_col"
+                        : "";
+                    break;
+                case 'myrating':
                 case 'artistrating':
                     // combine these as they all do the same thing just different tables
                     $looking = str_replace('rating', '', $rule[0]);
@@ -630,6 +665,9 @@ final class SongSearch implements SearchInterface
         if (array_key_exists('artist', $join)) {
             $table['3_artist_map'] = "LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song'";
             $table['4_artist']     = "LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id`";
+        }
+        if (array_key_exists('album_disk', $join)) {
+            $table['5_album_disk'] = "LEFT JOIN `album_disk` ON `song`.`album` = `album_disk`.`album_id`";
         }
         if (array_key_exists('album', $join)) {
             $table['album'] = "LEFT JOIN `album` ON `song`.`album` = `album`.`id`";
