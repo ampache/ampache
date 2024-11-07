@@ -47,7 +47,7 @@ use Ampache\Repository\Model\Userflag;
 global $dic;
 
 /** @var bool $isAlbumEditable */
-/** @var User $current_user */
+/** @var User|null $current_user */
 
 $current_user = $current_user ?? Core::get_global('user');
 $zipHandler   = $dic->get(ZipHandlerInterface::class);
