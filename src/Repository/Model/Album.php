@@ -1196,7 +1196,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             // Remove the album_map if this was the last track
             $sql = ($object_type == 'album')
                 ? "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` = ? AND object_type = ?;"
-                : "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` from `song` WHERE `album` = ?) AND object_type = ?;";
+                : "SELECT `artist_id` FROM `artist_map` WHERE `artist_id` = ? AND `object_id` IN (SELECT `id` FROM `song` WHERE `album` = ?) AND object_type = ?;";
             $db_results = Dba::read($sql, [$object_id, $album_id, $object_type]);
             $row        = Dba::fetch_assoc($db_results);
             if ($row === []) {
