@@ -4,6 +4,7 @@
 
 ### Added
 
+* Update Composer and NPM packages
 * Discogs search icon to valid library items
 * Add refresh icons to each dashboard page row
 * Add refresh icons to each home dashboard plugin page row
@@ -54,6 +55,7 @@
 * Make sure a user is set in the album page templates
 * Incorrect get_parent for Albums and AlbumDisks
 * Guest user can't play podcast_episodes
+* Don't filter Catalog list on admin pages
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest

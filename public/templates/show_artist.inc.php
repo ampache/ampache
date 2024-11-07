@@ -67,7 +67,6 @@ if ($directplay_limit > 0) {
     }
 }
 
-/** @var User|null $current_user */
 $current_user = Core::get_global('user');
 $f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
