@@ -66,7 +66,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-/** @var User $current_user */
+
 $current_user = Core::get_global('user');
 $f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
@@ -209,7 +209,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
-    <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
+    <?php if (!empty($artist->mbid) && $current_user && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>

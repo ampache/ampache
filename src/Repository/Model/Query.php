@@ -1005,7 +1005,7 @@ class Query
                 case 'song':
                 case 'tag':
                 case 'video':
-                    $dis = Catalog::get_user_filter($type, $this->user_id);
+                    $dis = Catalog::get_user_filter($type, $this->user_id ?? -1);
                     break;
             }
         }

@@ -1359,7 +1359,7 @@ class Ui implements UiInterface
                 if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string)$value) . '" />';
                 }
                 break;
         }

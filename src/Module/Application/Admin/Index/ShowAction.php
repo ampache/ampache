@@ -65,7 +65,6 @@ final class ShowAction implements ApplicationActionInterface
         $browse   = $this->modelFactory->createBrowse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
-        $browse->save_objects($catalogs);
         $browse->show_objects($catalogs);
         $browse->store();
 
