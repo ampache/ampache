@@ -1002,16 +1002,19 @@ class Stats
             $base_type = 'video';
             $sql       = "SELECT DISTINCT(`video`.`id`) AS `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
             $sql_type  = "`video`.`id`";
-        } elseif ($type === 'artist') {
-            $sql         = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' ";
-            $sql_type    = "`song`.`artist`";
-            $filter_type = 'song_artist';
-        } elseif ($type === 'album_artist') {
-            $base_type   = 'album';
-            $sql         = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `album` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' ";
-            $sql_type    = "`album`.`album_artist`";
-            $filter_type = 'artist';
-            $type        = 'artist';
+        } elseif ($input_type === 'artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist` ";
+            $sql_type  = '`artist`.`id`';
+        } elseif ($input_type === 'song_artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' ";
+            $sql_type  = '`artist_map`.`artist_id`';
+        } elseif ($input_type === 'album_artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' ";
+            $sql_type  = '`artist_map`.`artist_id`';
+            $type      = 'artist';
         } elseif ($type === 'podcast') {
             $base_type = 'podcast';
             $sql       = "SELECT DISTINCT(`podcast`.`id`) AS `id`, MIN(`podcast`.`lastsync`) AS `real_atime` FROM `podcast` ";
@@ -1025,10 +1028,11 @@ class Stats
             $sql      = "SELECT MIN(`$type`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
             $sql_type = "`song`.`" . $type . "`";
         }
+
         // join valid catalogs or a specific one
         $sql .= ((int)$catalog_id > 0)
-            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . $catalog_id . "' "
-            : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId() ?? null, true)) . ") ";
+            ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
+            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId() ?? null, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)(Core::get_global('user')?->getId());
