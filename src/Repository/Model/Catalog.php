@@ -3102,6 +3102,9 @@ abstract class Catalog extends database_object
         Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
         Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
         Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
+        // artist.addition_time
+        $sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
+        Dba::write($sql);
         // song.played might have had issues
         $sql = "UPDATE `song` SET `song`.`played` = 0 WHERE `song`.`played` = 1 AND `song`.`id` NOT IN (SELECT `object_id` FROM `object_count` WHERE `object_type` = 'song' AND `count_type` = 'stream');";
         Dba::write($sql);
