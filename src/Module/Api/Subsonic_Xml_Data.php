@@ -302,10 +302,6 @@ class Subsonic_Xml_Data
             $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
         }
 
-        if ($artist->has_art()) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-        }
-
         if ($extra) {
             if ($albumsSet) {
                 $xartist->addAttribute('albumCount', (string)$artist->album_count);

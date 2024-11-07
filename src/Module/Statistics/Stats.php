@@ -613,12 +613,12 @@ class Stats
      */
     public static function get_object_history($time, $newest = true): array
     {
-        $user_id = Core::get_global('user')?->getId() ?? 0;
+        $user_id = Core::get_global('user')?->getId() ?? -1;
         $order   = ($newest) ? 'DESC' : 'ASC';
         $sql     = (AmpConfig::get('catalog_disable'))
             ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
             : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
-        $sql .= (AmpConfig::get('catalog_filter') && $user_id > 0)
+        $sql .= (AmpConfig::get('catalog_filter'))
             ? " AND" . Catalog::get_user_filter('song', $user_id) . "ORDER BY `object_count`.`date` " . $order
             : "ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, [$user_id, $time]);
@@ -1002,16 +1002,19 @@ class Stats
             $base_type = 'video';
             $sql       = "SELECT DISTINCT(`video`.`id`) AS `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
             $sql_type  = "`video`.`id`";
-        } elseif ($type === 'artist') {
-            $sql         = "SELECT DISTINCT(`song`.`artist`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `song` ";
-            $sql_type    = "`song`.`artist`";
-            $filter_type = 'song_artist';
-        } elseif ($type === 'album_artist') {
-            $base_type   = 'album';
-            $sql         = "SELECT DISTINCT(`album`.`album_artist`) AS `id`, MIN(`album`.`addition_time`) AS `real_atime` FROM `album` LEFT JOIN `artist` ON `album`.`album_artist` = `artist`.`id` ";
-            $sql_type    = "`album`.`album_artist`";
-            $filter_type = 'artist';
-            $type        = 'artist';
+        } elseif ($input_type === 'artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist` ";
+            $sql_type  = '`artist`.`id`';
+        } elseif ($input_type === 'song_artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' ";
+            $sql_type  = '`artist_map`.`artist_id`';
+        } elseif ($input_type === 'album_artist') {
+            $base_type = 'artist';
+            $sql       = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' ";
+            $sql_type  = '`artist_map`.`artist_id`';
+            $type      = 'artist';
         } elseif ($type === 'podcast') {
             $base_type = 'podcast';
             $sql       = "SELECT DISTINCT(`podcast`.`id`) AS `id`, MIN(`podcast`.`lastsync`) AS `real_atime` FROM `podcast` ";
@@ -1025,10 +1028,11 @@ class Stats
             $sql      = "SELECT MIN(`$type`) AS `id`, MIN(`song`.`addition_time`) AS `real_atime` FROM `$base_type` ";
             $sql_type = "`song`.`" . $type . "`";
         }
+
         // join valid catalogs or a specific one
         $sql .= ((int)$catalog_id > 0)
-            ? "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog` = '" . $catalog_id . "' "
-            : "LEFT JOIN `catalog` ON `catalog`.`id` = `" . $base_type . "`.`catalog` WHERE `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId() ?? null, true)) . ") ";
+            ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
+            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId() ?? null, true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)(Core::get_global('user')?->getId());

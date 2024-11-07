@@ -229,13 +229,13 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
                 // alter the existing disk after editing
-                Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $current_id, $disksubtitle]);
+                Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id]);
                 if ($row['disk'] !== $disk) {
                     // Update songs when you edit an album_disk object
                     Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
                 }
 
-                return $current_id;
+                return (int)$current_id;
             }
         }
 
@@ -256,7 +256,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             Dba::write($sql, [$disksubtitle, $album_id, $disk, $catalog_id]);
         }
 
-        return $album_id;
+        return (int)$album_id;
     }
 
     /**
@@ -462,10 +462,10 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function get_parent(): ?array
     {
-        if ($this->album_id !== 0) {
+        if (!empty($this->album_artist)) {
             return [
                 'object_type' => LibraryItemEnum::ARTIST,
-                'object_id' => $this->album_id
+                'object_id' => (int) $this->album_artist,
             ];
         }
 
@@ -609,6 +609,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
      */
     public function update(array $data): int
     {
+        //debug_event(self::class, "update: " . print_r($data, true), 4);
         $album_id     = $this->album->update($data);
         $disk         = (int)($data['disk'] ?? $this->disk);
         $catalog      = $data['catalog'] ?? $this->catalog;

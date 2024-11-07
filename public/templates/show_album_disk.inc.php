@@ -47,7 +47,7 @@ use Ampache\Repository\Model\Userflag;
 global $dic;
 
 /** @var bool $isAlbumEditable */
-/** @var User $current_user */
+/** @var User|null $current_user */
 
 $current_user = $current_user ?? Core::get_global('user');
 $zipHandler   = $dic->get(ZipHandlerInterface::class);
@@ -98,7 +98,7 @@ if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_discogs')) {
-    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode((string) $albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($albumDisk->f_artist_name == 'Various Artists') ? 'Various' : (string)$albumDisk->f_artist_name) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($albumDisk->mbid) {
@@ -131,7 +131,7 @@ sprintf(nT_('%d time', '%d times', $albumDisk->total_count), $albumDisk->total_c
 
 <?php
 $owner_id = $albumDisk->get_user_owner();
-if (AmpConfig::get('sociable') && $owner_id > 0) {
+if (AmpConfig::get('sociable') && !empty($owner_id)) {
     $owner = new User($owner_id); ?>
 <div class="item_uploaded_by">
     <?php echo T_('Uploaded by'); ?> <?php echo $owner->get_f_link(); ?>
@@ -209,7 +209,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
             </li>
             <?php } ?>
         <?php } ?>
-        <?php if (($owner_id > 0 && $owner_id == $current_user->getId()) || $access50) {
+        <?php if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
             if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album_disk&object_id=<?php echo $albumDisk->id; ?>">

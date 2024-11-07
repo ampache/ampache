@@ -988,8 +988,7 @@ class Query
             $dis = Catalog::get_enable_filter($type, '`' . $type . '`.`id`');
         }
 
-        $catalog_filter = AmpConfig::get('catalog_filter');
-        if ($catalog_filter && $this->user_id > 0) {
+        if (AmpConfig::get('catalog_filter')) {
             // Add catalog user filter
             switch ($type) {
                 case 'album_disk':
@@ -1006,7 +1005,7 @@ class Query
                 case 'song':
                 case 'tag':
                 case 'video':
-                    $dis = Catalog::get_user_filter($type, $this->user_id);
+                    $dis = Catalog::get_user_filter($type, $this->user_id ?? -1);
                     break;
             }
         }

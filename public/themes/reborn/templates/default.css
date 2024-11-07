@@ -408,6 +408,7 @@ div#autoupdate > span {
 
 #ui-id-1 {
     min-width: 20%;
+    max-width: 630px;
 }
 
 /* --------------------------

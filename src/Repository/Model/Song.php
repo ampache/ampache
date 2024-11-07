@@ -1181,8 +1181,7 @@ class Song extends database_object implements
     public function update(array $data): int
     {
         foreach ($data as $key => $value) {
-            debug_event(self::class, $key . '=' . $value, 5);
-
+            //debug_event(self::class, $key . '=' . $value, 5);
             switch ($key) {
                 case 'artist_name':
                     // Create new artist name and id
