@@ -37,6 +37,7 @@ $web_path  = AmpConfig::get_web_path();
 
 require_once Ui::find_template('show_form_mashup.inc.php');
 
+//debug_event('show_mashup.inc', "Newest:  Stats::get_newest", 5);
 $object_ids = Stats::get_newest($object_type, $limit, 0, 0, $user);
 if (!empty($object_ids)) {
     echo "<a href=\"" . $web_path . "/stats.php?action=newest_" . $object_type . "\">";
@@ -54,6 +55,7 @@ if (!empty($object_ids)) {
     Ui::show_box_bottom();
 }
 
+//debug_event('show_mashup.inc', "Recent:  Stats::get_recent", 5);
 $object_ids = Stats::get_recent($object_type, $limit);
 if (!empty($object_ids)) {
     echo "<a href=\"" . $web_path . "/stats.php?action=recent_" . $object_type . "\">";
@@ -71,6 +73,7 @@ if (!empty($object_ids)) {
     Ui::show_box_bottom();
 }
 
+//debug_event('show_mashup.inc', "Trending:  Stats::get_top", 5);
 $object_ids = Stats::get_top($object_type, $limit, $threshold);
 if (!empty($object_ids)) {
     Ui::show_box_top(T_('Trending') . "&nbsp" . Ajax::button('?page=index&action=dashboard_trending&limit=' . $limit . '&object_type=' . $object_type . '&threshold=' . $threshold, 'refresh', T_('Refresh'), 'trending', 'dashboard_trending'), 'trending');
@@ -86,6 +89,7 @@ if (!empty($object_ids)) {
     Ui::show_box_bottom();
 }
 
+//debug_event('show_mashup.inc', "Popular:  Stats::get_top", 5);
 $object_ids = Stats::get_top($object_type, 100, $threshold, 0, $user);
 if (!empty($object_ids)) {
     shuffle($object_ids);
