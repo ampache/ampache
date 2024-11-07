@@ -4,7 +4,7 @@ build:
             version: "8.2"
             ini:
                 memory_limit: "-1"
-        node: 18.19.0
+        node: v18.20.4
     nodes:
         coverage:
             tests:
