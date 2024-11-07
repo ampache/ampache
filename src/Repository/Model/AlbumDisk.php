@@ -235,7 +235,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
                     Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
                 }
 
-                return $current_id;
+                return (int)$current_id;
             }
         }
 
@@ -256,7 +256,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             Dba::write($sql, [$disksubtitle, $album_id, $disk, $catalog_id]);
         }
 
-        return $album_id;
+        return (int)$album_id;
     }
 
     /**
