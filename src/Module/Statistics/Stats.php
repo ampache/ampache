@@ -1003,12 +1003,12 @@ class Stats
             $sql       = "SELECT DISTINCT(`video`.`id`) AS `id`, `video`.`addition_time` AS `real_atime` FROM `video` ";
             $sql_type  = "`video`.`id`";
         } elseif ($type === 'artist') {
-            $sql         = "SELECT DISTINCT(`artist_map`.`artist_id`) AS `id`, MIN(`artist`.`addition_time`) AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' ";
+            $sql         = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'song' LEFT JOIN `song` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' ";
             $sql_type    = "`song`.`artist`";
             $filter_type = 'song_artist';
         } elseif ($type === 'album_artist') {
             $base_type   = 'album';
-            $sql         = "SELECT DISTINCT(`artist_map`.`artist_id`) AS `id`, MIN(`artist`.`addition_time`) AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `album` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' ";
+            $sql         = "SELECT DISTINCT(`artist`.`id`) AS `id`, `artist`.`addition_time` AS `real_atime` FROM `artist_map` LEFT JOIN `artist` ON `artist_map`.`artist_id` = `artist`.`id` AND `artist_map`.`object_type` = 'album' LEFT JOIN `album` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' ";
             $sql_type    = "`album`.`album_artist`";
             $filter_type = 'artist';
             $type        = 'artist';
