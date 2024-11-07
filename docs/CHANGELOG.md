@@ -4,16 +4,12 @@
 
 ### Added
 
-* Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
-* AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
+* Update Composer and NPM packages
 * Discogs search icon to valid library items
-* Add `no_license` to song search
 * Add refresh icons to each dashboard page row
 * Add refresh icons to each home dashboard plugin page row
 * Update Creative Commons 3.0 licenses and include 4.0 versions
 * Debug messages from cron process
-* Add Album name to song search in top bar and expand the list
-* Debug warnings on searches with no rules
 * Allow editing AlbumDisk objects directly
   * If you edit `disk` number the songs with the disk number will also be updated
   * Edit `disksubtitle` and update AlbumDisk
@@ -21,6 +17,14 @@
   * Garbage collect orphaned AlbumDisks
 * Add AlbumDisk edit links to each disk on group pages
 * Allow editing song `disk`
+* Browse
+  * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
+  * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
+* Search
+  * Add Album name to song search in top bar and expand the list
+  * Add `disk_count` to Album & AlbumDisk search types
+  * Add `no_license` to Song search
+  * Debug warnings on searches with no rules
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
 * Database 702002
@@ -30,26 +34,31 @@
 
 ### Changed
 
-* Convert `custom_text_footer` to a system preference
 * Updating AlbumDisk `disk` number will migrate matching song disks to the new value
 * Load Ampache CSS after 3rd party components
+* Lots of areas would ignore `catalog_filter` if you were a guest. Now it uses the default filter group
+* Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
 * Search
   * AlbumDisk searches look for the disk rating
 
 ### Fixed
 
 * Secondary tab jplayer not checking the player is loaded on pause check
-* Loading text is in the wrong spot when using a fixed header theme
+* Ajax `Loading...` text is in the wrong spot when using a fixed header theme
 * Light sidebar album link didn't respect `album_group`
 * Album display when you have 0 disks
+* Album and AlbumDisk display for guest user
 * Searching with `catalog_filter` enabled would return nothing for System user
 * Guest user access to dashboard items when using `catalog_filter`
 * Speed up preference lookups and compatability checks
 * Art link on AlbumDisk objects pointed to the album
 * Make sure a user is set in the album page templates
-* Hide search action buttons on smartlists when the user is a guest
 * Incorrect get_parent for Albums and AlbumDisks
+* Guest user can't play podcast_episodes
+* Don't filter Catalog list on admin pages
 * Search
+  * Respect catalog filter on search
+  * Hide search action buttons on smartlists when the user is a guest
   * AlbumDisk searches not looking for the AlbumDisk rating
   * SongSearch not checking `album_group` setting for `albumrating`
 * SubSonic

@@ -6,7 +6,7 @@
   "private": "true",
   "dependencies": {
     "@material-symbols/svg-400": "^0.16.0",
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^5.3.3",
     "filepond": "^4.30.6",
     "jquery": "3.5.*",
     "jquery-contextmenu": "^2.9.2",

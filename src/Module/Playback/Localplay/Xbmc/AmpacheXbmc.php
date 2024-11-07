@@ -757,7 +757,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $options = self::get_instance();
         try {
-            debug_event(self::class, 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', 5);
+            debug_event(self::class, 'Trying to connect xbmc instance ' . ($options['host'] ?? '') . ':' . ($options['port'] ?? '') . '.', 5);
             $this->_xbmc = new XBMC_RPC_HTTPClient($options);
             debug_event(self::class, 'Connected.', 5);
 
