@@ -527,17 +527,24 @@ class Rating extends database_object
 
         $ratings = '';
 
-        for ($count = 1; $count < 6; ++$count) {
-            $isCurrentRate = $rate === $count;
-            $ratingAction  = $isCurrentRate ?
-                '0' : $count;
-            $action = $base_url . '&rating=' . $ratingAction;
+        for ($count = 0; $count < 6; ++$count) {
+            if ($count === 0) {
+                $action = -1;
+                $alt    = T_('Reset Rating');
+                $icon   = 'hide_source';
+            } else {
+                $action = $count;
+                $alt    = ($count === 1)
+                    ? T_('1 Star')
+                    : T_($count . ' Stars');
+                $icon = ($rate < $count)
+                    ? 'star'
+                    : 'star-fill';
+            }
+
+            $action = $base_url . '&rating=' . $action;
             $source = 'rating' . $count . '_' . $rating->id . '_' . $rating->type;
-            $alt    = $isCurrentRate ?
-                T_('Reset rating') : T_('Rate ' . $count);
-            $icon = $rate < $count ?
-                'star' : 'star-fill';
-            $text = Ajax::button($action, $icon, $alt, $source, '');
+            $text   = Ajax::button($action, $icon, $alt, $source, '');
             $ratings .= sprintf(
                 '<li>%s</li>',
                 $text
