@@ -1773,9 +1773,10 @@ span.fatalerror {
 }
 
 .star-rating .global-rating {
-    font-size: 0.8em;
-    position: relative;
     bottom: 2px;
+    font-size: 0.95em;
+    position: relative;
+    top: 0.9px;
 }
 
 .star-rating .current-rating {
