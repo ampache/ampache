@@ -87,9 +87,9 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
         <?php
     // FIXME: Fix this for the extra permission levels
     if ($libitem->disabled == '1') {
-        echo "<a href=\"" . $admin_path . "/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('check_circle', T_('Enable')) . "</a>";
+        echo "<a href=\"" . $admin_path . "/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('person', T_('Enable')) . "</a>";
     } else {
-        echo "<a href=\"" . $admin_path . "/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('hide_source', T_('Disable')) . "</a>";
+        echo "<a href=\"" . $admin_path . "/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('person_off', T_('Disable')) . "</a>";
     } ?>
         <a href="<?php echo $admin_path; ?>/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
             <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>

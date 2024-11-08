@@ -524,16 +524,6 @@ span.fatalerror {
     color: #777;
 }
 
-.userflag a.userflag_true,
-.userflag a:hover.userflag_false {
-    background: url('../../../images/icon_flag.png') left top;
-}
-
-.userflag a:hover.userflag_true,
-.userflag a.userflag_false {
-    background: url('../../../images/icon_flag_off.png') left top;
-}
-
 /* ------------------------
    Content (Track view)
    ------------------------ */
