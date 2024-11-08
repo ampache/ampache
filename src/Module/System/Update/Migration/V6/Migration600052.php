@@ -35,7 +35,7 @@ final class Migration600052 extends AbstractMigration
     public function migrate(): void
     {
         // fix up duplicate playlist track numbers
-        $sql        = 'SELECT DISTINCT `playlist` from `playlist_data` GROUP BY `playlist`, `track` having COUNT(`playlist`) > 1;';
+        $sql        = 'SELECT DISTINCT `playlist` FROM `playlist_data` GROUP BY `playlist`, `track` HAVING COUNT(`playlist`) > 1;';
         $db_results = Dba::read($sql);
         // get the base album you will migrate into
         while ($row = Dba::fetch_assoc($db_results)) {
