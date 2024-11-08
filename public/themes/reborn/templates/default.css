@@ -1127,7 +1127,7 @@ table.tabledata tbody td.cel_counter {
     text-align: center;
 }
 
-table.tabledata tbody td.cel_ratings {
+table.tabledata td.cel_ratings {
     width: 140px !important;
     min-width: 140px;
 }
@@ -1300,7 +1300,11 @@ table.disablegv td.cel_drag {
 }
 
 table.disablegv td.cel_ratings {
-    display: inline-block !important;
+    display: flex !important;
+    width: initial !important;
+    min-width: initial !important;
+    justify-content: center;
+    gap: 10px;
 }
 
 .tableform {
@@ -1762,31 +1766,10 @@ span.fatalerror {
 /* -------------------------
     Styles for star ratings
    ------------------------- */
-.star-rating {
-    position: relative;
-}
-
-.star-rating ul,
-.star-rating a:hover,
-.star-rating .current-rating {
-    background: url('../images/ratings/star_rating.png') left -1000px repeat-x;
-}
-
 .star-rating ul {
-    position: relative;
-    width: 80px;
-    height: 15px;
-    overflow: hidden;
-    list-style: none;
+    display: flex;
     margin: 0;
     padding: 0;
-    background-position: left top;
-    display: inline-block;
-    vertical-align: text-top;
-}
-
-.star-rating li {
-    display: inline;
 }
 
 .star-rating .global-rating {
@@ -1795,7 +1778,6 @@ span.fatalerror {
     bottom: 2px;
 }
 
-.star-rating a,
 .star-rating .current-rating {
     position: absolute;
     top: 0;
@@ -1808,58 +1790,16 @@ span.fatalerror {
     border: none;
 }
 
-.star-rating .star1 { width:20%; z-index:6; }
-.star-rating .star2 { width:40%; z-index:5; }
-.star-rating .star3 { width:60%; z-index:4; }
-.star-rating .star4 { width:80%; z-index:3; }
-.star-rating .star5 { width:100%; z-index:2;}
-.star-rating .current-rating { z-index:1; background-position: left bottom; }
-
-.star-rating a.star0 {
-    left: 0;
-    width: 16px;
-    background: url('../../../images/ratings/x_off.gif') left top;
+.rating {
+    display: flex;
 }
 
-.dynamic-star-rating a:hover {
-    background-position: left center;
+.cel_ratings .rating {
+    gap: 10px;
 }
 
-.dynamic-star-rating a:hover.star0 {
-    background: url('../../../images/ratings/x.gif') left top;
-}
-
-.dynamic-star-rating ul {
-    margin-left: 16px;
-}
-
-[id^=rating_] + [id^=userflag_] {
-    margin-left: 5px;
-}
-
-/* ------------------------
-    Styles for user flags
-   ------------------------ */
-.userflag {
-    position: relative;
-    width: 16px;
-    height: 16px;
-    display: inline-block;
-}
-
-.userflag a {
-    display: inline-block;
-    vertical-align: text-top;
-}
-
-.userflag a.userflag_true {
-    width: 16px;
-    height: 16px;
-}
-
-.userflag a.userflag_false {
-    width: 16px;
-    height: 16px;
+.random_album .rating {
+    justify-content: space-around;
 }
 
 /* --------------------------
