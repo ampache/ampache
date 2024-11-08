@@ -530,7 +530,7 @@ class Rating extends database_object
         for ($count = 0; $count < 6; ++$count) {
             if ($count === 0) {
                 $action = -1;
-                $alt    = T_('Reset Rating');
+                $alt    = T_('0 Stars');
                 $icon   = 'hide_source';
             } else {
                 $action = $count;
