@@ -600,7 +600,7 @@ final class SongSearch implements SearchInterface
                     $where[] = "`song`.`id` IN (SELECT MAX(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
                     break;
                 case 'orphaned_album':
-                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
+                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`))";
                     break;
                 case 'waveform':
                     $join['song_data'] = true;

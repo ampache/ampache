@@ -35,8 +35,10 @@
     <td class="${CLASS_COUNTER} optional" tal:condition="IS_SHOW_PLAYED_TIMES" tal:content="structure ALBUM/getPlayedTimes">PLAYED TIMES</td>
     <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure ALBUM/getGenre">TAGS</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
-        <span class="cel_rating" id="rating_${ALBUM/getId}_album" tal:content="structure ALBUM/getRating">RATING</span>
-        <span class="cel_userflag" id="userflag_${ALBUM/getId}_album" tal:content="structure ALBUM/getUserFlags">USERFLAGS</span>
+        <div class="rating">
+            <span class="cel_rating" id="rating_${ALBUM/getId}_album" tal:content="structure ALBUM/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${ALBUM/getId}_album" tal:content="structure ALBUM/getUserFlags">USERFLAGS</span>
+        </div>
     </td>
     <td class="cel_action">
         <a
