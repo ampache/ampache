@@ -509,22 +509,6 @@ class Rating extends database_object
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
         $rate     = ($rating->get_user_rating() ?? 0);
 
-        $global_rating = '';
-
-        if ($show_global_rating) {
-            $global_rating_value = $rating->get_average_rating();
-
-            if ($global_rating_value > 0) {
-                $global_rating = sprintf(
-                    '<span class="global-rating" title="%s">
-                        (%s)
-                    </span>',
-                    T_('Average from all users'),
-                    $global_rating_value
-                );
-            }
-        }
-
         $ratings = '';
 
         for ($count = 0; $count < 6; ++$count) {
@@ -551,6 +535,17 @@ class Rating extends database_object
             );
         }
 
+        if ($show_global_rating) {
+            $global_rating_value = $rating->get_average_rating();
+            if ($global_rating_value > 0) {
+                $ratings .= sprintf(
+                    '<li><span class="global-rating" title="%s">(%s)</span></li>',
+                    T_('Average from all users'),
+                    $global_rating_value
+                );
+            }
+        }
+
         $ratedText = ($rate < 1)
             ? T_('not rated yet')
             : sprintf(T_('%s of 5'), $rate);
@@ -561,12 +556,10 @@ class Rating extends database_object
                 <ul>
                     %s
                 </ul>
-                %s
             </div>',
             T_('Current rating'),
             $ratedText,
-            $ratings,
-            $global_rating
+            $ratings
         );
     }
 
