@@ -86,6 +86,97 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 710001) {
+            if (Dba::read('SELECT `addition_time` FROM `artist` LIMIT 1;')) {
+                // Migration\V7\Migration710001
+                if (!Dba::write("ALTER TABLE `artist` DROP COLUMN `addition_time`;")) {
+                    throw new UpdateFailedException();
+                }
+            }
+        }
+
+        if ($currentVersion >= 702002) {
+            // Migration\V7\Migration702002
+            if (!Preference::delete('external_links_discogs')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700029) {
+            // Migration\V7\Migration700028
+            if (!Dba::write("ALTER TABLE `user_activity` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700028) {
+            // Migration\V7\Migration700028
+            if (!Dba::write("ALTER TABLE `rating` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700027) {
+            // Migration\V7\Migration700027
+            if (!Dba::write("ALTER TABLE `now_playing` MODIFY COLUMN `object_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700026) {
+            // Migration\V7\Migration700026
+            if (!Dba::write("ALTER TABLE `image` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700025) {
+            // Migration\V7\Migration700025
+            if (!Dba::write("ALTER TABLE `user_flag` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700024) {
+            // Migration\V7\Migration700024
+            if (!Dba::write("ALTER TABLE `cache_object_count` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+            if (!Dba::write("ALTER TABLE `cache_object_count_run` MODIFY COLUMN `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','tvshow','tvshow_season','user','video') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700023) {
+            // Migration\V7\Migration700023
+            if (!Preference::delete('extended_playlist_links')) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700022) {
+            // Migration\V7\Migration700022
+            if (
+                !Preference::delete('external_links_google') ||
+                !Preference::delete('external_links_duckduckgo') ||
+                !Preference::delete('external_links_wikipedia') ||
+                !Preference::delete('external_links_lastfm') ||
+                !Preference::delete('external_links_bandcamp') ||
+                !Preference::delete('external_links_musicbrainz')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 700021) {
+            if (Dba::read('SELECT `order` FROM `license` LIMIT 1;')) {
+                // Migration\V7\Migration700021
+                if (!Dba::write("ALTER TABLE `license` DROP COLUMN `order`;")) {
+                    throw new UpdateFailedException();
+                }
+            }
+        }
+
         if ($currentVersion >= 700020) {
             // Migration\V7\Migration700020
             Dba::write("ALTER TABLE `user_preference` DROP KEY `unique_name`;");
