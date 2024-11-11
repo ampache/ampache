@@ -27,10 +27,12 @@
   * Debug warnings on searches with no rules
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
-* Database 702002
+* Database 710002
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
   * Add user preferences to show/hide Discogs links on object pages
+  * Add `addition_time` to artist table
+  * Update `action` column for `ip_history` table
 
 ### Changed
 

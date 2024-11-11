@@ -29,7 +29,7 @@ use Ampache\Module\System\Update\Migration\AbstractMigration;
 
 final class Migration710001 extends AbstractMigration
 {
-    protected array $changelog = ['Add addition_time to artist table.'];
+    protected array $changelog = ['Add `addition_time` to artist table.'];
 
     public function migrate(): void
     {
