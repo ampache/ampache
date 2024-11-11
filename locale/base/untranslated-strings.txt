@@ -250,3 +250,7 @@ msgstr ""
 #: ./untranslated-strings.txt:254
 msgid "sidebar"
 msgstr ""
+
+#: ./untranslated-strings.txt:256
+msgid "average"
+msgstr ""

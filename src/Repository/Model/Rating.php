@@ -509,35 +509,41 @@ class Rating extends database_object
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
         $rate     = ($rating->get_user_rating() ?? 0);
 
-        $global_rating = '';
+        $ratings = '';
+
+        for ($count = 0; $count < 6; ++$count) {
+            if ($count === 0) {
+                $action = -1;
+                $alt    = T_('0 Stars');
+                $icon   = 'hide_source';
+            } else {
+                $action = $count;
+                $alt    = ($count === 1)
+                    ? T_('1 Star')
+                    : T_($count . ' Stars');
+                $icon = ($rate < $count)
+                    ? 'star'
+                    : 'star-fill';
+            }
+
+            $action = $base_url . '&rating=' . $action;
+            $source = 'rating' . $count . '_' . $rating->id . '_' . $rating->type;
+            $text   = Ajax::button($action, $icon, $alt, $source, '');
+            $ratings .= sprintf(
+                '<li>%s</li>',
+                $text
+            );
+        }
 
         if ($show_global_rating) {
             $global_rating_value = $rating->get_average_rating();
-
             if ($global_rating_value > 0) {
-                $global_rating = sprintf(
-                    '<span class="global-rating" title="%s">
-                        (%s)
-                    </span>',
+                $ratings .= sprintf(
+                    '<li><span class="global-rating" title="%s">(%s)</span></li>',
                     T_('Average from all users'),
                     $global_rating_value
                 );
             }
-        }
-
-        // decide width of rating (5 stars -> 20% per star)
-        $width = $rate * 20;
-        if ($width < 0) {
-            $width = 0;
-        }
-
-        $ratings = '';
-
-        for ($count = 1; $count < 6; ++$count) {
-            $ratings .= sprintf(
-                '<li>%s</li>',
-                Ajax::text($base_url . '&rating=' . $count, '', 'rating' . $count . '_' . $rating->id . '_' . $rating->type, '', 'star' . $count)
-            );
         }
 
         $ratedText = ($rate < 1)
@@ -545,20 +551,15 @@ class Rating extends database_object
             : sprintf(T_('%s of 5'), $rate);
 
         return sprintf(
-            '<span class="star-rating dynamic-star-rating">
+            '<div class="star-rating dynamic-star-rating">
+                <span class="current-rating">%s: %s</span>
                 <ul>
-                    <li class="current-rating" style="width: %d%%">%s: %s</li>
                     %s
                 </ul>
-                %s
-                %s
-            </span>',
-            $width,
+            </div>',
             T_('Current rating'),
             $ratedText,
-            $ratings,
-            $global_rating,
-            Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
+            $ratings
         );
     }
 
