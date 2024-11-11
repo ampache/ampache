@@ -75,7 +75,7 @@ use Ampache\Repository\Model\User;
         <?php echo $data['agent'] ?: T_('Unknown'); ?>
     </td>
     <td class="col_action">
-        <?php echo (empty($data['action'])) ? T_($data['action']) : T_('Unknown'); ?>
+        <?php echo (!empty($data['action'])) ? T_($data['action']) : T_('Unknown'); ?>
     </td>
 </tr>
 <?php } ?>
