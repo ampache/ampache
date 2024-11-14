@@ -1067,6 +1067,20 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             }
         }
 
+        // AlbumDisk update
+        if ($this->disk_count === 1) {
+            $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
+            if ($disk[0] instanceof AlbumDisk) {
+                AlbumDisk::check(
+                    $album_id,
+                    $data['disk'] ?? $disk[0]->disk,
+                    $this->catalog,
+                    $data['disksubtitle'] ?? $disk[0]->disksubtitle,
+                    $disk[0]->getId()
+                );
+            }
+        }
+
         $this->year           = $year;
         $this->mbid           = $mbid;
         $this->mbid_group     = $mbid_group;
