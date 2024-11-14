@@ -2,13 +2,16 @@
 
 ## Ampache 7.1.0
 
-Builds now support php8.4
+Builds now support php8.4!
 
-This release has fixed a lot of issues with public site guest users and another round of speed updates with more indexes on large tables
+The icons for ratings and favorite flags are now SVG's which replaces the last png icons in the default theme.
+
+This release has fixed a lot of issues with public site guest users and another round of speed updates with more indexes on large tables.
 
 ### Added
 
 * Build PHP8.4 supported release zips
+* Rating and favorite flags are now using SVG's
 * Update Composer and NPM packages
 * Discogs search icon to valid library items
 * Add refresh icons to each dashboard page row
@@ -46,6 +49,8 @@ This release has fixed a lot of issues with public site guest users and another 
 * Load Ampache CSS after 3rd party components
 * Lots of areas would ignore `catalog_filter` if you were a guest. Now it uses the default filter group
 * Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
+* Use Artist `addition_time` in stat searches instead of large joins
+* Enable/Disable user icons changed to a person icons
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -64,8 +69,10 @@ This release has fixed a lot of issues with public site guest users and another 
 * Incorrect get_parent for Albums and AlbumDisks
 * Guest user can't play podcast_episodes
 * Don't filter Catalog list on admin pages
+* Catalog filter checking default group for users instead of ther filter group
 * Missing boolean prefs for debug page
 * Share display error with Share::create_fake_playlist()
+* IP History action was not displaying the action correctly
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
