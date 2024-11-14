@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Ampache 6.6.5
+
+### Added
+
+* Database downgrades up to Ampache 7.1.0
+
+### Fixed
+
+* Don't try to insert localplay preferences if missing (You enable/disable these on demand)
+* HTML alignment of 'Post Shout' on the artist page
+* Show albums with 0 disks correctly
+
 ## Ampache 6.6.4
 
 ### Added
