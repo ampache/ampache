@@ -993,9 +993,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             foreach ($songs as $song_id) {
                 Song::update_album($album_id, $song_id, $this->id, false);
                 Song::update_year($year, $song_id);
-                Song::update_utime($song_id);
-
-                $this->getSongTagWriter()->write(new Song($song_id));
             }
 
             self::update_table_counts();
@@ -1024,7 +1021,27 @@ class Album extends database_object implements library_item, CatalogItemInterfac
                 self::update_field('year', $year, $this->id);
                 foreach ($songs as $song_id) {
                     Song::update_year($year, $song_id);
-                    $this->getSongTagWriter()->write(new Song($song_id));
+                }
+
+                $updated = true;
+            }
+            
+            // AlbumDisk update
+            if ($this->disk_count === 1) {
+                $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
+                if ($disk[0] instanceof AlbumDisk) {
+                    $disk_id    = $disk[0]->getId();
+                    $disk_check = AlbumDisk::check(
+                        $album_id,
+                        $data['disk'] ?? $disk[0]->disk,
+                        $this->catalog,
+                        $data['disksubtitle'] ?? $disk[0]->disksubtitle,
+                        $disk[0]->getId()
+                    );
+
+                    if ($disk_check !== $disk_id) {
+                        $updated = true;
+                    }
                 }
             }
 
@@ -1067,20 +1084,6 @@ class Album extends database_object implements library_item, CatalogItemInterfac
             }
         }
 
-        // AlbumDisk update
-        if ($this->disk_count === 1) {
-            $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
-            if ($disk[0] instanceof AlbumDisk) {
-                AlbumDisk::check(
-                    $album_id,
-                    $data['disk'] ?? $disk[0]->disk,
-                    $this->catalog,
-                    $data['disksubtitle'] ?? $disk[0]->disksubtitle,
-                    $disk[0]->getId()
-                );
-            }
-        }
-
         $this->year           = $year;
         $this->mbid           = $mbid;
         $this->mbid_group     = $mbid_group;
@@ -1093,8 +1096,14 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $this->version        = $version;
 
         if ($updated && is_array($songs)) {
+            $time       = time();
+            $write_tags = AmpConfig::get('write_tags', false);
             foreach ($songs as $song_id) {
-                Song::update_utime($song_id);
+                Song::update_utime($song_id, $time);
+                if ($write_tags) {
+                    $song = new Song($song_id);
+                    $this->getSongTagWriter()->write($song);
+                }
             }
 
             if (!$cron_cache) {
