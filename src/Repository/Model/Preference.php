@@ -1053,7 +1053,6 @@ class Preference extends database_object
                 case 'api_always_download':
                     Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', 25, 'boolean', 'options', 'api']);
                     break;
-                case 'api_enable_7':
                 case 'httpq_active':
                 case 'mpd_active':
                 case 'upnp_active':
