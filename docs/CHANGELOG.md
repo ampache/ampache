@@ -2,8 +2,16 @@
 
 ## Ampache 7.1.0
 
+Builds now support php8.4!
+
+The icons for ratings and favorite flags are now SVG's which replaces the last png icons in the default theme.
+
+This release has fixed a lot of issues with public site guest users and another round of speed updates with more indexes on large tables.
+
 ### Added
 
+* Build PHP8.4 supported release zips
+* Rating and favorite flags are now using SVG's
 * Update Composer and NPM packages
 * Discogs search icon to valid library items
 * Add refresh icons to each dashboard page row
@@ -27,12 +35,13 @@
   * Debug warnings on searches with no rules
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
-* Database 710002
+* Database 710003
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
   * Add user preferences to show/hide Discogs links on object pages
   * Add `addition_time` to artist table
   * Update `action` column for `ip_history` table
+  * Add indexes to `album_map`, `catalog_map`, `artist_map`, `image`, `recommendation`, `rating`, `user_flag`, `user_activity` and `playlist_data` table
 
 ### Changed
 
@@ -40,6 +49,8 @@
 * Load Ampache CSS after 3rd party components
 * Lots of areas would ignore `catalog_filter` if you were a guest. Now it uses the default filter group
 * Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
+* Use Artist `addition_time` in stat searches instead of large joins
+* Enable/Disable user icons changed to a person icons
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -58,13 +69,17 @@
 * Incorrect get_parent for Albums and AlbumDisks
 * Guest user can't play podcast_episodes
 * Don't filter Catalog list on admin pages
+* Catalog filter checking default group for users instead of ther filter group
+* Missing boolean prefs for debug page
+* Share display error with Share::create_fake_playlist()
+* IP History action was not displaying the action correctly
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
   * AlbumDisk searches not looking for the AlbumDisk rating
   * SongSearch not checking `album_group` setting for `albumrating`
 * SubSonic
-  * Trying to add duplication XML art attribute
+  * Trying to add duplicate XML art attribute
 
 ## Ampache 7.0.1
 
