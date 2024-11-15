@@ -23,7 +23,9 @@ This release has fixed a lot of issues with public site guest users and another 
   * Edit `disksubtitle` and update AlbumDisk
   * Check for AlbumDisk when updating song `disk` value
   * Garbage collect orphaned AlbumDisks
+  * Update album disk if required when editing the Album
 * Add AlbumDisk edit links to each disk on group pages
+* Add AlbumDisk `disk` `disksubtitle` properties to single disk Album edit windows
 * Allow editing song `disk`
 * Browse
   * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
@@ -73,6 +75,8 @@ This release has fixed a lot of issues with public site guest users and another 
 * Missing boolean prefs for debug page
 * Share display error with Share::create_fake_playlist()
 * IP History action was not displaying the action correctly
+* Make sure a song exists before trying to write tags
+* Don't double write song details when updating Albums
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
