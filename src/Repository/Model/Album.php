@@ -1025,7 +1025,7 @@ class Album extends database_object implements library_item, CatalogItemInterfac
 
                 $updated = true;
             }
-            
+
             // AlbumDisk update
             if ($this->disk_count === 1) {
                 $disk = $this->getAlbumDiskRepository()->getByAlbum($this);
