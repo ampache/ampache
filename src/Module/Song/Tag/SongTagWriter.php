@@ -60,6 +60,10 @@ final class SongTagWriter implements SongTagWriterInterface
     public function write(
         Song $song
     ): void {
+        if ($song->isNew()) {
+            return;
+        }
+
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::WRITE_TAGS) === false) {
             return;
         }
@@ -68,171 +72,197 @@ final class SongTagWriter implements SongTagWriterInterface
         if ($catalog === null) {
             return;
         }
-        if ($catalog->get_type() == 'local') {
-            $this->logger->debug(
-                sprintf('Writing metadata to file %s', $song->file),
+
+        if ($catalog->get_type() !== 'local') {
+            $this->logger->error(
+                sprintf('Catalog type %s is not a valid catalog type', $catalog->get_type()),
                 [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            $ndata = [];
-            if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) === true) {
-                foreach ($song->getMetadata() as $metadata) {
-                    $field = $metadata->getField();
+            return;
+        }
 
-                    if ($field !== null) {
-                        $ndata[$field->getName()] = $metadata->getData();
-                    }
-                }
-            }
-            $vainfo = $this->utilityFactory->createVaInfo(
-                (string) $song->file
+        if (!is_file($song->file)) {
+            $this->logger->error(
+                sprintf('File %s does not exist', $song->file),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
             );
 
-            $result     = $vainfo->read_id3();
-            $fileformat = $result['fileformat'];
+            return;
+        }
 
-            $song->format();
-            if ($fileformat == 'mp3') {
-                $songMeta  = $this->getId3Metadata($song);
-                $txxxData  = $result['id3v2']['comments']['text'] ?? [];
-                $id3v2Data = $result['tags']['id3v2'] ?? [];
-                $apics     = $result['id3v2']['APIC'] ?? null;
-                // Update existing file frames.
-                if (!empty($txxxData)) {
-                    foreach ($txxxData as $key => $value) {
-                        $idx = $this->search_txxx($key, $songMeta['text']);
-                        if ($idx) {
-                            $ndata['text'][] = [
-                                'data' => $songMeta['text'][$idx]['data'],
-                                'description' => $key,
-                                'encodingid' => 0
-                            ];
-                        } else {
-                            $ndata['text'][] = [
-                                'data' => $value,
-                                'description' => $key,
-                                'encodingid' => 0
-                            ];
-                        }
-                    }
-                } else {
-                    // Assumes file originally had no TXXX frames
-                    $metatext = $songMeta['text'];
-                    if (!empty($metatext)) {
-                        foreach ($metatext as $key => $value) {
-                            $ndata['text'][$key] = $value;
-                        }
-                    }
+        $this->logger->debug(
+            sprintf('Writing metadata to file %s', $song->file),
+            [LegacyLogger::CONTEXT_TYPE => self::class]
+        );
+
+        $ndata = [];
+        if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ENABLE_CUSTOM_METADATA) === true) {
+            foreach ($song->getMetadata() as $metadata) {
+                $field = $metadata->getField();
+
+                if ($field !== null) {
+                    $ndata[$field->getName()] = $metadata->getData();
                 }
-                if (!empty($id3v2Data)) {
-                    unset($id3v2Data['text']);
-                    foreach ($id3v2Data as $key => $value) {
-                        if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
-                            $ndata[$key][] = $songMeta[$key];
-                        } else {
-                            $ndata[$key][] = $value[0];
-                        }
+            }
+        }
+        $vainfo = $this->utilityFactory->createVaInfo(
+            (string) $song->file
+        );
+
+        $result     = $vainfo->read_id3();
+        $fileformat = $result['fileformat'] ?? null;
+
+        if (!$fileformat) {
+            $this->logger->error(
+                sprintf('Could not determine file format for %s', $song->file),
+                [LegacyLogger::CONTEXT_TYPE => self::class]
+            );
+
+            return;
+        }
+
+        $song->format();
+        if ($fileformat == 'mp3') {
+            $songMeta  = $this->getId3Metadata($song);
+            $txxxData  = $result['id3v2']['comments']['text'] ?? [];
+            $id3v2Data = $result['tags']['id3v2'] ?? [];
+            $apics     = $result['id3v2']['APIC'] ?? null;
+            // Update existing file frames.
+            if (!empty($txxxData)) {
+                foreach ($txxxData as $key => $value) {
+                    $idx = $this->search_txxx($key, $songMeta['text']);
+                    if ($idx) {
+                        $ndata['text'][] = [
+                            'data' => $songMeta['text'][$idx]['data'],
+                            'description' => $key,
+                            'encodingid' => 0
+                        ];
+                    } else {
+                        $ndata['text'][] = [
+                            'data' => $value,
+                            'description' => $key,
+                            'encodingid' => 0
+                        ];
                     }
-                } else {
-                    unset($songMeta['text']);
-                    foreach ($songMeta as $key => $value) {
-                        $ndata[$key][] = $songMeta;
-                    }
-                }
-                if (isset($songMeta['unique_file_identifier'])) {
-                    $ndata['unique_file_identifier'] = $songMeta['unique_file_identifier'];
-                }
-                if (isset($songMeta['Popularimeter'])) {
-                    $ndata['Popularimeter'] = $songMeta['Popularimeter'];
                 }
             } else {
-                $songMeta       = $this->getVorbisMetadata($song);
-                $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
-                $apics          = $result['flac']['PICTURE'] ?? null;
-                // Update existing vorbiscomments
-                if (!empty($vorbiscomments)) {
-                    foreach ($vorbiscomments as $key => $value) {
-                        if (isset($songMeta[$key])) {
-                            if ($key == 'releasetype' || $key == 'releasestatus') {
-                                $ndata[$key] = $songMeta[$key];
-                            } else {
-                                $ndata[$key][] = $songMeta[$key];
-                            }
-                        } else {
-                            $ndata[$key] = $value;
-                        }
+                // Assumes file originally had no TXXX frames
+                $metatext = $songMeta['text'];
+                if (!empty($metatext)) {
+                    foreach ($metatext as $key => $value) {
+                        $ndata['text'][$key] = $value;
                     }
                 }
-                // Insert vorbiscomments that might not be in file.
+            }
+            if (!empty($id3v2Data)) {
+                unset($id3v2Data['text']);
+                foreach ($id3v2Data as $key => $value) {
+                    if (isset($songMeta[$key]) && $value[0] !== $songMeta[$key]) {
+                        $ndata[$key][] = $songMeta[$key];
+                    } else {
+                        $ndata[$key][] = $value[0];
+                    }
+                }
+            } else {
+                unset($songMeta['text']);
                 foreach ($songMeta as $key => $value) {
-                    if (!isset($vorbiscomments[$key]) && isset($value)) {
+                    $ndata[$key][] = $songMeta;
+                }
+            }
+            if (isset($songMeta['unique_file_identifier'])) {
+                $ndata['unique_file_identifier'] = $songMeta['unique_file_identifier'];
+            }
+            if (isset($songMeta['Popularimeter'])) {
+                $ndata['Popularimeter'] = $songMeta['Popularimeter'];
+            }
+        } else {
+            $songMeta       = $this->getVorbisMetadata($song);
+            $vorbiscomments = $result['tags']['vorbiscomment'] ?? [];
+            $apics          = $result['flac']['PICTURE'] ?? null;
+            // Update existing vorbiscomments
+            if (!empty($vorbiscomments)) {
+                foreach ($vorbiscomments as $key => $value) {
+                    if (isset($songMeta[$key])) {
                         if ($key == 'releasetype' || $key == 'releasestatus') {
-                            $ndata[$key] = $value;
+                            $ndata[$key] = $songMeta[$key];
                         } else {
-                            $ndata[$key][] = $value;
+                            $ndata[$key][] = $songMeta[$key];
                         }
+                    } else {
+                        $ndata[$key] = $value;
                     }
                 }
             }
-            $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
-                ? 'typeid'
-                : 'picturetypeid';
-            $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
-                ? 'image_mime'
-                : 'mime';
-            $file_has_pics = isset($apics) && is_array($apics);
-            if ($file_has_pics) {
-                foreach ($apics as $apic) {
-                    $ndata['attached_picture'][] = [
-                        'data' => $apic['data'],
-                        'mime' => $apic[$apic_mimetype],
-                        'picturetypeid' => $apic[$apic_typeid],
-                        'description' => $apic['description'],
-                        'encodingid' => $apic['encodingid']
-                    ];
+            // Insert vorbiscomments that might not be in file.
+            foreach ($songMeta as $key => $value) {
+                if (!isset($vorbiscomments[$key]) && isset($value)) {
+                    if ($key == 'releasetype' || $key == 'releasestatus') {
+                        $ndata[$key] = $value;
+                    } else {
+                        $ndata[$key][] = $value;
+                    }
                 }
             }
+        }
+        $apic_typeid = ($fileformat == 'flac' || $fileformat == 'ogg')
+            ? 'typeid'
+            : 'picturetypeid';
+        $apic_mimetype = ($fileformat == 'flac' || $fileformat == 'ogg')
+            ? 'image_mime'
+            : 'mime';
+        $file_has_pics = isset($apics) && is_array($apics);
+        if ($file_has_pics) {
+            foreach ($apics as $apic) {
+                $ndata['attached_picture'][] = [
+                    'data' => $apic['data'],
+                    'mime' => $apic[$apic_mimetype],
+                    'picturetypeid' => $apic[$apic_typeid],
+                    'description' => $apic['description'],
+                    'encodingid' => $apic['encodingid']
+                ];
+            }
+        }
 
-            $art = new Art($song->artist, 'artist');
-            if ($art->has_db_info()) {
-                $image   = $art->get(true);
-                $new_pic = [
-                    'data' => $image,
-                    'mime' => $art->raw_mime,
-                    'picturetypeid' => 8,
-                    'description' => $song->get_artist_fullname(),
-                    'encodingid' => 0
-                ];
-                if ($file_has_pics) {
-                    $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
-                    if (is_null($idx)) {
-                        $ndata['attached_picture'][] = $new_pic;
-                    }
-                } else {
+        $art = new Art($song->artist, 'artist');
+        if ($art->has_db_info()) {
+            $image   = $art->get(true);
+            $new_pic = [
+                'data' => $image,
+                'mime' => $art->raw_mime,
+                'picturetypeid' => 8,
+                'description' => $song->get_artist_fullname(),
+                'encodingid' => 0
+            ];
+            if ($file_has_pics) {
+                $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
+                if (is_null($idx)) {
                     $ndata['attached_picture'][] = $new_pic;
                 }
+            } else {
+                $ndata['attached_picture'][] = $new_pic;
             }
-            $art = new Art($song->album, 'album');
-            if ($art->has_db_info()) {
-                $image   = $art->get(true);
-                $new_pic = [
-                    'data' => $image,
-                    'mime' => $art->raw_mime,
-                    'picturetypeid' => 3,
-                    'description' => $song->f_album,
-                    'encodingid' => 0
-                ];
-                if ($file_has_pics) {
-                    $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
-                    if (is_null($idx)) {
-                        $ndata['attached_picture'][] = $new_pic;
-                    }
-                } else {
+        }
+        $art = new Art($song->album, 'album');
+        if ($art->has_db_info()) {
+            $image   = $art->get(true);
+            $new_pic = [
+                'data' => $image,
+                'mime' => $art->raw_mime,
+                'picturetypeid' => 3,
+                'description' => $song->f_album,
+                'encodingid' => 0
+            ];
+            if ($file_has_pics) {
+                $idx = $this->check_for_duplicate($apics, $new_pic, $ndata, $apic_typeid);
+                if (is_null($idx)) {
                     $ndata['attached_picture'][] = $new_pic;
                 }
+            } else {
+                $ndata['attached_picture'][] = $new_pic;
             }
-            $vainfo->write_id3($ndata);
-        } // catalog type = local
+        }
+        $vainfo->write_id3($ndata);
     }
 
     /**
