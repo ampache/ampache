@@ -188,6 +188,7 @@ final class PodcastQuery implements QueryInterface
             case 'website':
             case 'episodes':
             case 'catalog':
+            case 'total_count':
                 $sql = "`podcast`.`$field`";
                 break;
             case 'rating':
