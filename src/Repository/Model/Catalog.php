@@ -3154,6 +3154,12 @@ abstract class Catalog extends database_object
             // song.played
             $sql = "UPDATE `song` SET `played` = 0 WHERE `total_count` = 0 and `played` = 1;";
             Dba::write($sql);
+            // album.total_skip
+            Dba::write("UPDATE `album`, (SELECT SUM(`song`.`total_skip`) AS `total_skip`, `album` FROM `song` GROUP BY `song`.`album`, `song`.`disk`) AS `object_count` SET `album`.`total_skip` = `object_count`.`total_skip` WHERE `album`.`total_skip` != `object_count`.`total_skip` AND `album`.`id` = `object_count`.`album`;");
+            // album_disk.total_skip
+            Dba::write("UPDATE `album_disk`, (SELECT SUM(`song`.`total_skip`) AS `total_skip`, `album`, `disk` FROM `song` GROUP BY `song`.`album`, `song`.`disk`) AS `object_count` SET `album_disk`.`total_skip` = `object_count`.`total_skip` WHERE `album_disk`.`total_skip` != `object_count`.`total_skip` AND `album_disk`.`album_id` = `object_count`.`album` AND `album_disk`.`disk` = `object_count`.`disk`;");
+            // artist.total_skip
+            Dba::write("UPDATE `artist`, (SELECT COUNT(`object_count`.`object_id`) AS `total_skip`, `artist_map`.`artist_id` FROM `object_count` LEFT JOIN `artist_map` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` = 'song' AND `object_count`.`count_type` = 'skip' GROUP BY `artist_map`.`artist_id`) AS `object_count` SET `artist`.`total_skip` = `object_count`.`total_skip` WHERE `artist`.`total_skip` != `object_count`.`total_skip` AND `artist`.`id` = `object_count`.`artist_id`;");
         }
 
         if (AmpConfig::get('allow_video')) {

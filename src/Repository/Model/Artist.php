@@ -73,6 +73,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $total_count;
 
+    public int $total_skip;
+
     public ?string $link = null;
 
     /** @var int $catalog_id */

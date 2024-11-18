@@ -180,6 +180,9 @@ class Stats
     public static function count(string $type, int $object_id, string $count_type): void
     {
         switch ($type) {
+            case 'album':
+            case 'album_disk':
+            case 'artist':
             case 'song':
             case 'podcast':
             case 'podcast_episode':
@@ -189,15 +192,12 @@ class Stats
                     : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
                 Dba::write($sql, [$object_id]);
                 break;
-            case 'album':
-            case 'artist':
-                $sql = ($count_type == 'down')
-                    ? "UPDATE `$type` SET `total_count` = `total_count` - 1 WHERE `id` = ? AND `total_count` > 0"
-                    : "UPDATE `$type` SET `total_count` = `total_count` + 1 WHERE `id` = ?";
-                Dba::write($sql, [$object_id]);
-                break;
         }
-        if (in_array($type, ['song', 'podcast_episode', 'video']) && $count_type == 'down') {
+
+        if (
+            $count_type == 'down' &&
+            in_array($type, ['song', 'podcast_episode', 'video'])
+        ) {
             $sql = "UPDATE `$type` SET `played` = 0 WHERE `id` = ? AND `total_count` = 0 and `played` = 1;";
             Dba::write($sql, [$object_id]);
         }
@@ -252,10 +252,10 @@ class Stats
 
         // the count was inserted
         if ($db_results) {
-            if (in_array($type, ['song', 'album', 'artist', 'video', 'podcast', 'podcast_episode']) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
+            if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'video', 'podcast', 'podcast_episode']) && $count_type === 'stream' && $user_id > 0 && $agent !== 'debug') {
                 self::count($type, $object_id, 'up');
                 // don't register activity for album or artist plays
-                if (!in_array($type, ['album', 'artist', 'podcast'])) {
+                if (!in_array($type, ['album', 'album_disk', 'artist', 'podcast'])) {
                     self::getUserActivityPoster()->post((int)$user_id, 'play', $type, (int)$object_id, (int)$date);
                 }
             }
@@ -524,6 +524,8 @@ class Stats
             if ($object_type == 'song') {
                 $song = new Song($object_id);
                 self::count('album', $song->album, 'down');
+                $sql = "UPDATE `album_disk` SET `total_count` = `total_count` - 1 WHERE `album_id` = ? AND `disk` = ? AND `total_count` > 0";
+                Dba::write($sql, [$song->album, $song->disk]);
                 $artists = array_unique(array_merge(Song::get_parent_array($song->id), Song::get_parent_array($song->album, 'album')));
                 foreach ($artists as $artist_id) {
                     self::count('artist', $artist_id, 'down');
