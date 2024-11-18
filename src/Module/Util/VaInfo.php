@@ -1494,6 +1494,7 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'discsubtitle':
                     case 'setsubtitle':
+                    case 'set_subtitle':
                         $parsed['disksubtitle'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'barcode':
