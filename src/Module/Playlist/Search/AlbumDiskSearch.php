@@ -252,6 +252,14 @@ final class AlbumDiskSearch implements SearchInterface
                     $where[]      = "`album_disk`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'skipped_times':
+                    $where[]      = "(`album_disk`.`total_skip` $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'played_or_skipped_times':
+                    $where[]      = "((`album_disk`.`total_count` + `album_disk`.`total_skip`) $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
                 case 'disk_count':
                     $where[]      = "`album_disk`.`disk_count` $operator_sql ?";
                     $parameters[] = $input;

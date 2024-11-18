@@ -302,6 +302,14 @@ final class ArtistSearch implements SearchInterface
                     $where[]      = "`artist`.`total_count` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'skipped_times':
+                    $where[]      = "(`artist`.`total_skip` $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
+                case 'played_or_skipped_times':
+                    $where[]      = "((`artist`.`total_count` + `artist`.`total_skip`) $operator_sql ?)";
+                    $parameters[] = $input;
+                    break;
                 case 'song_count':
                     $where[]      = "`artist`.`song_count` $operator_sql ?";
                     $parameters[] = $input;
