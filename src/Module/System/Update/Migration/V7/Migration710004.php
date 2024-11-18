@@ -36,7 +36,7 @@ final class Migration710004 extends AbstractMigration
         'Add `total_skip` to album table',
         'Add `total_skip` to album_disk table',
         'Add `total_skip` to artist table',
-        ];
+    ];
 
     public function migrate(): void
     {
