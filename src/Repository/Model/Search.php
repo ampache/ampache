@@ -674,12 +674,6 @@ class Search extends playlist_object
         $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
-        /* HINT: Number of times object has been played */
-        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
-        /* HINT: Number of times object has been skipped */
-        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
-        /* HINT: Number of times object has been played OR skipped */
-        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Percentage of (Times Played / Times skipped) * 100 */
         $this->_add_type_numeric('play_skip_ratio', T_('Played/Skipped ratio'), 'numeric', $t_play_data);
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
@@ -689,6 +683,12 @@ class Search extends playlist_object
         $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayedalbum', T_('Played by Me (Album)'), 'boolean', $t_play_data);
         $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
+        /* HINT: Number of times object has been played */
+        $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been skipped */
+        $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
+        /* HINT: Number of times object has been played OR skipped */
+        $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
@@ -828,14 +828,14 @@ class Search extends playlist_object
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
@@ -922,15 +922,15 @@ class Search extends playlist_object
         $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
         $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
         $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayedartist', T_('Played by Me (Artist)'), 'boolean', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_genre = T_('Genre');
@@ -1036,17 +1036,17 @@ class Search extends playlist_object
         $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
@@ -1080,17 +1080,17 @@ class Search extends playlist_object
         $this->_add_type_numeric('skipped_times', T_('# Skipped'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('played_or_skipped_times', T_('# Played or Skipped'), 'numeric', $t_play_data);
+        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
+        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
+        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
+        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         /* HINT: Number of times object has been played */
         $this->_add_type_numeric('myplayed_times', T_('# Played by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been skipped */
         $this->_add_type_numeric('myskipped_times', T_('# Skipped by Me'), 'numeric', $t_play_data);
         /* HINT: Number of times object has been played OR skipped */
         $this->_add_type_numeric('myplayed_or_skipped_times', T_('# Played or Skipped by Me'), 'numeric', $t_play_data);
-        $this->_add_type_numeric('last_play', T_('My Last Play'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_skip', T_('My Last Skip'), 'days', $t_play_data);
-        $this->_add_type_numeric('last_play_or_skip', T_('My Last Play or Skip'), 'days', $t_play_data);
-        $this->_add_type_boolean('played', T_('Played'), 'boolean', $t_play_data);
-        $this->_add_type_boolean('myplayed', T_('Played by Me'), 'boolean', $t_play_data);
         $this->_add_type_numeric('recent_played', T_('Recently played'), 'recent_played', $t_play_data);
 
         $t_file_data = T_('File Data');
