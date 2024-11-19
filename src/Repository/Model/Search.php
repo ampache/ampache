@@ -54,17 +54,17 @@ class Search extends playlist_object
     protected const DB_TABLENAME = 'search';
 
     public const VALID_TYPES = [
-        'song',
-        'album',
-        'album_disk',
-        'song_artist',
         'album_artist',
+        'album_disk',
+        'album',
         'artist',
         'genre',
         'label',
         'playlist',
-        'podcast',
         'podcast_episode',
+        'podcast',
+        'song_artist',
+        'song',
         'tag',
         'user',
         'video',
@@ -246,7 +246,7 @@ class Search extends playlist_object
         $this->basetypes['numeric'][] = [
             'name' => 'lte',
             'description' => T_('is less than or equal to'),
-            'sql' => '<='
+            'sql' => '<=',
         ];
 
         $this->basetypes['numeric'][] = [
@@ -1001,7 +1001,7 @@ class Search extends playlist_object
         $this->_add_type_text('title', T_('Name'), $t_playlist);
         $playlist_types = [
             0 => T_('public'),
-            1 => T_('private')
+            1 => T_('private'),
         ];
         $this->_add_type_select('type', T_('Type'), 'boolean_numeric', $playlist_types, $t_playlist);
         $users = $this->getUserRepository()->getValidArray();
@@ -1024,7 +1024,7 @@ class Search extends playlist_object
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
-            2 => T_('completed')
+            2 => T_('completed'),
         ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
@@ -1068,7 +1068,7 @@ class Search extends playlist_object
         $episode_states = [
             0 => T_('skipped'),
             1 => T_('pending'),
-            2 => T_('completed')
+            2 => T_('completed'),
         ];
         $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
@@ -1171,16 +1171,16 @@ class Search extends playlist_object
         $search_type = strtolower($data['type'] ?? '');
         //Search::VALID_TYPES = array('song', 'album', 'album_disk', 'song_artist', 'album_artist', 'artist', 'label', 'playlist', 'podcast', 'podcast_episode', 'tag', 'user', 'video')
         switch ($search_type) {
-            case 'song':
-            case 'album':
-            case 'album_disk':
-            case 'song_artist':
             case 'album_artist':
+            case 'album_disk':
+            case 'album':
             case 'artist':
             case 'label':
             case 'playlist':
-            case 'podcast':
             case 'podcast_episode':
+            case 'podcast':
+            case 'song_artist':
+            case 'song':
             case 'tag':  // for Genres
             case 'user':
             case 'video':
@@ -1337,7 +1337,7 @@ class Search extends playlist_object
 
         return [
             'sql' => $sql,
-            'parameters' => $search_info['parameters']
+            'parameters' => $search_info['parameters'],
         ];
     }
 
@@ -1381,7 +1381,7 @@ class Search extends playlist_object
 
         return [
             'results' => $results,
-            'count' => $num_rows
+            'count' => $num_rows,
         ];
     }
 
@@ -1496,7 +1496,7 @@ class Search extends playlist_object
 
         return [
             'sql' => $sql,
-            'parameters' => $sqltbl['parameters']
+            'parameters' => $sqltbl['parameters'],
         ];
     }
 

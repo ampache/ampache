@@ -42,7 +42,7 @@ final class Migration400008 extends AbstractMigration
 
         $tables    = [
             'cache_object_count',
-            'cache_object_count_run'
+            'cache_object_count_run',
         ];
         $collation = (AmpConfig::get('database_collation', 'utf8mb4_unicode_ci'));
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));

@@ -721,7 +721,7 @@ final class SongSearch implements SearchInterface
             'table_sql' => $table_sql,
             'group_sql' => $group_sql,
             'having_sql' => $having_sql,
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
     }
 }

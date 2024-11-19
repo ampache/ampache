@@ -149,7 +149,7 @@ class Catalog_dropbox extends Catalog
         $fields['getchunk']  = [
             'description' => T_('Get chunked files on analyze'),
             'type' => 'checkbox',
-            'value' => true
+            'value' => true,
         ];
 
         return $fields;
@@ -743,7 +743,7 @@ class Catalog_dropbox extends Catalog
             'file_path' => $file,
             'file_name' => $media->getFileName(),
             'file_size' => $media->size,
-            'file_type' => $media->type
+            'file_type' => $media->type,
         ];
     }
 

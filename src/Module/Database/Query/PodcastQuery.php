@@ -32,36 +32,36 @@ use Ampache\Repository\Model\Query;
 final class PodcastQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
+        'catalog_enabled',
+        'catalog',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
-        'catalog',
-        'catalog_enabled',
         'unplayed',
         'user_catalog',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'title',
-        'name',
         'catalog',
-        'website',
         'episodes',
+        'id',
+        'name',
         'rand',
         'rating',
+        'title',
         'total_count',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
+        'website',
     ];
 
     protected string $select = "`podcast`.`id`";
@@ -184,11 +184,11 @@ final class PodcastQuery implements QueryInterface
             case 'title':
                 $sql = "`podcast`.`title`";
                 break;
-            case 'id':
-            case 'website':
-            case 'episodes':
             case 'catalog':
+            case 'episodes':
+            case 'id':
             case 'total_count':
+            case 'website':
                 $sql = "`podcast`.`$field`";
                 break;
             case 'rating':

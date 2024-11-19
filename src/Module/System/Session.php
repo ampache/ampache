@@ -193,7 +193,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         // Destroy our cookie!
@@ -413,7 +413,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ];
 
         // Set up the cookie params before we start the session.
@@ -662,7 +662,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
             $cookie_options = [
@@ -702,7 +702,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         setcookie($session_name . '_user', $username, $cookie_options);
@@ -724,7 +724,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit

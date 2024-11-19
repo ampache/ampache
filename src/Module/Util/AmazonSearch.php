@@ -108,7 +108,7 @@ class AmazonSearch
             'URL',
             'SmallImage',
             'MediumImage',
-            'LargeImage'
+            'LargeImage',
         ];
     }
 

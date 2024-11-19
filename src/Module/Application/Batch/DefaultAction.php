@@ -230,7 +230,7 @@ final readonly class DefaultAction implements ApplicationActionInterface
 
         return [
             'files' => $media_files,
-            'total_size' => $total_size
+            'total_size' => $total_size,
         ];
     }
 }

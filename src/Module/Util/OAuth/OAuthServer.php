@@ -122,7 +122,7 @@ class OAuthServer
 
         return [
             $consumer,
-            $token
+            $token,
         ];
     }
 

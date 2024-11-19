@@ -40,9 +40,9 @@ use Ampache\Repository\SongRepositoryInterface;
 class Random
 {
     public const VALID_TYPES = [
-        'song',
         'album',
         'artist',
+        'song',
         'video',
     ];
 
@@ -436,7 +436,7 @@ class Random
 
         return [
             'sql' => $sql,
-            'parameters' => $search_info['parameters']
+            'parameters' => $search_info['parameters'],
         ];
     }
 

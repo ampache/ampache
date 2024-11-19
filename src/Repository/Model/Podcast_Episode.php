@@ -364,7 +364,7 @@ class Podcast_Episode extends database_object implements
     {
         return [
             'object_type' => LibraryItemEnum::PODCAST,
-            'object_id' => $this->podcast
+            'object_id' => $this->podcast,
         ];
     }
 

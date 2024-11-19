@@ -143,7 +143,7 @@ class Broadcast_Server implements MessageComponentInterface
         $media   = [];
         $media[] = [
             'object_type' => LibraryItemEnum::SONG,
-            'object_id' => $song_id
+            'object_id' => $song_id,
         ];
         $item          = Stream_Playlist::media_to_urlarray($media);
         $transcode_cfg = AmpConfig::get('transcode', 'default');

@@ -60,7 +60,7 @@ final class FullServiceAction extends AbstractCatalogAction
         }
         $options = [
             'gather_art' => true,
-            'parse_playlist' => true
+            'parse_playlist' => true,
         ];
 
         catalog_worker('full_service', $catalogIds, $options);

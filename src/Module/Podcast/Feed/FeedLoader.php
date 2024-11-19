@@ -102,7 +102,7 @@ final class FeedLoader implements FeedLoaderInterface
             'generator' => html_entity_decode((string)$xml->channel->generator),
             'episodes' => $xml->channel->item,
             'artUrl' => $artUrl,
-            'lastBuildDate' => $lastBuildDate
+            'lastBuildDate' => $lastBuildDate,
         ];
     }
 }

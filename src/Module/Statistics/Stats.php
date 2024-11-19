@@ -180,12 +180,12 @@ class Stats
     public static function count(string $type, int $object_id, string $count_type): void
     {
         switch ($type) {
-            case 'album':
             case 'album_disk':
+            case 'album':
             case 'artist':
-            case 'song':
-            case 'podcast':
             case 'podcast_episode':
+            case 'podcast':
+            case 'song':
             case 'video':
                 $sql = ($count_type == 'down')
                     ? "UPDATE `$type` SET `total_count` = `total_count` - 1, `total_skip` = `total_skip` + 1 WHERE `id` = ? AND `total_count` > 0"

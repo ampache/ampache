@@ -826,8 +826,8 @@ class Ui implements UiInterface
             case 'api_enable_5':
             case 'api_enable_6':
             case 'api_hide_dupe_searches':
-            case 'autoupdate':
             case 'autoupdate_lastversion_new':
+            case 'autoupdate':
             case 'bookmark_latest':
             case 'broadcast_by_default':
             case 'browse_filter':
@@ -845,27 +845,27 @@ class Ui implements UiInterface
             case 'display_menu':
             case 'download':
             case 'extended_playlist_links':
-            case 'external_links_google':
+            case 'external_links_bandcamp':
             case 'external_links_discogs':
             case 'external_links_duckduckgo':
-            case 'external_links_wikipedia':
+            case 'external_links_google':
             case 'external_links_lastfm':
-            case 'external_links_bandcamp':
             case 'external_links_musicbrainz':
+            case 'external_links_wikipedia':
             case 'force_http_play':
             case 'geolocation':
             case 'hide_genres':
             case 'hide_single_artist':
-            case 'homedash_random':
-            case 'homedash_newest':
-            case 'homedash_recent':
-            case 'homedash_trending':
-            case 'homedash_popular':
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_now_playing':
-            case 'home_recently_played':
             case 'home_recently_played_all':
+            case 'home_recently_played':
+            case 'homedash_newest':
+            case 'homedash_popular':
+            case 'homedash_random':
+            case 'homedash_recent':
+            case 'homedash_trending':
             case 'index_dashboard_form':
             case 'libitem_contextmenu':
             case 'lock_songs':
@@ -880,8 +880,8 @@ class Ui implements UiInterface
             case 'ratingmatch_write_tags':
             case 'rio_global_stats':
             case 'rio_track_stats':
-            case 'share':
             case 'share_social':
+            case 'share':
             case 'show_album_artist':
             case 'show_artist':
             case 'show_donate':
@@ -892,9 +892,8 @@ class Ui implements UiInterface
             case 'show_played_times':
             case 'show_playlist_username':
             case 'show_skipped_times':
-            case 'show_wrapped':
             case 'show_subtitle':
-            case 'sidebar_light':
+            case 'show_wrapped':
             case 'sidebar_hide_browse':
             case 'sidebar_hide_dashboard':
             case 'sidebar_hide_information':
@@ -902,6 +901,7 @@ class Ui implements UiInterface
             case 'sidebar_hide_search':
             case 'sidebar_hide_switcher':
             case 'sidebar_hide_video':
+            case 'sidebar_light':
             case 'song_page_title':
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
@@ -910,12 +910,12 @@ class Ui implements UiInterface
             case 'topmenu':
             case 'ui_fixed':
             case 'unique_playlist':
-            case 'upload':
             case 'upload_allow_edit':
             case 'upload_allow_remove':
             case 'upload_catalog_pattern':
             case 'upload_subdir':
             case 'upload_user_artist':
+            case 'upload':
             case 'upnp_backend':
             case 'use_auth':
             case 'use_original_year':

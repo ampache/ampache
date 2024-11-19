@@ -34,16 +34,16 @@ final class ShareQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'object',
-        'object_type',
-        'user',
-        'creation_date',
-        'lastvisit_date',
-        'counter',
-        'max_counter',
-        'allow_stream',
         'allow_download',
+        'allow_stream',
+        'counter',
+        'creation_date',
         'expire',
+        'lastvisit_date',
+        'max_counter',
+        'object_type',
+        'object',
+        'user',
     ];
 
     protected string $select = "`share`.`id`";
@@ -110,16 +110,16 @@ final class ShareQuery implements QueryInterface
             case 'object':
                 $sql = "`share`.`object_type`, `share`.`object.id`";
                 break;
-            case 'id':
-            case 'user':
-            case 'object_type':
-            case 'creation_date':
-            case 'lastvisit_date':
-            case 'counter':
-            case 'max_counter':
-            case 'allow_stream':
             case 'allow_download':
+            case 'allow_stream':
+            case 'counter':
+            case 'creation_date':
             case 'expire':
+            case 'id':
+            case 'lastvisit_date':
+            case 'max_counter':
+            case 'object_type':
+            case 'user':
                 $sql = "`share`.`$field`";
                 break;
             default:

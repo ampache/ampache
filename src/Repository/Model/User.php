@@ -514,16 +514,16 @@ class User extends database_object
             }
 
             switch ($name) {
-                case 'password':
                 case 'access':
-                case 'email':
-                case 'username':
-                case 'fullname':
-                case 'fullname_public':
-                case 'website':
-                case 'state':
-                case 'city':
                 case 'catalog_filter_group':
+                case 'city':
+                case 'email':
+                case 'fullname_public':
+                case 'fullname':
+                case 'password':
+                case 'state':
+                case 'username':
+                case 'website':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -690,25 +690,25 @@ class User extends database_object
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
             $count_array   = [
-                'song',
-                'video',
-                'podcast_episode',
-                'artist',
-                'album',
-                'search',
-                'playlist',
-                'live_stream',
-                'podcast',
-                'user',
-                'catalog',
-                'label',
-                'tag',
-                'share',
-                'license',
                 'album_disk',
+                'album',
+                'artist',
+                'catalog',
                 'items',
-                'time',
+                'label',
+                'license',
+                'live_stream',
+                'playlist',
+                'podcast_episode',
+                'podcast',
+                'search',
+                'share',
                 'size',
+                'song',
+                'tag',
+                'time',
+                'user',
+                'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
             foreach ($user_list as $user_id) {
@@ -724,21 +724,21 @@ class User extends database_object
         }
 
         $count_array = [
-            'song',
-            'video',
-            'podcast_episode',
-            'artist',
             'album',
-            'search',
-            'playlist',
-            'live_stream',
-            'podcast',
-            'user',
+            'artist',
             'catalog',
             'label',
-            'tag',
-            'share',
             'license',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'podcast',
+            'search',
+            'share',
+            'song',
+            'tag',
+            'user',
+            'video',
         ];
         foreach ($user_list as $user_id) {
             $catalog_array = self::get_user_catalogs($user_id);

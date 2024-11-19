@@ -754,7 +754,7 @@ class Video extends database_object implements
     {
         return [
             'object_type' => 'video',
-            'object_id' => $this->id
+            'object_id' => $this->id,
         ];
     }
 
@@ -1174,11 +1174,11 @@ class Video extends database_object implements
             'tags',
         ];
         $skip_array   = [
-            'id',
-            'tag_id',
-            'mime',
-            'total_count',
             'disabledMetadataFields',
+            'id',
+            'mime',
+            'tag_id',
+            'total_count',
         ];
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);

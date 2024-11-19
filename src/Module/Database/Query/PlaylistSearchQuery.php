@@ -32,12 +32,14 @@ use Ampache\Repository\Model\Query;
 final class PlaylistSearchQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
         'equal',
-        'like',
         'exact_match',
         'hide_dupe_smartlist',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'playlist_open',
         'playlist_type',
         'playlist_user',
@@ -45,26 +47,24 @@ final class PlaylistSearchQuery implements QueryInterface
         'regex_not_match',
         'smartlist',
         'starts_with',
-        'not_starts_with',
-        'not_like',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'rand',
         'date',
+        'id',
         'last_count',
         'last_update',
-        'title',
         'name',
+        'rand',
         'rating',
+        'title',
         'type',
-        'user',
-        'username',
-        'user_flag',
-        'userflag',
         'user_flag_rating',
+        'user_flag',
+        'user',
+        'userflag',
+        'username',
     ];
 
     protected string $select = "`playlist`.`id`";
