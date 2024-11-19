@@ -609,7 +609,7 @@ class User extends database_object
 
         debug_event(self::class, 'Updating fullname public', 4);
 
-        Dba::write($sql, [$new_fullname_public ? '1' : '0', $this->id]);
+        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
     }
 
     /**
@@ -904,7 +904,7 @@ class User extends database_object
             $password = hash('sha256', $password);
         }
 
-        $disabled = $disabled ? 1 : 0;
+        $disabled = ($disabled) ? 1 : 0;
 
         // Just in case a zero value slipped in from upper layers...
         $catalog_filter_group ??= 0;
@@ -1308,7 +1308,7 @@ class User extends database_object
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
                 '%s/image.php?action=%s&object_id=%d',
-                $local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
+                ($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id
             );
@@ -1337,7 +1337,7 @@ class User extends database_object
         }
 
         if (!array_key_exists('url', $avatar)) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
+            $avatar['url']        = (($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
         }

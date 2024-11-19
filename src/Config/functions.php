@@ -466,10 +466,10 @@ function check_htaccess_play_writable(): bool
  */
 function debug_result($status = false, $value = null, $comment = ''): string
 {
-    $class = $status ? 'success' : 'danger';
+    $class = ($status) ? 'success' : 'danger';
 
     if ($value === null) {
-        $value = $status ? T_('OK') : T_('Error');
+        $value = ($status) ? T_('OK') : T_('Error');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

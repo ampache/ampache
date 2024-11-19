@@ -399,7 +399,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
-        $uid = $user === true ? (int)(Core::get_global('user')?->getId()) : (int)($user);
+        $uid = ($user === true) ? (int)(Core::get_global('user')?->getId()) : (int)($user);
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, $type . " is not a library item.", 3);

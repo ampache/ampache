@@ -1143,7 +1143,7 @@ class Query
         }
 
         // apply a limit/offset limit (if set)
-        $limit_sql = $limit ? $this->_get_limit_sql() : '';
+        $limit_sql = ($limit) ? $this->_get_limit_sql() : '';
 
         $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);

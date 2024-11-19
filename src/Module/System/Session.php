@@ -104,7 +104,7 @@ final class Session implements SessionInterface
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
+            $auth['access']       = ($defaultAuthLevel) ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);

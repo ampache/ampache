@@ -149,7 +149,7 @@ class Democratic extends Tmp_Playlist
     public function format(): void
     {
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
-        $this->f_primary  = $this->primary ? T_('Primary') : '';
+        $this->f_primary  = ($this->primary) ? T_('Primary') : '';
         $this->f_level    = $this->getAccessLevel()->toDescription();
     }
 

@@ -243,7 +243,7 @@ class Catalog_dropbox extends Catalog
         }
 
         $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `authtoken`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, [$apikey, $secret, $authtoken, $path, ($getchunk ? 1 : 0), $catalog_id]);
+        Dba::write($sql, [$apikey, $secret, $authtoken, $path, (($getchunk) ? 1 : 0), $catalog_id]);
 
         return true;
     }
@@ -518,7 +518,9 @@ class Catalog_dropbox extends Catalog
         }
 
         // Make Dropbox File if target is specified
-        $dropboxFile = $dropboxFile ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE) : null;
+        $dropboxFile = ($dropboxFile)
+            ? $dropbox->makeDropboxFile($dropboxFile, $maxlen, null, DropboxFile::MODE_WRITE)
+            : null;
 
         // Download File
         $response = $dropbox->postToContent('/files/download', ['path' => $path], null, $dropboxFile);

@@ -39,6 +39,6 @@ use Ampache\Module\Api\Ajax;
 </td>
 <td class="cel_name"><?php echo $libitem->name; ?></td>
 <td class="cel_genre"><?php echo $libitem->f_tags; ?></td>
-<td class="cel_started"><?php echo($libitem->started ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_started"><?php echo(($libitem->started) ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_listeners"><?php echo $libitem->listeners; ?></td>
 <td class="cel_action"><?php $libitem->show_action_buttons(); ?></td>

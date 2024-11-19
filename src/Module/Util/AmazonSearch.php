@@ -192,7 +192,7 @@ class AmazonSearch
         $options = [];
         if ($this->_proxy_host) {
             $proxy   = [];
-            $proxy[] = $this->_proxy_host . ($this->_proxy_port ? ':' . $this->_proxy_port : '');
+            $proxy[] = $this->_proxy_host . (($this->_proxy_port) ? ':' . $this->_proxy_port : '');
             if ($this->_proxy_user) {
                 $proxy[] = $this->_proxy_user;
                 $proxy[] = $this->_proxy_pass;

@@ -38,10 +38,10 @@ use Ampache\Module\Util\Ui;
  */
 function debug_wresult($status = false, $value = null, $comment = ''): string
 {
-    $class = $status ? 'success' : 'warning';
+    $class = ($status) ? 'success' : 'warning';
 
     if ($value === null) {
-        $value = $status ? T_('OK') : T_('WARNING');
+        $value = ($status) ? T_('OK') : T_('WARNING');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

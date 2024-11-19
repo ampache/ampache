@@ -1552,7 +1552,7 @@ class Song extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
+        self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1563,7 +1563,7 @@ class Song extends database_object implements
      */
     public static function update_enabled($new_enabled, $song_id): void
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
     }
 
     /**

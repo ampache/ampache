@@ -936,7 +936,7 @@ abstract class Catalog extends database_object
             return false;
         }
 
-        return self::_update_item('enabled', ($new_enabled ? 1 : 0), $catalog_id);
+        return self::_update_item('enabled', (($new_enabled) ? 1 : 0), $catalog_id);
     }
 
     /**
@@ -1310,8 +1310,8 @@ abstract class Catalog extends database_object
             'size' => 0,
         ];
         if ($catalog instanceof Catalog) {
-            $where_sql = $catalog_id ? 'WHERE `catalog` = ?' : '';
-            $params    = $catalog_id ? [$catalog_id] : [];
+            $where_sql = ($catalog_id) ? 'WHERE `catalog` = ?' : '';
+            $params    = ($catalog_id) ? [$catalog_id] : [];
 
             $table = self::get_table_from_type($catalog->gather_types);
             if ($table == 'podcast_episode' && $catalog_id) {

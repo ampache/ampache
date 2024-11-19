@@ -211,7 +211,11 @@ class Broadcast_Server implements MessageComponentInterface
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients   = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
+            $this->broadcastMessage(
+                $clients,
+                self::BROADCAST_PLAYER_PLAY,
+                ($play) ? 'true' : 'false'
+            );
 
             self::echo_message(
                 $this->verbose,

@@ -309,7 +309,7 @@ class Scrobbler
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys
-        $vars['method']  = $is_loved ? 'track.love' : 'track.unlove';
+        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
         $vars['sk']      = $this->challenge;
 

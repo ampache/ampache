@@ -224,8 +224,8 @@ class Share extends database_object
         $params = [
             $this->max_counter,
             $this->expire_days,
-            $this->allow_stream ? 1 : 0,
-            $this->allow_download ? 1 : 0,
+            ($this->allow_stream) ? 1 : 0,
+            ($this->allow_download) ? 1 : 0,
             $this->description,
             $this->id,
         ];

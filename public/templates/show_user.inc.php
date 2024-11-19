@@ -54,8 +54,8 @@ use Ampache\Repository\Model\Useractivity;
 
 /** @var User $current_user */
 $current_user = Core::get_global('user');
-$last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
-$create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
+$last_seen    = ($client->last_seen) ? get_datetime((int) $client->last_seen) : T_('Never');
+$create_date  = ($client->create_date) ? get_datetime((int) $client->create_date) : T_('Unknown');
 $web_path     = AmpConfig::get_web_path();
 $admin_path   = AmpConfig::get_web_path('/admin');
 $allow_upload = Upload::can_upload($current_user);

@@ -415,7 +415,7 @@ class Subsonic_Api
                 if ($options['keySearch']) {
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
-                $attributeKey = $options['attributePrefix'] . ($prefix ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
+                $attributeKey = $options['attributePrefix'] . (($prefix) ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
                 $strattr      = trim((string)$attribute);
                 if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
