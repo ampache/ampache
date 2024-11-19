@@ -80,7 +80,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
     <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
         AutoUpdate::show_new_version();
-    } ?>
+    }
 } else {
     Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
     <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
