@@ -84,7 +84,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
 } else {
     Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
     <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
-} ?>
+<?php } ?>
     <br />
     <?php Ui::show_box_bottom(); ?>
 
