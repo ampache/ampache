@@ -88,7 +88,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
     <br />
     <?php Ui::show_box_bottom(); ?>
 
-<?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
+<?php if (AmpConfig::get('cron_cache', false)) { ?>
     <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
     <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($lastCronDate); ?></div>
     <br />
