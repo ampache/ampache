@@ -59,11 +59,11 @@ class Song_Preview extends database_object implements Media, playable_item
 
     public ?string $link = null;
 
-    public $enabled = true;
+    public bool $enabled = true;
 
-    public $mime;
+    public string $mime;
 
-    public $type;
+    public string $type;
 
     public $f_artist;
 

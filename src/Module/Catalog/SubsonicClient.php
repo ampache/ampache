@@ -30,25 +30,25 @@ namespace Ampache\Module\Catalog;
  */
 class SubsonicClient
 {
-    protected $_serverUrl;
-    protected $_serverPort;
-    protected $_creds;
-    protected $_commands;
+    protected string $_serverUrl;
+
+    protected string $_serverPort;
+
+    /** @var string[] $_creds */
+    protected array $_creds;
+
+    /** @var string[] $_commands */
+    protected array $_commands;
 
     /**
      * SubsonicClient constructor.
-     * @param string $username
-     * @param string $password
-     * @param string $serverUrl
-     * @param string $port
-     * @param string $client
      */
     public function __construct(
-        $username,
-        $password,
-        $serverUrl,
-        $port = "4040",
-        $client = "Ampache"
+        string $username,
+        string $password,
+        string $serverUrl,
+        string $port = "4040",
+        string $client = "Ampache"
     ) {
         $this->setServer($serverUrl, $port);
 

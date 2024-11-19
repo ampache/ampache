@@ -36,6 +36,7 @@ use Ampache\Module\Playlist\Search\LabelSearch;
 use Ampache\Module\Playlist\Search\PlaylistSearch;
 use Ampache\Module\Playlist\Search\PodcastEpisodeSearch;
 use Ampache\Module\Playlist\Search\PodcastSearch;
+use Ampache\Module\Playlist\Search\SearchInterface;
 use Ampache\Module\Playlist\Search\SongSearch;
 use Ampache\Module\Playlist\Search\TagSearch;
 use Ampache\Module\Playlist\Search\UserSearch;
@@ -80,19 +81,20 @@ class Search extends playlist_object
 
     public int $limit = 0;
 
-    public $objectType; // the type of object you want to return (self::VALID_TYPES)
+    public string $objectType; // the type of object you want to return (self::VALID_TYPES)
 
-    public $search_user; // user running the search
+    public User $search_user; // user running the search
 
     public $types = []; // rules that are available to the objectType (title, year, rating, etc)
 
     public $basetypes = []; // rule operator subtypes (numeric, text, boolean, etc)
 
-    private $searchType;
+    private SearchInterface $searchType;
 
-    private $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
+    /** @var string[] $stars */
+    private array $stars; // generate sql for the object type (Ampache\Module\Playlist\Search\*)
 
-    private $order_by;
+    private string $order_by;
 
     /**
      * constructor
@@ -105,10 +107,9 @@ class Search extends playlist_object
         $object_type = 'song',
         ?User $user = null
     ) {
-        $this->search_user = $user;
-        if (!$this->search_user instanceof User) {
-            $this->search_user = User::get_from_global() ?? new User(-1);
-        }
+        $this->search_user = ($user instanceof User)
+            ? $user
+            : User::get_from_global() ?? new User(-1);
 
         $this->objectType = (in_array(strtolower($object_type), self::VALID_TYPES))
             ? strtolower($object_type)
@@ -1946,7 +1947,7 @@ class Search extends playlist_object
      */
     public function update(array $data = null): int
     {
-        if ($data && is_array($data)) {
+        if ($data !== null) {
             $this->name   = $data['name'] ?? $this->name;
             $this->type   = $data['pl_type'] ?? $this->type;
             $this->user   = $data['pl_user'] ?? $this->user;

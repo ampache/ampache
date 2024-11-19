@@ -54,13 +54,13 @@ class Democratic extends Tmp_Playlist
 
     public int $base_playlist = 0;
 
-    public $f_cooldown;
+    public string $f_cooldown;
 
-    public $f_primary;
+    public string $f_primary;
 
-    public $f_level;
+    public string $f_level;
 
-    public $tmp_playlist;
+    public ?int $tmp_playlist;
 
     public $object_ids = [];
 

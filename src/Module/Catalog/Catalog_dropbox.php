@@ -59,8 +59,11 @@ class Catalog_dropbox extends Catalog
     private string $authtoken;
 
     public string $path;
-    public $getchunk;
-    private $videos_to_gather;
+
+    public int $getchunk;
+
+    /** @var array<int> */
+    private array $videos_to_gather;
 
     /**
      * get_description
@@ -206,7 +209,7 @@ class Catalog_dropbox extends Catalog
         $secret    = trim($data['secret']);
         $authtoken = trim($data['authtoken']);
         $path      = $data['path'];
-        $getchunk  = $data['getchunk'];
+        $getchunk  = (int)($data['getchunk'] ?? 0);
 
         if (!strlen($apikey) || !strlen($secret) || !strlen($authtoken)) {
             AmpError::add('general', T_('Error: API Key, Secret and Access Token Required for Dropbox Catalogs'));
@@ -243,7 +246,7 @@ class Catalog_dropbox extends Catalog
         }
 
         $sql = 'INSERT INTO `catalog_dropbox` (`apikey`, `secret`, `authtoken`, `path`, `getchunk`, `catalog_id`) VALUES (?, ?, ?, ?, ?, ?)';
-        Dba::write($sql, [$apikey, $secret, $authtoken, $path, (($getchunk) ? 1 : 0), $catalog_id]);
+        Dba::write($sql, [$apikey, $secret, $authtoken, $path, $getchunk, $catalog_id]);
 
         return true;
     }

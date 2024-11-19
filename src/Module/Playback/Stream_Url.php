@@ -45,7 +45,6 @@ use Ampache\Config\AmpConfig;
  */
 class Stream_Url extends MemoryObject
 {
-    // Columns for the stream_playlist table. (Ordered by database structure)
     public $properties = [
         'url',
         'info_url',
@@ -57,7 +56,7 @@ class Stream_Url extends MemoryObject
         'type',
         'codec',
         'track_num',
-    ];
+    ]; // Columns for the stream_playlist table. (Ordered by database structure)
 
     /**
      * parse

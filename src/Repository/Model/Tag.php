@@ -46,7 +46,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public int $is_hidden = 0;
 
-    public $f_name;
+    public string $f_name;
 
     /**
      * constructor
