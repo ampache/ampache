@@ -299,17 +299,19 @@ class Catalog_remote extends Catalog
             return 0;
         }
 
+        $total = $remote_catalog_info->songs ?: $remote_catalog_info->max_songs ?: 0;
+        debug_event('remote.catalog', sprintf(nT_('%s song was found', '%s songs were found', $total), $total), 4);
+
         Ui::update_text(
             T_("Remote Catalog Updated"),
             /* HINT: count of songs found */
-            sprintf(nT_('%s song was found', '%s songs were found', $remote_catalog_info->songs), $remote_catalog_info->songs)
+            sprintf(nT_('%s song was found', '%s songs were found', $total), $total)
         );
 
         $date = time();
         // Hardcoded for now
         $step       = 500;
         $current    = 0;
-        $total      = $remote_catalog_info->songs;
         $songsadded = 0;
 
         while (count($total) > $current) {
