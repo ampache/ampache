@@ -140,7 +140,7 @@ class SeafileAdapter
             'Libraries' => new Library($client),
             'Directories' => new Directory($client),
             'Files' => new File($client),
-            'Client' => $client
+            'Client' => $client,
         ];
 
         // Get Library
@@ -221,7 +221,7 @@ class SeafileAdapter
 
         return [
             'path' => $split[1],
-            'filename' => $split[2]
+            'filename' => $split[2],
         ];
     }
 

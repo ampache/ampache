@@ -143,7 +143,7 @@ class Broadcast_Server implements MessageComponentInterface
         $media   = [];
         $media[] = [
             'object_type' => LibraryItemEnum::SONG,
-            'object_id' => $song_id
+            'object_id' => $song_id,
         ];
         $item          = Stream_Playlist::media_to_urlarray($media);
         $transcode_cfg = AmpConfig::get('transcode', 'default');
@@ -211,7 +211,11 @@ class Broadcast_Server implements MessageComponentInterface
         if ($this->isBroadcaster($from)) {
             $broadcast = $this->broadcasters[$from->resourceId];
             $clients   = $this->getListeners($broadcast);
-            $this->broadcastMessage($clients, self::BROADCAST_PLAYER_PLAY, $play ? 'true' : 'false');
+            $this->broadcastMessage(
+                $clients,
+                self::BROADCAST_PLAYER_PLAY,
+                ($play) ? 'true' : 'false'
+            );
 
             self::echo_message(
                 $this->verbose,

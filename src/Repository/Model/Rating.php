@@ -42,17 +42,17 @@ class Rating extends database_object
     protected const DB_TABLENAME = 'rating';
 
     private const RATING_TYPES   = [
-        'artist',
-        'album',
         'album_disk',
+        'album',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'search',
         'song',
         'stream',
-        'live_stream',
         'video',
-        'playlist',
-        'search',
-        'podcast',
-        'podcast_episode',
     ];
 
     // Public variables
@@ -94,18 +94,18 @@ class Rating extends database_object
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'search',
             'song',
+            'tag',
             'user',
             'video',
         ];

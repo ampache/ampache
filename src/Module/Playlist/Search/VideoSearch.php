@@ -38,7 +38,7 @@ final class VideoSearch implements SearchInterface
     public function getSql(
         Search $search
     ): array {
-        $search_user_id     = $search->search_user?->getId() ?? -1;
+        $search_user_id     = $search->search_user->getId();
         $sql_logic_operator = $search->logic_operator;
         $catalog_disable    = AmpConfig::get('catalog_disable');
         $catalog_filter     = AmpConfig::get('catalog_filter');
@@ -119,7 +119,7 @@ final class VideoSearch implements SearchInterface
             'table_sql' => $table_sql,
             'group_sql' => $group_sql,
             'having_sql' => $having_sql,
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
     }
 }

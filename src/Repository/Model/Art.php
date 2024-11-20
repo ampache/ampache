@@ -995,7 +995,7 @@ class Art extends database_object
 
         return [
             'thumb' => $data,
-            'thumb_mime' => $mime_type
+            'thumb_mime' => $mime_type,
         ];
     }
 

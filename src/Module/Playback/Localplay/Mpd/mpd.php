@@ -371,7 +371,7 @@ class mpd
             $this->RefreshInfo();
         }
 
-        return $response_string ? $response_string : true;
+        return ($response_string) ? $response_string : true;
     }
 
     /**
@@ -727,7 +727,7 @@ class mpd
     public function SetRepeat($value)
     {
         $this->_debug('SetRepeat', 'start', 5);
-        $value    = $value ? 1 : 0;
+        $value    = ($value) ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_REPEAT, $value);
         $this->_debug('SetRepeat', "return: $response", 5);
 
@@ -745,7 +745,7 @@ class mpd
     public function SetRandom($value)
     {
         $this->_debug('SetRandom', 'start', 5);
-        $value    = $value ? 1 : 0;
+        $value    = ($value) ? 1 : 0;
         $response = $this->SendCommand(self::COMMAND_RANDOM, $value);
         $this->_debug('SetRandom', "return: $response", 5);
 

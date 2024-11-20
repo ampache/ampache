@@ -444,7 +444,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return [
             'prefix' => '',
             'basename' => '',
-            'name' => ''
+            'name' => '',
         ];
     }
 }

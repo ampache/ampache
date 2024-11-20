@@ -60,7 +60,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
-            '%A' => 'album'
+            '%A' => 'album',
         ];
         foreach ($data as $element) {
             /** @var Song|Video $media */

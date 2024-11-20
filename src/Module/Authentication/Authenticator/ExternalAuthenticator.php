@@ -43,7 +43,7 @@ final class ExternalAuthenticator implements AuthenticatorInterface
         $proc = proc_open($authenticator, [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
-            2 => ['pipe', 'w']
+            2 => ['pipe', 'w'],
         ], $pipes);
 
         if (is_resource($proc)) {
@@ -71,7 +71,7 @@ final class ExternalAuthenticator implements AuthenticatorInterface
 
         return [
             'success' => false,
-            'error' => 'The external authenticator did not accept the login'
+            'error' => 'The external authenticator did not accept the login',
         ];
     }
 

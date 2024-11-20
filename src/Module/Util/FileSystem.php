@@ -169,7 +169,9 @@ class FileSystem
             ];
         }
         if (is_file($dir)) {
-            $ext = strpos($dir, '.') !== false ? substr($dir, strrpos($dir, '.') + 1) : '';
+            $ext = (strpos($dir, '.') !== false)
+                ? substr($dir, strrpos($dir, '.') + 1)
+                : '';
             $dat = ['type' => $ext, 'content' => ''];
             switch ($ext) {
                 /*case 'txt':

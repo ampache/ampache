@@ -120,7 +120,7 @@ class OAuthRequest
             "oauth_version" => OAuthRequest::$version,
             "oauth_nonce" => OAuthRequest::generate_nonce(),
             "oauth_timestamp" => OAuthRequest::generate_timestamp(),
-            "oauth_consumer_key" => $consumer->key
+            "oauth_consumer_key" => $consumer->key,
         ];
         if ($token) {
             $defaults['oauth_token'] = $token->key;
@@ -206,7 +206,7 @@ class OAuthRequest
         $parts = [
             $this->get_normalized_http_method(),
             $this->get_normalized_http_url(),
-            $this->get_signable_parameters()
+            $this->get_signable_parameters(),
         ];
 
         $parts = OAuthUtil::urlencode_rfc3986($parts);

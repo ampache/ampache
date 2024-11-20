@@ -36,8 +36,8 @@ final class FollowerQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'follow_user',
         'follow_date',
+        'follow_user',
         'user',
     ];
 

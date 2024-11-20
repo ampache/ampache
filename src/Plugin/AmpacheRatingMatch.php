@@ -54,11 +54,11 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $min_stars;
+    private int $min_stars;
 
-    private $match_flags;
+    private bool $match_flags;
 
-    private $user;
+    private User $user;
 
     private $star1_rule;
 
@@ -72,7 +72,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
 
     private $flag_rule;
 
-    private $write_tags;
+    private bool $write_tags;
 
     /**
      * Constructor
@@ -406,7 +406,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         $data              = $user->prefs;
         $this->user        = $user;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
-        $this->match_flags = (int) $data['ratingmatch_flags'];
+        $this->match_flags = (bool) $data['ratingmatch_flags'];
         $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
         $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
         $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];

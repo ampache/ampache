@@ -48,7 +48,7 @@ final class Migration370009 extends AbstractMigration
             "CREATE TABLE IF NOT EXISTS `tvshow_episode` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `season` int(11) unsigned NOT NULL, `episode_number` int(11) unsigned NOT NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `movie` (`id` int(11) unsigned NOT NULL, `original_name` varchar(80) NULL, `summary` varchar(256) NULL, `year` int(11) unsigned NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
             "CREATE TABLE IF NOT EXISTS `personal_video` (`id` int(11) unsigned NOT NULL, `location` varchar(256) NULL, `summary` varchar(256) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
-            "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine"
+            "CREATE TABLE IF NOT EXISTS `clip` (`id` int(11) unsigned NOT NULL, `artist` int(11) NULL, `song` int(11) NULL, PRIMARY KEY (`id`)) ENGINE=$engine",
         ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);

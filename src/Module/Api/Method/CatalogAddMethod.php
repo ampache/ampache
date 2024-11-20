@@ -117,7 +117,7 @@ final class CatalogAddMethod
             'sort_pattern' => $sort_pattern,
             'gather_media' => $gather_types,
             'username' => $username,
-            'password' => $password
+            'password' => $password,
         ];
         if ($type == 'seafile') {
             $object['library_name'  ] = $object['name'];

@@ -31,33 +31,33 @@ use Ampache\Repository\Model\Query;
 final class LabelQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'title',
-        'name',
-        'category',
-        'user',
-        'creation_date',
-        'mbid',
-        'country',
         'active',
+        'category',
+        'country',
+        'creation_date',
+        'id',
+        'mbid',
+        'name',
         'rating',
-        'user_flag',
-        'userflag',
+        'title',
         'user_flag_rating',
+        'user_flag',
+        'user',
+        'userflag',
     ];
 
     protected string $select = "`label`.`id`";
@@ -163,13 +163,13 @@ final class LabelQuery implements QueryInterface
             case 'title':
                 $sql = "`label`.`name`";
                 break;
-            case 'category':
-            case 'id':
-            case 'user':
-            case 'creation_date':
-            case 'mbid':
-            case 'country':
             case 'active':
+            case 'category':
+            case 'country':
+            case 'creation_date':
+            case 'id':
+            case 'mbid':
+            case 'user':
                 $sql = "`label`.`$field`";
                 break;
             case 'rating':

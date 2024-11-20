@@ -191,7 +191,7 @@ class AmpacheAmazon extends AmpachePlugin implements PluginGatherArtsInterface
         $possible_keys = [
             'LargeImage',
             'MediumImage',
-            'SmallImage'
+            'SmallImage',
         ];
 
         $mediaType = ($type === 'album' || $type === 'artist') ? 'Music' : 'Video';

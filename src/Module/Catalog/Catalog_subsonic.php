@@ -431,7 +431,7 @@ class Catalog_subsonic extends Catalog
         }
         $options = [
             'format' => $target,
-            'maxBitRate' => $max_bitrate
+            'maxBitRate' => $max_bitrate,
         ];
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');

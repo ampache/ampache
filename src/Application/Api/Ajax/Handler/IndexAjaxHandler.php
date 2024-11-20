@@ -382,11 +382,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['recently_played'] = ob_get_clean();
                 break;
-            case 'dashboard_random':
             case 'dashboard_newest':
+            case 'dashboard_popular':
+            case 'dashboard_random':
             case 'dashboard_recent':
             case 'dashboard_trending':
-            case 'dashboard_popular':
                 $limit       = $_REQUEST['limit'];
                 $object_type = $_REQUEST['object_type'];
                 $threshold   = $_REQUEST['threshold'];

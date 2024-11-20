@@ -37,13 +37,13 @@ final class Migration550005 extends AbstractMigration
     {
         // delete bad maps if they exist
         $tables = [
-            'song',
-            'album',
             'album_disk',
-            'video',
-            'podcast',
+            'album',
+            'live_stream',
             'podcast_episode',
-            'live_stream'
+            'podcast',
+            'song',
+            'video',
         ];
         foreach ($tables as $type) {
             $this->updateDatabase("DELETE FROM `catalog_map` USING `catalog_map` LEFT JOIN (SELECT DISTINCT `$type`.`catalog` AS `catalog_id`, '$type' AS `map_type`, `$type`.`id` AS `object_id` FROM `$type` GROUP BY `$type`.`catalog`, `map_type`, `$type`.`id`) AS `valid_maps` ON `valid_maps`.`catalog_id` = `catalog_map`.`catalog_id` AND `valid_maps`.`object_id` = `catalog_map`.`object_id` AND `valid_maps`.`map_type` = `catalog_map`.`object_type` WHERE `catalog_map`.`object_type` = '$type' AND `valid_maps`.`object_id` IS NULL;");

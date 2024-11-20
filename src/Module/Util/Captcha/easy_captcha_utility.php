@@ -122,7 +122,7 @@ class easy_captcha_utility
     // send base javascript
     public static function js_base()
     {
-        $captcha_new_urls = $_GET["captcha_new_urls"] ? 0 : 1;
+        $captcha_new_urls = ($_GET["captcha_new_urls"]) ? 0 : 1;
         $BASE_URL         = easy_captcha::CAPTCHA_BASE_URL;
         $PARAM_ID         = easy_captcha::CAPTCHA_PARAM_ID;
         $PARAM_INPUT      = easy_captcha::CAPTCHA_PARAM_INPUT;

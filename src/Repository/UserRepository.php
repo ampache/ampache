@@ -205,7 +205,7 @@ final readonly class UserRepository implements UserRepositoryInterface
             'user_preference',
             'user_shout',
             'user_vote',
-            'wanted'
+            'wanted',
         ];
         foreach ($user_tables as $table_id) {
             $sql = "DELETE FROM `" . $table_id . "` WHERE `user` IS NOT NULL AND `user` != -1 AND `user` != 0 AND `user` NOT IN (SELECT `id` FROM `user`);";
@@ -215,7 +215,7 @@ final readonly class UserRepository implements UserRepositoryInterface
         // reset their data to null if they've made custom changes
         $user_tables = [
             'artist',
-            'label'
+            'label',
         ];
         foreach ($user_tables as $table_id) {
             $sql = "UPDATE `" . $table_id . "` SET `user` = NULL WHERE `user` IS NOT NULL AND `user` != -1 AND `user` NOT IN (SELECT `id` FROM `user`);";

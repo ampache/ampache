@@ -514,16 +514,16 @@ class User extends database_object
             }
 
             switch ($name) {
-                case 'password':
                 case 'access':
-                case 'email':
-                case 'username':
-                case 'fullname':
-                case 'fullname_public':
-                case 'website':
-                case 'state':
-                case 'city':
                 case 'catalog_filter_group':
+                case 'city':
+                case 'email':
+                case 'fullname_public':
+                case 'fullname':
+                case 'password':
+                case 'state':
+                case 'username':
+                case 'website':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -609,7 +609,7 @@ class User extends database_object
 
         debug_event(self::class, 'Updating fullname public', 4);
 
-        Dba::write($sql, [$new_fullname_public ? '1' : '0', $this->id]);
+        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
     }
 
     /**
@@ -690,25 +690,25 @@ class User extends database_object
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
             $count_array   = [
-                'song',
-                'video',
-                'podcast_episode',
-                'artist',
-                'album',
-                'search',
-                'playlist',
-                'live_stream',
-                'podcast',
-                'user',
-                'catalog',
-                'label',
-                'tag',
-                'share',
-                'license',
                 'album_disk',
+                'album',
+                'artist',
+                'catalog',
                 'items',
-                'time',
+                'label',
+                'license',
+                'live_stream',
+                'playlist',
+                'podcast_episode',
+                'podcast',
+                'search',
+                'share',
                 'size',
+                'song',
+                'tag',
+                'time',
+                'user',
+                'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
             foreach ($user_list as $user_id) {
@@ -724,21 +724,21 @@ class User extends database_object
         }
 
         $count_array = [
-            'song',
-            'video',
-            'podcast_episode',
-            'artist',
             'album',
-            'search',
-            'playlist',
-            'live_stream',
-            'podcast',
-            'user',
+            'artist',
             'catalog',
             'label',
-            'tag',
-            'share',
             'license',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'podcast',
+            'search',
+            'share',
+            'song',
+            'tag',
+            'user',
+            'video',
         ];
         foreach ($user_list as $user_id) {
             $catalog_array = self::get_user_catalogs($user_id);
@@ -904,7 +904,7 @@ class User extends database_object
             $password = hash('sha256', $password);
         }
 
-        $disabled = $disabled ? 1 : 0;
+        $disabled = ($disabled) ? 1 : 0;
 
         // Just in case a zero value slipped in from upper layers...
         $catalog_filter_group ??= 0;
@@ -1308,7 +1308,7 @@ class User extends database_object
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
                 '%s/image.php?action=%s&object_id=%d',
-                $local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
+                ($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id
             );
@@ -1337,7 +1337,7 @@ class User extends database_object
         }
 
         if (!array_key_exists('url', $avatar)) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
+            $avatar['url']        = (($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
         }
