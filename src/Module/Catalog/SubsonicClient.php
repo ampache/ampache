@@ -30,25 +30,25 @@ namespace Ampache\Module\Catalog;
  */
 class SubsonicClient
 {
-    protected $_serverUrl;
-    protected $_serverPort;
-    protected $_creds;
-    protected $_commands;
+    protected string $_serverUrl;
+
+    protected string $_serverPort;
+
+    /** @var string[] $_creds */
+    protected array $_creds;
+
+    /** @var string[] $_commands */
+    protected array $_commands;
 
     /**
      * SubsonicClient constructor.
-     * @param string $username
-     * @param string $password
-     * @param string $serverUrl
-     * @param string $port
-     * @param string $client
      */
     public function __construct(
-        $username,
-        $password,
-        $serverUrl,
-        $port = "4040",
-        $client = "Ampache"
+        string $username,
+        string $password,
+        string $serverUrl,
+        string $port = "4040",
+        string $client = "Ampache"
     ) {
         $this->setServer($serverUrl, $port);
 
@@ -57,44 +57,44 @@ class SubsonicClient
             'p' => $password,
             'v' => '1.8.0',
             'c' => $client,
-            'f' => 'json'
+            'f' => 'json',
         ];
 
         $this->_commands = [
-            'ping',
+            'addChatMessage',
+            'changePassword',
+            'createPlaylist',
+            'createShare',
+            'createUser',
+            'deletePlaylist',
+            'deleteShare',
+            'deleteUser',
+            'download',
+            'getAlbumList',
+            'getArtistInfo',
+            'getChatMessages',
+            'getCoverArt',
+            'getIndexes',
             'getLicense',
+            'getLyrics',
+            'getMusicDirectory',
             'getMusicFolders',
             'getNowPlaying',
-            'getIndexes',
+            'getOpenSubsonicExtensions',
+            'getPlaylist',
+            'getPlaylists',
+            'getPordcasts',
+            'getRandomSongs',
             'getSong',
-            'getMusicDirectory',
-            'getArtistInfo',
+            'getUser',
+            'jukeboxControl',
+            'ping',
+            'scrobble',
             'search',
             'search2',
-            'getOpenSubsonicExtensions',
-            'getPlaylists',
-            'getPlaylist',
-            'createPlaylist',
-            'deletePlaylist',
-            'download',
-            'stream',
-            'getCoverArt',
-            'scrobble',
-            'changePassword',
-            'getUser',
-            'createUser',
-            'deleteUser',
-            'getChatMessages',
-            'addChatMessage',
-            'getAlbumList',
-            'getRandomSongs',
-            'getLyrics',
-            'jukeboxControl',
-            'getPordcasts',
-            'createShare',
-            'updateShare',
-            'deleteShare',
             'setRating',
+            'stream',
+            'updateShare',
         ];
     }
 

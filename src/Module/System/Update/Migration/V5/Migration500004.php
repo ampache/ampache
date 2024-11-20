@@ -45,10 +45,10 @@ final class Migration500004 extends AbstractMigration
         $charset   = (AmpConfig::get('database_charset', 'utf8mb4'));
         $engine    = ($charset == 'utf8mb4') ? 'InnoDB' : 'MYISAM';
         $tables    = [
-            'song',
             'album',
+            'podcast_episode',
+            'song',
             'video',
-            'podcast_episode'
         ];
         $catalogs  = Catalog::get_catalogs();
 

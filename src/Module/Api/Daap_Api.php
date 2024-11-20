@@ -840,7 +840,7 @@ class Daap_Api
     {
         self::$tags[$name] = [
             'type' => $type,
-            'code' => $code
+            'code' => $code,
         ];
     }
 

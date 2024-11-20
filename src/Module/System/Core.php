@@ -213,7 +213,7 @@ class Core
     {
         $empty = [
             'width' => 0,
-            'height' => 0
+            'height' => 0,
         ];
         if (!function_exists('imagecreatefromstring')) {
             return $empty;

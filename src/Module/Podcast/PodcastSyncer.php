@@ -284,7 +284,7 @@ final readonly class PodcastSyncer implements PodcastSyncerInterface
             $time,
             $pubdate,
             time(),
-            $podcast->getCatalogId()
+            $podcast->getCatalogId(),
         ]);
     }
 

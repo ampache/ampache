@@ -54,7 +54,7 @@ final class Migration360002 extends AbstractMigration
             "ALTER TABLE `live_stream` CHANGE COLUMN `url` `url` VARCHAR (4096)",
             "ALTER TABLE `artist` ADD FULLTEXT(`name`)",
             "ALTER TABLE `album` ADD FULLTEXT(`name`)",
-            "ALTER TABLE `song` ADD FULLTEXT(`title`)"
+            "ALTER TABLE `song` ADD FULLTEXT(`title`)",
         ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);

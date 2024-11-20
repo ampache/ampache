@@ -101,7 +101,7 @@ $t_logout          = T_('Log out'); ?>
             'id' => 'localplay',
             'title' => $t_localplay,
             'icon' => 'volume_up',
-            'access' => AccessLevelEnum::GUEST
+            'access' => AccessLevelEnum::GUEST,
         ];
     }
     if ($is_session) {
@@ -109,7 +109,7 @@ $t_logout          = T_('Log out'); ?>
             'id' => 'preferences',
             'title' => $t_preferences,
             'icon' => 'page_info',
-            'access' => AccessLevelEnum::GUEST
+            'access' => AccessLevelEnum::GUEST,
         ];
     }
     $sidebar_items[] = [

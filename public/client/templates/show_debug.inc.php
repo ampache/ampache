@@ -63,27 +63,32 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
             <li>
                 <a href="<?php echo $admin_path; ?>/system.php?action=clear_cache&type=album"><?php echo Ui::get_material_symbol('settings', T_('Clear Albums Cache')) . ' ' . T_('Clear Albums Cache'); ?></a>
             </li>
-    <?php if (AmpConfig::get('perpetual_api_session')) { ?>
+<?php if (AmpConfig::get('perpetual_api_session')) { ?>
             <li>
                 <a href="<?php echo $admin_path; ?>/system.php?action=clear_cache&type=perpetual_api_session"><?php echo Ui::get_material_symbol('settings', T_('Clear Perpetual API Sessions')) . ' ' . T_('Clear Perpetual API Sessions'); ?></a>
             </li>
-    <?php  } ?>
+<?php  } ?>
         </ul>
     </div>
-    <?php Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
+<?php if (AmpConfig::get('autoupdate', false)) { ?>
+    Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
     <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
-<?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
-    <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
-} ?>
+    <?php if ((string) AutoUpdate::is_force_git_branch() !== '') { ?>
+        <?php echo "<div>" . T_('GitHub Branch') . ': ' . (string)AutoUpdate::is_force_git_branch() . '</div>';
+    } ?>
     <div><a class="nohtml" href="<?php echo $admin_path; ?>/system.php?action=show_debug&autoupdate=force"><?php echo T_('Force check'); ?>...</a></div>
-<?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
-    AutoUpdate::show_new_version();
-} ?>
+    <?php if ($current_version !== $latest_version || AutoUpdate::is_update_available()) {
+        AutoUpdate::show_new_version();
+    }
+} else {
+    Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
+    <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
+<?php } ?>
     <br />
     <?php Ui::show_box_bottom(); ?>
 
-<?php if ((string) AmpConfig::get('cron_cache') !== '') { ?>
+<?php if (AmpConfig::get('cron_cache', false)) { ?>
     <?php Ui::show_box_top(T_('Ampache Cron'), 'box'); ?>
     <div><?php echo T_('The last cron was completed'); ?>: <?php echo get_datetime($lastCronDate); ?></div>
     <br />

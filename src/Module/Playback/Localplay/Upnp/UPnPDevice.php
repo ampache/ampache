@@ -124,7 +124,7 @@ class UPnPDevice
         $body .= '  </u:' . $method . '>';
         $body .= '</s:Body></s:Envelope>';
 
-        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != "/") ? '/' : "") . $this->_settings['controlURLs'][$type];
+        $controlUrl = $this->_settings['host'] . ((substr($this->_settings['controlURLs'][$type], 0, 1) != '/') ? '/' : '') . $this->_settings['controlURLs'][$type];
 
         //!! TODO - need to use scheme in header ??
         $header = [

@@ -31,32 +31,32 @@ use Ampache\Repository\Model\Query;
 final class TagQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
         'equal',
-        'like',
         'exact_match',
-        'hidden',
         'genre',
+        'hidden',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'object_type',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'tag',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
         'id',
-        'rand',
-        'tag',
         'name',
+        'rand',
         'rating',
+        'tag',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
     ];
 
     protected string $select = "`tag`.`id`";

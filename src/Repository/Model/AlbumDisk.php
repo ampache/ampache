@@ -53,6 +53,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $total_count;
 
+    public int $total_skip;
+
     public ?string $disksubtitle = null;
 
     /**

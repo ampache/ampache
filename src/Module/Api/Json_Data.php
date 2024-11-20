@@ -133,7 +133,7 @@ class Json_Data
                 "errorCode" => (string)$code,
                 "errorAction" => $action,
                 "errorType" => $type,
-                "errorMessage" => $string
+                "errorMessage" => $string,
             ]
         ];
 
@@ -479,7 +479,7 @@ class Json_Data
             "catalog_id" => (string)$catalog_id,
             "parent_id" => (string)$parent_id,
             "parent_type" => $parent_type,
-            "child_type" => $child_type
+            "child_type" => $child_type,
         ];
         $pattern = '/^(' . implode('\\s|', explode('|', AmpConfig::get('catalog_prefix_pattern', 'The|An|A|Die|Das|Ein|Eine|Les|Le|La'))) . '\\s)(.*)/i';
 

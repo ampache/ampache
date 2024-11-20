@@ -48,11 +48,11 @@ class AmpacheStreamHits extends AmpachePlugin implements PluginStreamControlInte
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user_id;
+    private int $user_id;
 
-    private $hits_days;
+    private int $hits_days;
 
-    private $hits_max;
+    private int $hits_max;
 
     /**
      * Constructor

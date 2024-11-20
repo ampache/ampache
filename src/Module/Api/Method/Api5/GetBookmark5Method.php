@@ -94,7 +94,7 @@ final class GetBookmark5Method
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
-            'comment' => null
+            'comment' => null,
         ];
         $results = Bookmark::getBookmarks($object);
         if (empty($results)) {

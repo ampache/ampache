@@ -50,7 +50,7 @@ if ($server_allow && $controller && $access_check) {
     // Little bit of work to be done here
     $localplay        = new LocalPlay(AmpConfig::get('localplay_controller', ''));
     $current_instance = $localplay->current_instance();
-    $class            = $current_instance ? '' : ' class="active_instance"'; ?>
+    $class            = ($current_instance) ? '' : ' class="active_instance"'; ?>
 <?php if (Access::check(AccessTypeEnum::LOCALPLAY, AccessLevelEnum::USER)) { ?>
     <?php if (AmpConfig::get('browse_filter')) {
         echo "<li>";

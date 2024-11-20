@@ -84,8 +84,8 @@ foreach ($object_ids as $user_id) {
         continue;
     }
     $libitem->format();
-    $last_seen   = $libitem->last_seen ? get_datetime($libitem->last_seen) : T_('Never');
-    $create_date = $libitem->create_date ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
+    $last_seen   = ($libitem->last_seen) ? get_datetime($libitem->last_seen) : T_('Never');
+    $create_date = ($libitem->create_date) ? get_datetime($libitem->create_date) : T_('Unknown'); ?>
 <tr id="admin_user_<?php echo $libitem->id; ?>">
     <?php require Ui::find_template('show_user_row.inc.php'); ?>
 </tr>
