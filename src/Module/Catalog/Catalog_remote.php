@@ -299,7 +299,9 @@ class Catalog_remote extends Catalog
             return 0;
         }
 
-        $total = $remote_catalog_info->songs ?: $remote_catalog_info->max_song ?: 0;
+        $total = ($remote_catalog_info->songs > 0)
+            ? $remote_catalog_info->songs
+            : $remote_catalog_info->max_song;
         debug_event('remote.catalog', sprintf(nT_('%s song was found', '%s songs were found', $total), $total), 4);
 
         Ui::update_text(
@@ -313,15 +315,19 @@ class Catalog_remote extends Catalog
         $step       = 500;
         $current    = 0;
         $songsadded = 0;
+        $songsFound = true;
 
-        while (count($total) > $current) {
+        while (
+            $total > $current &&
+            $songsFound
+        ) {
             $start = $current;
             $current += $step;
             try {
                 $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
-                if ($songs instanceof simpleXMLElement) {
-                    foreach ($songs as $song) {
+                if ($songs instanceof simpleXMLElement && $songs->song->count() > 0) {
+                    foreach ($songs->song as $song) {
                         if (
                             !$song instanceof simpleXMLElement ||
                             !$song->url
@@ -377,6 +383,8 @@ class Catalog_remote extends Catalog
                             }
                         }
                     }
+                } else {
+                    $songsFound = false;
                 }
             } catch (Exception $error) {
                 debug_event('remote.catalog', 'Songs parsing error: ' . $error->getMessage(), 1);
