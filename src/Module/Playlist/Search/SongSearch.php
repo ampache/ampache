@@ -68,6 +68,8 @@ final class SongSearch implements SearchInterface
             $operator_sql = $operator['sql'] ?? '';
 
             switch ($rule[0]) {
+                case 'none':
+                    break;
                 case 'anywhere':
                     // 'anywhere' searches song title, song filename, song genre, album title, artist title, label title and song comment
                     $tag_string = match ($operator_sql) {
