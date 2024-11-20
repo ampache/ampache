@@ -299,7 +299,7 @@ class Catalog_remote extends Catalog
             return 0;
         }
 
-        $total = $remote_catalog_info->songs ?: $remote_catalog_info->max_songs ?: 0;
+        $total = $remote_catalog_info->songs ?: $remote_catalog_info->max_song ?: 0;
         debug_event('remote.catalog', sprintf(nT_('%s song was found', '%s songs were found', $total), $total), 4);
 
         Ui::update_text(
