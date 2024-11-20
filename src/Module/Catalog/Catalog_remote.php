@@ -167,7 +167,7 @@ class Catalog_remote extends Catalog
      */
     public static function create_type($catalog_id, $data): bool
     {
-        $uri      = $data['uri'];
+        $uri      = rtrim(trim($data['uri']), '/');
         $username = $data['username'];
         $password = $data['password'];
 
