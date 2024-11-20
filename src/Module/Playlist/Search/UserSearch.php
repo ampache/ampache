@@ -86,7 +86,7 @@ final class UserSearch implements SearchInterface
             'table_sql' => '',
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
     }
 }

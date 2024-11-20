@@ -100,10 +100,10 @@ final class ShoutRepository extends BaseRepository implements ShoutRepositoryInt
         ?int $objectId = null
     ): void {
         $types = [
-            'song',
             'album',
             'artist',
-            'label'
+            'label',
+            'song',
         ];
 
         if ($objectType !== null) {

@@ -236,8 +236,8 @@ class Query
             case 'album_disk':
             case 'album':
             case 'artist':
-            case 'catalog':
             case 'catalog_enabled':
+            case 'catalog':
             case 'disabled':
             case 'disk':
             case 'enabled':
@@ -264,14 +264,14 @@ class Query
             case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
-            case 'equal':
-            case 'like':
             case 'alpha_match':
+            case 'equal':
             case 'exact_match':
+            case 'like':
+            case 'not_starts_with':
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
-            case 'not_starts_with':
                 if ($this->is_static_content()) {
                     return false;
                 }
@@ -1143,7 +1143,7 @@ class Query
         }
 
         // apply a limit/offset limit (if set)
-        $limit_sql = $limit ? $this->_get_limit_sql() : '';
+        $limit_sql = ($limit) ? $this->_get_limit_sql() : '';
 
         $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);

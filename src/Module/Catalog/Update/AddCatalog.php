@@ -60,7 +60,7 @@ final class AddCatalog extends AbstractCatalogUpdater implements AddCatalogInter
             'type' => $catalogType,
             'gather_media' => $mediaType,
             'rename_pattern' => $filePattern,
-            'sort_pattern' => $folderPattern
+            'sort_pattern' => $folderPattern,
         ];
         $catalog_id = Catalog::create($data);
 

@@ -18,6 +18,7 @@ This release has fixed a lot of issues with public site guest users and another 
 * Add refresh icons to each home dashboard plugin page row
 * Update Creative Commons 3.0 licenses and include 4.0 versions
 * Debug messages from cron process
+* Don't show delete icon for user tokens when they don't have one
 * Allow editing AlbumDisk objects directly
   * If you edit `disk` number the songs with the disk number will also be updated
   * Edit `disksubtitle` and update AlbumDisk
@@ -35,15 +36,20 @@ This release has fixed a lot of issues with public site guest users and another 
   * Add `disk_count` to Album & AlbumDisk search types
   * Add `no_license` to Song search
   * Debug warnings on searches with no rules
+  * Add `skipped_times` and `played_or_skipped_times` to Album, AlbumDisk and Artist searches
+  * Add `myplayed_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myskipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myplayed_or_skipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
-* Database 710003
+* Database 710004
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
   * Add user preferences to show/hide Discogs links on object pages
   * Add `addition_time` to artist table
   * Update `action` column for `ip_history` table
   * Add indexes to `album_map`, `catalog_map`, `artist_map`, `image`, `recommendation`, `rating`, `user_flag`, `user_activity` and `playlist_data` table
+  * 'Add `total_skip` to `album` , `album_disk` and `artist` tables
 
 ### Changed
 
@@ -53,6 +59,7 @@ This release has fixed a lot of issues with public site guest users and another 
 * Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
 * Use Artist `addition_time` in stat searches instead of large joins
 * Enable/Disable user icons changed to a person icons
+* If `autoupdate` is disabled don't show update options in the debug page
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -76,7 +83,11 @@ This release has fixed a lot of issues with public site guest users and another 
 * Share display error with Share::create_fake_playlist()
 * IP History action was not displaying the action correctly
 * Make sure a song exists before trying to write tags
+* Reading disk subtitle missin `set_subtitle`
 * Don't double write song details when updating Albums
+* Debug page checking cron_cache as a string and not a bool
+* Browse
+  * Missing `total_count` sort types for Podcast and PodCastEpisode browse
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest

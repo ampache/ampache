@@ -1002,6 +1002,9 @@ class Song extends database_object implements
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
+            if ($this->get_album_disk()) {
+                Stats::count('album_disk', $this->get_album_disk(), 'up');
+            }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
             foreach ($artists as $artist_id) {
@@ -1046,30 +1049,30 @@ class Song extends database_object implements
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
-            'title',
-            'comment',
-            'lyrics',
-            'composer',
-            'tags',
-            'artist',
-            'album',
             'album_disk',
+            'album',
+            'artist',
+            'comment',
+            'composer',
+            'lyrics',
+            'tags',
             'time',
+            'title',
         ];
         $skip_array   = [
-            'id',
-            'tag_id',
-            'mime',
-            'mbid',
-            'waveform',
-            'total_count',
-            'total_skip',
-            'albumartist',
-            'artist_mbid',
             'album_mbid',
             'albumartist_mbid',
-            'mb_albumid_group',
+            'albumartist',
+            'artist_mbid',
             'disabledMetadataFields',
+            'id',
+            'mb_albumid_group',
+            'mbid',
+            'mime',
+            'tag_id',
+            'total_count',
+            'total_skip',
+            'waveform',
         ];
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
@@ -1551,7 +1554,7 @@ class Song extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
+        self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1562,7 +1565,7 @@ class Song extends database_object implements
      */
     public static function update_enabled($new_enabled, $song_id): void
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
     }
 
     /**
@@ -2483,13 +2486,13 @@ class Song extends database_object implements
     public function getIgnoredMetadataKeys(): array
     {
         return [
+            'genre',
+            'mb_albumartistid',
+            'mb_albumid_group',
+            'mb_albumid',
+            'mb_artistid',
             'mb_trackid',
             'mbid',
-            'mb_albumid',
-            'mb_albumid_group',
-            'mb_artistid',
-            'mb_albumartistid',
-            'genre',
             'publisher',
         ];
     }

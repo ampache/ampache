@@ -93,7 +93,7 @@ final class TagSearch implements SearchInterface
             'table_sql' => '',
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
     }
 }

@@ -50,11 +50,11 @@ class AmpacheStreamTime extends AmpachePlugin implements PluginStreamControlInte
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $user_id;
+    private int $user_id;
 
-    private $time_days;
+    private int $time_days;
 
-    private $time_max;
+    private int $time_max;
 
     /**
      * Constructor

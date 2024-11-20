@@ -583,7 +583,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'live_stream' => 'true',
             'allow_public_registration' => 'false',
             'cookie_disclaimer' => 'false',
-            'share' => 'false'
+            'share' => 'false',
         ];
 
         $dbconfig = [
@@ -591,7 +591,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'share' => '0',
             'allow_video' => '0',
             'home_now_playing' => '1',
-            'home_recently_played' => '1'
+            'home_recently_played' => '1',
         ];
 
         switch ($case) {
@@ -647,7 +647,7 @@ final class InstallationHelper implements InstallationHelperInterface
             'daap_backend' => '0',
             'upnp_backend' => '0',
             'webdav_backend' => '0',
-            'stream_beautiful_url' => '0'
+            'stream_beautiful_url' => '0',
         ];
 
         foreach ($backends as $backend) {

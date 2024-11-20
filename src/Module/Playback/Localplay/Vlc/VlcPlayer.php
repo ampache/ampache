@@ -139,7 +139,7 @@ class VlcPlayer
     {
         $args    = [
             'command' => 'pl_play',
-            '&id' => $track_id
+            '&id' => $track_id,
         ];
         $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {

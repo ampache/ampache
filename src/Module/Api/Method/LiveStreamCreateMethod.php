@@ -87,7 +87,7 @@ final class LiveStreamCreateMethod
             "url" => $url,
             "codec" => $codec,
             "catalog" => $catalog_id,
-            "site_url" => $site_url
+            "site_url" => $site_url,
         ];
 
         $results = Live_Stream::create($data);

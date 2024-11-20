@@ -170,7 +170,9 @@ switch ($user_access) {
             <td>
                 <?php echo T_('API key'); ?>
                 <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new API key')); ?></a>&nbsp;
+                <?php if ($client->apikey) { ?>
                 <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_apikey&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                <?php } ?>
             </td>
             <td>
                 <span>
@@ -185,7 +187,9 @@ switch ($user_access) {
                 <?php echo T_('Stream Token'); ?>
                 <?php if ($access100) { ?>
                     <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new Stream token')); ?></a>&nbsp;
+                    <?php if ($client->streamtoken) { ?>
                     <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_streamtoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                    <?php } ?>
                 <?php } ?>
             </td>
             <td>
@@ -201,7 +205,9 @@ switch ($user_access) {
                 <?php echo T_('RSS Token'); ?>
                 <?php if ($access100) { ?>
                     <a href="<?php echo $admin_path; ?>/users.php?action=show_generate_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('cycle', T_('Generate new RSS token')); ?></a>
+                    <?php if ($client->rsstoken) { ?>
                     <a href="<?php echo $admin_path; ?>/users.php?action=show_delete_rsstoken&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('close', T_('Delete')); ?></a>
+                    <?php } ?>
                 <?php } ?>
             </td>
             <td>

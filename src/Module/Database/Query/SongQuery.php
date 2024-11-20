@@ -32,27 +32,27 @@ use Ampache\Repository\Model\Query;
 final class SongQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'add_gt',
         'add_lt',
-        'album',
         'album_disk',
+        'album',
         'alpha_match',
         'artist',
-        'catalog',
         'catalog_enabled',
+        'catalog',
         'disk',
         'enabled',
         'equal',
-        'like',
         'exact_match',
         'genre',
+        'id',
         'license',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'tag',
         'top50',
         'unplayed',
@@ -63,27 +63,27 @@ final class SongQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'title',
-        'name',
-        'catalog',
-        'year',
-        'track',
-        'time',
-        'composer',
         'addition_time',
-        'update_time',
-        'object_count',
-        'total_count',
-        'total_skip',
-        'album',
         'album_disk',
+        'album',
         'artist',
+        'catalog',
+        'composer',
+        'id',
+        'name',
+        'object_count',
         'rand',
         'rating',
+        'time',
+        'title',
+        'total_count',
+        'total_skip',
+        'track',
+        'update_time',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
+        'year',
     ];
 
     protected string $select = "`song`.`id`";
@@ -258,16 +258,16 @@ final class SongQuery implements QueryInterface
             case 'title':
                 $sql = "`song`.`title`";
                 break;
-            case 'catalog':
-            case 'id':
-            case 'year':
-            case 'track':
-            case 'time':
-            case 'composer':
             case 'addition_time':
-            case 'update_time':
+            case 'catalog':
+            case 'composer':
+            case 'id':
+            case 'time':
             case 'total_count':
             case 'total_skip':
+            case 'track':
+            case 'update_time':
+            case 'year':
                 $sql = "`song`.`$field`";
                 break;
             case 'album':

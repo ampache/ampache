@@ -82,7 +82,10 @@ final class SongTagWriter implements SongTagWriterInterface
             return;
         }
 
-        if (!is_file($song->file)) {
+        if (
+            empty($song->file) ||
+            !is_file($song->file)
+        ) {
             $this->logger->error(
                 sprintf('File %s does not exist', $song->file),
                 [LegacyLogger::CONTEXT_TYPE => self::class]

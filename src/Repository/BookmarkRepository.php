@@ -93,7 +93,7 @@ final readonly class BookmarkRepository implements BookmarkRepositoryInterface
         $types = [
             'song',
             'video',
-            'podcast_episode'
+            'podcast_episode',
         ];
         foreach ($types as $type) {
             $this->connection->query(

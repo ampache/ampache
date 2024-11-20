@@ -47,31 +47,31 @@ use Ampache\Repository\ShoutRepositoryInterface;
 class Browse extends Query
 {
     private const BROWSE_TYPES = [
-        'album',
         'album_disk',
+        'album',
         'artist',
         'broadcast',
         'catalog',
         'democratic',
         'follower',
         'label',
-        'license',
         'license_hidden',
+        'license',
         'live_stream',
-        'playlist',
         'playlist_localplay',
         'playlist_media',
         'playlist_search',
-        'podcast',
+        'playlist',
         'podcast_episode',
+        'podcast',
         'pvmsg',
         'share',
         'shoutbox',
         'smartplaylist',
-        'song',
         'song_preview',
-        'tag',
+        'song',
         'tag_hidden',
+        'tag',
         'user',
         'video',
         'wanted',
@@ -642,7 +642,7 @@ class Browse extends Query
     public function set_use_pages(bool $use_pages, bool $savecookie = true): void
     {
         if ($savecookie) {
-            $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
+            $this->save_cookie_params('pages', ($use_pages) ? 'true' : 'false');
         }
 
         $this->_state['use_pages'] = $use_pages;
@@ -710,7 +710,7 @@ class Browse extends Query
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
         if ($savecookie) {
-            $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
+            $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
         $this->_state['grid_view'] = $grid_view;
@@ -730,7 +730,7 @@ class Browse extends Query
     public function set_use_alpha(bool $use_alpha, bool $savecookie = true): void
     {
         if ($savecookie) {
-            $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
+            $this->save_cookie_params('alpha', ($use_alpha) ? 'true' : 'false');
         }
 
         $this->_state['use_alpha'] = $use_alpha;

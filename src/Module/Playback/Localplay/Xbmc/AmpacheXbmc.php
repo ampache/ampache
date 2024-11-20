@@ -568,7 +568,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Player->SetRepeat(
                 [
                     'playerid' => $this->_playerId,
-                    'repeat' => ($state ? 'all' : 'off')
+                    'repeat' => (($state) ? 'all' : 'off')
                 ]
             );
 

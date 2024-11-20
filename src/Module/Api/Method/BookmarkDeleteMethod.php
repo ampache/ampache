@@ -97,7 +97,7 @@ final class BookmarkDeleteMethod
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
-            'comment' => $comment
+            'comment' => $comment,
         ];
 
         $find = Bookmark::getBookmarks($object);

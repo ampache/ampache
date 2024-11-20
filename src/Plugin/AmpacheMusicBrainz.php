@@ -142,7 +142,7 @@ class AmpacheMusicBrainz extends AmpachePlugin implements PluginGetMetadataInter
         $mbrainz  = new MusicBrainz(new RequestsHttpAdapter());
         $includes = [
             'artists',
-            'releases'
+            'releases',
         ];
         try {
             /**

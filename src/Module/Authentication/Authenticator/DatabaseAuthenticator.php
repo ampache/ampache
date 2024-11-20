@@ -81,7 +81,7 @@ final class DatabaseAuthenticator implements AuthenticatorInterface
 
         return [
             'success' => false,
-            'error' => 'MySQL login attempt failed'
+            'error' => 'MySQL login attempt failed',
         ];
     }
 

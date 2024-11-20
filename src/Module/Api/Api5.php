@@ -317,7 +317,7 @@ class Api5
             'shares' => $counts['share'],
             'licenses' => $counts['license'],
             'live_streams' => $counts['live_stream'],
-            'labels' => $counts['label']
+            'labels' => $counts['label'],
         ];
 
         return array_merge($autharray, $outarray);
