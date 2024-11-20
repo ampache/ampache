@@ -85,6 +85,7 @@ This release has fixed a lot of issues with public site guest users and another 
 * Make sure a song exists before trying to write tags
 * Reading disk subtitle missin `set_subtitle`
 * Don't double write song details when updating Albums
+* Debug page checking cron_cache as a string and not a bool
 * Browse
   * Missing `total_count` sort types for Podcast and PodCastEpisode browse
 * Search
