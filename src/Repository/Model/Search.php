@@ -636,7 +636,7 @@ class Search extends playlist_object
     private function _set_types_song(): void
     {
         $this->_add_type_text('anywhere', T_('Any searchable text'));
-        
+
         $this->_add_type_boolean('none', T_('None'), 'is_true');
 
         $t_song_data = T_('Song Data');
