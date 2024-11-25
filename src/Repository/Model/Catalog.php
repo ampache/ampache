@@ -984,9 +984,38 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalogs
+     * get_all_catalogs
      *
      * Pull all the current catalogs and return an array of ids of what you find
+     * @param string $filter_type
+     * @return int[]
+     *
+     * @see CatalogLoader
+     */
+    public static function get_all_catalogs($filter_type = ''): array
+    {
+        $params = [];
+        $sql    = "SELECT `id` FROM `catalog` ";
+        if (!empty($filter_type)) {
+            $sql .= 'WHERE `gather_types` = ? ';
+            $params[] = $filter_type;
+        }
+
+        $sql .= "ORDER BY `name`;";
+        //debug_event(self::class, 'get_all_catalogs ' . $sql . ' ' . print_r($params, true), 5);
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Pull all the current catalogs for your user and return an array of ids
      * @param string $filter_type
      * @param int|null $user_id
      * @param bool $query
@@ -1029,7 +1058,7 @@ abstract class Catalog extends database_object
         $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
         if (is_dir($path) && $target) {
-            $catalogs = self::get_catalogs('music');
+            $catalogs = self::get_all_catalogs('music');
             foreach ($catalogs as $catalogid) {
                 debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
                 $catalog = self::create_from_id($catalogid);
@@ -1063,7 +1092,7 @@ abstract class Catalog extends database_object
     {
         $last_update = 0;
         if ($catalogs == null || !is_array($catalogs)) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_all_catalogs();
         }
 
         foreach ($catalogs as $catalogid) {
