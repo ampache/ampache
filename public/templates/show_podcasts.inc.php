@@ -43,7 +43,6 @@ $webPath      = AmpConfig::get_web_path();
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_table     = $browse->is_grid_view();
-$alpha_filter = $browse->get_alpha_filter();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -109,12 +108,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 foreach ($object_ids as $podcastId) {
     $libitem = $podcastRepository->findById($podcastId);
     if ($libitem === null) {
-        continue;
-    }
-    if (
-        $alpha_filter &&
-        !preg_match('/' . $alpha_filter . '/i', $libitem->getTitle())
-    ) {
         continue;
     }
     $libitem->format(); ?>

@@ -45,7 +45,6 @@ $thcount      = 8;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
-$alpha_filter = $browse->get_alpha_filter();
 // translate depending on the browse type
 if ($browse->is_album_artist()) {
     $artist_text = T_('Album Artist');
@@ -105,12 +104,6 @@ $directplay_limit                     = AmpConfig::get('direct_play_limit');
 foreach ($object_ids as $artist_id) {
     $libitem = new Artist($artist_id, $_SESSION['catalog'] ?? 0);
     if ($libitem->isNew()) {
-        continue;
-    }
-    if (
-        $alpha_filter &&
-        !preg_match('/' . $alpha_filter . '/i', (string)$libitem->name)
-    ) {
         continue;
     }
     $libitem->format(true, $limit_threshold);

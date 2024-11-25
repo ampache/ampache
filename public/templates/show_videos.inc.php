@@ -35,7 +35,6 @@ $web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
 $is_table     = $browse->is_grid_view();
-$alpha_filter = $browse->get_alpha_filter();
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
@@ -70,12 +69,6 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
         <?php foreach ($object_ids as $video_id) {
             $libitem = new Video($video_id);
             if ($libitem->isNew()) {
-                continue;
-            }
-            if (
-                $alpha_filter &&
-                !preg_match('/' . $alpha_filter . '/i', (string)$libitem->title)
-            ) {
                 continue;
             }
             $libitem->format(); ?>

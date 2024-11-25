@@ -47,7 +47,6 @@ $show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
 $is_table     = $browse->is_grid_view();
-$alpha_filter = $browse->get_alpha_filter();
 $is_group     = AmpConfig::get('album_group');
 $albumString  = ($is_group)
     ? 'album'
@@ -142,12 +141,6 @@ $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper(
 foreach ($object_ids as $song_id) {
     $libitem = new Song($song_id);
     if ($libitem->isNew()) {
-        continue;
-    }
-    if (
-        $alpha_filter &&
-        !preg_match('/' . $alpha_filter . '/i', (string)$libitem->title)
-    ) {
         continue;
     }
     $libitem->format(); ?>

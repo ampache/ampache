@@ -749,22 +749,6 @@ class Browse extends Query
     }
 
     /**
-     * set_alpha_filter
-     */
-    public function set_alpha_filter(string $alpha_filter): void
-    {
-        $this->_state['alpha_filter'] = $alpha_filter;
-    }
-
-    /**
-     * get_alpha_filter
-     */
-    public function get_alpha_filter(): ?string
-    {
-        return $this->_state['alpha_filter'] ?? null;
-    }
-
-    /**
      * Allow the current page to be save into the current session
      * @param bool $update_session
      */
