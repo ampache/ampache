@@ -156,16 +156,15 @@ class Query
         }
 
         if ($query_id === 0) {
-            $this->reset();
             $data = $this->_serialize($this->_state);
-
-            $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
+            $sql  = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
             Dba::write($sql, [$sid, $data]);
             $insert_id = Dba::insert_id();
             if (!$insert_id) {
                 return;
             }
 
+            $this->reset();
             $this->id = (int)$insert_id;
 
             return;
