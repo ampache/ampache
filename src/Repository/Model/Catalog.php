@@ -860,6 +860,11 @@ abstract class Catalog extends database_object
                     ? ' `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) '
                     : sprintf(' `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) ', $user_id);
                 break;
+            case 'catalog_map':
+                $sql = ($system)
+                    ? ' `catalog_map`.`catalog_id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) '
+                    : sprintf(' `catalog_map`.`catalog_id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) ', $user_id);
+                break;
             default:
                 debug_event(self::class, 'ERROR get_user_filter: ' . $type . ' not valid', 1);
                 $sql = '';
@@ -1032,6 +1037,20 @@ abstract class Catalog extends database_object
             $sql .= $join . ' `gather_types` = ? ';
             $params[] = $filter_type;
             $join     = 'AND';
+        }
+
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "$join `enabled` = 1 ";
+            $join = 'AND';
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            if ($user_id > 0) {
+                $sql .= $join . self::get_user_filter('catalog', $user_id);
+                $join = 'AND';
+            }
+            if ($user_id == -1) {
+                $sql .= "$join `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0) ";
+            }
         }
 
         $sql .= "ORDER BY `name`;";
@@ -1447,7 +1466,7 @@ abstract class Catalog extends database_object
     public static function get_videos($catalogs = null, string $type = ''): array
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_catalogs('video');
         }
 
         $results = [];
