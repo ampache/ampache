@@ -3601,11 +3601,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_replaceSpecialSymbols\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_slice\\(\\) has parameter \\$count with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -4891,21 +4886,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_remote.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:getSong\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Cannot access offset 'Success' on array\\|bool\\|object\\|string\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Cannot access offset 'success' on array\\|bool\\|object\\|string\\.$#"
-			count: 2
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_subsonic.php
@@ -5109,26 +5089,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:querySubsonic\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Album\\\\Export\\\\AlbumArtExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
 
 		-
 			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
@@ -8274,11 +8234,6 @@ parameters:
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
 			count: 1
 			path: src/Module/Util/UiInterface.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:add_file\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
 
 		-
 			message: "#^Call to function ob_get_contents\\(\\) on a separate line has no effect\\.$#"

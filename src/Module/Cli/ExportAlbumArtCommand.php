@@ -61,7 +61,7 @@ final class ExportAlbumArtCommand extends Command
     public function execute(
         string $type
     ): void {
-        $interactor         = $this->app()->io();
+        $interactor         = $this->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
 
         $interactor->info(
