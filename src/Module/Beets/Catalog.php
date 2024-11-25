@@ -131,6 +131,11 @@ abstract class Catalog extends \Ampache\Repository\Model\Catalog
     abstract protected function getParser();
 
     /**
+     * Check if a song was added before
+     */
+    abstract public function checkSong(array $song): bool;
+
+    /**
      * Adds new songs to the catalog
      * @param array $options
      */

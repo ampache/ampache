@@ -4471,17 +4471,17 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Beets/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
