@@ -91,7 +91,7 @@ if ($limit > 0 && $total > $limit) {
 <?php if ($browse->is_use_alpha()) { ?>
     <div class="list-header-alpha">
     <?php
-    $alphastr    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $alphastr    = AmpConfig::get('alpha_string_pattern', "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     $alphalist   = str_split($alphastr);
     $alphalist[] = '#';
     $alphalist[] = '*';
@@ -105,7 +105,7 @@ if ($limit > 0 && $total > $limit) {
             $filter .= $value;
         }
         if ($browse->get_filter('regex_match') == $filter) {
-            $value = '<b>' . $value . '</b>';
+            $value = '<b>' . scrub_out($value) . '</b>';
         }
         echo Ajax::text('?page=browse&action=browse&browse_id=' . $browse->id . '&key=regex_match&multi_alpha_filter=' . $filter . $argument_param, $value, 'browse_' . $uid . '_alpha_' . $key);
     } ?>
