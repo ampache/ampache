@@ -161,17 +161,17 @@ final class SongSearch implements SearchInterface
                     break;
                 case 'file':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT (`song`.`$rule[0]` SOUNDS LIKE ?)";
+                        $where[] = "NOT (`song`.`file` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`song`.`$rule[0]` $operator_sql ?";
+                        $where[] = "`song`.`file` $operator_sql ?";
                     }
                     $parameters[] = $input;
                     break;
                 case 'composer':
                     if ($operator_sql === 'NOT SOUNDS LIKE') {
-                        $where[] = "NOT (`song`.`" . $rule[0] . "` SOUNDS LIKE ?)";
+                        $where[] = "NOT (`song`.`composer` SOUNDS LIKE ?)";
                     } else {
-                        $where[] = "`song`.`" . $rule[0] . "` $operator_sql ?";
+                        $where[] = "`song`.`composer` $operator_sql ?";
                     }
                     $parameters[] = $input;
                     break;
@@ -327,8 +327,10 @@ final class SongSearch implements SearchInterface
                 case 'myplayed':
                 case 'myplayedalbum':
                 case 'myplayedartist':
+                    /** @var string $rulename */
+                    $rulename     = $rule[0];
                     // combine these as they all do the same thing just different tables
-                    $looking      = str_replace('myplayed', '', $rule[0]);
+                    $looking      = str_replace('myplayed', '', $rulename);
                     $column       = ($looking == '') ? 'id' : $looking;
                     $my_type      = ($looking == '') ? 'song' : $looking;
                     $operator_sql = ((int) $operator_sql == 0) ? 'IS NULL' : 'IS NOT NULL';

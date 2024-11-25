@@ -92,6 +92,7 @@ class Query
     /** @var array $_state */
     protected $_state = [
         'album_artist' => false, // Used by $browse->set_type() to filter artists to album artist only
+        'alpha_filter' => null, // post browse regex filtering
         'base' => null,
         'custom' => false,
         'extended_key_name' => null,

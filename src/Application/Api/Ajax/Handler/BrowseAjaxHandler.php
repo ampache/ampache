@@ -81,16 +81,19 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
-                // data set by the filter box (browse_filters.inc.php)
+                // data set by the filter box (browse_filters.inc.php & list_header.inc.php for alpha matching)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
-                        $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                        $value = $_REQUEST['key'] === 'starts_with'
+                            ? '^' . preg_quote($_REQUEST['multi_alpha_filter'])
+                            : $_REQUEST['multi_alpha_filter'];
+                        $browse->set_alpha_filter($value);
                     }
 
                     // Checkbox unplayed
                     if (isset($_REQUEST['value'])) {
-                        $value = (int)($_REQUEST['value'] ?? 0);
+                        $value = (int)$_REQUEST['value'];
                         if ($_REQUEST['key'] == 'unplayed' && $browse->get_filter('unplayed')) {
                             $value = 0;
                         }

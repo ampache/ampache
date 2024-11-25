@@ -54,6 +54,7 @@ $original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
 $is_table          = $browse->is_grid_view();
+$alpha_filter      = $browse->get_alpha_filter();
 $year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
 $album_text  = T_('Album');
@@ -122,6 +123,12 @@ if (AmpConfig::get('ratings')) {
 foreach ($object_ids as $album_disk_id) {
     $libitem = new AlbumDisk($album_disk_id);
     if ($libitem->isNew()) {
+        continue;
+    }
+    if (
+        $alpha_filter &&
+        !preg_match('/' . $alpha_filter . '/i', (string)$libitem->name)
+    ) {
         continue;
     }
     $libitem->format(true, $limit_threshold);

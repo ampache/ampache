@@ -237,6 +237,7 @@ class Catalog_remote extends Catalog
                     'username' => $this->username,
                     'password' => $this->password,
                     'server' => $this->uri,
+                    'debug' => null,
                     'debug_callback' => 'debug_event',
                     'api_secure' => (substr($this->uri, 0, 8) == 'https://'),
                     'api_format' => 'xml',

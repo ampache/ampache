@@ -38,6 +38,7 @@ $thcount      = 6;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_mashup    = $browse->is_mashup();
 $is_table     = $browse->is_grid_view();
+$alpha_filter = $browse->get_alpha_filter();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -82,6 +83,12 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 foreach ($object_ids as $episode_id) {
     $libitem = new Podcast_Episode($episode_id);
     if ($libitem->isNew()) {
+        continue;
+    }
+    if (
+        $alpha_filter &&
+        !preg_match('/' . $alpha_filter . '/i', (string)$libitem->title)
+    ) {
         continue;
     }
     $libitem->format(); ?>
