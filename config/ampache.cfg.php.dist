@@ -347,7 +347,7 @@ catalog_prefix_pattern = "The|An|A|Die|Das|Ein|Eine|Les|Le|La"
 ; This defines the string used in the list header when you check "Alphabet"
 ; in browse pages. Each character will be split into single items
 ; and will be applied as a regex to title of the objects being displayed.
-: NOTE: '#' (Digits or Punctuation) and '*' (All results) are added separately
+; NOTE: '#' (Digits or Punctuation) and '*' (All results) are added separately
 ; DEFAULT: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 ;alpha_string_pattern = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
