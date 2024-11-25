@@ -237,10 +237,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         // delete old album_disks that shouldn't exist
         $this->connection->query('DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)');
-        $result = $this->connection->query(
-            'SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);',
-            []
-        );
+        $result = $this->connection->query('SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);');
         // left over garbage
         while ($albumDiskId = $result->fetchColumn()) {
             $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId]);
