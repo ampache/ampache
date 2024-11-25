@@ -94,10 +94,13 @@ if ($limit > 0 && $total > $limit) {
     $alphastr    = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     $alphalist   = str_split($alphastr);
     $alphalist[] = '#';
+    $alphalist[] = '*';
     foreach ($alphalist as $key => $value) {
         $filter = '^';
         if ($value == '#') {
             $filter .= '[[:digit:]|[:punct:]]';
+        } elseif ($value == '*') {
+            $filter .= '.*';
         } else {
             $filter .= $value;
         }
