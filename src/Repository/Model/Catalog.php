@@ -1793,6 +1793,7 @@ abstract class Catalog extends database_object
         }
 
         $sql .= 'GROUP BY `album`.`id` ORDER BY `album`.`name` ' . $sql_limit;
+        //debug_event(self::class, "get_albums: " . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = [];
@@ -1837,6 +1838,7 @@ abstract class Catalog extends database_object
         }
 
         $sql .= sprintf('LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` %s %s ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` %s', $sql_where, $sql_group, $sql_limit);
+        //debug_event(self::class, "get_albums_by_artist: " . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = [];

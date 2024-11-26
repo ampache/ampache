@@ -3101,10 +3101,14 @@ class Subsonic_Api
                 $albums = Userflag::get_latest('album', null, $size, $offset);
                 break;
             case 'alphabeticalByName':
-                $albums = Catalog::get_albums($size, $offset, $catalogs);
+                $albums = (empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums($size, $offset, $catalogs);
                 break;
             case 'alphabeticalByArtist':
-                $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
+                $albums = (empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
             case 'byYear':
                 $fromYear = (int)min($input['fromYear'], $input['toYear']);
