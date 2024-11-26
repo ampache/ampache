@@ -28,7 +28,7 @@ namespace Ampache\Module\Database;
 use function DI\autowire;
 
 return [
-    DatabaseCharsetUpdaterInterface::class => autowire(),
+    DatabaseCharsetUpdaterInterface::class => autowire(DatabaseCharsetUpdater::class),
     Query\AlbumDiskQuery::class => autowire(),
     Query\BroadcastQuery::class => autowire(),
     Query\FollowerQuery::class => autowire(),
