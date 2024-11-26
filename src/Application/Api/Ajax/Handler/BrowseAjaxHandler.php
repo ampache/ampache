@@ -52,10 +52,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
         $browse_id = $_REQUEST['browse_id'] ?? null;
         $browse    = $this->modelFactory->createBrowse($browse_id);
 
+        debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '} id {' . $browse_id . '}', 5);
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
         }
@@ -218,9 +218,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $value = ($value == 'true');
                         $browse->set_use_alpha($value);
                         $browse->set_start(0);
-                        if ($value) {
-                            $browse->set_filter('regex_match', '^A');
-                        } else {
+                        if (!$value) {
                             $browse->set_filter('regex_not_match', '');
                         }
 
@@ -269,6 +267,14 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
+            case 'add_filter':
+                $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $browse->set_filter('tag', $object_id);
+                $object_ids = $browse->get_objects();
+                ob_start();
+                $browse->show_objects($object_ids);
+                $results[$browse->get_content_div()] = ob_get_clean();
+                $browse->store();
         } // switch on action;
 
         $browse->store();

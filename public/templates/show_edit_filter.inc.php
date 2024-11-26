@@ -60,7 +60,7 @@ if (!AmpConfig::get('catalog_filter')) {
 <?php
     echo "<td>" . T_('Catalogs') . ":</td><td></td></tr>";
 
-    $catalogs = Catalog::get_catalogs();
+    $catalogs = Catalog::get_all_catalogs();
     foreach ($catalogs as $catalog_id) {
         $catalog_name = Catalog::getName($catalog_id);
         $checked      = Catalog::check_filter_catalog_enabled($filter_id, $catalog_id) ? 'checked' : '';

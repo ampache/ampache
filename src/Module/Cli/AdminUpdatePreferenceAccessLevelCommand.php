@@ -69,27 +69,25 @@ final class AdminUpdatePreferenceAccessLevelCommand extends Command
                 "\n" . T_('No changes have been made'),
                 true
             );
+        } elseif (
+            $level &&
+            Preference::set_level($level)
+        ) {
+            $interactor->ok(
+                "\n" . T_('Updated'),
+                true
+            );
         } else {
-            if (
-                $level &&
-                Preference::set_level($level)
-            ) {
-                $interactor->ok(
-                    "\n" . T_('Updated'),
-                    true
-                );
-            } else {
-                if ($level === '') {
-                    $interactor->warn(
-                        "\n" . T_('Missing mandatory parameter') . ' -l|--level',
-                        true
-                    );
-                }
-                $interactor->error(
-                    "\n" . T_('Error'),
+            if ($level === '') {
+                $interactor->warn(
+                    "\n" . T_('Missing mandatory parameter') . ' -l|--level',
                     true
                 );
             }
+            $interactor->error(
+                "\n" . T_('Error'),
+                true
+            );
         }
     }
 }

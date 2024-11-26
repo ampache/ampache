@@ -291,7 +291,7 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog_id) {
-            $catalogs = Catalog::get_catalogs();
+            $catalogs = Catalog::get_all_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 if ($catalog === null) {

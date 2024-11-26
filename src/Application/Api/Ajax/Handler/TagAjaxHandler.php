@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
@@ -73,14 +72,6 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 header('Location: ' . AmpConfig::get_web_path() . '/browse.php?action=tag&type=artist');
 
                 return;
-            case 'add_filter':
-                $browse = new Browse($_GET['browse_id']);
-                $browse->set_filter('tag', $_GET['tag_id']);
-                $object_ids = $browse->get_objects();
-                ob_start();
-                $browse->show_objects($object_ids);
-                $results[$browse->get_content_div()] = ob_get_clean();
-                $browse->store();
         } // switch on action;
 
         // We always do this

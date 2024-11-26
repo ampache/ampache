@@ -82,12 +82,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ampache/ampacheapi-php.git",
-                "reference": "ab2331cb07263cd58d2e743b5e2ea8d075d8098e"
+                "reference": "01373aebe9c1413d67832c0cff1956a632845f13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/ab2331cb07263cd58d2e743b5e2ea8d075d8098e",
-                "reference": "ab2331cb07263cd58d2e743b5e2ea8d075d8098e",
+                "url": "https://api.github.com/repos/ampache/ampacheapi-php/zipball/01373aebe9c1413d67832c0cff1956a632845f13",
+                "reference": "01373aebe9c1413d67832c0cff1956a632845f13",
                 "shasum": ""
             },
             "require": {
@@ -122,7 +122,7 @@
                 "issues": "https://github.com/ampache/ampacheapi-php/issues",
                 "source": "https://github.com/ampache/ampacheapi-php/tree/master"
             },
-            "time": "2024-11-20T00:23:43+00:00"
+            "time": "2024-11-20T02:11:00+00:00"
         },
         {
             "name": "cboden/ratchet",

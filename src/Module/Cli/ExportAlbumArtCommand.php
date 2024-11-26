@@ -61,7 +61,7 @@ final class ExportAlbumArtCommand extends Command
     public function execute(
         string $type
     ): void {
-        $interactor         = $this->app()->io();
+        $interactor         = $this->io();
         $metadataWriterType = MetadataWriterTypeEnum::MAP[$type] ?? MetadataWriterTypeEnum::EXPORT_DRIVER_LINUX;
 
         $interactor->info(
@@ -69,7 +69,7 @@ final class ExportAlbumArtCommand extends Command
             true
         );
 
-        $catalogs = Catalog::get_catalogs();
+        $catalogs = Catalog::get_all_catalogs();
         foreach ($catalogs as $catalog_id) {
             $catalog = Catalog::create_from_id($catalog_id);
             if ($catalog === null) {

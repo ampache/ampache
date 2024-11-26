@@ -95,7 +95,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['random_selection'] = '<!-- None found -->';
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = Catalog::get_all_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
@@ -121,7 +121,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['random_selection'] = '<!-- None found -->';
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = Catalog::get_all_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(

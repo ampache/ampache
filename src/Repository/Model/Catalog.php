@@ -860,6 +860,11 @@ abstract class Catalog extends database_object
                     ? ' `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) '
                     : sprintf(' `catalog`.`id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) ', $user_id);
                 break;
+            case 'catalog_map':
+                $sql = ($system)
+                    ? ' `catalog_map`.`catalog_id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `catalog_filter_group_map`.`group_id` = 0 AND `catalog_filter_group_map`.`enabled`=1) '
+                    : sprintf(' `catalog_map`.`catalog_id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` INNER JOIN `user` ON `user`.`catalog_filter_group` = `catalog_filter_group_map`.`group_id` WHERE `user`.`id` = %d AND `catalog_filter_group_map`.`enabled`=1) ', $user_id);
+                break;
             default:
                 debug_event(self::class, 'ERROR get_user_filter: ' . $type . ' not valid', 1);
                 $sql = '';
@@ -984,9 +989,38 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * get_catalogs
+     * get_all_catalogs
      *
      * Pull all the current catalogs and return an array of ids of what you find
+     * @param string $filter_type
+     * @return int[]
+     *
+     * @see CatalogLoader
+     */
+    public static function get_all_catalogs($filter_type = ''): array
+    {
+        $params = [];
+        $sql    = "SELECT `id` FROM `catalog` ";
+        if (!empty($filter_type)) {
+            $sql .= 'WHERE `gather_types` = ? ';
+            $params[] = $filter_type;
+        }
+
+        $sql .= "ORDER BY `name`;";
+        //debug_event(self::class, 'get_all_catalogs ' . $sql . ' ' . print_r($params, true), 5);
+        $db_results = Dba::read($sql, $params);
+        $results    = [];
+        while ($row = Dba::fetch_assoc($db_results)) {
+            $results[] = (int)$row['id'];
+        }
+
+        return $results;
+    }
+
+    /**
+     * get_catalogs
+     *
+     * Pull all the current catalogs for your user and return an array of ids
      * @param string $filter_type
      * @param int|null $user_id
      * @param bool $query
@@ -1005,6 +1039,20 @@ abstract class Catalog extends database_object
             $join     = 'AND';
         }
 
+        if (AmpConfig::get('catalog_disable')) {
+            $sql .= "$join `enabled` = 1 ";
+            $join = 'AND';
+        }
+        if (AmpConfig::get('catalog_filter')) {
+            if ($user_id > 0) {
+                $sql .= $join . self::get_user_filter('catalog', $user_id);
+                $join = 'AND';
+            }
+            if ($user_id == -1) {
+                $sql .= "$join `id` IN (SELECT `catalog_id` FROM `catalog_filter_group_map` WHERE `enabled` = 1 AND `group_id` = 0) ";
+            }
+        }
+
         $sql .= "ORDER BY `name`;";
         //debug_event(self::class, 'get_catalogs ' . $sql . ' ' . print_r($params, true), 5);
         $db_results = Dba::read($sql, $params);
@@ -1014,7 +1062,7 @@ abstract class Catalog extends database_object
         }
 
         if ($results === [] && $query) {
-            return [0];
+            return [-1];
         }
 
         return $results;
@@ -1029,7 +1077,7 @@ abstract class Catalog extends database_object
         $target = (string)AmpConfig::get('cache_target', '');
         // need a destination and target filetype
         if (is_dir($path) && $target) {
-            $catalogs = self::get_catalogs('music');
+            $catalogs = self::get_all_catalogs('music');
             foreach ($catalogs as $catalogid) {
                 debug_event(self::class, 'cache_catalogs: ' . $catalogid, 5);
                 $catalog = self::create_from_id($catalogid);
@@ -1063,7 +1111,7 @@ abstract class Catalog extends database_object
     {
         $last_update = 0;
         if ($catalogs == null || !is_array($catalogs)) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_all_catalogs();
         }
 
         foreach ($catalogs as $catalogid) {
@@ -1418,7 +1466,7 @@ abstract class Catalog extends database_object
     public static function get_videos($catalogs = null, string $type = ''): array
     {
         if (!$catalogs) {
-            $catalogs = self::get_catalogs();
+            $catalogs = self::get_catalogs('video');
         }
 
         $results = [];
@@ -1745,6 +1793,7 @@ abstract class Catalog extends database_object
         }
 
         $sql .= 'GROUP BY `album`.`id` ORDER BY `album`.`name` ' . $sql_limit;
+        //debug_event(self::class, "get_albums: " . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = [];
@@ -1789,6 +1838,7 @@ abstract class Catalog extends database_object
         }
 
         $sql .= sprintf('LEFT JOIN `artist` ON `artist`.`id` = `album`.`album_artist` %s %s ORDER BY `artist`.`name`, `artist`.`id`, `album`.`name` %s', $sql_where, $sql_group, $sql_limit);
+        //debug_event(self::class, "get_albums_by_artist: " . $sql, 5);
 
         $db_results = Dba::read($sql);
         $results    = [];

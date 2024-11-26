@@ -159,7 +159,7 @@ final class CatalogQuery implements QueryInterface
                 $filter_sql = " `catalog`.`gather_types` IN ('" . implode("', '", $value) . "') AND ";
                 break;
             case 'user':
-                $filter_sql = " `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $value, true)) . ") AND ";
+                $filter_sql = Catalog::get_user_filter('catalog', $value);
                 break;
         }
 
