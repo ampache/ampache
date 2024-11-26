@@ -590,10 +590,17 @@ class Query
                 $this->queryType = new WantedQuery();
                 break;
         }
+
         if ($this->queryType !== null) {
             // Set it
             $this->_state['type'] = $type;
-            $this->_set_base_sql(true, $custom_base);
+            // don't overwrite an existing browse with defaults
+            if (
+                !empty($custom_base) ||
+                !$this->_state['base']
+            ) {
+                $this->_set_base_sql(true, $custom_base);
+            }
         }
     }
 
