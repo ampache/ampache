@@ -1062,7 +1062,7 @@ abstract class Catalog extends database_object
         }
 
         if ($results === [] && $query) {
-            return [0];
+            return [-1];
         }
 
         return $results;
