@@ -28,6 +28,8 @@ This release has fixed a lot of issues with public site guest users and another 
 * Add AlbumDisk edit links to each disk on group pages
 * Add AlbumDisk `disk` `disksubtitle` properties to single disk Album edit windows
 * Allow editing song `disk`
+* Define missing abstract method for beets catalog
+* Allow a wild (`.*`) regex filter on Alphabet filters
 * Browse
   * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
   * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
@@ -40,8 +42,11 @@ This release has fixed a lot of issues with public site guest users and another 
   * Add `myplayed_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
   * Add `myskipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
   * Add `myplayed_or_skipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `none` to Song search (Empty rule/no filter)
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
+* Config version 76
+  * Add `alpha_string_pattern` allowing a custom Alphabet list
 * Database 710004
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
@@ -60,6 +65,8 @@ This release has fixed a lot of issues with public site guest users and another 
 * Use Artist `addition_time` in stat searches instead of large joins
 * Enable/Disable user icons changed to a person icons
 * If `autoupdate` is disabled don't show update options in the debug page
+* Don't autofilter to A when enabling the alphabet filter
+* Sidebar Genre link defaults to Albums like all the other areas
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -89,6 +96,10 @@ This release has fixed a lot of issues with public site guest users and another 
 * AmpacheApi-PHP library fixed for unencrypted passwords
 * Use `max_song` for Ampache remote catalog lookups
 * Count the song elements returned by api lookups and stop if you can't find any
+* Trim trailing slash on remote catalog install
+* Update AmpacheApi-php to work around saved password that are unencrypted
+* Numerous filtering problems with `catalog_filter` enabled
+* Don't overwrite browse data before saving a `tmp_browse`
 * Browse
   * Missing `total_count` sort types for Podcast and PodCastEpisode browse
 * Search
