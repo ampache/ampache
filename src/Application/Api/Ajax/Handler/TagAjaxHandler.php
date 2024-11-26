@@ -31,7 +31,6 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\Check\PrivilegeCheckerInterface;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\LabelRepositoryInterface;
-use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\Label;
 use Ampache\Repository\Model\Tag;
 use Ampache\Repository\Model\User;
