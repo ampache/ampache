@@ -267,6 +267,14 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
 
                     return;
                 }
+            case 'add_filter':
+                $object_id = (int)filter_input(INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT);
+                $browse->set_filter('tag', $object_id);
+                $object_ids = $browse->get_objects();
+                ob_start();
+                $browse->show_objects($object_ids);
+                $results[$browse->get_content_div()] = ob_get_clean();
+                $browse->store();
         } // switch on action;
 
         $browse->store();
