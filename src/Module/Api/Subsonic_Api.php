@@ -3072,7 +3072,7 @@ class Subsonic_Api
         $musicFolderId = (int)($input['musicFolderId'] ?? 0);
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
-        $catalogs = null;
+        $catalogs = $user->get_catalogs('music');
         if ($musicFolderId > 0) {
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
