@@ -71,21 +71,20 @@ final class TagAction implements ApplicationActionInterface
 
         // FIXME: This whole thing is ugly, even though it works.
         $request_type = $this->requestParser->getFromRequest('type');
-        $browse_type  = ($browse->is_valid_type($request_type)) ? $request_type : 'artist';
+        $browse_type  = ($browse->is_valid_type($request_type)) ? $request_type : 'album';
         if ($request_type != $browse_type) {
             $_REQUEST['type'] = $browse_type;
         }
-        $browse->set_simple_browse(false);
-        $browse->save_objects(Tag::get_tags($browse_type, 0, 'name')); // Should add a pager?
-        $object_ids = $browse->get_saved();
+
+        $object_ids = Tag::get_tags($browse_type, 0, 'name');
         $keys       = array_keys($object_ids);
         Tag::build_cache($keys);
 
         $this->ui->showBoxTop(T_('Genres'), 'box box_tag_cloud');
 
-        $browse2 = $this->modelFactory->createBrowse();
-        $browse2->set_type($browse_type);
-        $browse2->store();
+        $browse = $this->modelFactory->createBrowse();
+        $browse->set_type($browse_type);
+        $browse->store();
         if ($request_type == 'tag_hidden') {
             require_once Ui::find_template('show_tagcloud_hidden.inc.php');
 
@@ -94,7 +93,7 @@ final class TagAction implements ApplicationActionInterface
             require_once Ui::find_template('show_tagcloud.inc.php');
 
             $this->ui->showBoxBottom();
-            $type = $browse2->get_content_div();
+            $type = $browse->get_content_div();
 
             require_once Ui::find_template('browse_content.inc.php');
 

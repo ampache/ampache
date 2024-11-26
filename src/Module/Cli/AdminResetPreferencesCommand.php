@@ -70,27 +70,25 @@ final class AdminResetPreferencesCommand extends Command
                 "\n" . T_('No changes have been made'),
                 true
             );
+        } elseif (
+            $preset &&
+            Preference::set_preset($username, $preset)
+        ) {
+            $interactor->ok(
+                "\n" . T_('Updated'),
+                true
+            );
         } else {
-            if (
-                $preset &&
-                Preference::set_preset($username, $preset)
-            ) {
-                $interactor->ok(
-                    "\n" . T_('Updated'),
-                    true
-                );
-            } else {
-                if ($preset === '') {
-                    $interactor->warn(
-                        "\n" . T_('Missing mandatory parameter') . ' -p|--preset',
-                        true
-                    );
-                }
-                $interactor->error(
-                    "\n" . T_('Error'),
+            if ($preset === '') {
+                $interactor->warn(
+                    "\n" . T_('Missing mandatory parameter') . ' -p|--preset',
                     true
                 );
             }
+            $interactor->error(
+                "\n" . T_('Error'),
+                true
+            );
         }
     }
 }

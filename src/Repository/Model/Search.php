@@ -637,6 +637,8 @@ class Search extends playlist_object
     {
         $this->_add_type_text('anywhere', T_('Any searchable text'));
 
+        $this->_add_type_boolean('none', T_('None'), 'is_true');
+
         $t_song_data = T_('Song Data');
         $this->_add_type_text('title', T_('Title'), $t_song_data);
         $this->_add_type_text('album', T_('Album'), $t_song_data);

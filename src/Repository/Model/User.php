@@ -784,7 +784,7 @@ class User extends database_object
             self::set_user_data($user_id, 'time', $time);
             self::set_user_data($user_id, 'size', $size);
             // album_disk counts
-            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' AND" . Catalog::get_user_filter('album', $user_id);
+            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
             self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
