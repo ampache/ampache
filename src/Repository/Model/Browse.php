@@ -735,11 +735,7 @@ class Browse extends Query
 
         $this->_state['use_alpha'] = $use_alpha;
 
-        if ($use_alpha) {
-            if (count($this->_state['filter']) == 0) {
-                $this->set_filter('regex_match', '^A');
-            }
-        } else {
+        if (!$use_alpha) {
             $this->set_filter('regex_not_match', '');
         }
     }

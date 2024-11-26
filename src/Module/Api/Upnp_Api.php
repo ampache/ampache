@@ -1449,8 +1449,8 @@ class Upnp_Api
     }
 
     /**
-     * @param $title
-     * @return string|string[]|null
+     * @param string|null $title
+     * @return string
      */
     private static function _replaceSpecialSymbols($title)
     {
@@ -1463,8 +1463,8 @@ class Upnp_Api
         //debug_event(self::class, 'replace <<< ' . $title, 5);
         //$title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
         //debug_event(self::class, 'replace >>> ' . $title, 5);
-        if ($title == "") {
-            $title = '(no title)';
+        if (empty($title)) {
+            return '(no title)';
         }
 
         return $title;

@@ -156,16 +156,15 @@ class Query
         }
 
         if ($query_id === 0) {
-            $this->reset();
             $data = $this->_serialize($this->_state);
-
-            $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
+            $sql  = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
             Dba::write($sql, [$sid, $data]);
             $insert_id = Dba::insert_id();
             if (!$insert_id) {
                 return;
             }
 
+            $this->reset();
             $this->id = (int)$insert_id;
 
             return;
@@ -407,13 +406,15 @@ class Query
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use
      * that.
-     * @param array $objects
+     * @param array $object_ids
      */
-    public function get_total($objects = null): int
+    public function get_total($object_ids = null): int
     {
         // If they pass something then just return that
-        if (is_array($objects) && !$this->is_simple()) {
-            return count($objects);
+        if (is_array($object_ids) && !$this->is_simple()) {
+            return (empty($object_ids)
+                ? 0
+                : ((int)array_key_last($object_ids)) + 1);
         }
 
         // See if we can find it in the cache
@@ -591,10 +592,17 @@ class Query
                 $this->queryType = new WantedQuery();
                 break;
         }
+
         if ($this->queryType !== null) {
             // Set it
             $this->_state['type'] = $type;
-            $this->_set_base_sql(true, $custom_base);
+            // don't overwrite an existing browse with defaults
+            if (
+                !empty($custom_base) ||
+                !$this->_state['base']
+            ) {
+                $this->_set_base_sql(true, $custom_base);
+            }
         }
     }
 
@@ -1161,12 +1169,14 @@ class Query
     {
         $tags = $this->_state['filter']['tag'] ?? '';
 
-        if (!is_array($tags) || count($tags) < 2) {
+        if (!is_array($tags) || array_key_last($tags) < 1) {
             return $data;
         }
 
-        $tag_count = count($tags);
         $count     = [];
+        $tag_count = (empty($tags)
+            ? 0
+            : ((int)array_key_last($tags)) + 1);
 
         foreach ($data as $row) {
             ++$count[$row['id']];
@@ -1385,7 +1395,7 @@ class Query
         // Only do this if it's not a simple browse
         if (!$this->is_simple()) {
             $this->_cache = $object_ids;
-            $this->set_total(count($object_ids));
+            $this->set_total((empty($object_ids) ? 0 : ((int)array_key_last($object_ids)) + 1));
             $browse_id = $this->id;
             if ($browse_id != 'nocache') {
                 $data = $this->_serialize($this->_cache);

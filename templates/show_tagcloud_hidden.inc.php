@@ -44,7 +44,7 @@ global $dic;
 $ui = $dic->get(UiInterface::class);
 
 /** @var UiInterface $ui */
-/** @var Browse $browse2 */
+/** @var Browse $browse */
 /** @var list<array{id: int, name: string}> $object_ids */
 /** @var string $browse_type */
 

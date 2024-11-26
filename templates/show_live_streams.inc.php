@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 /** @var list<int> $object_ids */
 
 $is_table     = $browse->is_grid_view();
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
+$show_ratings = (User::is_registered() && AmpConfig::get('ratings'));
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>

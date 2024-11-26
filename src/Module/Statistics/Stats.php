@@ -617,12 +617,9 @@ class Stats
     {
         $user_id = Core::get_global('user')?->getId() ?? -1;
         $order   = ($newest) ? 'DESC' : 'ASC';
-        $sql     = (AmpConfig::get('catalog_disable'))
-            ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `catalog`.`enabled` = '1' "
-            : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ";
-        $sql .= (AmpConfig::get('catalog_filter'))
-            ? " AND" . Catalog::get_user_filter('song', $user_id) . "ORDER BY `object_count`.`date` " . $order
-            : "ORDER BY `object_count`.`date` " . $order;
+        $sql     = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ORDER BY `object_count`.`date` " . $order
+            : "SELECT * FROM `object_count` LEFT JOIN `song` ON `song`.`id` = `object_count`.`object_id` WHERE `object_count`.`user` = ? AND `object_count`.`object_type`='song' AND `object_count`.`date` >= ? ORDER BY `object_count`.`date` " . $order;
         $db_results = Dba::read($sql, [$user_id, $time]);
 
         $results = [];
@@ -923,7 +920,9 @@ class Stats
         $results = [];
         $sql     = "SELECT `object_count`.`object_id`, `catalog_map`.`catalog_id`, `object_count`.`user`, `object_count`.`object_type`, `date`, `agent`, `geo_latitude`, `geo_longitude`, `geo_name`, `pref_recent`.`value` AS `user_recent`, `pref_time`.`value` AS `user_time`, `pref_agent`.`value` AS `user_agent`, `object_count`.`id` AS `activity_id` FROM `object_count` LEFT JOIN `user_preference` AS `pref_recent` ON `pref_recent`.`name`='allow_personal_info_recent' AND `pref_recent`.`user` = `object_count`.`user` AND `pref_recent`.`value`='1' LEFT JOIN `user_preference` AS `pref_time` ON `pref_time`.`name`='allow_personal_info_time' AND `pref_time`.`user` = `object_count`.`user` AND `pref_time`.`value`='1' LEFT JOIN `user_preference` AS `pref_agent` ON `pref_agent`.`name`='allow_personal_info_agent' AND `pref_agent`.`user` = `object_count`.`user` AND `pref_agent`.`value`='1' LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = `object_count`.`object_type` AND `catalog_map`.`object_id` = `object_count`.`object_id` WHERE `object_count`.`object_type` IN ($object_string) AND `object_count`.`count_type` = '$count_type' ";
         // check for valid catalogs
-        $sql .= "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        $sql .= (AmpConfig::get('catalog_filter'))
+            ? "AND `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "";
 
         if ((int)$user_id > 0 || !$access100) {
             $sql .= ($user_only)
@@ -1034,7 +1033,7 @@ class Stats
         // join valid catalogs or a specific one
         $sql .= ((int)$catalog_id > 0)
             ? "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` = '" . $catalog_id . "' "
-            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId() ?? null, true)) . ") ";
+            : "LEFT JOIN `catalog_map` ON `catalog_map`.`object_id` = " . $sql_type . " AND `catalog_map`.`object_type` = '" . $base_type . "' WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user?->getId(), true)) . ") ";
 
         $rating_filter = AmpConfig::get_rating_filter();
         $user_id       = (int)(Core::get_global('user')?->getId());

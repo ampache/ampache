@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -54,7 +55,7 @@ class Upload
         );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
-        if ($catalog !== null) {
+        if ($catalog !== null && $catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);

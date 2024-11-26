@@ -72,7 +72,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album'); ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album') ?? $browse->id; ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"><?php echo $cel_play_text; ?></th>
@@ -132,7 +132,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
             } ?>
         </tr>
     </thead>
-    <tbody id="sortableplaylist_<?php echo $browse->get_filter('album'); ?>">
+    <tbody id="sortableplaylist_<?php echo $browse->get_filter('album') ?? $browse->id; ?>">
         <?php global $dic;
 $talFactory = $dic->get(TalFactoryInterface::class);
 $guiFactory = $dic->get(GuiFactoryInterface::class);
