@@ -3070,9 +3070,12 @@ class Subsonic_Api
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
         $musicFolderId = (int)($input['musicFolderId'] ?? 0);
+        $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
-        $catalogs = $user->get_catalogs('music');
+        $catalogs = ($catalogFilter)
+            ? $user->get_catalogs('music')
+            : null;
         if ($musicFolderId > 0) {
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
@@ -3101,12 +3104,12 @@ class Subsonic_Api
                 $albums = Userflag::get_latest('album', null, $size, $offset);
                 break;
             case 'alphabeticalByName':
-                $albums = (empty($catalogs) && $musicFolderId == 0)
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
                     ? []
                     : Catalog::get_albums($size, $offset, $catalogs);
                 break;
             case 'alphabeticalByArtist':
-                $albums = (empty($catalogs) && $musicFolderId == 0)
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
                     ? []
                     : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
