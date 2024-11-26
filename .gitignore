@@ -43,6 +43,7 @@ error_log
 php-cs-fixer.phar
 phpcbf*
 phpcs*
+phpstorm_*
 phpunit.*
 robots.txt
 web.config
