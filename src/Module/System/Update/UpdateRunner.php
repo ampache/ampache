@@ -86,6 +86,27 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 710005) {
+            // Migration\V7\Migration710005
+            Dba::write("ALTER TABLE `song` DROP KEY `album_disk_IDX`;");
+            if (!Dba::write("ALTER TABLE `song` DROP COLUMN `album_disk`;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
+        if ($currentVersion >= 710004) {
+            // Migration\V7\Migration710004
+            if (!Dba::write("ALTER TABLE `album` DROP COLUMN `total_skip`;")) {
+                throw new UpdateFailedException();
+            }
+            if (!Dba::write("ALTER TABLE `album_disk` DROP COLUMN `total_skip`;")) {
+                throw new UpdateFailedException();
+            }
+            if (!Dba::write("ALTER TABLE `artist` DROP COLUMN `total_skip`;")) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 710001) {
             if (Dba::read('SELECT `addition_time` FROM `artist` LIMIT 1;')) {
                 // Migration\V7\Migration710001
