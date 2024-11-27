@@ -47,7 +47,7 @@ This release has fixed a lot of issues with public site guest users and another 
   * RatingMatch set the rating for Albums on single AlbumDisk objects
 * Config version 76
   * Add `alpha_string_pattern` allowing a custom Alphabet list
-* Database 710004
+* Database 710005
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
   * Add user preferences to show/hide Discogs links on object pages
@@ -55,6 +55,7 @@ This release has fixed a lot of issues with public site guest users and another 
   * Update `action` column for `ip_history` table
   * Add indexes to `album_map`, `catalog_map`, `artist_map`, `image`, `recommendation`, `rating`, `user_flag`, `user_activity` and `playlist_data` table
   * 'Add `total_skip` to `album` , `album_disk` and `artist` tables
+  * Add `album_disk` to the `song` table
 
 ### Changed
 
@@ -65,8 +66,10 @@ This release has fixed a lot of issues with public site guest users and another 
 * Use Artist `addition_time` in stat searches instead of large joins
 * Enable/Disable user icons changed to a person icons
 * If `autoupdate` is disabled don't show update options in the debug page
-* Don't autofilter to A when enabling the alphabet filter
+* Don't autofilter to A when enabling the Alphabet filter
 * Sidebar Genre link defaults to Albums like all the other areas
+* Action button for song link will open in a new page
+* Move update warning link to it's own wiki page
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -100,6 +103,7 @@ This release has fixed a lot of issues with public site guest users and another 
 * Update AmpacheApi-php to work around saved password that are unencrypted
 * Numerous filtering problems with `catalog_filter` enabled
 * Don't overwrite browse data before saving a `tmp_browse`
+* Update `album_disk` on song insert or update
 * Browse
   * Missing `total_count` sort types for Podcast and PodCastEpisode browse
 * Search
