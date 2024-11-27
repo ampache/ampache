@@ -2714,7 +2714,6 @@ abstract class Catalog extends database_object
         }
 
         // Check album_disk and update if needed
-        $song->get_album_disk();
         $new_song->album_disk = ($is_upload_albumartist)
             ? $song->album_disk
             : AlbumDisk::check($new_song->album, $new_song->disk, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);

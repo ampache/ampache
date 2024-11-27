@@ -85,11 +85,11 @@ if ($np_user->f_avatar_medium) {
   <div id="album_<?php echo $media->album; ?>" class="np_cell cel_albumart libitem_menu">
       <?php
       if (AmpConfig::get('show_song_art') && Art::has_db($media->id, 'song')) {
-          $playing = new Song($media->id);
-      } elseif ($showAlbum) {
-          $playing = new Album($media->album);
+          $playing = $media;
       } else {
-          $playing = new AlbumDisk($media->get_album_disk());
+          $playing = ($showAlbum)
+              ? new Album($media->album)
+              : new AlbumDisk($media->album_disk);
       }
 if ($playing->isNew() === false) {
     $playing->format();
