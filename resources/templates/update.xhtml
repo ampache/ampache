@@ -39,7 +39,7 @@
                 <strong tal:content="update/title">VERSION</strong><br />
                 <div tal:condition="update/warning">
                     <h4 i18n:translate="">Warning</h4>
-                    Please consider using the CLI for this update (`php bin/cli admin:updateDatabase -e`) <a href="https://github.com/ampache/ampache/wiki/ampache6-details#you-should-use-the-cli-when-upgrading">Ampache Wiki</a>,
+                    Please consider using the CLI for this update (`php bin/cli admin:updateDatabase -e`) <a href="https://github.com/ampache/ampache/wiki/cli-update-warning">Ampache Wiki</a>,
                 </div>
                 <ul>
                    <li tal:repeat="line update/changelog" tal:content="line">LINE</li>
