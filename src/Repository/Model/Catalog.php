@@ -2943,15 +2943,11 @@ abstract class Catalog extends database_object
             }
 
             // albums changes also require album_disk changes
-            if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
-                $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
-                Dba::write($sql, [$new_song->album, $song->get_album_disk()]);
+            if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
+                self::migrate('album', $song->album, $new_song->album, $song->id);
             }
-
-            // a change on any song will update for the entire disk
-            if ($new_song->disksubtitle !== $song->disksubtitle) {
-                $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?";
-                Dba::write($sql, [$new_song->disksubtitle, $song->get_album_disk()]);
+            if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
+                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
             }
 
             if ($song->tags != $new_song->tags) {
