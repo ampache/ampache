@@ -1352,6 +1352,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'discsubtitle':
+                case 'setsubtitle':
+                case 'set_subtitle':
                     $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'part_of_a_set':
