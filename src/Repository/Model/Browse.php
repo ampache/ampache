@@ -335,6 +335,16 @@ class Browse extends Query
                 : '';
         }
 
+        if (array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
+            $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true');
+        }
+        if (array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
+            $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false');
+        }
+        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)){
+            $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true');
+        }
+
         $box_title       = $this->get_title('');
         $limit_threshold = $this->get_threshold();
         // Switch on the type of browsing we're doing
