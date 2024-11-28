@@ -273,7 +273,7 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
+        if ($this->get_start() >= 0 && !$this->is_simple() && (count($object_ids) > $this->get_start())) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {
             $this->set_total(0);
@@ -745,7 +745,10 @@ class Browse extends Query
      */
     public function is_use_alpha(): bool
     {
-        return make_bool($this->_state['use_alpha'] ?? false);
+        return (
+            $this->is_use_filters() &&
+             make_bool($this->_state['use_alpha'] ?? false)
+        );
     }
 
     /**
