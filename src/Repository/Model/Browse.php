@@ -341,7 +341,7 @@ class Browse extends Query
         if (array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
             $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false');
         }
-        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)){
+        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
             $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true');
         }
 
