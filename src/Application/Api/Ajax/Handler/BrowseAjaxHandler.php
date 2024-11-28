@@ -81,11 +81,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
+                $filter = false;
                 // data set by the filter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                        $filter = true;
                     }
 
                     // Checkbox unplayed
@@ -96,6 +98,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         }
 
                         $browse->set_filter($_REQUEST['key'], $value);
+                        $filter = true;
                     }
                 }
 
@@ -105,17 +108,26 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
-                    $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $_SESSION['catalog'] = $_REQUEST['catalog_key'];
+                    $browse->set_filter('catalog', $_REQUEST['catalog_key']);
+                    $filter = true;
                 } else {
-                    $browse->set_filter('catalog', null);
                     $_SESSION['catalog'] = null;
+                    if (!empty($browse->get_filter('catalog'))) {
+                        $browse->set_filter('catalog', null);
+                        $filter = true;
+                    }
                 }
 
                 $browse->set_catalog($_SESSION['catalog']);
 
+                // when you filter the results you need the new objects
+                $object_ids = ($filter)
+                    ? $browse->get_objects()
+                    : [];
+
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects($object_ids, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -272,7 +284,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->set_filter('tag', $object_id);
                 $object_ids = $browse->get_objects();
                 ob_start();
-                $browse->show_objects($object_ids);
+                $browse->show_objects($object_ids, $argument);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 $browse->store();
         } // switch on action;
