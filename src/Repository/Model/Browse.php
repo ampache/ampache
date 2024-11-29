@@ -336,19 +336,19 @@ class Browse extends Query
         }
 
         if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
-            $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true');
+            $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true', false);
         }
 
         if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
             if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
-                $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false');
+                $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false', false);
             }
         } else {
             $browse->set_grid_view(true);
         }
 
         if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
-            $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true');
+            $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
         }
 
         $box_title       = $this->get_title('');
@@ -728,7 +728,7 @@ class Browse extends Query
      */
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
-        if ($savecookie) {
+        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
             $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
