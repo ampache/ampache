@@ -24,21 +24,33 @@
 /* Filters */
 /***********/
 
-export function showFilters(element, string) {
-    var link = $("#browse-options-link" + string);
+export function showFilters(element, string, group_release) {
+    if (group_release === true) {
+        var link = $("#browse-options-link" + string);
+        var hidelink = $("#browse-options-hidelink" + string);
+        var content = $("#browse-options-content" + string);
+    } else {
+        var link = $(".browse-options-link");
+        var hidelink = $(".browse-options-hidelink");
+        var content = $(".browse-options-content");
+    }
     link.hide();
-    var hidelink = $("#browse-options-hidelink" + string);
     hidelink.show();
-    var content = $("#browse-options-content" + string);
     content.show();
 }
 
-export function hideFilters(element, string) {
-    var link = $("#browse-options-link" + string);
+export function hideFilters(element, string, group_release) {
+    if (group_release === true) {
+        var link = $("#browse-options-link" + string);
+        var hidelink = $("#browse-options-hidelink" + string);
+        var content = $("#browse-options-content" + string);
+    } else {
+        var link = $(".browse-options-link");
+        var hidelink = $(".browse-options-hidelink");
+        var content = $(".browse-options-content");
+    }
     link.show();
-    var hidelink = $("#browse-options-hidelink" + string);
     hidelink.hide();
-    var content = $("#browse-options-content" + string);
     content.hide();
 }
 

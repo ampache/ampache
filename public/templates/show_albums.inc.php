@@ -180,6 +180,8 @@ foreach ($object_ids as $album_id) {
 </table>
 
 <?php show_table_render(); ?>
-<?php if (!$group_release && $browse->is_show_header()) {
+<?php if ($browse->is_show_header()) {
+    $is_header = $group_release;
+    $hide_view = $group_release;
     require Ui::find_template('list_header.inc.php');
 } ?>

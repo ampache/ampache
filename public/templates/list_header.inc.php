@@ -41,6 +41,17 @@ if (isset($is_header) && $is_header) {
 } else {
     $is_header = true;
 }
+if (isset($hide_view) && $hide_view) {
+    $hide_view = true;
+} else {
+    $hide_view = false;
+}
+// album grouped by release type
+if (isset($group_release) && $group_release) {
+    $group_release = true;
+} else {
+    $group_release = false;
+}
 $argument_param = $argument_param ?? '';
 
 // Pull these variables out to allow shorthand (easier for lazy programmers)
@@ -139,7 +150,8 @@ if ($limit > 0 && $total > $limit) {
 <?php }
     } ?>
     <span class="browse-options">
-            <a href="javascript:showFilters(this, '<?php echo '_' . $browse->id; ?>');" class="browse-options-link" id="browse-options-link_<?php echo $browse->id; ?>"><?php echo T_("View"); ?></a>
+<?php if (!$hide_view) { ?>
+            <a href="javascript:showFilters(this, '<?php echo '_' . $browse->id; ?>', <?php echo ($group_release) ? 'true' : 'false'; ?>);" class="browse-options-link" id="browse-options-link_<?php echo $browse->id; ?>"><?php echo T_("View"); ?></a>
             <span class="browse-options-content" id="browse-options-content_<?php echo $browse->id; ?>">
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_pages_" . $is_header); ?>"><?php echo T_('Pages'); ?></span>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo((!$browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>"><?php echo T_('Infinite Scroll'); ?></span>
@@ -167,9 +179,10 @@ if ($limit > 0 && $total > $limit) {
                 </form>
             </span>
         <?php } ?>
-        <a href="javascript:hideFilters(this, '<?php echo '_' . $browse->id; ?>');" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $browse->id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
+        <a href="javascript:hideFilters(this, '<?php echo '_' . $browse->id; ?>', <?php echo ($group_release) ? 'true' : 'false'; ?>);" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $browse->id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
         </span>
     </span>
+<?php } ?>
 </div>
 <span class="item-count"><?php echo T_('Item Count') . ': ' . $total; ?></span>
 <?php if (!$browse->is_use_pages() && $is_header) { ?>
