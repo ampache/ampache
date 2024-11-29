@@ -335,14 +335,16 @@ class Browse extends Query
                 : '';
         }
 
-        if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
-            $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true');
-        }
-        if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
-            $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false');
-        }
-        if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
-            $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true');
+        if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+            if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
+                $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true');
+            }
+            if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
+                $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'false');
+            }
+            if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
+                $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true');
+            }
         }
 
         $box_title       = $this->get_title('');
@@ -411,10 +413,12 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
             case 'playlist_media':
+                $browse->set_grid_view(true);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
                 break;
             case 'playlist_localplay':
+                $browse->set_grid_view(true);
                 $box_title = $this->get_title(T_('Current Playlist'));
                 $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
                 Ui::show_box_bottom();
@@ -458,6 +462,7 @@ class Browse extends Query
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
+                $browse->set_grid_view(true);
                 $box_title = $this->get_title(T_('Democratic Playlist'));
                 $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
                 break;
