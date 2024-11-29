@@ -139,13 +139,13 @@ if ($limit > 0 && $total > $limit) {
 <?php }
     } ?>
     <span class="browse-options">
-        <a href="javascript:showFilters(this);" class="browse-options-link"><?php echo T_("View"); ?></a>
-        <span class="browse-options-content">
+            <a href="javascript:showFilters(this, '<?php echo '_' . $browse->id; ?>');" class="browse-options-link" id="browse-options-link_<?php echo $browse->id; ?>"><?php echo T_("View"); ?></a>
+            <span class="browse-options-content" id="browse-options-content_<?php echo $browse->id; ?>">
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_pages_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + $('#browse_" . $browse->id . "_use_pages_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_pages_" . $is_header); ?>"><?php echo T_('Pages'); ?></span>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_scroll_<?php echo $is_header; ?>" value="true" <?php echo((!$browse->is_use_pages()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_pages&value=' + !($('#browse_" . $browse->id . "_use_scroll_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_use_scroll_" . $is_header); ?>"><?php echo T_('Infinite Scroll'); ?></span>
             <?php if (in_array($browse->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) { ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_grid_view_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_grid_view()) ? '' : 'checked'); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=grid_view&value=' + ($('#browse_" . $browse->id . "_grid_view_" . $is_header . "').is(':checked')) + '" . $argument_param, "browse_" . $browse->id . "_grid_view_" . $is_header); ?>"><?php echo T_('Grid View'); ?></span>
-            <?php } ?>
+            <?php } else { $browse->set_grid_view(true); } ?>
             <?php if (!$browse->is_static_content() && $browse->is_use_filters()) { ?>
             <span><input type="checkbox" id="browse_<?php echo $browse->id; ?>_use_alpha_<?php echo $is_header; ?>" value="true" <?php echo(($browse->is_use_alpha()) ? 'checked' : ''); ?> onClick="javascript:<?php echo Ajax::action("?page=browse&action=options&browse_id=" . $browse->id . "&option=use_alpha&value=' + $('#browse_" . $browse->id . "_use_alpha_" . $is_header . "').is(':checked') + '" . $argument_param, "browse_" . $browse->id . "_use_alpha_" . $is_header); ?>"><?php echo T_('Alphabet'); ?></span>
             <?php } ?>
@@ -165,6 +165,7 @@ if ($limit > 0 && $total > $limit) {
                 </form>
             </span>
         <?php } ?>
+        <a href="javascript:hideFilters(this, '<?php echo '_' . $browse->id; ?>');" class="browse-options-hidelink" id="browse-options-hidelink_<?php echo $browse->id; ?>" style="display:none;"><?php echo T_('View'); ?></a>
         </span>
     </span>
 </div>

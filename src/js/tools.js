@@ -24,11 +24,22 @@
 /* Filters */
 /***********/
 
-export function showFilters(element) {
-    var link = $(".browse-options-link");
+export function showFilters(element, string) {
+    var link = $("#browse-options-link" + string);
     link.hide();
-    var content = $(".browse-options-content");
+    var hidelink = $("#browse-options-hidelink" + string);
+    hidelink.show();
+    var content = $("#browse-options-content" + string);
     content.show();
+}
+
+export function hideFilters(element, string) {
+    var link = $("#browse-options-link" + string);
+    link.show();
+    var hidelink = $("#browse-options-hidelink" + string);
+    hidelink.hide();
+    var content = $("#browse-options-content" + string);
+    content.hide();
 }
 
 /************************************************************/

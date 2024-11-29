@@ -177,7 +177,4 @@ foreach ($object_ids as $album_disk_id) {
         </tr>
     <tfoot>
 </table>
-<?php show_table_render();
-if ($browse->is_show_header()) {
-    require Ui::find_template('list_header.inc.php');
-} ?>
+<?php show_table_render(); ?>
