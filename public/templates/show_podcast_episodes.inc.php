@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 $thcount      = 6;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_mashup    = $browse->is_mashup();
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');

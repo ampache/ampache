@@ -44,7 +44,7 @@ $web_path     = AmpConfig::get_web_path();
 $thcount      = 8;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 // translate depending on the browse type
 if ($browse->is_album_artist()) {
     $artist_text = T_('Album Artist');

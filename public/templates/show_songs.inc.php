@@ -46,7 +46,7 @@ $web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 $is_group     = AmpConfig::get('album_group');
 $albumString  = ($is_group)
     ? 'album'

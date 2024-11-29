@@ -250,7 +250,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (in_array($object_type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
                             $browse->set_type($object_type);
                         }
-                        $value = ($value == 'false');
+                        $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;
                     case 'limit':

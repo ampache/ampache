@@ -39,7 +39,7 @@ use Ampache\Module\Util\Ui;
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var list<int> $object_ids */
 
-$is_table          = $browse->is_grid_view();
+$is_table          = !$browse->is_grid_view();
 $show_art          = AmpConfig::get('playlist_art') || $browse->is_mashup();
 $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);

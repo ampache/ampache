@@ -96,7 +96,7 @@ class Query
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
-        'grid_view' => true,
+        'grid_view' => false,
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,

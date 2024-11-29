@@ -68,7 +68,7 @@ if ($libitem->get_default_art_kind() == 'preview') {
     $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    $thumb = ($browse->is_grid_view()) ? 6 : 7;
+    $thumb = (!$browse->is_grid_view()) ? 6 : 7;
     Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $thumb, $libitem->get_link());
 } ?>
 </td>
