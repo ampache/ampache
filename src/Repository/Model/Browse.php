@@ -843,7 +843,7 @@ class Browse extends Query
     public function get_css_class(): string
     {
         $css = '';
-        if (!$this->_state['grid_view']) {
+        if ($this->is_grid_view()) {
             $css = 'disablegv';
         }
 
