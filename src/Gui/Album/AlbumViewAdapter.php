@@ -84,7 +84,7 @@ final readonly class AlbumViewAdapter implements AlbumViewAdapterInterface
             ? '[' . $this->album->get_artist_fullname() . '] ' . scrub_out($this->album->get_fullname())
             : scrub_out($this->album->get_fullname());
 
-        $thumb = (!$this->browse->is_grid_view()) ? 1 : 11;
+        $thumb = ($this->browse->is_grid_view()) ? 11 : 1;
 
         Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
 
