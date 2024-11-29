@@ -844,7 +844,7 @@ class Browse extends Query
     {
         $css = '';
         if ($this->is_grid_view()) {
-            $css = 'disablegv';
+            $css = 'gridview';
         }
 
         return $css;

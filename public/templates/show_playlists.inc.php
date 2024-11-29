@@ -45,11 +45,12 @@ $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $show_playlist_add = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER);
 $hide_genres       = AmpConfig::get('hide_genres');
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
-<?php if ($browse->is_show_header()) {
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$css_class = ($is_table) ? '' : ' gridview';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="playlist">
+<table class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="playlist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

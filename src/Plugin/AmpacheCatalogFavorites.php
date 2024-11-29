@@ -134,8 +134,8 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
             echo $divString;
             Ui::show_box_top(T_('Highlight'));
             echo '<table class="tabledata striped-rows';
-            if (!$this->gridview) {
-                echo " disablegv";
+            if ($this->gridview) {
+                echo " gridview";
             }
 
             echo '">';

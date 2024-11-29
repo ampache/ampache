@@ -50,13 +50,14 @@ $is_table     = !$browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_time  = ($is_table) ? "cel_time" : 'grid_time';
+$css_class = ($is_table) ? '' : ' gridview';
 $count     = 1; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
 } ?>
     <form method="post" id="reorder_playlist_<?php echo $playlist_id; ?>">
-        <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
+        <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
             <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>

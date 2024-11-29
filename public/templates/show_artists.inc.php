@@ -59,11 +59,12 @@ $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
 $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
 $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
-$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
-<?php if ($browse->is_show_header()) {
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="artist">
+<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="artist">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
