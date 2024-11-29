@@ -246,6 +246,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                          * The `grid view` is implemented inverted, so apply an inverted logic.
                          * This ensures the `grid view` checkbox behaves as expected
                          */
+                        $object_type = $_REQUEST['object_type'] ?? '';
+                        if (in_array($object_type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+                            $browse->set_type($object_type);
+                        }
                         $value = ($value == 'false');
                         $browse->set_grid_view($value);
                         break;
