@@ -262,8 +262,9 @@ class Browse extends Query
      *
      * @param array $object_ids
      * @param bool|array|string $argument
+     * @param bool $skip_cookies
      */
-    public function show_objects($object_ids = [], $argument = false): void
+    public function show_objects($object_ids = [], $argument = false, $skip_cookies = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
@@ -335,7 +336,7 @@ class Browse extends Query
                 : '';
         }
 
-        if (!empty($type)) {
+        if (!empty($type) && !$skip_cookies) {
             if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
                 $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true', false);
             }

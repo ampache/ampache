@@ -133,7 +133,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     : [];
 
                 ob_start();
-                $browse->show_objects($object_ids, $argument);
+                $browse->show_objects($object_ids, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -146,7 +146,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'toggle_tag':
@@ -202,12 +202,12 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
@@ -277,7 +277,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
