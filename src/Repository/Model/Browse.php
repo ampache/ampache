@@ -345,7 +345,7 @@ class Browse extends Query
                     $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
                 }
             } else {
-                $browse->set_grid_view(true);
+                $browse->set_grid_view(false);
             }
 
             if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
@@ -419,12 +419,12 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
             case 'playlist_media':
-                $browse->set_grid_view(true);
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
                 break;
             case 'playlist_localplay':
-                $browse->set_grid_view(true);
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Current Playlist'));
                 $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
                 Ui::show_box_bottom();
@@ -468,7 +468,7 @@ class Browse extends Query
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
-                $browse->set_grid_view(true);
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Democratic Playlist'));
                 $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
                 break;
@@ -613,9 +613,9 @@ class Browse extends Query
             }
 
             $name = 'browse_' . $type . '_grid_view';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(Core::get_cookie($name) == 'true', false);
-            }
+            //if ((isset($_COOKIE[$name]))) {
+            //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
+            //}
 
             parent::set_type($type, $custom_base);
         } else {
