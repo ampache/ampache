@@ -752,15 +752,33 @@ final class Session implements SessionInterface
             'samesite' => 'Strict',
         ];
 
-        setcookie('browse_song_grid_view', (Preference::get_by_user($user->id, 'browse_song_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_album_grid_view', (Preference::get_by_user($user->id, 'browse_album_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_album_disk_grid_view', (Preference::get_by_user($user->id, 'browse_album_disk_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_artist_grid_view', (Preference::get_by_user($user->id, 'browse_artist_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_live_stream_grid_view', (Preference::get_by_user($user->id, 'browse_live_stream_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_playlist_grid_view', (Preference::get_by_user($user->id, 'browse_playlist_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_video_grid_view', (Preference::get_by_user($user->id, 'browse_video_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_podcast_grid_view', (Preference::get_by_user($user->id, 'browse_podcast_grid_view')) ? 'true' : 'false', $cookie_options);
-        setcookie('browse_podcast_episode_grid_view', (Preference::get_by_user($user->id, 'browse_podcast_episode_grid_view')) ? 'true' : 'false', $cookie_options);
+        if ((Preference::get_by_user($user->id, 'browse_song_grid_view'))) {
+            setcookie('browse_song_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_grid_view'))) {
+            setcookie('browse_album_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_disk_grid_view'))) {
+            setcookie('browse_album_disk_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_artist_grid_view'))) {
+            setcookie('browse_artist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_live_stream_grid_view'))) {
+            setcookie('browse_live_stream_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_playlist_grid_view'))) {
+            setcookie('browse_playlist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_video_grid_view'))) {
+            setcookie('browse_video_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_grid_view'))) {
+            setcookie('browse_podcast_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_episode_grid_view'))) {
+            setcookie('browse_podcast_episode_grid_view', 'true', $cookie_options);
+        }
     }
 
     /**
