@@ -335,7 +335,7 @@ class Browse extends Query
                 : '';
         }
 
-        if (array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
+        if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
             $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true');
         }
         if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
