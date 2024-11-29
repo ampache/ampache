@@ -177,7 +177,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     }
 
                     echo '<td class=grid_cover>';
-                    $thumb = ($this->gridview && UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
+                    $thumb = ($this->gridview && !UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
                     $item->display_art($thumb, true);
                     echo '</td>';
 
