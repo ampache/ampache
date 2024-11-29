@@ -734,7 +734,7 @@ class Browse extends Query
         if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
             $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
-        
+
         $this->_state['grid_view'] = $grid_view;
     }
 
