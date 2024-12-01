@@ -8,6 +8,12 @@ The icons for ratings and favorite flags are now SVG's which replaces the last p
 
 This release has fixed a lot of issues with public site guest users and another round of speed updates with more indexes on large tables.
 
+A big change here is in the Browse class.
+
+The logic of grid view has been normalized. Many logical issues reverse checking true/false and confusing text have been updated.
+
+Clear all your cookies and site data after the upgrade as this affects many visual areas on the site.
+
 ### Added
 
 * Build PHP8.4 supported release zips
@@ -33,6 +39,7 @@ This release has fixed a lot of issues with public site guest users and another 
 * Browse
   * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
   * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
+  * Allow hiding the view menu (Just click the `View` link again to close it)
 * Search
   * Add Album name to song search in top bar and expand the list
   * Add `disk_count` to Album & AlbumDisk search types
@@ -47,7 +54,7 @@ This release has fixed a lot of issues with public site guest users and another 
   * RatingMatch set the rating for Albums on single AlbumDisk objects
 * Config version 76
   * Add `alpha_string_pattern` allowing a custom Alphabet list
-* Database 710005
+* Database 710006
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
   * Add user preferences to show/hide Discogs links on object pages
@@ -56,6 +63,7 @@ This release has fixed a lot of issues with public site guest users and another 
   * Add indexes to `album_map`, `catalog_map`, `artist_map`, `image`, `recommendation`, `rating`, `user_flag`, `user_activity` and `playlist_data` table
   * 'Add `total_skip` to `album` , `album_disk` and `artist` tables
   * Add `album_disk` to the `song` table
+  * Add user preferencess to force enable `grid_view` cookies on login
 
 ### Changed
 
@@ -70,6 +78,12 @@ This release has fixed a lot of issues with public site guest users and another 
 * Sidebar Genre link defaults to Albums like all the other areas
 * Action button for song link will open in a new page
 * Move update warning link to it's own wiki page
+* Browse
+  * Do not filter to `A` when enabling Alphabet filter
+  * Don't show View on footer row when displaying Albums by Release Type
+  * Don't allow grid view on playlist and search result media pages
+  * Reverse grid logic. (Sorry!)
+  * CSS for grid_view doesn't match the code (`disablegv` is actually `gridview`)
 * Search
   * AlbumDisk searches look for the disk rating
 
@@ -106,6 +120,10 @@ This release has fixed a lot of issues with public site guest users and another 
 * Update `album_disk` on song insert or update
 * Browse
   * Missing `total_count` sort types for Podcast and PodCastEpisode browse
+  * Fixes for displaying browses after filtering
+  * Don't show Alphabet filter list when the browse isn't filtered
+  * Don't overwrite cookie values when using Ajax actions
+  * Send the object type when filtering a browse in case it's not saved 
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
