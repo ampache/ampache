@@ -52,7 +52,7 @@ if (!empty($videos)) {
             $art_showed = Art::display('video', $video->id, $video->getFileName(), 9, $video->get_link(), false, 'preview');
         }
         if (!$art_showed) {
-            $thumb = Ui::is_grid_view('video') ? 7 : 6;
+            $thumb = !Ui::is_grid_view('video') ? 7 : 6;
             Art::display('video', $video->id, $video->getFileName(), $thumb, $video->get_link());
         } ?>
         </div>

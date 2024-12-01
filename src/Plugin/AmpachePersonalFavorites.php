@@ -151,7 +151,7 @@ class AmpachePersonalFavorites extends AmpachePlugin implements PluginDisplayHom
                 echo $divString;
                 UI::show_box_top(T_('Favorite Lists'));
                 echo '<table class="tabledata striped-rows';
-                echo " disablegv";
+                echo " gridview";
                 echo '">';
                 $count = 0;
                 foreach ($list_array as $item) {

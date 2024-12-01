@@ -83,8 +83,8 @@ class Query
     /** @var int|string $id */
     public $id;
 
-    /** @var int $catalog */
-    public $catalog;
+    /** @var int|null $catalog */
+    public $catalog = null;
 
     /** @var int|null $user_id */
     public $user_id = null;
@@ -96,7 +96,7 @@ class Query
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
-        'grid_view' => true,
+        'grid_view' => false,
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,

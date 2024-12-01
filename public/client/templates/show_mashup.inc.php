@@ -48,7 +48,7 @@ if (!empty($object_ids)) {
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
-    $browse->set_grid_view(false, false);
+    $browse->set_grid_view(true, false);
     $browse->set_mashup(true);
     $browse->show_objects($object_ids);
     echo '</div>';
@@ -66,7 +66,7 @@ if (!empty($object_ids)) {
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
-    $browse->set_grid_view(false, false);
+    $browse->set_grid_view(true, false);
     $browse->set_mashup(true);
     $browse->show_objects($object_ids);
     echo '</div>';
@@ -82,7 +82,7 @@ if (!empty($object_ids)) {
     $browse->set_type($object_type);
     $browse->set_use_filters(false);
     $browse->set_show_header(false);
-    $browse->set_grid_view(false, false);
+    $browse->set_grid_view(true, false);
     $browse->set_mashup(true);
     $browse->show_objects($object_ids);
     echo '</div>';
@@ -101,7 +101,7 @@ if (!empty($object_ids)) {
     $browse = new Browse();
     $browse->set_type($object_type);
     $browse->set_show_header(false);
-    $browse->set_grid_view(false, false);
+    $browse->set_grid_view(true, false);
     $browse->set_mashup(true);
     $browse->show_objects($object_ids);
     echo '</div>';

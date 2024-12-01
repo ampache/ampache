@@ -737,6 +737,51 @@ final class Session implements SessionInterface
     }
 
     /**
+     * create_preference_cookies
+     *
+     * Store default cookie for preferences on login
+     * @param User $user
+     */
+    public static function create_preference_cookies($user): void
+    {
+        $cookie_options = [
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict',
+        ];
+
+        if ((Preference::get_by_user($user->id, 'browse_song_grid_view'))) {
+            setcookie('browse_song_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_grid_view'))) {
+            setcookie('browse_album_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_disk_grid_view'))) {
+            setcookie('browse_album_disk_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_artist_grid_view'))) {
+            setcookie('browse_artist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_live_stream_grid_view'))) {
+            setcookie('browse_live_stream_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_playlist_grid_view'))) {
+            setcookie('browse_playlist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_video_grid_view'))) {
+            setcookie('browse_video_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_grid_view'))) {
+            setcookie('browse_podcast_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_episode_grid_view'))) {
+            setcookie('browse_podcast_episode_grid_view', 'true', $cookie_options);
+        }
+    }
+
+    /**
      * generateRandomToken
      * Generate a random token.
      */

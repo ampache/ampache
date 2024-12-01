@@ -58,7 +58,7 @@ $ui->show(
     <div class="tag_container">
         <div class="tag_button">
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
-            <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=browse&action=add_filter&browse_id=' . $browse->id . '&object_id=' . $data['id'], '')); ?>
+            <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=tag&tag=' . $data['id'], '')); ?>
         </div>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <div class="tag_actions">
@@ -83,7 +83,7 @@ if (isset($_GET['show_tag'])) {
     $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
-    <?php echo Ajax::action('?page=browse&action=add_filter&browse_id=' . $browse->id . '&object_id=' . $show_tag, ''); ?>
+    <?php echo Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=tag&tag=' . $show_tag, ''); ?>
 });
 </script>
 <?php
