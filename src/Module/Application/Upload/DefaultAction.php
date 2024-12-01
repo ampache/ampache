@@ -32,6 +32,7 @@ use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\AjaxUriRetrieverInterface;
+use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Util\Upload;
 use Psr\Http\Message\ResponseInterface;
@@ -110,7 +111,7 @@ final class DefaultAction implements ApplicationActionInterface
             );
         } else {
             /* HINT: Requested object string/id/type ("album", "myusername", "some song title", 1298376) */
-            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '&nbsp' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . "</a>";
+            echo sprintf(T_('Not Found: %s'), 'upload_catalog') . '<br>' . "<a href=\"https://github.com/ampache/ampache/wiki/upload-catalogs\" target=\"_blank\">" . T_('Help') . " " . Ui::get_material_symbol('open_in_new', T_('Link')) . "</a>";
         }
         // Show the Footer
         $this->ui->showQueryStats();

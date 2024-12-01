@@ -95,7 +95,7 @@ class Browse extends Query
         if (!$browse_id) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
-            $this->set_grid_view(true);
+            $this->set_grid_view(false);
         }
     }
 
@@ -262,8 +262,9 @@ class Browse extends Query
      *
      * @param array $object_ids
      * @param bool|array|string $argument
+     * @param bool $skip_cookies
      */
-    public function show_objects($object_ids = [], $argument = false): void
+    public function show_objects($object_ids = [], $argument = false, $skip_cookies = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
@@ -273,7 +274,7 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
+        if ($this->get_start() >= 0 && !$this->is_simple() && (count($object_ids) > $this->get_start())) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {
             $this->set_total(0);
@@ -333,6 +334,24 @@ class Browse extends Query
             $argument_param = ($argument)
                 ? '&argument=' . scrub_in((string)$argument)
                 : '';
+        }
+
+        if (!empty($type) && !$skip_cookies) {
+            if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
+                $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true', false);
+            }
+
+            if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+                if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
+                    $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
+                }
+            } else {
+                $browse->set_grid_view(false);
+            }
+
+            if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
+                $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
+            }
         }
 
         $box_title       = $this->get_title('');
@@ -401,10 +420,12 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
             case 'playlist_media':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
                 break;
             case 'playlist_localplay':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Current Playlist'));
                 $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
                 Ui::show_box_bottom();
@@ -448,6 +469,7 @@ class Browse extends Query
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Democratic Playlist'));
                 $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
                 break;
@@ -592,9 +614,9 @@ class Browse extends Query
             }
 
             $name = 'browse_' . $type . '_grid_view';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(Core::get_cookie($name) == 'true');
-            }
+            //if ((isset($_COOKIE[$name]))) {
+            //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
+            //}
 
             parent::set_type($type, $custom_base);
         } else {
@@ -709,7 +731,7 @@ class Browse extends Query
      */
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
-        if ($savecookie) {
+        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
             $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
@@ -745,7 +767,10 @@ class Browse extends Query
      */
     public function is_use_alpha(): bool
     {
-        return make_bool($this->_state['use_alpha'] ?? false);
+        return (
+            $this->is_use_filters() &&
+             make_bool($this->_state['use_alpha'] ?? false)
+        );
     }
 
     /**
@@ -819,8 +844,8 @@ class Browse extends Query
     public function get_css_class(): string
     {
         $css = '';
-        if (!$this->_state['grid_view']) {
-            $css = 'disablegv';
+        if ($this->is_grid_view()) {
+            $css = 'gridview';
         }
 
         return $css;

@@ -1258,11 +1258,11 @@ div.box.box_current_configuration {
     margin-top: 20px;
 }
 
-table.disablegv thead {
+table.gridview thead {
     display: none;
 }
 
-table.disablegv tr {
+table.gridview tr {
     float: left;
     max-width: 15%;
     min-width: 170px;
@@ -1271,35 +1271,35 @@ table.disablegv tr {
     width: 15%;
 }
 
-table.disablegv tr {
+table.gridview tr {
     background-color: transparent !important;
 }
 
-table.disablegv td {
+table.gridview td {
     display: block !important;
     height: 25px;
     margin-left: 4%;
     margin-right: 4%;
 }
 
-table.disablegv td.optional {
+table.gridview td.optional {
     display: none !important;
 }
 
-table.disablegv td.cel_cover {
+table.gridview td.cel_cover {
     display: block !important;
     height: auto !important;
 }
 
-table.disablegv td.cel_play,
-table.disablegv td.cel_add,
-table.disablegv td.cel_action,
-table.disablegv td.cel_year,
-table.disablegv td.cel_drag {
+table.gridview td.cel_play,
+table.gridview td.cel_add,
+table.gridview td.cel_action,
+table.gridview td.cel_year,
+table.gridview td.cel_drag {
     display: none !important;
 }
 
-table.disablegv td.cel_ratings {
+table.gridview td.cel_ratings {
     display: flex !important;
     width: initial !important;
     min-width: initial !important;

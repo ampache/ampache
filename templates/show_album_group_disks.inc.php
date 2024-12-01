@@ -112,7 +112,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $f_album_name . '] ' . scrub_out($f_name);
-        $thumb = Ui::is_grid_view('album') ? 32 : 11;
+        $thumb = !Ui::is_grid_view('album') ? 32 : 11;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>

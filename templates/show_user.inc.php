@@ -99,7 +99,6 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
-
         <?php } ?>
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>

@@ -53,7 +53,7 @@ $show_ratings      = User::is_registered() && (AmpConfig::get('ratings'));
 $original_year     = AmpConfig::get('use_original_year');
 $hide_genres       = AmpConfig::get('hide_genres');
 $show_played_times = AmpConfig::get('show_played_times');
-$is_table          = $browse->is_grid_view();
+$is_table          = !$browse->is_grid_view();
 $year_sort         = ($original_year) ? "&sort=original_year" : "&sort=year";
 // translate once
 $album_text  = T_('Album');
@@ -70,6 +70,7 @@ $cel_album   = ($is_table) ? "cel_album" : 'grid_album';
 $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
 $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview';
 $album_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=name', $album_text, 'album_sort_name');
 $artist_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=album_artist_album_sort', $artist_text, 'album_sort_artist');
 $songs_link  = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&sort=song_count', $songs_text, 'album_sort_song_count');
@@ -80,7 +81,7 @@ $rating_link = Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->i
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="album">
+<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="album">
     <thead>
         <tr class="th-top">
         <div class="libitem_menu">
@@ -181,5 +182,7 @@ foreach ($object_ids as $album_id) {
 
 <?php show_table_render(); ?>
 <?php if ($browse->is_show_header()) {
+    $is_header = $group_release;
+    $hide_view = $group_release;
     require Ui::find_template('list_header.inc.php');
 } ?>
