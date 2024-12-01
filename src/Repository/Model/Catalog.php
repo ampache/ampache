@@ -2530,9 +2530,10 @@ abstract class Catalog extends database_object
     {
         //debug_event(self::class, "update_song_from_tags results: " . print_r($results, true), 4);
         // info for the song table. This is all the primary file data that is song related
-        $new_song       = new Song();
-        $new_song->file = $results['file'];
-        $new_song->year = (strlen((string)$results['year']) > 4)
+        $new_song          = new Song();
+        $new_song->file    = $results['file'];
+        $new_song->catalog = $song->getCatalogId();
+        $new_song->year    = (strlen((string)$results['year']) > 4)
             ? (int)substr((string) $results['year'], -4, 4)
             : (int)($results['year']);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
@@ -2707,9 +2708,17 @@ abstract class Catalog extends database_object
         // check whether this album exists
         $new_song->album = ($is_upload_albumartist)
             ? $song->album
-            : Album::check($song->getCatalogId(), $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
+            : Album::check($new_song->catalog, $album, $new_song->year, $album_mbid, $album_mbid_group, $new_song->albumartist, $release_type, $release_status, $original_year, $barcode, $catalog_number, $version);
         if ($new_song->album === 0) {
             $new_song->album = $song->album;
+        }
+
+        // Check album_disk and update if needed
+        $new_song->album_disk = ($is_upload_albumartist)
+            ? $song->album_disk
+            : AlbumDisk::check($new_song->album, $new_song->disk, $new_song->catalog, $new_song->disksubtitle, $song->album_disk);
+        if ($new_song->album_disk === 0) {
+            $new_song->album_disk = $song->album_disk;
         }
 
         $albumRepository = self::getAlbumRepository();
@@ -2933,15 +2942,11 @@ abstract class Catalog extends database_object
             }
 
             // albums changes also require album_disk changes
-            if (($song->album > 0 && $new_song->album) && self::migrate('album', $song->album, $new_song->album, $song->id)) {
-                $sql = "UPDATE IGNORE `album_disk` SET `album_id` = ? WHERE `id` = ?";
-                Dba::write($sql, [$new_song->album, $song->get_album_disk()]);
+            if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
+                self::migrate('album', $song->album, $new_song->album, $song->id);
             }
-
-            // a change on any song will update for the entire disk
-            if ($new_song->disksubtitle !== $song->disksubtitle) {
-                $sql = "UPDATE `album_disk` SET `disksubtitle` = ? WHERE `id` = ?";
-                Dba::write($sql, [$new_song->disksubtitle, $song->get_album_disk()]);
+            if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
+                self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
             }
 
             if ($song->tags != $new_song->tags) {

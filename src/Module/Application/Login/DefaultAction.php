@@ -327,6 +327,8 @@ final class DefaultAction implements ApplicationActionInterface
             }
 
             Session::createGlobalUser($user);
+            Session::create_preference_cookies($user);
+
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&

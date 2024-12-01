@@ -46,7 +46,7 @@ $web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && AmpConfig::get('ratings');
 $hide_genres  = AmpConfig::get('hide_genres');
 $thcount      = 7;
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 $is_group     = AmpConfig::get('album_group');
 $albumString  = ($is_group)
     ? 'album'
@@ -68,11 +68,12 @@ $cel_artist  = ($is_table) ? "cel_artist" : 'grid_artist';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
 $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
 $cel_license = ($is_table) ? "cel_license" : 'grid_license';
-$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
-<?php if ($browse->is_show_header()) {
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table id="reorder_songs_table_<?php echo $browse->get_filter('album') ?? $browse->id; ?>" class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
+<table id="reorder_songs_table_<?php echo $browse->get_filter('album') ?? $browse->id; ?>" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="song" data-offset="<?php echo $browse->get_start(); ?>">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"><?php echo $cel_play_text; ?></th>

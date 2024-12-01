@@ -34,15 +34,16 @@ use Ampache\Module\Util\Ui;
 $web_path     = AmpConfig::get_web_path();
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres  = AmpConfig::get('hide_genres');
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_tags    = ($is_table) ? "cel_tags" : 'grid_tags';
-$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
-<?php if ($browse->is_show_header()) {
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="video">
+<table class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="video">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

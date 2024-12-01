@@ -830,7 +830,16 @@ class Ui implements UiInterface
             case 'autoupdate':
             case 'bookmark_latest':
             case 'broadcast_by_default':
+            case 'browse_album_disk_grid_view':
+            case 'browse_album_grid_view':
+            case 'browse_artist_grid_view':
             case 'browse_filter':
+            case 'browse_live_stream_grid_view':
+            case 'browse_playlist_grid_view':
+            case 'browse_podcast_episode_grid_view':
+            case 'browse_podcast_grid_view':
+            case 'browse_song_grid_view':
+            case 'browse_video_grid_view':
             case 'browser_notify':
             case 'catalog_check_duplicate':
             case 'catalogfav_gridview':

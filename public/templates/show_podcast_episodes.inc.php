@@ -37,7 +37,7 @@ use Ampache\Module\Util\Ui;
 $thcount      = 6;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
 $is_mashup    = $browse->is_mashup();
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
@@ -45,11 +45,12 @@ $action_text = T_('Actions');
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_time    = ($is_table) ? "cel_time" : 'grid_time';
-$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
-<?php if ($browse->is_show_header()) {
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview';
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="podcast_episode">
+<table class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="podcast_episode">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>
