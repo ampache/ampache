@@ -238,8 +238,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $browse->set_use_alpha($value);
                         $browse->set_start(0);
                         if (!$value) {
-                            $filter = true;
                             $browse->set_filter('regex_not_match', '');
+                            $filter = true;
                         }
 
                         break;
