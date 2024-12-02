@@ -457,6 +457,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
+
                 $results[$action] = ob_get_clean();
                 break;
             case 'sidebar':

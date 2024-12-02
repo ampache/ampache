@@ -66,7 +66,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             $longitude = (float)$_REQUEST['longitude'];
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if (empty($name)) {
+                            if ($name === null || $name === '' || $name === '0') {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                     if (!empty($name)) {

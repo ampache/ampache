@@ -222,6 +222,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                     }
                 }
             }
+
             if ($rating->type == 'album') {
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
