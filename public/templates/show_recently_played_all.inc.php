@@ -45,9 +45,12 @@ $user_id   = $user_id ?? -1;
 $user_str  = (isset($user_only) && $user_only)
     ? '&user_only=1'
     : '';
+$refresh_str = (isset($no_refresh))
+    ? '&no_refresh=1'
+    : ''; 
 $refresh   = (isset($no_refresh))
     ? ""
-    : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
+    : "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path();
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');

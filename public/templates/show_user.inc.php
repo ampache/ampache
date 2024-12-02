@@ -176,11 +176,12 @@ $ajax_page  = 'stats';
 $limit      = AmpConfig::get('popular_threshold', 10);
 $no_refresh = true;
 $user       = $client;
+$user_only  = true;
 if (AmpConfig::get('home_recently_played_all')) {
-    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
+    $data = Stats::get_recently_played($client->getId(), 'stream', null, $user_only);
     require_once Ui::find_template('show_recently_played_all.inc.php');
 } else {
-    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', $user_only);
     Song::build_cache(array_keys($data));
     require Ui::find_template('show_recently_played.inc.php');
 } ?>
@@ -188,7 +189,7 @@ if (AmpConfig::get('home_recently_played_all')) {
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';
 $limit           = AmpConfig::get('popular_threshold', 10);
-$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
+$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', $user_only);
 Song::build_cache(array_keys($data));
 require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>
