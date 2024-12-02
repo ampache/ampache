@@ -39,7 +39,9 @@ use Ampache\Repository\Model\User;
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$user_str  = (isset($user_only) && $user_only)
+$user_only = (isset($user_only) && $user_only);
+$show_user = (!$user_only && $user_id > 0);
+$user_str  = ($user_only)
     ? '&user_only=1'
     : '';
 $rss_link  = AmpConfig::get('use_rss')
@@ -59,7 +61,7 @@ UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_pla
         <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
@@ -145,7 +147,7 @@ foreach ($data as $row) {
                 <td class="cel_artist"><?php echo $song->get_f_artist_link(); ?></td>
                 <td class="cel_album"><?php echo ($showAlbum) ? $song->get_f_album_link() : $song->get_f_album_disk_link(); ?></td>
                 <td class="cel_year"><?php echo $song->year; ?></td>
-                <?php if ($user_id > 0) { ?>
+                <?php if ($show_user) { ?>
                     <td class="cel_username">
                         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $row_user->id; ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
@@ -183,7 +185,7 @@ foreach ($data as $row) {
         <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
