@@ -370,6 +370,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
+                $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'index';
                 if (AmpConfig::get('home_recently_played_all')) {
                     $data = Stats::get_recently_played($user_id);
