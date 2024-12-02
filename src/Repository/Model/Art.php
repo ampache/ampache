@@ -388,7 +388,9 @@ class Art extends database_object
         }
 
         // Default to image/jpeg if they don't pass anything
-        $mime = empty($mime) ? $mime : 'image/jpeg';
+        $mime = (empty($mime))
+            ? 'image/jpeg'
+            : $mime;
         // Blow it away!
         $this->reset();
         $picturetypeid = ($this->type == 'album') ? 3 : 8;
