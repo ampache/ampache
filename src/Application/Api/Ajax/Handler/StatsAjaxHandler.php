@@ -106,7 +106,6 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id    = $user->id;
                 $user_only  = isset($_REQUEST['user_only']);
-                $no_refresh = isset($_REQUEST['no_refresh']);
                 $ajax_page  = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
                     $data = Stats::get_recently_played($user_id, 'stream', null, $user_only);
@@ -134,7 +133,19 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 ob_start();
                 $user_id    = $user->id;
                 $user_only  = isset($_REQUEST['user_only']);
-                $no_refresh = isset($_REQUEST['no_refresh']);
+                $data       = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
+                $ajax_page  = 'stats';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_skipped.inc.php');
+                $results['recently_skipped'] = ob_get_clean();
+                break;
+            case 'refresh_skipped':
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $user_id    = $user->id;
+                $user_only  = isset($_REQUEST['user_only']);
                 $data       = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
                 $ajax_page  = 'stats';
                 Song::build_cache(array_keys($data));

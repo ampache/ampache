@@ -42,12 +42,13 @@ $user_id   = $user_id ?? -1;
 $user_str  = (isset($user_only) && $user_only)
     ? '&user_only=1'
     : '';
-$link      = (AmpConfig::get('use_rss'))
+$rss_link  = (AmpConfig::get('use_rss'))
     ? ' ' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
     : '';
+$refresh   = "&nbsp" . Ajax::button('?page=stats&action=refresh_skipped' . $user_str, 'refresh', T_('Refresh'), 'refresh_skipped', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path();
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
+UI::show_box_top(T_('Recently Skipped') . $rss_link . $refresh, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">

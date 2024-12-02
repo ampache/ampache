@@ -172,11 +172,10 @@ if ($current_list) {
         <?php Ui::show_box_bottom();
     }
 }
-$ajax_page  = 'stats';
-$limit      = AmpConfig::get('popular_threshold', 10);
-$no_refresh = true;
-$user       = $client;
-$user_only  = true;
+$ajax_page = 'stats';
+$limit     = AmpConfig::get('popular_threshold', 10);
+$user      = $client;
+$user_only = true;
 if (AmpConfig::get('home_recently_played_all')) {
     $data = Stats::get_recently_played($client->getId(), 'stream', null, $user_only);
     require_once Ui::find_template('show_recently_played_all.inc.php');

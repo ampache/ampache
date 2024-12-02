@@ -45,15 +45,10 @@ $user_str  = (isset($user_only) && $user_only)
 $rss_link  = AmpConfig::get('use_rss')
     ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
     : '';
-$refresh_str = (isset($no_refresh))
-    ? '&no_refresh=1'
-    : '';
-$refresh   = (isset($no_refresh))
-    ? ""
-    : "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
-$web_path  = AmpConfig::get_web_path();
-$is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-$showAlbum = AmpConfig::get('album_group');
+$refresh_str = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
+$web_path    = AmpConfig::get_web_path();
+$is_admin    = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
+$showAlbum   = AmpConfig::get('album_group');
 UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
