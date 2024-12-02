@@ -39,7 +39,12 @@ use Ampache\Repository\Model\User;
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$rss_link  = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
+$user_str  = (isset($user_only) && $user_only)
+    ? '&user_only=1'
+    : '';
+$rss_link  = AmpConfig::get('use_rss')
+    ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
+    : '';
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
@@ -158,7 +163,7 @@ foreach ($data as $row) {
                     <?php
                     } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'] . $user_str, 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
