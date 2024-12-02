@@ -194,7 +194,7 @@ foreach ($data as $row) {
 <div id="recent_more">
     <?php
 $user_id_a = '';
-if (!empty($user_id)) {
+if ($user_id > 0) {
     $user_id_a = "&user_id=" . scrub_out($user_id);
 } ?>
     <a href="<?php echo $web_path; ?>/stats.php?action=recent_song<?php echo $user_id_a; ?>"><?php echo T_('More'); ?></a>
