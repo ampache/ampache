@@ -47,7 +47,7 @@ $rss_link  = AmpConfig::get('use_rss')
     : '';
 $refresh_str = (isset($no_refresh))
     ? '&no_refresh=1'
-    : ''; 
+    : '';
 $refresh   = (isset($no_refresh))
     ? ""
     : "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
