@@ -11,6 +11,7 @@
 * Don't try to insert localplay preferences if missing (You enable/disable these on demand)
 * HTML alignment of 'Post Shout' on the artist page
 * Show albums with 0 disks correctly
+* Sorting by `total_count` for PodcastEpisode and Podcast browses
 
 ## Ampache 6.6.4
 

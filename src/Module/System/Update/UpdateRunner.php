@@ -86,6 +86,24 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 710006) {
+            // Migration\V7\Migration710006
+            if (
+                !Preference::delete('external_links_discogs') ||
+                !Preference::delete('browse_song_grid_view') ||
+                !Preference::delete('browse_album_grid_view') ||
+                !Preference::delete('browse_album_disk_grid_view') ||
+                !Preference::delete('browse_artist_grid_view') ||
+                !Preference::delete('browse_live_stream_grid_view') ||
+                !Preference::delete('browse_playlist_grid_view') ||
+                !Preference::delete('browse_video_grid_view') ||
+                !Preference::delete('browse_podcast_grid_view') ||
+                !Preference::delete('browse_podcast_episode_grid_view')
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 710005) {
             // Migration\V7\Migration710005
             Dba::write("ALTER TABLE `song` DROP KEY `album_disk_IDX`;");
