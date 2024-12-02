@@ -221,6 +221,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results['browse_filters'] = ob_get_clean();
                 break;
             case 'options':
+                $filter = false;
                 $option = $_REQUEST['option'] ?? '';
                 $value  = $_REQUEST['value'] ?? '';
                 switch ($option) {
@@ -238,6 +239,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $browse->set_start(0);
                         if (!$value) {
                             $browse->set_filter('regex_not_match', '');
+                            $filter = true;
                         }
 
                         break;
@@ -276,8 +278,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         break;
                 }
 
+                // when you filter the results you need the new objects
+                $object_ids = ($filter)
+                    ? $browse->get_objects()
+                    : [];
+
                 ob_start();
-                $browse->show_objects([], $argument, true);
+                $browse->show_objects($object_ids, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':
