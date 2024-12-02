@@ -572,10 +572,10 @@ class Catalog_local extends Catalog
         }
 
         $time_diff = time() - $start_time;
-        $rate      = number_format(($time_diff > 0)
-            ? $this->count / $time_diff
-            : 0, 2);
-        if ($rate < 1) {
+        $rate      = ($time_diff > 0)
+            ? number_format($this->count / $time_diff)
+            : '0';
+        if (((float)$rate) < 1) {
             $rate = T_('N/A');
         }
 
