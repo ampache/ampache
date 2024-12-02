@@ -843,12 +843,9 @@ class Browse extends Query
      */
     public function get_css_class(): string
     {
-        $css = '';
-        if ($this->is_grid_view()) {
-            $css = 'gridview';
-        }
-
-        return $css;
+        return ($this->is_grid_view())
+            ? 'gridview'
+            : '';
     }
 
     /**
