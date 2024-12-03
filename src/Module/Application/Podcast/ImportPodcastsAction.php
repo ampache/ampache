@@ -148,7 +148,7 @@ final class ImportPodcastsAction implements ApplicationActionInterface
         }
 
         if (!in_array($file->getClientMediaType(), self::EXPECTED_MIME_TYPES, true)) {
-            AmpError::add('import_file', T_('File-type not recognized'));
+            AmpError::add('import_file', T_('File-type not recognized') . ' ' . $file->getClientMediaType());
 
             return 0;
         }

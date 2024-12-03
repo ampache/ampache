@@ -42,9 +42,12 @@ use Ampache\Repository\Model\Video;
 
 $ajax_page = $ajax_page ?? 'index';
 $user_id   = $user_id ?? -1;
-$refresh   = (isset($no_refresh))
-    ? ""
-    : "&nbsp" . Ajax::button('?page=index&action=refresh_index', 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
+$user_only = (isset($user_only) && $user_only);
+$show_user = (!$user_only && $user_id > 0);
+$user_str  = ($user_only)
+    ? '&user_only=1'
+    : '';
+$refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_str, 'refresh', T_('Refresh'), 'refresh_index', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path('/client');
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
@@ -58,7 +61,7 @@ UI::show_box_top(T_('Recently Played') . $refresh, 'box_recently_played'); ?>
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
@@ -147,7 +150,7 @@ foreach ($data as $row) {
                 <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
                 <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
                 <td class="cel_year"><?php echo $media->getYear(); ?></td>
-                <?php if ($user_id > 0) { ?>
+                <?php if ($show_user) { ?>
                     <td class="cel_username">
                         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $row_user->id; ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
@@ -163,7 +166,7 @@ foreach ($data as $row) {
                     <?php
                     } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'], 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_play&activity_id=' . $row['activity_id'] . $user_str, 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
@@ -185,7 +188,7 @@ foreach ($data as $row) {
         <th class="cel_artist"><?php echo T_('Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>

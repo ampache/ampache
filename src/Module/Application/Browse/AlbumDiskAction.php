@@ -69,7 +69,7 @@ final class AlbumDiskAction implements ApplicationActionInterface
         // Browser is able to save page on current session. Only applied to main menus.
         $browse->set_update_session(true);
 
-        $year_sort = $this->configContainer->get('use_original_year') ? "original_year" : "year";
+        $year_sort = ($this->configContainer->get('use_original_year')) ? "original_year" : "year";
         $sort_type = $this->configContainer->get('album_sort');
         switch ($sort_type) {
             case 'name_asc':

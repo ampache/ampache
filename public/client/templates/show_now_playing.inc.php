@@ -40,7 +40,7 @@ use Ampache\Repository\Model\Video;
 /** @var list<array{media: Media, client: User, agent: string,}> $results */
 
 if (count($results)) {
-    $rss_link = AmpConfig::get('use_rss') ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::NOW_PLAYING) : '';
+    $rss_link = (AmpConfig::get('use_rss')) ? '&nbsp' . Ui::getRssLink(RssFeedTypeEnum::NOW_PLAYING) : '';
     $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
     Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
 

@@ -39,10 +39,18 @@ use Ampache\Repository\Model\User;
 
 $ajax_page = $ajax_page ?? 'stats';
 $user_id   = $user_id ?? -1;
-$link      = AmpConfig::get('use_rss') ? ' ' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user) : '';
+$user_only = (isset($user_only) && $user_only);
+$show_user = (!$user_only && $user_id > 0);
+$user_str  = ($user_only)
+    ? '&user_only=1'
+    : '';
+$rss_link  = (AmpConfig::get('use_rss'))
+    ? ' ' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
+    : '';
+$refresh   = "&nbsp" . Ajax::button('?page=stats&action=refresh_skipped' . $user_str, 'refresh', T_('Refresh'), 'refresh_skipped', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path('/client');
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
+UI::show_box_top(T_('Recently Skipped') . $rss_link . $refresh, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">
@@ -52,7 +60,7 @@ UI::show_box_top(T_('Recently Skipped') . $link, 'box box_recently_skipped'); ?>
         <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastplayed"><?php echo T_('Last Played'); ?></th>
@@ -134,7 +142,7 @@ foreach ($data as $row) {
                 <td class="cel_artist"><?php echo $song->get_f_artist_link(); ?></td>
                 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
                 <td class="cel_year"><?php echo $song->year; ?></td>
-                <?php if ($user_id > 0) { ?>
+                <?php if ($show_user) { ?>
                     <td class="cel_username">
                         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo scrub_out((string)$row_user->id); ?>">
                             <?php echo scrub_out($row_user->fullname); ?>
@@ -150,7 +158,7 @@ foreach ($data as $row) {
                     <?php
                     } ?>
                     <td class="cel_delete">
-                        <?php echo Ajax::button('?page=stats&action=delete_skip&activity_id=' . $row['activity_id'], 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
+                        <?php echo Ajax::button('?page=stats&action=delete_skip&activity_id=' . $row['activity_id'] . $user_str, 'close', T_('Delete'), 'activity_remove_' . $row['activity_id']); ?>
                     </td>
                 <?php } ?>
             </tr>
@@ -172,7 +180,7 @@ foreach ($data as $row) {
         <th class="cel_artist"><?php echo T_('Song Artist'); ?></th>
         <th class="cel_album"><?php echo T_('Album'); ?></th>
         <th class="cel_year"><?php echo T_('Year'); ?></th>
-        <?php if ($user_id > 0) { ?>
+        <?php if ($show_user) { ?>
             <th class="cel_username"><?php echo T_('Username'); ?></th>
         <?php } ?>
         <th class="cel_lastskipped"><?php echo T_('Last Played'); ?></th>

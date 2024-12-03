@@ -36,7 +36,7 @@ use Ampache\Repository\VideoRepositoryInterface;
 global $dic;
 
 // POST = clicked on Search, REQUEST = coming from a link
-$data = !empty($_POST)
+$data = (!empty($_POST))
     ? $_POST
     : $_REQUEST;
 

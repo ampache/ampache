@@ -634,7 +634,7 @@ class User extends database_object
     public function update_website($new_website): void
     {
         $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
-        $new_website = is_string($new_website)
+        $new_website = (is_string($new_website))
             ? rtrim((string)$new_website, "/")
             : null;
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";

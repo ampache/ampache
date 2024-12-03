@@ -703,7 +703,9 @@ class Video extends database_object implements
     public static function update_video($video_id, Video $new_video): void
     {
         $update_time  = time();
-        $release_date = is_numeric($new_video->release_date) ? $new_video->release_date : null;
+        $release_date = (is_numeric($new_video->release_date))
+            ? $new_video->release_date
+            : null;
 
         $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
 

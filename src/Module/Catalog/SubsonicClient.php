@@ -248,7 +248,9 @@ class SubsonicClient
      */
     public function __call($action, $arguments)
     {
-        $object = count($arguments) ? (array)$arguments[0] : [];
+        $object = (count($arguments))
+            ? (array)$arguments[0]
+            : [];
 
         return $this->_querySubsonic($action, $object);
     }

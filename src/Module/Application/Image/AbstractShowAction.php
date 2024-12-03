@@ -162,8 +162,12 @@ abstract readonly class AbstractShowAction implements ApplicationActionInterface
                     $etag .= '-' . $thumb;
                 }
 
-                $mime  = array_key_exists('thumb_mime', $thumb_data) ? $thumb_data['thumb_mime'] : $art->raw_mime;
-                $image = array_key_exists('thumb', $thumb_data) ? $thumb_data['thumb'] : $art->raw;
+                $mime  = (array_key_exists('thumb_mime', $thumb_data))
+                    ? $thumb_data['thumb_mime']
+                    : $art->raw_mime;
+                $image = (array_key_exists('thumb', $thumb_data))
+                    ? $thumb_data['thumb']
+                    : $art->raw;
             }
         }
 

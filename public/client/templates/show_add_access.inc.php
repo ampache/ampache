@@ -37,7 +37,7 @@ $apirpc       = T_('API/RPC');
 $localnetwork = T_('Local Network Definition');
 $streamaccess = T_('Stream Access');
 $all          = T_('All');
-$current_ip   = !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
+$current_ip   = (!filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP))
     ? ''
     : (string)filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP); ?>
 <form name="update_access" method="post" enctype="multipart/form-data" action="<?php echo AmpConfig::get_web_path('/admin'); ?>/access.php?action=add_host">

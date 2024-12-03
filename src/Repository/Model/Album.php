@@ -321,14 +321,16 @@ class Album extends database_object implements library_item, CatalogItemInterfac
         $album_artist   = (int)$album_artist;
         $album_artist   = ($album_artist < 1) ? null : $album_artist;
 
-        $mbid           = empty($mbid) ? null : $mbid;
-        $mbid_group     = empty($mbid_group) ? null : $mbid_group;
-        $release_type   = empty($release_type) ? null : $release_type;
-        $release_status = empty($release_status) ? null : $release_status;
-        $original_year  = ((int)substr((string)$original_year, 0, 4) < 1) ? null : substr((string)$original_year, 0, 4);
-        $barcode        = empty($barcode) ? null : $barcode;
-        $catalog_number = empty($catalog_number) ? null : $catalog_number;
-        $version        = empty($version) ? null : $version;
+        $mbid           = (empty($mbid)) ? null : $mbid;
+        $mbid_group     = (empty($mbid_group)) ? null : $mbid_group;
+        $release_type   = (empty($release_type)) ? null : $release_type;
+        $release_status = (empty($release_status)) ? null : $release_status;
+        $original_year  = ((int)substr((string)$original_year, 0, 4) < 1)
+            ? null
+            : substr((string)$original_year, 0, 4);
+        $barcode        = (empty($barcode)) ? null : $barcode;
+        $catalog_number = (empty($catalog_number)) ? null : $catalog_number;
+        $version        = (empty($version)) ? null : $version;
 
         if (!$name) {
             $name          = T_('Unknown (Orphaned)');

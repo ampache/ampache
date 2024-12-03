@@ -1937,7 +1937,9 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = isset($input['time']) ? (int)(((int)$input['time']) / 1000) : time();
+                $time      = (isset($input['time']))
+                    ? (int)(((int)$input['time']) / 1000)
+                    : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;

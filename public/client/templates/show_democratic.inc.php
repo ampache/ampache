@@ -35,7 +35,7 @@ use Ampache\Repository\Model\Democratic;
 /** @var Democratic $democratic */
 
 /* HINT: Democratic Playlist Name */
-$string = $democratic->is_enabled()
+$string = ($democratic->is_enabled())
     ? sprintf(T_('%s Playlist'), scrub_out($democratic->name))
     : T_('Democratic Playlist');
 Ui::show_box_top($string, 'info-box'); ?>

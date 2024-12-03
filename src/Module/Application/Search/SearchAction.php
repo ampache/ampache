@@ -68,7 +68,7 @@ final class SearchAction implements ApplicationActionInterface
         $searchType = $this->requestParser->getFromRequest('type');
         $rule_1     = $this->requestParser->getFromRequest('rule_1');
         if (empty($searchType)) {
-            $searchType = in_array($rule_1, Search::VALID_TYPES)
+            $searchType = (in_array($rule_1, Search::VALID_TYPES))
                 ? str_replace('_name', ' ', $rule_1)
                 : 'song';
             // set the search type when you don't set one.
