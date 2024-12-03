@@ -117,6 +117,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | myplayedartist           | Played by Me (Artist)                   | boolean           |                              song, album                              |
 | album_count              | Album Count                             | numeric           |                                artist                                 |
 | song_count               | Song Count                              | numeric           |                             album, artist                             |
+| disk_count               | Song Count                              | numeric           |                                album                                  |
 | time                     | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | genre                    | Genre                                   | tags              |                          song, album, artist                          |
 | tag                      | (*Alias of genre)                       |                   |                                                                       |
@@ -133,6 +134,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | other_user_artist        | Another User (Artist)                   | user_numeric      |                                 song                                  |
 | label                    | Label                                   | text              |                                 song                                  |
 | license                  | Music License                           | boolean_numeric   |                                 song                                  |
+| no_license               | No License                              | is_true           |                                 song                                  |
 | playlist                 | Playlist                                | boolean_numeric   |                          song, album, artist                          |
 | smartplaylist            | Smart Playlist                          | boolean_subsearch |                              song, album                              |
 | playlist_name            | Playlist Name                           | text              |                          song, album, artist                          |
