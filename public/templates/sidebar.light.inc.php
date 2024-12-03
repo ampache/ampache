@@ -52,7 +52,7 @@ $allow_upload = $allow_upload ?? $access25 && Upload::can_upload($current_user);
 $albumString  = (AmpConfig::get('album_group'))
     ? 'album'
     : 'album_disk';
-$sidebarLightString = AmpConfig::get('sidebar_light') && AmpConfig::get('sidebar_hide_switcher')
+$sidebarLightString = (AmpConfig::get('sidebar_light') && AmpConfig::get('sidebar_hide_switcher'))
     ? 'sidebar-light-default'
     : 'sidebar-light'; ?>
 <ul id="<?php echo $sidebarLightString; ?>">

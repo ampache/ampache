@@ -121,7 +121,10 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
      */
     protected function headphones_call($command, $params): string
     {
-        if (empty($this->api_url) || empty($this->api_key)) {
+        if (
+            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0')) ||
+            (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
+        ) {
             debug_event(self::class, 'Headphones url or api key missing', 3);
 
             return '';

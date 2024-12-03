@@ -242,7 +242,7 @@ class Browse extends Query
                 $start = (int)$_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
                     $set_page    = floor($start / $this->get_offset());
-                    $total_pages = $this->get_total() > $this->get_offset()
+                    $total_pages = ($this->get_total() > $this->get_offset())
                         ? ceil($this->get_total() / $this->get_offset())
                         : 0;
 

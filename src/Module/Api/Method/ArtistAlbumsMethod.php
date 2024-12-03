@@ -67,7 +67,7 @@ final class ArtistAlbumsMethod
 
         $browse = Api::getBrowse($user);
         $browse->set_type('album');
-        $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+        $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
         $sort_type     = AmpConfig::get('album_sort');
         switch ($sort_type) {
             case 'name_asc':

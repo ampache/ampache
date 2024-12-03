@@ -66,7 +66,7 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                             $longitude = (float)$_REQUEST['longitude'];
                             // First try to get from local cache (avoid external api requests)
                             $name = Stats::get_cached_place_name($latitude, $longitude);
-                            if (empty($name)) {
+                            if ($name === null || $name === '' || $name === '0') {
                                 foreach ($this->pluginRetriever->retrieveByType(PluginTypeEnum::GEO_LOCATION, $user) as $plugin) {
                                     $name = $plugin->_plugin->get_location_name($latitude, $longitude);
                                     if (!empty($name)) {
@@ -104,13 +104,14 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id;
-                $ajax_page = 'stats';
+                $user_id    = $user->id;
+                $user_only  = isset($_REQUEST['user_only']);
+                $ajax_page  = 'stats';
                 if (AmpConfig::get('home_recently_played_all')) {
-                    $data = Stats::get_recently_played($user_id);
+                    $data = Stats::get_recently_played($user_id, 'stream', null, $user_only);
                     require_once Ui::find_template('show_recently_played_all.inc.php');
                 } else {
-                    $data = Stats::get_recently_played($user_id, 'stream', 'song');
+                    $data = Stats::get_recently_played($user_id, 'stream', 'song', $user_only);
                     Song::build_cache(array_keys($data));
                     require Ui::find_template('show_recently_played.inc.php');
                 }
@@ -130,9 +131,23 @@ final readonly class StatsAjaxHandler implements AjaxHandlerInterface
                 show_now_playing();
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
-                $user_id   = $user->id;
-                $data      = Stats::get_recently_played($user_id, 'skip', 'song');
-                $ajax_page = 'stats';
+                $user_id    = $user->id;
+                $user_only  = isset($_REQUEST['user_only']);
+                $data       = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
+                $ajax_page  = 'stats';
+                Song::build_cache(array_keys($data));
+                require_once Ui::find_template('show_recently_skipped.inc.php');
+                $results['recently_skipped'] = ob_get_clean();
+                break;
+            case 'refresh_skipped':
+                ob_start();
+                show_now_playing();
+                $results['now_playing'] = ob_get_clean();
+                ob_start();
+                $user_id    = $user->id;
+                $user_only  = isset($_REQUEST['user_only']);
+                $data       = Stats::get_recently_played($user_id, 'skip', 'song', $user_only);
+                $ajax_page  = 'stats';
                 Song::build_cache(array_keys($data));
                 require_once Ui::find_template('show_recently_skipped.inc.php');
                 $results['recently_skipped'] = ob_get_clean();

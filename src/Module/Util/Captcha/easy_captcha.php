@@ -275,7 +275,7 @@ class easy_captcha
         $onClick    = self::CAPTCHA_ONCLICK_HIRES ? 'onClick="this.src += this.src.match(/hires/) ? \'.\' : \'hires=1&\';"' : 'onClick="this.src += \'.\';"';
         $onKeyDown  = self::CAPTCHA_AJAX ? 'onKeyUp="captcha_check_solution()"' : '';
         $javascript = self::CAPTCHA_AJAX ? '<script src="' . $base_url . 'base.js&captcha_new_urls=' . $new_urls . '" id="captcha_ajax_1"></script>' : '';
-        $error      = function_exists('imagecreatetruecolor') ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
+        $error      = (function_exists('imagecreatetruecolor')) ? '' : '<div class="error">PHP setup lacks GD. No image drawing possible</div>';
 
         // assemble
         $HTML = //'<script>if (document.getElementById("captcha")) { document.getElementById("captcha").parentNode.removeChild(document.getElementById("captcha")); }</script>' .   // workaround for double instantiations

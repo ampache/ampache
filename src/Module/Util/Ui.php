@@ -1296,7 +1296,7 @@ class Ui implements UiInterface
                 $ids             = explode(',', $value);
                 $options         = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
-                    $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
+                    $selected  = (in_array($propertyId, $ids)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
@@ -1310,7 +1310,7 @@ class Ui implements UiInterface
                     : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
-                        $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
+                        $selected  = (in_array($list_id, $ids)) ? ' selected="selected"' : '';
                         $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
                     }
                     echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
