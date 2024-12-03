@@ -337,7 +337,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0';
+        $s_ip  = (string)(isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0');
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];

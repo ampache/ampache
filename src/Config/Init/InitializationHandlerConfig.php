@@ -93,7 +93,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 ? ':' . $results['http_port']
                 : '';
 
-            $results['raw_web_path'] = empty($results['web_path']) ? '/' : $results['web_path'];
+            $results['raw_web_path'] = (empty($results['web_path']))
+                ? '/'
+                : $results['web_path'];
             $results['web_path']     = sprintf(
                 '%s://%s%s%s',
                 $protocol,

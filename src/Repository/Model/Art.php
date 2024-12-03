@@ -591,7 +591,7 @@ class Art extends database_object
         }
 
         // Correctly detect the slash we need to use here
-        $slash_type = str_contains((string) $path, '/') ? '/' : '\\';
+        $slash_type = (str_contains((string) $path, '/')) ? '/' : '\\';
 
         $path .= $slash_type . $type;
         if ($autocreate && !Core::is_readable($path)) {
