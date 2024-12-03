@@ -36,6 +36,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Allow editing song `disk`
 * Define missing abstract method for beets catalog
 * Allow a wild (`.*`) regex filter on Alphabet filters
+* Allow refresh on user recently played and skipped pages
 * Browse
   * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
   * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
@@ -118,12 +119,16 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Numerous filtering problems with `catalog_filter` enabled
 * Don't overwrite browse data before saving a `tmp_browse`
 * Update `album_disk` on song insert or update
+* User recent and skipped pages may refresh without filtering
+* Hide username on user recent and skipped refresh'
+* Art mime check was inserting empty values
 * Browse
   * Missing `total_count` sort types for Podcast and PodCastEpisode browse
   * Fixes for displaying browses after filtering
   * Don't show Alphabet filter list when the browse isn't filtered
   * Don't overwrite cookie values when using Ajax actions
-  * Send the object type when filtering a browse in case it's not saved 
+  * Send the object type when filtering a browse in case it's not saved
+  * Disabling Alphabet list would keep the filters active
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
@@ -1554,7 +1559,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 ### Added
 
 * Put next (n) and back (b) shortcuts in the web_player
-* Allow _ and % wildcards for hiding playlists (api_hidden_playlists)
+* Allow `_` and `%` wildcards for hiding playlists (api_hidden_playlists)
 * Missing translations on CLI strings
 * Config version 62
   * Added webplayer_debug (was previously undocumented/hidden)
