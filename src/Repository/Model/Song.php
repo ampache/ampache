@@ -326,8 +326,8 @@ class Song extends database_object implements
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
         $lyrics           = $results['lyrics'] ?? null;
         $user_upload      = $results['user_upload'] ?? null;
-        $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
-        $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        $composer         = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
+        $label            = (isset($results['publisher'])) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -361,9 +361,9 @@ class Song extends database_object implements
             $license_id = (int)$results['license'];
         }
 
-        $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
+        $language              = (isset($results['language'])) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?? null;
-        $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
+        $release_type          = (isset($results['release_type'])) ? Catalog::check_length($results['release_type'], 32) : null;
         $release_status        = $results['release_status'] ?? null;
         $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
         $replaygain_track_peak = $results['replaygain_track_peak'] ?? null;
@@ -373,7 +373,7 @@ class Song extends database_object implements
         $r128_album_gain       = $results['r128_album_gain'] ?? null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
         $barcode               = (isset($results['barcode'])) ? Catalog::check_length($results['barcode'], 64) : null;
-        $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
+        $catalog_number        = (isset($results['catalog_number'])) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $version               = (isset($results['version'])) ? Catalog::check_length($results['version'], 64) : null;
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {

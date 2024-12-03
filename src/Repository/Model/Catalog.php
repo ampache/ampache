@@ -2583,7 +2583,7 @@ abstract class Catalog extends database_object
             $new_song->license = null;
         }
 
-        $new_song->label = isset($results['publisher']) ? self::check_length($results['publisher'], 128) : null;
+        $new_song->label = (isset($results['publisher'])) ? self::check_length($results['publisher'], 128) : null;
         if ($song->label !== null && $song->label !== '' && $song->label !== '0' && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', (string) $new_song->label)) as $label_name) {

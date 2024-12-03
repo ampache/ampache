@@ -232,6 +232,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         // delete old album_disks that shouldn't exist
         $this->connection->query('DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)');
+
         $result = $this->connection->query('SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);');
         // left over garbage
         while ($albumDiskId = $result->fetchColumn()) {
@@ -256,7 +257,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
 
-        $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $original_year = (AmpConfig::get('use_original_year'))
+            ? "IFNULL(`album`.`original_year`, `album`.`year`)"
+            : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         $showAlbum     = AmpConfig::get('album_group');
         $sql_sort      = match ($sort_type) {
@@ -316,7 +319,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
 
-        $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $original_year = (AmpConfig::get('use_original_year'))
+            ? "IFNULL(`album`.`original_year`, `album`.`year`)"
+            : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         $sql_sort      = match ($sort_type) {
             'name_asc' => "`album`.`name` ASC",

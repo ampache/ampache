@@ -96,7 +96,9 @@ final class AccessListManager implements AccessListManagerInterface
     ): void {
         $startIp = (string)@inet_pton($startIp);
         $endIp   = (string)@inet_pton($endIp);
-        $type    = in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST) ? $type : AccessTypeEnum::STREAM;
+        $type    = (in_array($type, AccessTypeEnum::CONFIGURABLE_TYPE_LIST))
+            ? $type
+            : AccessTypeEnum::STREAM;
 
         $this->verifyRange($startIp, $endIp);
 

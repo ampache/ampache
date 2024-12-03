@@ -577,7 +577,7 @@ class AmpacheVlc extends localplay_controller
                 ENT_NOQUOTES
             );
             $url_data = $this->parse_url($ampurl);
-            $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
+            $oid      = (array_key_exists('oid', $url_data)) ? $url_data['oid'] : '';
 
             foreach ($listtracks as $track) {
                 if ($track['oid'] == $oid) {

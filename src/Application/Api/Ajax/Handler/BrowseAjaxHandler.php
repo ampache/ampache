@@ -119,7 +119,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $filter = true;
                 } else {
                     $_SESSION['catalog'] = null;
-                    if (!empty($browse->get_filter('catalog'))) {
+                    if ($browse->get_filter('catalog') !== null && $browse->get_filter('catalog') !== '' && $browse->get_filter('catalog') !== '0') {
                         $browse->set_filter('catalog', null);
                         $filter = true;
                     }
@@ -252,6 +252,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         if (in_array($object_type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
                             $browse->set_type($object_type);
                         }
+
                         $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;

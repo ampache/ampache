@@ -56,7 +56,9 @@ final class ShowDeleteCatalogAction implements ApplicationActionInterface
         if ($gatekeeper->mayAccess(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER) === false) {
             throw new AccessDeniedException();
         }
-        $catalogs = isset($_REQUEST['catalogs']) ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT) : [];
+        $catalogs = (isset($_REQUEST['catalogs']))
+            ? filter_var_array($_REQUEST['catalogs'], FILTER_SANITIZE_NUMBER_INT)
+            : [];
 
         $this->ui->showHeader();
 

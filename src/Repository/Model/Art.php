@@ -388,7 +388,9 @@ class Art extends database_object
         }
 
         // Default to image/jpeg if they don't pass anything
-        $mime = empty($mime) ? $mime : 'image/jpeg';
+        $mime = (empty($mime))
+            ? 'image/jpeg'
+            : $mime;
         // Blow it away!
         $this->reset();
         $picturetypeid = ($this->type == 'album') ? 3 : 8;
@@ -589,7 +591,7 @@ class Art extends database_object
         }
 
         // Correctly detect the slash we need to use here
-        $slash_type = str_contains((string) $path, '/') ? '/' : '\\';
+        $slash_type = (str_contains((string) $path, '/')) ? '/' : '\\';
 
         $path .= $slash_type . $type;
         if ($autocreate && !Core::is_readable($path)) {

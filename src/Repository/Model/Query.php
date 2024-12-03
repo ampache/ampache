@@ -354,8 +354,9 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
+     * @return string|int|null
      */
-    public function get_filter(string $key): ?string
+    public function get_filter(string $key)
     {
         return $this->_state['filter'][$key] ?? null;
     }

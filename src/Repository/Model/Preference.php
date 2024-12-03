@@ -442,7 +442,7 @@ class Preference extends database_object
     public static function update_level($preference, $level): bool
     {
         // First prepare
-        $preference_id = is_numeric($preference)
+        $preference_id = (is_numeric($preference))
             ? $preference
             : self::id_from_name($preference);
 
