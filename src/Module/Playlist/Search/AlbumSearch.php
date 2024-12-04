@@ -102,7 +102,7 @@ final class AlbumSearch implements SearchInterface
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]          = "`average_rating`.`avg` $operator_sql ?";
+                    $where[]          = "IFNULL(`average_rating`.`avg`, 0) $operator_sql ?";
                     $parameters[]     = $input;
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='album' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `album`.`id` ";
                     break;
