@@ -55,9 +55,10 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
                 'title' => (string) $artist->get_fullname(),
                 'link' => $artist->get_link(),
                 'description' => (string) $artist->summary,
-                'image' => (string)Art::url($artist->id, 'artist', null, 2),
                 'comments' => '',
-                'pubDate' => ''
+                'pubDate' => '',
+                'guid' => 'artist-' . $artist->id,
+                'image' => (string)Art::url($artist->id, 'artist', null, 2),
             ];
         }
     }

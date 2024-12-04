@@ -48,6 +48,7 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
      *  description: string,
      *  comments: string,
      *  pubDate: string,
+     *  guid: string,
      *  image?: string
      * }>
      */
