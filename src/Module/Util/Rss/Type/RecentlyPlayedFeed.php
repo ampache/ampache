@@ -43,14 +43,6 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
     }
 
     /**
-     * Returns a link to the feed url
-     */
-    public function getRssLink(): string
-    {
-        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
-    }
-
-    /**
      * @return Generator<array{
      *  title: string,
      *  link: string,

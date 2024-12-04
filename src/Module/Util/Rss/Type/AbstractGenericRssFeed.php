@@ -39,7 +39,6 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
         $tal->set('ITEMS', $this->getItems());
         $tal->set('LINK', AmpConfig::get_web_path());
         $tal->set('PUBDATE', $this->getPubDate());
-        $tal->set('RSSLINK', $this->getRssLink());
     }
 
     /**
@@ -65,6 +64,4 @@ abstract readonly class AbstractGenericRssFeed implements FeedTypeInterface
     }
 
     abstract protected function getTitle(): string;
-
-    abstract protected function getRssLink(): string;
 }

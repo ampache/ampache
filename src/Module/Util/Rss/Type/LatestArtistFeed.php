@@ -43,14 +43,6 @@ final readonly class LatestArtistFeed extends AbstractGenericRssFeed
         return T_('Recently Artists');
     }
 
-    /**
-     * Returns a link to the feed url
-     */
-    public function getRssLink(): string
-    {
-        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
-    }
-
     protected function getItems(): Generator
     {
         $ids = Stats::get_newest('artist', 10, 0, 0, $this->user);
