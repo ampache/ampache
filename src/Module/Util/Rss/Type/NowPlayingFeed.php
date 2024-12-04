@@ -87,7 +87,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'title' => str_replace(' - - ', ' - ', $title),
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
-                'comments' => $client->get_fullname() . ' - ' . $element['agent'],
+                'comments' => $client->get_link(),
                 'pubDate' => date("r", (int)$element['expire']),
                 'guid' => $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
             ];
