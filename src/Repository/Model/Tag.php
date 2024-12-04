@@ -692,17 +692,19 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = [];
         if ($type == 'tag_hidden') {
-            $sql = "SELECT `tag`.`id` AS `id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true ";
+            $is_hidden = 1;
+            $sql       = "SELECT `tag`.`id` AS `id`, `tag`.`name` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
-            $type_sql = (empty($type))
+            $is_hidden = 0;
+            $type_sql  = (empty($type))
                 ? ""
                 : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE', $type_sql) . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
-                : sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
+                ? sprintf('SELECT `tag`.`id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE', $type_sql) . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
+                : sprintf('SELECT `tag`.`id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
 
-            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
         }
 
         $order = "`" . $order . "`";
@@ -723,7 +725,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $results[$row['id']] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
+                'is_hidden' => $is_hidden,
                 'count' => $row['count'] ?? 0
             ];
         }
