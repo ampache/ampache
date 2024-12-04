@@ -3,6 +3,7 @@
     <channel>
         <title tal:content="TITLE">TITLE</title>
         <link tal:content="LINK">LINK</link>
+        <atom:link tal:attributes="href RSSLINK" rel="self" type="application/rss+xml" />
         <description tal:content="TITLE">TITLE</description>
         <pubDate tal:condition="PUBDATE | false" tal:content="PUBDATE">PUBDATE</pubDate>
         <item tal:repeat="item ITEMS">

@@ -44,6 +44,14 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
         return T_('Recent Shouts');
     }
 
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string
+    {
+        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
+    }
+
     protected function getItems(): Generator
     {
         $shouts = $this->shoutRepository->getTop(10);
