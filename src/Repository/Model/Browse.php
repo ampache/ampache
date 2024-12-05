@@ -551,7 +551,8 @@ class Browse extends Query
     }
 
     /**
-     * @param $argument
+     * show_next_link
+     * @param string|bool|array $argument
      */
     public function show_next_link($argument = null): void
     {
