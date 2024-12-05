@@ -48,15 +48,20 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
     {
         $results   = [];
         $action    = $this->requestParser->getFromRequest('action');
+        $type      = $this->requestParser->getFromRequest('type');
 
         // Switch on the actions
         switch ($action) {
             case 'get_tag_map':
-                $tags            = Tag::get_display(Tag::get_tags());
+                $tags = (in_array($type, ['album_disk_row', 'album_row', 'artist_row', 'song_row', 'video_row']))
+                    ? Tag::get_display(Tag::get_tags())
+                    : '';
                 $results['tags'] = $tags;
                 break;
             case 'get_labels':
-                $labels            = Label::get_display($this->labelRepository->getAll());
+                $labels = ($type == 'artist_row')
+                    ? Label::get_display($this->labelRepository->getAll())
+                    : '';
                 $results['labels'] = $labels;
                 break;
             case 'delete':

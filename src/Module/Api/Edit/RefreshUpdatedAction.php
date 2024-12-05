@@ -103,7 +103,8 @@ final class RefreshUpdatedAction extends AbstractEditAction
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         library_item $libitem,
-        int $object_id
+        int $object_id,
+        ?Browse $browse = null
     ): ?ResponseInterface {
         $show_ratings = User::is_registered() && AmpConfig::get('ratings');
         /**
@@ -216,7 +217,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_start();
 
                 $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
+                    'show_artist_row.inc.php',
                     [
                         'libitem' => $libitem,
                         'is_table' => true,
@@ -230,6 +231,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'cel_time' => 'cel_time',
                         'cel_counter' => 'cel_counter',
                         'cel_tags' => 'cel_tags',
+                        'browse' => $browse,
                     ]
                 );
 
@@ -242,7 +244,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_start();
 
                 $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
+                    'show_podcast_row.inc.php',
                     [
                         'libitem' => $libitem,
                         'is_mashup' => false,
@@ -253,6 +255,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'cel_cover' => 'cel_cover',
                         'cel_time' => 'cel_time',
                         'cel_counter' => 'cel_counter',
+                        'browse' => $browse,
                     ]
                 );
 
@@ -265,7 +268,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_start();
 
                 $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
+                    'show_podcast_episode_row.inc.php',
                     [
                         'libitem' => $libitem,
                         'is_mashup' => false,
@@ -276,6 +279,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'cel_cover' => 'cel_cover',
                         'cel_counter' => 'cel_counter',
                         'cel_time' => 'cel_time',
+                        'browse' => $browse,
                     ]
                 );
 
@@ -289,7 +293,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_start();
 
                 $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
+                    'show_video_row.inc.php',
                     [
                         'libitem' => $libitem,
                         'is_table' => true,
@@ -300,6 +304,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'cel_cover' => 'cel_cover',
                         'cel_counter' => 'cel_counter',
                         'cel_tags' => 'cel_tags',
+                        'browse' => $browse,
                     ]
                 );
 
@@ -311,7 +316,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                 ob_start();
 
                 $this->ui->show(
-                    'show_' . $object_type . '.inc.php',
+                    'show_live_stream_row.inc.php',
                     [
                         'libitem' => $libitem,
                         'is_table' => true,
@@ -319,6 +324,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'object_id' => $object_id,
                         'show_ratings' => $show_ratings,
                         'cel_cover' => 'cel_cover',
+                        'browse' => $browse,
                     ]
                 );
 
@@ -332,7 +338,6 @@ final class RefreshUpdatedAction extends AbstractEditAction
                  *
                  * broadcast_row
                  * label_row
-                 * live_stream_row
                  * pvmsg_row
                  * search_row
                  * share_row
@@ -350,6 +355,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
                         'object_type' => $object_type,
                         'object_id' => $object_id,
                         'show_ratings' => $show_ratings,
+                        'browse' => $browse,
                     ]
                 );
 

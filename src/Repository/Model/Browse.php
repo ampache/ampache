@@ -537,7 +537,7 @@ class Browse extends Query
                 echo ';</script>';
             }
         } elseif (!$this->is_use_pages()) {
-            $this->show_next_link($argument);
+            $this->show_next_link($argument_param);
         }
 
         // hide the filter box on some pages
@@ -551,9 +551,10 @@ class Browse extends Query
     }
 
     /**
-     * @param $argument
+     * show_next_link
+     * @param string $argument_param
      */
-    public function show_next_link($argument = null): void
+    public function show_next_link(string $argument_param = ''): void
     {
         // FIXME Can be removed if Browse gets instantiated by the factory
         global $dic;
@@ -563,7 +564,7 @@ class Browse extends Query
         $total       = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
         }
     }
 

@@ -123,8 +123,8 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         // Charset and gettext setup
-        $htmllang = $_REQUEST['htmllang'] ?? 'en_US';
         $charset  = $_REQUEST['charset'] ?? 'UTF-8';
+        $htmllang = $_REQUEST['htmllang'] ?? null;
 
         if (!$htmllang) {
             if ($_ENV['LANG']) {

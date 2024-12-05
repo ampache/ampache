@@ -36,7 +36,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var Playlist|null $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
@@ -48,7 +48,7 @@ use Ampache\Module\Util\Ui;
 
 // Don't show disabled medias to normal users
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
-    $thumb = ($browse->is_grid_view()) ? 11 : 3;
+    $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 3;
     $link  = (AmpConfig::get('extended_playlist_links', false) && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>
@@ -108,7 +108,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
         echo Share::display_ui($object_type, $libitem->getId(), false);
     }
-    if (isset($playlist) && $playlist->has_collaborate()) {
+    if (isset($browse) && isset($playlist) && $playlist->has_collaborate()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">
