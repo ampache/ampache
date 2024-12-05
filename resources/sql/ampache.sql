@@ -573,7 +573,7 @@ INSERT INTO `license` (`id`, `name`, `description`, `external_link`, `order`) VA
 (11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html', 11),
 (12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL', 12),
 (13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html', 13),
-(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14);
+(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14),
 (15, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/4.0/', 15),
 (16, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/4.0/', 16),
 (17, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/4.0/', 17),

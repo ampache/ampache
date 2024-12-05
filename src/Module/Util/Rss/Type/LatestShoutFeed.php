@@ -65,9 +65,10 @@ final readonly class LatestShoutFeed extends AbstractGenericRssFeed
                     'title' => sprintf(T_('%s on %s'), $user->getUsername(), $object->get_fullname()),
                     'link' => $object->get_link(),
                     'description' => $shout->getText(),
-                    'image' => (string) Art::url($shout->getObjectId(), $shout->getObjectType()->value, null, 2),
                     'comments' => '',
-                    'pubDate' => $shout->getDate()->format(DATE_ATOM)
+                    'pubDate' => $shout->getDate()->format(DATE_ATOM),
+                    'guid' => 'shout-' . $shout->getId(),
+                    'image' => (string) Art::url($shout->getObjectId(), $shout->getObjectType()->value, null, 2),
                 ];
             }
         }

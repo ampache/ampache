@@ -88,6 +88,31 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Returns the itunes category of the item
+     * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
+     */
+    public function getCategory(): string
+    {
+        return 'Music';
+    }
+
+    /**
+     * Returns a link to the item
+     */
+    public function getLink(): string
+    {
+        return $this->playable->get_link();
+    }
+
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string
+    {
+        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
+    }
+
+    /**
      * Returns `true` if an item-owner is set
      */
     public function hasOwner(): bool

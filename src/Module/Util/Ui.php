@@ -694,17 +694,16 @@ class Ui implements UiInterface
     }
 
     /**
-     * @param $type
+     * is_grid_view
      */
-    public static function is_grid_view($type): bool
+    public static function is_grid_view(string $type): bool
     {
-        $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
         if (isset($_COOKIE[$name])) {
-            $isgv = ($_COOKIE[$name] == 'true');
+            return ($_COOKIE[$name] == 'true');
         }
 
-        return $isgv;
+        return false;
     }
 
     /**
