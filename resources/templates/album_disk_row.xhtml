@@ -36,8 +36,8 @@
     <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure ALBUMDISK/getGenre">TAGS</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
         <div class="rating">
-            <span class="cel_rating" id="rating_${ALBUMDISK/getId}_album_disk" class="rating_${ALBUMDISK/getId}_album_disk" tal:content="structure ALBUMDISK/getRating">RATING</span>
-            <span class="cel_userflag" id="userflag_${ALBUMDISK/getId}_album_disk" class="userflag_${ALBUMDISK/getId}_album_disk" tal:content="structure ALBUMDISK/getUserFlags">USERFLAGS</span>
+            <span id="rating_${ALBUMDISK/getId}_album_disk" class="cel_rating rating_${ALBUMDISK/getId}_album_disk" tal:content="structure ALBUMDISK/getRating">RATING</span>
+            <span id="userflag_${ALBUMDISK/getId}_album_disk" class="cel_userflag userflag_${ALBUMDISK/getId}_album_disk" tal:content="structure ALBUMDISK/getUserFlags">USERFLAGS</span>
         </div>
     </td>
     <td class="cel_action">
