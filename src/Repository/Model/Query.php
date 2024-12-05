@@ -407,13 +407,13 @@ class Query
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use
      * that.
-     * @param array $objects
+     * @param array $object_ids
      */
-    public function get_total($objects = null): int
+    public function get_total($object_ids = null): int
     {
         // If they pass something then just return that
-        if (is_array($objects) && !$this->is_simple()) {
-            return count($objects);
+        if (is_array($object_ids) && !$this->is_simple()) {
+            return count($object_ids);
         }
 
         // See if we can find it in the cache
@@ -1313,17 +1313,17 @@ class Query
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
-            $objects = $this->get_saved();
+            $object_ids = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if ($objects === [] || !is_array($objects)) {
+            if ($object_ids === [] || !is_array($object_ids)) {
                 return false;
             }
 
             $type      = $this->get_type();
             $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
-            foreach ($objects as $object_id) {
+            foreach ($object_ids as $object_id) {
                 $object_id = Dba::escape($object_id);
                 $where_sql .= sprintf('\'%s\',', $object_id);
             }

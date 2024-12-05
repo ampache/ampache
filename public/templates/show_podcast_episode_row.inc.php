@@ -37,7 +37,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var bool $is_mashup */
 /** @var bool $is_table */
 /** @var bool $show_ratings */

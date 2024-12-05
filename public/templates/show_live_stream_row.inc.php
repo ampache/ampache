@@ -35,7 +35,7 @@ use Ampache\Module\Api\Ajax;
 use Ampache\Module\Util\Ui;
 
 /** @var Live_Stream $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var string $cel_cover */
 /** @var bool $show_ratings */
 

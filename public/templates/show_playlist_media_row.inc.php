@@ -36,7 +36,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\library_item $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var Playlist|null $playlist */
 /** @var int $playlist_track */
 /** @var int $search */
@@ -108,7 +108,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('share')) {
         echo Share::display_ui($object_type, $libitem->getId(), false);
     }
-    if (isset($playlist) && $playlist->has_collaborate()) {
+    if (isset($browse) && isset($playlist) && $playlist->has_collaborate()) {
         echo Ajax::button('?page=playlist&action=delete_track&playlist_id=' . $playlist->id . '&browse_id=' . $browse->getId() . '&track_id=' . $object['track_id'], 'close', T_('Delete'), 'track_del_' . $object['track_id']); ?>
     </td>
     <td class="cel_drag">

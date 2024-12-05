@@ -39,7 +39,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Video $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var bool $hide_genres */
 /** @var bool $show_ratings */
 /** @var string $cel_cover */
