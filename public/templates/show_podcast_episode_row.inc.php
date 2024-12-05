@@ -66,7 +66,7 @@ $web_path = AmpConfig::get_web_path();
 if ($is_mashup) {
     $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
+        <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 1;
     Art::display('podcast_episode', $libitem->id, $name, $thumb, $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
