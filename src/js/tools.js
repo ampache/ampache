@@ -252,7 +252,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
     parent.editType = edit_type;
     parent.editId = edit_id;
 
-    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map"), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels")).then(function( a1, a2 ) {
+    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map&type=" + edit_type), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels&type=" + edit_type)).then(function( a1, a2 ) {
 
         if(a1[2].status !== 200 || a2[2].status !== 200){
             displayNotification("Failed to open dialog", 5000);

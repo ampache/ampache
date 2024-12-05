@@ -8191,11 +8191,6 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:is_grid_view\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
@@ -9276,11 +9271,6 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has parameter \\$argument with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Browse.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has parameter \\$argument with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
@@ -10244,11 +10234,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"

@@ -85,6 +85,11 @@ class Upload
                     $options['license'] = Core::get_post('license');
                 }
 
+                // Require a license with the upload if it's enabled
+                if (AmpConfig::get('licensing') && !isset($options['license'])) {
+                    return self::rerror($targetfile);
+                }
+
                 if (Core::get_request('artist') !== '') {
                     $options['artist_id'] = (int)Core::get_request('artist');
                 }

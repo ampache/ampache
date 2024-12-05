@@ -136,7 +136,7 @@ final class ArtistSearch implements SearchInterface
                     break;
                 case 'rating':
                     // average ratings only
-                    $where[]          = "`average_rating`.`avg` $operator_sql ?";
+                    $where[]          = "IFNULL(`average_rating`.`avg`, 0) $operator_sql ?";
                     $parameters[]     = $input;
                     $table['average'] = "LEFT JOIN (SELECT `object_id`, ROUND(AVG(IFNULL(`rating`.`rating`,0))) AS `avg` FROM `rating` WHERE `rating`.`object_type`='artist' GROUP BY `object_id`) AS `average_rating` ON `average_rating`.`object_id` = `artist`.`id` ";
                     break;
@@ -189,15 +189,8 @@ final class ArtistSearch implements SearchInterface
                         $input        = 1;
                         $operator_sql = '>=';
                     }
-                    if (($input == 0 && $operator_sql != '>') || ($input == 1 && $operator_sql == '<')) {
-                        $where[] = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL";
-                    } elseif (in_array($operator_sql, ['<>', '<', '<=', '!='])) {
-                        $where[]      = "(`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ? OR `rating_" . $my_type . "_" . $search_user_id . "`.`rating` IS NULL)";
-                        $parameters[] = $input;
-                    } else {
-                        $where[]      = "`rating_" . $my_type . "_" . $search_user_id . "`.`rating` $operator_sql ?";
-                        $parameters[] = $input;
-                    }
+                    $where[]      = "IFNULL(`rating_" . $my_type . "_" . $search_user_id . "`.`rating`, 0) $operator_sql ?";
+                    $parameters[] = $input;
                     // rating once per user
                     if (!array_key_exists('rating', $table)) {
                         $table['rating'] = '';

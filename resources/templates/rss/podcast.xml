@@ -2,11 +2,13 @@
 <rss xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
     <channel>
         <title tal:content="THIS/getTitle">some-title</title>
+        <link tal:content="THIS/getLink">some-link</link>
+        <atom:link tal:attributes="href THIS/getRssLink" rel="self" type="application/rss+xml" />
         <itunes:image tal:condition="THIS/hasImage" tal:attributes="href THIS/getImageUrl" />
         <description tal:condition="THIS/hasSummary" tal:content="THIS/getSummary">some-summary</description>
         <itunes:summary tal:condition="THIS/hasSummary" tal:content="THIS/getSummary">some-summary</itunes:summary>
         <generator>ampache</generator>
-        <itunes:category>Music</itunes:category>
+        <itunes:category tal:attributes="text THIS/getCategory" />
         <itunes:owner tal:condition="THIS/hasOwner">
             <itunes:name tal:content="THIS/getOwnerName">owner-name</itunes:name>
         </itunes:owner>

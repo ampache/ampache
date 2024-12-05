@@ -413,9 +413,7 @@ class Query
     {
         // If they pass something then just return that
         if (is_array($object_ids) && !$this->is_simple()) {
-            return (empty($object_ids)
-                ? 0
-                : ((int)array_key_last($object_ids)) + 1);
+            return count($object_ids);
         }
 
         // See if we can find it in the cache
@@ -1170,14 +1168,12 @@ class Query
     {
         $tags = $this->_state['filter']['tag'] ?? '';
 
-        if (!is_array($tags) || array_key_last($tags) < 1) {
+        if (!is_array($tags) || count($tags) < 2) {
             return $data;
         }
 
+        $tag_count = count($tags);
         $count     = [];
-        $tag_count = (empty($tags)
-            ? 0
-            : ((int)array_key_last($tags)) + 1);
 
         foreach ($data as $row) {
             ++$count[$row['id']];
@@ -1317,17 +1313,17 @@ class Query
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
-            $objects = $this->get_saved();
+            $object_ids = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if ($objects === [] || !is_array($objects)) {
+            if ($object_ids === [] || !is_array($object_ids)) {
                 return false;
             }
 
             $type      = $this->get_type();
             $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
-            foreach ($objects as $object_id) {
+            foreach ($object_ids as $object_id) {
                 $object_id = Dba::escape($object_id);
                 $where_sql .= sprintf('\'%s\',', $object_id);
             }
@@ -1396,7 +1392,7 @@ class Query
         // Only do this if it's not a simple browse
         if (!$this->is_simple()) {
             $this->_cache = $object_ids;
-            $this->set_total((empty($object_ids) ? 0 : ((int)array_key_last($object_ids)) + 1));
+            $this->set_total(count($object_ids));
             $browse_id = $this->id;
             if ($browse_id != 'nocache') {
                 $data = $this->_serialize($this->_cache);
