@@ -701,8 +701,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
-                : sprintf('SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
+                ? sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
+                : sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
 
             $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
         }
