@@ -86,7 +86,7 @@ class Upload
                 }
 
                 // Require a license with the upload if it's enabled
-                if (AmpConfig::get('licensing') && !$options['license']) {
+                if (AmpConfig::get('licensing') && !isset($options['license'])) {
                     return self::rerror('licensing');
                 }
 
