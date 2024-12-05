@@ -3,7 +3,7 @@
 <dl class="media_details" tal:define="song_id SONG/getId">
     <dt i18n:translate="">Rating</dt>
     <dd>
-        <div id="rating_${song_id}_song" tal:define="average_rating SONG/getAverageRating">
+        <div id="rating_${song_id}_song" class="rating_${song_id}_song" tal:define="average_rating SONG/getAverageRating">
             <div tal:replace="structure SONG/getRating">RATING</div>
             <tal:block tal:condition="average_rating">
                 (<span i18n:translate="" title="Average for all users" i18n:attributes="title">average</span> ${average_rating})
@@ -12,7 +12,7 @@
     </dd>
     <dt i18n:translate="">Fav</dt>
     <dd>
-        <div id="userflag_${song_id}_song" tal:content="structure SONG/getUserFlags">FLAGS</div>
+        <div id="userflag_${song_id}_song" class="userflag_${song_id}_song" tal:content="structure SONG/getUserFlags">FLAGS</div>
     </dd>
     <tal:block tal:condition="CONFIG/isWaveformEnabled">
         <dt i18n:translate="">Waveform</dt>

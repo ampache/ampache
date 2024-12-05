@@ -60,10 +60,10 @@ Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</d
 $playlist->display_art($thumb, false, false); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-<span id="rating_<?php echo $playlist->id; ?>_playlist">
+<span id="rating_<?php echo $playlist->id; ?>_playlist" class="rating_<?php echo $playlist->id; ?>_playlist">
     <?php echo Rating::show($playlist->id, 'playlist'); ?>
 </span>
-<span id="userflag_<?php echo $playlist->id; ?>_playlist">
+<span id="userflag_<?php echo $playlist->id; ?>_playlist" class="userflag_<?php echo $playlist->id; ?>_playlist">
     <?php echo Userflag::show($playlist->id, 'playlist'); ?>
 </span>
 <?php } ?>

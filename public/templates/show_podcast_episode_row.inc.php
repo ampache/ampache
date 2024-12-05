@@ -97,10 +97,10 @@ if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <div class="rating">
-                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
+                    <span id="rating_<?php echo $libitem->id; ?>_podcast_episode" class="cel_rating rating_<?php echo $libitem->id; ?>_podcast_episode">
                         <?php echo Rating::show($libitem->id, 'podcast_episode'); ?>
                     </span>
-                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
+                    <span id="userflag_<?php echo $libitem->id; ?>_podcast_episode" class="cel_userflag userflag_<?php echo $libitem->id; ?>_podcast_episode">
                         <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
                     </span>
                 </div>

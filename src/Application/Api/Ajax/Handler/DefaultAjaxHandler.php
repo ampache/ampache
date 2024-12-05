@@ -206,12 +206,12 @@ final readonly class DefaultAjaxHandler implements AjaxHandlerInterface
                 $rating_type = (string)filter_input(INPUT_GET, 'object_type', FILTER_SANITIZE_SPECIAL_CHARS);
                 ob_start();
                 if (AmpConfig::get('ratings') && Rating::is_valid($rating_type)) {
-                    echo " <span id='rating_" . $rating_id . "_" . $rating_type . "'>";
+                    echo ' <span id="rating_' . $rating_id . '_' . $rating_type . '" class="rating_' . $rating_id . '_' . $rating_type . '">';
                     echo Rating::show($rating_id, $rating_type);
-                    echo "</span>";
-                    echo " <span id='userflag_" . $rating_id . "_" . $rating_type . "'>";
+                    echo '</span>';
+                    echo ' <span id="userflag_' . $rating_id . '_' . $rating_type . '" class="userflag_' . $rating_id . '_' . $rating_type . '">';
                     echo Userflag::show($rating_id, $rating_type);
-                    echo "</span>";
+                    echo '</span>';
                 }
 
                 $results['action_buttons'] = ob_get_contents();

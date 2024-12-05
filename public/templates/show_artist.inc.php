@@ -110,10 +110,10 @@ if (AmpConfig::get('external_links_musicbrainz')) {
 } ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo (int) ($artist->id); ?>_artist">
+    <span id="rating_<?php echo (int) ($artist->id); ?>_artist" class="rating_<?php echo (int) ($artist->id); ?>_artist">
         <?php echo Rating::show($artist->id, 'artist', true); ?>
     </span>
-    <span id="userflag_<?php echo $artist->id; ?>_artist">
+    <span id="userflag_<?php echo $artist->id; ?>_artist" class="userflag_<?php echo $artist->id; ?>_artist">
         <?php echo Userflag::show($artist->id, 'artist'); ?>
     </span>
 <?php }

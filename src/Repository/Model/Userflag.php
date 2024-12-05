@@ -402,7 +402,7 @@ class Userflag extends database_object
             $icon   = 'favorite';
             $alt    = T_('Favorite');
         }
-        $text = Ajax::button($action, $icon, $alt, $source);
+        $text = Ajax::button($action, $icon, $alt, $source, '', $source);
 
         return $text;
     }

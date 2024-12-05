@@ -70,8 +70,8 @@ if (!empty($videos)) {
         <?php
         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
-                <span class="cel_rating" id="userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>
+                <span id="rating_<?php echo $video->id; ?>_video" class="cel_rating rating_<?php echo $video->id; ?>_video"><?php echo Rating::show($video->id, 'video'); ?></span>
+                <span id="userflag_<?php echo $video->id; ?>_video" class="cel_rating userflag_<?php echo $video->id; ?>_video"><?php echo Userflag::show($video->id, 'video'); ?></span>
             <?php } ?>
         <?php } ?>
     </div>

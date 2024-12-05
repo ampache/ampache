@@ -60,10 +60,10 @@ Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $th
 </div>
 <?php } ?>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo (int) ($podcast->getId()); ?>_podcast">
+    <span id="rating_<?php echo (int) ($podcast->getId()); ?>_podcast" class="rating_<?php echo (int) ($podcast->getId()); ?>_podcast">
         <?php echo Rating::show($podcast->getId(), 'podcast'); ?>
     </span>
-    <span id="userflag_<?php echo $podcast->getId(); ?>_podcast">
+    <span id="userflag_<?php echo $podcast->getId(); ?>_podcast" class="userflag_<?php echo $podcast->getId(); ?>_podcast">
         <?php echo Userflag::show($podcast->getId(), 'podcast'); ?>
     </span>
 <?php } ?>

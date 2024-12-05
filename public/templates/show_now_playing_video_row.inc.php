@@ -68,10 +68,10 @@ if (!$art_showed) {
 
 <div class="np_group" id="np_group_4">
 <?php if (AmpConfig::get('ratings')) { ?>
-        <span id="rating_<?php echo $media->id; ?>_video">
+        <span id="rating_<?php echo $media->id; ?>_video" class="rating_<?php echo $media->id; ?>_video">
             <?php echo Rating::show($media->id, 'video'); ?>
         </span>
-        <span id="userflag_<?php echo $media->id; ?>_video">
+        <span id="userflag_<?php echo $media->id; ?>_video" class="userflag_<?php echo $media->id; ?>_video">
             <?php echo Userflag::show($media->id, 'video'); ?>
         </span>
     <?php } ?>
