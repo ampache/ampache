@@ -37,7 +37,7 @@ use Ampache\Module\Playback\Stream_Playlist;
 use Ampache\Module\Util\Ui;
 
 /** @var Ampache\Repository\Model\Podcast_Episode $libitem */
-/** @var Ampache\Repository\Model\Browse|null $browse */
+/** @var Ampache\Repository\Model\Browse $browse */
 /** @var bool $is_mashup */
 /** @var bool $is_table */
 /** @var bool $show_ratings */
@@ -66,7 +66,7 @@ $web_path = AmpConfig::get_web_path();
 if ($is_mashup) {
     $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 1;
+        <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
     Art::display('podcast_episode', $libitem->id, $name, $thumb, $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
@@ -116,7 +116,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $libitem->id, 'sync', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
-    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_')">
+    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
     </a>
     <?php

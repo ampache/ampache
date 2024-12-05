@@ -30,6 +30,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\System\LegacyLogger;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Podcast;
 use Ampache\Repository\Model\Share;
@@ -65,7 +66,8 @@ final class EditObjectAction extends AbstractEditAction
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         library_item|Share $libitem,
-        int $object_id
+        int $object_id,
+        ?Browse $browse = null
     ): ?ResponseInterface {
         // Scrub the data, walk recursive through array
         $entities = function (&$data) use (&$entities) {

@@ -64,7 +64,7 @@ $ui->show(
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id']; ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
+                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id']; ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
                         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                     </a>
                 </li>
