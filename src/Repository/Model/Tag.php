@@ -693,7 +693,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results = [];
         if ($type == 'tag_hidden') {
             $is_hidden = 1;
-            $sql       = "SELECT `tag`.`id` AS `id`, `tag`.`name` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
+            $sql       = "SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
             $is_hidden = 0;
             $type_sql  = (empty($type))
@@ -701,10 +701,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE', $type_sql) . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
-                : sprintf('SELECT `tag`.`id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
+                ? sprintf('SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
+                : sprintf('SELECT `tag_map`.`tag_id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
 
-            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
+            $sql .= "GROUP BY `tag_map`.`tag_id` ";
         }
 
         $order = "`" . $order . "`";
