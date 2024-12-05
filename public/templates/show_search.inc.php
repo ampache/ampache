@@ -52,10 +52,10 @@ $browse->set_static_content(false);
 ob_end_clean();
 Ui::show_box_top('<div id="smartplaylist_row_' . $playlist->id . '">' . $title . '</div>', 'box box_smartplaylist'); ?>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $playlist->id; ?>_search" class="rating_<?php echo $playlist->id; ?>_search">
+    <span id="rating_<?php echo $playlist->id; ?>_search">
     <?php echo Rating::show($playlist->id, 'search'); ?>
 </span>
-    <span id="userflag_<?php echo $playlist->id; ?>_search" class="userflag_<?php echo $playlist->id; ?>_search">
+    <span id="userflag_<?php echo $playlist->id; ?>_search">
     <?php echo Userflag::show($playlist->id, 'search'); ?>
 </span>
 <?php } ?>

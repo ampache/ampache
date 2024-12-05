@@ -113,10 +113,10 @@ $thumb      = Ui::is_grid_view('album') ? 11 : 32;
 Art::display('album', $albumDisk->album_id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
-    <span id="rating_<?php echo $albumDisk->id; ?>_album_disk" class="rating_<?php echo $albumDisk->id; ?>_album_disk">
+    <span id="rating_<?php echo $albumDisk->id; ?>_album_disk">
         <?php echo Rating::show($albumDisk->id, 'album_disk', true); ?>
     </span>
-    <span id="userflag_<?php echo $albumDisk->id; ?>_album_disk" class="userflag_<?php echo $albumDisk->id; ?>_album_disk">
+    <span id="userflag_<?php echo $albumDisk->id; ?>_album_disk">
         <?php echo Userflag::show($albumDisk->id, 'album_disk'); ?>
     </span>
 <?php } ?>

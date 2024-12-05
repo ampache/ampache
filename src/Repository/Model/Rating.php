@@ -528,7 +528,7 @@ class Rating extends database_object
 
             $action = $base_url . '&rating=' . $action;
             $source = 'rating' . $count . '_' . $rating->id . '_' . $rating->type;
-            $text   = Ajax::button($action, $icon, $alt, $source, '', $source);
+            $text   = Ajax::button($action, $icon, $alt, $source);
             $ratings .= sprintf(
                 '<li>%s</li>',
                 $text

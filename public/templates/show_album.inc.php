@@ -116,10 +116,10 @@ Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) {
     if (AmpConfig::get('ratings')) { ?>
-        <span id="rating_<?php echo $album->id; ?>_album" class="rating_<?php echo $album->id; ?>_album">
+        <span id="rating_<?php echo $album->id; ?>_album">
             <?php echo Rating::show($album->id, 'album', true); ?>
         </span>
-        <span id="userflag_<?php echo $album->id; ?>_album" class="userflag_<?php echo $album->id; ?>_album">
+        <span id="userflag_<?php echo $album->id; ?>_album">
             <?php echo Userflag::show($album->id, 'album'); ?>
         </span>
         <?php }

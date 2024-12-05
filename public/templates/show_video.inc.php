@@ -68,13 +68,13 @@ $gart = Art::display('video', $video->id, $fullname, 7); ?>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
     <dt><?php echo T_('Rating'); ?></dt>
     <dd>
-        <div id="rating_<?php echo $video->id; ?>_video" class="rating_<?php echo $video->id; ?>_video">
+        <div id="rating_<?php echo $video->id; ?>_video">
             <?php echo Rating::show($video->id, 'video'); ?>
         </div>
     </dd>
     <dt><?php echo T_('Fav.'); ?></dt>
     <dd>
-        <div id="userflag_<?php echo $video->id; ?>_video" class="userflag_<?php echo $video->id; ?>_video">
+        <div id="userflag_<?php echo $video->id; ?>_video">
             <?php echo Userflag::show($video->id, 'video'); ?>
         </div>
     </dd>

@@ -71,8 +71,8 @@ if (!empty($albumDisks)) {
         <?php
         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span id="rating_<?php echo $albumDisk->id; ?>_album" class="cel_rating rating_<?php echo $albumDisk->id; ?>_album"><?php echo Rating::show($albumDisk->id, 'album_disk'); ?></span>
-                <span id="userflag_<?php echo $albumDisk->id; ?>_album" class="cel_rating userflag_<?php echo $albumDisk->id; ?>_album"><?php echo Userflag::show($albumDisk->id, 'album_disk'); ?></span>
+                <span class="cel_rating" id="rating_<?php echo $albumDisk->id; ?>_album"><?php echo Rating::show($albumDisk->id, 'album_disk'); ?></span>
+                <span class="cel_rating" id="userflag_<?php echo $albumDisk->id; ?>_album"><?php echo Userflag::show($albumDisk->id, 'album_disk'); ?></span>
             <?php } ?>
         <?php } ?>
     </div>

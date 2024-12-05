@@ -123,10 +123,10 @@ $(document).ready(function(){
 <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <div class="np_group" id="np_group_4">
     <?php if (AmpConfig::get('ratings')) { ?>
-            <span id="rating_<?php echo $media->id; ?>_song" class="rating_<?php echo $media->id; ?>_song">
+            <span id="rating_<?php echo $media->id; ?>_song">
                 <?php echo Rating::show($media->id, 'song'); ?>
             </span>
-            <span id="userflag_<?php echo $media->id; ?>_song" class="userflag_<?php echo $media->id; ?>_song">
+            <span id="userflag_<?php echo $media->id; ?>_song">
                 <?php echo Userflag::show($media->id, 'song'); ?>
             </span>
         <?php } ?>

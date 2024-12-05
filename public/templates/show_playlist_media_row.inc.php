@@ -88,10 +88,10 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
     <td class="cel_ratings">
         <?php if (AmpConfig::get('ratings')) { ?>
             <div class="rating">
-                <span id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>" class="cel_rating rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
                     <?php echo Rating::show($libitem->getId(), $object_type); ?>
                 </span>
-                <span id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>" class="cel_userflag userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
+                <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_<?php echo $object_type; ?>">
                     <?php echo Userflag::show($libitem->getId(), $object_type); ?>
                 </span>
             </div>

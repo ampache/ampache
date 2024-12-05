@@ -98,10 +98,10 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
                 <div class="rating">
-                    <span id="rating_<?php echo $libitem->id; ?>_video" class="cel_rating rating_<?php echo $libitem->id; ?>_video" >
+                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_video">
                         <?php echo Rating::show($libitem->id, 'video'); ?>
                     </span>
-                    <span id="userflag_<?php echo $libitem->id; ?>_video" class="cel_userflag userflag_<?php echo $libitem->id; ?>_video">
+                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_video">
                         <?php echo Userflag::show($libitem->id, 'video'); ?>
                     </span>
                 </div>
