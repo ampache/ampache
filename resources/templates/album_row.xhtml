@@ -36,8 +36,8 @@
     <td class="${CLASS_TAGS} optional" tal:condition="not:IS_HIDE_GENRE" tal:content="structure ALBUM/getGenre">TAGS</td>
     <td class="cel_ratings" tal:condition="USING_RATINGS">
         <div class="rating">
-            <span id="rating_${ALBUM/getId}_album" class="cel_rating rating_${ALBUM/getId}_album" tal:content="structure ALBUM/getRating">RATING</span>
-            <span id="userflag_${ALBUM/getId}_album" class="cel_userflag userflag_${ALBUM/getId}_album" tal:content="structure ALBUM/getUserFlags">USERFLAGS</span>
+            <span class="cel_rating" id="rating_${ALBUM/getId}_album" class="rating_${ALBUM/getId}_album" tal:content="structure ALBUM/getRating">RATING</span>
+            <span class="cel_userflag" id="userflag_${ALBUM/getId}_album" class="userflag_${ALBUM/getId}_album" tal:content="structure ALBUM/getUserFlags">USERFLAGS</span>
         </div>
     </td>
     <td class="cel_action">
