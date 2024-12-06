@@ -242,7 +242,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // create the album_disk (if missing)
-        $db_results = Dba::write("INSERT INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?);", [$album_id, $disk, $catalog_id]);
+        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) VALUES (?, ?, ?, ?);", [$album_id, $disk, $catalog_id, $disksubtitle]);
         if (!$db_results) {
             return 0;
         }
