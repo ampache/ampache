@@ -1098,6 +1098,19 @@ class User extends database_object
             Dba::write($sql);
         }
 
+        // Make sure the language a user has is valid
+        $sql = "UPDATE `user_preference` SET `value` = 'en_US' WHERE `user` = -1 AND `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
+        Dba::write($sql);
+
+        $sql          = "SELECT `value` FROM `user_preference` WHERE `user` = -1 AND `name` = 'lang';";
+        $db_results   = Dba::read($sql);
+        $row          = Dba::fetch_assoc($db_results);
+        $default_lang = $row['value'] ?? 'en_US';
+
+        // Set the default system user value if your user is bad
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
+        Dba::write($sql, [$default_lang]);
+
         // Make sure all current catalogs are in the default group map
         $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);";
         Dba::write($sql);
