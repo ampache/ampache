@@ -1232,6 +1232,57 @@ class Preference extends database_object
                 case 'api_always_download':
                     Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
+                case 'external_links_google':
+                    Dba::write($pref_sql, [206, 'external_links_google', '1', T_('Show Google search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_duckduckgo':
+                    Dba::write($pref_sql, [207, 'external_links_duckduckgo', '1', T_('Show DuckDuckGo search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_wikipedia':
+                    Dba::write($pref_sql, [208, 'external_links_wikipedia', '1', T_('Show Wikipedia search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_lastfm':
+                    Dba::write($pref_sql, [209, 'external_links_lastfm', '1', T_('Show Last.fm search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_bandcamp':
+                    Dba::write($pref_sql, [210, 'external_links_bandcamp', '1', T_('Show Bandcamp search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_musicbrainz':
+                    Dba::write($pref_sql, [211, 'external_links_musicbrainz', '1', T_('Show MusicBrainz search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'extended_playlist_links':
+                    Dba::write($pref_sql, [219, 'extended_playlist_links', '0', T_('Show extended links for playlist media'), AccessLevelEnum::USER->value, 'boolean', 'playlist']);
+                    break;
+                case 'external_links_discogs':
+                    Dba::write($pref_sql, [220, 'external_links_discogs', '1', T_('Show Discogs search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'browse_song_grid_view':
+                    Dba::write($pref_sql, [221, 'browse_song_grid_view', '0', T_('Force Grid View on Song browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_album_grid_view':
+                    Dba::write($pref_sql, [222, 'browse_album_grid_view', '0', T_('Force Grid View on Album browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_album_disk_grid_view':
+                    Dba::write($pref_sql, [223, 'browse_album_disk_grid_view', '0', T_('Force Grid View on Album Disk browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_artist_grid_view':
+                    Dba::write($pref_sql, [224, 'browse_artist_grid_view', '0', T_('Force Grid View on Artist browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_live_stream_grid_view':
+                    Dba::write($pref_sql, [225, 'browse_live_stream_grid_view', '0', T_('Force Grid View on Radio Station browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_playlist_grid_view':
+                    Dba::write($pref_sql, [226, 'browse_playlist_grid_view', '0', T_('Force Grid View on Playlist browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_video_grid_view':
+                    Dba::write($pref_sql, [227, 'browse_video_grid_view', '0', T_('Force Grid View on Video browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_podcast_grid_view':
+                    Dba::write($pref_sql, [228, 'browse_podcast_grid_view', '0', T_('Force Grid View on Podcast browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_podcast_episode_grid_view':
+                    Dba::write($pref_sql, [229, 'browse_podcast_episode_grid_view', '0', T_('Force Grid View on Podcast Episode browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
