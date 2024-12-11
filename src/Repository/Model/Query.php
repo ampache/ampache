@@ -421,6 +421,10 @@ class Query
             return $this->_state['total'];
         }
 
+        if (is_array($this->_cache)) {
+            return count($this->_cache);
+        }
+
         $db_results = Dba::read($this->_get_sql(false));
         $num_rows   = Dba::num_rows($db_results);
 
