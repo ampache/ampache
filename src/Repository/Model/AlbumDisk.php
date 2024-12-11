@@ -153,6 +153,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
         $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
         if ($info === []) {
+            $this->album = new Album();
+
             return;
         }
 

@@ -29,7 +29,6 @@ use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
-use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
@@ -44,13 +43,10 @@ $show_user = (!$user_only && $user_id > 0);
 $user_str  = ($user_only)
     ? '&user_only=1'
     : '';
-$rss_link  = (AmpConfig::get('use_rss'))
-    ? ' ' . Ui::getRssLink(RssFeedTypeEnum::RECENTLY_PLAYED, $user)
-    : '';
 $refresh   = "&nbsp" . Ajax::button('?page=stats&action=refresh_skipped' . $user_str, 'refresh', T_('Refresh'), 'refresh_skipped', 'box box_recently_played');
 $web_path  = AmpConfig::get_web_path('/client');
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
-UI::show_box_top(T_('Recently Skipped') . $rss_link . $refresh, 'box box_recently_skipped'); ?>
+UI::show_box_top(T_('Recently Skipped') . $refresh, 'box box_recently_skipped'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">
