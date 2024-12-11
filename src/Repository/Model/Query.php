@@ -103,6 +103,7 @@ class Query
         'limit' => 0,
         'mashup' => null,
         'offset' => 0,
+        'params' => [], // parameters for custom sql
         'select' => [],
         'show_header' => true,
         'simple' => false,
@@ -421,7 +422,11 @@ class Query
             return $this->_state['total'];
         }
 
-        $db_results = Dba::read($this->_get_sql(false));
+        if (is_array($this->_cache)) {
+            return count($this->_cache);
+        }
+
+        $db_results = Dba::read($this->_get_sql(false), $this->_state['params']);
         $num_rows   = Dba::num_rows($db_results);
 
         $this->_state['total'] = $num_rows;
@@ -505,8 +510,9 @@ class Query
      * and if I want to change the location I only have to do it here
      * @param string $type
      * @param string $custom_base
+     * @param array $parameters
      */
-    public function set_type($type, $custom_base = ''): void
+    public function set_type($type, $custom_base = '', $parameters = []): void
     {
         switch ($type) {
             case 'album':
@@ -600,7 +606,7 @@ class Query
                 !empty($custom_base) ||
                 !$this->_state['base']
             ) {
-                $this->_set_base_sql(true, $custom_base);
+                $this->_set_base_sql(true, $custom_base, $parameters);
             }
         }
     }
@@ -891,11 +897,8 @@ class Query
      */
     public function get_objects(): array
     {
-        // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
-        $sql = $this->_get_sql();
-        //debug_event(self::class, 'get_objects query: ' . $sql, 5);
-
-        $db_results = Dba::read($sql);
+        //debug_event(self::class, 'get_objects query: ' . $this->_get_sql(), 5);
+        $db_results = Dba::read($this->_get_sql(), $this->_state['params']);
         $results    = [];
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
@@ -921,8 +924,9 @@ class Query
      * This saves the base sql statement we are going to use.
      * @param bool $force
      * @param string $custom_base
+     * @param array $parameters
      */
-    private function _set_base_sql($force = false, $custom_base = ''): void
+    private function _set_base_sql($force = false, $custom_base = '', $parameters = []): void
     {
         // Only allow it to be set once
         if (!empty((string)$this->_state['base']) && !$force) {
@@ -933,6 +937,7 @@ class Query
         if ($force && !empty($custom_base)) {
             $this->_state['custom'] = true;
             $this->_state['base']   = $custom_base;
+            $this->_state['params'] = $parameters;
         } else {
             // TODO we should remove this default fallback and rely on set_type()
             if ($this->queryType === null) {
@@ -1349,7 +1354,7 @@ class Query
             $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, $this->_state['params']);
         //debug_event(self::class, "_resort_objects: " . $sql, 5);
 
         $results = [];

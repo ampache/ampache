@@ -572,15 +572,16 @@ class Browse extends Query
      * This sets the type of object that we want to browse by
      * @param string $type
      * @param string $custom_base
+     * @param array $parameters
      */
-    public function set_type($type, $custom_base = ''): void
+    public function set_type($type, $custom_base = '', $parameters = []): void
     {
         if (empty($type)) {
             return;
         }
 
         if ($type === 'album_artist') {
-            $this->set_type('artist', $custom_base);
+            $this->set_type('artist', $custom_base, $parameters);
             $this->set_album_artist(true);
             $this->set_filter('album_artist', true);
 
@@ -588,7 +589,7 @@ class Browse extends Query
         }
 
         if ($type === 'song_artist') {
-            $this->set_type('artist', $custom_base);
+            $this->set_type('artist', $custom_base, $parameters);
             $this->set_song_artist(true);
             $this->set_filter('song_artist', true);
 
@@ -619,7 +620,7 @@ class Browse extends Query
             //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
             //}
 
-            parent::set_type($type, $custom_base);
+            parent::set_type($type, $custom_base, $parameters);
         } else {
             debug_event(self::class, 'set_type invalid type: ' . $type, 5);
         }
