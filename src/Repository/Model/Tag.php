@@ -693,7 +693,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $results = [];
         if ($type == 'tag_hidden') {
             $is_hidden = 1;
-            $sql       = "SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
+            $sql       = "SELECT `tag`.`id`, `tag`.`name` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
             $is_hidden = 0;
             $type_sql  = (empty($type))

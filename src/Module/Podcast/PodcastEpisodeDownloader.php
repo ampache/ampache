@@ -145,6 +145,7 @@ final class PodcastEpisodeDownloader implements PodcastEpisodeDownloaderInterfac
             // file is null until it's downloaded
             if (empty($episode->file)) {
                 $episode->file = $destinationFilePath;
+                $episode->type = $extension;
                 Podcast_Episode::update_file($destinationFilePath, $episodeId);
             }
             Catalog::update_media_from_tags($episode);
