@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
@@ -160,9 +159,7 @@ final class CatalogQuery implements QueryInterface
                 $filter_sql = " `catalog`.`gather_types` IN ('" . implode("', '", $value) . "') AND ";
                 break;
             case 'user':
-                $filter_sql = (AmpConfig::get('catalog_filter'))
-                    ? Catalog::get_user_filter('catalog', $value) . " AND "
-                    : '';
+                $filter_sql = " `catalog`.`id` IN (" . implode(',', Catalog::get_catalogs('', $value, true)) . ") AND ";
                 break;
         }
 
