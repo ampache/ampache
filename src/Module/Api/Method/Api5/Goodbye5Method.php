@@ -56,8 +56,8 @@ final class Goodbye5Method
 
         // Check and see if we should destroy the api session (done if valid session is passed)
         if (Session::exists(AccessTypeEnum::API->value, $input['auth'])) {
-            $sql = "DELETE FROM `session` WHERE `id` = ? AND `type` = ?;";
-            Dba::write($sql, [$input['auth'], AccessTypeEnum::API->value]);
+            $sql = "DELETE FROM `session` WHERE `id` = ? AND (`type` = ? OR `type` = ?);";
+            Dba::write($sql, [$input['auth'], AccessTypeEnum::API->value], 'api');
 
             ob_end_clean();
             Api5::message($input['auth'], $input['api_format']);
