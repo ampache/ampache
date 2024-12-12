@@ -25,7 +25,6 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
-use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
