@@ -703,7 +703,7 @@ final class SongSearch implements SearchInterface
         $having_sql = implode(" $sql_logic_operator ", $having);
 
         return [
-            'base' => 'SELECT DISTINCT(`song`.`id`), `song`.`file` FROM `song`',
+            'base' => 'SELECT `song`.`id`, `song`.`file` FROM `song`',
             'join' => $join,
             'where' => $where,
             'where_sql' => $where_sql,
