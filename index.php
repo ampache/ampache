@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="./public/client/templates/install.css" type="text/css" media="screen">
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="./public/client/images/ampache-dark.png" title="Ampache" alt="Ampache">

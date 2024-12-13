@@ -45,6 +45,7 @@ $htmllang = str_replace("_", "-", $lang);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title><?php echo T_('Ampache') . ' :: ' . T_('For the Love of Music') . ' - ' . T_('Installation'); ?></title>
+    <link rel="stylesheet" href="themes/reborn/templates/default.css">
     <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
@@ -52,7 +53,7 @@ $htmllang = str_replace("_", "-", $lang);
     <script src="lib/components/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body id="install-page">
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
                 <img src="images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">

@@ -33,12 +33,13 @@ use Ampache\Module\Util\Ui;
   <!-- Propelled by Ampache | ampache.org -->
   <?php Ui::show_custom_style(); ?>
   <title><?php echo T_('Ampache -- Config Debug Page'); ?></title>
+  <link rel="stylesheet" href="themes/reborn/templates/default.css">
   <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
 </head>
 <body>
-        <div class="navbar navbar-inverse" role="navigation">
+        <div class="navbar navbar-dark navbar-inverse" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="images/ampache-dark.png" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
