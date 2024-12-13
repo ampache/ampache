@@ -762,7 +762,7 @@ class Stream
 
         $web_path = ($local)
             ? AmpConfig::get('local_web_path')
-            : AmpConfig::get_web_path('/client');
+            : AmpConfig::get_web_path();
         if (empty($web_path) && !empty(AmpConfig::get('fallback_url'))) {
             $web_path = rtrim((string)AmpConfig::get('fallback_url'), '/');
         }
