@@ -26,6 +26,7 @@ declare(strict_types=0);
 namespace Ampache\Module\Application\Browse;
 
 use Ampache\Module\Util\RequestParserInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
 use Ampache\Repository\Model\Tag;
 use Ampache\Module\Application\ApplicationActionInterface;
@@ -59,17 +60,11 @@ final class TagAction implements ApplicationActionInterface
     {
         session_start();
 
-        $browse = $this->modelFactory->createBrowse();
-        $browse->set_simple_browse(true);
-
         $this->ui->showHeader();
-
-        // Browser is able to save page on current session. Only applied to main menus.
-        $browse->set_update_session(true);
 
         // FIXME: This whole thing is ugly, even though it works.
         $request_type = $this->requestParser->getFromRequest('type');
-        $browse_type  = ($browse->is_valid_type($request_type)) ? $request_type : 'album';
+        $browse_type  = (Browse::is_valid_type($request_type)) ? $request_type : 'album';
         if ($request_type != $browse_type) {
             $_REQUEST['type'] = $browse_type;
         }
