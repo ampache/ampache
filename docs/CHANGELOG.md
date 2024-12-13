@@ -12,6 +12,9 @@
 * HTML alignment of 'Post Shout' on the artist page
 * Show albums with 0 disks correctly
 * Sorting by `total_count` for PodcastEpisode and Podcast browses
+* Listing hidden tags
+* Loading songs with an empty AlbumDisk
+* Podcast Episode file type not set on first download
 
 ## Ampache 6.6.4
 
