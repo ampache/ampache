@@ -36,6 +36,7 @@ $dir       = $dir ?? 'ltr'; ?>
 <!-- Propelled by Ampache | ampache.org -->
 <?php Ui::show_custom_style(); ?>
 <title><?php echo("Ampache Error Page"); ?></title>
+<link rel="stylesheet" href="themes/reborn/templates/default.css">
 <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
@@ -44,7 +45,7 @@ $dir       = $dir ?? 'ltr'; ?>
     <!-- rfc3514 implementation -->
     <div id="rfc3514" style="display: none;">0x0</div>
     <div id="reloader" style="display: none;"></div>
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container" style="height: 70px;">
             <a class="navbar-brand" href="#">
                 <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo $t_ampache; ?>" alt="<?php echo $t_ampache; ?>">
