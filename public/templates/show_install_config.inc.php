@@ -143,7 +143,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
         <div class="form-group">
             <label for="transcode_template" class="col-sm-2 control-label"><?php echo T_('Template Configuration'); ?></label>
             <div class="col-sm-10">
-                <select class="form-control-plaintext" id="transcode_template" size="32" name="transcode_template">
+                <select class="form-control" id="transcode_template" name="transcode_template">
                     <option value=""><?php echo T_('None'); ?></option>
                     <?php
                 $modes = $this->installationHelper->install_get_transcode_modes();
