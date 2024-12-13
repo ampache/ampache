@@ -57,3 +57,4 @@ web.config
 *.swp
 *.v11.suo
 *~
+.npmrc
