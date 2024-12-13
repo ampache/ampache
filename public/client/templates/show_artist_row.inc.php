@@ -40,7 +40,7 @@ global $dic;
 $gatekeeper = $dic->get(GatekeeperFactoryInterface::class)->createGuiGatekeeper();
 
 /** @var Ampache\Repository\Model\Artist $libitem */
-/** @var Ampache\Repository\Model\Browse $browse */
+/** @var Ampache\Repository\Model\Browse|null $browse */
 /** @var bool $show_direct_play */
 /** @var bool $show_playlist_add */
 /** @var bool $hide_genres */
@@ -67,7 +67,7 @@ $web_path   = AmpConfig::get_web_path('/client'); ?>
 </td>
 <?php $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
+    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 1;
 Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
@@ -113,7 +113,7 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
         <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>
     </a>
     <?php }
-    if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
+    if (isset($browse) && canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
         <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>

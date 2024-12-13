@@ -60,9 +60,7 @@ final class TagAction implements ApplicationActionInterface
         session_start();
 
         $browse = $this->modelFactory->createBrowse();
-        $browse->set_type(self::REQUEST_KEY);
         $browse->set_simple_browse(true);
-        $browse->set_sort('name', 'ASC');
 
         $this->ui->showHeader();
 
@@ -84,7 +82,6 @@ final class TagAction implements ApplicationActionInterface
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type($browse_type);
-        $browse->store();
         if ($request_type == 'tag_hidden') {
             require_once Ui::find_template('show_tagcloud_hidden.inc.php');
 
@@ -97,8 +94,8 @@ final class TagAction implements ApplicationActionInterface
 
             require_once Ui::find_template('browse_content.inc.php');
 
-            $browse->store();
         }
+        $browse->store();
 
         $this->ui->showQueryStats();
         $this->ui->showFooter();
