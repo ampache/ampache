@@ -170,12 +170,15 @@ class Query
 
             return;
         } else {
-            $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+            $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
             $db_results = Dba::read($sql, [$query_id, $sid]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)$this->_unserialize($results['data']);
+                $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
+                    ? (array)$this->_unserialize($results['object_data'])
+                    : null;
                 // queryType isn't set by restoring state
                 $this->set_type($this->_state['type']);
 
