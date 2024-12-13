@@ -4,6 +4,12 @@
 
 Merge update from Ampache7.
 
+### Added
+
+* Search
+  * Add `disk_count` to Album & AlbumDisk search types
+  * Add `no_license` to Song search
+
 ### Fixed
 
 * API6
