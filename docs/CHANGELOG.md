@@ -16,6 +16,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 
 ### Added
 
+* Translations 2024-12-11
 * Build PHP8.4 supported release zips
 * Rating and favorite flags are now using SVG's
 * Update Composer and NPM packages
@@ -41,6 +42,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
   * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
   * Allow hiding the view menu (Just click the `View` link again to close it)
+  * Read from the cache array if valid
 * Search
   * Add Album name to song search in top bar and expand the list
   * Add `disk_count` to Album & AlbumDisk search types
@@ -79,6 +81,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Sidebar Genre link defaults to Albums like all the other areas
 * Action button for song link will open in a new page
 * Move update warning link to it's own wiki page
+* Fail an upload if licensing is enabled and there isn't one sent to the uploader
 * Browse
   * Do not filter to `A` when enabling Alphabet filter
   * Don't show View on footer row when displaying Albums by Release Type
@@ -87,6 +90,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * CSS for grid_view doesn't match the code (`disablegv` is actually `gridview`)
 * Search
   * AlbumDisk searches look for the disk rating
+  * Take `DISTINCT` off `id` in SongSearch
 
 ### Fixed
 
@@ -122,18 +126,29 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * User recent and skipped pages may refresh without filtering
 * Hide username on user recent and skipped refresh'
 * Art mime check was inserting empty values
+* RSS calls providing invalid XML
+* Check `$_ENV` for language variables
+* Viewing hidden tags would only show the first one
+* Check that user `lang` preferences is valid
+* Remove wrong RSS link to recently skipped
+* Opening a song without a valid AlbumDisk would fail
+* Downloading PodcastEpisodes would not set file type
+* Installer CSS woth Bootstrap 5
 * Browse
-  * Missing `total_count` sort types for Podcast and PodCastEpisode browse
+  * Missing `total_count` sort types for Podcast and PodcastEpisode browse
   * Fixes for displaying browses after filtering
   * Don't show Alphabet filter list when the browse isn't filtered
   * Don't overwrite cookie values when using Ajax actions
   * Send the object type when filtering a browse in case it's not saved
   * Disabling Alphabet list would keep the filters active
+  * Don't pull a tag or label lists if you aren't going to use it
+  * Speed up tag Browse
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
   * AlbumDisk searches not looking for the AlbumDisk rating
   * SongSearch not checking `album_group` setting for `albumrating`
+  * Searching for null ratings when using the average rating search
 * SubSonic
   * Trying to add duplicate XML art attribute
 
