@@ -130,16 +130,16 @@ final class UserQuery implements QueryInterface
                 break;
             case 'regex_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`username` REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`email` REGEXP '" . Dba::escape($value) . "%') AND ";
+                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`username` REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`email` REGEXP '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "%') AND ";
+                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'starts_with':
