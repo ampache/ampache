@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Ampache\Module\Util;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Core;
 use PDO;
 
@@ -276,6 +277,10 @@ final class Environment implements EnvironmentInterface
 
     public function isDevJS(string $entry): bool
     {
+        if (!AmpConfig::get('vite_dev', false)) {
+            return false;
+        }
+
         // hardcoded port for simplicity
         $handle = curl_init('http://localhost:5177/' . $entry);
 
