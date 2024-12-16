@@ -283,10 +283,14 @@ final class Environment implements EnvironmentInterface
             return false;
         }
 
-        curl_setopt_array($handle, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_NOBODY => true,
-        ]);
+        curl_setopt_array(
+            $handle, 
+            [
+                CURLOPT_TIMEOUT, 1,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_NOBODY => true,
+            ]
+        );
         curl_exec($handle);
         $error = curl_errno($handle);
         curl_close($handle);
