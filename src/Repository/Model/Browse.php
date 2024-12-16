@@ -197,7 +197,7 @@ class Browse extends Query
      * is_valid_type
      * Validate the browse is a type of object you can actually browse
      */
-    public function is_valid_type(string $type): bool
+    public static function is_valid_type(string $type): bool
     {
         return in_array($type, self::BROWSE_TYPES);
     }
