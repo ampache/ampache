@@ -149,7 +149,7 @@ final class SongQuery implements QueryInterface
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='song' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";

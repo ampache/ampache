@@ -9271,6 +9271,11 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Browse.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_objects\\(\\) has parameter \\$argument with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
@@ -9761,6 +9766,11 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_set_base_sql\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -9782,6 +9792,11 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 

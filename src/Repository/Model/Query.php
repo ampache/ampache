@@ -125,7 +125,7 @@ class Query
     ];
 
     /** @var array $_cache */
-    protected $_cache;
+    protected $_cache = [];
 
     /** @var QueryInterface|null $queryType */
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -178,7 +178,7 @@ class Query
                 $this->_state = (array)$this->_unserialize($results['data']);
                 $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
                     ? (array)$this->_unserialize($results['object_data'])
-                    : null;
+                    : [];
                 // queryType isn't set by restoring state
                 $this->set_type($this->_state['type']);
 
@@ -425,7 +425,7 @@ class Query
             return $this->_state['total'];
         }
 
-        if (is_array($this->_cache)) {
+        if (!empty($this->_cache)) {
             return count($this->_cache);
         }
 
