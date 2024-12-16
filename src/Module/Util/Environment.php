@@ -286,7 +286,7 @@ final class Environment implements EnvironmentInterface
         curl_setopt_array(
             $handle, 
             [
-                CURLOPT_TIMEOUT, 1,
+                CURLOPT_TIMEOUT => 1,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_NOBODY => true,
             ]
