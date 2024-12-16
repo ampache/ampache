@@ -133,7 +133,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Remove wrong RSS link to recently skipped
 * Opening a song without a valid AlbumDisk would fail
 * Downloading PodcastEpisodes would not set file type
-* Installer CSS woth Bootstrap 5
+* Installer CSS with Bootstrap 5
 * Browse
   * Missing `total_count` sort types for Podcast and PodcastEpisode browse
   * Fixes for displaying browses after filtering
