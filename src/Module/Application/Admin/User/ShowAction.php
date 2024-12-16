@@ -52,9 +52,8 @@ final class ShowAction extends AbstractUserAction
 
         $browse = $this->modelFactory->createBrowse();
         $browse->set_type('user');
-        $browse->set_simple_browse(true);
         $browse->set_sort('username', 'ASC');
-        $browse->show_objects($browse->get_objects());
+        $browse->show_objects();
         $browse->store();
 
         $this->ui->showQueryStats();
