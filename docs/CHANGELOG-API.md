@@ -13,6 +13,7 @@ Merge update from Ampache7.
 ### Fixed
 
 * API6
+  * handshake: Downgrade version 7 calls to 6
   * get_indexes: Respect 'api_hidden_playlists'
   * index: Respect 'api_hidden_playlists'
   * list: Respect 'api_hidden_playlists'

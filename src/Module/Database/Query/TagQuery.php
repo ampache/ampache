@@ -143,10 +143,10 @@ final class TagQuery implements QueryInterface
                 break;
             case 'genre':
             case 'tag':
-                $filter_sql = " `tag`.`id` = '" . Dba::escape($value) . "' AND ";
+                $filter_sql = " `tag`.`id` = '" . (int)$value . "' AND ";
                 break;
             case 'hidden':
-                $filter_sql = " `tag`.`is_hidden` = " . Dba::escape($value) . " AND ";
+                $filter_sql = " `tag`.`is_hidden` = " . (int)$value . " AND ";
                 break;
             case 'object_type':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`tag_id`', '`tag`.`id`', 100);
