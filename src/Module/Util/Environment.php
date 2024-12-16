@@ -277,7 +277,7 @@ final class Environment implements EnvironmentInterface
     public function isDevJS(string $entry): bool
     {
         // hardcoded port for simplicity
-        $handle = curl_init('http://localhost:5177/' . $entry, CURLOPT_TIMEOUT, 1);
+        $handle = curl_init('http://localhost:5177/' . $entry);
 
         if ($handle === false) {
             return false;
