@@ -87,9 +87,6 @@ class ShowActionTest extends MockeryTestCase
         $browse->shouldReceive('set_type')
             ->with('user')
             ->once();
-        $browse->shouldReceive('set_simple_browse')
-            ->with(true)
-            ->once();
         $browse->shouldReceive('set_sort')
             ->with('username', 'ASC')
             ->once();
