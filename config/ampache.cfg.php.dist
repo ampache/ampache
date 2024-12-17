@@ -6,7 +6,7 @@
 ; This value is used to detect if this config file is up to date
 ; this is compared against a constant called CONFIG_VERSION
 ; that is located in src/Config/Init/InitializationHandlerConfig.php
-config_version = 76
+config_version = 77
 
 ; Defines the default timezone used by the date functions
 ; Uses the same strings as the default date.timezone (https://php.net/date.timezone)
@@ -911,6 +911,13 @@ log_filename = "%name.%Y%m%d.log"
 ; You can make changes and then check how the player is functioning.
 ; DEFAULT: "false"
 ;webplayer_debug = "true"
+
+; Load Vite dev environment
+; This will load the Vite dev server scripts from scripts.inc.php
+; Not needed unless you're interested in Ampache JS dev
+; https://vite.dev/guide/
+; DEFAULT: "false"
+;vite_dev = "true"
 
 ;#########################################################
 ; Encoding Settings                                      #
