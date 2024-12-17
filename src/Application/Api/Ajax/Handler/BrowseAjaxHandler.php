@@ -149,10 +149,6 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
-            case 'toggle_tag':
-                $type = $_SESSION['tagcloud_type'] ?? 'song';
-                $browse->set_type($type);
-                break;
             case 'delete_object':
                 if (check_http_referer() === false) {
                     return;
