@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Ampache 6.6.5
+
+### Added
+
+* Database downgrades up to Ampache 7.1.0
+
+### Fixed
+
+* Don't try to insert localplay preferences if missing (You enable/disable these on demand)
+* HTML alignment of 'Post Shout' on the artist page
+* Show albums with 0 disks correctly
+* Sorting by `total_count` for PodcastEpisode and Podcast browses
+* Listing hidden tags
+* Loading songs with an empty AlbumDisk
+* Podcast Episode file type not set on first download
+
 ## Ampache 6.6.4
 
 ### Added

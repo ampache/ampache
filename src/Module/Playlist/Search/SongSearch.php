@@ -194,6 +194,9 @@ final class SongSearch implements SearchInterface
                     $where[]      = "`song`.`$rule[0]` $operator_sql ?";
                     $parameters[] = $input;
                     break;
+                case 'no_license':
+                    $where[]      = "`song`.`license` IS NULL";
+                    break;
                 case 'comment':
                     $join['song_data'] = true;
                     if (!$input || $input == '%%' || $input == '%') {
@@ -574,7 +577,7 @@ final class SongSearch implements SearchInterface
                     $where[] = "`song`.`id` IN (SELECT MAX(`id`) AS `id` FROM `song` GROUP BY `track`, `album`, `disk` HAVING COUNT(`track`) > 1)";
                     break;
                 case 'orphaned_album':
-                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` from `album`))";
+                    $where[] = "`song`.`album` IN (SELECT `album_id` FROM `album_map` WHERE `album_id` NOT IN (SELECT `id` FROM `album`))";
                     break;
                 case 'metadata':
                     $field = (int)$rule[3];

@@ -55,7 +55,7 @@ final class IpHistoryRepository implements IpHistoryRepositoryInterface
     /**
      * This returns the ip_history for the provided user
      *
-     * @return Generator<array{ip: string, date: DateTimeInterface}>
+     * @return Generator<array{ip: string, date: DateTimeInterface, agent: string}>
      */
     public function getHistory(
         User $user,

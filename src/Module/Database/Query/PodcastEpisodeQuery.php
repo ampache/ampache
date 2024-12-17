@@ -215,6 +215,7 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'pubdate':
             case 'state':
             case 'addition_time':
+            case 'total_count':
                 $sql = "`podcast_episode`.`$field`";
                 break;
             case 'rating':
