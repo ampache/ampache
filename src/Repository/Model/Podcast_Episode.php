@@ -232,7 +232,7 @@ class Podcast_Episode extends database_object implements
 
     public function getSizeFormatted(): string
     {
-        return UI::format_bytes($this->size);
+        return Ui::format_bytes($this->size);
     }
 
     /**
