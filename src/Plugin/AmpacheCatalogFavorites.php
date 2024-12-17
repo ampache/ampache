@@ -144,7 +144,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 if ($item->isNew() === false) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
+                        echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button(
