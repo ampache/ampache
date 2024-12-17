@@ -70,7 +70,7 @@ $latest_version  = AutoUpdate::get_latest_version(); ?>
 <?php  } ?>
         </ul>
     </div>
-<?php if (AmpConfig::get('autoupdate', false)) { ?>
+<?php if (AmpConfig::get('autoupdate', false)) {
     Ui::show_box_top(T_('Ampache Update'), 'box'); ?>
     <div><?php echo T_('Installed Ampache version'); ?>: <?php echo $current_version; ?></div>
     <div><?php echo T_('Latest Ampache version'); ?>: <?php echo $latest_version; ?></div>
