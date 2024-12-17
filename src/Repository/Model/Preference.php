@@ -2075,6 +2075,7 @@ class Preference extends database_object
             'user_agreement',
             'user_create_streamtoken',
             'user_no_email_confirm',
+            'vite_dev',
             'wanted_auto_accept',
             'wanted',
             'waveform',
