@@ -12,6 +12,8 @@ A big change here is in the Browse class.
 
 The logic of grid view has been normalized. Many logical issues reverse checking true/false and confusing text have been updated.
 
+If you use the Catalog Favorites plugin the `gridview` preference will now actually enable grid view
+
 Clear all your cookies and site data after the upgrade as this affects many visual areas on the site.
 
 ### Added
@@ -39,7 +41,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Allow a wild (`.*`) regex filter on Alphabet filters
 * Allow refresh on user recently played and skipped pages
 * Browse
-  * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then the default sort)
+  * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then by your `album_sort` pref)
   * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
   * Allow hiding the view menu (Just click the `View` link again to close it)
   * Read from the cache array if valid
@@ -92,6 +94,8 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Search
   * AlbumDisk searches look for the disk rating
   * Take `DISTINCT` off `id` in SongSearch
+* Plugin
+  * Catalog Favorites grid view is reversed to match the correct grid view logic
 
 ### Fixed
 
@@ -155,6 +159,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * Searching for null ratings when using the average rating search
 * Subsonic
   * Trying to add duplicate XML art attribute
+  * Errors with remote Subsonic catalog add
 
 ## Ampache 7.0.1
 

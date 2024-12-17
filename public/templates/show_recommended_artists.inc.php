@@ -47,7 +47,7 @@ $cel_artist  = "cel_artist";
 $cel_tags    = "cel_tags";
 $cel_time    = "cel_time";
 $cel_counter = "cel_counter"; ?>
-<?php UI::show_box_top(T_('Similar Artists'), 'info-box'); ?>
+<?php Ui::show_box_top(T_('Similar Artists'), 'info-box'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">

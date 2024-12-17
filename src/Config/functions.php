@@ -434,7 +434,7 @@ function return_bytes($val)
  */
 function check_config_writable(): bool
 {
-    // file eixsts && is writable, or dir is writable
+    // file exists && is writable, or dir is writable
     return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php')) ||
         (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
