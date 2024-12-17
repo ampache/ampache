@@ -997,10 +997,11 @@ class Query
             $sql .= $this->_sql_filter($key, $value);
         }
 
-        $dis = '';
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            // Add catalog enabled filter
-            $dis = Catalog::get_enable_filter($type, '`' . $type . '`.`id`');
+            // Add catalog enabled filter. ($this->_sql_filter( will add ' AND ' to the end of filters)
+            $sql .= ($sql == "WHERE")
+                ? ' ' . Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND '
+                : Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND ';
         }
 
         if (AmpConfig::get('catalog_filter')) {
@@ -1020,18 +1021,16 @@ class Query
                 case 'song':
                 case 'tag':
                 case 'video':
-                    $dis = Catalog::get_user_filter($type, $this->user_id ?? -1);
+                    $sql .= ($sql == "WHERE")
+                        ? ' ' . Catalog::get_user_filter($type, $this->user_id ?? -1)
+                        : Catalog::get_user_filter($type, $this->user_id ?? -1);
                     break;
             }
         }
 
-        if ($dis !== '' && $dis !== '0') {
-            $sql .= $dis . " AND ";
-        }
-
         $sql = rtrim($sql, " AND ") . " ";
 
-        return rtrim($sql, "WHERE ") . " ";
+        return rtrim($sql, "WHERE") . " ";
     }
 
     /**
