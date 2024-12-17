@@ -98,7 +98,7 @@ if (!$environment->check_dependencies_folder()) { ?>
 </tr>
 <tr>
     <td><?php echo T_('PHP iconv extension'); ?></td>
-    <td><?php echo debug_result(UI::check_iconv()); ?></td>
+    <td><?php echo debug_result(Ui::check_iconv()); ?></td>
     <td><?php echo T_('This tests whether you have the iconv extension enabled. This extension is required by Ampache.'); ?></td>
 </tr>
 <tr>
