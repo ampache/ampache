@@ -1130,6 +1130,7 @@ class Catalog_local extends Catalog
     public static function check_path($path): bool
     {
         if (!strlen($path)) {
+            debug_event('local.catalog', 'Path was not specified', 1);
             AmpError::add('general', T_('Path was not specified'));
 
             return false;
@@ -1137,6 +1138,7 @@ class Catalog_local extends Catalog
 
         // Make sure that there isn't a catalog with a directory above this one
         if (is_int(self::get_from_path($path))) {
+            debug_event('local.catalog', 'Specified path is inside an existing catalog', 1);
             AmpError::add('general', T_('Specified path is inside an existing catalog'));
 
             return false;
@@ -1144,7 +1146,7 @@ class Catalog_local extends Catalog
 
         // Make sure the path is readable/exists
         if (!Core::is_readable($path)) {
-            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            debug_event('local.catalog', 'The folder couldn\'t be read. Does it exist? ' . $path, 1);
             /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($path)));
 
