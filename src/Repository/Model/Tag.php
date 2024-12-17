@@ -685,9 +685,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
-        if (parent::is_cached('tags_list', 'no_name')) {
+        $cacheType = (empty($type)) ? 'all' : $type;
+        if (parent::is_cached('tags_list', $cacheType)) {
             //debug_event(self::class, 'Tags list found into cache memory!', 5);
-            return parent::get_from_cache('tags_list', 'no_name');
+            return parent::get_from_cache('tags_list', $cacheType);
         }
 
         $results = [];
@@ -730,7 +731,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             ];
         }
 
-        parent::add_to_cache('tags_list', 'no_name', $results);
+        parent::add_to_cache('tags_list', $cacheType, $results);
 
         return $results;
     }
