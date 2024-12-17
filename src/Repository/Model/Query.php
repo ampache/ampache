@@ -1030,7 +1030,7 @@ class Query
 
         $sql = rtrim($sql, " AND ") . " ";
 
-        return rtrim($sql, "WHERE") . " ";
+        return rtrim($sql, "WHERE ") . " ";
     }
 
     /**
