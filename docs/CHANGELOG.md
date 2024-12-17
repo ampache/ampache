@@ -55,8 +55,9 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * Add `none` to Song search (Empty rule/no filter)
 * Plugin
   * RatingMatch set the rating for Albums on single AlbumDisk objects
-* Config version 76
+* Config version 77
   * Add `alpha_string_pattern` allowing a custom Alphabet list
+  * Add `vite_dev` to check for the local dev environment
 * Database 710006
   * Update Creative Commons 3.0 licenses with a version suffix
   * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
@@ -134,6 +135,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Opening a song without a valid AlbumDisk would fail
 * Downloading PodcastEpisodes would not set file type
 * Installer CSS with Bootstrap 5
+* Vite url check may timeout your server for 2 minutes
 * Browse
   * Missing `total_count` sort types for Podcast and PodcastEpisode browse
   * Fixes for displaying browses after filtering
@@ -143,13 +145,15 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * Disabling Alphabet list would keep the filters active
   * Don't pull a tag or label lists if you aren't going to use it
   * Speed up tag Browse
+  * Admin User page browse filtering
+  * UserQuery regex had a `%` in the filters
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
   * AlbumDisk searches not looking for the AlbumDisk rating
   * SongSearch not checking `album_group` setting for `albumrating`
   * Searching for null ratings when using the average rating search
-* SubSonic
+* Subsonic
   * Trying to add duplicate XML art attribute
 
 ## Ampache 7.0.1
@@ -1409,7 +1413,7 @@ This release fixes up all the issues I created with the bad release files as wel
 * Null artist->id on wanted pages
 * Search
   * Album 'other_user' favorite searches
-* SubSonic
+* Subsonic
   * Error if you didn't have data when using get_user_data
   * Response data might fall back to mp3 and not match the output format
 * webplayer
@@ -1566,7 +1570,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
   * Added aliases for some of the confusing search types
-* SubSonic
+* Subsonic
   * Checking parameters might return the error AND the empty response
 
 ## Ampache 5.4.1-release
@@ -1671,7 +1675,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 * Searching for albums with '# Played' with grouping enabled with album_map
 * Adding a new xbmc localplay
 * Catalog type filter in get_top_sql
-* SubSonic
+* Subsonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
   * getPlayQueue doesn't change back to miliseconds from seconds
@@ -1691,7 +1695,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Updated the translation gathering process a little
 * Organized the play/skip counting into it's own function
 * Update artist from tags needs to update albums first
-* SubSonic
+* Subsonic
   * Only search for song title instead of everything
   * Add starred to directory elements
 
@@ -1702,7 +1706,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Migrating to a new album would leave old album maps
 * Artist search query with mapping was very slow
 * Database column check not included in 5.3.1 correctly
-* SubSonic
+* Subsonic
   * Get recently played
   * Fixed up search queries using "" (wrapping in quotes means exact search)
 
@@ -2348,7 +2352,7 @@ If you want to keep utf8 make sure you set it before running updates.
 ### Changed
 
 * Simplify flagging/rating multi-disk albums
-* SubSonic
+* Subsonic
   * just send getmusicfolders music folders
   * When calling createPlaylist, assume that the list needs to be empty first
 
@@ -2356,7 +2360,7 @@ If you want to keep utf8 make sure you set it before running updates.
 
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
-* SubSonic
+* Subsonic
   * Clients might send you a file path of Artist art instead of the id
   * Strings don't need json conversion checks
   * Send the cover art id for playlists
@@ -2433,7 +2437,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Persist replaygain setting as a cookie
 * Support for image per song
 * Format XML output using DOMDocument
-* SubSonic - shift the current track start time when you pause/resume
+* Subsonic - shift the current track start time when you pause/resume
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -2465,7 +2469,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Don't hide rss generation when you haven't got a key
 * Podcast episode durations that use seconds were converting into crazy lengths
 * Playlist and Smartlist check sql simplified
-* SubSonic - Json clients need their playlist entry to always array (single item lists)
+* Subsonic - Json clients need their playlist entry to always array (single item lists)
 
 ## Ampache 4.3.0-release
 
@@ -2476,7 +2480,7 @@ There also a few API changes to enable a bit better control for older clients.
 
 * Check limits on democratic playlists (> 0 && < 3000000000)
 * Show an error for out of range democratic cooldowns
-* SubSonic - Force a default format (xml) instead of none
+* Subsonic - Force a default format (xml) instead of none
 * Added back the agent string in recently played (for admins)
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'
