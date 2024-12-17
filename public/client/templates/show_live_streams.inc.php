@@ -41,7 +41,7 @@ $show_ratings = (User::is_registered() && AmpConfig::get('ratings'));
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $css_class = ($is_table) ? '' : ' gridview';
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-<?php UI::show_box_top(T_('Manage'), 'info-box'); ?>
+<?php Ui::show_box_top(T_('Manage'), 'info-box'); ?>
 <div id="information_actions">
 <ul>
 <li>
@@ -52,7 +52,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
 </li>
 </ul>
 </div>
-<?php UI::show_box_bottom(); ?>
+<?php Ui::show_box_bottom(); ?>
 <?php } ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');

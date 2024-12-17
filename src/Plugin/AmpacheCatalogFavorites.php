@@ -144,7 +144,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                 if ($item->isNew() === false) {
                     echo '<tr id="song_' . $userflag . '" class="libitem_menu">';
                     if ($this->gridview) {
-                        echo '<td class="cel_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
+                        echo '<td class="grid_song"><span style="font-weight: bold;">' . $item->get_f_link() . '</span><br> ';
                         echo '<span style="margin-right: 10px;">';
                         if (AmpConfig::get('directplay')) {
                             echo Ajax::button(
@@ -177,7 +177,7 @@ class AmpacheCatalogFavorites extends AmpachePlugin implements PluginDisplayHome
                     }
 
                     echo '<td class=grid_cover>';
-                    $thumb = ($this->gridview && !UI::is_grid_view('album')) ? 1 : 12; // default to 150x150
+                    $thumb = ($this->gridview) ? 12 : 1; // default to 100x100
                     $item->display_art($thumb, true);
                     echo '</td>';
 

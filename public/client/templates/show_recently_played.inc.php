@@ -51,7 +51,7 @@ $refresh   = "&nbsp" . Ajax::button('?page=index&action=refresh_index' . $user_s
 $web_path  = AmpConfig::get_web_path('/client');
 $is_admin  = Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN);
 $showAlbum = AmpConfig::get('album_group');
-UI::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
+Ui::show_box_top(T_('Recently Played') . $rss_link . $refresh, 'box_recently_played'); ?>
 <table class="tabledata striped-rows">
     <thead>
     <tr class="th-top">

@@ -117,4 +117,4 @@ if (AmpConfig::get('cookie_disclaimer')) {
     echo T_("By logging in you agree to the use of cookies while using this site.");
     echo '</div>';
 }
-UI::show_footer();
+Ui::show_footer();
