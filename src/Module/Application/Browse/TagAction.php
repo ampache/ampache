@@ -70,7 +70,7 @@ final class TagAction implements ApplicationActionInterface
         $request_type = $this->requestParser->getFromRequest('type');
         $browse_type  = (Browse::is_valid_type($request_type))
             ? $request_type
-            : $this->configContainer->get(ConfigurationKeyEnum::ALBUM_GROUP) ?? 'album';
+            : ($this->configContainer->get(ConfigurationKeyEnum::ALBUM_GROUP) ? 'album' : 'album_disk');
         if ($request_type != $browse_type) {
             $_REQUEST['type'] = $browse_type;
         }
