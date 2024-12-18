@@ -141,7 +141,9 @@ class Core
             return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: '';
+        return (filter_has_var(INPUT_SERVER, 'HTTP_X_FORWARDED_FOR'))
+            ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: ''
+            : '';
     }
 
     /**
