@@ -151,7 +151,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
 <?php if ($allowVideo) { ?>
                 <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
                 <?php } ?>
-        <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=album"><?php echo $t_genres; ?></a></li>
+        <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>"><?php echo $t_genres; ?></a></li>
 <?php if ($allow_upload) { ?>
               <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
 <?php } ?>

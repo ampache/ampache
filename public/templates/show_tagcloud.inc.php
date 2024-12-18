@@ -36,6 +36,7 @@ use Ampache\Repository\Model\Browse;
 $tag_types = [
     'artist' => T_('Artist'),
     'album' => T_('Album'),
+    'album_disk' => T_('Album'),
     'song' => T_('Song'),
     'video' => T_('Video'),
     'tag_hidden' => T_('Hidden'),
