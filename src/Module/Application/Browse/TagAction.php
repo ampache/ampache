@@ -25,6 +25,8 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Application\Browse;
 
+use Ampache\Config\ConfigContainerInterface;
+use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Util\RequestParserInterface;
 use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\ModelFactoryInterface;
@@ -39,6 +41,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class TagAction implements ApplicationActionInterface
 {
     public const REQUEST_KEY = 'tag';
+    private ConfigContainerInterface $configContainer;
 
     private RequestParserInterface $requestParser;
 
@@ -47,13 +50,15 @@ final class TagAction implements ApplicationActionInterface
     private UiInterface $ui;
 
     public function __construct(
+        ConfigContainerInterface $configContainer,
         RequestParserInterface $requestParser,
         ModelFactoryInterface $modelFactory,
         UiInterface $ui
     ) {
-        $this->requestParser = $requestParser;
-        $this->modelFactory  = $modelFactory;
-        $this->ui            = $ui;
+        $this->configContainer = $configContainer;
+        $this->requestParser   = $requestParser;
+        $this->modelFactory    = $modelFactory;
+        $this->ui              = $ui;
     }
 
     public function run(ServerRequestInterface $request, GuiGatekeeperInterface $gatekeeper): ?ResponseInterface
@@ -61,16 +66,20 @@ final class TagAction implements ApplicationActionInterface
         session_start();
 
         $this->ui->showHeader();
-
         // FIXME: This whole thing is ugly, even though it works.
         $request_type = $this->requestParser->getFromRequest('type');
-        $browse_type  = (Browse::is_valid_type($request_type)) ? $request_type : 'album';
+        $browse_type  = (Browse::is_valid_type($request_type))
+            ? $request_type
+            : $this->configContainer->get(ConfigurationKeyEnum::ALBUM_GROUP) ?? 'album';
         if ($request_type != $browse_type) {
             $_REQUEST['type'] = $browse_type;
         }
 
-        $object_ids = Tag::get_tags($browse_type, 0, 'name');
-        $keys       = array_keys($object_ids);
+        $object_ids = ($browse_type == 'album_disk')
+            ? Tag::get_tags('album', 0, 'name')
+            : Tag::get_tags($browse_type, 0, 'name');
+
+        $keys = array_keys($object_ids);
         Tag::build_cache($keys);
 
         $this->ui->showBoxTop(T_('Genres'), 'box box_tag_cloud');

@@ -12,13 +12,16 @@ global $dic;
 
 $videoRepository = $dic->get(VideoRepositoryInterface::class);
 $web_path        = AmpConfig::get_web_path('/client');
-$filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS); ?>
+$filter_str      = $type ?? (string) filter_input(INPUT_GET, 'type', FILTER_SANITIZE_SPECIAL_CHARS);
+$albumString     = (AmpConfig::get('album_group'))
+    ? 'album'
+    : 'album_disk'; ?>
 
 <div class="category_options">
     <a class="category <?php echo ($filter_str == 'song') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=song">
         <?php echo T_('Songs'); ?>
     </a>
-    <a class="category <?php echo ($filter_str == 'album') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=album">
+    <a class="category <?php echo ($filter_str == 'album' || $filter_str == 'album_disk') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>">
         <?php echo T_('Albums'); ?>
     </a>
     <a class="category <?php echo ($filter_str == 'artist' || $filter_str == 'album_artist') ? 'current' : ''; ?>" href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist">
