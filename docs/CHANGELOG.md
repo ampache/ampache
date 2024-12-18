@@ -139,7 +139,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Opening a song without a valid AlbumDisk would fail
 * Downloading PodcastEpisodes would not set file type
 * Installer CSS with Bootstrap 5
-* Vite url check may timeout your server for 2 minutes
+* Vite URL check may timeout your server for 2 minutes
 * Browse
   * Missing `total_count` sort types for Podcast and PodcastEpisode browse
   * Fixes for displaying browses after filtering
@@ -151,6 +151,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
   * Speed up tag Browse
   * Admin User page browse filtering
   * UserQuery regex had a `%` in the filters
+  * Display AlbumDisk items on the genre browse pages respecting `album_group`
 * Search
   * Respect catalog filter on search
   * Hide search action buttons on smartlists when the user is a guest
