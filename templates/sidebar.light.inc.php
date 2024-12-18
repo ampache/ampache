@@ -64,7 +64,7 @@ $sidebarLightString = (AmpConfig::get('sidebar_light') && AmpConfig::get('sideba
 <?php if (!AmpConfig::get('sidebar_hide_search', false)) { ?>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=smartplaylist"><?php echo Ui::get_image('topmenu-smartlist', $t_smartlists); ?><br /><?php echo $t_smartlists; ?></a></li>
 <?php } ?>
-    <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres; ?></a></li>
+    <li><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>"><?php echo Ui::get_image('topmenu-tagcloud', $t_genres); ?><br /><?php echo $t_genres; ?></a></li>
 <?php if (AmpConfig::get('live_stream')) { ?>
     <li><a href="<?php echo $web_path; ?>/browse.php?action=live_stream"><?php echo Ui::get_image('topmenu-radio', $t_radioStations); ?><br /><?php echo $t_radio; ?></a></li>
 <?php } ?>
