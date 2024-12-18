@@ -689,37 +689,42 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $results = array();
         if ($type == 'tag_hidden') {
-            $sql = "SELECT `tag`.`id` AS `tag_id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true ";
+            $is_hidden = 1;
+            $sql       = "SELECT `tag`.`id`, `tag`.`name`, 0 AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
-            $type_sql = (!empty($type))
-                ? "AND `tag_map`.`object_type` = '" . (string)scrub_in($type) . "'"
-                : "";
+            $is_hidden = 0;
+            $type_sql  = (empty($type))
+                ? ""
+                : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
 
-            $sql = (AmpConfig::get('catalog_filter') && !empty(Core::get_global('user')) && Core::get_global('user')->id > 0)
-                ? "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE" . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
-                : "SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` $type_sql WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ";
+            $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
+                ? sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
+                : sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
 
-            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
         }
+
         $order = "`" . $order . "`";
         if ($order == 'count') {
             $order .= " DESC";
         }
+
         $sql .= "ORDER BY " . $order;
 
         if ($limit > 0) {
-            $sql .= " LIMIT $limit";
+            $sql .= ' LIMIT ' . $limit;
         }
+
         //debug_event(self::class, 'get_tags ' . $sql, 5);
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['id']] = array(
+            $results[$row['id']] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
+                'is_hidden' => $is_hidden,
                 'count' => $row['count'] ?? 0
-            );
+            ];
         }
 
         parent::add_to_cache('tags_list', 'no_name', $results);
