@@ -79,6 +79,10 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 </tr>
                 <?php } ?>
             <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
+                <td><input type="text" name="disk" value="<?php echo scrub_out((string)$libitem->disk); ?>" /></td>
+            </tr>
+            <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Track'); ?></td>
                 <td><input type="text" name="track" value="<?php echo scrub_out((string)$libitem->track); ?>" /></td>
             </tr>

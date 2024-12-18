@@ -33,19 +33,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 
-$tag_types = [
-    'artist' => T_('Artist'),
-    'album' => T_('Album'),
-    'song' => T_('Song'),
-    'video' => T_('Video'),
-    'tag_hidden' => T_('Hidden'),
-];
-
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
 /** @var UiInterface $ui */
-/** @var Browse $browse2 */
+/** @var Browse $browse */
 /** @var list<array{id: int, name: string}> $object_ids */
 /** @var string $browse_type */
 
@@ -58,13 +50,13 @@ $ui->show(
     <div class="tag_container">
         <div class="tag_button">
             <span id="click_tag_<?php echo $data['id']; ?>"><?php echo scrub_out($data['name']); ?></span>
-            <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $data['id'], '')); ?>
+            <?php echo Ajax::observe('click_tag_' . $data['id'], 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=tag&tag=' . $data['id'], '')); ?>
         </div>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id']; ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
+                    <a class="tag_edit" id="<?php echo 'edit_tag_' . $data['id']; ?>" onclick="showEditDialog('tag_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
                         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                     </a>
                 </li>
@@ -83,7 +75,7 @@ if (isset($_GET['show_tag'])) {
     $show_tag = (int) (Core::get_get('show_tag')); ?>
 <script>
 $(document).ready(function () {
-    <?php echo Ajax::action('?page=tag&action=add_filter&browse_id=' . $browse2->id . '&tag_id=' . $show_tag, ''); ?>
+    <?php echo Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=tag&tag=' . $show_tag, ''); ?>
 });
 </script>
 <?php

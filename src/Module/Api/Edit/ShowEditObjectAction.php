@@ -28,6 +28,7 @@ namespace Ampache\Module\Api\Edit;
 use Ampache\Config\ConfigContainerInterface;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\Share;
 use Ampache\Repository\UserRepositoryInterface;
@@ -65,7 +66,8 @@ final class ShowEditObjectAction extends AbstractEditAction
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         library_item|Share $libitem,
-        int $object_id
+        int $object_id,
+        ?Browse $browse = null
     ): ?ResponseInterface {
         ob_start();
         $users     = self::getUserRepository()->getValidArray();

@@ -478,7 +478,7 @@ class Recommendation
             'largephoto' => null,
             'smallphoto' => null,
             'mediumphoto' => null,
-            'megaphoto' => null
+            'megaphoto' => null,
         ];
 
         try {

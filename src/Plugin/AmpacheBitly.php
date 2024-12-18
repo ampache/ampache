@@ -116,7 +116,7 @@ class AmpacheBitly extends AmpachePlugin implements PluginShortenerInterface
 
         $headers = [
             'Authorization' => 'Bearer ' . $this->bitly_token,
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ];
         $data = [
             'group_guid' => $this->bitly_group_guid,

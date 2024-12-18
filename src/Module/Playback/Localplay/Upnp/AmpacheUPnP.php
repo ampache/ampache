@@ -122,7 +122,7 @@ class AmpacheUPnP extends localplay_controller
     public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_upnp` (`name`, `url`, `owner`) VALUES (?, ?, ?)";
-        $user_id = Core::get_global('user') instanceof User
+        $user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : -1;
 
@@ -517,10 +517,14 @@ class AmpacheUPnP extends localplay_controller
     public function connect(): bool
     {
         $options = self::get_instance();
-        debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
-        $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
-        debug_event('upnp.controller', 'Connected.', 5);
+        if (isset($options['name']) && isset($options['url'])) {
+            debug_event('upnp.controller', 'Trying to connect UPnP instance ' . $options['name'] . ' ( ' . $options['url'] . ' )', 5);
+            $this->_upnp = new UPnPPlayer($options['name'], $options['url']);
+            debug_event('upnp.controller', 'Connected.', 5);
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 }

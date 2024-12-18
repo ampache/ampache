@@ -299,7 +299,7 @@ class Catalog_local extends Catalog
             // reduce the crazy log info
             if ($counter % 1000 == 0) {
                 debug_event('local.catalog', "Reading $file inside $path", 5);
-                debug_event('local.catalog', "Memory usage: " . (string) UI::format_bytes(memory_get_usage(true)), 5);
+                debug_event('local.catalog', "Memory usage: " . (string) Ui::format_bytes(memory_get_usage(true)), 5);
             }
             $counter++;
 
@@ -572,10 +572,10 @@ class Catalog_local extends Catalog
         }
 
         $time_diff = time() - $start_time;
-        $rate      = number_format(($time_diff > 0)
-            ? $this->count / $time_diff
-            : 0, 2);
-        if ($rate < 1) {
+        $rate      = ($time_diff > 0)
+            ? number_format($this->count / $time_diff)
+            : '0';
+        if (((float)$rate) < 1) {
             $rate = T_('N/A');
         }
 
@@ -1118,7 +1118,7 @@ class Catalog_local extends Catalog
             'file_path' => (string) $media->file,
             'file_name' => $media->getFileName(),
             'file_size' => $media->size,
-            'file_type' => $media->type
+            'file_type' => $media->type,
         ];
     }
 
@@ -1130,6 +1130,7 @@ class Catalog_local extends Catalog
     public static function check_path($path): bool
     {
         if (!strlen($path)) {
+            debug_event('local.catalog', 'Path was not specified', 1);
             AmpError::add('general', T_('Path was not specified'));
 
             return false;
@@ -1137,6 +1138,7 @@ class Catalog_local extends Catalog
 
         // Make sure that there isn't a catalog with a directory above this one
         if (is_int(self::get_from_path($path))) {
+            debug_event('local.catalog', 'Specified path is inside an existing catalog', 1);
             AmpError::add('general', T_('Specified path is inside an existing catalog'));
 
             return false;
@@ -1144,7 +1146,7 @@ class Catalog_local extends Catalog
 
         // Make sure the path is readable/exists
         if (!Core::is_readable($path)) {
-            debug_event('local.catalog', 'Cannot add catalog at unopenable path ' . $path, 1);
+            debug_event('local.catalog', 'The folder couldn\'t be read. Does it exist? ' . $path, 1);
             /* HINT: directory (file path) */
             AmpError::add('general', sprintf(T_("The folder couldn't be read. Does it exist? %s"), scrub_out($path)));
 

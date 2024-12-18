@@ -63,17 +63,19 @@ use Ampache\Repository\Model\Userflag;
 </td>
 <td class="cel_last_update"><?php echo $libitem->f_last_update; ?></td>
 <td class="cel_type"><?php echo $libitem->get_f_type(); ?></td>
-<td class="cel_random"><?php echo($libitem->random ? T_('Yes') : T_('No')); ?></td>
+<td class="cel_random"><?php echo(($libitem->random) ? T_('Yes') : T_('No')); ?></td>
 <td class="cel_limit"><?php echo(($libitem->limit > 0) ? $libitem->limit : T_('None')); ?></td>
 
 <?php if (User::is_registered() && (AmpConfig::get('ratings'))) { ?>
     <td class="cel_ratings">
-        <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">
-            <?php echo Rating::show($libitem->getId(), 'search'); ?>
-        </span>
-        <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_search">
-            <?php echo Userflag::show($libitem->getId(), 'search'); ?>
-        </span>
+        <div class="rating">
+            <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_search">
+                <?php echo Rating::show($libitem->getId(), 'search'); ?>
+            </span>
+            <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_search">
+                <?php echo Userflag::show($libitem->getId(), 'search'); ?>
+            </span>
+        </div>
     </td>
 <?php } ?>
 <td class="cel_owner"><?php echo scrub_out($libitem->username); ?></td>

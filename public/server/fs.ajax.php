@@ -50,7 +50,7 @@ if (isset($_GET['operation'])) {
             case 'get_node':
                 $rslt = $fs->lst($node, (isset($_GET['id']) && $_GET['id'] === '#'));
                 break;
-            case "get_content":
+            case 'get_content':
                 $rslt = $fs->data($node);
                 break;
             case 'create_node':

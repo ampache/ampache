@@ -121,7 +121,7 @@ class AmpacheVlc extends localplay_controller
     public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_vlc` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = Core::get_global('user') instanceof User
+        $user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : -1;
 
@@ -577,7 +577,7 @@ class AmpacheVlc extends localplay_controller
                 ENT_NOQUOTES
             );
             $url_data = $this->parse_url($ampurl);
-            $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
+            $oid      = (array_key_exists('oid', $url_data)) ? $url_data['oid'] : '';
 
             foreach ($listtracks as $track) {
                 if ($track['oid'] == $oid) {

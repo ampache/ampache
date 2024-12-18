@@ -44,9 +44,9 @@ final class Migration500002 extends AbstractMigration
         $tables = [
             'album',
             'artist',
+            'podcast_episode',
             'song',
             'video',
-            'podcast_episode'
         ];
         foreach ($tables as $type) {
             Dba::write("ALTER TABLE `$type` DROP COLUMN `total_count`;", [], true);
@@ -57,9 +57,9 @@ final class Migration500002 extends AbstractMigration
 
         // tables that also have a skip count
         $tables = [
+            'podcast_episode',
             'song',
             'video',
-            'podcast_episode'
         ];
         foreach ($tables as $type) {
             Dba::write("ALTER TABLE `$type` DROP COLUMN `total_skip`;", [], true);

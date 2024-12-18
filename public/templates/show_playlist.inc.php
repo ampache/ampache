@@ -56,7 +56,7 @@ $web_path = AmpConfig::get_web_path();
 ob_end_clean();
 Ui::show_box_top('<div id="playlist_row_' . $playlist->id . '">' . $title . '</div>', 'info-box'); ?>
 <div class="item_right_info">
-<?php $thumb = Ui::is_grid_view('playlist') ? 32 : 11;
+<?php $thumb = Ui::is_grid_view('playlist') ? 11 : 32;
 $playlist->display_art($thumb, false, false); ?>
 </div>
 <?php if (User::is_registered() && AmpConfig::get('ratings')) { ?>
@@ -102,7 +102,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
     <?php } ?>
     <?php if (AmpConfig::get('share')) { ?>
         <a onclick="showShareDialog(event, 'playlist', '<?php echo $playlist->id; ?>');">
-                <?php echo UI::get_material_symbol('share', T_('Share playlist'));
+                <?php echo Ui::get_material_symbol('share', T_('Share playlist'));
         echo "&nbsp;" . T_('Share playlist'); ?>
         </a>
     <?php } ?>

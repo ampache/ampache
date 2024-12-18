@@ -122,7 +122,7 @@ class OAuthServer
 
         return [
             $consumer,
-            $token
+            $token,
         ];
     }
 
@@ -157,7 +157,7 @@ class OAuthServer
      */
     private function get_signature_method($request)
     {
-        $signature_method = $request instanceof OAuthRequest ? $request->get_parameter("oauth_signature_method") : null;
+        $signature_method = ($request instanceof OAuthRequest) ? $request->get_parameter("oauth_signature_method") : null;
 
         if (!$signature_method) {
             // According to chapter 7 ("Accessing Protected Resources") the signature-method
@@ -180,7 +180,7 @@ class OAuthServer
      */
     private function get_consumer($request)
     {
-        $consumer_key = $request instanceof OAuthRequest ? $request->get_parameter("oauth_consumer_key") : null;
+        $consumer_key = ($request instanceof OAuthRequest) ? $request->get_parameter("oauth_consumer_key") : null;
 
         if (!$consumer_key) {
             throw new OAuthException("Invalid consumer key");
@@ -204,7 +204,7 @@ class OAuthServer
      */
     private function get_token($request, $consumer, $token_type = "access")
     {
-        $token_field = $request instanceof OAuthRequest ? $request->get_parameter('oauth_token') : null;
+        $token_field = ($request instanceof OAuthRequest) ? $request->get_parameter('oauth_token') : null;
         $token       = $this->data_store->lookup_token($consumer, $token_type, $token_field);
         if (!$token) {
             throw new OAuthException("Invalid $token_type token: $token_field");

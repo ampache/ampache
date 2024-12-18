@@ -42,14 +42,15 @@ use Ampache\Repository\PodcastRepositoryInterface;
 $webPath      = AmpConfig::get_web_path();
 $thcount      = 7;
 $show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$is_table     = $browse->is_grid_view();
+$is_table     = !$browse->is_grid_view();
 // translate once
 $count_text  = T_('Played');
 $rating_text = T_('Rating');
 $action_text = T_('Actions');
 //mashup and grid view need different css
 $cel_cover   = ($is_table) ? "cel_cover" : 'grid_cover';
-$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
+$cel_counter = ($is_table) ? "cel_counter" : 'grid_counter';
+$css_class   = ($is_table) ? '' : ' gridview'; ?>
 <div id="information_actions">
     <ul>
         <?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) { ?>
@@ -77,7 +78,7 @@ $cel_counter = ($is_table) ? "cel_counter" : 'grid_counter'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="podcast">
+<table class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="podcast">
     <thead>
         <tr class="th-top">
             <th class="cel_play essential"></th>

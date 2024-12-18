@@ -54,13 +54,13 @@ class Democratic extends Tmp_Playlist
 
     public int $base_playlist = 0;
 
-    public $f_cooldown;
+    public string $f_cooldown;
 
-    public $f_primary;
+    public string $f_primary;
 
-    public $f_level;
+    public string $f_level;
 
-    public $tmp_playlist;
+    public ?int $tmp_playlist;
 
     public $object_ids = [];
 
@@ -149,7 +149,7 @@ class Democratic extends Tmp_Playlist
     public function format(): void
     {
         $this->f_cooldown = $this->cooldown . ' ' . T_('minutes');
-        $this->f_primary  = $this->primary ? T_('Primary') : '';
+        $this->f_primary  = ($this->primary) ? T_('Primary') : '';
         $this->f_level    = $this->getAccessLevel()->toDescription();
     }
 
@@ -292,8 +292,8 @@ class Democratic extends Tmp_Playlist
             return $data[0]['object_id'];
         } else {
             $sql = "SELECT `id` FROM `song` WHERE `enabled`='1'";
-            if (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->getId() > 0) {
-                $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')->id);
+            if (AmpConfig::get('catalog_filter')) {
+                $sql .= " AND" . Catalog::get_user_filter("song", Core::get_global('user')?->id ?? -1);
             }
 
             $sql .= " ORDER BY RAND() LIMIT 1";
@@ -400,7 +400,7 @@ class Democratic extends Tmp_Playlist
         $className = ObjectTypeToClassNameMapper::map($object_type);
         /** @var Media $media */
         $media = new $className($object_id);
-        $track = isset($media->track) ? (int)($media->track) : null;
+        $track = (isset($media->track)) ? (int)($media->track) : null;
 
         /* If it's on the playlist just vote */
         $sql        = "SELECT `id` FROM `tmp_playlist_data` WHERE `tmp_playlist_data`.`object_id` = ? AND `tmp_playlist_data`.`tmp_playlist` = ?";

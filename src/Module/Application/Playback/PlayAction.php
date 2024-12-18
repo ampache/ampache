@@ -144,7 +144,9 @@ final class PlayAction implements ApplicationActionInterface
             $player       = scrub_in((string) ($new_request['player'] ?? ''));
             $format       = scrub_in((string) ($new_request['format'] ?? ''));
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '') ? $format : scrub_in((string) ($new_request['transcode_to'] ?? ''));
+            $transcode_to = (!$original && $format != '')
+                ? $format
+                : scrub_in((string) ($new_request['transcode_to'] ?? ''));
 
             // Share id and secret if used
             $share_id = (int)scrub_in((string) ($new_request['share_id'] ?? 0));
@@ -170,7 +172,9 @@ final class PlayAction implements ApplicationActionInterface
             $player       = scrub_in((string) filter_input(INPUT_GET, 'player', FILTER_SANITIZE_SPECIAL_CHARS));
             $format       = scrub_in((string) filter_input(INPUT_GET, 'format', FILTER_SANITIZE_SPECIAL_CHARS));
             $original     = ($format == 'raw');
-            $transcode_to = (!$original && $format != '') ? $format : scrub_in((string) filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
+            $transcode_to = (!$original && $format != '')
+                ? $format
+                : scrub_in((string) filter_input(INPUT_GET, 'transcode_to', FILTER_SANITIZE_SPECIAL_CHARS));
 
             // Share id and secret if used
             $share_id = (int)filter_input(INPUT_GET, 'share_id', FILTER_SANITIZE_NUMBER_INT);
@@ -237,13 +241,13 @@ final class PlayAction implements ApplicationActionInterface
                 for ($i = 0; $i < $v_count; $i += 2) {
                     switch ($vparts[$i]) {
                         case 'maxbitrate':
-                            $maxbitrate = (int) ($vparts[$i + 1]);
+                            $maxbitrate = (int)($vparts[$i + 1]);
                             break;
                         case 'resolution':
                             $resolution = $vparts[$i + 1];
                             break;
                         case 'quality':
-                            $quality = (int) ($vparts[$i + 1]);
+                            $quality = (int)($vparts[$i + 1]);
                             break;
                     }
                 }
@@ -609,8 +613,12 @@ final class PlayAction implements ApplicationActionInterface
         $transcode      = false;
         $transcode_cfg  = AmpConfig::get('transcode', 'default');
         $cache_file     = false;
-        $mediaOwnerId   = ($media instanceof Song_Preview) ? null : $media->get_user_owner();
-        $mediaCatalogId = ($media instanceof Song_Preview) ? null : $media->catalog;
+        $mediaOwnerId   = ($media instanceof Song_Preview)
+            ? null
+            : $media->get_user_owner();
+        $mediaCatalogId = ($media instanceof Song_Preview)
+            ? null
+            : $media->catalog;
         if ($mediaCatalogId) {
             /** @var Song|Podcast_Episode|Video $media */
             // The media catalog is restricted
@@ -867,7 +875,9 @@ final class PlayAction implements ApplicationActionInterface
         if ($transcode) {
             $transcode_settings = $media->get_transcode_settings($transcode_to, $player, $troptions);
             if ($bitrate) {
-                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate) ? $maxbitrate : $bitrate;
+                $troptions['bitrate'] = ($maxbitrate > 0 && $maxbitrate < $media_bitrate)
+                    ? $maxbitrate
+                    : $bitrate;
             }
             if ($maxbitrate > 0) {
                 $troptions['maxbitrate'] = $maxbitrate;
@@ -895,8 +905,10 @@ final class PlayAction implements ApplicationActionInterface
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-                $troptions['frame']    = (int) ($_REQUEST['segment']) * $ssize;
-                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time) ? $ssize : ($media->time - $troptions['frame']);
+                $troptions['frame']    = (int)($_REQUEST['segment']) * $ssize;
+                $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
+                    ? $ssize
+                    : ($media->time - $troptions['frame']);
             }
 
             $transcoder  = Stream::start_transcode($media, $transcode_settings, $troptions);
@@ -1106,7 +1118,7 @@ final class PlayAction implements ApplicationActionInterface
             return null;
         } elseif ($status > 0) {
             do {
-                $read_size = $transcode
+                $read_size = ($transcode)
                     ? 2048
                     : min(2048, max(0, $stream_size - $bytes_streamed));
 

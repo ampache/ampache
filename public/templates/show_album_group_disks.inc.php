@@ -98,6 +98,9 @@ if (AmpConfig::get('external_links_lastfm')) {
 if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_album_name) . "+" . rawurlencode($f_name) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
+if (AmpConfig::get('external_links_discogs')) {
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($f_album_name == 'Various Artists') ? 'Various' : $f_album_name) . "+" . rawurlencode($f_name) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+}
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($album->mbid) {
         echo "<a href=\"https://musicbrainz.org/release/" . $album->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
@@ -109,7 +112,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $f_album_name . '] ' . scrub_out($f_name);
-        $thumb = Ui::is_grid_view('album') ? 32 : 11;
+        $thumb = Ui::is_grid_view('album') ? 11 : 32;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>
@@ -209,7 +212,7 @@ if ($access25) {
             </li>
     <?php }
     }
-if (($owner_id > 0 && !empty($current_user) && $owner_id == (int) $current_user->id) || $access50) {
+if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || $access50) {
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>
                 <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=album&object_id=<?php echo $album->id; ?>">
@@ -274,8 +277,8 @@ if (Catalog::can_remove($album)) {
 define('TABLE_RENDERED', 1);
 foreach ($album->getDisks() as $album_disk) {
     $sub_title  = (!empty($album_disk->disksubtitle))
-        ? scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . ": " . scrub_out($album_disk->disksubtitle) . "</span>"
-        : scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";
+        ? $album_disk->get_f_link() . "<span class=\"discnb disc" . $album_disk->disk . "\">: " . scrub_out($album_disk->disksubtitle) . "</span>"
+        : $album_disk->get_f_link();
     if ($directplay_limit > 0) {
         $show_playlist_add = ($album_disk->song_count <= $directplay_limit);
         if ($show_direct_play) {
@@ -306,6 +309,11 @@ foreach ($album->getDisks() as $album_disk) {
             echo Share::display_ui('album_disk', $album_disk->id, false);
         }
     }
+    if ($isAlbumEditable) { ?>
+        <a id="<?php echo 'edit_album_disk_' . $album_disk->id; ?>" onclick="showEditDialog('album_disk_row', '<?php echo $album_disk->id; ?>', '<?php echo 'edit_album_disk_' . $album_disk->id; ?>', '<?php echo addslashes(T_('Album Edit')); ?>', '')">
+                    <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+                </a>
+    <?php }
     if ($zip_albumD) { ?>
             <a class="nohtml" href="<?php echo $web_path; ?>/batch.php?action=album_disk&id=<?php echo $album_disk->id; ?>"><?php echo Ui::get_material_symbol('folder_zip', T_('Download')); ?></a>
         <?php } ?>

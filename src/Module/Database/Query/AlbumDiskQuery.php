@@ -25,6 +25,7 @@ declare(strict_types=0);
 
 namespace Ampache\Module\Database\Query;
 
+use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Repository\Model\Query;
@@ -32,24 +33,24 @@ use Ampache\Repository\Model\Query;
 final class AlbumDiskQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'add_gt',
         'add_lt',
+        'album_artist',
         'alpha_match',
         'artist',
-        'album_artist',
-        'song_artist',
-        'catalog',
         'catalog_enabled',
+        'catalog',
         'equal',
         'exact_match',
         'genre',
+        'id',
         'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
+        'song_artist',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'tag',
         'unplayed',
         'update_gt',
@@ -59,35 +60,37 @@ final class AlbumDiskQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'album_id',
-        'disk',
-        'disk_count',
-        'time',
-        'catalog',
-        'song_count',
-        'total_count',
-        'disksubtitle',
+        'album_artist_album_sort',
+        'album_artist_title',
         'album_artist',
+        'album_id',
         'artist',
         'barcode',
         'catalog_number',
+        'catalog',
+        'disk_count',
+        'disk',
+        'disksubtitle',
         'generic_artist',
-        'title',
-        'name',
-        'name_year',
+        'id',
         'name_original_year',
+        'name_year',
+        'name',
         'original_year',
         'rand',
+        'rating',
         'release_status',
         'release_type',
+        'song_count',
         'subtitle',
-        'version',
-        'year',
-        'rating',
+        'time',
+        'title',
+        'total_count',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
+        'version',
+        'year',
     ];
 
     protected string $select = "`album_disk`.`id`";
@@ -149,7 +152,7 @@ final class AlbumDiskQuery implements QueryInterface
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='album' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -275,6 +278,38 @@ final class AlbumDiskQuery implements QueryInterface
                     100
                 );
                 break;
+            case 'album_artist_album_sort':
+                $sql = "`artist`.`name` $order, ";
+                // sort the albums by arist AND default sort
+                $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
+                $sort_type     = AmpConfig::get('album_sort');
+                switch ($sort_type) {
+                    case 'name_asc':
+                        $sql .= '`album`.`name` ' . $order . ', `album_disk`.`disk`';
+                        $order = 'ASC';
+                        break;
+                    case 'name_desc':
+                        $sql .= '`album`.`name` ' . $order . ', `album_disk`.`disk`';
+                        $order = 'DESC';
+                        break;
+                    case 'year_asc':
+                        $sql .= '`album`.`' . $original_year . '` ' . $order . ', `album_disk`.`disk`';
+                        $order = 'ASC';
+                        break;
+                    case 'year_desc':
+                        $sql .= '`album`.`' . $original_year . '` ' . $order . ', `album_disk`.`disk`';
+                        $order = 'DESC';
+                        break;
+                    case 'default':
+                    default:
+                        $sql .= '`album`.`name` ' . $order . ', `album_disk`.`disk`, `album`' . `' . $original_year . '`;
+                }
+                $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                break;
+            case 'album_artist_title':
+                $sql = "`artist`.`name` $order, `album`.`name` $order, `album_disk`.`disk`";
+                $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
+                break;
             case 'album_artist':
                 $sql = "`artist`.`name`";
                 $query->set_join('LEFT', '`artist`', '`album`.`album_artist`', '`artist`.`id`', 100);
@@ -308,19 +343,19 @@ final class AlbumDiskQuery implements QueryInterface
                 break;
             case 'album_id':
             case 'catalog':
-            case 'disk':
             case 'disk_count':
+            case 'disk':
             case 'disksubtitle':
             case 'song_count':
-            case 'total_count':
             case 'time':
+            case 'total_count':
                 $sql   = "`album_disk`.`$field` $order, `album`.`name`, `album_disk`.`disk`";
                 $order = '';
                 break;
-            case 'release_type':
-            case 'release_status':
             case 'barcode':
             case 'catalog_number':
+            case 'release_status':
+            case 'release_type':
             case 'subtitle':
             case 'version':
                 $sql   = "`album`.`$field` $order, `album`.`name`, `album_disk`.`disk`";

@@ -32,36 +32,36 @@ use Ampache\Repository\Model\Query;
 final class LiveStreamQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
-        'catalog',
         'catalog_enabled',
+        'catalog',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'user_catalog',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'title',
-        'name',
+        'catalog',
         'catalog',
         'codec',
-        'site_url',
-        'url',
         'genre',
-        'catalog',
+        'id',
+        'name',
         'rating',
+        'site_url',
+        'title',
+        'url',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
     ];
 
     protected string $select = "`live_stream`.`id`";
@@ -181,10 +181,10 @@ final class LiveStreamQuery implements QueryInterface
                 break;
             case 'catalog':
             case 'codec':
+            case 'genre':
             case 'id':
             case 'site_url':
             case 'url':
-            case 'genre':
                 $sql = "`live_stream`.`$field`";
                 break;
             case 'rating':

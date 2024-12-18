@@ -71,7 +71,7 @@ class Stream_Playlist
 
     private ?string $streamtoken = null;
 
-    public string $id;
+    public ?string $id = null;
 
     /** @var list<Stream_Url> */
     public array $urls = [];

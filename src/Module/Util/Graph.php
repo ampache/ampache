@@ -291,7 +291,7 @@ class Graph
 
         // Only display other users if the graph is not for a specific catalog
         if (!$catalog_id) {
-            $catalogs = Catalog::get_catalogs();
+            $catalogs = Catalog::get_all_catalogs();
             foreach ($catalogs as $catalog_id) {
                 $catalog = Catalog::create_from_id($catalog_id);
                 if ($catalog === null) {
@@ -568,7 +568,7 @@ class Graph
             "EndR" => 50,
             "EndG" => 50,
             "EndB" => 50,
-            "Alpha" => 50
+            "Alpha" => 50,
         ];
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_VERTICAL, $Settings);
         $myPicture->drawGradientArea(0, 0, $width, $height, DIRECTION_HORIZONTAL, $Settings);
@@ -598,7 +598,7 @@ class Graph
             "DrawSubTicks" => false,
             "Mode" => SCALE_MODE_START0,
             "LabelRotation" => 45,
-            "LabelingMethod" => LABELING_DIFFERENT
+            "LabelingMethod" => LABELING_DIFFERENT,
         ];
         $myPicture->drawScale($scaleSettings);
 

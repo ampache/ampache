@@ -99,15 +99,15 @@ class Podcast_Episode extends database_object implements
 
     public ?string $waveform = null;
 
-    public $type;
+    public string $type;
 
-    public $mime;
+    public string $mime;
 
-    public $f_name;
+    public ?string $f_name = null;
 
-    public $f_time;
+    public string $f_time;
 
-    public $f_time_h;
+    public string $f_time_h;
 
     private ?string $link = null;
 
@@ -232,7 +232,7 @@ class Podcast_Episode extends database_object implements
 
     public function getSizeFormatted(): string
     {
-        return UI::format_bytes($this->size);
+        return Ui::format_bytes($this->size);
     }
 
     /**
@@ -364,7 +364,7 @@ class Podcast_Episode extends database_object implements
     {
         return [
             'object_type' => LibraryItemEnum::PODCAST,
-            'object_id' => $this->podcast
+            'object_id' => $this->podcast,
         ];
     }
 

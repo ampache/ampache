@@ -151,7 +151,7 @@ if (!AmpConfig::get('sidebar_hide_browse', false)) { ?>
 <?php if ($allowVideo) { ?>
                 <li id="sb_home_browse_video"><a href="<?php echo $web_path; ?>/browse.php?action=video"><?php echo $t_videos; ?></a></li>
                 <?php } ?>
-        <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=artist"><?php echo $t_genres; ?></a></li>
+        <li id="sb_home_browse_tags"><a href="<?php echo $web_path; ?>/browse.php?action=tag&type=<?php echo $albumString; ?>"><?php echo $t_genres; ?></a></li>
 <?php if ($allow_upload) { ?>
               <li id="sb_home_browse_upload"><a href="<?php echo $web_path; ?>/stats.php?action=upload"><?php echo $t_uploads; ?></a></li>
 <?php } ?>
@@ -215,7 +215,7 @@ if (
 <?php if (
     $access25 &&
     !AmpConfig::get('sidebar_hide_playlist', false)
-) {  ?>
+) { ?>
     <li class="sb2_playlist" style="order: <?php echo $order_playlist; ?>">
         <h4 class="header">
             <span class="sidebar-header-title"><?php echo $t_playlists; ?></span>
@@ -231,7 +231,7 @@ if (
         <?php if ($server_allow && $controller) { ?>
             <?php $localplay      = new LocalPlay(AmpConfig::get('localplay_controller', ''));
             $current_instance     = $localplay->current_instance();
-            $class                = $current_instance ? '' : ' class="active_instance"'; ?>
+            $class                = ($current_instance) ? '' : ' class="active_instance"'; ?>
                 <li id="sb_home_playlist_show"><a href="<?php echo $web_path; ?>/localplay.php?action=show_playlist"><?php echo $t_localplay; ?></a></li>
         <?php } ?>
         </ul>

@@ -266,13 +266,13 @@ final class Play2Action implements ApplicationActionInterface
                 for ($i = 0; $i < $v_count; $i += 2) {
                     switch ($vparts[$i]) {
                         case 'maxbitrate':
-                            $maxbitrate = (int) ($vparts[$i + 1]);
+                            $maxbitrate = (int)($vparts[$i + 1]);
                             break;
                         case 'resolution':
                             $resolution = $vparts[$i + 1];
                             break;
                         case 'quality':
-                            $quality = (int) ($vparts[$i + 1]);
+                            $quality = (int)($vparts[$i + 1]);
                             break;
                     }
                 }
@@ -797,7 +797,7 @@ final class Play2Action implements ApplicationActionInterface
             // Check to see if we should be throttling because we can get away with it
             if (AmpConfig::get('rate_limit') > 0) {
                 while (!feof($filepointer)) {
-                    echo fread($filepointer, (int) (round(AmpConfig::get('rate_limit', 8192) * 1024)));
+                    echo fread($filepointer, (int)(round(AmpConfig::get('rate_limit', 8192) * 1024)));
                     flush();
                     sleep(1);
                 }
@@ -927,7 +927,7 @@ final class Play2Action implements ApplicationActionInterface
                     'Sending all data in one piece.',
                     [LegacyLogger::CONTEXT_TYPE => self::class]
                 );
-                $troptions['frame']    = (int) ($this->requestParser->getFromRequest('segment')) * $ssize;
+                $troptions['frame']    = (int)($this->requestParser->getFromRequest('segment')) * $ssize;
                 $troptions['duration'] = ($troptions['frame'] + $ssize <= $media->time)
                     ? $ssize
                     : ($media->time - $troptions['frame']);
@@ -1121,7 +1121,7 @@ final class Play2Action implements ApplicationActionInterface
             return null;
         } elseif ($status > 0) {
             do {
-                $read_size = $transcode
+                $read_size = ($transcode)
                     ? 2048
                     : min(2048, max(0, $stream_size - $bytes_streamed));
 

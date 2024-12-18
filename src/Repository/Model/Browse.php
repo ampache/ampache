@@ -47,31 +47,31 @@ use Ampache\Repository\ShoutRepositoryInterface;
 class Browse extends Query
 {
     private const BROWSE_TYPES = [
-        'album',
         'album_disk',
+        'album',
         'artist',
         'broadcast',
         'catalog',
         'democratic',
         'follower',
         'label',
-        'license',
         'license_hidden',
+        'license',
         'live_stream',
-        'playlist',
         'playlist_localplay',
         'playlist_media',
         'playlist_search',
-        'podcast',
+        'playlist',
         'podcast_episode',
+        'podcast',
         'pvmsg',
         'share',
         'shoutbox',
         'smartplaylist',
-        'song',
         'song_preview',
-        'tag',
+        'song',
         'tag_hidden',
+        'tag',
         'user',
         'video',
         'wanted',
@@ -95,7 +95,7 @@ class Browse extends Query
         if (!$browse_id) {
             $this->set_use_pages(true);
             $this->set_use_alpha(false);
-            $this->set_grid_view(true);
+            $this->set_grid_view(false);
         }
     }
 
@@ -197,7 +197,7 @@ class Browse extends Query
      * is_valid_type
      * Validate the browse is a type of object you can actually browse
      */
-    public function is_valid_type(string $type): bool
+    public static function is_valid_type(string $type): bool
     {
         return in_array($type, self::BROWSE_TYPES);
     }
@@ -242,7 +242,7 @@ class Browse extends Query
                 $start = (int)$_SESSION[$name]['start'];
                 if ($this->get_offset() > 0) {
                     $set_page    = floor($start / $this->get_offset());
-                    $total_pages = $this->get_total() > $this->get_offset()
+                    $total_pages = ($this->get_total() > $this->get_offset())
                         ? ceil($this->get_total() / $this->get_offset())
                         : 0;
 
@@ -262,8 +262,9 @@ class Browse extends Query
      *
      * @param array $object_ids
      * @param bool|array|string $argument
+     * @param bool $skip_cookies
      */
-    public function show_objects($object_ids = [], $argument = false): void
+    public function show_objects($object_ids = [], $argument = false, $skip_cookies = false): void
     {
         if ($this->is_simple() || !is_array($object_ids) || $object_ids === []) {
             $object_ids = $this->get_saved();
@@ -273,7 +274,7 @@ class Browse extends Query
 
         // Limit is based on the user's preferences if this is not a
         // simple browse because we've got too much here
-        if ($this->get_start() >= 0 && (count($object_ids) > $this->get_start()) && !$this->is_simple()) {
+        if ($this->get_start() >= 0 && !$this->is_simple() && (count($object_ids) > $this->get_start())) {
             $object_ids = array_slice($object_ids, $this->get_start(), $this->get_offset(), true);
         } elseif ($object_ids === []) {
             $this->set_total(0);
@@ -333,6 +334,24 @@ class Browse extends Query
             $argument_param = ($argument)
                 ? '&argument=' . scrub_in((string)$argument)
                 : '';
+        }
+
+        if (!empty($type) && !$skip_cookies) {
+            if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_use_pages', $_COOKIE)) {
+                $browse->set_use_pages(Core::get_cookie('browse_' . $type . '_use_pages') == 'true', false);
+            }
+
+            if (in_array($type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+                if (!$browse->is_mashup() && array_key_exists('browse_' . $type . '_grid_view', $_COOKIE)) {
+                    $browse->set_grid_view(Core::get_cookie('browse_' . $type . '_grid_view') == 'true', false);
+                }
+            } else {
+                $browse->set_grid_view(false);
+            }
+
+            if ($this->is_use_filters() && array_key_exists('browse_' . $type . '_alpha', $_COOKIE)) {
+                $browse->set_use_alpha(Core::get_cookie('browse_' . $type . '_alpha') == 'true', false);
+            }
         }
 
         $box_title       = $this->get_title('');
@@ -401,10 +420,12 @@ class Browse extends Query
                 $box_req   = Ui::find_template('show_playlists.inc.php');
                 break;
             case 'playlist_media':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Playlist Items') . $match);
                 $box_req   = Ui::find_template('show_playlist_medias.inc.php');
                 break;
             case 'playlist_localplay':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Current Playlist'));
                 $box_req   = Ui::find_template('show_localplay_playlist.inc.php');
                 Ui::show_box_bottom();
@@ -448,6 +469,7 @@ class Browse extends Query
                 $box_req    = Ui::find_template('show_videos.inc.php');
                 break;
             case 'democratic':
+                $browse->set_grid_view(false);
                 $box_title = $this->get_title(T_('Democratic Playlist'));
                 $box_req   = Ui::find_template('show_democratic_playlist.inc.php');
                 break;
@@ -515,7 +537,7 @@ class Browse extends Query
                 echo ';</script>';
             }
         } elseif (!$this->is_use_pages()) {
-            $this->show_next_link($argument);
+            $this->show_next_link($argument_param);
         }
 
         // hide the filter box on some pages
@@ -529,9 +551,10 @@ class Browse extends Query
     }
 
     /**
-     * @param $argument
+     * show_next_link
+     * @param string $argument_param
      */
-    public function show_next_link($argument = null): void
+    public function show_next_link(string $argument_param = ''): void
     {
         // FIXME Can be removed if Browse gets instantiated by the factory
         global $dic;
@@ -541,7 +564,7 @@ class Browse extends Query
         $total       = $this->get_total();
         $next_offset = $start + $limit;
         if ($next_offset <= $total) {
-            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument . '">' . T_('More') . '</a>';
+            echo '<a class="jscroll-next" href="' . $dic->get(AjaxUriRetrieverInterface::class)->getAjaxUri() . '?page=browse&action=page&browse_id=' . $this->id . '&start=' . $next_offset . '&xoutput=raw&xoutputnode=' . $this->get_content_div() . '&show_header=false' . $argument_param . '">' . T_('More') . '</a>';
         }
     }
 
@@ -549,15 +572,16 @@ class Browse extends Query
      * This sets the type of object that we want to browse by
      * @param string $type
      * @param string $custom_base
+     * @param array $parameters
      */
-    public function set_type($type, $custom_base = ''): void
+    public function set_type($type, $custom_base = '', $parameters = []): void
     {
         if (empty($type)) {
             return;
         }
 
         if ($type === 'album_artist') {
-            $this->set_type('artist', $custom_base);
+            $this->set_type('artist', $custom_base, $parameters);
             $this->set_album_artist(true);
             $this->set_filter('album_artist', true);
 
@@ -565,7 +589,7 @@ class Browse extends Query
         }
 
         if ($type === 'song_artist') {
-            $this->set_type('artist', $custom_base);
+            $this->set_type('artist', $custom_base, $parameters);
             $this->set_song_artist(true);
             $this->set_filter('song_artist', true);
 
@@ -592,11 +616,11 @@ class Browse extends Query
             }
 
             $name = 'browse_' . $type . '_grid_view';
-            if ((isset($_COOKIE[$name]))) {
-                $this->set_grid_view(Core::get_cookie($name) == 'true');
-            }
+            //if ((isset($_COOKIE[$name]))) {
+            //    $this->set_grid_view(Core::get_cookie($name) == 'true', false);
+            //}
 
-            parent::set_type($type, $custom_base);
+            parent::set_type($type, $custom_base, $parameters);
         } else {
             debug_event(self::class, 'set_type invalid type: ' . $type, 5);
         }
@@ -642,7 +666,7 @@ class Browse extends Query
     public function set_use_pages(bool $use_pages, bool $savecookie = true): void
     {
         if ($savecookie) {
-            $this->save_cookie_params('pages', $use_pages ? 'true' : 'false');
+            $this->save_cookie_params('pages', ($use_pages) ? 'true' : 'false');
         }
 
         $this->_state['use_pages'] = $use_pages;
@@ -709,8 +733,8 @@ class Browse extends Query
      */
     public function set_grid_view(bool $grid_view, bool $savecookie = true): void
     {
-        if ($savecookie) {
-            $this->save_cookie_params('grid_view', $grid_view ? 'true' : 'false');
+        if ($savecookie && in_array($this->get_type(), ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+            $this->save_cookie_params('grid_view', ($grid_view) ? 'true' : 'false');
         }
 
         $this->_state['grid_view'] = $grid_view;
@@ -730,16 +754,12 @@ class Browse extends Query
     public function set_use_alpha(bool $use_alpha, bool $savecookie = true): void
     {
         if ($savecookie) {
-            $this->save_cookie_params('alpha', $use_alpha ? 'true' : 'false');
+            $this->save_cookie_params('alpha', ($use_alpha) ? 'true' : 'false');
         }
 
         $this->_state['use_alpha'] = $use_alpha;
 
-        if ($use_alpha) {
-            if (count($this->_state['filter']) == 0) {
-                $this->set_filter('regex_match', '^A');
-            }
-        } else {
+        if (!$use_alpha) {
             $this->set_filter('regex_not_match', '');
         }
     }
@@ -749,7 +769,10 @@ class Browse extends Query
      */
     public function is_use_alpha(): bool
     {
-        return make_bool($this->_state['use_alpha'] ?? false);
+        return (
+            $this->is_use_filters() &&
+             make_bool($this->_state['use_alpha'] ?? false)
+        );
     }
 
     /**
@@ -822,12 +845,9 @@ class Browse extends Query
      */
     public function get_css_class(): string
     {
-        $css = '';
-        if (!$this->_state['grid_view']) {
-            $css = 'disablegv';
-        }
-
-        return $css;
+        return ($this->is_grid_view())
+            ? 'gridview'
+            : '';
     }
 
     /**

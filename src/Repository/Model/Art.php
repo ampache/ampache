@@ -328,12 +328,18 @@ class Art extends database_object
      */
     public static function has_db($object_id, $object_type, $kind = 'default'): bool
     {
+        if (database_object::is_cached('art_has_db_' . $object_type, $object_id)) {
+            $nb_img = database_object::get_from_cache('art_has_db_' . $object_type, $object_id)[0];
+
+            return ($nb_img > 0);
+        }
         $sql        = "SELECT COUNT(`id`) AS `nb_img` FROM `image` WHERE `object_type` = ? AND `object_id` = ? AND `kind` = ?";
         $db_results = Dba::read($sql, [$object_type, $object_id, $kind]);
         $nb_img     = 0;
         if ($results = Dba::fetch_assoc($db_results)) {
             $nb_img = $results['nb_img'];
         }
+        database_object::add_to_cache('art_has_db_' . $object_type, $object_id, [$nb_img]);
 
         return ($nb_img > 0);
     }
@@ -382,7 +388,9 @@ class Art extends database_object
         }
 
         // Default to image/jpeg if they don't pass anything
-        $mime = empty($mime) ? $mime : 'image/jpeg';
+        $mime = (empty($mime))
+            ? 'image/jpeg'
+            : $mime;
         // Blow it away!
         $this->reset();
         $picturetypeid = ($this->type == 'album') ? 3 : 8;
@@ -583,7 +591,7 @@ class Art extends database_object
         }
 
         // Correctly detect the slash we need to use here
-        $slash_type = str_contains((string) $path, '/') ? '/' : '\\';
+        $slash_type = (str_contains((string) $path, '/')) ? '/' : '\\';
 
         $path .= $slash_type . $type;
         if ($autocreate && !Core::is_readable($path)) {
@@ -989,7 +997,7 @@ class Art extends database_object
 
         return [
             'thumb' => $data,
-            'thumb_mime' => $mime_type
+            'thumb_mime' => $mime_type,
         ];
     }
 
@@ -1089,7 +1097,7 @@ class Art extends database_object
         }
 
         if (AmpConfig::get('use_auth') && AmpConfig::get('require_session')) {
-            $sid = $sid
+            $sid = ($sid)
                 ? scrub_out($sid)
                 : scrub_out(session_id() ?: 'none');
             if ($sid == null) {

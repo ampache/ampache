@@ -31,11 +31,11 @@ use Ampache\Module\Authorization\AccessFunctionEnum;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
 use Ampache\Module\Playback\Stream_Playlist;
+use Ampache\Module\System\Core;
 use Ampache\Module\Util\Rss\Type\RssFeedTypeEnum;
 use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\Upload;
 use Ampache\Module\Util\ZipHandlerInterface;
-use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Art;
 use Ampache\Repository\Model\Browse;
@@ -52,7 +52,7 @@ global $dic;
 /** @var ContainerInterface $dic */
 /** @var User|null $current_user */
 
-$current_user = Core::get_global('user');
+$current_user = $current_user ?? Core::get_global('user');
 $zipHandler   = $dic->get(ZipHandlerInterface::class);
 $batch_dl     = Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD);
 $zip_album    = $batch_dl && $zipHandler->isZipable('album');
@@ -98,6 +98,9 @@ if (AmpConfig::get('external_links_lastfm')) {
 if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode((string) $album->f_artist_name) . "+" . rawurlencode($simple) . "&item_type=a\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
 }
+if (AmpConfig::get('external_links_discogs')) {
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode(($album->f_artist_name == 'Various Artists') ? 'Various' : (string)$album->f_artist_name) . "+" . rawurlencode($simple) . "&type=master\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
+}
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($album->mbid) {
         echo "<a href=\"https://musicbrainz.org/release/" . $album->mbid . "\" target=\"_blank\">" . Ui::get_icon('musicbrainz', T_('Search on Musicbrainz ...')) . "</a>";
@@ -108,7 +111,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     </div>
     <?php
         $name = '[' . scrub_out($album->f_artist_name) . '] ' . scrub_out($f_name);
-$thumb        = Ui::is_grid_view('album') ? 32 : 11;
+$thumb        = Ui::is_grid_view('album') ? 11 : 32;
 Art::display('album', $album->id, $name, $thumb); ?>
 </div>
 <?php if (User::is_registered()) {
@@ -210,7 +213,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) {
             </li>
             <?php }
     }
-if (($owner_id > 0 && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
+if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
     $saveorder = T_('Save Track Order');
     if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
             <li>

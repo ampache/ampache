@@ -434,7 +434,7 @@ function return_bytes($val)
  */
 function check_config_writable(): bool
 {
-    // file eixsts && is writable, or dir is writable
+    // file exists && is writable, or dir is writable
     return ((file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/ampache.cfg.php')) ||
         (!file_exists(__DIR__ . '/../../config/ampache.cfg.php') && is_writeable(__DIR__ . '/../../config/')));
 }
@@ -466,10 +466,10 @@ function check_htaccess_play_writable(): bool
  */
 function debug_result($status = false, $value = null, $comment = ''): string
 {
-    $class = $status ? 'success' : 'danger';
+    $class = ($status) ? 'success' : 'danger';
 
     if ($value === null) {
-        $value = $status ? T_('OK') : T_('Error');
+        $value = ($status) ? T_('OK') : T_('Error');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .

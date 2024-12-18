@@ -53,7 +53,7 @@ final readonly class UserFollowStateRenderer implements UserFollowStateRendererI
         $html = sprintf('<span id=\'button_follow_%s\' class=\'followbtn\'>', $userId);
         $html .= Ajax::text(
             '?page=user&action=flip_follow&user_id=' . $userId,
-            ($followed ? T_('Unfollow') : T_('Follow')) . ' (' . $followersCount . ')',
+            (($followed) ? T_('Unfollow') : T_('Follow')) . ' (' . $followersCount . ')',
             'flip_follow_' . $userId
         );
         $html .= "</span>";

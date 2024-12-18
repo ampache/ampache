@@ -36,7 +36,7 @@ use Ampache\Module\Util\Ui;
 $t_ampache = T_('Ampache');
 $web_path  = AmpConfig::get_web_path();
 $htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$dir       = is_rtl(AmpConfig::get('lang', 'en_US'))
+$dir       = (is_rtl(AmpConfig::get('lang', 'en_US')))
     ? 'rtl'
     : 'ltr';
 
@@ -117,4 +117,4 @@ if (AmpConfig::get('cookie_disclaimer')) {
     echo T_("By logging in you agree to the use of cookies while using this site.");
     echo '</div>';
 }
-UI::show_footer();
+Ui::show_footer();

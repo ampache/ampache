@@ -89,9 +89,9 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
             ? '[' . $this->albumDisk->get_artist_fullname() . '] ' . scrub_out($this->albumDisk->get_fullname())
             : scrub_out($this->albumDisk->get_fullname());
 
-        $thumb = $this->browse->is_grid_view() ? 1 : 11;
+        $thumb = ($this->browse->is_grid_view()) ? 11 : 1;
 
-        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show&album=' . $albumId);
+        Art::display('album', $albumId, $name, $thumb, $this->configContainer->getWebPath() . '/albums.php?action=show_disk&album_disk=' . $this->albumDisk->getId());
 
         return '';
     }

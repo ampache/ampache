@@ -75,9 +75,13 @@ class OAuthUtil
     public static function split_header($header, $oauth_parameters = true)
     {
         $params = [];
-        if (preg_match_all('/(' . ($oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
+        if (preg_match_all('/(' . (($oauth_parameters) ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
-                $params[$h] = OAuthUtil::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
+                $params[$h] = OAuthUtil::urldecode_rfc3986(
+                    (empty($matches[3][$i]))
+                        ? $matches[4][$i]
+                        : $matches[3][$i]
+                );
             }
             if (isset($params['realm'])) {
                 unset($params['realm']);
@@ -153,7 +157,7 @@ class OAuthUtil
             if (strpos((string)$pair, '=')) {
                 $split     = explode('=', $pair, 2);
                 $parameter = OAuthUtil::urldecode_rfc3986($split[0]);
-                $value     = isset($split[1]) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
+                $value     = (isset($split[1])) ? OAuthUtil::urldecode_rfc3986($split[1]) : '';
 
                 if (isset($parsed_parameters[$parameter])) {
                     // We have already received parameter(s) with this name, so add to the list

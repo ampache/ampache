@@ -24,11 +24,34 @@
 /* Filters */
 /***********/
 
-export function showFilters(element) {
-    var link = $(".browse-options-link");
+export function showFilters(element, string, group_release) {
+    if (group_release === true) {
+        var link = $("#browse-options-link" + string);
+        var hidelink = $("#browse-options-hidelink" + string);
+        var content = $("#browse-options-content" + string);
+    } else {
+        var link = $(".browse-options-link");
+        var hidelink = $(".browse-options-hidelink");
+        var content = $(".browse-options-content");
+    }
     link.hide();
-    var content = $(".browse-options-content");
+    hidelink.show();
     content.show();
+}
+
+export function hideFilters(element, string, group_release) {
+    if (group_release === true) {
+        var link = $("#browse-options-link" + string);
+        var hidelink = $("#browse-options-hidelink" + string);
+        var content = $("#browse-options-content" + string);
+    } else {
+        var link = $(".browse-options-link");
+        var hidelink = $(".browse-options-hidelink");
+        var content = $(".browse-options-content");
+    }
+    link.show();
+    hidelink.hide();
+    content.hide();
 }
 
 /************************************************************/
@@ -229,7 +252,7 @@ export function showEditDialog(edit_type, edit_id, edit_form_id, edit_title, ref
     parent.editType = edit_type;
     parent.editId = edit_id;
 
-    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map"), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels")).then(function( a1, a2 ) {
+    $.when($.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_tag_map&type=" + edit_type), $.ajax(jsAjaxServer + "/ajax.server.php?page=tag&action=get_labels&type=" + edit_type)).then(function( a1, a2 ) {
 
         if(a1[2].status !== 200 || a2[2].status !== 200){
             displayNotification("Failed to open dialog", 5000);

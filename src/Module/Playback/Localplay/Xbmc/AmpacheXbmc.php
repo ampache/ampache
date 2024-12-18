@@ -127,7 +127,7 @@ class AmpacheXbmc extends localplay_controller
     public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_xbmc` (`name`, `host`, `port`, `user`, `pass`, `owner`) VALUES (?, ?, ?, ?, ?, ?)";
-        $user_id = Core::get_global('user') instanceof User
+        $user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : -1;
 
@@ -568,7 +568,7 @@ class AmpacheXbmc extends localplay_controller
             $this->_xbmc->Player->SetRepeat(
                 [
                     'playerid' => $this->_playerId,
-                    'repeat' => ($state ? 'all' : 'off')
+                    'repeat' => (($state) ? 'all' : 'off')
                 ]
             );
 
@@ -727,7 +727,7 @@ class AmpacheXbmc extends localplay_controller
                 $playlist_item  = rawurldecode($currentplay['item']['file']);
 
                 $url_data = $this->parse_url($playlist_item);
-                $oid      = array_key_exists('oid', $url_data) ? $url_data['oid'] : '';
+                $oid      = (array_key_exists('oid', $url_data)) ? $url_data['oid'] : '';
                 if (!empty($oid)) {
                     $song = new Song($oid);
                     if ($song->isNew() === false) {
@@ -757,7 +757,7 @@ class AmpacheXbmc extends localplay_controller
     {
         $options = self::get_instance();
         try {
-            debug_event(self::class, 'Trying to connect xbmc instance ' . $options['host'] . ':' . $options['port'] . '.', 5);
+            debug_event(self::class, 'Trying to connect xbmc instance ' . ($options['host'] ?? '') . ':' . ($options['port'] ?? '') . '.', 5);
             $this->_xbmc = new XBMC_RPC_HTTPClient($options);
             debug_event(self::class, 'Connected.', 5);
 

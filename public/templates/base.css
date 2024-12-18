@@ -225,10 +225,14 @@ a.tag_size4 { text-decoration: none; }
     float: left;
 }
 
+.ui-menu .ui-menu-item.ui-menu-item a {
+    display: flex;
+    align-items: center;
+}
+
 .searchitemtxt {
     display: inline-block;
     vertical-align: middle;
-    height: 32px;
     color: #222;
 }
 

@@ -31,35 +31,35 @@ use Ampache\Repository\Model\Query;
 final class UserQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
+        'access',
         'alpha_match',
+        'disabled',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
-        'access',
-        'disabled',
         'starts_with',
-        'not_starts_with',
-        'not_like',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'rand',
-        'id',
-        'username',
-        'fullname',
-        'email',
-        'website',
         'access',
-        'disabled',
-        'last_seen',
-        'create_date',
-        'state',
         'city',
+        'create_date',
+        'disabled',
+        'email',
         'fullname_public',
+        'fullname',
+        'id',
+        'last_seen',
+        'rand',
+        'state',
+        'username',
+        'website',
     ];
 
     protected string $select = "`user`.`id`";
@@ -130,16 +130,16 @@ final class UserQuery implements QueryInterface
                 break;
             case 'regex_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`username` REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`email` REGEXP '" . Dba::escape($value) . "%') AND ";
+                    $filter_sql = " (`user`.`fullname` REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`username` REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`email` REGEXP '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'regex_not_match':
                 if (!empty($value)) {
-                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "%' OR " .
-                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "%') AND ";
+                    $filter_sql = " (`user`.`fullname` NOT REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`username` NOT REGEXP '" . Dba::escape($value) . "' OR " .
+                        "`user`.`email` NOT REGEXP '" . Dba::escape($value) . "') AND ";
                 }
                 break;
             case 'starts_with':
@@ -169,18 +169,18 @@ final class UserQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
-            case 'id':
-            case 'username':
-            case 'fullname':
-            case 'email':
-            case 'website':
             case 'access':
-            case 'disabled':
-            case 'last_seen':
-            case 'create_date':
-            case 'state':
             case 'city':
+            case 'create_date':
+            case 'disabled':
+            case 'email':
             case 'fullname_public':
+            case 'fullname':
+            case 'id':
+            case 'last_seen':
+            case 'state':
+            case 'username':
+            case 'website':
                 $sql = "`user`.`$field`";
                 break;
             default:

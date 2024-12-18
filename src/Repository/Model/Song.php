@@ -71,6 +71,8 @@ class Song extends database_object implements
 
     public int $album;
 
+    public int $album_disk;
+
     public ?int $disk = null;
 
     public int $year;
@@ -164,9 +166,6 @@ class Song extends database_object implements
 
     /** @var string $album_mbid */
     public $album_mbid;
-
-    /** @var int $album_disk */
-    public $album_disk;
 
     /** @var array $tags */
     public $tags;
@@ -301,6 +300,7 @@ class Song extends database_object implements
         if ($check_file > 0) {
             return $check_file;
         }
+        //debug_event(self::class, "insert results: " . print_r($results, true), 4);
 
         $catalog          = $results['catalog'];
         $file             = $results['file'];
@@ -326,8 +326,8 @@ class Song extends database_object implements
         $tags             = $results['genre'] ?? []; // multiple genre support makes this an array
         $lyrics           = $results['lyrics'] ?? null;
         $user_upload      = $results['user_upload'] ?? null;
-        $composer         = isset($results['composer']) ? Catalog::check_length($results['composer']) : null;
-        $label            = isset($results['publisher']) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
+        $composer         = (isset($results['composer'])) ? Catalog::check_length($results['composer']) : null;
+        $label            = (isset($results['publisher'])) ? Catalog::get_unique_string(Catalog::check_length($results['publisher'], 128)) : null;
         if ($label && AmpConfig::get('label')) {
             // create the label if missing
             foreach (array_map('trim', explode(';', $label)) as $label_name) {
@@ -361,9 +361,9 @@ class Song extends database_object implements
             $license_id = (int)$results['license'];
         }
 
-        $language              = isset($results['language']) ? Catalog::check_length($results['language'], 128) : null;
+        $language              = (isset($results['language'])) ? Catalog::check_length($results['language'], 128) : null;
         $channels              = $results['channels'] ?? null;
-        $release_type          = isset($results['release_type']) ? Catalog::check_length($results['release_type'], 32) : null;
+        $release_type          = (isset($results['release_type'])) ? Catalog::check_length($results['release_type'], 32) : null;
         $release_status        = $results['release_status'] ?? null;
         $replaygain_track_gain = $results['replaygain_track_gain'] ?? null;
         $replaygain_track_peak = $results['replaygain_track_peak'] ?? null;
@@ -373,7 +373,7 @@ class Song extends database_object implements
         $r128_album_gain       = $results['r128_album_gain'] ?? null;
         $original_year         = Catalog::normalize_year($results['original_year'] ?? 0);
         $barcode               = (isset($results['barcode'])) ? Catalog::check_length($results['barcode'], 64) : null;
-        $catalog_number        = isset($results['catalog_number']) ? Catalog::check_length($results['catalog_number'], 64) : null;
+        $catalog_number        = (isset($results['catalog_number'])) ? Catalog::check_length($results['catalog_number'], 64) : null;
         $version               = (isset($results['version'])) ? Catalog::check_length($results['version'], 64) : null;
 
         if (!in_array($mode, ['vbr', 'cbr', 'abr'])) {
@@ -404,12 +404,12 @@ class Song extends database_object implements
             $album_id = (int)($results['album_id']);
         }
 
+        // create the album_disk (if missing)
+        $album_disk_id = AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
+
         $insert_time = time();
-
-        $sql = "INSERT INTO `song` (`catalog`, `file`, `album`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        $db_results = Dba::write($sql, [$catalog, $file, $album_id, $disk, $artist_id, $title, $bitrate, $rate, $mode, $size, $time, $track, $insert_time, $insert_time, $year, $track_mbid, $user_upload, $license_id, $composer, $channels]);
-
+        $sql         = "INSERT INTO `song` (`catalog`, `file`, `album`, `album_disk`, `disk`, `artist`, `title`, `bitrate`, `rate`, `mode`, `size`, `time`, `track`, `addition_time`, `update_time`, `year`, `mbid`, `user_upload`, `license`, `composer`, `channels`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $db_results  = Dba::write($sql, [$catalog, $file, $album_id, $album_disk_id, $disk, $artist_id, $title, $bitrate, $rate, $mode, $size, $time, $track, $insert_time, $insert_time, $year, $track_mbid, $user_upload, $license_id, $composer, $channels]);
         if (!$db_results) {
             debug_event(self::class, 'Unable to insert ' . $file, 2);
 
@@ -418,9 +418,6 @@ class Song extends database_object implements
 
         $song_id = (int)Dba::insert_id();
         $artists = [$artist_id, (int)$albumartist_id];
-
-        // create the album_disk (if missing)
-        AlbumDisk::check($album_id, $disk, $catalog, $disksubtitle);
 
         // map the song to catalog album and artist maps
         Catalog::update_map((int)$catalog, 'song', $song_id);
@@ -619,7 +616,7 @@ class Song extends database_object implements
             return parent::get_from_cache('song', $song_id);
         }
 
-        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
+        $sql        = "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `album`.`album_artist` AS `albumartist`, `album`.`mbid` AS `album_mbid`, `artist`.`mbid` AS `artist_mbid`, `album_artist`.`mbid` AS `albumartist_mbid` FROM `song` LEFT JOIN `album` ON `album`.`id` = `song`.`album` LEFT JOIN `artist` ON `artist`.`id` = `song`.`artist` LEFT JOIN `artist` AS `album_artist` ON `album_artist`.`id` = `album`.`album_artist` WHERE `song`.`id` = ?";
         $db_results = Dba::read($sql, [$song_id]);
         $results    = Dba::fetch_assoc($db_results);
         if (isset($results['id'])) {
@@ -860,9 +857,20 @@ class Song extends database_object implements
      */
     public function get_album_disk_fullname(): string
     {
-        $albumDisk = new AlbumDisk((int)$this->get_album_disk());
+        $albumDisk = new AlbumDisk($this->album_disk);
 
         return $albumDisk->get_fullname();
+    }
+
+    /**
+     * get_album_disk_subtitle
+     * gets the disk subtitle allows passing of id
+     */
+    public function get_album_disk_subtitle(): ?string
+    {
+        $albumDisk = new AlbumDisk($this->album_disk);
+
+        return $albumDisk->disksubtitle;
     }
 
     /**
@@ -949,29 +957,6 @@ class Song extends database_object implements
     }
 
     /**
-     * get_album_disk
-     * gets album_disk of the object
-     * @return int|null
-     */
-    public function get_album_disk(): ?int
-    {
-        if ($this->album_disk) {
-            return $this->album_disk;
-        }
-
-        $sql        = "SELECT DISTINCT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ?;";
-        $db_results = Dba::read($sql, [$this->album, $this->disk]);
-        $results    = Dba::fetch_assoc($db_results);
-        if ($results === []) {
-            return null;
-        }
-
-        $this->album_disk = (int)$results['id'];
-
-        return $this->album_disk;
-    }
-
-    /**
      * set_played
      * this checks to see if the current object has been played
      * if not then it sets it to played. In any case it updates stats.
@@ -991,6 +976,7 @@ class Song extends database_object implements
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
+            Stats::count('album_disk', $this->album_disk, 'up');
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
             foreach ($artists as $artist_id) {
@@ -1035,30 +1021,30 @@ class Song extends database_object implements
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
-            'title',
-            'comment',
-            'lyrics',
-            'composer',
-            'tags',
-            'artist',
-            'album',
             'album_disk',
+            'album',
+            'artist',
+            'comment',
+            'composer',
+            'lyrics',
+            'tags',
             'time',
+            'title',
         ];
         $skip_array   = [
-            'id',
-            'tag_id',
-            'mime',
-            'mbid',
-            'waveform',
-            'total_count',
-            'total_skip',
-            'albumartist',
-            'artist_mbid',
             'album_mbid',
             'albumartist_mbid',
-            'mb_albumid_group',
+            'albumartist',
+            'artist_mbid',
             'disabledMetadataFields',
+            'id',
+            'mb_albumid_group',
+            'mbid',
+            'mime',
+            'tag_id',
+            'total_count',
+            'total_skip',
+            'waveform',
         ];
 
         return self::compare_media_information($song, $new_song, $string_array, $skip_array);
@@ -1170,8 +1156,7 @@ class Song extends database_object implements
     public function update(array $data): int
     {
         foreach ($data as $key => $value) {
-            debug_event(self::class, $key . '=' . $value, 5);
-
+            //debug_event(self::class, $key . '=' . $value, 5);
             switch ($key) {
                 case 'artist_name':
                     // Create new artist name and id
@@ -1205,20 +1190,30 @@ class Song extends database_object implements
                         self::update_album($new_album_id, $this->id, $old_album_id);
                     }
                     break;
-                case 'year':
-                case 'title':
-                case 'track':
-                case 'mbid':
-                case 'license':
+                case 'disk':
+                    // Check to see if it needs to be updated
+                    if ($value != $this->disk) {
+                        // create the album_disk (if missing)
+                        AlbumDisk::check($this->album, $value, $this->catalog, $this->get_album_disk_subtitle());
+
+                        self::update_disk($value, $this->id);
+                        $this->disk = $value;
+                    }
+                    break;
+                case 'bitrate':
+                case 'comment':
                 case 'composer':
                 case 'label':
                 case 'language':
-                case 'comment':
-                case 'publisher':
-                case 'bitrate':
-                case 'rate':
+                case 'license':
+                case 'mbid':
                 case 'mode':
+                case 'publisher':
+                case 'rate':
                 case 'size':
+                case 'title':
+                case 'track':
+                case 'year':
                     // Check to see if it needs to be updated
                     if ($value != $this->$key) {
                         /**
@@ -1263,17 +1258,27 @@ class Song extends database_object implements
      * update_song
      * this is the main updater for a song and updates
      * the "update_time" of the song
-     * @param int $song_id
      */
-    public static function update_song($song_id, Song $new_song): void
+    public static function update_song(int $song_id, Song $new_song): void
     {
         $update_time = time();
 
-        $sql = "UPDATE `song` SET `album` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
-        Dba::write($sql, [$new_song->album, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
+        $sql = "UPDATE `song` SET `album` = ?, `album_disk` = ?, `disk` = ?, `year` = ?, `artist` = ?, `title` = ?, `composer` = ?, `bitrate` = ?, `rate` = ?, `mode` = ?, `channels` = ?, `size` = ?, `time` = ?, `track` = ?, `mbid` = ?, `update_time` = ? WHERE `id` = ?";
+        Dba::write($sql, [$new_song->album, $new_song->album_disk, $new_song->disk, $new_song->year, $new_song->artist, $new_song->title, $new_song->composer, $new_song->bitrate, $new_song->rate, $new_song->mode, $new_song->channels, $new_song->size, $new_song->time, $new_song->track, $new_song->mbid, $update_time, $song_id]);
 
         $sql = "UPDATE `song_data` SET `label` = ?, `lyrics` = ?, `language` = ?, `disksubtitle` = ?, `comment` = ?, `replaygain_track_gain` = ?, `replaygain_track_peak` = ?, `replaygain_album_gain` = ?, `replaygain_album_peak` = ?, `r128_track_gain` = ?, `r128_album_gain` = ? WHERE `song_id` = ?";
         Dba::write($sql, [$new_song->label, $new_song->lyrics, $new_song->language, $new_song->disksubtitle, $new_song->comment, $new_song->replaygain_track_gain, $new_song->replaygain_track_peak, $new_song->replaygain_album_gain, $new_song->replaygain_album_peak, $new_song->r128_track_gain, $new_song->r128_album_gain, $song_id]);
+    }
+
+    /**
+     * update_disk
+     * update the disk tag
+     * @param int $new_disk
+     * @param int $song_id
+     */
+    public static function update_disk($new_disk, $song_id): void
+    {
+        self::_update_item('disk', $new_disk, $song_id, AccessLevelEnum::CONTENT_MANAGER, true);
     }
 
     /**
@@ -1520,7 +1525,7 @@ class Song extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
+        self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1531,7 +1536,7 @@ class Song extends database_object implements
      */
     public static function update_enabled($new_enabled, $song_id): void
     {
-        self::_update_item('enabled', ($new_enabled ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
+        self::_update_item('enabled', (($new_enabled) ? 1 : 0), $song_id, AccessLevelEnum::MANAGER, true);
     }
 
     /**
@@ -1867,7 +1872,7 @@ class Song extends database_object implements
         if ($this->f_album_disk_link === null) {
             $this->f_album_disk_link = '';
             $web_path                = AmpConfig::get_web_path();
-            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->get_album_disk() . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
+            $this->f_album_disk_link = "<a href=\"" . $web_path . "/albums.php?action=show_disk&album_disk=" . $this->album_disk . "\" title=\"" . scrub_out($this->get_album_disk_fullname()) . "\"> " . scrub_out($this->get_album_disk_fullname()) . "</a>";
         }
 
         return $this->f_album_disk_link;
@@ -2452,13 +2457,13 @@ class Song extends database_object implements
     public function getIgnoredMetadataKeys(): array
     {
         return [
+            'genre',
+            'mb_albumartistid',
+            'mb_albumid_group',
+            'mb_albumid',
+            'mb_artistid',
             'mb_trackid',
             'mbid',
-            'mb_albumid',
-            'mb_albumid_group',
-            'mb_artistid',
-            'mb_albumartistid',
-            'genre',
             'publisher',
         ];
     }

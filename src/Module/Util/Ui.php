@@ -694,17 +694,16 @@ class Ui implements UiInterface
     }
 
     /**
-     * @param $type
+     * is_grid_view
      */
-    public static function is_grid_view($type): bool
+    public static function is_grid_view(string $type): bool
     {
-        $isgv = true;
         $name = 'browse_' . $type . '_grid_view';
         if (isset($_COOKIE[$name])) {
-            $isgv = ($_COOKIE[$name] == 'true');
+            return ($_COOKIE[$name] == 'true');
         }
 
-        return $isgv;
+        return false;
     }
 
     /**
@@ -826,11 +825,20 @@ class Ui implements UiInterface
             case 'api_enable_5':
             case 'api_enable_6':
             case 'api_hide_dupe_searches':
-            case 'autoupdate':
             case 'autoupdate_lastversion_new':
+            case 'autoupdate':
             case 'bookmark_latest':
             case 'broadcast_by_default':
+            case 'browse_album_disk_grid_view':
+            case 'browse_album_grid_view':
+            case 'browse_artist_grid_view':
             case 'browse_filter':
+            case 'browse_live_stream_grid_view':
+            case 'browse_playlist_grid_view':
+            case 'browse_podcast_episode_grid_view':
+            case 'browse_podcast_grid_view':
+            case 'browse_song_grid_view':
+            case 'browse_video_grid_view':
             case 'browser_notify':
             case 'catalog_check_duplicate':
             case 'catalogfav_gridview':
@@ -845,26 +853,27 @@ class Ui implements UiInterface
             case 'display_menu':
             case 'download':
             case 'extended_playlist_links':
-            case 'external_links_google':
-            case 'external_links_duckduckgo':
-            case 'external_links_wikipedia':
-            case 'external_links_lastfm':
             case 'external_links_bandcamp':
+            case 'external_links_discogs':
+            case 'external_links_duckduckgo':
+            case 'external_links_google':
+            case 'external_links_lastfm':
             case 'external_links_musicbrainz':
+            case 'external_links_wikipedia':
             case 'force_http_play':
             case 'geolocation':
             case 'hide_genres':
             case 'hide_single_artist':
-            case 'homedash_random':
-            case 'homedash_newest':
-            case 'homedash_recent':
-            case 'homedash_trending':
-            case 'homedash_popular':
             case 'home_moment_albums':
             case 'home_moment_videos':
             case 'home_now_playing':
-            case 'home_recently_played':
             case 'home_recently_played_all':
+            case 'home_recently_played':
+            case 'homedash_newest':
+            case 'homedash_popular':
+            case 'homedash_random':
+            case 'homedash_recent':
+            case 'homedash_trending':
             case 'index_dashboard_form':
             case 'libitem_contextmenu':
             case 'lock_songs':
@@ -879,8 +888,8 @@ class Ui implements UiInterface
             case 'ratingmatch_write_tags':
             case 'rio_global_stats':
             case 'rio_track_stats':
-            case 'share':
             case 'share_social':
+            case 'share':
             case 'show_album_artist':
             case 'show_artist':
             case 'show_donate':
@@ -891,9 +900,8 @@ class Ui implements UiInterface
             case 'show_played_times':
             case 'show_playlist_username':
             case 'show_skipped_times':
-            case 'show_wrapped':
             case 'show_subtitle':
-            case 'sidebar_light':
+            case 'show_wrapped':
             case 'sidebar_hide_browse':
             case 'sidebar_hide_dashboard':
             case 'sidebar_hide_information':
@@ -901,6 +909,7 @@ class Ui implements UiInterface
             case 'sidebar_hide_search':
             case 'sidebar_hide_switcher':
             case 'sidebar_hide_video':
+            case 'sidebar_light':
             case 'song_page_title':
             case 'stream_beautiful_url':
             case 'subsonic_always_download':
@@ -909,12 +918,12 @@ class Ui implements UiInterface
             case 'topmenu':
             case 'ui_fixed':
             case 'unique_playlist':
-            case 'upload':
             case 'upload_allow_edit':
             case 'upload_allow_remove':
             case 'upload_catalog_pattern':
             case 'upload_subdir':
             case 'upload_user_artist':
+            case 'upload':
             case 'upnp_backend':
             case 'use_auth':
             case 'use_original_year':
@@ -1286,7 +1295,7 @@ class Ui implements UiInterface
                 $ids             = explode(',', $value);
                 $options         = [];
                 foreach ($this->getMetadataFieldRepository()->getPropertyList() as $propertyId => $propertyName) {
-                    $selected  = in_array($propertyId, $ids) ? ' selected="selected"' : '';
+                    $selected  = (in_array($propertyId, $ids)) ? ' selected="selected"' : '';
                     $options[] = '<option value="' . $propertyId . '"' . $selected . '>' . scrub_out($propertyName) . '</option>';
                 }
                 echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
@@ -1300,7 +1309,7 @@ class Ui implements UiInterface
                     : Playlist::get_playlist_array();
                 if (!empty($playlists)) {
                     foreach ($playlists as $list_id => $list_name) {
-                        $selected  = in_array($list_id, $ids) ? ' selected="selected"' : '';
+                        $selected  = (in_array($list_id, $ids)) ? ' selected="selected"' : '';
                         $options[] = '<option value="' . $list_id . '"' . $selected . '>' . scrub_out($list_name) . '</option>';
                     }
                     echo '<select multiple size="5" name="' . $name . '[]">' . implode("\n", $options) . '</select>';
@@ -1358,7 +1367,7 @@ class Ui implements UiInterface
                 if (str_ends_with($name, '_pass')) {
                     echo '<input type="password" name="' . $name . '" value="******" />';
                 } else {
-                    echo '<input type="text" name="' . $name . '" value="' . strip_tags($value) . '" />';
+                    echo '<input type="text" name="' . $name . '" value="' . strip_tags((string)$value) . '" />';
                 }
                 break;
         }

@@ -29,6 +29,7 @@ use Ampache\Config\ConfigContainerInterface;
 use Ampache\Gui\GuiFactoryInterface;
 use Ampache\Gui\TalFactoryInterface;
 use Ampache\Module\Authorization\GuiGatekeeperInterface;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -68,7 +69,8 @@ final class ShowEditPlaylistAction extends AbstractEditAction
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         library_item $libitem,
-        int $object_id
+        int $object_id,
+        ?Browse $browse = null
     ): ?ResponseInterface {
         /**
          * Actually, object_id is not used - this is a design flaw.

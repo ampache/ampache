@@ -46,7 +46,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public int $is_hidden = 0;
 
-    public $f_name;
+    public string $f_name;
 
     /**
      * constructor
@@ -196,7 +196,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return false;
         }
 
-        $uid = $user === true ? (int)(Core::get_global('user')?->getId()) : (int)($user);
+        $uid = ($user === true)
+            ? (int)(Core::get_global('user')?->getId())
+            : (int)($user);
 
         // Check and see if the tag exists, if not create it, we need the tag id from this
         if (($tag_id = self::tag_exists($cleaned_value)) === 0) {
@@ -397,7 +399,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function add_tag_map($type, $object_id, $tag_id, $user = true)
     {
-        $uid = $user === true ? (int)(Core::get_global('user')?->getId()) : (int)($user);
+        $uid = ($user === true) ? (int)(Core::get_global('user')?->getId()) : (int)($user);
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, $type . " is not a library item.", 3);
@@ -683,24 +685,27 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function get_tags($type = '', $limit = 0, $order = 'count'): array
     {
-        if (parent::is_cached('tags_list', 'no_name')) {
+        $cacheType = (empty($type)) ? 'all' : $type;
+        if (parent::is_cached('tags_list', $cacheType)) {
             //debug_event(self::class, 'Tags list found into cache memory!', 5);
-            return parent::get_from_cache('tags_list', 'no_name');
+            return parent::get_from_cache('tags_list', $cacheType);
         }
 
         $results = [];
         if ($type == 'tag_hidden') {
-            $sql = "SELECT `tag`.`id` AS `tag_id`, `tag`.`name`, `tag`.`is_hidden` FROM `tag` WHERE `tag`.`is_hidden` = true ";
+            $is_hidden = 1;
+            $sql       = "SELECT `tag`.`id`, `tag`.`name`, 0 AS `count` FROM `tag` WHERE `tag`.`is_hidden` = 1 ";
         } else {
-            $type_sql = (empty($type))
+            $is_hidden = 0;
+            $type_sql  = (empty($type))
                 ? ""
                 : "AND `tag_map`.`object_type` = '" . scrub_in($type) . "'";
 
             $sql = (AmpConfig::get('catalog_filter') && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0)
-                ? sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE', $type_sql) . Catalog::get_user_filter('tag', Core::get_global('user')->id) . " AND `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 "
-                : sprintf('SELECT `tag`.`id`, `tag`.`name`, `tag`.`is_hidden`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag` LEFT JOIN `tag_map` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag_map`.`tag_id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
+                ? sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE %s AND `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql, Catalog::get_user_filter('tag_map', Core::get_global('user')->id))
+                : sprintf('SELECT `tag_map`.`tag_id` AS `id`, `tag`.`name`, COUNT(`tag_map`.`object_id`) AS `count` FROM `tag_map` LEFT JOIN `tag` ON `tag_map`.`tag_id`=`tag`.`id` %s WHERE `tag`.`id` IS NOT NULL AND `tag`.`is_hidden` = 0 ', $type_sql);
 
-            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name`, `tag`.`is_hidden` ";
+            $sql .= "GROUP BY `tag_map`.`tag_id`, `tag`.`name` ";
         }
 
         $order = "`" . $order . "`";
@@ -721,12 +726,12 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $results[$row['id']] = [
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'is_hidden' => $row['is_hidden'],
+                'is_hidden' => $is_hidden,
                 'count' => $row['count'] ?? 0
             ];
         }
 
-        parent::add_to_cache('tags_list', 'no_name', $results);
+        parent::add_to_cache('tags_list', $cacheType, $results);
 
         return $results;
     }

@@ -42,17 +42,17 @@ class Rating extends database_object
     protected const DB_TABLENAME = 'rating';
 
     private const RATING_TYPES   = [
-        'artist',
-        'album',
         'album_disk',
+        'album',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'search',
         'song',
         'stream',
-        'live_stream',
         'video',
-        'playlist',
-        'search',
-        'podcast',
-        'podcast_episode',
     ];
 
     // Public variables
@@ -94,18 +94,18 @@ class Rating extends database_object
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'search',
             'song',
+            'tag',
             'user',
             'video',
         ];
@@ -169,11 +169,11 @@ class Rating extends database_object
 
         foreach ($ids as $object_id) {
             // First store the user-specific rating
-            $rating = isset($user_ratings[$object_id]) ? (int)$user_ratings[$object_id] : 0;
+            $rating = (isset($user_ratings[$object_id])) ? (int)$user_ratings[$object_id] : 0;
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
             // Then store the average
-            $rating = isset($ratings[$object_id]) ? round($ratings[$object_id], 1) : 0;
+            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
 
             parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int)$rating]);
         }
@@ -252,7 +252,7 @@ class Rating extends database_object
     public static function get_highest_sql($input_type, $user_id = null): string
     {
         $type    = Stats::validate_type($input_type);
-        $user_id = (int)($user_id);
+        $user_id = (int)($user_id ?? -1);
         $sql     = "SELECT MAX(`rating`.`id`) AS `table_id`, MIN(`rating`.`object_id`) AS `id`, ROUND(AVG(`rating`.`rating`), 2) AS `rating`, COUNT(DISTINCT(`rating`.`user`)) AS `count` FROM `rating`";
         if ($input_type == 'album_artist' || $input_type == 'song_artist') {
             $sql .= " LEFT JOIN `artist` ON `artist`.`id` = `rating`.`object_id` AND `rating`.`object_type` = 'artist'";
@@ -263,7 +263,7 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($input_type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user_id > 0) {
+        if (AmpConfig::get('catalog_filter')) {
             $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user_id);
         }
 
@@ -419,8 +419,8 @@ class Rating extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user !== null) {
-            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user->getId());
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('rating_' . $type, $user?->getId() ?? -1);
         }
 
         if ($input_type == 'album_artist') {
@@ -509,35 +509,41 @@ class Rating extends database_object
         $base_url = '?action=set_rating&rating_type=' . $rating->type . '&object_id=' . $rating->id;
         $rate     = ($rating->get_user_rating() ?? 0);
 
-        $global_rating = '';
+        $ratings = '';
+
+        for ($count = 0; $count < 6; ++$count) {
+            if ($count === 0) {
+                $action = -1;
+                $alt    = T_('0 Stars');
+                $icon   = 'hide_source';
+            } else {
+                $action = $count;
+                $alt    = ($count === 1)
+                    ? T_('1 Star')
+                    : T_($count . ' Stars');
+                $icon = ($rate < $count)
+                    ? 'star'
+                    : 'star-fill';
+            }
+
+            $action = $base_url . '&rating=' . $action;
+            $source = 'rating' . $count . '_' . $rating->id . '_' . $rating->type;
+            $text   = Ajax::button($action, $icon, $alt, $source);
+            $ratings .= sprintf(
+                '<li>%s</li>',
+                $text
+            );
+        }
 
         if ($show_global_rating) {
             $global_rating_value = $rating->get_average_rating();
-
             if ($global_rating_value > 0) {
-                $global_rating = sprintf(
-                    '<span class="global-rating" title="%s">
-                        (%s)
-                    </span>',
+                $ratings .= sprintf(
+                    '<li><span class="global-rating" title="%s">(%s)</span></li>',
                     T_('Average from all users'),
                     $global_rating_value
                 );
             }
-        }
-
-        // decide width of rating (5 stars -> 20% per star)
-        $width = $rate * 20;
-        if ($width < 0) {
-            $width = 0;
-        }
-
-        $ratings = '';
-
-        for ($count = 1; $count < 6; ++$count) {
-            $ratings .= sprintf(
-                '<li>%s</li>',
-                Ajax::text($base_url . '&rating=' . $count, '', 'rating' . $count . '_' . $rating->id . '_' . $rating->type, '', 'star' . $count)
-            );
         }
 
         $ratedText = ($rate < 1)
@@ -545,20 +551,15 @@ class Rating extends database_object
             : sprintf(T_('%s of 5'), $rate);
 
         return sprintf(
-            '<span class="star-rating dynamic-star-rating">
+            '<div class="star-rating dynamic-star-rating">
+                <span class="current-rating">%s: %s</span>
                 <ul>
-                    <li class="current-rating" style="width: %d%%">%s: %s</li>
                     %s
                 </ul>
-                %s
-                %s
-            </span>',
-            $width,
+            </div>',
             T_('Current rating'),
             $ratedText,
-            $ratings,
-            $global_rating,
-            Ajax::text($base_url . '&rating=-1', '', 'rating0_' . $rating->id . '_' . $rating->type, '', 'star0')
+            $ratings
         );
     }
 

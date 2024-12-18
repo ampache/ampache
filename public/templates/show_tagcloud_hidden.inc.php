@@ -32,19 +32,11 @@ use Ampache\Module\Util\Ui;
 use Ampache\Module\Util\UiInterface;
 use Ampache\Repository\Model\Browse;
 
-$tag_types = [
-    'artist' => T_('Artist'),
-    'album' => T_('Album'),
-    'song' => T_('Song'),
-    'video' => T_('Video'),
-    'tag_hidden' => T_('Hidden'),
-];
-
 global $dic;
 $ui = $dic->get(UiInterface::class);
 
 /** @var UiInterface $ui */
-/** @var Browse $browse2 */
+/** @var Browse $browse */
 /** @var list<array{id: int, name: string}> $object_ids */
 /** @var string $browse_type */
 
@@ -62,7 +54,7 @@ $ui->show(
         <div class="tag_actions">
             <ul>
                 <li>
-                    <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id']; ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_hidden_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_')">
+                    <a class="tag_hidden_edit" id="<?php echo 'tag_hidden_row' . $data['id']; ?>" onclick="showEditDialog('tag_hidden_row', '<?php echo $data['id']; ?>', '<?php echo 'edit_tag_hidden_' . $data['id']; ?>', '<?php echo addslashes(T_('Edit')); ?>', 'click_tag_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
                         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
                     </a>
                 </li>

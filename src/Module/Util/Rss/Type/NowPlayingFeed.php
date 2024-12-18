@@ -60,7 +60,7 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
         $string_map = [
             '%t' => 'title',
             '%a' => 'artist',
-            '%A' => 'album'
+            '%A' => 'album',
         ];
         foreach ($data as $element) {
             /** @var Song|Video $media */
@@ -87,8 +87,9 @@ final readonly class NowPlayingFeed extends AbstractGenericRssFeed
                 'title' => str_replace(' - - ', ' - ', $title),
                 'link' => $media->get_link(),
                 'description' => str_replace('<p>Artist: </p><p>Album: </p>', '', $description),
-                'comments' => $client->get_fullname() . ' - ' . $element['agent'],
-                'pubDate' => date("r", (int)$element['expire'])
+                'comments' => $client->get_link(),
+                'pubDate' => date("r", (int)$element['expire']),
+                'guid' => $element['expire'] . '-' . $client->getId() . '-' . $media->getId(),
             ];
         }
     }

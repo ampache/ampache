@@ -66,7 +66,7 @@ $web_path = AmpConfig::get_web_path();
 if ($is_mashup) {
     $name = scrub_out((string)$libitem->get_fullname()); ?>
     <td class="<?php echo $cel_cover; ?>">
-        <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
+        <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
     Art::display('podcast_episode', $libitem->id, $name, $thumb, $web_path . '/podcast_episode.php?action=show&podcast_episode=' . $libitem->id); ?>
     </td>
 <?php
@@ -96,12 +96,14 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
-                    <?php echo Rating::show($libitem->id, 'podcast_episode'); ?>
-                </span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
-                    <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
-                </span>
+                <div class="rating">
+                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_podcast_episode">
+                        <?php echo Rating::show($libitem->id, 'podcast_episode'); ?>
+                    </span>
+                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_podcast_episode">
+                        <?php echo Userflag::show($libitem->id, 'podcast_episode'); ?>
+                    </span>
+                </div>
             <?php } ?>
         </td>
     <?php } ?>
@@ -114,7 +116,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) 
     <span id="button_sync_<?php echo $libitem->id; ?>">
         <?php echo Ajax::button('?page=podcast&action=syncPodcastEpisode&podcast_episode_id=' . $libitem->id, 'sync', T_('Sync'), 'sync_podcast_episode_' . $libitem->id); ?>
     </span>
-    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_')">
+    <a id="<?php echo 'edit_podcast_episode_' . $libitem->id; ?>" onclick="showEditDialog('podcast_episode_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_podcast_episode_' . $libitem->id; ?>', '<?php echo addslashes(T_('Podcast Episode Edit')); ?>', 'podcast_episode_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
     </a>
     <?php

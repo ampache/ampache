@@ -87,8 +87,9 @@ final class CronProcessCommand extends Command
         }
 
         $interactor = $this->io();
+
         if (!$this->configContainer->get('cron_cache')) {
-            debug_event('cron.inc', 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
+            debug_event(self::class, 'ENABLE \'Cache computed SQL data (eg. media hits stats) using a cron\' * In Admin -> Server Config -> System -> Catalog', 5);
 
             $interactor->error(
                 T_('Cron cache not enabled'),
@@ -97,7 +98,8 @@ final class CronProcessCommand extends Command
 
             return;
         }
-        debug_event('cron', 'started cron process', 3);
+
+        debug_event(self::class, 'started cron process', 3);
 
         /**
          * Catalog garbage_collection covers these functions
@@ -119,6 +121,7 @@ final class CronProcessCommand extends Command
          * MetadataField::garbage_collection();
          */
         $this->catalogGarbageCollector->collect();
+        debug_event(self::class, 'finished catalogGarbageCollector->collect()', 5);
 
         /**
          * Session garbage_collection covers these functions.
@@ -129,21 +132,29 @@ final class CronProcessCommand extends Command
          * Ampache\Model\Tmp_Playlist::garbage_collection(); FIXME Duplicated with Catalog
          */
         Session::garbage_collection();
+        debug_event(self::class, 'finished Session::garbage_collection()', 5);
 
         /**
          * Clean up remaining functions.
          */
         $this->shareRepository->collectGarbage();
+        debug_event(self::class, 'finished shareRepository->collectGarbage()', 5);
         Stream::garbage_collection();
+        debug_event(self::class, 'finished Stream::garbage_collection()', 5);
         $this->podcastEpisodeRepository->collectGarbage();
+        debug_event(self::class, 'finished podcastEpisodeRepository->collectGarbage()', 5);
         $this->bookmarkRepository->collectGarbage();
+        debug_event(self::class, 'finished bookmarkRepository->collectGarbage()', 5);
         Recommendation::garbage_collection();
+        debug_event(self::class, 'finished Recommendation::garbage_collection()', 5);
         $this->userRepository->collectGarbage();
+        debug_event(self::class, 'finished userRepository->collectGarbage()', 5);
 
         /**
          * Run compute_cache
          */
         $this->objectCache->compute();
+        debug_event(self::class, 'finished objectCache->compute()', 5);
 
         // mark the date this cron was completed.
         $this->updateInfoRepository->setValue(
@@ -151,7 +162,7 @@ final class CronProcessCommand extends Command
             (string) time()
         );
 
-        debug_event('cron', 'finished cron process', 4);
+        debug_event(self::class, 'finished cron process', 4);
 
         $interactor->info(
             T_('Cron process finished'),

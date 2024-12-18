@@ -302,10 +302,6 @@ class Subsonic_Xml_Data
             $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
         }
 
-        if ($artist->has_art()) {
-            $xartist->addAttribute('coverArt', 'ar-' . $sub_id);
-        }
-
         if ($extra) {
             if ($albumsSet) {
                 $xartist->addAttribute('albumCount', (string)$artist->album_count);
@@ -1041,11 +1037,11 @@ class Subsonic_Xml_Data
         $xuser->addAttribute('scrobblingEnabled', 'true');
         $isManager = ($user->access >= 75);
         $isAdmin   = ($user->access === 100);
-        $xuser->addAttribute('adminRole', $isAdmin ? 'true' : 'false');
+        $xuser->addAttribute('adminRole', ($isAdmin) ? 'true' : 'false');
         $xuser->addAttribute('settingsRole', 'true');
         $xuser->addAttribute('downloadRole', Preference::get_by_user($user->id, 'download') ? 'true' : 'false');
         $xuser->addAttribute('playlistRole', 'true');
-        $xuser->addAttribute('coverArtRole', $isManager ? 'true' : 'false');
+        $xuser->addAttribute('coverArtRole', ($isManager) ? 'true' : 'false');
         $xuser->addAttribute('commentRole', (AmpConfig::get('social')) ? 'true' : 'false');
         $xuser->addAttribute('podcastRole', (AmpConfig::get('podcast')) ? 'true' : 'false');
         $xuser->addAttribute('streamRole', 'true');
@@ -1267,7 +1263,7 @@ class Subsonic_Xml_Data
 
         foreach ($similars as $similar) {
             $xsimilar = self::addChildToResultXml($xartist, 'similarArtist');
-            $xsimilar->addAttribute('id', ($similar['id'] !== null ? (string)self::_getArtistId($similar['id']) : "-1"));
+            $xsimilar->addAttribute('id', (($similar['id'] !== null) ? (string)self::_getArtistId($similar['id']) : "-1"));
             $xsimilar->addAttribute('name', (string)self::_checkName($similar['name']));
         }
     }

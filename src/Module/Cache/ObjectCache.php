@@ -35,7 +35,7 @@ final class ObjectCache implements ObjectCacheInterface
         $count_types = [
             'stream',
             'download',
-            'skip'
+            'skip',
         ];
         $thresholds  = [0, 7, 10];
         $sql         = "SELECT DISTINCT(`user_preference`.`value`) FROM `preference` INNER JOIN `user_preference` ON `user_preference`.`preference`=`preference`.`id` WHERE `preference`.`name` IN ('stats_threshold', 'popular_threshold')";
@@ -47,14 +47,14 @@ final class ObjectCache implements ObjectCacheInterface
         $object_types = [
             'album',
             'artist',
-            'song',
-            'genre',
             'catalog',
+            'genre',
             'live_stream',
-            'video',
-            'podcast',
+            'playlist',
             'podcast_episode',
-            'playlist'
+            'podcast',
+            'song',
+            'video',
         ];
 
         foreach ($thresholds as $threshold) {

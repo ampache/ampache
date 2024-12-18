@@ -165,7 +165,7 @@ class Catalog_subsonic extends Catalog
      */
     public static function create_type($catalog_id, $data): bool
     {
-        $uri      = $data['uri'];
+        $uri      = rtrim(trim($data['uri']), '/');
         $username = $data['username'];
         $password = $data['password'];
 
@@ -249,6 +249,9 @@ class Catalog_subsonic extends Catalog
                 'getAlbumList',
                 ['type' => 'alphabeticalByName', 'size' => 500, 'offset' => $offset]
             );
+            if (!is_array($albumList)) {
+                break;
+            }
             $offset += 500;
             if ($albumList['success']) {
                 if (count($albumList['data']['albumList']) == 0) {
@@ -257,7 +260,7 @@ class Catalog_subsonic extends Catalog
                 foreach ($albumList['data']['albumList']['album'] as $anAlbum) {
                     $album = $subsonic->querySubsonic('getMusicDirectory', ['id' => $anAlbum['id']]);
 
-                    if ($album['success']) {
+                    if (is_array($album) && $album['success']) {
                         foreach ($album['data']['directory']['child'] as $song) {
                             $artistInfo = $subsonic->querySubsonic('getArtistInfo', ['id' => $song['artistId']]);
                             if (Catalog::is_audio_file($song['path'])) {
@@ -265,7 +268,7 @@ class Catalog_subsonic extends Catalog
                                 $data['artist'] = html_entity_decode($song['artist']);
                                 $data['album']  = html_entity_decode($song['album']);
                                 $data['title']  = html_entity_decode($song['title']);
-                                if ($artistInfo['Success']) {
+                                if (is_array($artistInfo) && $artistInfo['Success']) {
                                     $data['comment'] = html_entity_decode($artistInfo['data']['artistInfo']['biography']);
                                 }
                                 $data['year']     = $song['year'];
@@ -370,8 +373,8 @@ class Catalog_subsonic extends Catalog
             $remove = false;
             try {
                 $songid = $this->url_to_songid($row['file']);
-                $song   = $subsonic->getSong(['id' => $songid]);
-                if (!$song['success']) {
+                $song   = $subsonic->querySubsonic('getSong', ['id' => $songid]);
+                if (!is_array($song) || !$song['success']) {
                     $remove = true;
                 }
             } catch (Exception $error) {
@@ -431,7 +434,7 @@ class Catalog_subsonic extends Catalog
         }
         $options = [
             'format' => $target,
-            'maxBitRate' => $max_bitrate
+            'maxBitRate' => $max_bitrate,
         ];
         $cache_path   = (string)AmpConfig::get('cache_path', '');
         $cache_target = (string)AmpConfig::get('cache_target', '');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -65,7 +66,7 @@ class easy_captcha_graphic_image_waved extends easy_captcha_graphic
             0,
             $this->width,
             $this->height,
-            $this->inverse ? $this->bg ^ 0xFFFFFF : $this->bg
+            ($this->inverse) ? $this->bg ^ 0xFFFFFF : $this->bg
         ); //$this->rgb(255,255,255)
         if (function_exists("imageantialias")) {
             imageantialias($img, true);

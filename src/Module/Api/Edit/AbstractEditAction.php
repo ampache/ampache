@@ -36,6 +36,7 @@ use Ampache\Module\Authorization\GuiGatekeeperInterface;
 use Ampache\Module\System\Core;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\Util\ObjectTypeToClassNameMapper;
+use Ampache\Repository\Model\Browse;
 use Ampache\Repository\Model\library_item;
 use Ampache\Repository\Model\User;
 use Psr\Http\Message\ResponseInterface;
@@ -78,6 +79,11 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             $source_object_type = $object_type;
             $object_type        = implode('_', explode('_', $object_type, -1));
         }
+        // source Browse
+        $browse_id = (int)Core::get_get('browse_id');
+        $browse    = ($browse_id > 0)
+            ? new Browse($browse_id)
+            : null;
 
         if (!InterfaceImplementationChecker::is_library_item($object_type) && !in_array($object_type, ['share', 'tag', 'tag_hidden'])) {
             $this->logger->warning(
@@ -116,7 +122,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
             return null;
         }
 
-        return $this->handle($request, $gatekeeper, $source_object_type, $libitem, $object_id);
+        return $this->handle($request, $gatekeeper, $source_object_type, $libitem, $object_id, $browse);
     }
 
     abstract protected function handle(
@@ -124,6 +130,7 @@ abstract class AbstractEditAction implements ApplicationActionInterface
         GuiGatekeeperInterface $gatekeeper,
         string $object_type,
         library_item $libitem,
-        int $object_id
+        int $object_id,
+        ?Browse $browse = null
     ): ?ResponseInterface;
 }

@@ -125,7 +125,7 @@ class AmpacheMpd extends localplay_controller
     public function add_instance($data): void
     {
         $sql     = "INSERT INTO `localplay_mpd` (`name`, `host`, `port`, `password`, `owner`) VALUES (?, ?, ?, ?, ?)";
-        $user_id = Core::get_global('user') instanceof User
+        $user_id = (Core::get_global('user') instanceof User)
             ? Core::get_global('user')->id
             : -1;
 
@@ -482,7 +482,7 @@ class AmpacheMpd extends localplay_controller
                                 break;
                             case 'live_stream':
                                 /** @var Live_Stream $media */
-                                $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $site_url";
                                 $data['link'] = $media->site_url;
                                 break;

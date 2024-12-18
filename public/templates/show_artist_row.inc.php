@@ -67,7 +67,7 @@ $web_path   = AmpConfig::get_web_path(); ?>
 </td>
 <?php $name = scrub_out((string)$libitem->get_fullname()); ?>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 1 : 11;
+    <?php $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 1;
 Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?action=show&artist=' . $libitem->id); ?>
 </td>
 <td class="<?php echo $cel_artist; ?>"><?php echo $libitem->get_f_link(); ?></td>
@@ -95,12 +95,14 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
-                    <?php echo Rating::show($libitem->id, 'artist'); ?>
-                </span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
-                    <?php echo Userflag::show($libitem->id, 'artist'); ?>
-                </span>
+                <div class="rating">
+                    <span class="cel_rating" id="rating_<?php echo $libitem->id; ?>_artist">
+                        <?php echo Rating::show($libitem->id, 'artist'); ?>
+                    </span>
+                    <span class="cel_userflag" id="userflag_<?php echo $libitem->id; ?>_artist">
+                        <?php echo Userflag::show($libitem->id, 'artist'); ?>
+                    </span>
+                </div>
             <?php } ?>
         </td>
     <?php } ?>
@@ -111,8 +113,8 @@ Art::display('artist', $libitem->id, $name, $thumb, $web_path . '/artists.php?ac
         <?php echo Ui::get_material_symbol('comment', T_('Post Shout')); ?>
     </a>
     <?php }
-    if (canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
-        <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_')">
+    if (isset($browse) && canEditArtist($libitem, $gatekeeper->getUserId())) { ?>
+        <a id="<?php echo 'edit_artist_' . $libitem->id; ?>" onclick="showEditDialog('artist_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_artist_' . $libitem->id; ?>', '<?php echo addslashes(T_('Artist Edit')); ?>', 'artist_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
     <?php }

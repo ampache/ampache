@@ -32,39 +32,39 @@ use Ampache\Repository\Model\Query;
 final class SmartplaylistQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'playlist_open',
         'playlist_type',
         'playlist_user',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
         'date',
+        'id',
         'last_count',
         'last_update',
-        'title',
-        'name',
         'limit',
+        'name',
         'rand',
         'random',
         'rating',
+        'title',
         'type',
-        'user',
-        'username',
-        'user_flag',
-        'userflag',
         'user_flag_rating',
+        'user_flag',
+        'user',
+        'userflag',
+        'username',
     ];
 
     protected string $select = "`search`.`id`";
@@ -186,8 +186,8 @@ final class SmartplaylistQuery implements QueryInterface
             case 'title':
                 $sql = "`search`.`name`";
                 break;
-            case 'id':
             case 'date':
+            case 'id':
             case 'last_count':
             case 'last_update':
             case 'limit':

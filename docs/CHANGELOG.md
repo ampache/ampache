@@ -1,5 +1,167 @@
 # CHANGELOG
 
+## Ampache 7.1.0
+
+Builds now support php8.4!
+
+The icons for ratings and favorite flags are now SVG's which replaces the last png icons in the default theme.
+
+This release has fixed a lot of issues with public site guest users and another round of speed updates with more indexes on large tables.
+
+A big change here is in the Browse class.
+
+The logic of grid view has been normalized. Many logical issues reverse checking true/false and confusing text have been updated.
+
+If you use the Catalog Favorites plugin the `gridview` preference will now actually enable grid view
+
+Clear all your cookies and site data after the upgrade as this affects many visual areas on the site.
+
+### Added
+
+* Translations 2024-12-11
+* Build PHP8.4 supported release zips
+* Rating and favorite flags are now using SVG's
+* Update Composer and NPM packages
+* Discogs search icon to valid library items
+* Add refresh icons to each dashboard page row
+* Add refresh icons to each home dashboard plugin page row
+* Update Creative Commons 3.0 licenses and include 4.0 versions
+* Debug messages from cron process
+* Don't show delete icon for user tokens when they don't have one
+* Allow editing AlbumDisk objects directly
+  * If you edit `disk` number the songs with the disk number will also be updated
+  * Edit `disksubtitle` and update AlbumDisk
+  * Check for AlbumDisk when updating song `disk` value
+  * Garbage collect orphaned AlbumDisks
+  * Update album disk if required when editing the Album
+* Add AlbumDisk edit links to each disk on group pages
+* Add AlbumDisk `disk` `disksubtitle` properties to single disk Album edit windows
+* Allow editing song `disk`
+* Define missing abstract method for beets catalog
+* Allow a wild (`.*`) regex filter on Alphabet filters
+* Allow refresh on user recently played and skipped pages
+* Browse
+  * Album and AlbumDisk browse `album_artist_album_sort`. (Sort by artist then by your `album_sort` pref)
+  * AlbumDisk query sort `album_artist_title`. (Sort by artist name then album title)
+  * Allow hiding the view menu (Just click the `View` link again to close it)
+  * Read from the cache array if valid
+* Search
+  * Add Album name to song search in top bar and expand the list
+  * Add `disk_count` to Album & AlbumDisk search types
+  * Add `no_license` to Song search
+  * Debug warnings on searches with no rules
+  * Add `skipped_times` and `played_or_skipped_times` to Album, AlbumDisk and Artist searches
+  * Add `myplayed_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myskipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `myplayed_or_skipped_times` to Album, AlbumDisk, Artist, PodcastEpisode, Podcast and Song searches
+  * Add `none` to Song search (Empty rule/no filter)
+* Plugin
+  * RatingMatch set the rating for Albums on single AlbumDisk objects
+* Config version 77
+  * Add `alpha_string_pattern` allowing a custom Alphabet list
+  * Add `vite_dev` to check for the local dev environment
+* Database 710006
+  * Update Creative Commons 3.0 licenses with a version suffix
+  * Add Creative Commons 4.0 licenses if their `external_link` doesn't exist
+  * Add user preferences to show/hide Discogs links on object pages
+  * Add `addition_time` to artist table
+  * Update `action` column for `ip_history` table
+  * Add indexes to `album_map`, `catalog_map`, `artist_map`, `image`, `recommendation`, `rating`, `user_flag`, `user_activity` and `playlist_data` table
+  * 'Add `total_skip` to `album` , `album_disk` and `artist` tables
+  * Add `album_disk` to the `song` table
+  * Add user preferencess to force enable `grid_view` cookies on login
+
+### Changed
+
+* Updating AlbumDisk `disk` number will migrate matching song disks to the new value
+* Load Ampache CSS after 3rd party components
+* Lots of areas would ignore `catalog_filter` if you were a guest. Now it uses the default filter group
+* Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
+* Use Artist `addition_time` in stat searches instead of large joins
+* Enable/Disable user icons changed to a person icons
+* If `autoupdate` is disabled don't show update options in the debug page
+* Don't autofilter to A when enabling the Alphabet filter
+* Sidebar Genre link defaults to Albums like all the other areas
+* Action button for song link will open in a new page
+* Move update warning link to it's own wiki page
+* Fail an upload if licensing is enabled and there isn't one sent to the uploader
+* Browse
+  * Do not filter to `A` when enabling Alphabet filter
+  * Don't show View on footer row when displaying Albums by Release Type
+  * Don't allow grid view on playlist and search result media pages
+  * Reverse grid logic. (Sorry!)
+  * CSS for grid_view doesn't match the code (`disablegv` is actually `gridview`)
+* Search
+  * AlbumDisk searches look for the disk rating
+  * Take `DISTINCT` off `id` in SongSearch
+* Plugin
+  * Catalog Favorites grid view is reversed to match the correct grid view logic
+
+### Fixed
+
+* Secondary tab jplayer not checking the player is loaded on pause check
+* Ajax `Loading...` text is in the wrong spot when using a fixed header theme
+* Light sidebar album link didn't respect `album_group`
+* Album display when you have 0 disks
+* Album and AlbumDisk display for guest user
+* Searching with `catalog_filter` enabled would return nothing for System user
+* Guest user access to dashboard items when using `catalog_filter`
+* Speed up preference lookups and compatability checks
+* Art link on AlbumDisk objects pointed to the album
+* Make sure a user is set in the album page templates
+* Incorrect get_parent for Albums and AlbumDisks
+* Guest user can't play podcast_episodes
+* Don't filter Catalog list on admin pages
+* Catalog filter checking default group for users instead of ther filter group
+* Missing boolean prefs for debug page
+* Share display error with Share::create_fake_playlist()
+* IP History action was not displaying the action correctly
+* Make sure a song exists before trying to write tags
+* Reading disk subtitle missin `set_subtitle`
+* Don't double write song details when updating Albums
+* Debug page checking cron_cache as a string and not a bool
+* AmpacheApi-PHP library fixed for unencrypted passwords
+* Use `max_song` for Ampache remote catalog lookups
+* Count the song elements returned by api lookups and stop if you can't find any
+* Trim trailing slash on remote catalog install
+* Update AmpacheApi-php to work around saved password that are unencrypted
+* Numerous filtering problems with `catalog_filter` enabled
+* Don't overwrite browse data before saving a `tmp_browse`
+* Update `album_disk` on song insert or update
+* User recent and skipped pages may refresh without filtering
+* Hide username on user recent and skipped refresh'
+* Art mime check was inserting empty values
+* RSS calls providing invalid XML
+* Check `$_ENV` for language variables
+* Viewing hidden tags would only show the first one
+* Check that user `lang` preferences is valid
+* Remove wrong RSS link to recently skipped
+* Opening a song without a valid AlbumDisk would fail
+* Downloading PodcastEpisodes would not set file type
+* Installer CSS with Bootstrap 5
+* Vite URL check may timeout your server for 2 minutes
+* Browse
+  * Missing `total_count` sort types for Podcast and PodcastEpisode browse
+  * Fixes for displaying browses after filtering
+  * Don't show Alphabet filter list when the browse isn't filtered
+  * Don't overwrite cookie values when using Ajax actions
+  * Send the object type when filtering a browse in case it's not saved
+  * Disabling Alphabet list would keep the filters active
+  * Don't pull a tag or label lists if you aren't going to use it
+  * Speed up tag Browse
+  * Admin User page browse filtering
+  * UserQuery regex had a `%` in the filters
+  * Display AlbumDisk items on the genre browse pages respecting `album_group`
+* Search
+  * Respect catalog filter on search
+  * Hide search action buttons on smartlists when the user is a guest
+  * AlbumDisk searches not looking for the AlbumDisk rating
+  * SongSearch not checking `album_group` setting for `albumrating`
+  * Searching for null ratings when using the average rating search
+* Subsonic
+  * Trying to add duplicate XML art attribute
+  * Errors with remote Subsonic catalog add
+
 ## Ampache 7.0.1
 
 Fixed some slowdowns due to preference name and location look ups happening for no reason.
@@ -79,7 +241,7 @@ I want to just thank everyone who has helped over the last year on this version 
   * Home Dashboard: show album dashboard sections on the index
   * Preferences for sorting display_home plugins using CSS order
 * Browse
-  * Sort by play count (`total_count`) for podcast, podcast_episode and video 
+  * Sort by play count (`total_count`) for podcast, podcast_episode and video
   * Add `country` and `active` sort to label
   * Add `rating` sort to live_stream and video
   * Add `id` browse to all types
@@ -1257,7 +1419,7 @@ This release fixes up all the issues I created with the bad release files as wel
 * Null artist->id on wanted pages
 * Search
   * Album 'other_user' favorite searches
-* SubSonic
+* Subsonic
   * Error if you didn't have data when using get_user_data
   * Response data might fall back to mp3 and not match the output format
 * webplayer
@@ -1414,7 +1576,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
   * SQL might have connected AND and OR incorrectly
   * Metadata search might have badly parsed input
   * Added aliases for some of the confusing search types
-* SubSonic
+* Subsonic
   * Checking parameters might return the error AND the empty response
 
 ## Ampache 5.4.1-release
@@ -1422,7 +1584,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 ### Added
 
 * Put next (n) and back (b) shortcuts in the web_player
-* Allow _ and % wildcards for hiding playlists (api_hidden_playlists)
+* Allow `_` and `%` wildcards for hiding playlists (api_hidden_playlists)
 * Missing translations on CLI strings
 * Config version 62
   * Added webplayer_debug (was previously undocumented/hidden)
@@ -1519,7 +1681,7 @@ PHP8.1 has now been fixed up completely and is now fully supported.
 * Searching for albums with '# Played' with grouping enabled with album_map
 * Adding a new xbmc localplay
 * Catalog type filter in get_top_sql
-* SubSonic
+* Subsonic
   * Fixed the query searches (Again) based on the wildcards different clients may send
   * Song discNumber was sending the MAX disk instead of the actual disk
   * getPlayQueue doesn't change back to miliseconds from seconds
@@ -1539,7 +1701,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Updated the translation gathering process a little
 * Organized the play/skip counting into it's own function
 * Update artist from tags needs to update albums first
-* SubSonic
+* Subsonic
   * Only search for song title instead of everything
   * Add starred to directory elements
 
@@ -1550,7 +1712,7 @@ Some QoL fixes here with some initial SubSonic, Search and that database column 
 * Migrating to a new album would leave old album maps
 * Artist search query with mapping was very slow
 * Database column check not included in 5.3.1 correctly
-* SubSonic
+* Subsonic
   * Get recently played
   * Fixed up search queries using "" (wrapping in quotes means exact search)
 
@@ -2196,7 +2358,7 @@ If you want to keep utf8 make sure you set it before running updates.
 ### Changed
 
 * Simplify flagging/rating multi-disk albums
-* SubSonic
+* Subsonic
   * just send getmusicfolders music folders
   * When calling createPlaylist, assume that the list needs to be empty first
 
@@ -2204,7 +2366,7 @@ If you want to keep utf8 make sure you set it before running updates.
 
 * Require a valid database hostname instead of assuming localhost
 * A valid transcode_cmd is required to transcode media
-* SubSonic
+* Subsonic
   * Clients might send you a file path of Artist art instead of the id
   * Strings don't need json conversion checks
   * Send the cover art id for playlists
@@ -2281,7 +2443,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Persist replaygain setting as a cookie
 * Support for image per song
 * Format XML output using DOMDocument
-* SubSonic - shift the current track start time when you pause/resume
+* Subsonic - shift the current track start time when you pause/resume
 * Config version 49
 * NEW config options
   * hide_ampache_messages: We sometimes need to talk and will show a warning to admin users. Allow hiding this
@@ -2313,7 +2475,7 @@ Keep an eye on the incoming changes to develop at [Ampache-Next-Changes](https:/
 * Don't hide rss generation when you haven't got a key
 * Podcast episode durations that use seconds were converting into crazy lengths
 * Playlist and Smartlist check sql simplified
-* SubSonic - Json clients need their playlist entry to always array (single item lists)
+* Subsonic - Json clients need their playlist entry to always array (single item lists)
 
 ## Ampache 4.3.0-release
 
@@ -2324,7 +2486,7 @@ There also a few API changes to enable a bit better control for older clients.
 
 * Check limits on democratic playlists (> 0 && < 3000000000)
 * Show an error for out of range democratic cooldowns
-* SubSonic - Force a default format (xml) instead of none
+* Subsonic - Force a default format (xml) instead of none
 * Added back the agent string in recently played (for admins)
 * Replace 'Admin' icon with padlock in sidebar when access check fails. (Hide this new icon with 'simple_user_mode')
 * Disable API/Subsonic password resets in 'simple_user_mode'

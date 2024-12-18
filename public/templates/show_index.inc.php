@@ -33,7 +33,7 @@ use Ampache\Module\Util\Ui;
 use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\User;
 
-$header_form = AmpConfig::get('index_dashboard_form', false)
+$header_form = (AmpConfig::get('index_dashboard_form', false))
     ? 'show_form_mashup.inc.php'
     : 'show_form_browse.inc.php'; ?>
 <div id="browse_header">

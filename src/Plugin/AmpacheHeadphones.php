@@ -49,9 +49,9 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $api_url;
+    private string $api_url;
 
-    private $api_key;
+    private string $api_key;
 
     /**
      * Constructor
@@ -121,7 +121,10 @@ class AmpacheHeadphones extends AmpachePlugin implements PluginProcessWantedInte
      */
     protected function headphones_call($command, $params): string
     {
-        if (empty($this->api_url) || empty($this->api_key)) {
+        if (
+            (!isset($this->api_url) || ($this->api_url === '' || $this->api_url === '0')) ||
+            (!isset($this->api_key) || ($this->api_key === '' || $this->api_key === '0'))
+        ) {
             debug_event(self::class, 'Headphones url or api key missing', 3);
 
             return '';

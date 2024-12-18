@@ -40,9 +40,9 @@ use Ampache\Repository\SongRepositoryInterface;
 class Random
 {
     public const VALID_TYPES = [
-        'song',
         'album',
         'artist',
+        'song',
         'video',
     ];
 
@@ -52,13 +52,17 @@ class Random
      */
     public static function artist(): int
     {
-        $user_id = Core::get_global('user')?->getId();
-        $sql     = "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        $catalog_filter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
+        $user_id        = Core::get_global('user')?->getId() ?? -1;
+        $sql            = ($catalog_filter)
+            ? "SELECT `artist`.`id` FROM `artist` LEFT JOIN `catalog_map` ON `catalog_map`.`object_type` = 'artist' AND `catalog_map`.`object_id` = `artist`.`id` WHERE `catalog_map`.`catalog_id` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "SELECT `artist`.`id` FROM `artist` ";
 
         $rating_filter = AmpConfig::get_rating_filter();
-        if ($rating_filter > 0 && $rating_filter <= 5 && Core::get_global('user') instanceof User && Core::get_global('user')->id > 0) {
-            $user_id = Core::get_global('user')->id;
-            $sql .= sprintf('AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+        if ($rating_filter > 0 && $rating_filter <= 5 && $user_id) {
+            $sql .= ($catalog_filter)
+                ? sprintf('AND `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
+                : sprintf('WHERE `artist`.`id` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
         $sql .= "GROUP BY `artist`.`id` ORDER BY RAND() LIMIT 1;";
@@ -121,16 +125,21 @@ class Random
             $user = Core::get_global('user');
         }
 
-        $user_id = $user?->getId();
-        $sql     = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        $user_id   = $user?->getId();
+        $sql       = "SELECT `song`.`id` FROM `song` ";
+        $where_sql = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+            : "";
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user_id !== null) {
-            $sql .= sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
-            $sql .= sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+            $where_sql .= ($where_sql == "")
+                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id)
+                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
+            $where_sql .= sprintf('AND `song`.`album` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'album\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d)', $rating_filter, $user_id);
         }
 
-        $sql .= 'ORDER BY RAND() LIMIT ' . $limit;
+        $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
         $db_results = Dba::read($sql);
         //debug_event(self::class, "get_default " . $sql , 5);
 
@@ -161,18 +170,24 @@ class Random
             return [];
         }
 
+        $sql       = "SELECT `song`.`id` FROM `song` ";
         $user_id   = $user->id;
         $data      = $user->get_recently_played('artist', 1);
-        $where_sql = "";
-        if ($data[0]) {
-            $where_sql = "AND `song`.`artist`='" . $data[0] . "' ";
-        }
+        $where_sql = ($data[0])
+            ? "WHERE `song`.`artist`='" . $data[0] . "' "
+            : "";
 
-        $sql = "SELECT `song`.`id` FROM `song` WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        if (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter')) {
+            $where_sql .= ($where_sql == "")
+                ? "WHERE `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") "
+                : "AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ") ";
+        }
 
         $rating_filter = AmpConfig::get_rating_filter();
         if ($rating_filter > 0 && $rating_filter <= 5 && $user instanceof User) {
-            $sql .= sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
+            $where_sql .= ($where_sql == "")
+                ? sprintf('WHERE `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id)
+                : sprintf('AND `song`.`artist` NOT IN (SELECT `object_id` FROM `rating` WHERE `rating`.`object_type` = \'artist\' AND `rating`.`rating` <=%d AND `rating`.`user` = %d) ', $rating_filter, $user_id);
         }
 
         $sql .= sprintf('%s ORDER BY RAND() LIMIT %d', $where_sql, $limit);
@@ -436,7 +451,7 @@ class Random
 
         return [
             'sql' => $sql,
-            'parameters' => $search_info['parameters']
+            'parameters' => $search_info['parameters'],
         ];
     }
 

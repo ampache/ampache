@@ -66,7 +66,7 @@ if ($directplay_limit > 0) {
         $show_direct_play = $show_playlist_add;
     }
 }
-/** @var User $current_user */
+
 $current_user = Core::get_global('user');
 $f_name       = (string)$artist->get_fullname();
 $title        = scrub_out($f_name);
@@ -87,6 +87,9 @@ if (AmpConfig::get('external_links_lastfm')) {
 }
 if (AmpConfig::get('external_links_bandcamp')) {
     echo "<a href=\"https://bandcamp.com/search?q=" . rawurlencode($f_name) . "&item_type=b\" target=\"_blank\">" . Ui::get_icon('bandcamp', T_('Search on Bandcamp ...')) . "</a>";
+}
+if (AmpConfig::get('external_links_discogs')) {
+    echo "<a href=\"https://www.discogs.com/search/?q=" . rawurlencode($f_name) . "&type=artist\" target=\"_blank\">" . Ui::get_icon('discogs', T_('Search on Discogs ...')) . "</a>";
 }
 if (AmpConfig::get('external_links_musicbrainz')) {
     if ($artist->mbid) {
@@ -132,7 +135,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     <h3><?php echo T_('Actions'); ?>:</h3>
     <ul>
 <?php if ($is_album_type) {
-    $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+    $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
     $sort_type     = AmpConfig::get('album_sort');
     switch ($sort_type) {
         case 'name_asc':
@@ -206,7 +209,7 @@ if (AmpConfig::get('sociable') && $owner_id > 0) {
     echo "&nbsp;" . T_('Update from tags'); ?>
             </a>
         </li>
-    <?php if (!empty($artist->mbid) && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
+    <?php if (!empty($artist->mbid) && $current_user && Preference::get_by_user($current_user->id, 'mb_overwrite_name')) { ?>
         <li>
             <a href="javascript:NavigateTo('<?php echo $web_path; ?>/artists.php?action=update_from_musicbrainz&artist=<?php echo $artist->id; ?>');" onclick="return confirm('<?php echo T_('Are you sure? This will overwrite Artist details using MusicBrainz data'); ?>');">
                 <?php echo Ui::get_icon('musicbrainz', T_('Update details from MusicBrainz')); ?>
@@ -247,7 +250,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_BATCH_DOWNLOAD) && $zipH
             </a>
         </li>
 <?php }
-if (($owner_id > 0 && $owner_id == $current_user->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
+if ((!empty($owner_id) && $owner_id == $current_user?->getId()) || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
             <?php if (AmpConfig::get('statistical_graphs') && is_dir(__DIR__ . '/../../vendor/szymach/c-pchart/src/Chart/')) { ?>
                 <li>
                     <a href="<?php echo $web_path; ?>/stats.php?action=graph&object_type=artist&object_id=<?php echo $artist->id; ?>">

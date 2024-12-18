@@ -6,7 +6,7 @@
         <div id="rating_${song_id}_song" tal:define="average_rating SONG/getAverageRating">
             <div tal:replace="structure SONG/getRating">RATING</div>
             <tal:block tal:condition="average_rating">
-                (<span i18n:translate="">average</span> ${average_rating})
+                (<span i18n:translate="" title="Average for all users" i18n:attributes="title">average</span> ${average_rating})
             </tal:block>
         </div>
     </dd>
@@ -51,6 +51,7 @@
             <a
                 class="nohtml"
                 tal:attributes="href SONG/getExternalPlayUrl"
+                target="_blank"
                 tal:content="structure SONG/getExternalPlayIcon"
             >EXTERNAL PLAY</a>
             <a

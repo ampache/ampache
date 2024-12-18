@@ -54,9 +54,10 @@ final readonly class LatestAlbumFeed extends AbstractGenericRssFeed
                 'title' => $album->get_fullname(),
                 'link' => $album->get_link(),
                 'description' => $album->get_artist_fullname() . ' - ' . $album->get_fullname(true),
-                'image' => (string)Art::url($album->id, 'album', null, 2),
                 'comments' => '',
-                'pubDate' => date("c", $album->addition_time)
+                'pubDate' => date("c", $album->addition_time),
+                'guid' => 'album-' . $album->id,
+                'image' => (string)Art::url($album->id, 'album', null, 2),
             ];
         }
     }

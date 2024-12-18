@@ -28,6 +28,7 @@ namespace Ampache\Plugin;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Song\Tag\SongTagWriterInterface;
 use Ampache\Repository\Model\Album;
+use Ampache\Repository\Model\AlbumDisk;
 use Ampache\Repository\Model\Plugin;
 use Ampache\Repository\Model\Preference;
 use Ampache\Repository\Model\Rating;
@@ -53,11 +54,11 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
     public string $max_ampache = '999999';
 
     // These are internal settings used by this class, run this->load to fill them out
-    private $min_stars;
+    private int $min_stars;
 
-    private $match_flags;
+    private bool $match_flags;
 
-    private $user;
+    private User $user;
 
     private $star1_rule;
 
@@ -71,7 +72,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
 
     private $flag_rule;
 
-    private $write_tags;
+    private bool $write_tags;
 
     /**
      * Constructor
@@ -199,7 +200,30 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
                 }
             }
 
-            if ($rating->type == 'album') { // TODO missing album_disk
+            if ($rating->type == 'album_disk') {
+                $album_disk = new AlbumDisk($rating->id);
+                // rate the album when the disk count is 1
+                if ($album_disk->disk_count == 1) {
+                    $rAlbum       = new Rating($album_disk->album_id, 'album');
+                    $rating_album = $rAlbum->get_user_rating($this->user->id);
+                    if ($rating_album < $new_rating) {
+                        $rAlbum->set_rating($new_rating, $this->user->id);
+                    }
+                }
+
+                if ($album_disk->album_artist) {
+                    // rate all the album artists (If there are more than one)
+                    foreach (Album::get_parent_array($album_disk->album_id, $album_disk->album_artist) as $artist_id) {
+                        $rArtist       = new Rating($artist_id, 'artist');
+                        $rating_artist = $rArtist->get_user_rating($this->user->id);
+                        if ($rating_artist <= $new_rating) {
+                            $rArtist->set_rating($new_rating, $this->user->id);
+                        }
+                    }
+                }
+            }
+
+            if ($rating->type == 'album') {
                 $album        = new Album($rating->id);
                 $rAlbum       = new Rating($rating->id, 'album');
                 $rating_album = $rAlbum->get_user_rating($this->user->id);
@@ -244,7 +268,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
             $fAlbum = new Userflag($song->album, 'album');
             $fAlbum->set_flag($flagged, $this->user->id);
             // and individual disks (if set)
-            $fAlbumDisk = new Userflag((int)$song->get_album_disk(), 'album_disk');
+            $fAlbumDisk = new Userflag((int)$song->album_disk, 'album_disk');
             $fAlbumDisk->set_flag($flagged, $this->user->id);
             // rate all the album artists (If there are more than one)
             if ($album->album_artist) {
@@ -383,7 +407,7 @@ class AmpacheRatingMatch extends AmpachePlugin implements PluginSaveMediaplayInt
         $data              = $user->prefs;
         $this->user        = $user;
         $this->min_stars   = (int) $data['ratingmatch_stars'];
-        $this->match_flags = (int) $data['ratingmatch_flags'];
+        $this->match_flags = (bool) $data['ratingmatch_flags'];
         $this->star1_rule  = (isset($data['ratingmatch_star1_rule'])) ? explode(',', (string) $data['ratingmatch_star1_rule']) : [];
         $this->star2_rule  = (isset($data['ratingmatch_star2_rule'])) ? explode(',', (string) $data['ratingmatch_star2_rule']) : [];
         $this->star3_rule  = (isset($data['ratingmatch_star3_rule'])) ? explode(',', (string) $data['ratingmatch_star3_rule']) : [];

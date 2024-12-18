@@ -310,7 +310,7 @@ class WebPlayer
                 if (AmpConfig::get('album_group')) {
                     $json['album_id'] = $media->album;
                 } else {
-                    $json['albumdisk_id'] = $media->get_album_disk();
+                    $json['albumdisk_id'] = $media->album_disk;
                 }
                 $json['album_name'] = $media->get_album_disk_fullname();
                 // get replaygain from the song_data table

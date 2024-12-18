@@ -76,6 +76,9 @@ final class TagSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                default:
+                    debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
+                    break;
             } // switch on ruletype
         } // foreach rule
 
@@ -90,7 +93,7 @@ final class TagSearch implements SearchInterface
             'table_sql' => '',
             'group_sql' => '',
             'having_sql' => '',
-            'parameters' => $parameters
+            'parameters' => $parameters,
         ];
     }
 }

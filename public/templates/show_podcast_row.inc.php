@@ -67,8 +67,10 @@ use Ampache\Module\Util\Ui;
 <?php if ($show_ratings) { ?>
         <td class="cel_ratings">
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_podcast"><?php echo Rating::show($libitem->getId(), 'podcast'); ?></span>
-                <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_podcast"><?php echo Userflag::show($libitem->getId(), 'podcast'); ?></span>
+                <div class="rating">
+                    <span class="cel_rating" id="rating_<?php echo $libitem->getId(); ?>_podcast"><?php echo Rating::show($libitem->getId(), 'podcast'); ?></span>
+                    <span class="cel_userflag" id="userflag_<?php echo $libitem->getId(); ?>_podcast"><?php echo Userflag::show($libitem->getId(), 'podcast'); ?></span>
+                </div>
             <?php } ?>
         </td>
     <?php } ?>

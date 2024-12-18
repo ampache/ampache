@@ -314,7 +314,7 @@ class Tmp_Playlist extends database_object
     }
 
     /**
-     * @param $medias
+     * @param list<array{object_type: LibraryItemEnum, object_id: int}> $medias
      */
     public function add_medias($medias): void
     {

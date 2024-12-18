@@ -61,7 +61,7 @@ final class PingMethod
         $results      = [
             'server' => AmpConfig::get('version'),
             'version' => Api::$version,
-            'compatible' => '350001'
+            'compatible' => '350001',
         ];
 
         // Check and see if we should extend the api sessions (done if valid session is passed)

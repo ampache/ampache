@@ -83,8 +83,8 @@ class Query
     /** @var int|string $id */
     public $id;
 
-    /** @var int $catalog */
-    public $catalog;
+    /** @var int|null $catalog */
+    public $catalog = null;
 
     /** @var int|null $user_id */
     public $user_id = null;
@@ -96,13 +96,14 @@ class Query
         'custom' => false,
         'extended_key_name' => null,
         'filter' => [],
-        'grid_view' => true,
+        'grid_view' => false,
         'group' => [],
         'having' => '', // HAVING is not currently used in Query SQL
         'join' => null,
         'limit' => 0,
         'mashup' => null,
         'offset' => 0,
+        'params' => [], // parameters for custom sql
         'select' => [],
         'show_header' => true,
         'simple' => false,
@@ -124,7 +125,7 @@ class Query
     ];
 
     /** @var array $_cache */
-    protected $_cache;
+    protected $_cache = [];
 
     /** @var QueryInterface|null $queryType */
     private ?QueryInterface $queryType = null; // generate sql for the object type (Ampache\Module\Database\Query\*)
@@ -156,26 +157,28 @@ class Query
         }
 
         if ($query_id === 0) {
-            $this->reset();
             $data = $this->_serialize($this->_state);
-
-            $sql = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
+            $sql  = 'INSERT INTO `tmp_browse` (`sid`, `data`) VALUES(?, ?)';
             Dba::write($sql, [$sid, $data]);
             $insert_id = Dba::insert_id();
             if (!$insert_id) {
                 return;
             }
 
+            $this->reset();
             $this->id = (int)$insert_id;
 
             return;
         } else {
-            $sql = 'SELECT `data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
+            $sql = 'SELECT `data`, `object_data` FROM `tmp_browse` WHERE `id` = ? AND `sid` = ?';
 
             $db_results = Dba::read($sql, [$query_id, $sid]);
             if ($results = Dba::fetch_assoc($db_results)) {
                 $this->id     = (int)$query_id;
                 $this->_state = (array)$this->_unserialize($results['data']);
+                $this->_cache = (array_key_exists('object_data', $results) && !empty($results['object_data']))
+                    ? (array)$this->_unserialize($results['object_data'])
+                    : [];
                 // queryType isn't set by restoring state
                 $this->set_type($this->_state['type']);
 
@@ -236,8 +239,8 @@ class Query
             case 'album_disk':
             case 'album':
             case 'artist':
-            case 'catalog':
             case 'catalog_enabled':
+            case 'catalog':
             case 'disabled':
             case 'disk':
             case 'enabled':
@@ -264,14 +267,14 @@ class Query
             case 'year_lt':
                 $this->_state['filter'][$key] = (int)($value);
                 break;
-            case 'equal':
-            case 'like':
             case 'alpha_match':
+            case 'equal':
             case 'exact_match':
+            case 'like':
+            case 'not_starts_with':
             case 'regex_match':
             case 'regex_not_match':
             case 'starts_with':
-            case 'not_starts_with':
                 if ($this->is_static_content()) {
                     return false;
                 }
@@ -355,8 +358,9 @@ class Query
     /**
      * get_filter
      * returns the specified filter value
+     * @return string|int|null
      */
-    public function get_filter(string $key): ?string
+    public function get_filter(string $key)
     {
         return $this->_state['filter'][$key] ?? null;
     }
@@ -407,13 +411,13 @@ class Query
      * This returns the total number of objects for this current sort type.
      * If it's already cached used it. if they pass us an array then use
      * that.
-     * @param array $objects
+     * @param array $object_ids
      */
-    public function get_total($objects = null): int
+    public function get_total($object_ids = null): int
     {
         // If they pass something then just return that
-        if (is_array($objects) && !$this->is_simple()) {
-            return count($objects);
+        if (is_array($object_ids) && !$this->is_simple()) {
+            return count($object_ids);
         }
 
         // See if we can find it in the cache
@@ -421,7 +425,11 @@ class Query
             return $this->_state['total'];
         }
 
-        $db_results = Dba::read($this->_get_sql(false));
+        if (!empty($this->_cache)) {
+            return count($this->_cache);
+        }
+
+        $db_results = Dba::read($this->_get_sql(false), $this->_state['params']);
         $num_rows   = Dba::num_rows($db_results);
 
         $this->_state['total'] = $num_rows;
@@ -505,8 +513,9 @@ class Query
      * and if I want to change the location I only have to do it here
      * @param string $type
      * @param string $custom_base
+     * @param array $parameters
      */
-    public function set_type($type, $custom_base = ''): void
+    public function set_type($type, $custom_base = '', $parameters = []): void
     {
         switch ($type) {
             case 'album':
@@ -591,10 +600,17 @@ class Query
                 $this->queryType = new WantedQuery();
                 break;
         }
+
         if ($this->queryType !== null) {
             // Set it
             $this->_state['type'] = $type;
-            $this->_set_base_sql(true, $custom_base);
+            // don't overwrite an existing browse with defaults
+            if (
+                !empty($custom_base) ||
+                !$this->_state['base']
+            ) {
+                $this->_set_base_sql(true, $custom_base, $parameters);
+            }
         }
     }
 
@@ -884,11 +900,8 @@ class Query
      */
     public function get_objects(): array
     {
-        // First we need to get the SQL statement we are going to run. This has to run against any possible filters (dependent on type)
-        $sql = $this->_get_sql();
-        //debug_event(self::class, 'get_objects query: ' . $sql, 5);
-
-        $db_results = Dba::read($sql);
+        //debug_event(self::class, 'get_objects query: ' . $this->_get_sql(), 5);
+        $db_results = Dba::read($this->_get_sql(), $this->_state['params']);
         $results    = [];
         while ($data = Dba::fetch_assoc($db_results)) {
             $results[] = $data;
@@ -914,8 +927,9 @@ class Query
      * This saves the base sql statement we are going to use.
      * @param bool $force
      * @param string $custom_base
+     * @param array $parameters
      */
-    private function _set_base_sql($force = false, $custom_base = ''): void
+    private function _set_base_sql($force = false, $custom_base = '', $parameters = []): void
     {
         // Only allow it to be set once
         if (!empty((string)$this->_state['base']) && !$force) {
@@ -926,6 +940,7 @@ class Query
         if ($force && !empty($custom_base)) {
             $this->_state['custom'] = true;
             $this->_state['base']   = $custom_base;
+            $this->_state['params'] = $parameters;
         } else {
             // TODO we should remove this default fallback and rely on set_type()
             if ($this->queryType === null) {
@@ -982,14 +997,14 @@ class Query
             $sql .= $this->_sql_filter($key, $value);
         }
 
-        $dis = '';
         if (AmpConfig::get('catalog_disable') && in_array($type, ['artist', 'album', 'album_disk', 'song', 'video'])) {
-            // Add catalog enabled filter
-            $dis = Catalog::get_enable_filter($type, '`' . $type . '`.`id`');
+            // Add catalog enabled filter. ($this->_sql_filter( will add ' AND ' to the end of filters)
+            $sql .= ($sql == "WHERE")
+                ? ' ' . Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND '
+                : Catalog::get_enable_filter($type, '`' . $type . '`.`id`') . ' AND ';
         }
 
-        $catalog_filter = AmpConfig::get('catalog_filter');
-        if ($catalog_filter && $this->user_id > 0) {
+        if (AmpConfig::get('catalog_filter')) {
             // Add catalog user filter
             switch ($type) {
                 case 'album_disk':
@@ -1006,13 +1021,11 @@ class Query
                 case 'song':
                 case 'tag':
                 case 'video':
-                    $dis = Catalog::get_user_filter($type, $this->user_id);
+                    $sql .= ($sql == "WHERE")
+                        ? ' ' . Catalog::get_user_filter($type, $this->user_id ?? -1)
+                        : Catalog::get_user_filter($type, $this->user_id ?? -1);
                     break;
             }
-        }
-
-        if ($dis !== '' && $dis !== '0') {
-            $sql .= $dis . " AND ";
         }
 
         $sql = rtrim($sql, " AND ") . " ";
@@ -1144,7 +1157,7 @@ class Query
         }
 
         // apply a limit/offset limit (if set)
-        $limit_sql = $limit ? $this->_get_limit_sql() : '';
+        $limit_sql = ($limit) ? $this->_get_limit_sql() : '';
 
         $final_sql .= $limit_sql;
         //debug_event(self::class, "get_sql: " . $final_sql, 5);
@@ -1307,17 +1320,17 @@ class Query
         } else {
             // FIXME: this is fragile for large browses
             // First pull the objects
-            $objects = $this->get_saved();
+            $object_ids = $this->get_saved();
 
             // If there's nothing there don't do anything
-            if ($objects === [] || !is_array($objects)) {
+            if ($object_ids === [] || !is_array($object_ids)) {
                 return false;
             }
 
             $type      = $this->get_type();
             $where_sql = sprintf('WHERE `%s`.`id` IN (', $type);
 
-            foreach ($objects as $object_id) {
+            foreach ($object_ids as $object_id) {
                 $object_id = Dba::escape($object_id);
                 $where_sql .= sprintf('\'%s\',', $object_id);
             }
@@ -1343,7 +1356,7 @@ class Query
             $sql = $sql . $this->_get_join_sql() . $where_sql . $group_sql . $order_sql;
         } // if not simple
 
-        $db_results = Dba::read($sql);
+        $db_results = Dba::read($sql, $this->_state['params']);
         //debug_event(self::class, "_resort_objects: " . $sql, 5);
 
         $results = [];

@@ -57,6 +57,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $last_update;
 
+    public int $addition_time;
+
     public ?int $user = null;
 
     public bool $manual_update;
@@ -70,6 +72,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
     public int $album_disk_count;
 
     public int $total_count;
+
+    public int $total_skip;
 
     public ?string $link = null;
 
@@ -372,13 +376,19 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
      */
     public static function get_fullname_by_id(?int $artist_id = 0): string
     {
-        if ($artist_id === 0) {
+        if (empty($artist_id)) {
             return '';
+        }
+
+        if (database_object::is_cached('artist_fullname_by_id', $artist_id)) {
+            return database_object::get_from_cache('artist_fullname_by_id', $artist_id)[0];
         }
 
         $sql        = "SELECT LTRIM(CONCAT(COALESCE(`artist`.`prefix`, ''), ' ', `artist`.`name`)) AS `f_name` FROM `artist` WHERE `id` = ?;";
         $db_results = Dba::read($sql, [$artist_id]);
         if ($row = Dba::fetch_assoc($db_results)) {
+            database_object::add_to_cache('artist_fullname_by_id', $artist_id, [$row['f_name']]);
+
             return $row['f_name'];
         }
 
@@ -414,7 +424,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             "id" => '',
             "name" => '',
             "prefix" => '',
-            "basename" => ''
+            "basename" => '',
         ];
     }
 
@@ -819,7 +829,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         return [
             'name' => $name,
-            'prefix' => $prefix
+            'prefix' => $prefix,
         ];
     }
 

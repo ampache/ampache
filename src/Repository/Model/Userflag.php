@@ -122,18 +122,18 @@ class Userflag extends database_object
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'search',
             'song',
+            'tag',
             'user',
             'video',
         ];
@@ -299,8 +299,8 @@ class Userflag extends database_object
             $sql .= " AND " . Catalog::get_enable_filter($type, '`object_id`');
         }
 
-        if (AmpConfig::get('catalog_filter') && $user !== null) {
-            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user->getId());
+        if (AmpConfig::get('catalog_filter')) {
+            $sql .= " AND" . Catalog::get_user_filter('user_flag_' . $type, $user?->getId() ?? -1);
         }
 
         if ($input_type == 'album_artist') {
@@ -392,24 +392,19 @@ class Userflag extends database_object
         );
 
         if ($userflag->get_flag()) {
-            $text = Ajax::text(
-                $base_url . '&userflag=0',
-                '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type,
-                '',
-                'userflag_true'
-            );
+            $action = $base_url . '&userflag=0';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite-fill';
+            $alt    = T_('Unfavorite');
         } else {
-            $text = Ajax::text(
-                $base_url . '&userflag=1',
-                '',
-                'userflag_i_' . $userflag->id . '_' . $userflag->type,
-                '',
-                'userflag_false'
-            );
+            $action = $base_url . '&userflag=1';
+            $source = 'userflag_i_' . $userflag->id . '_' . $userflag->type;
+            $icon   = 'favorite';
+            $alt    = T_('Favorite');
         }
+        $text = Ajax::button($action, $icon, $alt, $source);
 
-        return sprintf('<span class="userflag">%s</span>', $text);
+        return $text;
     }
 
     /**

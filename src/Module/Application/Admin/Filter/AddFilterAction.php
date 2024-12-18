@@ -92,7 +92,7 @@ final class AddFilterAction extends AbstractFilterAction
             return null;
         }
 
-        $catalogs = Catalog::get_catalogs();
+        $catalogs = Catalog::get_all_catalogs();
 
         /** @var array<string, int> $catalog_array */
         $catalog_array = [];

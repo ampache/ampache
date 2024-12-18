@@ -48,7 +48,7 @@ if (!empty($albums)) {
     <div class="random_album">
         <div id="album_<?php echo $album_id; ?>" class="art_album libitem_menu">
             <?php $thumb = 1;
-        if (!Ui::is_grid_view('album')) {
+        if (Ui::is_grid_view('album')) {
             $thumb     = 11;
             $show_play = false;
         }
@@ -71,8 +71,10 @@ if (!empty($albums)) {
         <?php
         if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
             <?php if (AmpConfig::get('ratings')) { ?>
-                <span class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php echo Rating::show($album->id, 'album'); ?></span>
-                <span class="cel_rating" id="userflag_<?php echo $album->id; ?>_album"><?php echo Userflag::show($album->id, 'album'); ?></span>
+                <div class="rating">
+                    <span class="cel_rating" id="rating_<?php echo $album->id; ?>_album"><?php echo Rating::show($album->id, 'album'); ?></span>
+                    <span class="cel_rating" id="userflag_<?php echo $album->id; ?>_album"><?php echo Userflag::show($album->id, 'album'); ?></span>
+                </div>
             <?php } ?>
         <?php } ?>
     </div>
