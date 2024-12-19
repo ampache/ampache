@@ -84,7 +84,7 @@ class Upload
                 $options['license']     = Core::get_post('license');
 
                 // Require a license with the upload if it's enabled
-                if (AmpConfig::get('licensing') && !isset($options['license'])) {
+                if (AmpConfig::get('licensing') && $options['license'] == '') {
                     debug_event(self::class, "error: license is required.", 3);
 
                     return self::rerror($targetfile);
