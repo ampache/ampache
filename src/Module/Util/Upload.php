@@ -81,12 +81,12 @@ class Upload
 
                 $options                = [];
                 $options['user_upload'] = Core::get_global('user')?->getId();
-                if (isset($_POST['license'])) {
-                    $options['license'] = Core::get_post('license');
-                }
+                $options['license']     = Core::get_post('license');
 
                 // Require a license with the upload if it's enabled
                 if (AmpConfig::get('licensing') && !isset($options['license'])) {
+                    debug_event(self::class, "error: license is required.", 3);
+
                     return self::rerror($targetfile);
                 }
 
@@ -97,6 +97,8 @@ class Upload
                 if (Core::get_request('artist_name') !== '') {
                     $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
                     if (!$artist_id) {
+                        debug_event(self::class, "error: check_artist.", 3);
+
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
@@ -112,6 +114,8 @@ class Upload
                 if (Core::get_request('album_name') !== '') {
                     $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
                     if (!is_int($album_id)) {
+                        debug_event(self::class, "error: check_album.", 3);
+
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -132,6 +136,7 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
+
                 Album::update_table_counts();
                 Artist::update_table_counts();
 
