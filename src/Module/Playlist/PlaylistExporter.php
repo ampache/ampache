@@ -76,7 +76,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
                 if ((int)$playlistId < 1) {
                     $browse = new Browse(null, false);
                     $browse->set_type('smartplaylist');
-                    $browse->set_filter('playlist_user', $userId);
+                    if ($userId > 0) {
+                        $browse->set_filter('playlist_user', $userId);
+                    }
 
                     $ids = $browse->get_objects();
                 } else {
@@ -98,7 +100,9 @@ final class PlaylistExporter implements PlaylistExporterInterface
                     $browse = new Browse(null, false);
                     $browse->set_type('playlist');
                     $browse->set_sort('name', 'ASC');
-                    $browse->set_filter('playlist_user', $userId);
+                    if ($userId > 0) {
+                        $browse->set_filter('playlist_user', $userId);
+                    }
 
                     $ids = $browse->get_objects();
                 } else {

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Ampache 7.1.1
+
+### Fixed
+
+* Upload POST array not sending license correctly to filepond
+* CLI
+  * export:playlist: Documentation for type listed as mandatory
+  * export:playlist: User id would not export all playlists when using System account
+  * Error checking `REMOTE_ADDR` for web URLs (CLI commands will user `fallback_url` when required)
+
 ## Ampache 7.1.0
 
 Builds now support php8.4!
