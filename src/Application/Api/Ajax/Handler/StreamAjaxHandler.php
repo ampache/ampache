@@ -85,7 +85,7 @@ final readonly class StreamAjaxHandler implements AjaxHandlerInterface
                 break;
             case 'directplay':
                 $object_type = Core::get_request('object_type');
-                $object_id   = $_GET['object_id']??null;
+                $object_id   = $_GET['object_id'] ?? null;
                 if (is_array($object_id)) {
                     $object_id = implode(',', $object_id);
                 }
