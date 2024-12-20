@@ -46,8 +46,8 @@ class Preference extends database_object
     public const SYSTEM_LIST = [
         'ajax_load',
         'album_group',
-        'album_release_type',
         'album_release_type_sort',
+        'album_release_type',
         'album_sort',
         'allow_democratic_playback',
         'allow_localplay_playback',
@@ -66,15 +66,24 @@ class Preference extends database_object
         'api_force_version',
         'api_hidden_playlists',
         'api_hide_dupe_searches',
-        'autoupdate',
         'autoupdate_lastcheck',
-        'autoupdate_lastversion',
         'autoupdate_lastversion_new',
+        'autoupdate_lastversion',
+        'autoupdate',
         'bookmark_latest',
         'broadcast_by_default',
+        'browse_album_disk_grid_view',
+        'browse_album_grid_view',
+        'browse_artist_grid_view',
         'browse_filter',
-        'browser_notify',
+        'browse_live_stream_grid_view',
+        'browse_playlist_grid_view',
+        'browse_podcast_episode_grid_view',
+        'browse_podcast_grid_view',
+        'browse_song_grid_view',
+        'browse_video_grid_view',
         'browser_notify_timeout',
+        'browser_notify',
         'catalog_check_duplicate',
         'cron_cache',
         'custom_blankalbum',
@@ -82,8 +91,8 @@ class Preference extends database_object
         'custom_favicon',
         'custom_login_background',
         'custom_login_logo',
-        'custom_logo',
         'custom_logo_user',
+        'custom_logo',
         'custom_text_footer',
         'custom_timezone',
         'daap_backend',
@@ -91,17 +100,17 @@ class Preference extends database_object
         'demo_clear_sessions',
         'demo_use_search',
         'direct_play_limit',
-        'disabled_custom_metadata_fields',
         'disabled_custom_metadata_fields_input',
+        'disabled_custom_metadata_fields',
         'download',
         'extended_playlist_links',
-        'external_links_google',
+        'external_links_bandcamp',
         'external_links_discogs',
         'external_links_duckduckgo',
-        'external_links_wikipedia',
+        'external_links_google',
         'external_links_lastfm',
-        'external_links_bandcamp',
         'external_links_musicbrainz',
+        'external_links_wikipedia',
         'force_http_play',
         'geolocation',
         'hide_genres',
@@ -109,8 +118,8 @@ class Preference extends database_object
         'home_moment_albums',
         'home_moment_videos',
         'home_now_playing',
-        'home_recently_played',
         'home_recently_played_all',
+        'home_recently_played',
         'httpq_active',
         'index_dashboard_form',
         'jp_volume',
@@ -124,18 +133,18 @@ class Preference extends database_object
         'lock_songs',
         'notify_email',
         'now_playing_per_user',
-        'offset_limit',
         'of_the_moment',
+        'offset_limit',
         'perpetual_api_session',
+        'play_type',
         'playlist_method',
         'playlist_type',
-        'play_type',
         'podcast_keep',
         'podcast_new_download',
         'popular_threshold',
         'rate_limit',
-        'share',
         'share_expire',
+        'share',
         'show_album_artist',
         'show_artist',
         'show_donate',
@@ -172,15 +181,15 @@ class Preference extends database_object
         'theme_color',
         'theme_name',
         'topmenu',
-        'transcode',
         'transcode_bitrate',
+        'transcode',
         'ui_fixed',
         'unique_playlist',
         'upload_access_level',
         'upload_allow_edit',
         'upload_allow_remove',
-        'upload_catalog',
         'upload_catalog_pattern',
+        'upload_catalog',
         'upload_script',
         'upload_subdir',
         'upload_user_artist',
@@ -433,7 +442,7 @@ class Preference extends database_object
     public static function update_level($preference, $level): bool
     {
         // First prepare
-        $preference_id = is_numeric($preference)
+        $preference_id = (is_numeric($preference))
             ? $preference
             : self::id_from_name($preference);
 
@@ -753,8 +762,8 @@ class Preference extends database_object
             'art_order',
             'auth_methods',
             'getid3_tag_order',
-            'metadata_order',
             'metadata_order_video',
+            'metadata_order',
             'registration_display_fields',
             'registration_mandatory_fields',
             'wanted_types',
@@ -1223,6 +1232,57 @@ class Preference extends database_object
                 case 'api_always_download':
                     Dba::write($pref_sql, [189, 'api_always_download', T_('Force API streams to download. (Enable scrobble in your client to record stats)'), '0', AccessLevelEnum::USER->value, 'boolean', 'options', 'api']);
                     break;
+                case 'external_links_google':
+                    Dba::write($pref_sql, [206, 'external_links_google', '1', T_('Show Google search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_duckduckgo':
+                    Dba::write($pref_sql, [207, 'external_links_duckduckgo', '1', T_('Show DuckDuckGo search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_wikipedia':
+                    Dba::write($pref_sql, [208, 'external_links_wikipedia', '1', T_('Show Wikipedia search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_lastfm':
+                    Dba::write($pref_sql, [209, 'external_links_lastfm', '1', T_('Show Last.fm search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_bandcamp':
+                    Dba::write($pref_sql, [210, 'external_links_bandcamp', '1', T_('Show Bandcamp search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'external_links_musicbrainz':
+                    Dba::write($pref_sql, [211, 'external_links_musicbrainz', '1', T_('Show MusicBrainz search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'extended_playlist_links':
+                    Dba::write($pref_sql, [219, 'extended_playlist_links', '0', T_('Show extended links for playlist media'), AccessLevelEnum::USER->value, 'boolean', 'playlist']);
+                    break;
+                case 'external_links_discogs':
+                    Dba::write($pref_sql, [220, 'external_links_discogs', '1', T_('Show Discogs search icon on library items'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'library']);
+                    break;
+                case 'browse_song_grid_view':
+                    Dba::write($pref_sql, [221, 'browse_song_grid_view', '0', T_('Force Grid View on Song browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_album_grid_view':
+                    Dba::write($pref_sql, [222, 'browse_album_grid_view', '0', T_('Force Grid View on Album browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_album_disk_grid_view':
+                    Dba::write($pref_sql, [223, 'browse_album_disk_grid_view', '0', T_('Force Grid View on Album Disk browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_artist_grid_view':
+                    Dba::write($pref_sql, [224, 'browse_artist_grid_view', '0', T_('Force Grid View on Artist browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_live_stream_grid_view':
+                    Dba::write($pref_sql, [225, 'browse_live_stream_grid_view', '0', T_('Force Grid View on Radio Station browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_playlist_grid_view':
+                    Dba::write($pref_sql, [226, 'browse_playlist_grid_view', '0', T_('Force Grid View on Playlist browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_video_grid_view':
+                    Dba::write($pref_sql, [227, 'browse_video_grid_view', '0', T_('Force Grid View on Video browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_podcast_grid_view':
+                    Dba::write($pref_sql, [228, 'browse_podcast_grid_view', '0', T_('Force Grid View on Podcast browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
+                case 'browse_podcast_episode_grid_view':
+                    Dba::write($pref_sql, [229, 'browse_podcast_episode_grid_view', '0', T_('Force Grid View on Podcast Episode browse'), AccessLevelEnum::USER->value, 'boolean', 'interface', 'cookies']);
+                    break;
                 default:
                     debug_event(self::class, 'ERROR: missing preference insert code for: ' . $row['item'], 1);
             }
@@ -1277,7 +1337,16 @@ class Preference extends database_object
             'bitly_username' => T_('Bit.ly Username'),
             'bookmark_latest' => T_('Only keep the latest media bookmark'),
             'broadcast_by_default' => T_('Broadcast web player by default'),
+            'browse_album_disk_grid_view' => T_('Force Grid View on Album Disk browse'),
+            'browse_album_grid_view' => T_('Force Grid View on Album browse'),
+            'browse_artist_grid_view' => T_('Force Grid View on Artist browse'),
             'browse_filter' => T_('Show filter box on browse'),
+            'browse_live_stream_grid_view' => T_('Force Grid View on Radio Station browse'),
+            'browse_playlist_grid_view' => T_('Force Grid View on Playlist browse'),
+            'browse_podcast_episode_grid_view' => T_('Force Grid View on Podcast Episode browse'),
+            'browse_podcast_grid_view' => T_('Force Grid View on Podcast browse'),
+            'browse_song_grid_view' => T_('Force Grid View on Song browse'),
+            'browse_video_grid_view' => T_('Force Grid View on Video browse'),
             'browser_notify_timeout' => T_('Web Player browser notifications timeout (seconds)'),
             'browser_notify' => T_('Web Player browser notifications'),
             'catalog_check_duplicate' => T_('Check library item at import time and disable duplicates'),
@@ -1829,8 +1898,8 @@ class Preference extends database_object
             'allow_php_themes',
             'allow_public_registration',
             'allow_stream_playback',
-            'allow_upload',
             'allow_upload_scripts',
+            'allow_upload',
             'allow_video',
             'allow_zip_download',
             'api_always_download',
@@ -1843,11 +1912,11 @@ class Preference extends database_object
             'art_zip_add',
             'auth_password_save',
             'auto_create',
-            'autoupdate',
             'autoupdate_lastversion_new',
+            'autoupdate',
             'bookmark_latest',
-            'broadcast',
             'broadcast_by_default',
+            'broadcast',
             'browse_filter',
             'browser_notify',
             'cache_aif',
@@ -1867,11 +1936,11 @@ class Preference extends database_object
             'captcha_public_reg',
             'catalog_check_duplicate',
             'catalog_disable',
-            'catalogfav_gridview',
             'catalog_filter',
             'catalog_verify_by_time',
-            'condPL',
+            'catalogfav_gridview',
             'composer_no_dev',
+            'condPL',
             'cookie_disclaimer',
             'cookie_secure',
             'cron_cache',
@@ -1890,15 +1959,15 @@ class Preference extends database_object
             'download',
             'downsample_remote',
             'enable_custom_metadata',
-            'external_auto_update',
             'extended_playlist_links',
-            'external_links_google',
+            'external_auto_update',
+            'external_links_bandcamp',
             'external_links_discogs',
             'external_links_duckduckgo',
-            'external_links_wikipedia',
+            'external_links_google',
             'external_links_lastfm',
-            'external_links_bandcamp',
             'external_links_musicbrainz',
+            'external_links_wikipedia',
             'force_http_play',
             'force_ssl',
             'gather_song_art',
@@ -1912,14 +1981,14 @@ class Preference extends database_object
             'home_moment_albums',
             'home_moment_videos',
             'home_now_playing',
-            'home_recently_played',
             'home_recently_played_all',
+            'home_recently_played',
             'homedash_max_items',
-            'homedash_random',
             'homedash_newest',
+            'homedash_popular',
+            'homedash_random',
             'homedash_recent',
             'homedash_trending',
-            'homedash_popular',
             'index_dashboard_form',
             'label',
             'ldap_start_tls',
@@ -1952,8 +2021,8 @@ class Preference extends database_object
             'rio_track_stats',
             'send_full_stream',
             'session_cookiesecure',
-            'share',
             'share_social',
+            'share',
             'show_album_artist',
             'show_artist',
             'show_donate',
@@ -1969,7 +2038,6 @@ class Preference extends database_object
             'show_song_art',
             'show_subtitle',
             'show_wrapped',
-            'sidebar_light',
             'sidebar_hide_browse',
             'sidebar_hide_dashboard',
             'sidebar_hide_information',
@@ -1977,6 +2045,7 @@ class Preference extends database_object
             'sidebar_hide_search',
             'sidebar_hide_switcher',
             'sidebar_hide_video',
+            'sidebar_light',
             'simple_user_mode',
             'sociable',
             'song_page_title',
@@ -1990,24 +2059,25 @@ class Preference extends database_object
             'transcode_player_customize',
             'ui_fixed',
             'unique_playlist',
-            'upload',
             'upload_allow_edit',
             'upload_allow_remove',
             'upload_catalog_pattern',
             'upload_script',
             'upload_subdir',
             'upload_user_artist',
+            'upload',
             'upnp_backend',
             'use_auth',
             'use_now_playing_embedded',
             'use_original_year',
             'use_play2',
+            'use_rss',
             'user_agreement',
             'user_create_streamtoken',
             'user_no_email_confirm',
-            'use_rss',
-            'wanted',
+            'vite_dev',
             'wanted_auto_accept',
+            'wanted',
             'waveform',
             'webdav_backend',
             'webplayer_aurora',

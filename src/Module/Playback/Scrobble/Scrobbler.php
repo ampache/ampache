@@ -30,13 +30,20 @@ use SimpleXMLElement;
 
 class Scrobbler
 {
-    public $error_msg;
-    public $challenge;
-    public $host;
-    public $scheme;
-    public $api_key;
-    public $queued_tracks;
-    private $secret;
+    public string $api_key;
+
+    public string $error_msg;
+
+    public ?string $challenge;
+
+    public ?string $host;
+
+    public ?string $scheme;
+
+    /** @var array<int, array{artist: string, album: string, title: string, track: int, length: int, time: int}> $queued_tracks */
+    public array $queued_tracks;
+
+    private ?string $secret;
 
     /**
      * Constructor
@@ -48,11 +55,11 @@ class Scrobbler
      * @param string|null $secret
      */
     public function __construct(
-        $api_key,
-        $scheme = 'https',
-        $host = '',
-        $challenge = '',
-        $secret = ''
+        string  $api_key,
+        ?string $scheme = 'https',
+        ?string $host = '',
+        ?string $challenge = '',
+        ?string $secret = ''
     ) {
         $this->error_msg     = '';
         $this->challenge     = $challenge;
@@ -201,20 +208,14 @@ class Scrobbler
      * This queues the LastFM / Libre.fm track by storing it in this object, it doesn't actually
      * submit the track or talk to LastFM / Libre in anyway, kind of useless for our uses but its
      * here, and that's how it is.
-     * @param $artist
-     * @param $album
-     * @param $title
-     * @param $timestamp
-     * @param $length
-     * @param $track
      */
     public function queue_track(
-        $artist,
-        $album,
-        $title,
-        $timestamp,
-        $length,
-        $track
+        string $artist,
+        string $album,
+        string $title,
+        int    $timestamp,
+        int    $length,
+        int    $track
     ): bool {
         if ($length < 30) {
             debug_event(self::class, "Not queuing track, too short", 3);
@@ -309,7 +310,7 @@ class Scrobbler
         $vars['track']  = $title;
         $vars['artist'] = $artist;
         // Add the method, API and session keys
-        $vars['method']  = $is_loved ? 'track.love' : 'track.unlove';
+        $vars['method']  = ($is_loved) ? 'track.love' : 'track.unlove';
         $vars['api_key'] = $this->api_key;
         $vars['sk']      = $this->challenge;
 

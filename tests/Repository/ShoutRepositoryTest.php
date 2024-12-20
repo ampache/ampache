@@ -174,7 +174,12 @@ class ShoutRepositoryTest extends TestCase
 
     public function testCollectGarbageDeletesDefaults(): void
     {
-        $types = ['song', 'album', 'artist', 'label'];
+        $types = [
+            'album',
+            'artist',
+            'label',
+            'song',
+        ];
 
         $query = <<<SQL
             DELETE FROM

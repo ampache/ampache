@@ -32,45 +32,45 @@ use Ampache\Repository\Model\Query;
 final class PodcastEpisodeQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
-        'podcast',
-        'catalog',
-        'catalog_enabled',
         'add_gt',
         'add_lt',
         'alpha_match',
+        'catalog_enabled',
+        'catalog',
         'equal',
-        'like',
         'exact_match',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
+        'podcast',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'unplayed',
         'user_catalog',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'podcast',
-        'title',
-        'name',
+        'addition_time',
+        'author',
         'catalog',
         'category',
-        'author',
-        'time',
+        'id',
+        'name',
+        'podcast',
         'pubdate',
-        'state',
         'rand',
-        'addition_time',
+        'rating',
+        'state',
+        'time',
+        'title',
         'total_count',
         'total_skip',
-        'rating',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
     ];
 
     protected string $select = "`podcast_episode`.`id`";
@@ -205,14 +205,15 @@ final class PodcastEpisodeQuery implements QueryInterface
             case 'podcast':
                 $sql = "`podcast_episode`.`$field` $order, `podcast_episode`.`pubdate` ";
                 break;
+            case 'addition_time':
+            case 'author':
             case 'catalog':
             case 'category':
             case 'id':
-            case 'author':
-            case 'time':
             case 'pubdate':
             case 'state':
-            case 'addition_time':
+            case 'time':
+            case 'total_count':
                 $sql = "`podcast_episode`.`$field`";
                 break;
             case 'rating':

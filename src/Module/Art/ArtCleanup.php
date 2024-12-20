@@ -81,19 +81,19 @@ final class ArtCleanup implements ArtCleanupInterface
     public function collectGarbageForObject(string $object_type, int $object_id): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'song',
+            'tag',
             'user',
-            'video'
+            'video',
         ];
 
         if (in_array($object_type, $types)) {
@@ -113,19 +113,19 @@ final class ArtCleanup implements ArtCleanupInterface
     public function collectGarbage(): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'song',
+            'tag',
             'user',
-            'video'
+            'video',
         ];
 
         $album_art_store_disk = $this->configContainer->get(ConfigurationKeyEnum::ALBUM_ART_STORE_DISK);

@@ -73,6 +73,8 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
     public int $total_count;
 
+    public int $total_skip;
+
     public ?string $link = null;
 
     /** @var int $catalog_id */
@@ -422,7 +424,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
             "id" => '',
             "name" => '',
             "prefix" => '',
-            "basename" => ''
+            "basename" => '',
         ];
     }
 
@@ -827,7 +829,7 @@ class Artist extends database_object implements library_item, CatalogItemInterfa
 
         return [
             'name' => $name,
-            'prefix' => $prefix
+            'prefix' => $prefix,
         ];
     }
 

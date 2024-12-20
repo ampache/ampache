@@ -106,7 +106,7 @@ final class LiveStreamEditMethod
             "url" => $url,
             "codec" => $codec,
             "catalog" => $catalog_id,
-            "site_url" => $site_url
+            "site_url" => $site_url,
         ];
 
         // check for the live_stream first

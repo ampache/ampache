@@ -52,10 +52,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '}', 5);
         $browse_id = $_REQUEST['browse_id'] ?? null;
         $browse    = $this->modelFactory->createBrowse($browse_id);
 
+        debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '} id {' . $browse_id . '}', 5);
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {
             $browse->set_show_header($_REQUEST['show_header'] == 'true');
         }
@@ -81,11 +81,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                     $browse->set_sort($_REQUEST['sort']);
                 }
 
+                $filter = false;
                 // data set by the filter box (browse_filters.inc.php)
                 if (isset($_REQUEST['key'])) {
                     // user typed a "start with" word
                     if (isset($_REQUEST['multi_alpha_filter'])) {
                         $browse->set_filter($_REQUEST['key'], $_REQUEST['multi_alpha_filter']);
+                        $filter = true;
                     }
 
                     // Checkbox unplayed
@@ -96,6 +98,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         }
 
                         $browse->set_filter($_REQUEST['key'], $value);
+                        $filter = true;
+                    }
+
+                    // user filtered by genre
+                    if (isset($_REQUEST['tag'])) {
+                        $browse->set_filter($_REQUEST['key'], $_REQUEST['tag']);
+                        $filter = true;
                     }
                 }
 
@@ -105,17 +114,26 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 if (array_key_exists('catalog_key', $_REQUEST) && $_REQUEST['catalog_key']) {
-                    $browse->set_filter('catalog', $_REQUEST['catalog_key']);
                     $_SESSION['catalog'] = $_REQUEST['catalog_key'];
+                    $browse->set_filter('catalog', $_REQUEST['catalog_key']);
+                    $filter = true;
                 } else {
-                    $browse->set_filter('catalog', null);
                     $_SESSION['catalog'] = null;
+                    if ($browse->get_filter('catalog') !== null && $browse->get_filter('catalog') !== '' && $browse->get_filter('catalog') !== '0') {
+                        $browse->set_filter('catalog', null);
+                        $filter = true;
+                    }
                 }
 
                 $browse->set_catalog($_SESSION['catalog']);
 
+                // when you filter the results you need the new objects
+                $object_ids = ($filter)
+                    ? $browse->get_objects()
+                    : [];
+
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects($object_ids, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'set_sort':
@@ -128,12 +146,8 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 }
 
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
-                break;
-            case 'toggle_tag':
-                $type = $_SESSION['tagcloud_type'] ?? 'song';
-                $browse->set_type($type);
                 break;
             case 'delete_object':
                 if (check_http_referer() === false) {
@@ -184,12 +198,12 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             case 'page':
                 $browse->set_start((int)($_REQUEST['start'] ?? 0));
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'show_art':
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects([], $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_filters':
@@ -203,6 +217,7 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                 $results['browse_filters'] = ob_get_clean();
                 break;
             case 'options':
+                $filter = false;
                 $option = $_REQUEST['option'] ?? '';
                 $value  = $_REQUEST['value'] ?? '';
                 switch ($option) {
@@ -218,10 +233,9 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         $value = ($value == 'true');
                         $browse->set_use_alpha($value);
                         $browse->set_start(0);
-                        if ($value) {
-                            $browse->set_filter('regex_match', '^A');
-                        } else {
+                        if (!$value) {
                             $browse->set_filter('regex_not_match', '');
+                            $filter = true;
                         }
 
                         break;
@@ -230,7 +244,12 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                          * The `grid view` is implemented inverted, so apply an inverted logic.
                          * This ensures the `grid view` checkbox behaves as expected
                          */
-                        $value = ($value == 'false');
+                        $object_type = $_REQUEST['object_type'] ?? '';
+                        if (in_array($object_type, ['song', 'album', 'album_disk', 'artist', 'live_stream', 'playlist', 'smartplaylist', 'video', 'podcast', 'podcast_episode'])) {
+                            $browse->set_type($object_type);
+                        }
+
+                        $value = ($value == 'true');
                         $browse->set_grid_view($value);
                         break;
                     case 'limit':
@@ -256,8 +275,13 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
                         break;
                 }
 
+                // when you filter the results you need the new objects
+                $object_ids = ($filter)
+                    ? $browse->get_objects()
+                    : [];
+
                 ob_start();
-                $browse->show_objects([], $argument);
+                $browse->show_objects($object_ids, $argument, true);
                 $results[$browse->get_content_div()] = ob_get_clean();
                 break;
             case 'get_share_links':

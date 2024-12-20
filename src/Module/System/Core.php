@@ -141,7 +141,9 @@ class Core
             return filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP);
         }
 
-        return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: '';
+        return (filter_has_var(INPUT_SERVER, 'REMOTE_ADDR'))
+            ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?: ''
+            : '';
     }
 
     /**
@@ -213,7 +215,7 @@ class Core
     {
         $empty = [
             'width' => 0,
-            'height' => 0
+            'height' => 0,
         ];
         if (!function_exists('imagecreatefromstring')) {
             return $empty;

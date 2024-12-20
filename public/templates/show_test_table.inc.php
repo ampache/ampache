@@ -38,10 +38,10 @@ use Ampache\Module\Util\Ui;
  */
 function debug_wresult($status = false, $value = null, $comment = ''): string
 {
-    $class = $status ? 'success' : 'warning';
+    $class = ($status) ? 'success' : 'warning';
 
     if ($value === null) {
-        $value = $status ? T_('OK') : T_('WARNING');
+        $value = ($status) ? T_('OK') : T_('WARNING');
     }
 
     return '<button type="button" class="btn btn-' . $class . '">' . scrub_out($value) .
@@ -98,7 +98,7 @@ if (!$environment->check_dependencies_folder()) { ?>
 </tr>
 <tr>
     <td><?php echo T_('PHP iconv extension'); ?></td>
-    <td><?php echo debug_result(UI::check_iconv()); ?></td>
+    <td><?php echo debug_result(Ui::check_iconv()); ?></td>
     <td><?php echo T_('This tests whether you have the iconv extension enabled. This extension is required by Ampache.'); ?></td>
 </tr>
 <tr>

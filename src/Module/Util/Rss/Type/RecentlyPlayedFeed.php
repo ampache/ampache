@@ -47,8 +47,9 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
      *  title: string,
      *  link: string,
      *  description: string,
-     *  comments: string,
+     *  comments: ?string,
      *  pubDate: string,
+     *  guid: string,
      *  image?: string
      * }>
      */
@@ -87,8 +88,9 @@ final readonly class RecentlyPlayedFeed extends AbstractGenericRssFeed
                         T_('Play date'),
                         get_datetime($item['date'])
                     ),
-                    'comments' => (string)$client->username,
-                    'pubDate' => date("r", (int)$item['date'])
+                    'comments' => $client->get_link(),
+                    'pubDate' => date("r", (int)$item['date']),
+                    'guid' => $item['date'] . '-' . $client->getId() . '-' . $song->getId(),
                 ];
             }
         }

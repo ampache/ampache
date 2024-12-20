@@ -37,7 +37,7 @@ if (AmpConfig::get('session_length', 3600) >= AmpConfig::get('remember_length', 
 
 $t_ampache = T_('Ampache');
 $htmllang  = str_replace("_", "-", AmpConfig::get('lang', 'en_US'));
-$dir       = is_rtl(AmpConfig::get('lang', 'en_US')) ? 'rtl' : 'ltr';
+$dir       = (is_rtl(AmpConfig::get('lang', 'en_US'))) ? 'rtl' : 'ltr';
 $web_path  = AmpConfig::get_web_path();
 
 $_SESSION['login'] = true;

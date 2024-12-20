@@ -75,12 +75,12 @@ final class SearchGroupMethod
             return false;
         }
         $search_groups = [
+            'album_artist',
             'all',
             'music',
-            'song_artist',
-            'album_artist',
             'podcast',
-            'video'
+            'song_artist',
+            'video',
         ];
         $type = (isset($input['type']))
             ? $input['type']
@@ -97,40 +97,40 @@ final class SearchGroupMethod
             return false;
         }
         $search_types = [
-            'song',
-            'album',
-            'song_artist',
             'album_artist',
+            'album',
             'artist',
+            'genre',
             'label',
             'playlist',
-            'podcast',
             'podcast_episode',
-            'genre',
-            'user'
+            'podcast',
+            'song_artist',
+            'song',
+            'user',
         ];
         switch ($type) {
             case 'all':
                 break;
             case 'music':
                 $search_types = [
-                    'song',
                     'album',
                     'artist',
+                    'song',
                 ];
                 break;
             case 'song_artist':
                 $search_types = [
-                    'song',
                     'album',
                     'song_artist',
+                    'song',
                 ];
                 break;
             case 'album_artist':
                 $search_types = [
-                    'song',
-                    'album',
                     'album_artist',
+                    'album',
+                    'song',
                 ];
                 break;
             case 'podcast':

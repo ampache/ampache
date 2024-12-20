@@ -104,6 +104,19 @@ $is_owner     = $current_user instanceof User && $current_user->getId() == $libi
                 <td class="edit_dialog_content_header"><?php echo T_('Release Comment'); ?></td>
                 <td><input type="text" name="version" value="<?php echo $libitem->version; ?>" /></td>
             </tr>
+            <?php if ($libitem->disk_count === 1) {
+                foreach ($libitem->getDisks() as $albumDisk) { ?>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk'); ?></td>
+                <td><input type="text" name="disk" value="<?php echo $albumDisk->disk; ?>" /></td>
+            </tr>
+            <tr>
+                <td class="edit_dialog_content_header"><?php echo T_('Disk Subtitle'); ?></td>
+                <td><input type="text" name="disksubtitle" value="<?php echo $albumDisk->disksubtitle; ?>" /></td>
+            </tr>
+                <?php break;
+                } ?>
+            <?php } ?>
             <tr>
                 <td class="edit_dialog_content_header"><?php echo T_('Catalog Number'); ?></td>
                 <td><input type="text" name="catalog_number" value="<?php echo $libitem->catalog_number; ?>" /></td>

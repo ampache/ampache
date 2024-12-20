@@ -17,10 +17,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.9
--- Generation Time: Nov 01, 2024 at 02:40 AM
--- Server version: 11.4.3-MariaDB-1
--- PHP Version: 8.3.13
+-- Host: 192.168.1.20
+-- Generation Time: Dec 05, 2024 at 11:44 PM
+-- Server version: 10.11.6-MariaDB-0+deb12u1-log
+-- PHP Version: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `addition_time` int(11) UNSIGNED DEFAULT 0,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `song_count` smallint(5) UNSIGNED DEFAULT 0,
   `artist_count` smallint(5) UNSIGNED DEFAULT 0,
   `song_artist_count` smallint(5) UNSIGNED DEFAULT 0,
@@ -128,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `album_disk` (
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `song_count` smallint(5) UNSIGNED DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `disksubtitle` varchar(255) DEFAULT NULL,
   UNIQUE KEY `unique_album_disk` (`album_id`,`disk`,`catalog`),
   KEY `id_index` (`id`),
@@ -150,7 +152,8 @@ CREATE TABLE IF NOT EXISTS `album_map` (
   KEY `object_id_index` (`object_id`),
   KEY `album_id_type_index` (`album_id`,`object_type`),
   KEY `object_id_type_index` (`object_id`,`object_type`),
-  KEY `object_type_IDX` (`object_type`) USING BTREE
+  KEY `object_type_IDX` (`object_type`) USING BTREE,
+  KEY `object_type_id_IDX` (`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -176,6 +179,8 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `album_count` smallint(5) UNSIGNED DEFAULT 0,
   `album_disk_count` smallint(5) UNSIGNED DEFAULT 0,
   `total_count` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `total_skip` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `addition_time` int(11) UNSIGNED DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -195,7 +200,8 @@ CREATE TABLE IF NOT EXISTS `artist_map` (
   KEY `object_id_index` (`object_id`),
   KEY `artist_id_index` (`artist_id`),
   KEY `artist_id_type_index` (`artist_id`,`object_type`),
-  KEY `object_id_type_index` (`object_id`,`object_type`)
+  KEY `object_id_type_index` (`object_id`,`object_type`),
+  KEY `artist_id_object_type_id_IDX` (`artist_id`,`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -345,7 +351,10 @@ CREATE TABLE IF NOT EXISTS `catalog_map` (
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   UNIQUE KEY `unique_catalog_map` (`object_id`,`object_type`,`catalog_id`),
-  KEY `object_type_IDX` (`object_type`) USING BTREE
+  KEY `object_type_IDX` (`object_type`) USING BTREE,
+  KEY `catalog_id_object_type_IDX` (`catalog_id`,`object_type`) USING BTREE,
+  KEY `catalog_id_object_id_IDX` (`catalog_id`,`object_id`) USING BTREE,
+  KEY `catalog_id_object_type_id_IDX` (`catalog_id`,`object_type`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -477,7 +486,9 @@ CREATE TABLE IF NOT EXISTS `image` (
   `kind` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `object_type` (`object_type`),
-  KEY `object_id` (`object_id`)
+  KEY `object_id` (`object_id`),
+  KEY `object_type_size_kind_IDX` (`object_type`,`size`,`kind`) USING BTREE,
+  KEY `object_type_size_mime_IDX` (`object_type`,`size`,`mime`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -493,7 +504,7 @@ CREATE TABLE IF NOT EXISTS `ip_history` (
   `ip` varbinary(255) DEFAULT NULL,
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `agent` varchar(255) DEFAULT NULL,
-  `action` char(36) DEFAULT NULL,
+  `action` varchar(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`user`),
   KEY `date` (`date`),
@@ -573,7 +584,7 @@ INSERT INTO `license` (`id`, `name`, `description`, `external_link`, `order`) VA
 (11, 'Gnu GPL Art', NULL, 'http://gnuart.org/english/gnugpl.html', 11),
 (12, 'WTFPL', NULL, 'https://en.wikipedia.org/wiki/WTFPL', 12),
 (13, 'FMPL', NULL, 'http://www.ram.org/ramblings/philosophy/fmp/fmpl/fmpl.html', 13),
-(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14);
+(14, 'C Reaction', NULL, 'http://morne.free.fr/Necktar7/creaction.htm', 14),
 (15, 'CC BY', NULL, 'https://creativecommons.org/licenses/by/4.0/', 15),
 (16, 'CC BY NC', NULL, 'https://creativecommons.org/licenses/by-nc/4.0/', 16),
 (17, 'CC BY NC ND', NULL, 'https://creativecommons.org/licenses/by-nc-nd/4.0/', 17),
@@ -780,7 +791,8 @@ CREATE TABLE IF NOT EXISTS `playlist_data` (
   `object_type` enum('broadcast','democratic','live_stream','podcast_episode','song','song_preview','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `track` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `playlist` (`playlist`)
+  KEY `playlist` (`playlist`),
+  KEY `playlist_object_type_IDX` (`playlist`,`object_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -864,7 +876,7 @@ CREATE TABLE IF NOT EXISTS `preference` (
   UNIQUE KEY `preference_UN` (`name`),
   KEY `category` (`category`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `preference`
@@ -1027,7 +1039,17 @@ INSERT INTO `preference` (`id`, `name`, `value`, `description`, `level`, `type`,
 (216, 'homedash_trending', '1', 'Trending', 25, 'boolean', 'plugins', 'home dashboard'),
 (217, 'homedash_popular', '0', 'Popular', 25, 'boolean', 'plugins', 'home dashboard'),
 (218, 'homedash_order', '0', 'Plugin CSS order', 25, 'integer', 'plugins', 'home dashboard'),
-(219, 'extended_playlist_links', '0', 'Show extended links for playlist media', 25, 'boolean', 'playlist', NULL);
+(219, 'extended_playlist_links', '0', 'Show extended links for playlist media', 25, 'boolean', 'playlist', NULL),
+(220, 'external_links_discogs', '1', 'Show Discogs search icon on library items', 25, 'boolean', 'interface', 'library'),
+(221, 'browse_song_grid_view', '0', 'Force Grid View on Song browse', 25, 'boolean', 'interface', 'cookies'),
+(222, 'browse_album_grid_view', '0', 'Force Grid View on Album browse', 25, 'boolean', 'interface', 'cookies'),
+(223, 'browse_album_disk_grid_view', '0', 'Force Grid View on Album Disk browse', 25, 'boolean', 'interface', 'cookies'),
+(224, 'browse_artist_grid_view', '0', 'Force Grid View on Artist browse', 25, 'boolean', 'interface', 'cookies'),
+(225, 'browse_live_stream_grid_view', '0', 'Force Grid View on Radio Station browse', 25, 'boolean', 'interface', 'cookies'),
+(226, 'browse_playlist_grid_view', '0', 'Force Grid View on Playlist browse', 25, 'boolean', 'interface', 'cookies'),
+(227, 'browse_video_grid_view', '0', 'Force Grid View on Video browse', 25, 'boolean', 'interface', 'cookies'),
+(228, 'browse_podcast_grid_view', '0', 'Force Grid View on Podcast browse', 25, 'boolean', 'interface', 'cookies'),
+(229, 'browse_podcast_episode_grid_view', '0', 'Force Grid View on Podcast Episode browse', 25, 'boolean', 'interface', 'cookies');
 
 -- --------------------------------------------------------
 
@@ -1045,7 +1067,9 @@ CREATE TABLE IF NOT EXISTS `rating` (
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_rating` (`user`,`object_type`,`object_id`),
-  KEY `object_id` (`object_id`)
+  KEY `object_id` (`object_id`),
+  KEY `user_object_type_IDX` (`user`,`object_type`) USING BTREE,
+  KEY `user_object_id_IDX` (`user`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1060,7 +1084,9 @@ CREATE TABLE IF NOT EXISTS `recommendation` (
   `object_type` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
   `last_update` int(11) UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `object_type_object_id_IDX` (`object_type`,`object_id`) USING BTREE,
+  KEY `object_type_IDX` (`object_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1215,6 +1241,7 @@ CREATE TABLE IF NOT EXISTS `song` (
   `file` varchar(4096) DEFAULT NULL,
   `catalog` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `album` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `album_disk` int(11) UNSIGNED NOT NULL DEFAULT 0,
   `disk` smallint(5) UNSIGNED DEFAULT NULL,
   `year` mediumint(4) UNSIGNED NOT NULL DEFAULT 0,
   `artist` int(11) UNSIGNED NOT NULL DEFAULT 0,
@@ -1245,7 +1272,8 @@ CREATE TABLE IF NOT EXISTS `song` (
   KEY `catalog` (`catalog`),
   KEY `played` (`played`),
   KEY `enabled` (`enabled`),
-  KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE
+  KEY `title_enabled_IDX` (`title`,`enabled`) USING BTREE,
+  KEY `album_disk_IDX` (`album_disk`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1431,7 +1459,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '702001'),
+('db_version', '710006'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
@@ -1479,7 +1507,9 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `object_id` int(11) UNSIGNED NOT NULL,
   `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `activity_date` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_object_type_IDX` (`user`,`object_type`) USING BTREE,
+  KEY `user_object_id_IDX` (`user`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1513,7 +1543,9 @@ CREATE TABLE IF NOT EXISTS `user_flag` (
   `date` int(11) UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_userflag` (`user`,`object_type`,`object_id`),
-  KEY `object_id` (`object_id`)
+  KEY `object_id` (`object_id`),
+  KEY `user_object_type_IDX` (`user`,`object_type`) USING BTREE,
+  KEY `user_object_id_IDX` (`user`,`object_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1747,7 +1779,17 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 216, 'homedash_trending', '1'),
 (-1, 217, 'homedash_popular', '0'),
 (-1, 218, 'homedash_order', '0'),
-(-1, 219, 'extended_playlist_links', '0');
+(-1, 219, 'extended_playlist_links', '0'),
+(-1, 220, 'external_links_discogs', '1'),
+(-1, 221, 'browse_song_grid_view', '0'),
+(-1, 222, 'browse_album_grid_view', '0'),
+(-1, 223, 'browse_album_disk_grid_view', '0'),
+(-1, 224, 'browse_artist_grid_view', '0'),
+(-1, 225, 'browse_live_stream_grid_view', '0'),
+(-1, 226, 'browse_playlist_grid_view', '0'),
+(-1, 227, 'browse_video_grid_view', '0'),
+(-1, 228, 'browse_podcast_grid_view', '0'),
+(-1, 229, 'browse_podcast_episode_grid_view', '0');
 
 -- --------------------------------------------------------
 

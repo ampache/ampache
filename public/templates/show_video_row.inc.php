@@ -68,7 +68,7 @@ if ($libitem->get_default_art_kind() == 'preview') {
     $art_showed = Art::display('video', $libitem->id, (string)$libitem->get_fullname(), 9, $libitem->get_link(), false, 'preview');
 }
 if (!$art_showed) {
-    $thumb = ($browse->is_grid_view()) ? 6 : 7;
+    $thumb = ($browse->is_grid_view()) ? 7 : 6;
     Art::display('video', $libitem->id, (string)$libitem->get_fullname(), $thumb, $libitem->get_link());
 } ?>
 </td>
@@ -125,7 +125,7 @@ if (Access::check_function(AccessFunctionEnum::FUNCTION_DOWNLOAD)) { ?>
     <a class="nohtml" href="<?php echo $web_path; ?>/stream.php?action=download&video_id=<?php echo $libitem->id; ?>"><?php echo Ui::get_material_symbol('download', T_('Download')); ?></a>
 <?php }
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-    <a id="<?php echo 'edit_video_' . $libitem->id; ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_video_' . $libitem->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', 'video_')">
+    <a id="<?php echo 'edit_video_' . $libitem->id; ?>" onclick="showEditDialog('video_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_video_' . $libitem->id; ?>', '<?php echo addslashes(T_('Video Edit')); ?>', 'video_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
         <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
     </a>
 <?php

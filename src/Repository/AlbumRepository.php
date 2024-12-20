@@ -141,10 +141,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     ): array {
         $user   = Core::get_global('user');
         $userId = $user?->getId() ?? -1;
-        $sql    = "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= "AND" . Catalog::get_user_filter('song', $userId) . " ";
-        }
+        $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `album_disk`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
+            : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
 
         $sql .= "ORDER BY `song`.`disk`, `song`.`track`, `song`.`title`";
         $db_results = Dba::read($sql, [$albumDiskId]);
@@ -165,12 +164,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function getRandomSongs(
         int $albumId
     ): array {
-        $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`album` = ? AND `catalog`.`enabled` = '1' "
+        $userId = Core::get_global('user')?->id ?? -1;
+        $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` WHERE `song`.`album` = ? ";
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')?->id ?? -1) . " ";
-        }
 
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumId]);
@@ -191,12 +188,10 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
     public function getRandomSongsByAlbumDisk(
         int $albumDiskId
     ): array {
-        $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `album_disk`.`id` = ? AND `catalog`.`enabled` = '1' "
+        $userId = Core::get_global('user')?->id ?? -1;
+        $sql    = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'))
+            ? "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? AND `song`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ") "
             : "SELECT `song`.`id` FROM `song` LEFT JOIN `album_disk` ON `album_disk`.`album_id` = `song`.`album` AND `album_disk`.`disk` = `song`.`disk` WHERE `album_disk`.`id` = ? ";
-        if (AmpConfig::get('catalog_filter')) {
-            $sql .= "AND" . Catalog::get_user_filter('song', Core::get_global('user')?->id ?? -1) . " ";
-        }
 
         $sql .= 'ORDER BY RAND()';
         $db_results = Dba::read($sql, [$albumDiskId]);
@@ -237,10 +232,8 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
 
         // delete old album_disks that shouldn't exist
         $this->connection->query('DELETE FROM `album_disk` WHERE `album_id` NOT IN (SELECT `id` FROM `album`)');
-        $result = $this->connection->query(
-            'SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);',
-            []
-        );
+
+        $result = $this->connection->query('SELECT `id` FROM `album_disk` WHERE CONCAT(`album_id`, \'_\', `disk`) NOT IN (SELECT CONCAT(`album`, \'_\', `disk`) AS `id` FROM `song`);');
         // left over garbage
         while ($albumDiskId = $result->fetchColumn()) {
             $this->connection->query('DELETE FROM `album_disk` WHERE `id` = ?;', [$albumDiskId]);
@@ -264,7 +257,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
             $catalog_where = "AND `album`.`catalog` = '" . Dba::escape($catalogId) . "'";
         }
 
-        $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $original_year = (AmpConfig::get('use_original_year'))
+            ? "IFNULL(`album`.`original_year`, `album`.`year`)"
+            : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         $showAlbum     = AmpConfig::get('album_group');
         $sql_sort      = match ($sort_type) {
@@ -324,7 +319,9 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         $userId        = Core::get_global('user')?->getId();
         $catalog_where = "AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $userId, true)) . ")";
 
-        $original_year = AmpConfig::get('use_original_year') ? "IFNULL(`album`.`original_year`, `album`.`year`)" : "`album`.`year`";
+        $original_year = (AmpConfig::get('use_original_year'))
+            ? "IFNULL(`album`.`original_year`, `album`.`year`)"
+            : "`album`.`year`";
         $sort_type     = AmpConfig::get('album_sort');
         $sql_sort      = match ($sort_type) {
             'name_asc' => "`album`.`name` ASC",
@@ -444,7 +441,7 @@ final readonly class AlbumRepository implements AlbumRepositoryInterface
         return [
             'prefix' => '',
             'basename' => '',
-            'name' => ''
+            'name' => '',
         ];
     }
 }

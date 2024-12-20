@@ -37,6 +37,7 @@ use Ampache\Module\Util\Ui;
 /** @var Live_Stream $libitem */
 /** @var Ampache\Repository\Model\Browse $browse */
 /** @var string $cel_cover */
+/** @var string $object_type */
 /** @var bool $show_ratings */
 
 $object_type = 'live_stream'; ?>
@@ -55,7 +56,7 @@ $object_type = 'live_stream'; ?>
     </div>
 </td>
 <td class="<?php echo $cel_cover; ?>">
-    <?php $thumb = ($browse->is_grid_view()) ? 1 : 11;
+    <?php $thumb = ($browse->is_grid_view()) ? 11 : 1;
 $libitem->display_art($thumb); ?>
 </td>
 <td class="cel_streamname"><?php echo $libitem->get_f_link(); ?></td>
@@ -88,7 +89,7 @@ if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER)) { ?>
 <td class="cel_action">
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) { ?>
-        <a id="<?php echo 'edit_live_stream_' . $libitem->id; ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_live_stream_' . $libitem->id; ?>', '<?php echo addslashes(T_('Live Stream Edit')); ?>', 'live_stream_')">
+        <a id="<?php echo 'edit_live_stream_' . $libitem->id; ?>" onclick="showEditDialog('live_stream_row', '<?php echo $libitem->id; ?>', '<?php echo 'edit_live_stream_' . $libitem->id; ?>', '<?php echo addslashes(T_('Live Stream Edit')); ?>', 'live_stream_', '<?php echo '&browse_id=' . $browse->getId(); ?>')">
             <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
         </a>
         <?php

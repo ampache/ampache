@@ -74,7 +74,7 @@ class Label extends database_object implements library_item
     /** @var array $artists */
     public $artists = [];
 
-    /** @var int $artists */
+    /** @var int $artist_count */
     public $artist_count;
 
     /**
@@ -295,7 +295,9 @@ class Label extends database_object implements library_item
         $website  = (isset($data['website']))
             ? filter_var(urldecode($data['website']), FILTER_VALIDATE_URL) ?: null
             : null;
-        $active   = isset($data['active']) ? (bool)$data['active'] : $this->active;
+        $active   = (isset($data['active']))
+            ? (bool)$data['active']
+            : $this->active;
 
         $sql = "UPDATE `label` SET `name` = ?, `mbid` = ?, `category` = ?, `summary` = ?, `address` = ?, `country` = ?, `email` = ?, `website` = ?, `active` = ? WHERE `id` = ?";
         Dba::write($sql, [$name, $mbid, strtolower((string) $category), $summary, $address, $country, $email, $website, $active, $this->id]);

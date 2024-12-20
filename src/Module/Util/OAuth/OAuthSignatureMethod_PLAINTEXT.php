@@ -58,7 +58,7 @@ class OAuthSignatureMethod_PLAINTEXT extends OAuthSignatureMethod
     {
         $key_parts = [
             $consumer->secret,
-            ($token) ? $token->secret : ""
+            ($token) ? $token->secret : "",
         ];
 
         $key_parts            = OAuthUtil::urlencode_rfc3986($key_parts);

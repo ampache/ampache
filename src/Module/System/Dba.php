@@ -632,7 +632,7 @@ class Dba
 
         return [
             'charset' => $target_charset,
-            'collation' => $target_collation
+            'collation' => $target_collation,
         ];
     }
 

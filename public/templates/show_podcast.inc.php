@@ -51,7 +51,7 @@ $web_path = AmpConfig::get_web_path();
 Ui::show_box_top((string)$podcast->get_fullname(), 'info-box'); ?>
 <div class="item_right_info">
     <?php
-    $thumb = Ui::is_grid_view('podcast') ? 32 : 11;
+    $thumb = Ui::is_grid_view('podcast') ? 11 : 32;
 Art::display('podcast', $podcast->getId(), (string)$podcast->get_fullname(), $thumb); ?>
 </div>
 <?php if ($podcast->get_description()) { ?>

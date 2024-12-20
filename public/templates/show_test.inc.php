@@ -34,12 +34,13 @@ use Ampache\Module\Util\Ui;
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo T_('Ampache') . " -- " . T_("Debug Page"); ?></title>
+        <link rel="stylesheet" href="themes/reborn/templates/default.css">
         <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" href="lib/components/bootstrap/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="#">
                     <img src="<?php echo Ui::get_logo_url('dark'); ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">
@@ -52,7 +53,7 @@ use Ampache\Module\Util\Ui;
             <h1><?php echo T_('Ampache Debug'); ?></h1>
         </div>
         <div class="well">
-            <p>
+            <p style="padding: 10px;">
                 <?php echo T_('You may have reached this page because a configuration error has occurred. Debug information is below.'); ?>
                 <?php if (!is_readable($configfile)) { ?>
                 | <a href="install.php"><?php echo T_('Web Installation'); ?></a>

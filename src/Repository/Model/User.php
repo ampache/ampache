@@ -514,16 +514,16 @@ class User extends database_object
             }
 
             switch ($name) {
-                case 'password':
                 case 'access':
-                case 'email':
-                case 'username':
-                case 'fullname':
-                case 'fullname_public':
-                case 'website':
-                case 'state':
-                case 'city':
                 case 'catalog_filter_group':
+                case 'city':
+                case 'email':
+                case 'fullname_public':
+                case 'fullname':
+                case 'password':
+                case 'state':
+                case 'username':
+                case 'website':
                     if ($this->$name != $value) {
                         $function = 'update_' . $name;
                         $this->$function($value);
@@ -609,7 +609,7 @@ class User extends database_object
 
         debug_event(self::class, 'Updating fullname public', 4);
 
-        Dba::write($sql, [$new_fullname_public ? '1' : '0', $this->id]);
+        Dba::write($sql, [($new_fullname_public) ? '1' : '0', $this->id]);
     }
 
     /**
@@ -634,7 +634,7 @@ class User extends database_object
     public function update_website($new_website): void
     {
         $new_website = filter_var(urldecode($new_website), FILTER_VALIDATE_URL) ?: null;
-        $new_website = is_string($new_website)
+        $new_website = (is_string($new_website))
             ? rtrim((string)$new_website, "/")
             : null;
         $sql = "UPDATE `user` SET `website` = ? WHERE `id` = ?";
@@ -690,25 +690,25 @@ class User extends database_object
         if (!$catalog_filter) {
             // no filter means no need for filtering or counting per user
             $count_array   = [
-                'song',
-                'video',
-                'podcast_episode',
-                'artist',
-                'album',
-                'search',
-                'playlist',
-                'live_stream',
-                'podcast',
-                'user',
-                'catalog',
-                'label',
-                'tag',
-                'share',
-                'license',
                 'album_disk',
+                'album',
+                'artist',
+                'catalog',
                 'items',
-                'time',
+                'label',
+                'license',
+                'live_stream',
+                'playlist',
+                'podcast_episode',
+                'podcast',
+                'search',
+                'share',
                 'size',
+                'song',
+                'tag',
+                'time',
+                'user',
+                'video',
             ];
             $server_counts = Catalog::get_server_counts(0);
             foreach ($user_list as $user_id) {
@@ -724,21 +724,21 @@ class User extends database_object
         }
 
         $count_array = [
-            'song',
-            'video',
-            'podcast_episode',
-            'artist',
             'album',
-            'search',
-            'playlist',
-            'live_stream',
-            'podcast',
-            'user',
+            'artist',
             'catalog',
             'label',
-            'tag',
-            'share',
             'license',
+            'live_stream',
+            'playlist',
+            'podcast_episode',
+            'podcast',
+            'search',
+            'share',
+            'song',
+            'tag',
+            'user',
+            'video',
         ];
         foreach ($user_list as $user_id) {
             $catalog_array = self::get_user_catalogs($user_id);
@@ -784,7 +784,7 @@ class User extends database_object
             self::set_user_data($user_id, 'time', $time);
             self::set_user_data($user_id, 'size', $size);
             // album_disk counts
-            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `catalog` ON `catalog`.`id` = `album`.`catalog` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `catalog`.`enabled` = '1' AND" . Catalog::get_user_filter('album', $user_id);
+            $sql        = "SELECT COUNT(DISTINCT `album_disk`.`id`) AS `count` FROM `album_disk` LEFT JOIN `album` ON `album_disk`.`album_id` = `album`.`id` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` WHERE `artist_map`.`object_type` = 'album' AND `album`.`catalog` IN (" . implode(',', Catalog::get_catalogs('', $user_id, true)) . ")";
             $db_results = Dba::read($sql);
             $row        = Dba::fetch_row($db_results);
             self::set_user_data($user_id, 'album_disk', (int)($row[0] ?? 0));
@@ -904,7 +904,7 @@ class User extends database_object
             $password = hash('sha256', $password);
         }
 
-        $disabled = $disabled ? 1 : 0;
+        $disabled = ($disabled) ? 1 : 0;
 
         // Just in case a zero value slipped in from upper layers...
         $catalog_filter_group ??= 0;
@@ -1097,6 +1097,19 @@ class User extends database_object
             $sql        = sprintf('ALTER TABLE `catalog_filter_group` AUTO_INCREMENT = %d;', $increment);
             Dba::write($sql);
         }
+
+        // Make sure the language a user has is valid
+        $sql = "UPDATE `user_preference` SET `value` = 'en_US' WHERE `user` = -1 AND `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
+        Dba::write($sql);
+
+        $sql          = "SELECT `value` FROM `user_preference` WHERE `user` = -1 AND `name` = 'lang';";
+        $db_results   = Dba::read($sql);
+        $row          = Dba::fetch_assoc($db_results);
+        $default_lang = $row['value'] ?? 'en_US';
+
+        // Set the default system user value if your user is bad
+        $sql = "UPDATE `user_preference` SET `value` = ? WHERE `name` = 'lang' AND `value` NOT IN ('af_ZA', 'bg_BG', 'ca_ES', 'cs_CZ', 'da_DK', 'de_CH', 'de_DE', 'el_GR', 'en_AU', 'en_GB', 'en_US', 'es_AR', 'es_ES', 'es_MX', 'et_EE', 'eu_ES', 'fi_FI', 'fr_BE', 'fr_FR', 'ga_IE', 'gl_ES', 'hi_IN', 'hu_HU', 'id_ID', 'is_IS', 'it_IT', 'ja_JP', 'ko_KR', 'lt_LT', 'lv_LV', 'nb_NO', 'nl_NL', 'no_NO', 'pl_PL', 'pt_BR', 'pt_PT', 'ro_RO', 'ru_RU', 'sk_SK', 'sl_SI', 'sr_CS', 'sv_SE', 'tr_TR', 'uk_UA', 'vi_VN', 'zh_CN', 'zh_TW', 'zh-Hant', 'zh_SG', 'ar_SA', 'he_IL', 'fa_IR');";
+        Dba::write($sql, [$default_lang]);
 
         // Make sure all current catalogs are in the default group map
         $sql = "INSERT IGNORE INTO `catalog_filter_group_map` (`group_id`, `catalog_id`, `enabled`) SELECT 0, `catalog`.`id`, `catalog`.`enabled` FROM `catalog` WHERE `catalog`.`id` NOT IN (SELECT `catalog_id` AS `id` FROM `catalog_filter_group_map` WHERE `group_id` = 0);";
@@ -1308,7 +1321,7 @@ class User extends database_object
         if ($this->has_art()) {
             $avatar['url'] = sprintf(
                 '%s/image.php?action=%s&object_id=%d',
-                $local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
+                ($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path(),
                 ShowUserAvatarAction::REQUEST_ACTION,
                 $this->id
             );
@@ -1337,7 +1350,7 @@ class User extends database_object
         }
 
         if (!array_key_exists('url', $avatar)) {
-            $avatar['url']        = ($local ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
+            $avatar['url']        = (($local) ? AmpConfig::get('local_web_path') : AmpConfig::get_web_path()) . '/images/blankuser.png';
             $avatar['url_mini']   = $avatar['url'];
             $avatar['url_medium'] = $avatar['url'];
         }

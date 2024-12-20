@@ -32,20 +32,20 @@ final class PvmsgQuery implements QueryInterface
 {
     public const FILTERS = [
         'alpha_match',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
         'to_user',
         'user',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'subject',
-        'to_user',
         'creation_date',
         'is_read',
+        'subject',
+        'to_user',
     ];
 
     protected string $select = "`user_pvmsg`.`id`";
@@ -142,11 +142,11 @@ final class PvmsgQuery implements QueryInterface
     public function get_sql_sort($query, $field, $order): string
     {
         switch ($field) {
+            case 'creation_date':
             case 'id':
+            case 'is_read':
             case 'subject':
             case 'to_user':
-            case 'creation_date':
-            case 'is_read':
                 $sql = "`user_pvmsg`.`$field`";
                 break;
             default:

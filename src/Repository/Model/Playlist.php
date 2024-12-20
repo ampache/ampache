@@ -349,10 +349,10 @@ class Playlist extends playlist_object
             $params      = [$this->id];
 
             switch ($object_type) {
-                case "song":
-                case "live_stream":
-                case "podcast_episode":
-                case "video":
+                case 'song':
+                case 'live_stream':
+                case 'podcast_episode':
+                case 'video':
                     $sql = sprintf('SELECT `playlist_data`.`id`, `object_id`, `object_type`, `playlist_data`.`track` FROM `playlist_data` INNER JOIN `%s` ON `playlist_data`.`object_id` = `%s`.`id` WHERE `playlist_data`.`playlist` = ? AND `object_type` = \'%s\' ', $object_type, $object_type, $object_type);
                     if (AmpConfig::get('catalog_filter')) {
                         if ($user_id < 0) {

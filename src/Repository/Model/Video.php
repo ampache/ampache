@@ -703,7 +703,9 @@ class Video extends database_object implements
     public static function update_video($video_id, Video $new_video): void
     {
         $update_time  = time();
-        $release_date = is_numeric($new_video->release_date) ? $new_video->release_date : null;
+        $release_date = (is_numeric($new_video->release_date))
+            ? $new_video->release_date
+            : null;
 
         $sql = "UPDATE `video` SET `title` = ?, `bitrate` = ?, `size` = ?, `time` = ?, `video_codec` = ?, `audio_codec` = ?, `resolution_x` = ?, `resolution_y` = ?, `release_date` = ?, `channels` = ?, `display_x` = ?, `display_y` = ?, `frame_rate` = ?, `video_bitrate` = ?, `update_time` = ? WHERE `id` = ?";
 
@@ -754,7 +756,7 @@ class Video extends database_object implements
     {
         return [
             'object_type' => 'video',
-            'object_id' => $this->id
+            'object_id' => $this->id,
         ];
     }
 
@@ -1110,7 +1112,7 @@ class Video extends database_object implements
      */
     public static function update_played($new_played, $song_id): void
     {
-        self::_update_item('played', ($new_played ? 1 : 0), $song_id, AccessLevelEnum::USER);
+        self::_update_item('played', (($new_played) ? 1 : 0), $song_id, AccessLevelEnum::USER);
     }
 
     /**
@@ -1174,11 +1176,11 @@ class Video extends database_object implements
             'tags',
         ];
         $skip_array   = [
-            'id',
-            'tag_id',
-            'mime',
-            'total_count',
             'disabledMetadataFields',
+            'id',
+            'mime',
+            'tag_id',
+            'total_count',
         ];
 
         return Song::compare_media_information($video, $new_video, $string_array, $skip_array);

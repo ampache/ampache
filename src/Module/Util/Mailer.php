@@ -119,7 +119,7 @@ final class Mailer implements MailerInterface
      */
     public static function validate_address(string $address): bool
     {
-        return PHPMailer::ValidateAddress($address);
+        return PHPMailer::validateAddress($address);
     }
 
     /**
@@ -202,7 +202,7 @@ final class Mailer implements MailerInterface
             if (function_exists('mb_encode_mimeheader')) {
                 $recipient_name = mb_encode_mimeheader($recipient_name);
             }
-            $mail->AddAddress((string) $this->recipient, $recipient_name);
+            $mail->addAddress((string) $this->recipient, $recipient_name);
         } else {
             $mail = $phpmailer;
         }
@@ -228,7 +228,7 @@ final class Mailer implements MailerInterface
 
         switch ($mailtype) {
             case 'smtp':
-                $mail->IsSMTP();
+                $mail->isSMTP();
                 $mail->Host = $mailhost;
                 $mail->Port = $mailport;
                 if ($mailauth) {
@@ -241,12 +241,12 @@ final class Mailer implements MailerInterface
                 }
                 break;
             case 'sendmail':
-                $mail->IsSendmail();
+                $mail->isSendmail();
                 $mail->Sendmail = $sendmail;
                 break;
             case 'php':
             default:
-                $mail->IsMail();
+                $mail->isMail();
                 break;
         }
 
@@ -273,7 +273,7 @@ final class Mailer implements MailerInterface
             if (function_exists('mb_encode_mimeheader')) {
                 $member['fullname'] = mb_encode_mimeheader($member['fullname']);
             }
-            $mail->AddBCC($member['email'], $member['fullname']);
+            $mail->addBCC($member['email'], $member['fullname']);
         }
 
         return $this->send($mail);

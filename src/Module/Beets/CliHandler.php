@@ -132,7 +132,7 @@ class CliHandler extends Handler
         $commandParts = [
             escapeshellcmd($this->beetsCommand),
             ' -l ' . escapeshellarg($this->handler->get_path()),
-            escapeshellcmd($command)
+            escapeshellcmd($command),
         ];
         if ($this->useCustomFields && !$disableCostomFields) {
             $commandParts[] = ' -f ' . escapeshellarg($this->getFieldFormat());

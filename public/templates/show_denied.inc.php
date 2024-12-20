@@ -46,7 +46,7 @@ $web_path = AmpConfig::get_web_path(); ?>
         <link rel="stylesheet" href="templates/install.css" type="text/css" media="screen">
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar navbar-dark navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container" style="height: 70px;">
                 <a class="navbar-brand" href="<?php echo $web_path; ?>">
                     <img src="<?php echo $logo_url; ?>" title="<?php echo T_('Ampache'); ?>" alt="<?php echo T_('Ampache'); ?>">

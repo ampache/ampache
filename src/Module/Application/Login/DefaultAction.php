@@ -237,12 +237,12 @@ final class DefaultAction implements ApplicationActionInterface
             } elseif ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTO_CREATE) && $auth['success'] && !$user instanceof User) {
                 // This is run if we want to autocreate users who don't exist (useful for non-mysql auth)
                 $access   = AccessLevelEnum::fromTextual($this->configContainer->get(ConfigurationKeyEnum::AUTO_USER) ?? 'guest');
-                $fullname = array_key_exists('name', $auth) ? $auth['name'] : '';
-                $email    = array_key_exists('email', $auth) ? $auth['email'] : '';
-                $website  = array_key_exists('website', $auth) ? $auth['website'] : '';
-                $state    = array_key_exists('state', $auth) ? $auth['state'] : '';
-                $city     = array_key_exists('city', $auth) ? $auth['city'] : '';
-                $dfg      = array_key_exists('catalog_filter_group', $auth) ? $auth['catalog_filter_group'] : 0;
+                $fullname = (array_key_exists('name', $auth)) ? $auth['name'] : '';
+                $email    = (array_key_exists('email', $auth)) ? $auth['email'] : '';
+                $website  = (array_key_exists('website', $auth)) ? $auth['website'] : '';
+                $state    = (array_key_exists('state', $auth)) ? $auth['state'] : '';
+                $city     = (array_key_exists('city', $auth)) ? $auth['city'] : '';
+                $dfg      = (array_key_exists('catalog_filter_group', $auth)) ? $auth['catalog_filter_group'] : 0;
 
                 // Attempt to create the user
                 $user_id = User::create($username, $fullname, $email, $website, hash('sha256', bin2hex(random_bytes(20))), $access, $dfg, $state, $city);
@@ -327,6 +327,8 @@ final class DefaultAction implements ApplicationActionInterface
             }
 
             Session::createGlobalUser($user);
+            Session::create_preference_cookies($user);
+
             // If an admin, check for update
             if (
                 $this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::AUTOUPDATE) &&

@@ -209,7 +209,7 @@ class UPnPPlayer
      */
     public function skip(int $track_id): bool
     {
-        if ($this->Playlist()->Skip($track_id)) {
+        if ($this->Playlist()->skip($track_id)) {
             $this->Play();
 
             return true;
@@ -240,7 +240,7 @@ class UPnPPlayer
         return [
             'InstanceID' => 0,
             $prefix . 'URI' => $songUrl,
-            $prefix . 'URIMetaData' => htmlentities($xmlDIDL)
+            $prefix . 'URIMetaData' => htmlentities($xmlDIDL),
         ];
     }
 
@@ -274,7 +274,7 @@ class UPnPPlayer
 
         $args = [
             'InstanceID' => 0,
-            'Speed' => 1
+            'Speed' => 1,
         ];
         $response = $this->Device()->sendRequestToDevice('Play', $args, 'AVTransport');
 
@@ -387,14 +387,14 @@ class UPnPPlayer
      */
     public function SetVolume($value): bool
     {
-        $desiredVolume = Max(0, Min(100, $value));
+        $desiredVolume = max(0, min(100, $value));
         $instanceId    = 0;
         $channel       = 'Master';
 
         $response = $this->Device()->sendRequestToDevice('SetVolume', [
             'InstanceID' => $instanceId,
             'Channel' => $channel,
-            'DesiredVolume' => $desiredVolume
+            'DesiredVolume' => $desiredVolume,
         ]);
 
         return true;
@@ -412,7 +412,7 @@ class UPnPPlayer
 
         $response = $this->Device()->sendRequestToDevice('GetVolume', [
             'InstanceID' => $instanceId,
-            'Channel' => $channel
+            'Channel' => $channel,
         ]);
 
         $responseXML = simplexml_load_string($response);

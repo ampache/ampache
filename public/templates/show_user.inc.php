@@ -54,8 +54,8 @@ use Ampache\Repository\Model\Useractivity;
 
 /** @var User $current_user */
 $current_user = Core::get_global('user');
-$last_seen    = $client->last_seen ? get_datetime((int) $client->last_seen) : T_('Never');
-$create_date  = $client->create_date ? get_datetime((int) $client->create_date) : T_('Unknown');
+$last_seen    = ($client->last_seen) ? get_datetime((int) $client->last_seen) : T_('Never');
+$create_date  = ($client->create_date) ? get_datetime((int) $client->create_date) : T_('Unknown');
 $web_path     = AmpConfig::get_web_path();
 $admin_path   = AmpConfig::get_web_path('/admin');
 $allow_upload = Upload::can_upload($current_user);
@@ -99,7 +99,6 @@ Ui::show_box_top(scrub_out($client->get_fullname())); ?>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_preferences&user_id=<?php echo $client->id; ?>"><?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?></a>
         <?php } elseif ($client->id == $current_user->id) { ?>
             <a href="<?php echo $web_path; ?>/preferences.php?tab=account"><?php echo Ui::get_material_symbol('edit', T_('Edit')); ?></a>
-
         <?php } ?>
 <?php if (AmpConfig::get('use_now_playing_embedded')) { ?>
         <a href="<?php echo $web_path; ?>/now_playing.php?user_id=<?php echo $client->id; ?>" target="_blank"><?php echo Ui::get_material_symbol('headphones', T_('Now Playing')); ?></a>
@@ -173,15 +172,15 @@ if ($current_list) {
         <?php Ui::show_box_bottom();
     }
 }
-$ajax_page  = 'stats';
-$limit      = AmpConfig::get('popular_threshold', 10);
-$no_refresh = true;
-$user       = $client;
+$ajax_page = 'stats';
+$limit     = AmpConfig::get('popular_threshold', 10);
+$user      = $client;
+$user_only = true;
 if (AmpConfig::get('home_recently_played_all')) {
-    $data = Stats::get_recently_played($client->getId(), 'stream', null, true);
+    $data = Stats::get_recently_played($client->getId(), 'stream', null, $user_only);
     require_once Ui::find_template('show_recently_played_all.inc.php');
 } else {
-    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', true);
+    $data = Stats::get_recently_played($client->getId(), 'stream', 'song', $user_only);
     Song::build_cache(array_keys($data));
     require Ui::find_template('show_recently_played.inc.php');
 } ?>
@@ -189,7 +188,7 @@ if (AmpConfig::get('home_recently_played_all')) {
         <div id="recently_skipped" class="tab_content">
 <?php $ajax_page = 'stats';
 $limit           = AmpConfig::get('popular_threshold', 10);
-$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', true);
+$data            = Stats::get_recently_played($client->getId(), 'skip', 'song', $user_only);
 Song::build_cache(array_keys($data));
 require Ui::find_template('show_recently_skipped.inc.php'); ?>
         </div>

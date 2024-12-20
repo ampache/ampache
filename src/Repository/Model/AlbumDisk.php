@@ -53,6 +53,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $total_count;
 
+    public int $total_skip;
+
     public ?string $disksubtitle = null;
 
     /**
@@ -151,6 +153,8 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
         $info = $this->get_info($album_disk_id, static::DB_TABLENAME);
         if ($info === []) {
+            $this->album = new Album();
+
             return;
         }
 
@@ -240,7 +244,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // create the album_disk (if missing)
-        $db_results = Dba::write("INSERT INTO `album_disk` (`album_id`, `disk`, `catalog`) VALUES(?, ?, ?);", [$album_id, $disk, $catalog_id]);
+        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) VALUES (?, ?, ?, ?);", [$album_id, $disk, $catalog_id, $disksubtitle]);
         if (!$db_results) {
             return 0;
         }

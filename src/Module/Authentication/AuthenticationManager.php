@@ -116,7 +116,9 @@ final class AuthenticationManager implements AuthenticationManagerInterface
     public function logout(string $key = '', bool $relogin = true): void
     {
         // If no key is passed try to find the session id
-        $key = empty($key) ? session_id() : $key;
+        $key = (empty($key))
+            ? session_id()
+            : $key;
 
         // Nuke the cookie before all else
         Session::destroy((string)$key);

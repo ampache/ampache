@@ -154,7 +154,7 @@ class Catalog_Seafile extends Catalog
         $fields['server_uri'] = [
             'description' => T_('Server URI'),
             'type' => 'text',
-            'value' => 'https://seafile.example.org/'
+            'value' => 'https://seafile.example.org/',
         ];
         $fields['library_name']   = ['description' => T_('Library Name'), 'type' => 'text', 'value' => 'Music'];
         $fields['api_call_delay'] = ['description' => T_('API Call Delay'), 'type' => 'number', 'value' => '250'];
@@ -678,7 +678,7 @@ class Catalog_Seafile extends Catalog
             'file_path' => $stream_path,
             'file_name' => $stream_name,
             'file_size' => $size,
-            'file_type' => $media->type
+            'file_type' => $media->type,
         ];
     }
 

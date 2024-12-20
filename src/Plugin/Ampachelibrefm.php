@@ -160,7 +160,7 @@ class Ampachelibrefm extends AmpachePlugin implements PluginSaveMediaplayInterfa
         $scrobbler = new Scrobbler($this->api_key, $this->scheme, $this->api_host, $this->challenge, $this->secret);
 
         // Check to see if the scrobbling works by queueing song
-        if (!$scrobbler->queue_track($song->get_artist_fullname(), $song->get_album_fullname(), $song->title, time(), $song->time, $song->track)) {
+        if (!$scrobbler->queue_track($song->get_artist_fullname(), $song->get_album_fullname(), (string)$song->title, time(), $song->time, (int)$song->track)) {
             return false;
         }
 

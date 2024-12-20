@@ -291,7 +291,7 @@ class Stream
 
         return [
             'format' => $target,
-            'command' => $cmd . $args
+            'command' => $cmd . $args,
         ];
     }
 

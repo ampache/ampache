@@ -33,24 +33,24 @@ use Ampache\Repository\Model\Query;
 final class AlbumQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'add_gt',
         'add_lt',
+        'album_artist',
         'alpha_match',
         'artist',
-        'album_artist',
-        'song_artist',
-        'catalog',
         'catalog_enabled',
+        'catalog',
         'equal',
-        'like',
         'exact_match',
         'genre',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
+        'song_artist',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'tag',
         'unplayed',
         'update_gt',
@@ -60,34 +60,34 @@ final class AlbumQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'album_artist',
         'album_artist_album_sort',
         'album_artist_title',
+        'album_artist',
         'artist',
         'barcode',
-        'catalog',
         'catalog_number',
+        'catalog',
+        'disk_count',
         'generic_artist',
-        'title',
-        'name',
-        'name_year',
+        'id',
         'name_original_year',
+        'name_year',
+        'name',
         'original_year',
         'rand',
+        'rating',
         'release_status',
         'release_type',
-        'disk_count',
         'song_count',
         'subtitle',
         'time',
+        'title',
         'total_count',
-        'version',
-        'year',
-        'rating',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
+        'version',
+        'year',
     ];
 
     protected string $select = "`album`.`id`";
@@ -148,7 +148,7 @@ final class AlbumQuery implements QueryInterface
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`album`.`id`', 100);
-                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='album' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -273,7 +273,7 @@ final class AlbumQuery implements QueryInterface
             case 'album_artist_album_sort':
                 $sql = "`artist`.`name` $order, ";
                 // sort the albums by arist AND default sort
-                $original_year = AmpConfig::get('use_original_year') ? "original_year" : "year";
+                $original_year = (AmpConfig::get('use_original_year')) ? "original_year" : "year";
                 $sort_type     = AmpConfig::get('album_sort');
                 switch ($sort_type) {
                     case 'name_asc':
@@ -331,17 +331,17 @@ final class AlbumQuery implements QueryInterface
             case 'year':
                 $sql = "`album`.`year` $order, `album`.`addition_time`";
                 break;
+            case 'barcode':
+            case 'catalog_number':
             case 'catalog':
             case 'disk_count':
             case 'id':
-            case 'song_count':
-            case 'total_count':
-            case 'release_type':
             case 'release_status':
-            case 'barcode':
-            case 'catalog_number':
+            case 'release_type':
+            case 'song_count':
             case 'subtitle':
             case 'time':
+            case 'total_count':
             case 'version':
                 $sql = "`album`.`$field`";
                 break;

@@ -34,7 +34,7 @@ require __DIR__ . '/install_header.inc.php'; ?>
             <h1><?php echo T_('Requirements'); ?></h1>
         </div>
         <div class="well">
-            <p>
+            <p style="padding: 10px;">
                 <?php echo T_('This page handles the installation of the Ampache database and the creation of the ampache.cfg.php file. Before you continue please make sure that you have the following prerequisites:'); ?>
             </p>
             <ul>

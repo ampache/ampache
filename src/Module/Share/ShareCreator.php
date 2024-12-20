@@ -116,7 +116,7 @@ final class ShareCreator implements ShareCreatorInterface
             $secret,
             0,
             $max_counter,
-            $description
+            $description,
         ];
         Dba::write($sql, $params);
 

@@ -42,17 +42,17 @@ class Rating extends database_object
     protected const DB_TABLENAME = 'rating';
 
     private const RATING_TYPES   = [
-        'artist',
-        'album',
         'album_disk',
+        'album',
+        'artist',
+        'live_stream',
+        'playlist',
+        'podcast_episode',
+        'podcast',
+        'search',
         'song',
         'stream',
-        'live_stream',
         'video',
-        'playlist',
-        'search',
-        'podcast',
-        'podcast_episode',
     ];
 
     // Public variables
@@ -94,18 +94,18 @@ class Rating extends database_object
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'search',
             'song',
+            'tag',
             'user',
             'video',
         ];
@@ -169,11 +169,11 @@ class Rating extends database_object
 
         foreach ($ids as $object_id) {
             // First store the user-specific rating
-            $rating = isset($user_ratings[$object_id]) ? (int)$user_ratings[$object_id] : 0;
+            $rating = (isset($user_ratings[$object_id])) ? (int)$user_ratings[$object_id] : 0;
 
             parent::add_to_cache('rating_' . $type . '_user' . $user_id, $object_id, [$rating]);
             // Then store the average
-            $rating = isset($ratings[$object_id]) ? round($ratings[$object_id], 1) : 0;
+            $rating = (isset($ratings[$object_id])) ? round($ratings[$object_id], 1) : 0;
 
             parent::add_to_cache('rating_' . $type . '_all', $object_id, [(int)$rating]);
         }
@@ -528,7 +528,7 @@ class Rating extends database_object
 
             $action = $base_url . '&rating=' . $action;
             $source = 'rating' . $count . '_' . $rating->id . '_' . $rating->type;
-            $text   = Ajax::button($action, $icon, $alt, $source, '');
+            $text   = Ajax::button($action, $icon, $alt, $source);
             $ratings .= sprintf(
                 '<li>%s</li>',
                 $text

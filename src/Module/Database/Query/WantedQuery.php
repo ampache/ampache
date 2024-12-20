@@ -34,12 +34,12 @@ final class WantedQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'rand',
-        'user',
         'accepted',
         'artist',
-        'title',
         'name',
+        'rand',
+        'title',
+        'user',
         'year',
     ];
 
@@ -108,11 +108,11 @@ final class WantedQuery implements QueryInterface
             case 'title':
                 $sql = "`wanted`.`name`";
                 break;
-            case 'id':
-            case 'username':
-            case 'user':
             case 'accepted':
             case 'artist':
+            case 'id':
+            case 'user':
+            case 'username':
             case 'year':
                 $sql = "`wanted`.`$field`";
                 break;

@@ -235,7 +235,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->PlaylistAdd($url->title, $url->url);
+        $this->_upnp->PlayListAdd($url->title, $url->url);
 
         return true;
     }
@@ -322,7 +322,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->Skip($track_id);
+        $this->_upnp->skip($track_id);
 
         return true;
     }
@@ -409,7 +409,7 @@ class AmpacheUPnP extends localplay_controller
             return false;
         }
 
-        $this->_upnp->Repeat($state);
+        $this->_upnp->repeat($state);
 
         return true;
     }

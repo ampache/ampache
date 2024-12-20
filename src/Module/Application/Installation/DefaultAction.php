@@ -123,8 +123,8 @@ final class DefaultAction implements ApplicationActionInterface
         }
 
         // Charset and gettext setup
-        $htmllang = $_REQUEST['htmllang'] ?? 'en_US';
         $charset  = $_REQUEST['charset'] ?? 'UTF-8';
+        $htmllang = $_REQUEST['htmllang'] ?? null;
 
         if (!$htmllang) {
             if ($_ENV['LANG']) {
@@ -153,7 +153,7 @@ final class DefaultAction implements ApplicationActionInterface
         // Correct potential \ or / in the dirname
         $safe_dirname = get_web_path();
 
-        $this->environment->isSsl() ? $protocol = 'https' : $protocol = 'http';
+        $protocol = ($this->environment->isSsl()) ? 'https' : 'http';
 
         $web_path = sprintf(
             '%s://%s%s',

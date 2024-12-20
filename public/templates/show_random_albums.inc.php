@@ -48,7 +48,7 @@ if (!empty($albums)) {
     <div class="random_album">
         <div id="album_<?php echo $album_id; ?>" class="art_album libitem_menu">
             <?php $thumb = 1;
-        if (!Ui::is_grid_view('album')) {
+        if (Ui::is_grid_view('album')) {
             $thumb     = 11;
             $show_play = false;
         }

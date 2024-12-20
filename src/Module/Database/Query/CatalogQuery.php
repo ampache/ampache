@@ -32,39 +32,39 @@ use Ampache\Repository\Model\Query;
 final class CatalogQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'alpha_match',
+        'enabled',
         'equal',
-        'like',
         'exact_match',
+        'gather_type',
+        'gather_types',
+        'id',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
         'starts_with',
-        'not_starts_with',
-        'not_like',
-        'enabled',
-        'gather_type',
-        'gather_types',
         'user',
     ];
 
     /** @var string[] $sorts */
     protected array $sorts = [
-        'id',
-        'title',
-        'name',
         'catalog_type',
-        'last_update',
-        'last_clean',
-        'last_add',
         'enabled',
+        'gather_types',
+        'id',
+        'last_add',
+        'last_clean',
+        'last_update',
+        'name',
+        'rating',
         'rename_pattern',
         'sort_pattern',
-        'gather_types',
-        'rating',
+        'title',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
     ];
 
     protected string $select = "`catalog`.`id`";
@@ -183,14 +183,14 @@ final class CatalogQuery implements QueryInterface
                 $sql = "`catalog`.`name`";
                 break;
             case 'catalog_type':
-            case 'id':
-            case 'last_update':
-            case 'last_clean':
-            case 'last_add':
             case 'enabled':
+            case 'gather_types':
+            case 'id':
+            case 'last_add':
+            case 'last_clean':
+            case 'last_update':
             case 'rename_pattern':
             case 'sort_pattern':
-            case 'gather_types':
                 $sql = "`catalog`.`$field`";
                 break;
             case 'rating':

@@ -32,24 +32,24 @@ use Ampache\Repository\Model\Query;
 final class ArtistQuery implements QueryInterface
 {
     public const FILTERS = [
-        'id',
         'add_gt',
         'add_lt',
         'album_artist',
-        'song_artist',
         'alpha_match',
-        'catalog',
         'catalog_enabled',
+        'catalog',
         'equal',
-        'like',
         'exact_match',
         'genre',
+        'id',
         'label',
+        'like',
+        'not_like',
+        'not_starts_with',
         'regex_match',
         'regex_not_match',
+        'song_artist',
         'starts_with',
-        'not_starts_with',
-        'not_like',
         'tag',
         'unplayed',
         'update_gt',
@@ -59,20 +59,20 @@ final class ArtistQuery implements QueryInterface
 
     /** @var string[] $sorts */
     protected array $sorts = [
+        'album_count',
         'id',
-        'title',
         'name',
         'placeformed',
-        'yearformed',
-        'song_count',
-        'album_count',
-        'total_count',
         'rand',
         'rating',
+        'song_count',
         'time',
+        'title',
+        'total_count',
+        'user_flag_rating',
         'user_flag',
         'userflag',
-        'user_flag_rating',
+        'yearformed',
     ];
 
     protected string $select = "`artist`.`id`";
@@ -133,7 +133,7 @@ final class ArtistQuery implements QueryInterface
             case 'genre':
             case 'tag':
                 $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
-                $filter_sql = " `tag_map`.`object_type`='" . $query->get_type() . "' AND (";
+                $filter_sql = " `tag_map`.`object_type`='artist' AND (";
 
                 foreach ($value as $tag_id) {
                     $filter_sql .= "`tag_map`.`tag_id`='" . Dba::escape($tag_id) . "' AND ";
@@ -265,13 +265,13 @@ final class ArtistQuery implements QueryInterface
             case 'title':
                 $sql = "`artist`.`name`";
                 break;
+            case 'album_count':
             case 'id':
             case 'placeformed':
-            case 'yearformed':
             case 'song_count':
-            case 'album_count':
-            case 'total_count':
             case 'time':
+            case 'total_count':
+            case 'yearformed':
                 $sql = "`artist`.`$field`";
                 break;
             case 'rating':

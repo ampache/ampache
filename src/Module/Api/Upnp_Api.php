@@ -460,7 +460,7 @@ class Upnp_Api
                         $ndItem->setAttribute('restricted', $value);
                         break;
                     case 'searchable':
-                        $ndItem->SetAttribute('searchable', $value);
+                        $ndItem->setAttribute('searchable', $value);
                         break;
                     case 'res':
                         break;
@@ -779,7 +779,7 @@ class Upnp_Api
 
         return [
             $maxCount,
-            array_slice($items, $start, (($count == 0) ? $maxCount - $start : $count))
+            array_slice($items, $start, (($count == 0) ? $maxCount - $start : $count)),
         ];
     }
 
@@ -997,7 +997,7 @@ class Upnp_Api
 
         return [
             $maxCount,
-            $mediaItems
+            $mediaItems,
         ];
     }
 
@@ -1096,7 +1096,7 @@ class Upnp_Api
 
         return [
             $maxCount,
-            $mediaItems
+            $mediaItems,
         ];
     }
 
@@ -1135,11 +1135,11 @@ class Upnp_Api
         for ($i = 0; $i < $nospacesize; $i++) {
             $token = $nospacetokens[$i];
             switch ($token) {
-                case "not":
-                case "or":
-                case "and":
-                case "(":
-                case ")":
+                case 'not':
+                case 'or':
+                case 'and':
+                case '(':
+                case ')':
                     if ($onetoken != "") {
                         $tokens[$index++] = $onetoken;
                         $onetoken         = "";
@@ -1256,7 +1256,7 @@ class Upnp_Api
             ['upnp:class = "object.container.playlistContainer"', 'playlist'],
             ['upnp:class derivedfrom "object.container.playlistContainer"', 'playlist'],
             ['upnp:class = "object.container.genre.musicGenre"', 'tag'],
-            ['@refID exists false', '']
+            ['@refID exists false', ''],
         ];
 
         $tokens = self::gettokens($query);
@@ -1444,13 +1444,13 @@ class Upnp_Api
 
         return [
             $maxCount,
-            $mediaItems
+            $mediaItems,
         ];
     }
 
     /**
-     * @param $title
-     * @return string|string[]|null
+     * @param string|null $title
+     * @return string
      */
     private static function _replaceSpecialSymbols($title)
     {
@@ -1463,8 +1463,8 @@ class Upnp_Api
         //debug_event(self::class, 'replace <<< ' . $title, 5);
         //$title = preg_replace('~[^\\pL\d\.:\s\(\)\.\,\'\"]+~u', '-', $title);
         //debug_event(self::class, 'replace >>> ' . $title, 5);
-        if ($title == "") {
-            $title = '(no title)';
+        if (empty($title)) {
+            return '(no title)';
         }
 
         return $title;
@@ -1635,7 +1635,7 @@ class Upnp_Api
             'upnp:albumArtURI' => $art_url,
 
             'res' => $radio->url,
-            'protocolInfo' => $arrFileType['mime']
+            'protocolInfo' => $arrFileType['mime'],
         ];
     }
 
@@ -1705,7 +1705,7 @@ class Upnp_Api
             'dc:title' => self::_replaceSpecialSymbols($episode->get_fullname()),
             'upnp:album' => self::_replaceSpecialSymbols($episode->getPodcastName()),
             'upnp:class' => (isset($arrFileType['class'])) ? $arrFileType['class'] : 'object.item.unknownItem',
-            'upnp:albumArtURI' => $art_url
+            'upnp:albumArtURI' => $art_url,
         ];
         if (isset($arrFileType['mime'])) {
             $ret['res']          = $episode->play_url('', 'api');

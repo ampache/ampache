@@ -28,6 +28,7 @@ namespace Ampache\Module\Util;
 class MemoryObject
 {
     private $_data = [];
+
     public $properties;
 
     /**

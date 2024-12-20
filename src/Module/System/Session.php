@@ -104,7 +104,7 @@ final class Session implements SessionInterface
             $auth['fullname']     = "Ampache User";
             $auth['id']           = -1;
             $auth['offset_limit'] = 50;
-            $auth['access']       = $defaultAuthLevel ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
+            $auth['access']       = ($defaultAuthLevel) ? AccessLevelEnum::fromTextual($defaultAuthLevel)->value : AccessLevelEnum::GUEST->value;
             if (!array_key_exists($sessionName, $_COOKIE) || (!self::exists('interface', $_COOKIE[$sessionName]))) {
                 self::create_cookie();
                 self::create($auth);
@@ -193,7 +193,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         // Destroy our cookie!
@@ -337,7 +337,7 @@ final class Session implements SessionInterface
         if (isset($data['username'])) {
             $username = $data['username'];
         }
-        $s_ip  = isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0';
+        $s_ip  = (string)(isset($_SERVER['REMOTE_ADDR']) ? filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) : '0');
         $value = '';
         if (isset($data['value'])) {
             $value = $data['value'];
@@ -413,7 +413,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ];
 
         // Set up the cookie params before we start the session.
@@ -662,7 +662,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
         ];
         if (isset($_SESSION)) {
             $cookie_options = [
@@ -702,7 +702,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         setcookie($session_name . '_user', $username, $cookie_options);
@@ -724,7 +724,7 @@ final class Session implements SessionInterface
             'path' => (string)AmpConfig::get('cookie_path'),
             'domain' => (string)AmpConfig::get('cookie_domain'),
             'secure' => make_bool(AmpConfig::get('cookie_secure')),
-            'samesite' => 'Strict'
+            'samesite' => 'Strict',
         ];
 
         $token = self::generateRandomToken(); // generate a token, should be 128 - 256 bit
@@ -734,6 +734,51 @@ final class Session implements SessionInterface
         $cookie .= ':' . $mac;
 
         setcookie($session_name . '_remember', $cookie, $cookie_options);
+    }
+
+    /**
+     * create_preference_cookies
+     *
+     * Store default cookie for preferences on login
+     * @param User $user
+     */
+    public static function create_preference_cookies($user): void
+    {
+        $cookie_options = [
+            'expires' => (int)AmpConfig::get('cookie_life'),
+            'path' => (string)AmpConfig::get('cookie_path'),
+            'domain' => (string)AmpConfig::get('cookie_domain'),
+            'secure' => make_bool(AmpConfig::get('cookie_secure')),
+            'samesite' => 'Strict',
+        ];
+
+        if ((Preference::get_by_user($user->id, 'browse_song_grid_view'))) {
+            setcookie('browse_song_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_grid_view'))) {
+            setcookie('browse_album_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_album_disk_grid_view'))) {
+            setcookie('browse_album_disk_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_artist_grid_view'))) {
+            setcookie('browse_artist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_live_stream_grid_view'))) {
+            setcookie('browse_live_stream_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_playlist_grid_view'))) {
+            setcookie('browse_playlist_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_video_grid_view'))) {
+            setcookie('browse_video_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_grid_view'))) {
+            setcookie('browse_podcast_grid_view', 'true', $cookie_options);
+        }
+        if ((Preference::get_by_user($user->id, 'browse_podcast_episode_grid_view'))) {
+            setcookie('browse_podcast_episode_grid_view', 'true', $cookie_options);
+        }
     }
 
     /**

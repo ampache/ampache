@@ -88,6 +88,31 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
     }
 
     /**
+     * Returns the itunes category of the item
+     * https://www.rssboard.org/rss-validator/docs/error/InvalidItunesCategory.html
+     */
+    public function getCategory(): string
+    {
+        return 'Music';
+    }
+
+    /**
+     * Returns a link to the item
+     */
+    public function getLink(): string
+    {
+        return $this->playable->get_link();
+    }
+
+    /**
+     * Returns a link to the feed url
+     */
+    public function getRssLink(): string
+    {
+        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
+    }
+
+    /**
      * Returns `true` if an item-owner is set
      */
     public function hasOwner(): bool
@@ -139,7 +164,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
             $data = [
                 'title' => (string) $media->get_fullname(),
                 'guid' => $media->get_link(),
-                'length' => $media->f_time,
+                'length' => (string)$media->f_time,
                 'author' => $media->get_artist_fullname(),
                 'pubDate' => null,
                 'type' => null,

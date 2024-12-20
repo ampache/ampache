@@ -482,7 +482,7 @@ class AmpacheMpd extends localplay_controller
                                 break;
                             case 'live_stream':
                                 /** @var Live_Stream $media */
-                                $site_url     = $media->site_url ? '(' . $media->site_url . ')' : '';
+                                $site_url     = ($media->site_url) ? '(' . $media->site_url . ')' : '';
                                 $data['name'] = "$media->name $site_url";
                                 $data['link'] = $media->site_url;
                                 break;

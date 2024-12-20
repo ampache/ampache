@@ -165,8 +165,8 @@ class Subsonic_Api
         'totalHits',
         'track',
         'userRating',
-        'visitCount',
         'versions',
+        'visitCount',
         'year',
     ];
 
@@ -360,7 +360,7 @@ class Subsonic_Api
             return;
         }
         $output = false;
-        $xmlstr = $xml->asXml();
+        $xmlstr = $xml->asXML();
         if (is_string($xmlstr)) {
             // clean illegal XML characters.
             $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
@@ -402,7 +402,7 @@ class Subsonic_Api
             'autoText' => true, // skip textContent key if node has no attributes or child nodes
             'keySearch' => false, // optional search and replace on tag and attribute names
             'keyReplace' => false, // replace values for above search values (as passed to str_replace())
-            'boolean' => true // replace true and false string with boolean values
+            'boolean' => true, // replace true and false string with boolean values
         ];
         $options        = array_merge($defaults, $input_options);
         $namespaces     = $xml->getDocNamespaces();
@@ -415,7 +415,7 @@ class Subsonic_Api
                 if ($options['keySearch']) {
                     $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
                 }
-                $attributeKey = $options['attributePrefix'] . ($prefix ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
+                $attributeKey = $options['attributePrefix'] . (($prefix) ? $prefix . $options['namespaceSeparator'] : '') . $attributeName;
                 $strattr      = trim((string)$attribute);
                 if ($options['boolean'] && ($strattr == "true" || $strattr == "false")) {
                     $vattr = ($strattr == "true");
@@ -1079,7 +1079,7 @@ class Subsonic_Api
      */
     public static function getalbumlist2($input, $user): void
     {
-        self::getAlbumList($input, $user, "albumList2");
+        self::getalbumlist($input, $user, "albumList2");
     }
 
     /**
@@ -1241,7 +1241,7 @@ class Subsonic_Api
      */
     public static function getstarred2($input, $user): void
     {
-        self::getStarred($input, $user, "starred2");
+        self::getstarred($input, $user, "starred2");
     }
 
     /**
@@ -1937,7 +1937,9 @@ class Subsonic_Api
         // don't scrobble after setting the play queue too quickly
         if ($playqueue_time < ($now_time - 2)) {
             foreach ($object_ids as $subsonic_id) {
-                $time      = isset($input['time']) ? (int)(((int)$input['time']) / 1000) : time();
+                $time      = (isset($input['time']))
+                    ? (int)(((int)$input['time']) / 1000)
+                    : time();
                 $previous  = Stats::get_last_play($user->id, $client, $time);
                 $prev_obj  = $previous['object_id'] ?? 0;
                 $prev_date = $previous['date'] ?? 0;
@@ -3070,43 +3072,50 @@ class Subsonic_Api
         $size          = (int)($input['size'] ?? 10);
         $offset        = (int)($input['offset'] ?? 0);
         $musicFolderId = (int)($input['musicFolderId'] ?? 0);
+        $catalogFilter = (AmpConfig::get('catalog_disable') || AmpConfig::get('catalog_filter'));
 
         // Get albums from all catalogs by default Catalog filter is not supported for all request types for now.
-        $catalogs = null;
+        $catalogs = ($catalogFilter)
+            ? $user->get_catalogs('music')
+            : null;
         if ($musicFolderId > 0) {
             $catalogs   = [];
             $catalogs[] = $musicFolderId;
         }
         $albums = false;
         switch ($type) {
-            case "random":
+            case 'random':
                 $albums = self::getAlbumRepository()->getRandom(
                     $user->id,
                     $size
                 );
                 break;
-            case "newest":
-                $albums = Stats::get_newest("album", $size, $offset, $musicFolderId, $user);
+            case 'newest':
+                $albums = Stats::get_newest('album', $size, $offset, $musicFolderId, $user);
                 break;
-            case "highest":
-                $albums = Rating::get_highest("album", $size, $offset, $user->id);
+            case 'highest':
+                $albums = Rating::get_highest('album', $size, $offset, $user->id);
                 break;
-            case "frequent":
-                $albums = Stats::get_top("album", $size, 0, $offset);
+            case 'frequent':
+                $albums = Stats::get_top('album', $size, 0, $offset);
                 break;
-            case "recent":
-                $albums = Stats::get_recent("album", $size, $offset);
+            case 'recent':
+                $albums = Stats::get_recent('album', $size, $offset);
                 break;
-            case "starred":
+            case 'starred':
                 $albums = Userflag::get_latest('album', null, $size, $offset);
                 break;
-            case "alphabeticalByName":
-                $albums = Catalog::get_albums($size, $offset, $catalogs);
+            case 'alphabeticalByName':
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums($size, $offset, $catalogs);
                 break;
-            case "alphabeticalByArtist":
-                $albums = Catalog::get_albums_by_artist($size, $offset, $catalogs);
+            case 'alphabeticalByArtist':
+                $albums = ($catalogFilter && empty($catalogs) && $musicFolderId == 0)
+                    ? []
+                    : Catalog::get_albums_by_artist($size, $offset, $catalogs);
                 break;
-            case "byYear":
+            case 'byYear':
                 $fromYear = (int)min($input['fromYear'], $input['toYear']);
                 $toYear   = (int)max($input['fromYear'], $input['toYear']);
 
@@ -3115,7 +3124,7 @@ class Subsonic_Api
                     $albums = Search::run($data, $user);
                 }
                 break;
-            case "byGenre":
+            case 'byGenre':
                 $genre  = self::_check_parameter($input, 'genre');
                 $tag_id = Tag::tag_exists($genre);
                 if ($tag_id > 0) {

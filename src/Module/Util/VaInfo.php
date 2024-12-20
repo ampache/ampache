@@ -394,7 +394,7 @@ final class VaInfo implements VaInfoInterface
             'mp3' => 'id3v2.3',
             'flac' => 'metaflac',
             'oga' => 'vorbiscomment',
-            'ogg' => 'vorbiscomment'
+            'ogg' => 'vorbiscomment',
         ];
         if (!array_key_exists(strtolower($extension), $extensionMap)) {
             $this->logger->debug(
@@ -527,7 +527,7 @@ final class VaInfo implements VaInfoInterface
         $tagorderMap = [
             'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
             'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
         ];
 
         $order = [];
@@ -886,7 +886,7 @@ final class VaInfo implements VaInfoInterface
         $tagorderMap = [
             'metadata_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER),
             'metadata_order_video' => self::getConfigContainer()->get(ConfigurationKeyEnum::METADATA_ORDER_VIDEO),
-            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER)
+            'getid3_tag_order' => self::getConfigContainer()->get(ConfigurationKeyEnum::GETID3_TAG_ORDER),
         ];
 
         // convert to lower case to be sure it matches plugin names in Ampache\Plugin\PluginEnum
@@ -1037,8 +1037,8 @@ final class VaInfo implements VaInfoInterface
             case 'avi':
             case 'flac':
             case 'flv':
-            case 'mpg':
             case 'mpeg':
+            case 'mpg':
             case 'wav':
                 return $type;
             default:
@@ -1352,6 +1352,8 @@ final class VaInfo implements VaInfoInterface
                     $parsed['genre'] = $this->parseGenres($data);
                     break;
                 case 'discsubtitle':
+                case 'setsubtitle':
+                case 'set_subtitle':
                     $parsed['disksubtitle'] = $data[0];
                     break;
                 case 'part_of_a_set':
@@ -1494,6 +1496,7 @@ final class VaInfo implements VaInfoInterface
                         break;
                     case 'discsubtitle':
                     case 'setsubtitle':
+                    case 'set_subtitle':
                         $parsed['disksubtitle'] = $id3v2['comments']['text'][$txxx['description']];
                         break;
                     case 'barcode':
@@ -2027,7 +2030,7 @@ final class VaInfo implements VaInfoInterface
             '%s' => 'subtitle',
             '%y' => 'year',
             '%Y' => 'original_year',
-            '%o' => 'zz_other'
+            '%o' => 'zz_other',
         ];
 
         if (isset($code_array[$code])) {

@@ -112,7 +112,7 @@ if (AmpConfig::get('external_links_musicbrainz')) {
     <?php
     if ($album->name != T_('Unknown (Orphaned)')) {
         $name  = '[' . $f_album_name . '] ' . scrub_out($f_name);
-        $thumb = Ui::is_grid_view('album') ? 32 : 11;
+        $thumb = Ui::is_grid_view('album') ? 11 : 32;
         Art::display('album', $album->id, $name, $thumb);
     } ?>
 </div>
@@ -277,8 +277,8 @@ if (Catalog::can_remove($album)) {
 define('TABLE_RENDERED', 1);
 foreach ($album->getDisks() as $album_disk) {
     $sub_title  = (!empty($album_disk->disksubtitle))
-        ? scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . ": " . scrub_out($album_disk->disksubtitle) . "</span>"
-        : scrub_out($f_name) . "<span class=\"discnb disc" . $album_disk->disk . "\">, " . T_('Disk') . " " . $album_disk->disk . "</span>";
+        ? $album_disk->get_f_link() . "<span class=\"discnb disc" . $album_disk->disk . "\">: " . scrub_out($album_disk->disksubtitle) . "</span>"
+        : $album_disk->get_f_link();
     if ($directplay_limit > 0) {
         $show_playlist_add = ($album_disk->song_count <= $directplay_limit);
         if ($show_direct_play) {

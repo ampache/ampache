@@ -100,7 +100,7 @@ final class GetBookmarkMethod
             'user' => $user->id,
             'object_id' => $object_id,
             'object_type' => $type,
-            'comment' => null
+            'comment' => null,
         ];
         $results = Bookmark::getBookmarks($object);
         if (

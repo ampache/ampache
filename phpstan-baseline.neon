@@ -3601,11 +3601,6 @@ parameters:
 			path: src/Module/Api/Upnp_Api.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_replaceSpecialSymbols\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Module/Api/Upnp_Api.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Api\\\\Upnp_Api\\:\\:_slice\\(\\) has parameter \\$count with no type specified\\.$#"
 			count: 1
 			path: src/Module/Api/Upnp_Api.php
@@ -4476,17 +4471,17 @@ parameters:
 			path: src/Module/Authentication/Ldap/Ldap.php
 
 		-
-			message: "#^Call to an undefined method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Beets/Catalog.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:addSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Module/Beets/Catalog.php
+
+		-
+			message: "#^Method Ampache\\\\Module\\\\Beets\\\\Catalog\\:\\:checkSong\\(\\) has parameter \\$song with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Beets/Catalog.php
 
@@ -4831,16 +4826,6 @@ parameters:
 			path: src/Module/Catalog/Catalog_dropbox.php
 
 		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$getchunk has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\Catalog_dropbox\\:\\:\\$videos_to_gather has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_dropbox.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_local\\:\\:add_file\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_local.php
@@ -4899,21 +4884,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_remote\\:\\:create_type\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/Catalog_remote.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:getSong\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Cannot access offset 'Success' on array\\|bool\\|object\\|string\\.$#"
-			count: 1
-			path: src/Module/Catalog/Catalog_subsonic.php
-
-		-
-			message: "#^Cannot access offset 'success' on array\\|bool\\|object\\|string\\.$#"
-			count: 2
-			path: src/Module/Catalog/Catalog_subsonic.php
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\Catalog_subsonic\\:\\:add_to_catalog\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -5119,56 +5089,6 @@ parameters:
 			message: "#^Method Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:querySubsonic\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_commands has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_creds has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_serverPort has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Catalog\\\\SubsonicClient\\:\\:\\$_serverUrl has no type specified\\.$#"
-			count: 1
-			path: src/Module/Catalog/SubsonicClient.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:error\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Call to an undefined method Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor\\:\\:info\\(\\)\\.$#"
-			count: 2
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Album\\\\Export\\\\AlbumArtExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportAlbumArtCommand.php
-
-		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportPlaylistCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Playlist\\\\PlaylistExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportPlaylistCommand.php
 
 		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
@@ -5997,71 +5917,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:get_api_sig\\(\\) has parameter \\$vars with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$album with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$artist with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$length with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$timestamp with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Method Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:queue_track\\(\\) has parameter \\$track with no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$challenge has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$error_msg has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$host has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$queued_tracks has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$scheme has no type specified\\.$#"
-			count: 1
-			path: src/Module/Playback/Scrobble/Scrobbler.php
-
-		-
-			message: "#^Property Ampache\\\\Module\\\\Playback\\\\Scrobble\\\\Scrobbler\\:\\:\\$secret has no type specified\\.$#"
 			count: 1
 			path: src/Module/Playback/Scrobble/Scrobbler.php
 
@@ -8326,11 +8181,6 @@ parameters:
 			path: src/Module/Util/Ui.php
 
 		-
-			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:is_grid_view\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Module/Util/Ui.php
-
-		-
 			message: "#^Method Ampache\\\\Module\\\\Util\\\\Ui\\:\\:show\\(\\) has parameter \\$context with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Module/Util/Ui.php
@@ -8369,11 +8219,6 @@ parameters:
 			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
 			count: 1
 			path: src/Module/Util/UiInterface.php
-
-		-
-			message: "#^Call to an undefined method Ampache\\\\Repository\\\\Model\\\\Catalog\\:\\:add_file\\(\\)\\.$#"
-			count: 1
-			path: src/Module/Util/Upload.php
 
 		-
 			message: "#^Call to function ob_get_contents\\(\\) on a separate line has no effect\\.$#"
@@ -8731,16 +8576,6 @@ parameters:
 			path: src/Plugin/Ampache7digital.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\Ampache7digital\\:\\:\\$secret has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/Ampache7digital.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheAmazon\\:\\:gather_arts\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheAmazon.php
@@ -8841,16 +8676,6 @@ parameters:
 			path: src/Plugin/AmpacheDiscogs.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheDiscogs\\:\\:\\$secret has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheDiscogs.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheFriendsTimeline\\:\\:\\$maxitems has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheFriendsTimeline.php
@@ -8872,16 +8697,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:headphones_call\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheHeadphones.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheHeadphones\\:\\:\\$api_url has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheHeadphones.php
 
@@ -9021,16 +8836,6 @@ parameters:
 			path: src/Plugin/AmpacheRatingMatch.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$match_flags has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$min_stars has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star1_rule has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
@@ -9052,16 +8857,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$star5_rule has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$user has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheRatingMatch.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheRatingMatch\\:\\:\\$write_tags has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheRatingMatch.php
 
@@ -9096,37 +8891,7 @@ parameters:
 			path: src/Plugin/AmpacheStreamHits.php
 
 		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$hits_days has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$hits_max has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamHits\\:\\:\\$user_id has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamHits.php
-
-		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:stream_control\\(\\) has parameter \\$media_ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$time_days has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$time_max has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheStreamTime.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheStreamTime\\:\\:\\$user_id has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheStreamTime.php
 
@@ -9152,16 +8917,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:get_metadata\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$api_key has no type specified\\.$#"
-			count: 1
-			path: src/Plugin/AmpacheTheaudiodb.php
-
-		-
-			message: "#^Property Ampache\\\\Plugin\\\\AmpacheTheaudiodb\\:\\:\\$overwrite_name has no type specified\\.$#"
 			count: 1
 			path: src/Plugin/AmpacheTheaudiodb.php
 
@@ -9506,7 +9261,7 @@ parameters:
 			path: src/Repository/Model/Browse.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:show_next_link\\(\\) has parameter \\$argument with no type specified\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Browse\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Browse.php
 
@@ -9756,27 +9511,7 @@ parameters:
 			path: src/Repository/Model/Democratic.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$f_cooldown has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$f_level has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$f_primary has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$object_ids has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Democratic.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Democratic\\:\\:\\$tmp_playlist has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Democratic.php
 
@@ -9812,11 +9547,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Label\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Label.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Label\\:\\:\\$artist_count has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Label.php
 
@@ -9986,31 +9716,6 @@ parameters:
 			path: src/Repository/Model/Podcast_Episode.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_time has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$f_time_h has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$mime has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Podcast_Episode\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Podcast_Episode.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Preference\\:\\:fix_preferences\\(\\) has parameter \\$results with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Preference.php
@@ -10051,6 +9756,11 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:_set_base_sql\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_allowed_filters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
@@ -10066,12 +9776,17 @@ parameters:
 			path: src/Repository/Model/Query.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_total\\(\\) has parameter \\$objects with no value type specified in iterable type array\\.$#"
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:get_total\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:save_objects\\(\\) has parameter \\$object_ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Repository/Model/Query.php
+
+		-
+			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Query\\:\\:set_type\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Query.php
 
@@ -10231,32 +9946,7 @@ parameters:
 			path: src/Repository/Model/Search.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$objectType has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$order_by has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$rules has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$searchType has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$search_user has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Search.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Search\\:\\:\\$stars has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Search.php
 
@@ -10441,11 +10131,6 @@ parameters:
 			path: src/Repository/Model/Song_Preview.php
 
 		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$enabled has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_album has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
@@ -10482,16 +10167,6 @@ parameters:
 
 		-
 			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$f_track has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$mime has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Song_Preview.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Song_Preview\\:\\:\\$type has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/Song_Preview.php
 
@@ -10564,16 +10239,6 @@ parameters:
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:update\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:\\$f_name has no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:add_medias\\(\\) has parameter \\$medias with no type specified\\.$#"
-			count: 1
-			path: src/Repository/Model/Tmp_Playlist.php
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tmp_Playlist\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
@@ -10802,11 +10467,6 @@ parameters:
 
 		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:get_info\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/database_object.php
-
-		-
-			message: "#^Property Ampache\\\\Repository\\\\Model\\\\database_object\\:\\:\\$cache_hit has no type specified\\.$#"
 			count: 1
 			path: src/Repository/Model/database_object.php
 

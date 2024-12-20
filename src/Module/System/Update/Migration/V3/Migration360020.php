@@ -62,7 +62,7 @@ final class Migration360020 extends AbstractMigration
             "ALTER TABLE `catalog` MODIFY COLUMN `catalog_type` varchar(128)",
             "UPDATE `artist` SET `mbid` = NULL WHERE `mbid` = ''",
             "UPDATE `album` SET `mbid` = NULL WHERE `mbid` = ''",
-            "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''"
+            "UPDATE `song` SET `mbid` = NULL WHERE `mbid` = ''",
         ];
         foreach ($sql_array as $sql) {
             $this->updateDatabase($sql);

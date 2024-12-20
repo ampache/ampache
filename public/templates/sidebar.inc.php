@@ -101,7 +101,7 @@ $t_logout          = T_('Log out'); ?>
             'id' => 'localplay',
             'title' => $t_localplay,
             'icon' => 'volume_up',
-            'access' => AccessLevelEnum::GUEST
+            'access' => AccessLevelEnum::GUEST,
         ];
     }
     if ($is_session) {
@@ -109,7 +109,7 @@ $t_logout          = T_('Log out'); ?>
             'id' => 'preferences',
             'title' => $t_preferences,
             'icon' => 'page_info',
-            'access' => AccessLevelEnum::GUEST
+            'access' => AccessLevelEnum::GUEST,
         ];
     }
     $sidebar_items[] = [
@@ -132,7 +132,7 @@ $t_logout          = T_('Log out'); ?>
         </li>
     <?php
         } elseif ($item['title'] === 'Admin' && !AmpConfig::get('simple_user_mode')) {
-            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . UI::get_material_symbol('lock', T_('Admin Disabled')) . "</li>";
+            echo "<li id='sb_tab_" . $item['id'] . "' class='sb1'>" . Ui::get_material_symbol('lock', T_('Admin Disabled')) . "</li>";
         } ?>
     <?php
     } ?>

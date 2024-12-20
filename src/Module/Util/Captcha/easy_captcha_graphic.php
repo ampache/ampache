@@ -1,4 +1,5 @@
 <?php
+
 /*
  * vim:set softtabstop=4 shiftwidth=4 expandtab:
  *
@@ -108,7 +109,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
      */
     public function random_color($a, $b)
     {
-        $R = $this->inverse ? 0xFF : 0x00;
+        $R = ($this->inverse) ? 0xFF : 0x00;
 
         return imagecolorallocate($this->img, rand($a, $b) ^ $R, rand($a, $b) ^ $R, rand($a, $b) ^ $R);
     }
@@ -121,7 +122,7 @@ class easy_captcha_graphic extends easy_captcha_fuzzy
      */
     public function rgb($r, $g, $b)
     {
-        $R = $this->inverse ? 0xFF : 0x00;
+        $R = ($this->inverse) ? 0xFF : 0x00;
 
         return imagecolorallocate($this->img, $r ^ $R, $g ^ $R, $b ^ $R);
     }

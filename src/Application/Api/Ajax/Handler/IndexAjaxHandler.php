@@ -95,7 +95,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['random_selection'] = '<!-- None found -->';
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = Catalog::get_all_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
@@ -121,7 +121,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $results['random_selection'] = '<!-- None found -->';
 
                     if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::MANAGER)) {
-                        $catalogs = Catalog::get_catalogs();
+                        $catalogs = Catalog::get_all_catalogs();
                         if (count($catalogs) == 0) {
                             /* HINT: %1 and %2 surround "add a Catalog" to make it into a link */
                             $results['random_selection'] = sprintf(
@@ -370,6 +370,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                 $results['now_playing'] = ob_get_clean();
                 ob_start();
                 $user_id   = $user->id ?? -1;
+                $user_only = isset($_REQUEST['user_only']);
                 $ajax_page = 'index';
                 if (AmpConfig::get('home_recently_played_all')) {
                     $data = Stats::get_recently_played($user_id);
@@ -382,11 +383,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
 
                 $results['recently_played'] = ob_get_clean();
                 break;
-            case 'dashboard_random':
             case 'dashboard_newest':
+            case 'dashboard_popular':
+            case 'dashboard_random':
             case 'dashboard_recent':
             case 'dashboard_trending':
-            case 'dashboard_popular':
                 $limit       = $_REQUEST['limit'];
                 $object_type = $_REQUEST['object_type'];
                 $threshold   = $_REQUEST['threshold'];
@@ -399,7 +400,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
-                    $browse->set_grid_view(false, false);
+                    $browse->set_grid_view(true, false);
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
@@ -412,7 +413,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
-                    $browse->set_grid_view(false, false);
+                    $browse->set_grid_view(true, false);
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
@@ -425,7 +426,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
-                    $browse->set_grid_view(false, false);
+                    $browse->set_grid_view(true, false);
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
@@ -438,7 +439,7 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
-                    $browse->set_grid_view(false, false);
+                    $browse->set_grid_view(true, false);
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
@@ -453,10 +454,11 @@ final readonly class IndexAjaxHandler implements AjaxHandlerInterface
                     $browse->set_type($object_type);
                     $browse->set_use_filters(false);
                     $browse->set_show_header(false);
-                    $browse->set_grid_view(false, false);
+                    $browse->set_grid_view(true, false);
                     $browse->set_mashup(true);
                     $browse->show_objects($object_ids);
                 }
+
                 $results[$action] = ob_get_clean();
                 break;
             case 'sidebar':

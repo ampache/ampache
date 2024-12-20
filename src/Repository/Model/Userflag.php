@@ -122,18 +122,18 @@ class Userflag extends database_object
     public static function garbage_collection($object_type = null, $object_id = null): void
     {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
-            'tag',
             'label',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'search',
             'song',
+            'tag',
             'user',
             'video',
         ];
@@ -402,9 +402,8 @@ class Userflag extends database_object
             $icon   = 'favorite';
             $alt    = T_('Favorite');
         }
-        $text = Ajax::button($action, $icon, $alt, $source, '');
 
-        return $text;
+        return Ajax::button($action, $icon, $alt, $source);
     }
 
     /**

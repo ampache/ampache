@@ -84,7 +84,7 @@ final class ShareEdit5Method
             'expire' => $expires,
             'allow_stream' => $stream,
             'allow_download' => $download,
-            'description' => $description
+            'description' => $description,
         ];
         if ($share->update($data, $user)) {
             Api5::message('share ' . $share_id . ' updated', $input['api_format']);

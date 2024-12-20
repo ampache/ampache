@@ -420,7 +420,7 @@ class HttpQPlayer
     public function clear_playlist(): bool
     {
         $args    = [];
-        $results = $this->sendcommand('flushplaylist', $args);
+        $results = $this->sendCommand('flushplaylist', $args);
 
         if (
             !$results ||

@@ -98,7 +98,7 @@ class JsonHandler extends Handler
     {
         $uriParts = [
             $this->uri,
-            $command
+            $command,
         ];
 
         return implode('/', $uriParts);
@@ -124,7 +124,7 @@ class JsonHandler extends Handler
         $toRemove = [
             '{"items":[',
             '{"results":[',
-            ']}'
+            ']}',
         ];
 
         return str_replace($toRemove, '', $item);
@@ -175,7 +175,7 @@ class JsonHandler extends Handler
             $this->uri,
             'item',
             $song['id'],
-            'file' . '#.' . strtolower($song['format'])
+            'file' . '#.' . strtolower($song['format']),
         ];
 
         return implode('/', $parts);

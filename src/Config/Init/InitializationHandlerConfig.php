@@ -34,8 +34,8 @@ use DateTimeZone;
 
 final class InitializationHandlerConfig implements InitializationHandlerInterface
 {
-    private const VERSION        = '7.1.0'; // AMPACHE_VERSION
-    private const CONFIG_VERSION = '75';
+    private const VERSION        = '7.1.1'; // AMPACHE_VERSION
+    private const CONFIG_VERSION = '77';
     private const STRUCTURE      = 'public'; // Project release is using either the public html folder or squashed structure
 
     public const CONFIG_FILE_PATH = __DIR__ . '/../../../config/ampache.cfg.php';
@@ -93,7 +93,9 @@ final class InitializationHandlerConfig implements InitializationHandlerInterfac
                 ? ':' . $results['http_port']
                 : '';
 
-            $results['raw_web_path'] = empty($results['web_path']) ? '/' : $results['web_path'];
+            $results['raw_web_path'] = (empty($results['web_path']))
+                ? '/'
+                : $results['web_path'];
             $results['web_path']     = sprintf(
                 '%s://%s%s%s',
                 $protocol,

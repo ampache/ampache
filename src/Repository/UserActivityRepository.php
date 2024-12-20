@@ -107,16 +107,16 @@ final class UserActivityRepository implements UserActivityRepositoryInterface
         ?int $object_id = null
     ): void {
         $types = [
-            'album',
             'album_disk',
+            'album',
             'artist',
             'catalog',
             'live_stream',
             'playlist',
-            'podcast',
             'podcast_episode',
+            'podcast',
             'song',
-            'video'
+            'video',
         ];
 
         if ($object_type !== null) {

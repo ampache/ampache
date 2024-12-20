@@ -38,10 +38,11 @@ $labelRepository = $dic->get(LabelRepositoryInterface::class);
 /** @var Browse $browse */
 /** @var list<int> $object_ids */
 $thcount  = 7;
-$is_table = $browse->is_grid_view();
+$is_table = !$browse->is_grid_view();
 //mashup and grid view need different css
-$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
-<?php if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || AmpConfig::get('upload_allow_edit')) { ?>
+$cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
+$css_class = ($is_table) ? '' : ' gridview';
+if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER) || AmpConfig::get('upload_allow_edit')) { ?>
 <div id="information_actions">
     <ul>
         <li>
@@ -56,7 +57,7 @@ $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover'; ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>
-<table class="tabledata striped-rows <?php echo $browse->get_css_class(); ?>" data-objecttype="label">
+<table class="tabledata striped-rows<?php echo $css_class; ?>" data-objecttype="label">
     <thead>
         <tr class="th-top">
             <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>

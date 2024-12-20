@@ -50,7 +50,7 @@ if (!AmpConfig::get('catalog_filter')) {
         </tr>
         <tr>
 <?php echo "<td>" . T_('Catalogs') . ":</td><td></td></tr>";
-    $catalogs = Catalog::get_catalogs();
+    $catalogs = Catalog::get_all_catalogs();
     foreach ($catalogs as $catalog_id) {
         $catalog_name = Catalog::getName($catalog_id);
         echo "<tr><td>$catalog_name</td>" . '<td><input type="checkbox" name="catalog_' . $catalog_id . '" value="1"></td></tr>';

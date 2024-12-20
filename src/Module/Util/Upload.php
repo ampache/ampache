@@ -30,6 +30,7 @@ use Ampache\Config\ConfigurationKeyEnum;
 use Ampache\Module\Authorization\Access;
 use Ampache\Module\Authorization\AccessLevelEnum;
 use Ampache\Module\Authorization\AccessTypeEnum;
+use Ampache\Module\Catalog\Catalog_local;
 use Ampache\Module\System\Core;
 use Ampache\Repository\Model\Album;
 use Ampache\Repository\Model\Artist;
@@ -54,7 +55,7 @@ class Upload
         );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
-        if ($catalog !== null) {
+        if ($catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);
@@ -74,14 +75,20 @@ class Upload
             }
             if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
                 debug_event(self::class, 'File uploaded to `' . $targetfile . '`.', 5);
+                //debug_event(self::class, 'post ' . print_r($_POST, true), 5);
 
                 // run upload script if set
                 self::upload_script($targetdir, $targetfile);
 
                 $options                = [];
                 $options['user_upload'] = Core::get_global('user')?->getId();
-                if (isset($_POST['license'])) {
-                    $options['license'] = Core::get_post('license');
+                $options['license']     = Core::get_post('license');
+
+                // Require a license with the upload if it's enabled
+                if (AmpConfig::get('licensing') && $options['license'] == '') {
+                    debug_event(self::class, "error: license is required.", 3);
+
+                    return self::rerror($targetfile);
                 }
 
                 if (Core::get_request('artist') !== '') {
@@ -91,6 +98,8 @@ class Upload
                 if (Core::get_request('artist_name') !== '') {
                     $artist_id = self::check_artist(Core::get_request('artist_name'), (int)(Core::get_global('user')?->getId()));
                     if (!$artist_id) {
+                        debug_event(self::class, "error: check_artist.", 3);
+
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
@@ -106,6 +115,8 @@ class Upload
                 if (Core::get_request('album_name') !== '') {
                     $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
                     if (!is_int($album_id)) {
+                        debug_event(self::class, "error: check_album.", 3);
+
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
@@ -126,6 +137,7 @@ class Upload
 
                     return self::rerror($targetfile);
                 }
+
                 Album::update_table_counts();
                 Artist::update_table_counts();
 
