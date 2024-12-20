@@ -31,7 +31,6 @@ use Ampache\Module\Cache\ObjectCacheInterface;
 use Ampache\Module\Catalog\GarbageCollector\CatalogGarbageCollectorInterface;
 use Ampache\Module\Playback\Stream;
 use Ampache\Module\System\Session;
-use Ampache\Module\Util\Cron;
 use Ampache\Module\Util\Recommendation;
 use Ampache\Repository\BookmarkRepositoryInterface;
 use Ampache\Repository\Model\UpdateInfoEnum;

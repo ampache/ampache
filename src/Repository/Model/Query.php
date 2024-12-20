@@ -487,7 +487,7 @@ class Query
             case 'shoutbox':
                 return ShoutboxQuery::FILTERS;
             case 'smartplaylist':
-                return SmartPlaylistQuery::FILTERS;
+                return SmartplaylistQuery::FILTERS;
             case 'song_preview':
                 return SongPreviewQuery::FILTERS;
             case 'song':
@@ -578,7 +578,7 @@ class Query
                 break;
             case 'search':
             case 'smartplaylist':
-                $this->queryType = new SmartPlaylistQuery();
+                $this->queryType = new SmartplaylistQuery();
                 break;
             case 'song_preview':
                 $this->queryType = new SongPreviewQuery();

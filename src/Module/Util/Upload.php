@@ -55,7 +55,7 @@ class Upload
         );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
-        if ($catalog !== null && $catalog instanceof Catalog_local) {
+        if ($catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);

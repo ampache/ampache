@@ -5091,16 +5091,6 @@ parameters:
 			path: src/Module/Catalog/SubsonicClient.php
 
 		-
-			message: "#^Cannot call method io\\(\\) on Ahc\\\\Cli\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportPlaylistCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$interactor of method Ampache\\\\Module\\\\Playlist\\\\PlaylistExporterInterface\\:\\:export\\(\\) expects Ahc\\\\Cli\\\\IO\\\\Interactor, Ahc\\\\Cli\\\\Application\\|Ahc\\\\Cli\\\\IO\\\\Interactor given\\.$#"
-			count: 1
-			path: src/Module/Cli/ExportPlaylistCommand.php
-
-		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
 			count: 1
 			path: src/Module/Cli/RunWebsocketCommand.php

@@ -54,7 +54,7 @@ final class UrlToSong4Method
         }
         $charset  = AmpConfig::get('site_charset');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
-        $url_data = Stream_URL::parse($song_url);
+        $url_data = Stream_Url::parse($song_url);
         ob_end_clean();
         switch ($input['api_format']) {
             case 'json':
