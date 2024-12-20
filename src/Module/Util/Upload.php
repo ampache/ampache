@@ -75,6 +75,7 @@ class Upload
             }
             if (move_uploaded_file($_FILES['upl']['tmp_name'], $targetfile)) {
                 debug_event(self::class, 'File uploaded to `' . $targetfile . '`.', 5);
+                //debug_event(self::class, 'post ' . print_r($_POST, true), 5);
 
                 // run upload script if set
                 self::upload_script($targetdir, $targetfile);
