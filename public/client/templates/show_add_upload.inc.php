@@ -342,7 +342,9 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
         <?php echo T_("Read the text of the license you choose carefully with the 'View License' link."); ?>
     </td>
 </tr>
-<?php } ?>
+<?php } else {
+    echo "<input type=\"hidden\" id=\"license_select_c1\" name=\"license\" value=\"\" />";
+} ?>
 </table>
 
 <?php echo T_('Files'); ?>
@@ -366,6 +368,9 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
                 ondata: (formData) => {
                     formData.append('upload_action', 'upload');
                     formData.append('folder', document.querySelector("#folder").value);
+                    formData.append('artist_id', document.querySelector("#artist_select_1").value);
+                    formData.append('album_id', document.querySelector("#album_select_1").value);
+                    formData.append('license', document.querySelector("#license_select_c1").value);
                     return formData;
                 }
             },
