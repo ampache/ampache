@@ -88,7 +88,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Lots of areas would ignore `catalog_filter` if you were a guest. Now it uses the default filter group
 * Respect `sidebar_hide_playlist` and `sidebar_hide_search` in light sidebar
 * Use Artist `addition_time` in stat searches instead of large joins
-* Enable/Disable user icons changed to a person icons
+* Enable/Disable user icons changed to a person icon
 * If `autoupdate` is disabled don't show update options in the debug page
 * Don't autofilter to A when enabling the Alphabet filter
 * Sidebar Genre link defaults to Albums like all the other areas
@@ -127,7 +127,7 @@ Clear all your cookies and site data after the upgrade as this affects many visu
 * Share display error with Share::create_fake_playlist()
 * IP History action was not displaying the action correctly
 * Make sure a song exists before trying to write tags
-* Reading disk subtitle missin `set_subtitle`
+* Reading disk subtitle missing `set_subtitle`
 * Don't double write song details when updating Albums
 * Debug page checking cron_cache as a string and not a bool
 * AmpacheApi-PHP library fixed for unencrypted passwords
