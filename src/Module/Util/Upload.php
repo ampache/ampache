@@ -103,7 +103,10 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
-                    if ($artist->get_user_owner() != $options['user_upload']) {
+                    if (
+                        $artist->get_user_owner() &&
+                        $artist->get_user_owner() != $options['user_upload']
+                    ) {
                         debug_event(self::class, "Artist owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);
@@ -123,7 +126,10 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
-                    if ($album->get_user_owner() != $options['user_upload']) {
+                    if (
+                        $album->get_user_owner() &&
+                        $album->get_user_owner() != $options['user_upload']
+                    ) {
                         debug_event(self::class, "Album owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);
