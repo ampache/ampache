@@ -91,8 +91,8 @@ class Upload
                     return self::rerror($targetfile);
                 }
 
-                if (Core::get_request('artist') !== '') {
-                    $options['artist_id'] = (int)Core::get_request('artist');
+                if (Core::get_request('artist_id') !== '') {
+                    $options['artist_id'] = (int)Core::get_request('artist_id');
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
@@ -111,6 +111,9 @@ class Upload
                     $options['artist_id'] = $artist_id;
                 }
 
+                if (Core::get_request('album_id') !== '') {
+                    $options['album_id'] = (int)Core::get_request('album_id');
+                }
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
                     $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
