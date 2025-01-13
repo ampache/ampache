@@ -153,7 +153,7 @@ final class AlbumDiskQuery implements QueryInterface
                 break;
             case 'no_genre':
             case 'no_tag':
-                $filter_sql = " (`album`.`id` NOT IN (SELECT tag_id FROM `tag_map` WHERE `object_type`='album')) AND ";
+                $filter_sql = " (`album`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='album')) AND ";
                 break;
             case 'genre':
             case 'tag':

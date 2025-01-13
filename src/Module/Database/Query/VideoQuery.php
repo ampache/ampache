@@ -132,7 +132,7 @@ final class VideoQuery implements QueryInterface
                 break;
             case 'no_genre':
             case 'no_tag':
-                $filter_sql = " (`video`.`id` NOT IN (SELECT tag_id FROM `tag_map` WHERE `object_type`='video')) AND ";
+                $filter_sql = " (`video`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='video')) AND ";
                 break;
             case 'genre':
             case 'tag':

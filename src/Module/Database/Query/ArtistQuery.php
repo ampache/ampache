@@ -134,7 +134,7 @@ final class ArtistQuery implements QueryInterface
                 break;
             case 'no_genre':
             case 'no_tag':
-                $filter_sql = " (`artist`.`id` NOT IN (SELECT tag_id FROM `tag_map` WHERE `object_type`='artist')) AND ";
+                $filter_sql = " (`artist`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='artist')) AND ";
                 break;
             case 'genre':
             case 'tag':
