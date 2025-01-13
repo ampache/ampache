@@ -71,7 +71,7 @@ class Song extends database_object implements
 
     public int $album;
 
-    public int $album_disk;
+    public ?int $album_disk = null;
 
     public ?int $disk = null;
 
