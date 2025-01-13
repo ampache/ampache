@@ -976,7 +976,9 @@ class Song extends database_object implements
         if (Stats::insert('song', $this->id, $user_id, $agent, $location, 'stream', $date)) {
             // followup on some stats too
             Stats::insert('album', $this->album, $user_id, $agent, $location, 'stream', $date);
-            Stats::count('album_disk', $this->album_disk, 'up');
+            if ($this->album_disk) {
+                Stats::count('album_disk', $this->album_disk, 'up');
+            }
             // insert plays for song and album artists
             $artists = array_unique(array_merge(self::get_parent_array($this->id), self::get_parent_array($this->album, 'album')));
             foreach ($artists as $artist_id) {
