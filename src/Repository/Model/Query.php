@@ -311,6 +311,8 @@ class Query
                 } else {
                     $this->_state['filter'][$key] = [];
                 }
+                // remove any existing no_genre filter
+                unset($this->_state['filter']['no_genre']);
                 break;
             default:
                 // you might be trying to set an invalid filter that doesn't exist
