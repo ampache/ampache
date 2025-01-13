@@ -299,7 +299,7 @@ class Query
             case 'no_genre':
                 $this->_state['filter'][$key] = 1;
                 // remove any existing genre filter
-                unset($this->_state['filter']['genre']);
+                unset($this->_state['filter']['tag']);
                 break;
             case 'genre':
             case 'tag':
