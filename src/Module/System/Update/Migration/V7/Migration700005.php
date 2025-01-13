@@ -42,7 +42,7 @@ final class Migration700005 extends AbstractMigration
         }
 
         $sql       = "SELECT `playlist`.`id`, COUNT(`playlist_data`.`id`) AS `count` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` GROUP BY `playlist`.`id`;";
-        $playlists = Dba::read($sql);
+        $playlists = Dba::read($sql, [], true);
         while ($results = Dba::fetch_assoc($playlists)) {
             $playlist = new Playlist((int)$results['id']);
             $playlist->update(['last_count' => (int)$results['count']]);
