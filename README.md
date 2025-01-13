@@ -133,10 +133,12 @@ Ampache would like to request anyone wanting to donate to the project spend that
 If you use these projects please consider donating in any way possible. (Including your time if you can help out!)
 
 @mitchray developer of [ample](https://github.com/mitchray/ample).
-<a target="_blank" href="[https://www.paypal.com/paypalme/musiquelibre](https://buymeacoffee.com/mitchray)">
+<a target="_blank" href="[https://buymeacoffee.com/mitchray](https://buymeacoffee.com/mitchray)">
 <img width="32" height="32" class="octicon rounded-2 d-block" alt="buy_me_a_coffee" src="https://github.githubassets.com/assets/buy_me_a_coffee-63ed78263f6e.svg">https://buymeacoffee.com/mitchray</a>
 
 @icefields developer of [Power Ampache](https://power.ampache.dev/)
+<a target="_blank" href="[https://buymeacoffee.com/powerampache](https://buymeacoffee.com/powerampache)">
+<img width="32" height="32" class="octicon rounded-2 d-block" alt="buy_me_a_coffee" src="https://github.githubassets.com/assets/buy_me_a_coffee-63ed78263f6e.svg">https://buymeacoffee.com/powerampache</a>
 <a target="_blank" href="https://www.patreon.com/Icefields">
 <img height="40" hspace="20" alt="Become a patreon" src="https://github.com/user-attachments/assets/3318ab05-3c7e-42dd-8784-f12129c0915d"></a>
 <a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
