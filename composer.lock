@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86599f4e1c142e1e5b6e5709862db9b7",
+    "content-hash": "5c91c2c07768d3f9a71878db174a2c16",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -1627,44 +1627,6 @@
             "time": "2024-03-23T07:42:40+00:00"
         },
         {
-            "name": "marcusball/case-helper",
-            "version": "0.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/marcusball/case-helper.git",
-                "reference": "c5c6321d7f908fce6d77f13b0c0d706cbd880e00"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/marcusball/case-helper/zipball/c5c6321d7f908fce6d77f13b0c0d706cbd880e00",
-                "reference": "c5c6321d7f908fce6d77f13b0c0d706cbd880e00",
-                "shasum": ""
-            },
-            "require": {
-                "symfony/polyfill-mbstring": "^1.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "CaseHelper\\": "src/",
-                    "CaseHelper\\Test\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Easily convert between camelCase, PascalCase, kebab-case, snake_case, SCREAMING_SNAKE_CASE, Train-Case, and string case! Note: This is a fork of nabil1337/case-helper, which appears abandoned.",
-            "support": {
-                "issues": "https://github.com/marcusball/case-helper/issues",
-                "source": "https://github.com/marcusball/case-helper/tree/0.2.0"
-            },
-            "time": "2021-07-14T21:20:15+00:00"
-        },
-        {
             "name": "mikealmond/musicbrainz",
             "version": "dev-master",
             "source": {
@@ -1732,6 +1694,42 @@
                 }
             ],
             "time": "2020-02-14T19:39:17+00:00"
+        },
+        {
+            "name": "nabil1337/case-helper",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nabil1337/case-helper.git",
+                "reference": "8cead5fe6470402d127ae0d759168f9778078992"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nabil1337/case-helper/zipball/8cead5fe6470402d127ae0d759168f9778078992",
+                "reference": "8cead5fe6470402d127ae0d759168f9778078992",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CaseHelper\\": "src/",
+                    "CaseHelper\\Test\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Easily convert between camelCase, PascalCase, kebab-case, snake_case, SCREAMING_SNAKE_CASE, Train-Case, and string case!",
+            "support": {
+                "issues": "https://github.com/nabil1337/case-helper/issues",
+                "source": "https://github.com/nabil1337/case-helper/tree/master"
+            },
+            "abandoned": "marcusball/case-helper",
+            "time": "2014-12-06T02:33:17+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -3365,34 +3363,33 @@
         },
         {
             "name": "rsd/seafile-php-sdk",
-            "version": "dev-master",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK.git",
-                "reference": "d33a3cf325acf48cc8726c0eb2e1353d24924b10"
+                "reference": "7236eff9adaf0fc586fb64e046f58331ddc83993"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Schmidt-DevOps/Seafile-PHP-SDK/zipball/d33a3cf325acf48cc8726c0eb2e1353d24924b10",
-                "reference": "d33a3cf325acf48cc8726c0eb2e1353d24924b10",
+                "url": "https://api.github.com/repos/Schmidt-DevOps/Seafile-PHP-SDK/zipball/7236eff9adaf0fc586fb64e046f58331ddc83993",
+                "reference": "7236eff9adaf0fc586fb64e046f58331ddc83993",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "guzzlehttp/guzzle": "~7.7",
-                "marcusball/case-helper": "~0.2",
-                "php": ">=8.3",
-                "sdo/bitmask": "~1.0"
+                "guzzlehttp/guzzle": "~6.0|~7.0",
+                "nabil1337/case-helper": "~0.1",
+                "php": ">=7.3",
+                "sdo/bitmask": "^1.0"
             },
             "require-dev": {
-                "fzaninotto/faker": "~1.5",
-                "monolog/monolog": " ~2.9",
-                "phpmd/phpmd": "^2.15.0",
-                "phpstan/phpstan": "^1.11",
-                "phpunit/php-timer": "~5.0",
-                "phpunit/phpunit": "~9.6",
-                "rector/rector": "^1.2",
-                "squizlabs/php_codesniffer": "~3.7"
+                "fzaninotto/faker": "^1.9",
+                "monolog/monolog": "~1.17",
+                "phpunit/php-timer": "~2.0",
+                "phpunit/php-token-stream": "~3.0",
+                "phpunit/phpunit": "~8.0",
+                "sebastian/phpcpd": "~4.0",
+                "squizlabs/php_codesniffer": "~3.2"
             },
             "type": "library",
             "autoload": {
@@ -3425,9 +3422,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/issues",
-                "source": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/tree/develop"
+                "source": "https://github.com/Schmidt-DevOps/Seafile-PHP-SDK/tree/v2.0.1"
             },
-            "time": "2024-12-23T20:38:36+00:00"
+            "time": "2020-12-08T08:47:41+00:00"
         },
         {
             "name": "sabre/dav",
@@ -8562,8 +8559,7 @@
         "ampache/ampacheapi-php": 20,
         "james-heinrich/getid3": 20,
         "krixon/xbmc-php-rpc": 20,
-        "mikealmond/musicbrainz": 20,
-        "rsd/seafile-php-sdk": 20
+        "mikealmond/musicbrainz": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -8583,7 +8579,7 @@
         "ext-xml": "*",
         "ext-zip": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "ext-curl": "1.0",
         "ext-date": "1.0",
@@ -8604,5 +8600,5 @@
         "ext-xmlreader": "1.0",
         "lib-libxml": "2.7.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.2.0"
 }
