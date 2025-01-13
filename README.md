@@ -139,10 +139,13 @@ If you use these projects please consider donating in any way possible. (Includi
 @icefields developer of [Power Ampache](https://power.ampache.dev/)
 <a target="_blank" href="[https://buymeacoffee.com/powerampache](https://buymeacoffee.com/powerampache)">
 <img width="32" height="32" class="octicon rounded-2 d-block" alt="buy_me_a_coffee" src="https://github.githubassets.com/assets/buy_me_a_coffee-63ed78263f6e.svg">https://buymeacoffee.com/powerampache</a>
+
 <a target="_blank" href="https://www.patreon.com/Icefields">
 <img height="40" hspace="20" alt="Become a patreon" src="https://github.com/user-attachments/assets/3318ab05-3c7e-42dd-8784-f12129c0915d"></a>
+
 <a target="_blank" href="https://live.blockcypher.com/btc/address/bc1qm9dvdrukgrqpg5f7466u4cy7tfvwcsc8pqshl4">
 <img height="40" hspace="20" alt="Donate Bitcoin" src="https://power.ampache.dev/images/banner_bitcoin.png"></a>
+
 <a target="_blank" href="https://paypal.me/powerampache">
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://power.ampache.dev/images/banner_paypal.png"></a>
 
