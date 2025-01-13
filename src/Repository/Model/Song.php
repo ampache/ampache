@@ -71,7 +71,7 @@ class Song extends database_object implements
 
     public int $album;
 
-    public ?int $album_disk = null;
+    public int $album_disk;
 
     public ?int $disk = null;
 
@@ -267,6 +267,9 @@ class Song extends database_object implements
 
         $info = $this->has_info($song_id);
         if ($info === []) {
+            $this->album      = 0;
+            $this->album_disk = 0;
+
             return;
         }
 
