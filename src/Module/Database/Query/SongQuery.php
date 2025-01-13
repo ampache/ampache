@@ -150,8 +150,7 @@ final class SongQuery implements QueryInterface
                 break;
             case 'no_genre':
             case 'no_tag':
-                $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`song`.`id`', 100);
-                $filter_sql = " (`tag_map`.`object_type`='song' AND `tag_map`.`tag_id` IS NULL) AND ";
+                $filter_sql = " (`song`.`id` NOT IN (SELECT tag_id FROM `tag_map` WHERE `object_type`='song')) AND ";
                 break;
             case 'genre':
             case 'tag':

@@ -296,6 +296,11 @@ class Query
                     $this->_state['filter'][$key] = 1;
                 }
                 break;
+            case 'no_genre':
+                $this->_state['filter'][$key] = 1;
+                // remove any existing genre filter
+                unset($this->_state['filter']['genre']);
+                break;
             case 'genre':
             case 'tag':
                 // array values
