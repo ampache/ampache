@@ -44,6 +44,8 @@ final class ArtistQuery implements QueryInterface
         'id',
         'label',
         'like',
+        'no_genre',
+        'no_tag',
         'not_like',
         'not_starts_with',
         'regex_match',
@@ -129,6 +131,11 @@ final class ArtistQuery implements QueryInterface
                     $filter_sql .= (int)$uid . ',';
                 }
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
+            case 'no_genre':
+            case 'no_tag':
+                $query->set_join('LEFT', '`tag_map`', '`tag_map`.`object_id`', '`artist`.`id`', 100);
+                $filter_sql = " (`tag_map`.`object_type`='artist' AND `tag_map`.`tag_id` IS NULL) AND ";
                 break;
             case 'genre':
             case 'tag':
