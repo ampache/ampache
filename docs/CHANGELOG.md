@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## Ampache 7.2.0
+
+### Added
+
+* Add `npm audit` to GitHub QA workflow
+* Assign a HTML id to input text on inline loaded input
+* Add `[No Genre]` as the first genre on the browse pages
+* Browse
+  * Add `no_genre` to Song, Album, AlbumDisk, Artist, Song and Video browses
+* Database 720001
+  * Add `artist`, `album`, `song` and `video` counts to the tag table
+  * Update `object_type` to an enum on the tag_map table
+
+### Changed
+
+* Updated NPM and Composer packages
+* Invalidate default theme CSS cache on new Ampache versions
+
+### Fixed
+
+* Missing `album_id` in upload process function
+* Custom Artist and Album names for filepond uploads
+* Typo on user pages loading recently played
+* Sending a string to `createBrowse` where int|null is required
+* Rector updates for function name case and other minor issues
+* Set empty album and album_disk properties on bad songs
+* Simplify DB update 700005 to avoid possible issues with empty playlists
+
 ## Ampache 7.1.1
 
 ### Fixed
