@@ -254,7 +254,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700014) {
-            if (Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
+            if (Dba::read('SELECT `name` FROM `user_preference` LIMIT 1;')) {
                 // Migration\V7\Migration700005
                 if (!Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")) {
                     throw new UpdateFailedException();
@@ -279,7 +279,7 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700005) {
-            if (Dba::read('SELECT SUM(`last_count`) from `playlist`;')) {
+            if (Dba::read('SELECT `last_count` FROM `playlist` LIMIT 1;')) {
                 // Migration\V7\Migration700005
                 if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")) {
                     throw new UpdateFailedException();
