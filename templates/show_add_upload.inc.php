@@ -309,18 +309,18 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 <table class="tabledata">
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Artist'); ?></td>
-    <td class="upload_select">
+    <td id="artist_select" class="upload_select">
+        <div id="artist_select">
         <?php show_artist_select('artist', $artist, true, 1, true); ?>
-        <div id="artist_select_1">
             <?php echo Ajax::observe('artist_select_1', 'change', 'check_inline_song_edit("artist", 1)'); ?>
         </div>
     </td>
 </tr>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Album'); ?></td>
-    <td class="upload_select">
+    <td id="album_select" class="upload_select">
+        <div id="album_select">
         <?php show_album_select('album_id', $album, true, 1, true); ?>
-        <div id="album_select_1">
             <?php echo Ajax::observe('album_select_1', 'change', 'check_inline_song_edit("album", 1)'); ?>
         </div>
     </td>
@@ -328,9 +328,9 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
 <?php if (AmpConfig::get('licensing')) { ?>
 <tr>
     <td class="edit_dialog_content_header"><?php echo T_('Music License'); ?></td>
-    <td class="upload_select">
-        <?php show_license_select('license'); ?>
+    <td id="license_select" class="upload_select">
         <div id="album_select_license">
+        <?php show_license_select('license'); ?>
             <?php echo Ajax::observe('license_select', 'change', 'check_inline_song_edit("license", "0")'); ?>
         </div>
     </td>
@@ -368,8 +368,10 @@ $user_id  = (!empty(Core::get_global('user'))) ? Core::get_global('user')->id : 
                 ondata: (formData) => {
                     formData.append('upload_action', 'upload');
                     formData.append('folder', document.querySelector("#folder").value);
-                    formData.append('artist_id', document.querySelector("#artist_select_1").value);
-                    formData.append('album_id', document.querySelector("#album_select_1").value);
+                    if (document.querySelector("#artist_select_1") !== null) formData.append('artist_id', document.querySelector("#artist_select_1").value);
+                    if (document.querySelector("#album_select_1") !== null) formData.append('album_id', document.querySelector("#album_select_1").value);
+                    if (document.querySelector("#artist_name") !== null) formData.append('artist_name', document.querySelector("#artist_name").value);
+                    if (document.querySelector("#album_name") !== null) formData.append('album_name', document.querySelector("#album_name").value);
                     formData.append('license', document.querySelector("#license_select_c1").value);
                     return formData;
                 }

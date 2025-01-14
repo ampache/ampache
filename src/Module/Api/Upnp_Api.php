@@ -460,7 +460,7 @@ class Upnp_Api
                         $ndItem->setAttribute('restricted', $value);
                         break;
                     case 'searchable':
-                        $ndItem->SetAttribute('searchable', $value);
+                        $ndItem->setAttribute('searchable', $value);
                         break;
                     case 'res':
                         break;

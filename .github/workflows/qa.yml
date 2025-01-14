@@ -50,6 +50,9 @@ jobs:
           max_attempts: 3
           command: composer update --no-interaction --no-progress --ignore-platform-req=php
 
+      - name: Run NPM audit
+        run: npm audit
+
       - name: Run test suite
         run: composer run-script qa
         env:

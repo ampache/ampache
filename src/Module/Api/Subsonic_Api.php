@@ -360,7 +360,7 @@ class Subsonic_Api
             return;
         }
         $output = false;
-        $xmlstr = $xml->asXml();
+        $xmlstr = $xml->asXML();
         if (is_string($xmlstr)) {
             // clean illegal XML characters.
             $clean_xml = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '_', $xmlstr);
@@ -1079,7 +1079,7 @@ class Subsonic_Api
      */
     public static function getalbumlist2($input, $user): void
     {
-        self::getAlbumList($input, $user, "albumList2");
+        self::getalbumlist($input, $user, "albumList2");
     }
 
     /**
@@ -1241,7 +1241,7 @@ class Subsonic_Api
      */
     public static function getstarred2($input, $user): void
     {
-        self::getStarred($input, $user, "starred2");
+        self::getstarred($input, $user, "starred2");
     }
 
     /**

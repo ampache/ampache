@@ -46,7 +46,7 @@ use Ampache\Repository\Model\Useractivity;
 
 /** @var UserActivityRendererInterface $userActivityRenderer */
 /** @var UserFollowStateRendererInterface $userFollowStateRenderer */
-/** @var LibraryItemLoaderInterface $libaryItemLoader */
+/** @var LibraryItemLoaderInterface $libraryItemLoader */
 /** @var User $client */
 /** @var int[] $following */
 /** @var int[] $followers */
@@ -158,7 +158,7 @@ if ($current_list) {
                     <tr>
                         <td>
         <?php foreach ($object_ids as $object_data) {
-            $object = $libaryItemLoader->load(
+            $object = $libraryItemLoader->load(
                 $object_data['object_type'],
                 $object_data['object_id'],
             );
