@@ -358,7 +358,7 @@ export function check_inline_song_edit(type, song) {
     var source = "#" + type + "_select_" + song;
     if ($(source + " option:selected").val() == -1) {
         $(source).fadeOut(600, function() {
-            $(this).replaceWith("<input type=\"text\" name=\"" + type + "_name\" value=\"New " + type + "\" onclick=\"this.select();\" />");
+            $(this).replaceWith("<input id=\"" + type + "_name\" type=\"text\" name=\"" + type + "_name\" value=\"New " + type + "\" onclick=\"this.select();\" />");
         });
     }
     else {

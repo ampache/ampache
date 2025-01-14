@@ -52,8 +52,10 @@ final readonly class BrowseAjaxHandler implements AjaxHandlerInterface
             return;
         }
 
-        $browse_id = $_REQUEST['browse_id'] ?? null;
-        $browse    = $this->modelFactory->createBrowse($browse_id);
+        $browse_id = (isset($_REQUEST['browse_id']))
+            ? (int)$_REQUEST['browse_id']
+            : null;
+        $browse = $this->modelFactory->createBrowse($browse_id);
 
         debug_event('browse.ajax', 'Called for action: {' . Core::get_request('action') . '} id {' . $browse_id . '}', 5);
         if (array_key_exists('show_header', $_REQUEST) && $_REQUEST['show_header']) {

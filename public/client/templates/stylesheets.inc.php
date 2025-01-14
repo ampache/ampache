@@ -26,10 +26,11 @@ declare(strict_types=0);
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Util\Ui;
 
-$web_path       = AmpConfig::get_web_path('/client');
-$theme_path     = AmpConfig::get('theme_path') . '/templates';
-$theme_color    = AmpConfig::get('theme_color', 'dark');
-$theme_css_base = AmpConfig::get('theme_css_base');
+$web_path        = AmpConfig::get_web_path('/client');
+$theme_path      = AmpConfig::get('theme_path') . '/templates';
+$theme_color     = AmpConfig::get('theme_color', 'dark');
+$theme_css_base  = AmpConfig::get('theme_css_base');
+$ampache_version = AmpConfig::get('version');
 if (!is_array($theme_css_base)) {
     $theme_css_base = [$theme_css_base];
 }
@@ -47,11 +48,11 @@ if (!is_array($theme_css_base)) {
 
 <?php
 foreach ($theme_css_base as $css_base) { ?>
-    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $css_base[0]; ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
+    <link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . (str_ends_with($css_base[0], '.css') ? $css_base[0] . '?v=' . $ampache_version : $css_base[0]); ?>" type="text/css" media="<?php echo $css_base[1]; ?>">
 <?php } ?>
 
-<link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css'; ?>" type="text/css" media="screen">
-<link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css'; ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path . '/templates/base.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
+<link rel="stylesheet" href="<?php echo $web_path . $theme_path . '/' . $theme_color . '.css?v=' . $ampache_version; ?>" type="text/css" media="screen">
 <link rel="stylesheet" href="<?php echo $web_path . '/templates/print.css'; ?>" type="text/css" media="print">
 
 <?php

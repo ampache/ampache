@@ -417,19 +417,19 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops[T_('Song MBID')]      = scrub_out($this->song->mbid);
         $songprops[T_('Album MBID')]     = scrub_out($this->song->album_mbid);
         $songprops[T_('Artist MBID')]    = scrub_out($this->song->artist_mbid);
-        if ($this->song->replaygain_track_gain !== null && $this->song->replaygain_track_gain !== null) {
+        if ($this->song->replaygain_track_gain !== null) {
             $songprops[T_('ReplayGain Track Gain')] = $this->song->replaygain_track_gain;
         }
 
-        if ($this->song->replaygain_album_gain !== null && $this->song->replaygain_album_gain !== null) {
+        if ($this->song->replaygain_album_gain !== null) {
             $songprops[T_('ReplayGain Album Gain')] = $this->song->replaygain_album_gain;
         }
 
-        if ($this->song->r128_track_gain !== null && $this->song->r128_track_gain !== null) {
+        if ($this->song->r128_track_gain !== null) {
             $songprops[T_('R128 Track Gain')] = $this->song->r128_track_gain;
         }
 
-        if ($this->song->r128_album_gain !== null && $this->song->r128_album_gain !== null) {
+        if ($this->song->r128_album_gain !== null) {
             $songprops[T_('R128 Album Gain')] = $this->song->r128_album_gain;
         }
 

@@ -644,11 +644,9 @@ class Subsonic_Xml_Data
 
         foreach ($tags as $tag) {
             $otag   = new Tag($tag['id']);
-            $counts = $otag->count();
-
             $xgenre = self::addChildToResultXml($xgenres, 'genre', htmlspecialchars((string)$otag->name));
-            $xgenre->addAttribute('songCount', (string)($counts['song'] ?? 0));
-            $xgenre->addAttribute('albumCount', (string)($counts['album'] ?? 0));
+            $xgenre->addAttribute('songCount', (string)($otag->song));
+            $xgenre->addAttribute('albumCount', (string)($otag->album));
         }
     }
 

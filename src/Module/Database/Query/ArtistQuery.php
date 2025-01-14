@@ -44,6 +44,8 @@ final class ArtistQuery implements QueryInterface
         'id',
         'label',
         'like',
+        'no_genre',
+        'no_tag',
         'not_like',
         'not_starts_with',
         'regex_match',
@@ -129,6 +131,10 @@ final class ArtistQuery implements QueryInterface
                     $filter_sql .= (int)$uid . ',';
                 }
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
+            case 'no_genre':
+            case 'no_tag':
+                $filter_sql = " (`artist`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='artist')) AND ";
                 break;
             case 'genre':
             case 'tag':

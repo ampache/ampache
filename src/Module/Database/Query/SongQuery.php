@@ -48,6 +48,8 @@ final class SongQuery implements QueryInterface
         'id',
         'license',
         'like',
+        'no_genre',
+        'no_tag',
         'not_like',
         'not_starts_with',
         'regex_match',
@@ -145,6 +147,10 @@ final class SongQuery implements QueryInterface
                 $query->set_join_and('LEFT', '`artist_map`', '`artist_map`.`object_id`', '`song`.`id`', '`artist_map`.`object_type`', "'song'", 50);
                 $query->set_join_and_and('LEFT', '`object_count`', '`object_count`.`object_id`', '`song`.`id`', '`object_count`.`object_type`', "'song'", '`object_count`.`count_type`', "'stream'", 100);
                 $filter_sql = " `artist_map`.`artist_id` = " . Dba::escape($value) . " AND ";
+                break;
+            case 'no_genre':
+            case 'no_tag':
+                $filter_sql = " (`song`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='song')) AND ";
                 break;
             case 'genre':
             case 'tag':

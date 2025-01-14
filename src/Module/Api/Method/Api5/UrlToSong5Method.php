@@ -55,7 +55,7 @@ final class UrlToSong5Method
         }
         $charset  = AmpConfig::get('site_charset');
         $song_url = html_entity_decode($input['url'], ENT_QUOTES, $charset);
-        $url_data = Stream_URL::parse($song_url);
+        $url_data = Stream_Url::parse($song_url);
         if (!array_key_exists('id', $url_data)) {
             Api5::error(T_('Bad Request'), ErrorCodeEnum::BAD_REQUEST, self::ACTION, 'url', $input['api_format']);
 

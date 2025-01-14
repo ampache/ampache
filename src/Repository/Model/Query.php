@@ -296,6 +296,11 @@ class Query
                     $this->_state['filter'][$key] = 1;
                 }
                 break;
+            case 'no_genre':
+                $this->_state['filter'][$key] = 1;
+                // remove any existing genre filter
+                unset($this->_state['filter']['tag']);
+                break;
             case 'genre':
             case 'tag':
                 // array values
@@ -306,6 +311,8 @@ class Query
                 } else {
                     $this->_state['filter'][$key] = [];
                 }
+                // remove any existing no_genre filter
+                unset($this->_state['filter']['no_genre']);
                 break;
             default:
                 // you might be trying to set an invalid filter that doesn't exist
@@ -487,7 +494,7 @@ class Query
             case 'shoutbox':
                 return ShoutboxQuery::FILTERS;
             case 'smartplaylist':
-                return SmartPlaylistQuery::FILTERS;
+                return SmartplaylistQuery::FILTERS;
             case 'song_preview':
                 return SongPreviewQuery::FILTERS;
             case 'song':
@@ -578,7 +585,7 @@ class Query
                 break;
             case 'search':
             case 'smartplaylist':
-                $this->queryType = new SmartPlaylistQuery();
+                $this->queryType = new SmartplaylistQuery();
                 break;
             case 'song_preview':
                 $this->queryType = new SongPreviewQuery();
