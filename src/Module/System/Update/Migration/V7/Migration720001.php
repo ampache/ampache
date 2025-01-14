@@ -31,7 +31,7 @@ final class Migration720001 extends AbstractMigration
 {
     protected array $changelog = [
         'Add `artist`, `album`, `song` and `video` counts to the tag table.',
-        'Update `object_type` an enum (\'album\', \'artist\', \'song\', \'video\') on the tag_map table.',
+        'Update `object_type` to an enum on the tag_map table.',
     ];
 
     public function migrate(): void
