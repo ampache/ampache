@@ -41,11 +41,15 @@ final class Migration700005 extends AbstractMigration
             $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `last_count` INT(11) NULL;");
         }
 
-        $sql       = "SELECT `playlist`.`id`, COUNT(`playlist_data`.`id`) AS `count` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` GROUP BY `playlist`.`id`;";
-        $playlists = Dba::read($sql, [], true);
-        while ($results = Dba::fetch_assoc($playlists)) {
-            $playlist = new Playlist((int)$results['id']);
-            $playlist->update(['last_count' => (int)$results['count']]);
+        $sql        = "SELECT `playlist`.`id`, COUNT(`playlist_data`.`id`) AS `count` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` GROUP BY `playlist`.`id`;";
+        $db_results = Dba::read($sql, [], true);
+        $playlists  = [];
+        while ($results = Dba::fetch_assoc($db_results)) {
+            $playlists[(int)$results['id']] = (int)$results['count'];
+        }
+
+        foreach ($playlists as $playlist_id => $last_count) {
+            Dba::write("UPDATE `playlist` SET `last_count` = ? WHERE `id` = ?", [$playlist_id, $last_count], true);
         }
     }
 }
