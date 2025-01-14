@@ -26,7 +26,6 @@ namespace Ampache\Module\System\Update\Migration\V7;
 
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update\Migration\AbstractMigration;
-use Ampache\Repository\Model\Playlist;
 
 /**
  * Add a last_count to playlists to speed up access requests
