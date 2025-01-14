@@ -10191,11 +10191,6 @@ parameters:
 			path: src/Repository/Model/Tag.php
 
 		-
-			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:count\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Repository/Model/Tag.php
-
-		-
 			message: "#^Method Ampache\\\\Repository\\\\Model\\\\Tag\\:\\:get_children\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Repository/Model/Tag.php
