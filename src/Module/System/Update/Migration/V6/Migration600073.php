@@ -37,19 +37,19 @@ final class Migration600073 extends AbstractMigration
 
     public function migrate(): void
     {
-        if (!Dba::read('SELECT `last_count` FROM `playlist` LIMIT 1;', [], true)) {
+        if (!Dba::read('SELECT `last_count` FROM `playlist` LIMIT 1;')) {
             $this->updateDatabase("ALTER TABLE `playlist` ADD COLUMN `last_count` INT(11) NULL;");
         }
 
         $sql        = "SELECT `playlist`.`id`, COUNT(`playlist_data`.`id`) AS `count` FROM `playlist` LEFT JOIN `playlist_data` ON `playlist_data`.`playlist` = `playlist`.`id` GROUP BY `playlist`.`id`;";
-        $db_results = Dba::read($sql, [], true);
+        $db_results = Dba::read($sql);
         $playlists  = [];
         while ($results = Dba::fetch_assoc($db_results)) {
             $playlists[(int)$results['id']] = (int)$results['count'];
         }
 
         foreach ($playlists as $playlist_id => $last_count) {
-            Dba::write("UPDATE `playlist` SET `last_count` = ? WHERE `id` = ?", [$playlist_id, $last_count], true);
+            Dba::write("UPDATE `playlist` SET `last_count` = ? WHERE `id` = ?", [$playlist_id, $last_count]);
         }
     }
 }
