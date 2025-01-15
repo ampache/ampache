@@ -1523,10 +1523,8 @@ final class VaInfo implements VaInfoInterface
                     continue;
                 }
 
-                if (
-                    array_key_exists('email', $popm) &&
-                    $user = $this->userRepository->findByEmail($popm['email'])
-                ) {
+                if (array_key_exists('email', $popm)) {
+                    $user = $this->userRepository->findByEmail($popm['email']);
                     if ($user instanceof User) {
                         // Ratings are out of 255; scale it
                         $parsed['rating'][$user->id] = ((int)$popm['rating']) / 255 * 5;
