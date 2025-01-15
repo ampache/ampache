@@ -44,7 +44,7 @@ final class LiveStreamsMethod
      * live_streams
      * MINIMUM_API_VERSION=5.1.0
      *
-     * This returns the live_streams  based on the specified filter
+     * This returns the live_streams based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional

@@ -592,7 +592,7 @@
                 vars.next
                     //add the active-class
                     .addClass(vars.prefix + "active")
-                    //and put  it above the others
+                    //and put it above the others
                     .css({
                         zIndex: 1,
                         top: 0,
