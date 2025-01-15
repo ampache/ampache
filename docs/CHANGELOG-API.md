@@ -1,8 +1,13 @@
 # API CHANGELOG
 
-## API 6.6.5
+## API 6.6.6
 
-Merge update from Ampache7.
+### Fixed
+
+* ALL
+  * Not checking auth on User lookup
+
+## API 6.6.5
 
 ### Added
 
@@ -23,8 +28,6 @@ Merge update from Ampache7.
   * playlists: Respect 'api_hidden_playlists'
 
 ## API 6.6.4
-
-Merge update from Ampache7.
 
 This update has counting updates to allow faster responses on larger results
 

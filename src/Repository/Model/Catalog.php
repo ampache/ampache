@@ -4543,7 +4543,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @deprecated  inject dependency
+     * @deprecated inject dependency
      */
     private static function getShareRepository(): ShareRepositoryInterface
     {

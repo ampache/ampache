@@ -44,7 +44,7 @@ use Ampache\Module\Util\Ui;
             <th class="cel_allow_download optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=allow_download', T_('Allow Download'), 'share_sort_allow_download'); ?></th>
             <th class="cel_expire optional"><?php echo Ajax::text('?page=browse&action=set_sort&browse_id=' . $browse->id . '&type=share&sort=expire', T_('Expiry Days'), 'share_sort_expire'); ?></th>
             <th class="cel_public_url essential"><?php echo T_('Public URL'); ?></th>
-            <th class="cel_action  essential"><?php echo T_('Actions'); ?></th>
+            <th class="cel_action essential"><?php echo T_('Actions'); ?></th>
         </tr>
     </thead>
     <tbody>
