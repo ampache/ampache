@@ -114,6 +114,20 @@ final class ApiHandler implements ApiHandlerInterface
             }
             $input['auth'] = $gatekeeper->getAuth();
         }
+
+        if (empty($input['auth'])) {
+            return $response->withBody(
+                $this->streamFactory->createStream(
+                    $output->error(
+                        ErrorCodeEnum::INVALID_HANDSHAKE,
+                        T_('Access Denied'),
+                        $action,
+                        'system'
+                    )
+                )
+            );
+        }
+
         $api_format  = $input['api_format'];
         $version     = (isset($input['version'])) ? $input['version'] : Api::$version;
         $user        = $gatekeeper->getUser();
