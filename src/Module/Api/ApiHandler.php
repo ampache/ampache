@@ -116,8 +116,13 @@ final class ApiHandler implements ApiHandlerInterface
         }
 
         $api_format  = $input['api_format'];
-        $version     = (isset($input['version'])) ? $input['version'] : Api::$version;
-        $user        = (!empty($input['auth'])) ? $gatekeeper->getUser() : null;
+        $version     = (isset($input['version']))
+            ? $input['version']
+            : Api::$version;
+
+        $user = (!empty($input['auth']))
+            ? $gatekeeper->getUser()
+            : null;
         $userId      = $user?->id ?? -1;
         $api_version = (int)Preference::get_by_user($userId, 'api_force_version');
         if (!in_array($api_version, Api::API_VERSIONS)) {
