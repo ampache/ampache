@@ -87,7 +87,7 @@ $replaygain = (AmpConfig::get('theme_color', 'dark') == 'light')
                 autoPlay: <?php echo ($autoplay) ? 'true' : 'false'; ?>,
                 removePlayed: <?php echo ($removePlayed) ? 'true' : 'false'; ?>, // remove tracks before the current playlist item
                 removeCount: <?php echo $removeCount; ?>, // shift the index back to keep x items BEFORE the current index
-                loopBack:  false, // repeat a finished playlist from the start
+                loopBack: false, // repeat a finished playlist from the start
                 shuffleOnLoop: false,
                 enableRemoveControls: true,
                 displayTime: 'slow',

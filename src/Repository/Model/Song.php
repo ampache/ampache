@@ -1145,7 +1145,7 @@ class Song extends database_object implements
 
         $value = trim(stripslashes((string) preg_replace('/\s+/', ' ', $value)));
 
-        // Strings containing  only UTF-8 BOM = empty string
+        // Strings containing only UTF-8 BOM = empty string
         if (strlen($value) == 2 && (ord($value[0]) == 0xFF || ord($value[0]) == 0xFE)) {
             $value = "";
         }

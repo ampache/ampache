@@ -34,7 +34,7 @@ $description = scrub_out(T_('Search Ampache'));
 header(sprintf('Content-type: application/opensearchdescription+xml; charset=%s; filename=opensearch.xml', $char_set));
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" .
-    "<OpenSearchDescription  xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">" .
+    "<OpenSearchDescription xmlns=\"http://a9.com/-/spec/opensearch/1.1/\">" .
     "<ShortName>" . $short_name . "</ShortName>" .
     "<Description>" . $description . "</Description>" .
     "<InputEncoding>" . $char_set . "></InputEncoding>" .

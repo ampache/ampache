@@ -1271,24 +1271,19 @@ final class VaInfo implements VaInfoInterface
                         $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                     }
 
-                    $parsed['rating'][$rating_user] = floor($data[0] * 5 / 100);
+                    $parsed['rating'][$rating_user] = floor(((int)$data[0]) * 5 / 100);
                     break;
                 default:
-                    // look for set ratings using email address
-                    foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
-                        /**
-                         * @todo check functionality; looks like an array is used for a string
-                         */
-                        $items       = preg_split("/^rating:/", $user_rating) ?: [];
-                        $rating_user = $this->userRepository->findByEmail(
-                            array_map('trim', $items)[1] ?? ''
-                        );
-                        if ($rating_user !== null) {
-                            $parsed['rating'][$rating_user->id] = floor($data[0] * 5 / 100);
-                        }
-                    }
                     $parsed[strtolower($tag)] = $data[0];
                     break;
+            }
+
+            // look for set ratings using email address
+            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
+                $rating_user = $this->userRepository->findByEmail(ltrim($user_rating, "rating:"));
+                if ($rating_user instanceof User) {
+                    $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
+                }
             }
         }
         // Replaygain stored by getID3
@@ -1528,13 +1523,11 @@ final class VaInfo implements VaInfoInterface
                     continue;
                 }
 
-                if (
-                    array_key_exists('email', $popm) &&
-                    $user = $this->userRepository->findByEmail($popm['email'])
-                ) {
+                if (array_key_exists('email', $popm)) {
+                    $user = $this->userRepository->findByEmail($popm['email']);
                     if ($user instanceof User) {
                         // Ratings are out of 255; scale it
-                        $parsed['rating'][$user->id] = $popm['rating'] / 255 * 5;
+                        $parsed['rating'][$user->id] = ((int)$popm['rating']) / 255 * 5;
                     }
                     continue;
                 }
@@ -1544,7 +1537,7 @@ final class VaInfo implements VaInfoInterface
                     $rating_user = (int) $this->configContainer->get(ConfigurationKeyEnum::RATING_FILE_TAG_USER);
                 }
 
-                $parsed['rating'][$rating_user] = $popm['rating'] / 255 * 5;
+                $parsed['rating'][$rating_user] = ((int)$popm['rating']) / 255 * 5;
             }
         }
 

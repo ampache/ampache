@@ -290,9 +290,9 @@ class Xml3_Data
      * we want
      *
      * @param array $artists
-     * @param array $include    Array of other items to include
+     * @param array $include Array of other items to include
      * @param User $user
-     * @param bool $full_xml  whether to return a full XML document or just the node
+     * @param bool $full_xml whether to return a full XML document or just the node
      */
     public static function artists($artists, $include, $user, $full_xml = true): string
     {
@@ -353,7 +353,7 @@ class Xml3_Data
      * @param array $albums
      * @param array|false $include Array of other items to include
      * @param User $user
-     * @param bool $full_xml  whether to return a full XML document or just the node
+     * @param bool $full_xml whether to return a full XML document or just the node
      */
     public static function albums($albums, $include, $user, $full_xml = true): string
     {

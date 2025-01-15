@@ -27,6 +27,7 @@
 * Rector updates for function name case and other minor issues
 * Set empty album and album_disk properties on bad songs
 * Simplify DB update 700005 to avoid possible issues with empty playlists
+* Import user ratings correctly for vorbiscomment (flac) files
 
 ## Ampache 7.1.1
 
