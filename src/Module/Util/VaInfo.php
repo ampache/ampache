@@ -1274,21 +1274,16 @@ final class VaInfo implements VaInfoInterface
                     $parsed['rating'][$rating_user] = floor(((int)$data[0]) * 5 / 100);
                     break;
                 default:
-                    // look for set ratings using email address
-                    foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
-                        /**
-                         * @todo check functionality; looks like an array is used for a string
-                         */
-                        $items       = preg_split("/^rating:/", $user_rating) ?: [];
-                        $rating_user = $this->userRepository->findByEmail(
-                            array_map('trim', $items)[1] ?? ''
-                        );
-                        if ($rating_user !== null) {
-                            $parsed['rating'][$rating_user->id] = floor(((int)$data[0]) * 5 / 100);
-                        }
-                    }
                     $parsed[strtolower($tag)] = $data[0];
                     break;
+            }
+
+            // look for set ratings using email address
+            foreach (preg_grep("/^rating:.*@.*/", array_keys($parsed)) as $user_rating) {
+                $rating_user = $this->userRepository->findByEmail(ltrim($user_rating, "rating:"));
+                if ($rating_user instanceof User) {
+                    $parsed['rating'][$rating_user->id] = floor(((int)$parsed[$user_rating]) * 5 / 100);
+                }
             }
         }
         // Replaygain stored by getID3
