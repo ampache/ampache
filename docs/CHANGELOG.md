@@ -9,6 +9,8 @@
 * Add `[No Genre]` as the first genre on the browse pages
 * Browse
   * Add `no_genre` to Song, Album, AlbumDisk, Artist, Song and Video browses
+* Search
+  * Add `album_count`, `artist_count`, `song_count` and `video_count` to Genre search
 * Database 720001
   * Add `artist`, `album`, `song` and `video` counts to the tag table
   * Update `object_type` to an enum on the tag_map table
@@ -28,6 +30,9 @@
 * Set empty album and album_disk properties on bad songs
 * Simplify DB update 700005 to avoid possible issues with empty playlists
 * Import user ratings correctly for vorbiscomment (flac) files
+* Include `disksubtitle` in more AlbumDisk import and update areas
+* Search
+  * Searching Podcast Episode by `state` would not reload after the results are loaded
 
 ## Ampache 7.1.1
 
