@@ -530,6 +530,7 @@ class Song extends database_object implements
         Dba::write("UPDATE `song_data` SET `label` = NULL WHERE `label` = '';");
         Dba::write("UPDATE `song_data` SET `language` = NULL WHERE `language` = '';");
         Dba::write("UPDATE `song_data` SET `waveform` = NULL WHERE `waveform` = '';");
+        Dba::write("UPDATE `song_data` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
     }
 
     /**

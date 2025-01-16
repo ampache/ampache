@@ -3162,6 +3162,7 @@ abstract class Catalog extends database_object
         Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
         Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
         Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
+        Dba::write("UPDATE `album_disk` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
         // artist.addition_time
         $sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
         Dba::write($sql);
