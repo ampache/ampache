@@ -1029,7 +1029,7 @@ class Search extends playlist_object
             1 => T_('pending'),
             2 => T_('completed'),
         ];
-        $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_play_data = T_('Play History');
@@ -1073,7 +1073,7 @@ class Search extends playlist_object
             1 => T_('pending'),
             2 => T_('completed'),
         ];
-        $this->_add_type_select('status', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
+        $this->_add_type_select('state', T_('Status'), 'boolean_numeric', $episode_states, $t_podcast_episodes);
         $this->_add_type_numeric('time', T_('Length (in minutes)'), 'numeric', $t_podcast_episodes);
 
         $t_play_data = T_('Play History');
@@ -1132,6 +1132,12 @@ class Search extends playlist_object
     private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
+        $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('artist_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric');
+        if (AmpConfig::get('video')) {
+            $this->_add_type_numeric('video_count', T_('Video Count'), 'numeric');
+        }
     }
 
     /**
