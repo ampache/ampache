@@ -1132,6 +1132,12 @@ class Search extends playlist_object
     private function _set_types_tag(): void
     {
         $this->_add_type_text('title', T_('Genre'));
+        $this->_add_type_numeric('album_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('artist_count', T_('Album Count'), 'numeric');
+        $this->_add_type_numeric('song_count', T_('Song Count'), 'numeric');
+        if (AmpConfig::get('video')) {
+            $this->_add_type_numeric('video_count', T_('Video Count'), 'numeric');
+        }
     }
 
     /**
