@@ -2542,7 +2542,7 @@ abstract class Catalog extends database_object
             ? (int)substr((string) $results['year'], -4, 4)
             : (int)($results['year']);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->disksubtitle = $results['disksubtitle'];
+        $new_song->disksubtitle = $results['disksubtitle'] ?: null;
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
         $new_song->rate         = $results['rate'];
