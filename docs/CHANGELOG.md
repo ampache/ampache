@@ -38,6 +38,7 @@
 
 ### Fixed
 
+* Show all catalogs in show catalogs page correctly
 * Upload POST array not sending license correctly to filepond
 * CLI
   * export:playlist: Documentation for type listed as mandatory
