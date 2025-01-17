@@ -58,7 +58,7 @@ final class ShowCatalogsAction implements ApplicationActionInterface
         $this->ui->showBoxTop(T_('Show Catalogs'), 'box box_manage_catalogs');
         $this->ui->show('show_manage_catalogs.inc.php');
 
-        $catalogs = Catalog::get_catalogs();
+        $catalogs = Catalog::get_all_catalogs();
         $browse   = new Browse();
         $browse->set_type('catalog');
         $browse->set_static_content(true);
