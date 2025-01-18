@@ -63,6 +63,7 @@ $count     = 1; ?>
                 <th class="cel_play essential"></th>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
                 <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
+                <th class="cel_title essential persist"><?php echo T_('Artist'); ?></th>
                 <th class="cel_add essential"></th>
                 <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
                 <?php if ($show_ratings) { ?>
@@ -102,6 +103,7 @@ $count     = 1; ?>
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
                 <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
                 <th class="cel_title"><?php echo T_('Title'); ?></th>
+                <th class="cel_artist"><?php echo T_('Artist'); ?></th>
                 <th class="cel_add"></th>
                 <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
                 <?php if ($show_ratings) { ?>
