@@ -193,6 +193,7 @@ class AmpacheRatingMatch implements AmpachePluginInterface
                 }
             }
         }
+
         // write to tags
         if ($this->write_tags) {
             global $dic;

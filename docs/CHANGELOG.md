@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Ampache 6.6.6
+
+### Added
+
+* Database downgrades up to Ampache 7.2.0
+
+### Fixed
+
+* Sending a string to `createBrowse` where int|null is required
+* Simplify DB update 600073 to avoid possible issues with empty playlists
+* Search
+  * Searching Podcast Episode by `state` would not reload after the results are loaded
+
 ## Ampache 6.6.5
 
 ### Added

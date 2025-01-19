@@ -1,5 +1,14 @@
 # API CHANGELOG
 
+## API 6.6.6
+
+Merge update from Ampache7.
+
+### Fixed
+
+* ALL
+  * Not checking auth on User lookup
+
 ## API 6.6.5
 
 Merge update from Ampache7.

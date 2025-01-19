@@ -86,6 +86,34 @@ final class UpdateRunner implements UpdateRunnerInterface
         // Prevent the script from timing out, which could be bad
         set_time_limit(0);
 
+        if ($currentVersion >= 720001) {
+            // Migration\V7\Migration720001
+            if (
+                Dba::read('SELECT `artist` FROM `tag` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `tag` DROP COLUMN `artist`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+            if (
+                Dba::read('SELECT `album` FROM `tag` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `tag` DROP COLUMN `album`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+            if (
+                Dba::read('SELECT `song` FROM `tag` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `tag` DROP COLUMN `song`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+            if (
+                Dba::read('SELECT `video` FROM `tag` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `tag` DROP COLUMN `video`;")
+            ) {
+                throw new UpdateFailedException();
+            }
+        }
+
         if ($currentVersion >= 710006) {
             // Migration\V7\Migration710006
             if (
@@ -107,30 +135,43 @@ final class UpdateRunner implements UpdateRunnerInterface
         if ($currentVersion >= 710005) {
             // Migration\V7\Migration710005
             Dba::write("ALTER TABLE `song` DROP KEY `album_disk_IDX`;");
-            if (!Dba::write("ALTER TABLE `song` DROP COLUMN `album_disk`;")) {
+            if (
+                Dba::read('SELECT `album_disk` FROM `song` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `song` DROP COLUMN `album_disk`;")
+            ) {
                 throw new UpdateFailedException();
             }
         }
 
         if ($currentVersion >= 710004) {
             // Migration\V7\Migration710004
-            if (!Dba::write("ALTER TABLE `album` DROP COLUMN `total_skip`;")) {
+            if (
+                Dba::read('SELECT `total_skip` FROM `album` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `album` DROP COLUMN `total_skip`;")
+            ) {
                 throw new UpdateFailedException();
             }
-            if (!Dba::write("ALTER TABLE `album_disk` DROP COLUMN `total_skip`;")) {
+            if (
+                Dba::read('SELECT `total_skip` FROM `album_disk` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `album_disk` DROP COLUMN `total_skip`;")
+            ) {
                 throw new UpdateFailedException();
             }
-            if (!Dba::write("ALTER TABLE `artist` DROP COLUMN `total_skip`;")) {
+            if (
+                Dba::read('SELECT `total_skip` FROM `artist` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `artist` DROP COLUMN `total_skip`;")
+            ) {
                 throw new UpdateFailedException();
             }
         }
 
         if ($currentVersion >= 710001) {
-            if (Dba::read('SELECT `addition_time` FROM `artist` LIMIT 1;')) {
-                // Migration\V7\Migration710001
-                if (!Dba::write("ALTER TABLE `artist` DROP COLUMN `addition_time`;")) {
-                    throw new UpdateFailedException();
-                }
+            // Migration\V7\Migration710001
+            if (
+                Dba::read('SELECT `addition_time` FROM `artist` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `artist` DROP COLUMN `addition_time`;")
+            ) {
+                throw new UpdateFailedException();
             }
         }
 
@@ -208,11 +249,12 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700021) {
-            if (Dba::read('SELECT `order` FROM `license` LIMIT 1;')) {
-                // Migration\V7\Migration700021
-                if (!Dba::write("ALTER TABLE `license` DROP COLUMN `order`;")) {
-                    throw new UpdateFailedException();
-                }
+            // Migration\V7\Migration700021
+            if (
+                Dba::read('SELECT `order` FROM `license` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `license` DROP COLUMN `order`;")
+            ) {
+                throw new UpdateFailedException();
             }
         }
 
@@ -254,11 +296,12 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700014) {
-            if (Dba::read('SELECT COUNT(`name`) from `user_preference`;')) {
-                // Migration\V7\Migration700005
-                if (!Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")) {
-                    throw new UpdateFailedException();
-                }
+            // Migration\V7\Migration700005
+            if (
+                Dba::read('SELECT `name` FROM `user_preference` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `user_preference` DROP COLUMN `name`;")
+            ) {
+                throw new UpdateFailedException();
             }
         }
 
@@ -279,11 +322,12 @@ final class UpdateRunner implements UpdateRunnerInterface
         }
 
         if ($currentVersion >= 700005) {
-            if (Dba::read('SELECT SUM(`last_count`) from `playlist`;')) {
-                // Migration\V7\Migration700005
-                if (!Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")) {
-                    throw new UpdateFailedException();
-                }
+            // Migration\V7\Migration700005
+            if (
+                Dba::read('SELECT `last_count` FROM `playlist` LIMIT 1;') &&
+                !Dba::write("ALTER TABLE `playlist` DROP COLUMN `last_count`;")
+            ) {
+                throw new UpdateFailedException();
             }
         }
 
