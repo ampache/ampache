@@ -45,11 +45,12 @@ use Ampache\Module\Util\Ui;
 /** @var string $cel_cover */
 /** @var string $cel_time */
 /** @var bool $show_ratings */
+/** @var bool $extended_links */
 
 // Don't show disabled medias to normal users
 if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::CONTENT_MANAGER)) {
     $thumb = (isset($browse) && $browse->is_grid_view()) ? 11 : 3;
-    $link  = (AmpConfig::get('extended_playlist_links', false) && !empty($libitem->get_f_parent_link()))
+    $link  = ($extended_links && !empty($libitem->get_f_parent_link()))
         ? $libitem->get_f_link() . '&nbsp;-&nbsp;' . $libitem->get_f_parent_link()
         : $libitem->get_f_link(); ?>
 <td class="cel_play">
@@ -73,7 +74,9 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 </div>
 </td>
 <td class="cel_title"><?php echo $link; ?></td>
+<?php if (!$extended_links) { ?>
 <td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
+<?php } ?>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
