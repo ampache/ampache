@@ -22,6 +22,7 @@
 
 ### Fixed
 
+* Show all catalogs in show catalogs page correctly
 * Missing `album_id` in upload process function
 * Custom Artist and Album names for filepond uploads
 * Typo on user pages loading recently played
@@ -38,7 +39,6 @@
 
 ### Fixed
 
-* Show all catalogs in show catalogs page correctly
 * Upload POST array not sending license correctly to filepond
 * CLI
   * export:playlist: Documentation for type listed as mandatory
