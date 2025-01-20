@@ -94,6 +94,7 @@ final class RefreshUpdatedAction extends AbstractEditAction
      * * playlist_media_row
      *
      * Templates that redirect and are not refreshed here
+     * * filter_row
      * * license_row
      * * shout_row
      * * user_row

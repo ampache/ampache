@@ -32,16 +32,27 @@ use Ampache\Module\Util\Ui;
 /** @var list<Shoutbox> $shouts */
 
 $web_path   = AmpConfig::get_web_path();
-$admin_path = AmpConfig::get_web_path('/admin'); ?>
+$admin_path = AmpConfig::get_web_path('/admin');
+$t_object   = T_('Object');
+$t_user     = T_('User');
+$t_sticky   = T_('Sticky');
+$t_comment  = T_('Comment');
+$t_added    = T_('Date Added');
+$t_action   = T_('Action');
+// show_shout_row.inc.php
+$t_edit     = T_('Edit');
+$t_delete   = T_('Delete');
+$t_yes      = T_('Yes');
+$t_no       = T_('No'); ?>
 <table class="tabledata striped-rows">
     <thead>
         <tr class="th-top">
-            <th class="cel_object"><?php echo T_('Object'); ?></th>
-            <th class="cel_username"><?php echo T_('User'); ?></th>
-            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
-            <th class="cel_action"><?php echo T_('Action'); ?></th>
+            <th class="cel_object"><?php echo $t_object; ?></th>
+            <th class="cel_username"><?php echo $t_user; ?></th>
+            <th class="cel_sticky"><?php echo $t_sticky; ?></th>
+            <th class="cel_comment"><?php echo $t_comment; ?></th>
+            <th class="cel_date"><?php echo $t_added; ?></th>
+            <th class="cel_action"><?php echo $t_action; ?></th>
         </tr>
     </thead>
     <tbody>
@@ -67,12 +78,12 @@ $admin_path = AmpConfig::get_web_path('/admin'); ?>
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <th class="cel_object"><?php echo T_('Object'); ?></th>
-            <th class="cel_username"><?php echo T_('User'); ?></th>
-            <th class="cel_sticky"><?php echo T_('Sticky'); ?></th>
-            <th class="cel_comment"><?php echo T_('Comment'); ?></th>
-            <th class="cel_date"><?php echo T_('Date Added'); ?></th>
-            <th class="cel_action"><?php echo T_('Action'); ?></th>
+            <th class="cel_object"><?php echo $t_object; ?></th>
+            <th class="cel_username"><?php echo $t_user; ?></th>
+            <th class="cel_sticky"><?php echo $t_sticky; ?></th>
+            <th class="cel_comment"><?php echo $t_comment; ?></th>
+            <th class="cel_date"><?php echo $t_added; ?></th>
+            <th class="cel_action"><?php echo $t_action; ?></th>
         </tr>
     </tfoot>
 </table>
