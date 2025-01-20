@@ -302,7 +302,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         // set link and f_link
         $this->get_artist_fullname();
         $this->get_f_link();
-        $this->get_f_artist_link();
+        $this->get_f_parent_link();
 
         if (!$this->year) {
             $this->f_year = $this->album->f_year;

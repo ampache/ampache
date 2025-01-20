@@ -278,7 +278,7 @@ final readonly class AlbumDiskViewAdapter implements AlbumDiskViewAdapterInterfa
 
     public function getArtistLink(): string
     {
-        return (string)$this->albumDisk->get_f_artist_link();
+        return (string)$this->albumDisk->get_f_parent_link();
     }
 
     public function canShowYear(): bool

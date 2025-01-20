@@ -135,7 +135,7 @@ foreach ($data as $row) {
                     </a>
                 </span>
                 </td>
-                <td class="cel_artist"><?php echo $song->get_f_artist_link(); ?></td>
+                <td class="cel_artist"><?php echo $song->get_f_parent_link(); ?></td>
                 <td class="cel_album"><?php echo $song->f_album_link; ?></td>
                 <td class="cel_year"><?php echo $song->year; ?></td>
                 <?php if ($show_user) { ?>
