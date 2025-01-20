@@ -1749,7 +1749,7 @@ INSERT INTO `user_preference` (`user`, `preference`, `name`, `value`) VALUES
 (-1, 185, 'jp_volume', '0.8'),
 (-1, 186, 'perpetual_api_session', '0'),
 (-1, 187, 'home_recently_played_all', '1'),
-(-1, 188, 'show_wrapped', '0'),
+(-1, 188, 'show_wrapped', '1'),
 (-1, 189, 'sidebar_hide_switcher', '0'),
 (-1, 190, 'sidebar_hide_browse', '0'),
 (-1, 191, 'sidebar_hide_dashboard', '0'),
