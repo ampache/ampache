@@ -73,7 +73,7 @@ if (!isset($libitem->enabled) || $libitem->enabled || Access::check(AccessTypeEn
 </div>
 </td>
 <td class="cel_title"><?php echo $link; ?></td>
-<td class="cel_artist"><?php echo $libitem->f_artist_link; ?></td>
+<td class="cel_artist"><?php echo $libitem->get_f_parent_link(); ?></td>
 <td class="cel_add">
     <span class="cel_item_add">
         <?php echo Ajax::button('?action=basket&type=' . $object_type . '&id=' . $libitem->getId(), 'new_window', T_('Add to Temporary Playlist'), 'playlist_add_' . $libitem->getId());
