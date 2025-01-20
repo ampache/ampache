@@ -147,7 +147,7 @@ foreach ($data as $row) {
                     </a>
                 </span>
                 </td>
-                <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
+                <td class="cel_artist"><?php echo $media->get_f_parent_link(); ?></td>
                 <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
                 <td class="cel_year"><?php echo $media->getYear(); ?></td>
                 <?php if ($show_user) { ?>
