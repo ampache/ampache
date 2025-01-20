@@ -39,12 +39,21 @@ use Ampache\Module\Api\Ajax;
 /** @var Ampache\Repository\Model\User $np_user */
 /** @var string $web_path */
 /** @var string $agent */
+/** @var string $t_username */
+/** @var string $t_song */
+/** @var string $t_album */
+/** @var string $t_artist */
+/** @var string $t_year */
+/** @var string $t_genres */
+/** @var string $t_similar_artists */
+/** @var string $t_loading */
+/** @var string $t_similar_songs */
 
 $showAlbum = AmpConfig::get('album_group');
 ?>
 <div class="np_group" id="np_group_1">
     <div class="np_cell cel_username">
-        <label><?php echo T_('Username'); ?></label>
+        <label><?php echo $t_username; ?></label>
         <a title="<?php echo scrub_out($agent); ?>" href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $np_user->id ?? -1; ?>">
         <?php
             echo scrub_out($np_user->fullname);
@@ -57,25 +66,25 @@ if ($np_user->f_avatar_medium) {
 
 <div class="np_group" id="np_group_2">
     <div class="np_cell cel_left">
-        <label><?php echo T_('Song'); ?></label>
+        <label><?php echo $t_song; ?></label>
         <?php echo $media->get_f_link(); ?>
     </div>
     <div class="np_cell cel_left">
-        <label><?php echo T_('Album'); ?></label>
+        <label><?php echo $t_album; ?></label>
         <?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?>
     </div>
     <div class="np_cell cel_left">
-        <label><?php echo T_('Artist'); ?></label>
+        <label><?php echo $t_artist; ?></label>
         <?php echo $media->get_f_parent_link(); ?>
     </div>
     <div class="np_cell cel_left">
-        <label><?php echo T_('Year'); ?></label>
+        <label><?php echo $t_year; ?></label>
         <?php echo $media->f_year_link; ?>
     </div>
     <?php
         if (!empty($media->f_tags)) { ?>
             <div id="np_song_tags_<?php echo $media->id; ?>" class="np_cell cel_left">
-                <label><?php echo T_('Genres'); ?></label>
+                <label><?php echo $t_genres; ?></label>
                 <?php echo $media->f_tags; ?>
             </div>
         <?php } ?>
@@ -102,14 +111,14 @@ if ($playing->isNew() === false) {
 <div class="np_group similars" id="similar_items_<?php echo $media->id; ?>">
     <div class="np_group similars">
         <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Artists'); ?></label>
-            <p><?php echo T_('Loading...'); ?></p>
+            <label><?php echo $t_similar_artists; ?></label>
+            <p><?php echo $t_loading; ?></p>
         </div>
     </div>
     <div class="np_group similars">
         <div class="np_cell cel_similar">
-            <label><?php echo T_('Similar Songs'); ?></label>
-            <p><?php echo T_('Loading...'); ?></p>
+            <label><?php echo $t_similar_songs; ?></label>
+            <p><?php echo $t_loading; ?></p>
         </div>
     </div>
 </div>

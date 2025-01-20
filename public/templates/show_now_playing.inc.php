@@ -44,6 +44,17 @@ if (count($results)) {
     $refresh  = "&nbsp" . Ajax::button('?page=index&action=refresh_now_playing', 'refresh', T_('Refresh'), 'refresh_now_playing', 'box_np');
     Ui::show_box_top(T_('Now Playing') . $rss_link . $refresh, 'box_np');
 
+    $t_username        = T_('Username');
+    $t_song            = T_('Song');
+    $t_video           = T_('Video');
+    $t_album           = T_('Album');
+    $t_artist          = T_('Artist');
+    $t_year            = T_('Year');
+    $t_genres          = T_('Genres');
+    $t_similar_artists = T_('Similar Artists');
+    $t_loading         = T_('Loading...');
+    $t_similar_songs   = T_('Similar Songs');
+
     foreach ($results as $item) {
         $media   = $item['media'];
         $np_user = $item['client'];

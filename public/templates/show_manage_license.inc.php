@@ -32,7 +32,9 @@ $licenseRepository = $dic->get(LicenseRepositoryInterface::class);
 
 /** @var list<int> $object_ids */
 
-$admin_path = AmpConfig::get_web_path('/admin'); ?>
+$admin_path = AmpConfig::get_web_path('/admin');
+$t_edit     = T_('Edit');
+$t_delete   = T_('Delete'); ?>
 <div id="information_actions">
     <ul>
         <li>

@@ -27,6 +27,8 @@ use Ampache\Repository\Model\License;
 use Ampache\Module\Util\Ui;
 
 /** @var string $admin_path */
+/** @var string $t_edit */
+/** @var string $t_delete */
 /** @var License $libitem */
 ?>
 <tr id="license_<?php echo $libitem->getId(); ?>">
@@ -35,10 +37,10 @@ use Ampache\Module\Util\Ui;
     <td class="cel_order"><?php echo $libitem->getOrder(); ?></td>
     <td class="cel_action">
         <a href="<?php echo $admin_path; ?>/license.php?action=show_edit&license_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+            <?php echo Ui::get_material_symbol('edit', $t_edit); ?>
         </a>
         <a href="<?php echo $admin_path; ?>/license.php?action=delete&license_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', $t_delete); ?>
         </a>
     </td>
 </tr>

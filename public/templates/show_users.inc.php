@@ -37,6 +37,13 @@ use Ampache\Module\Util\Ui;
 
 $web_path   = AmpConfig::get_web_path();
 $admin_path = AmpConfig::get_web_path('/admin');
+// show_user_row.inc.php
+$t_send_pm     = T_('Send private message');
+$t_edit        = T_('Edit');
+$t_preferences = T_('Preferences');
+$t_enable      = T_('Enable');
+$t_disable     = T_('Disable');
+$t_delete      = T_('Delete');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
 } ?>

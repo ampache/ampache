@@ -27,7 +27,15 @@ use Ampache\Config\AmpConfig;
 use Ampache\Repository\Model\Catalog;
 use Ampache\Module\Util\Ui;
 
-$admin_path = AmpConfig::get_web_path('/admin'); ?>
+$admin_path  = AmpConfig::get_web_path('/admin');
+$t_name      = T_('Filter Name');
+$t_num_users = T_('Number of Users');
+$t_num_cats  = T_('Number of Catalogs');
+$t_actions   = T_('Actions');
+// show_filter_row.inc.php
+$t_edit      = T_('Edit');
+$t_delete    = T_('Delete');
+?>
 <div id="information_actions">
     <ul style="float: left;">
         <li>
@@ -58,10 +66,10 @@ foreach ($filters as $filter) {
     </tbody>
     <tfoot>
         <tr class="th-bottom">
-            <th class="cel_name"><?php echo T_('Filter Name'); ?></th>
-            <th class="cel_num_users"><?php echo T_('Number of Users'); ?></th>
-            <th class="cel_num_catalogs"><?php echo T_('Number of Catalogs'); ?></th>
-            <th class="cel_action cel_action_text"><?php echo T_('Actions'); ?></th>
+            <th class="cel_name"><?php echo $t_name; ?></th>
+            <th class="cel_num_users"><?php echo $t_num_users; ?></th>
+            <th class="cel_num_catalogs"><?php echo $t_num_cats; ?></th>
+            <th class="cel_action cel_action_text"><?php echo $t_actions; ?></th>
         </tr>
     </tfoot>
 </table>
