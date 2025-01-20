@@ -199,7 +199,7 @@ class Json5_Data
      * @param string $type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'|'live_stream'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
-     * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user, $include = false)
     {
@@ -360,16 +360,15 @@ class Json5_Data
         $JSON = [];
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
-            $counts = $tag->count();
             $JSON[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
-                "albums" => (int)($counts['album'] ?? 0),
-                "artists" => (int)($counts['artist'] ?? 0),
-                "songs" => (int)($counts['song'] ?? 0),
-                "videos" => (int)($counts['video'] ?? 0),
-                "playlists" => (int)($counts['playlist'] ?? 0),
-                "live_streams" => (int)($counts['live_stream'] ?? 0)
+                "albums" => $tag->album,
+                "artists" => $tag->artist,
+                "songs" => $tag->song,
+                "videos" => $tag->video,
+                "playlists" => 0,
+                "live_streams" => 0,
             ];
         } // end foreach
         $output = ($object) ? ["genre" => $JSON] : $JSON[0] ?? [];

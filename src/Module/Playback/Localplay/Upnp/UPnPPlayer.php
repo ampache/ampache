@@ -209,7 +209,7 @@ class UPnPPlayer
      */
     public function skip(int $track_id): bool
     {
-        if ($this->Playlist()->Skip($track_id)) {
+        if ($this->Playlist()->skip($track_id)) {
             $this->Play();
 
             return true;
@@ -387,7 +387,7 @@ class UPnPPlayer
      */
     public function SetVolume($value): bool
     {
-        $desiredVolume = Max(0, Min(100, $value));
+        $desiredVolume = max(0, min(100, $value));
         $instanceId    = 0;
         $channel       = 'Master';
 

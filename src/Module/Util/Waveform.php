@@ -385,7 +385,7 @@ class Waveform
                     imageline(
                         $img, // x1
                         (int)($data_point / $detail),
-                        // y1: height of the image minus  as a percentage of the height for the wave amplitude
+                        // y1: height of the image minus as a percentage of the height for the wave amplitude
                         $height - $value, // x2
                         (int)($data_point / $detail), // y2: same as y1, but from the bottom of the image
                         $height - ($height - $value),

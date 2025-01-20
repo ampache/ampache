@@ -44,7 +44,7 @@ final class Licenses5Method
      * licenses
      * MINIMUM_API_VERSION=420000
      *
-     * This returns the licenses  based on the specified filter
+     * This returns the licenses based on the specified filter
      *
      * filter = (string) Alpha-numeric search term //optional
      * exact  = (integer) 0,1, if true filter is exact rather then fuzzy //optional

@@ -59,7 +59,7 @@ final readonly class TagAjaxHandler implements AjaxHandlerInterface
                 $results['tags'] = $tags;
                 break;
             case 'get_labels':
-                $labels = ($type == 'artist_row')
+                $labels = ($type === 'artist_row')
                     ? Label::get_display($this->labelRepository->getAll())
                     : '';
                 $results['labels'] = $labels;

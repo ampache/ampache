@@ -46,6 +46,14 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
     public int $is_hidden = 0;
 
+    public int $artist = 0;
+
+    public int $album = 0;
+
+    public int $song = 0;
+
+    public int $video = 0;
+
     public string $f_name;
 
     /**
@@ -178,22 +186,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param int $object_id
      * @param string $value
      * @param bool $user
-     * @return bool|int
      */
-    public static function add($type, $object_id, $value, $user = true)
+    public static function add($type, $object_id, $value, $user = true): int
     {
         if (!InterfaceImplementationChecker::is_library_item($type)) {
-            return false;
+            return 0;
         }
 
         if (!is_numeric($object_id)) {
-            return false;
+            return 0;
         }
 
         $cleaned_value = str_replace('Folk, World, & Country', 'Folk World & Country', $value);
 
         if ((string)$cleaned_value === '') {
-            return false;
+            return 0;
         }
 
         $uid = ($user === true)
@@ -209,15 +216,15 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         if (!$tag_id) {
             debug_event(self::class, 'Error unable to create tag value:' . $cleaned_value . ' unknown error', 1);
 
-            return false;
+            return 0;
         }
 
         // We've got the tag id, let's see if it's already got a map, if not then create the map and return the value
-        if (!$map_id = self::tag_map_exists($type, $object_id, (int)$tag_id, $uid)) {
-            $map_id = self::add_tag_map($type, $object_id, (int)$tag_id, $user);
+        if (!self::tag_map_exists($type, $object_id, $tag_id, $uid)) {
+            return self::add_tag_map($type, $object_id, $tag_id, $user);
         }
 
-        return (int)$map_id;
+        return 0;
     }
 
     /**
@@ -394,24 +401,25 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      * @param string $type
      * @param int|string $object_id
      * @param int|string $tag_id
-     * @param bool $user
-     * @return bool|int
+     * @param bool|int $user
      */
-    public static function add_tag_map($type, $object_id, $tag_id, $user = true)
+    public static function add_tag_map($type, $object_id, $tag_id, $user = true): int
     {
-        $uid = ($user === true) ? (int)(Core::get_global('user')?->getId()) : (int)($user);
+        $uid = ($user === true)
+            ? (int)(Core::get_global('user')?->getId())
+            : (int)$user;
 
         if (!InterfaceImplementationChecker::is_library_item($type)) {
             debug_event(self::class, $type . " is not a library item.", 3);
 
-            return false;
+            return 0;
         }
 
         $tag_id  = (int)($tag_id);
         $item_id = (int)($object_id);
 
         if (!$tag_id || !$item_id) {
-            return false;
+            return 0;
         }
 
         // If tag merged to another one, add reference to the merge destination
@@ -421,14 +429,29 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             $merges[] = ['id' => $parent->id, 'name' => $parent->name];
         }
 
+        $insert_id = 0;
         foreach ($merges as $tag) {
             $sql = "INSERT IGNORE INTO `tag_map` (`tag_id`, `user`, `object_type`, `object_id`) VALUES (?, ?, ?, ?)";
             Dba::write($sql, [$tag['id'], $uid, $type, $item_id]);
+
+            $insert_id = (int)Dba::insert_id();
+            parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id]);
+
+            switch ($type) {
+                case 'album':
+                    Dba::write("UPDATE `tag` SET `album` = `album` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'artist':
+                    Dba::write("UPDATE `tag` SET `artist` = `artist` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'song':
+                    Dba::write("UPDATE `tag` SET `song` = `song` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+                case 'video':
+                    Dba::write("UPDATE `tag` SET `video` = `video` + 1 WHERE `id` = ?", [$tag['id']]);
+                    break;
+            }
         }
-
-        $insert_id = (int)Dba::insert_id();
-
-        parent::add_to_cache('tag_map_' . $type, $insert_id, ['tag_id' => $tag_id, 'user' => $uid, 'object_type' => $type, 'object_id' => $item_id]);
 
         return $insert_id;
     }
@@ -441,22 +464,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function garbage_collection(): void
     {
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL";
-        Dba::write($sql);
-
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL";
-        Dba::write($sql);
-
-        $sql = "DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL";
-        Dba::write($sql);
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL");
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL");
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL");
 
         // Now nuke the tags themselves
-        $sql = "DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)";
-        Dba::write($sql);
+        Dba::write("DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)");
 
         // delete duplicates
-        $sql = "DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`";
-        Dba::write($sql);
+        Dba::write("DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`");
+
+        // recount all the (currently) valid object types
+        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'album' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`album` = `tag_count`.`tag_count` WHERE `tag`.`album` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'artist' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`artist` = `tag_count`.`tag_count` WHERE `tag`.`artist` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'song' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`song` = `tag_count`.`tag_count` WHERE `tag`.`song` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+        Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'video' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`video` = `tag_count`.`tag_count` WHERE `tag`.`video` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
     }
 
     /**
@@ -873,39 +895,6 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
     }
 
     /**
-     * count
-     * This returns the count for the all objects associated with this tag
-     * If a type is specific only counts for said type are returned
-     * @param string $type
-     * @param int $user_id
-     */
-    public function count($type = '', $user_id = 0): array
-    {
-        $params = [$this->id];
-
-        $filter_sql = "";
-        if ($user_id > 0) {
-            $filter_sql = " AND `user` = ?";
-            $params[]   = $user_id;
-        }
-
-        if ($type) {
-            $filter_sql = " AND `object_type` = ?";
-            $params[]   = $type;
-        }
-
-        $results    = [];
-        $sql        = "SELECT DISTINCT(`object_type`), COUNT(`object_id`) AS `count` FROM `tag_map` WHERE `tag_id` = ?" . $filter_sql . " GROUP BY `object_type`";
-        $db_results = Dba::read($sql, $params);
-
-        while ($row = Dba::fetch_assoc($db_results)) {
-            $results[$row['object_type']] = (int)$row['count'];
-        }
-
-        return $results;
-    }
-
-    /**
      * remove_map
      * This will only remove tag maps for the current user
      * @param string $type
@@ -926,6 +915,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $sql = "DELETE FROM `tag_map` WHERE `tag_id` = ? AND `object_type` = ? AND `object_id` = ? AND `user` = ?";
         Dba::write($sql, [$this->id, $type, $object_id, $uid]);
 
+        switch ($type) {
+            case 'album':
+                Dba::write("UPDATE `tag` SET `album` = `album` - 1 WHERE `id` = ? AND `album` > 0;", [$this->id]);
+                break;
+            case 'artist':
+                Dba::write("UPDATE `tag` SET `artist` = `artist` - 1 WHERE `id` = ? AND `artist` > 0;", [$this->id]);
+                break;
+            case 'song':
+                Dba::write("UPDATE `tag` SET `song` = `song` - 1 WHERE `id` = ? AND `song` > 0;", [$this->id]);
+                break;
+            case 'video':
+                Dba::write("UPDATE `tag` SET `video` = `video` - 1 WHERE `id` = ? AND `video` > 0;", [$this->id]);
+                break;
+        }
+
         return true;
     }
 
@@ -943,6 +947,21 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         $sql = "DELETE FROM `tag_map` WHERE `object_type` = ? AND `object_id` = ?";
         Dba::write($sql, [$object_type, $object_id]);
+
+        switch ($object_type) {
+            case 'album':
+                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'album' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`album` = `tag_count`.`tag_count` WHERE `tag`.`album` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+                break;
+            case 'artist':
+                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'artist' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`artist` = `tag_count`.`tag_count` WHERE `tag`.`artist` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+                break;
+            case 'song':
+                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'song' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`song` = `tag_count`.`tag_count` WHERE `tag`.`song` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+                break;
+            case 'video':
+                Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'video' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`video` = `tag_count`.`tag_count` WHERE `tag`.`video` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+                break;
+        }
 
         return true;
     }

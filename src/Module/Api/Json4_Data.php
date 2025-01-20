@@ -181,7 +181,7 @@ class Json4_Data
      * @param string $object_type 'artist'|'album'|'song'|'playlist'|'share'|'podcast'|'podcast_episode'|'video'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
-     * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"
      */
     public static function indexes($objects, $object_type, $user, $include = false)
     {
@@ -260,16 +260,15 @@ class Json4_Data
 
         foreach ($tags as $tag_id) {
             $tag    = new Tag($tag_id);
-            $counts = $tag->count();
             $TAGS[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
-                "albums" => (int)($counts['album'] ?? 0),
-                "artists" => (int)($counts['artist'] ?? 0),
-                "songs" => (int)($counts['song'] ?? 0),
-                "videos" => (int)($counts['video'] ?? 0),
-                "playlists" => (int)($counts['playlist'] ?? 0),
-                "stream" => (int)($counts['live_stream'] ?? 0)
+                "albums" => $tag->album,
+                "artists" => $tag->artist,
+                "songs" => $tag->song,
+                "videos" => $tag->video,
+                "playlists" => 0,
+                "stream" => 0,
             ];
         } // end foreach
 

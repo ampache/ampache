@@ -2542,7 +2542,7 @@ abstract class Catalog extends database_object
             ? (int)substr((string) $results['year'], -4, 4)
             : (int)($results['year']);
         $new_song->disk         = (Album::sanitize_disk($results['disk']) > 0) ? Album::sanitize_disk($results['disk']) : 1;
-        $new_song->disksubtitle = $results['disksubtitle'];
+        $new_song->disksubtitle = $results['disksubtitle'] ?: null;
         $new_song->title        = self::check_length(self::check_title($results['title'], $new_song->file));
         $new_song->bitrate      = $results['bitrate'];
         $new_song->rate         = $results['rate'];
@@ -3114,7 +3114,7 @@ abstract class Catalog extends database_object
         Dba::write($sql);
         $sql = "INSERT IGNORE INTO `album_map` (`album_id`, `object_type`, `object_id`) SELECT DISTINCT `artist_map`.`object_id` AS `album_id`, 'album' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` WHERE `artist_map`.`object_type` = 'album' AND `artist_map`.`object_id` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `song`.`artist` AS `object_id` FROM `song` WHERE `song`.`album` IS NOT NULL UNION SELECT DISTINCT `song`.`album` AS `album_id`, 'song' AS `object_type`, `artist_map`.`artist_id` AS `object_id` FROM `artist_map` LEFT JOIN `song` ON `artist_map`.`object_type` = 'song' AND `artist_map`.`object_id` = `song`.`id` WHERE `song`.`album` IS NOT NULL AND `artist_map`.`object_type` = 'song';";
         Dba::write($sql);
-        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog` FROM `song`;";
+        $sql = "INSERT IGNORE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) SELECT DISTINCT `song`.`album` AS `album_id`, `song`.`disk` AS `disk`, `song`.`catalog` AS `catalog`, NULLIF(`song_data`.`disksubtitle`, '') AS `disksubtitle` FROM `song` LEFT JOIN `song_data` ON `song_data`.`song_id` = `song`.`id`;";
         Dba::write($sql);
         // do the longer updates over a larger stretch of time
         if ($update_time !== 0 && $update_time < ($now_time - 86400)) {
@@ -3162,6 +3162,7 @@ abstract class Catalog extends database_object
         Dba::write("UPDATE `album` SET `barcode` = NULL WHERE `barcode` = '';");
         Dba::write("UPDATE `album` SET `catalog_number` = NULL WHERE `catalog_number` = '';");
         Dba::write("UPDATE `album` SET `release_status` = NULL WHERE `release_status` = '';");
+        Dba::write("UPDATE `album_disk` SET `disksubtitle` = NULL WHERE `disksubtitle` = '';");
         // artist.addition_time
         $sql = "UPDATE `artist`, (SELECT MIN(`song`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `song` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `song`.`id` AND `artist_map`.`object_type` = 'song' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id` UNION SELECT MIN(`album`.`addition_time`) AS `addition_time`, `artist_map`.`artist_id` FROM `album` LEFT JOIN `artist_map` ON `artist_map`.`object_id` = `album`.`id` AND `artist_map`.`object_type` = 'album' AND `artist_map`.`object_type` IS NOT NULL GROUP BY `artist_map`.`artist_id`) AS `addition` SET `artist`.`addition_time` = `addition`.`addition_time` WHERE (`artist`.`addition_time` > `addition`.`addition_time` OR `artist`.`addition_time` IS NULL OR `artist`.`addition_time` = 0) AND `addition`.`artist_id` = `artist`.`id`;";
         Dba::write($sql);
@@ -4543,7 +4544,7 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * @deprecated  inject dependency
+     * @deprecated inject dependency
      */
     private static function getShareRepository(): ShareRepositoryInterface
     {

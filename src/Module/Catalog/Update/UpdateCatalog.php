@@ -246,7 +246,7 @@ final class UpdateCatalog extends AbstractCatalogUpdater implements UpdateCatalo
                 $artists = $catalog->get_artist_ids('time');
                 $catalog->update_from_external($artists, 'artist');
 
-                // Look for updated recommendations / similar artists  LIMIT 500
+                // Look for updated recommendations / similar artists LIMIT 500
                 $artist_info = $catalog->get_artist_ids('info');
                 $catalog->gather_artist_info($artist_info);
 

@@ -55,7 +55,7 @@ class Upload
         );
         $catalog_id = (int)AmpConfig::get('upload_catalog', 0);
         $catalog    = self::check($catalog_id);
-        if ($catalog !== null && $catalog instanceof Catalog_local) {
+        if ($catalog instanceof Catalog_local) {
             debug_event(self::class, 'Uploading to catalog ID ' . $catalog_id, 4);
 
             $rootdir = self::get_root($catalog);
@@ -91,8 +91,8 @@ class Upload
                     return self::rerror($targetfile);
                 }
 
-                if (Core::get_request('artist') !== '') {
-                    $options['artist_id'] = (int)Core::get_request('artist');
+                if (Core::get_request('artist_id') !== '') {
+                    $options['artist_id'] = (int)Core::get_request('artist_id');
                 }
                 // Try to create a new artist
                 if (Core::get_request('artist_name') !== '') {
@@ -103,7 +103,10 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $artist = new Artist($artist_id);
-                    if ($artist->get_user_owner() != $options['user_upload']) {
+                    if (
+                        $artist->get_user_owner() &&
+                        $artist->get_user_owner() != $options['user_upload']
+                    ) {
                         debug_event(self::class, "Artist owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);
@@ -111,6 +114,9 @@ class Upload
                     $options['artist_id'] = $artist_id;
                 }
 
+                if (Core::get_request('album_id') !== '') {
+                    $options['album_id'] = (int)Core::get_request('album_id');
+                }
                 // Try to create a new album
                 if (Core::get_request('album_name') !== '') {
                     $album_id = self::check_album(Core::get_request('album_name'), ($options['artist_id'] ?? null));
@@ -120,7 +126,10 @@ class Upload
                         return self::rerror($targetfile);
                     }
                     $album = new Album($album_id);
-                    if ($album->get_user_owner() != $options['user_upload']) {
+                    if (
+                        $album->get_user_owner() &&
+                        $album->get_user_owner() != $options['user_upload']
+                    ) {
                         debug_event(self::class, "Album owner doesn't match the current user.", 3);
 
                         return self::rerror($targetfile);

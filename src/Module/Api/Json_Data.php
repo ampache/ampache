@@ -226,7 +226,7 @@ class Json_Data
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add child id's of the object (in sub array by type))
-     * @return string  JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     * @return string JSON Object "catalog"|"artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function index($objects, $type, $user, $include = false): string
     {
@@ -368,7 +368,7 @@ class Json_Data
      * @param string $type 'album_artist'|'album'|'artist'|'catalog'|'live_stream'|'playlist'|'podcast_episode'|'podcast'|'share'|'song_artist'|'song'|'video'
      * @param User $user
      * @param bool $include (add the extra songs details if a playlist or podcast_episodes if a podcast)
-     * @return string  JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
+     * @return string JSON Object "artist"|"album"|"song"|"playlist"|"share"|"podcast"|"podcast_episode"|"video"|"live_stream"
      */
     public static function indexes($objects, $type, $user, $include = false): string
     {
@@ -673,16 +673,15 @@ class Json_Data
         $JSON = [];
         foreach ($objects as $tag_id) {
             $tag    = new Tag($tag_id);
-            $counts = $tag->count();
             $JSON[] = [
                 "id" => (string)$tag_id,
                 "name" => $tag->name,
-                "albums" => (int)($counts['album'] ?? 0),
-                "artists" => (int)($counts['artist'] ?? 0),
-                "songs" => (int)($counts['song'] ?? 0),
-                "videos" => (int)($counts['video'] ?? 0),
-                "playlists" => (int)($counts['playlist'] ?? 0),
-                "live_streams" => (int)($counts['live_stream'] ?? 0)
+                "albums" => $tag->album,
+                "artists" => $tag->artist,
+                "songs" => $tag->song,
+                "videos" => $tag->video,
+                "playlists" => 0,
+                "live_streams" => 0,
             ];
         } // end foreach
 

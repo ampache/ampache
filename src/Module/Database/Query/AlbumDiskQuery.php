@@ -45,6 +45,8 @@ final class AlbumDiskQuery implements QueryInterface
         'genre',
         'id',
         'like',
+        'no_genre',
+        'no_tag',
         'not_like',
         'not_starts_with',
         'regex_match',
@@ -148,6 +150,10 @@ final class AlbumDiskQuery implements QueryInterface
                     $filter_sql .= (int)$uid . ',';
                 }
                 $filter_sql = rtrim($filter_sql, ',') . ") AND ";
+                break;
+            case 'no_genre':
+            case 'no_tag':
+                $filter_sql = " (`album`.`id` NOT IN (SELECT `object_id` FROM `tag_map` WHERE `object_type`='album')) AND ";
                 break;
             case 'genre':
             case 'tag':

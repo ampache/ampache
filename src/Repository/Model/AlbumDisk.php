@@ -221,7 +221,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         // check if the album_disk exists
         $db_results = (!empty($disksubtitle))
             ? Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle])
-            : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` IS NULL;", [$album_id, $disk, $catalog_id]);
+            : Dba::read("SELECT * FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND (`disksubtitle` = '' OR `disksubtitle` IS NULL);", [$album_id, $disk, $catalog_id]);
         $row = Dba::fetch_assoc($db_results);
         if (isset($row['id'])) {
             return (int)$row['id'];
@@ -233,9 +233,16 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
             $row        = Dba::fetch_assoc($db_results);
             if (isset($row['id'])) {
                 // alter the existing disk after editing
-                Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id]);
+                if (!Dba::write("UPDATE `album_disk` SET `album_id` = ?, `disk` = ?, `catalog` = ?, `disksubtitle` = ? WHERE `id` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle, $current_id])) {
+                    // Duplicates might collide here
+                    $db_results = Dba::read("SELECT `id` FROM `album_disk` WHERE `album_id` = ? AND `disk` = ? AND `catalog` = ? AND `disksubtitle` = ?;", [$album_id, $disk, $catalog_id, $disksubtitle ?: null, $current_id]);
+                    if ($row = Dba::fetch_assoc($db_results)) {
+                        $current_id = (int)$row['id'];
+                    }
+                }
+
+                // Update songs when you edit an album_disk object
                 if ($row['disk'] !== $disk) {
-                    // Update songs when you edit an album_disk object
                     Dba::write("UPDATE `song` SET `disk` = ? WHERE `album` = ? AND `disk` = ?;", [$disk, $album_id, $row['disk']]);
                 }
 
@@ -244,7 +251,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
         }
 
         // create the album_disk (if missing)
-        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) VALUES (?, ?, ?, ?);", [$album_id, $disk, $catalog_id, $disksubtitle]);
+        $db_results = Dba::write("REPLACE INTO `album_disk` (`album_id`, `disk`, `catalog`, `disksubtitle`) VALUES (?, ?, ?, ?);", [$album_id, $disk, $catalog_id, $disksubtitle ?: null]);
         if (!$db_results) {
             return 0;
         }

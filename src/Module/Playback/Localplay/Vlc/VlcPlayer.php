@@ -338,7 +338,7 @@ class VlcPlayer
     public function clear_playlist(): bool
     {
         $args    = ['command' => 'pl_empty'];
-        $results = $this->sendcommand('status.xml?', $args);
+        $results = $this->sendCommand('status.xml?', $args);
         if ($results === null) {
             return false;
         }

@@ -117,7 +117,7 @@ Searching 'anywhere' searches song title, song filename, song genre, album title
 | myplayedartist           | Played by Me (Artist)                   | boolean           |                              song, album                              |
 | album_count              | Album Count                             | numeric           |                                artist                                 |
 | song_count               | Song Count                              | numeric           |                             album, artist                             |
-| disk_count               | Song Count                              | numeric           |                                album                                  |
+| disk_count               | Song Count                              | numeric           |                                 album                                 |
 | time                     | Length (in minutes)                     | numeric           |             song, album, artist, podcast, podcast_episode             |
 | genre                    | Genre                                   | tags              |                          song, album, artist                          |
 | tag                      | (*Alias of genre)                       |                   |                                                                       |
@@ -236,3 +236,4 @@ Artist `https://music.com.au/server/xml.server.php?action=advanced_search&auth=e
 Album `https://music.com.au/server/xml.server.php?action=advanced_search&auth=eeb9f1b6056246a7d563f479f518bb34&operator=or&type=album&offset=0&limit=4&random=0&rule_1=favorite&rule_1_operator=0&rule_1_input=%25&rule_2=artist&rule_2_operator=0&rule_2_input=Men`
 
 Song `https://music.com.au/server/xml.server.php?action=advanced_search&auth=eeb9f1b6056246a7d563f479f518bb34&operator=or&type=song&offset=0&limit=4&random=0&rule_1=favorite&rule_1_operator=0&rule_1_input=%25&rule_2=title&rule_2_operator=2&rule_2_input=Dance`
+

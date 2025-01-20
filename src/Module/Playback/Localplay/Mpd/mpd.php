@@ -237,7 +237,7 @@ class mpd
             return;
         }
 
-        $response = $this->Connect();
+        $response = $this->connect();
         if (!$response) {
             $this->_error('construct', 'Could not connect');
 
@@ -371,7 +371,7 @@ class mpd
             $this->RefreshInfo();
         }
 
-        return ($response_string) ? $response_string : true;
+        return $response_string ?: true;
     }
 
     /**

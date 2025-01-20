@@ -46,6 +46,12 @@ $ui->show(
     ['type' => $browse_type]
 ); ?>
 <?php Ajax::start_container('tag_filter'); ?>
+<div class="tag_container">
+    <div class="tag_button">
+        <span id="click_tag_no_genre"><?php echo scrub_out('[' . T_('No Genre') . ']'); ?></span>
+        <?php echo Ajax::observe('click_tag_no_genre', 'click', Ajax::action('?page=browse&action=browse&browse_id=' . $browse->id . '&key=no_genre&tag=-1', '')); ?>
+    </div>
+</div>
 <?php foreach ($object_ids as $data) { ?>
     <div class="tag_container">
         <div class="tag_button">

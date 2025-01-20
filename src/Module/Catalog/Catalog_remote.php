@@ -296,7 +296,7 @@ class Catalog_remote extends Catalog
 
         // Get the song count, etc.
         $remote_catalog_info = $remote_handle->info();
-        if (!$remote_catalog_info instanceof simpleXMLElement) {
+        if (!$remote_catalog_info instanceof SimpleXMLElement) {
             return 0;
         }
 
@@ -327,10 +327,10 @@ class Catalog_remote extends Catalog
             try {
                 $songs = $remote_handle->send_command('songs', ['offset' => $start, 'limit' => $step]);
                 // Iterate over the songs we retrieved and insert them
-                if ($songs instanceof simpleXMLElement && $songs->song->count() > 0) {
+                if ($songs instanceof SimpleXMLElement && $songs->song->count() > 0) {
                     foreach ($songs->song as $song) {
                         if (
-                            !$song instanceof simpleXMLElement ||
+                            !$song instanceof SimpleXMLElement ||
                             !$song->url
                         ) {
                             continue;
@@ -433,7 +433,7 @@ class Catalog_remote extends Catalog
             try {
                 $song = $remote_handle->send_command('url_to_song', ['url' => $row['file']]);
                 if (
-                    $song instanceof simpleXMLElement &&
+                    $song instanceof SimpleXMLElement &&
                     count($song) == 1
                 ) {
                     debug_event('remote.catalog', 'keeping song', 5);

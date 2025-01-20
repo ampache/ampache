@@ -76,6 +76,22 @@ final class TagSearch implements SearchInterface
                     }
                     $parameters[] = $input;
                     break;
+                case 'artist_count':
+                    $where[]      = "`tag`.`artist` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'album_count':
+                    $where[]      = "`tag`.`album` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'song_count':
+                    $where[]      = "`tag`.`song` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
+                case 'video_count':
+                    $where[]      = "`tag`.`video` $operator_sql ?";
+                    $parameters[] = $input;
+                    break;
                 default:
                     debug_event(self::class, 'ERROR! rule not found: ' . $rule[0], 3);
                     break;

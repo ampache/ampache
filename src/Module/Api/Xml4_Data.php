@@ -407,9 +407,8 @@ class Xml4_Data
         $string = "<total_count>" . count($tags) . "</total_count>\n";
 
         foreach ($tags as $tag_id) {
-            $tag    = new Tag($tag_id);
-            $counts = $tag->count();
-            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . (int) ($counts['album'] ?? 0) . "</albums>\n\t<artists>" . (int) ($counts['artist'] ?? 0) . "</artists>\n\t<songs>" . (int) ($counts['song'] ?? 0) . "</songs>\n\t<videos>" . (int) ($counts['video'] ?? 0) . "</videos>\n\t<playlists>" . (int) ($counts['playlist'] ?? 0) . "</playlists>\n\t<stream>" . (int) ($counts['live_stream'] ?? 0) . "</stream>\n</tag>\n";
+            $tag = new Tag($tag_id);
+            $string .= "<tag id=\"$tag_id\">\n\t<name><![CDATA[" . $tag->name . "]]></name>\n\t<albums>" . $tag->album . "</albums>\n\t<artists>" . $tag->artist . "</artists>\n\t<songs>" . $tag->song . "</songs>\n\t<videos>" . $tag->video . "</videos>\n\t<playlists>0</playlists>\n\t<stream>0</stream>\n</tag>\n";
         } // end foreach
 
         return Xml_Data::output_xml($string);
