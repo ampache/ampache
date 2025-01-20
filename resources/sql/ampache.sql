@@ -17,10 +17,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 192.168.1.20
--- Generation Time: Dec 05, 2024 at 11:44 PM
--- Server version: 10.11.6-MariaDB-0+deb12u1-log
--- PHP Version: 8.3.14
+-- Host: 192.168.1.9
+-- Generation Time: Jan 20, 2025 at 01:05 AM
+-- Server version: 11.4.4-MariaDB-3
+-- PHP Version: 8.3.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1356,6 +1356,10 @@ CREATE TABLE IF NOT EXISTS `tag` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `is_hidden` tinyint(1) NOT NULL DEFAULT 0,
+  `artist` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `album` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `song` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `video` int(11) UNSIGNED NOT NULL DEFAULT 0,
   UNIQUE KEY `name` (`name`),
   KEY `map_id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1371,7 +1375,7 @@ CREATE TABLE IF NOT EXISTS `tag_map` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) UNSIGNED NOT NULL,
   `object_id` int(11) UNSIGNED NOT NULL,
-  `object_type` varchar(16) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `object_type` enum('album','album_disk','artist','catalog','tag','label','live_stream','playlist','podcast','podcast_episode','search','song','user','video') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `user` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_tag_map` (`object_id`,`object_type`,`user`,`tag_id`)
@@ -1459,7 +1463,7 @@ CREATE TABLE IF NOT EXISTS `update_info` (
 --
 
 INSERT INTO `update_info` (`key`, `value`) VALUES
-('db_version', '710006'),
+('db_version', '720001'),
 ('Plugin_Last.FM', '000005'),
 ('Plugin_Home Dashboard', '2');
 
