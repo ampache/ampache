@@ -898,6 +898,7 @@ class Ui implements UiInterface
             case 'show_lyrics':
             case 'show_original_year':
             case 'show_played_times':
+            case 'show_playlist_media_parent':
             case 'show_playlist_username':
             case 'show_skipped_times':
             case 'show_subtitle':
