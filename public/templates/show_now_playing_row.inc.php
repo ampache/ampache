@@ -66,7 +66,7 @@ if ($np_user->f_avatar_medium) {
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Artist'); ?></label>
-        <?php echo $media->get_f_artist_link(); ?>
+        <?php echo $media->get_f_parent_link(); ?>
     </div>
     <div class="np_cell cel_left">
         <label><?php echo T_('Year'); ?></label>
