@@ -46,6 +46,7 @@ $seconds        = $browse->duration;
 $duration       = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
 $show_ratings   = User::is_registered() && (AmpConfig::get('ratings'));
 $hide_genres    = AmpConfig::get('hide_genres');
+$show_parent    = AmpConfig::get('show_playlist_media_parent', false);
 $extended_links = AmpConfig::get('extended_playlist_links', false);
 $is_table       = !$browse->is_grid_view();
 // mashup and grid view need different css
@@ -61,6 +62,15 @@ $t_artist   = T_('Artist');
 $t_time     = T_('Time');
 $t_rating   = T_('Rating');
 $t_action   = T_('Action');
+// don't translate media row text for every row
+$t_play        = T_('Play');
+$t_play_next   = T_('Play next');
+$t_play_last   = T_('Play last');
+$t_add_to_temp = T_('Add to Temporary Playlist');
+$t_add_to_list = T_('Add to playlist');
+$t_download    = T_('Download');
+$t_delete      = T_('Delete');
+$t_reorder     = T_('Reorder');
 if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
     echo '<span class="item-duration">' . '| ' . $t_duration . ': ' . $duration . '</span>';
@@ -72,7 +82,7 @@ if ($browse->is_show_header()) {
                 <th class="cel_play essential"></th>
                 <th class="<?php echo $cel_cover; ?> optional"><?php echo $t_art; ?></th>
                 <th class="cel_title essential persist"><?php echo $t_title; ?></th>
-                <?php if (!$extended_links) { ?>
+                <?php if ($show_parent) { ?>
                 <th class="cel_artist essential persist"><?php echo $t_artist; ?></th>
                 <?php } ?>
                 <th class="cel_add essential"></th>
@@ -114,7 +124,7 @@ if ($browse->is_show_header()) {
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
                 <th class="<?php echo $cel_cover; ?>"><?php echo $t_art; ?></th>
                 <th class="cel_title"><?php echo $t_title; ?></th>
-                <?php if (!$extended_links) { ?>
+                <?php if ($show_parent) { ?>
                 <th class="cel_artist essential persist"><?php echo $t_artist; ?></th>
                 <?php } ?>
                 <th class="cel_add"></th>
