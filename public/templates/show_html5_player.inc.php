@@ -240,6 +240,9 @@ echo implode(',', $solutions); ?>",
                         var currentobject = 'song_id'
                     }
 
+                    obj.title = obj.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    obj.artist = obj.artist.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
                     <?php if (!$isVideo && !$isRadio && !$isShare) {
                         if ($iframed) {
                             if (AmpConfig::get('sociable')) {
