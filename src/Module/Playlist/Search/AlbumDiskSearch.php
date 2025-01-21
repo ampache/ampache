@@ -84,6 +84,7 @@ final class AlbumDiskSearch implements SearchInterface
                     } else {
                         $where[] = "`album`.`" . $rule[0] . "` $operator_sql ?";
                     }
+                    $parameters[] = $input;
                     break;
                 case 'catalog':
                 case 'year':
