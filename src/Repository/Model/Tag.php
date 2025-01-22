@@ -817,6 +817,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
+        $change       = false;
         $current_tags = self::get_top_tags($object_type, $object_id, 50);
         foreach ($current_tags as $ctv) {
             $found = false;
@@ -855,6 +856,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 ) {
                     debug_event(self::class, 'update_tag_list delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);
+                    $change = true;
                 }
             }
         }
@@ -864,10 +866,11 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             if ($tv != '') {
                 debug_event(self::class, 'update_tag_list add {' . $tv . '}', 5);
                 self::add($object_type, $object_id, $tv, false);
+                $change = true;
             }
         }
 
-        return true;
+        return $change;
     }
 
     /**
