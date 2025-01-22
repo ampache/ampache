@@ -817,14 +817,17 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
-        $ctags = self::get_top_tags($object_type, $object_id, 50);
-        foreach ($ctags as $ctv) {
-            //debug_event(self::class, 'ctag {' . $ctid . '} = ' . print_r($ctv, true), 5);
+        $current_tags = self::get_top_tags($object_type, $object_id, 50);
+        foreach ($current_tags as $ctv) {
             $found = false;
             if ($ctv['id'] != '') {
                 $ctag = new Tag($ctv['id']);
+                if ($ctag->isNew()) {
+                    continue;
+                }
+
+                //debug_event(self::class, 'update_tag_list current_tag ' . print_r($ctv, true), 5);
                 foreach ($editedTags as $tv) {
-                    //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
                     if (strtolower((string)$ctag->name) === strtolower($tv)) {
                         $found = true;
                         break;
@@ -839,11 +842,18 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 if ($found) {
-                    unset($editedTags[$ctag->id]);
+                    //debug_event(self::class, 'from_tags matched id {' . $ctag->id . '} = ' . $tv, 5);
+                    if (($key = array_search($tv, $editedTags)) !== false) {
+                        unset($editedTags[$key]);
+                    }
                 }
 
-                if (!$found && $overwrite && $ctv['user'] == 0) {
-                    debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
+                if (
+                    !$found &&
+                    $overwrite &&
+                    $ctv['user'] == 0
+                ) {
+                    debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it. ' . $object_type . ': ' . $object_id, 5);
                     $ctag->remove_map($object_type, $object_id, false);
                 }
             }
@@ -852,6 +862,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Look if we need to add some new tags
         foreach ($editedTags as $tv) {
             if ($tv != '') {
+                debug_event(self::class, 'update_tag_list {' . $tv . '} missing. Add it. ' . $object_type . ': ' . $object_id, 5);
                 self::add($object_type, $object_id, $tv, false);
             }
         }
