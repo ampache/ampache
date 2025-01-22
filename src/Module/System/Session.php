@@ -371,7 +371,7 @@ final class Session implements SessionInterface
 
         /* Insert the row */
         $sql        = 'INSERT INTO `session` (`id`, `username`, `ip`, `type`, `agent`, `value`, `expire`, `geo_latitude`, `geo_longitude`, `geo_name`) ' . 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        $db_results = Dba::write($sql, [$key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname]);
+        $db_results = Dba::write($sql, [$key, $username, $s_ip, $type, $agent, $value, $expire, $latitude, $longitude, $geoname], ($type === 'stream'));
 
         if (!$db_results) {
             debug_event(self::class, 'Session creation failed', 1);
