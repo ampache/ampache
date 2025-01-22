@@ -2403,8 +2403,10 @@ abstract class Catalog extends database_object
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
             $genres = self::getSongTags('album', $libitem->id);
-            Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true);
-            if ($artist || $album || $tags || $maps) {
+            if (
+                Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true) ||
+                $artist || $album || $tags || $maps
+            ) {
                 $artists = [];
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
