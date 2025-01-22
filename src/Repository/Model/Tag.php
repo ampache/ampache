@@ -842,7 +842,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 if ($found) {
-                    //debug_event(self::class, 'from_tags matched id {' . $ctag->id . '} = ' . $tv, 5);
+                    //debug_event(self::class, 'update_tag_list matched {' . $ctag->id . '} to ' . $tv, 5);
                     if (($key = array_search($tv, $editedTags)) !== false) {
                         unset($editedTags[$key]);
                     }
@@ -853,7 +853,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     $overwrite &&
                     $ctv['user'] == 0
                 ) {
-                    debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it. ' . $object_type . ': ' . $object_id, 5);
+                    debug_event(self::class, 'update_tag_list delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);
                 }
             }
@@ -862,7 +862,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Look if we need to add some new tags
         foreach ($editedTags as $tv) {
             if ($tv != '') {
-                debug_event(self::class, 'update_tag_list {' . $tv . '} missing. Add it. ' . $object_type . ': ' . $object_id, 5);
+                debug_event(self::class, 'update_tag_list add {' . $tv . '}', 5);
                 self::add($object_type, $object_id, $tv, false);
             }
         }
