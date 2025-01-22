@@ -27,7 +27,6 @@ namespace Ampache\Repository\Model;
 
 use Ampache\Plugin\AmpacheDiscogs;
 use Ampache\Plugin\AmpacheTheaudiodb;
-use WpOrg\Requests\Autoload;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\Art\ArtCleanupInterface;
 use Ampache\Module\Art\Collector\MetaTagCollectorModule;
@@ -41,8 +40,9 @@ use Ampache\Module\Util\UtilityFactoryInterface;
 use Ampache\Module\Util\InterfaceImplementationChecker;
 use Ampache\Module\System\Core;
 use Ampache\Repository\SongRepositoryInterface;
+use WpOrg\Requests\Autoload;
+use WpOrg\Requests\Requests;
 use Exception;
-use WpOrg\Requests;
 use RuntimeException;
 
 /**
@@ -1043,7 +1043,7 @@ class Art extends database_object
             try {
                 $options['timeout'] = 10;
                 Autoload::register();
-                $request = Requests\Requests::get($data['url'], [], Core::requests_options($options));
+                $request = Requests::get($data['url'], [], Core::requests_options($options));
                 $raw     = $request->body;
             } catch (Exception $error) {
                 debug_event(self::class, 'Error getting art: ' . $error->getMessage(), 2);
