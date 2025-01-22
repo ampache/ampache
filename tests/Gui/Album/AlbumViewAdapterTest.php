@@ -246,7 +246,7 @@ class AlbumViewAdapterTest extends MockeryTestCase
 
         $this->album->f_artist_link = $value;
 
-        $this->album->shouldReceive('get_f_artist_link')
+        $this->album->shouldReceive('get_f_parent_link')
             ->withNoArgs()
             ->once()
             ->andReturn($value);

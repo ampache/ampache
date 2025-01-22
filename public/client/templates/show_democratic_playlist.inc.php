@@ -104,7 +104,7 @@ if (empty($object_ids) && isset($democratic->base_playlist)) {
     <td class="cel_votes" ><?php echo scrub_out((string) $democratic->get_vote($item['track_id'])); ?></td>
     <td class="cel_title"><?php echo $media->get_f_link(); ?></td>
     <td class="cel_album"><?php echo ($showAlbum) ? $media->get_f_album_link() : $media->get_f_album_disk_link(); ?></td>
-    <td class="cel_artist"><?php echo $media->get_f_artist_link(); ?></td>
+    <td class="cel_artist"><?php echo $media->get_f_parent_link(); ?></td>
     <td class="cel_time"><?php echo $media->f_time; ?></td>
     <?php if ($access100) { ?>
     <td class="cel_admin">

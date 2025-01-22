@@ -38,6 +38,12 @@ use Ampache\Module\Util\Ui;
 /** @var User $libitem */
 /** @var string $last_seen */
 /** @var string $create_date */
+/** @var string $t_send_pm */
+/** @var string $t_edit */
+/** @var string $t_preferences */
+/** @var string $t_enable */
+/** @var string $t_disable */
+/** @var string $t_delete */
 ?>
     <td class="cel_username">
         <a href="<?php echo $web_path; ?>/stats.php?action=show_user&user_id=<?php echo $libitem->id; ?>">
@@ -73,26 +79,26 @@ if (Core::get_global('user') instanceof User && Access::check(AccessTypeEnum::IN
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::USER) && AmpConfig::get('sociable')) { ?>
             <a id="<?php echo 'reply_pvmsg_' . $libitem->id; ?>" href="<?php echo AmpConfig::get_web_path('/client'); ?>/pvmsg.php?action=show_add_message&to_user=<?php echo urlencode((string)$libitem->username); ?>">
-                <?php echo Ui::get_material_symbol('mail', T_('Send private message')); ?>
+                <?php echo Ui::get_material_symbol('mail', $t_send_pm); ?>
             </a>
         <?php } ?>
     <?php
 if (Access::check(AccessTypeEnum::INTERFACE, AccessLevelEnum::ADMIN)) { ?>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_edit&user_id=<?php echo $libitem->id; ?>">
-                <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+                <?php echo Ui::get_material_symbol('edit', $t_edit); ?>
             </a>
             <a href="<?php echo $admin_path; ?>/users.php?action=show_preferences&user_id=<?php echo $libitem->id; ?>">
-                <?php echo Ui::get_material_symbol('page_info', T_('Preferences')); ?>
+                <?php echo Ui::get_material_symbol('page_info', $t_preferences); ?>
             </a>
         <?php
     // FIXME: Fix this for the extra permission levels
     if ($libitem->disabled == '1') {
-        echo "<a href=\"" . $admin_path . "/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('person', T_('Enable')) . "</a>";
+        echo "<a href=\"" . $admin_path . "/users.php?action=enable&user_id=$libitem->id\">" . Ui::get_material_symbol('person', $t_enable) . "</a>";
     } else {
-        echo "<a href=\"" . $admin_path . "/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('person_off', T_('Disable')) . "</a>";
+        echo "<a href=\"" . $admin_path . "/users.php?action=disable&user_id=$libitem->id\">" . Ui::get_material_symbol('person_off', $t_disable) . "</a>";
     } ?>
         <a href="<?php echo $admin_path; ?>/users.php?action=delete&user_id=<?php echo $libitem->id; ?>">
-            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', $t_delete); ?>
         </a>
         <?php } ?>
     </td>

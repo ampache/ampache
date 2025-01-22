@@ -52,7 +52,7 @@ $web_path = AmpConfig::get_web_path('/client');
 $f_album_name = (string)$album->get_artist_fullname();
 $f_name       = (string)$album->get_fullname(false, true);
 $title        = ($album->album_artist > 0)
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_artist_link())
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . ((string)$album->get_f_parent_link())
     : scrub_out($f_name);
 
 $current_user         = Core::get_global('user');

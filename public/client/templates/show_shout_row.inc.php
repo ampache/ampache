@@ -33,19 +33,23 @@ use Ampache\Repository\Model\User;
 /** @var User $client */
 /** @var string $web_path */
 /** @var string $admin_path */
+/** @var string $t_edit */
+/** @var string $t_delete */
+/** @var string $t_yes */
+/** @var string $t_no */
 ?>
 <tr id="flagged_<?php echo $libitem->getId(); ?>">
     <td class="cel_object"><?php echo $object->get_f_link(); ?></td>
     <td class="cel_username"><?php echo $client->get_f_link(); ?></td>
-    <td class="cel_sticky"><?php echo $libitem->isSticky() ? T_('Yes') : T_('No'); ?></td>
+    <td class="cel_sticky"><?php echo $libitem->isSticky() ? $t_yes : $t_no; ?></td>
     <td class="cel_comment"><?php echo scrub_out($libitem->getText()); ?></td>
     <td class="cel_date"><?php echo get_datetime($libitem->getDate()); ?></td>
     <td class="cel_action">
         <a href="<?php echo $admin_path; ?>/shout.php?action=show_edit&shout_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_material_symbol('edit', T_('Edit')); ?>
+            <?php echo Ui::get_material_symbol('edit', $t_edit); ?>
         </a>
         <a href="<?php echo $admin_path; ?>/shout.php?action=delete&shout_id=<?php echo $libitem->getId(); ?>">
-            <?php echo Ui::get_material_symbol('close', T_('Delete')); ?>
+            <?php echo Ui::get_material_symbol('close', $t_delete); ?>
         </a>
     </td>
 </tr>

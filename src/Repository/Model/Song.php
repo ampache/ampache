@@ -1656,7 +1656,7 @@ class Song extends database_object implements
 
         // Create Links for the different objects
         $this->get_f_link();
-        $this->get_f_artist_link();
+        $this->get_f_parent_link();
         $this->get_f_albumartist_link();
         $this->get_f_album_link();
 

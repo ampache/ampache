@@ -63,7 +63,7 @@ $web_path = AmpConfig::get_web_path('/client');
 $simple   = $album->get_fullname(true);
 $f_name   = $album->get_fullname(false, true);
 $title    = ($album->album_artist !== null)
-    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_artist_link()
+    ? scrub_out($f_name) . '&nbsp;-&nbsp;' . $album->get_f_parent_link()
     : scrub_out($f_name);
 
 $show_direct_play  = AmpConfig::get('directplay');

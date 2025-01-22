@@ -355,7 +355,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
         $songprops = [];
 
         $songprops[T_('Title')]        = scrub_out($this->song->title);
-        $songprops[T_('Song Artist')]  = $this->song->get_f_artist_link();
+        $songprops[T_('Song Artist')]  = $this->song->get_f_parent_link();
         $songprops[T_('Album Artist')] = $this->song->get_f_albumartist_link();
         if ($this->configContainer->isFeatureEnabled(ConfigurationKeyEnum::ALBUM_GROUP)) {
             $songprops[T_('Album')] = $this->song->get_f_album_link();
@@ -513,7 +513,7 @@ final readonly class SongViewAdapter implements SongViewAdapterInterface
 
     public function getArtistLink(): string
     {
-        return (string)$this->song->get_f_artist_link();
+        return (string)$this->song->get_f_parent_link();
     }
 
     public function getAlbumLink(): string

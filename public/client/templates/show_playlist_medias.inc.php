@@ -40,35 +40,57 @@ $libraryItemLoader = $dic->get(LibraryItemLoaderInterface::class);
 /** @var bool $argument */
 
 // playlists and searches come from the same 'playlist_media' browse but you can't reorder a search
-$playlist_id  = $playlist->id ?? '';
-$web_path     = AmpConfig::get_web_path('/client');
-$seconds      = $browse->duration;
-$duration     = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
-$show_ratings = User::is_registered() && (AmpConfig::get('ratings'));
-$hide_genres  = AmpConfig::get('hide_genres');
-$is_table     = !$browse->is_grid_view();
-//mashup and grid view need different css
+$playlist_id    = $playlist->id ?? '';
+$web_path       = AmpConfig::get_web_path('/client');
+$seconds        = $browse->duration;
+$duration       = floor($seconds / 3600) . gmdate(":i:s", $seconds % 3600);
+$show_ratings   = User::is_registered() && (AmpConfig::get('ratings'));
+$hide_genres    = AmpConfig::get('hide_genres');
+$show_parent    = AmpConfig::get('show_playlist_media_parent', false);
+$extended_links = AmpConfig::get('extended_playlist_links', false);
+$is_table       = !$browse->is_grid_view();
+// mashup and grid view need different css
 $cel_cover = ($is_table) ? "cel_cover" : 'grid_cover';
 $cel_time  = ($is_table) ? "cel_time" : 'grid_time';
 $css_class = ($is_table) ? '' : ' gridview';
-$count     = 1; ?>
-<?php if ($browse->is_show_header()) {
+$count     = 1;
+// Translations
+$t_duration = T_('Duration');
+$t_art      = T_('Art');
+$t_title    = T_('Title');
+$t_artist   = T_('Artist');
+$t_time     = T_('Time');
+$t_rating   = T_('Rating');
+$t_action   = T_('Action');
+// don't translate media row text for every row
+$t_play        = T_('Play');
+$t_play_next   = T_('Play next');
+$t_play_last   = T_('Play last');
+$t_add_to_temp = T_('Add to Temporary Playlist');
+$t_add_to_list = T_('Add to playlist');
+$t_download    = T_('Download');
+$t_delete      = T_('Delete');
+$t_reorder     = T_('Reorder');
+if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
-    echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
+    echo '<span class="item-duration">' . '| ' . $t_duration . ': ' . $duration . '</span>';
 } ?>
     <form method="post" id="reorder_playlist_<?php echo $playlist_id; ?>">
         <table id="reorder_playlist_table" class="tabledata striped-rows <?php echo $css_class; ?>" data-objecttype="media" data-offset="<?php echo $browse->get_start(); ?>">
             <thead>
             <tr class="th-top">
                 <th class="cel_play essential"></th>
-                <th class="<?php echo $cel_cover; ?> optional"><?php echo T_('Art'); ?></th>
-                <th class="cel_title essential persist"><?php echo T_('Title'); ?></th>
+                <th class="<?php echo $cel_cover; ?> optional"><?php echo $t_art; ?></th>
+                <th class="cel_title essential persist"><?php echo $t_title; ?></th>
+                <?php if ($show_parent) { ?>
+                <th class="cel_artist essential persist"><?php echo $t_artist; ?></th>
+                <?php } ?>
                 <th class="cel_add essential"></th>
-                <th class="<?php echo $cel_time; ?> optional"><?php echo T_('Time'); ?></th>
+                <th class="<?php echo $cel_time; ?> optional"><?php echo $t_time; ?></th>
                 <?php if ($show_ratings) { ?>
-                    <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-                    <?php } ?>
-                <th class="cel_action essential"><?php echo T_('Action'); ?></th>
+                <th class="cel_ratings optional"><?php echo $t_rating; ?></th>
+                <?php } ?>
+                <th class="cel_action essential"><?php echo $t_action; ?></th>
                 <th class="cel_drag essential"></th>
             </tr>
             </thead>
@@ -100,14 +122,17 @@ $count     = 1; ?>
             <tfoot>
             <tr class="th-bottom">
                 <th class="cel_play"><?php echo T_('Play'); ?></th>
-                <th class="<?php echo $cel_cover; ?>"><?php echo T_('Art'); ?></th>
-                <th class="cel_title"><?php echo T_('Title'); ?></th>
+                <th class="<?php echo $cel_cover; ?>"><?php echo $t_art; ?></th>
+                <th class="cel_title"><?php echo $t_title; ?></th>
+                <?php if ($show_parent) { ?>
+                <th class="cel_artist essential persist"><?php echo $t_artist; ?></th>
+                <?php } ?>
                 <th class="cel_add"></th>
-                <th class="<?php echo $cel_time; ?>"><?php echo T_('Time'); ?></th>
+                <th class="<?php echo $cel_time; ?>"><?php echo $t_time; ?></th>
                 <?php if ($show_ratings) { ?>
-                    <th class="cel_ratings optional"><?php echo T_('Rating'); ?></th>
-                    <?php } ?>
-                <th class="cel_action"><?php echo T_('Action'); ?></th>
+                    <th class="cel_ratings optional"><?php echo $t_rating; ?></th>
+                <?php } ?>
+                <th class="cel_action"><?php echo $t_action; ?></th>
                 <th class="cel_drag"></th>
             </tr>
             </tfoot>
@@ -116,5 +141,5 @@ $count     = 1; ?>
 <?php show_table_render($argument); ?>
 <?php if ($browse->is_show_header()) {
     require Ui::find_template('list_header.inc.php');
-    echo '<span class="item-duration">' . '| ' . T_('Duration') . ': ' . $duration . '</span>';
+    echo '<span class="item-duration">' . '| ' . $t_duration . ': ' . $duration . '</span>';
 } ?>
