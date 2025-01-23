@@ -838,7 +838,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     continue;
                 }
 
-                //debug_event(self::class, 'update_tag_list current_tag ' . print_r($ctv, true), 5);
+                //debug_event(self::class, 'update_tag_list' . $object_type . 'current_tag ' . print_r($ctv, true), 5);
                 foreach ($editedTags as $tv) {
                     if (strtolower((string)$ctag->name) === strtolower($tv)) {
                         $found = true;
@@ -854,7 +854,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 if ($found) {
-                    //debug_event(self::class, 'update_tag_list matched {' . $ctag->id . '} to ' . $tv, 5);
+                    //debug_event(self::class, 'update_tag_list' . $object_type . 'matched {' . $ctag->id . '} to ' . $tv, 5);
                     if (($key = array_search($tv, $editedTags)) !== false) {
                         unset($editedTags[$key]);
                     }
@@ -865,7 +865,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                     $overwrite &&
                     $ctv['user'] == 0
                 ) {
-                    debug_event(self::class, 'update_tag_list delete {' . $ctag->name . '}', 5);
+                    debug_event(self::class, 'update_tag_list' . $object_type . 'delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);
                     $change = true;
                 }
@@ -875,7 +875,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Look if we need to add some new tags
         foreach ($editedTags as $tv) {
             if ($tv != '') {
-                debug_event(self::class, 'update_tag_list add {' . $tv . '}', 5);
+                debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tv . '}', 5);
                 self::add($object_type, $object_id, $tv, false);
                 $change = true;
             }
