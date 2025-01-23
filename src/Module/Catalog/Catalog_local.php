@@ -633,6 +633,9 @@ class Catalog_local extends Catalog
             $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), 10000);
             $chunk++;
             $count++;
+            if ($catalog_media_type == 'music') {
+                Catalog::clean_empty_albums();
+            }
         }
         if ($media_type === 'song') {
             Album::update_table_counts();
