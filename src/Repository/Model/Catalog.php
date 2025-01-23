@@ -2951,6 +2951,7 @@ abstract class Catalog extends database_object
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
                 self::migrate('album', $song->album, $new_song->album, $song->id);
+                $song->album = $new_song->album;
             }
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
