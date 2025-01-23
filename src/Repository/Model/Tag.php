@@ -270,7 +270,9 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
 
         if ($is_hidden !== $this->is_hidden) {
             debug_event(self::class, 'Hidden tag {' . $this->id . '} with status {' . $is_hidden . '}...', 5);
-            $sql = 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
+            $sql = ($is_hidden == 1 && $this->is_hidden == 0)
+                ? 'UPDATE `tag` SET `is_hidden` = ?, `artist` = 0, `album` = 0, `song` = 0 WHERE `id` = ?'
+                : 'UPDATE `tag` SET `is_hidden` = ? WHERE `id` = ?';
             Dba::write($sql, [$is_hidden, $this->id]);
             // if you had previously hidden this tag then remove the merges too
             if ($is_hidden == 0 && $this->is_hidden == 1) {
@@ -464,21 +466,30 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
      */
     public static function garbage_collection(): void
     {
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL");
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL");
-        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL");
+        // Remove maps for objects that no longer exist
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `song` ON `song`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='song' AND `song`.`id` IS NULL;");
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `album` ON `album`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='album' AND `album`.`id` IS NULL;");
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `artist` ON `artist`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='artist' AND `artist`.`id` IS NULL;");
+        Dba::write("DELETE FROM `tag_map` USING `tag_map` LEFT JOIN `video` ON `video`.`id`=`tag_map`.`object_id` WHERE `tag_map`.`object_type`='video' AND `video`.`id` IS NULL;");
+        // Hidden tags are not associated with an object anymore
+        Dba::write("DELETE FROM `tag_map` WHERE `tag_id` IN (SELECT `id` FROM `tag` WHERE `is_hidden` = 1)");
 
-        // Now nuke the tags themselves
-        Dba::write("DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`)");
+        // Now nuke the empty tags (Keep hidden tags)
+        Dba::write("DELETE FROM `tag` USING `tag` LEFT JOIN `tag_map` ON `tag`.`id`=`tag_map`.`tag_id` WHERE `tag_map`.`id` IS NULL AND `is_hidden` = 0 AND NOT EXISTS (SELECT 1 FROM `tag_merge` WHERE `tag_merge`.`tag_id` = `tag`.`id`);");
 
         // delete duplicates
-        Dba::write("DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`");
+        Dba::write("DELETE `b` FROM `tag_map` AS `a`, `tag_map` AS `b` WHERE `a`.`id` < `b`.`id` AND `a`.`tag_id` <=> `b`.`tag_id` AND `a`.`object_id` <=> `b`.`object_id` AND `a`.`object_type` <=> `b`.`object_type`;");
 
         // recount all the (currently) valid object types
         Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'album' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`album` = `tag_count`.`tag_count` WHERE `tag`.`album` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
         Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'artist' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`artist` = `tag_count`.`tag_count` WHERE `tag`.`artist` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
         Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'song' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`song` = `tag_count`.`tag_count` WHERE `tag`.`song` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
         Dba::write("UPDATE `tag`, (SELECT `tag_id`, COUNT(`tag_id`) AS `tag_count` FROM `tag_map` WHERE `object_type` = 'video' GROUP BY `tag_id`) AS `tag_count` SET `tag`.`video` = `tag_count`.`tag_count` WHERE `tag`.`video` != `tag_count`.`tag_count` AND `tag_count`.`tag_id` = `tag`.`id`;");
+        // reset tags without an object in tag_map
+        Dba::write("UPDATE `tag` SET `tag`.`artist` = 0 WHERE `tag`.`artist` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'artist');");
+        Dba::write("UPDATE `tag` SET `tag`.`album` = 0 WHERE `tag`.`album` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'album');");
+        Dba::write("UPDATE `tag` SET `tag`.`song` = 0 WHERE `tag`.`song` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'song');");
+        Dba::write("UPDATE `tag` SET `tag`.`video` = 0 WHERE `tag`.`video` != 0 AND `tag`.`id` NOT IN (SELECT `tag_map`.`tag_id` FROM `tag_map` WHERE `tag_map`.`object_type` = 'video');");
     }
 
     /**
@@ -809,7 +820,7 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
             return self::remove_all_map($object_type, $object_id);
         }
 
-        debug_event(self::class, sprintf('update_tag_list %s: {%d}', $object_type, $object_id), 5);
+        debug_event(self::class, sprintf('update_tag_list %s {%d}', $object_type, $object_id), 5);
         // tags from your file can be in a terrible format
         $filterfolk  = str_replace('Folk, World, & Country', 'Folk World & Country', $tags_comma);
         $filterunder = str_replace('_', ', ', $filterfolk);
@@ -817,14 +828,18 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         $filter_list = preg_split('/(\s*,*\s*)*,+(\s*,*\s*)*/', $filter);
         $editedTags  = (is_array($filter_list)) ? array_unique($filter_list) : [];
 
-        $ctags = self::get_top_tags($object_type, $object_id, 50);
-        foreach ($ctags as $ctv) {
-            //debug_event(self::class, 'ctag {' . $ctid . '} = ' . print_r($ctv, true), 5);
+        $change       = false;
+        $current_tags = self::get_top_tags($object_type, $object_id, 50);
+        foreach ($current_tags as $ctv) {
             $found = false;
             if ($ctv['id'] != '') {
                 $ctag = new Tag($ctv['id']);
+                if ($ctag->isNew()) {
+                    continue;
+                }
+
+                //debug_event(self::class, 'update_tag_list current_tag ' . print_r($ctv, true), 5);
                 foreach ($editedTags as $tv) {
-                    //debug_event(self::class, 'from_tags {' . $tk . '} = ' . $tv, 5);
                     if (strtolower((string)$ctag->name) === strtolower($tv)) {
                         $found = true;
                         break;
@@ -839,12 +854,20 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 if ($found) {
-                    unset($editedTags[$ctag->id]);
+                    //debug_event(self::class, 'update_tag_list matched {' . $ctag->id . '} to ' . $tv, 5);
+                    if (($key = array_search($tv, $editedTags)) !== false) {
+                        unset($editedTags[$key]);
+                    }
                 }
 
-                if (!$found && $overwrite && $ctv['user'] == 0) {
-                    debug_event(self::class, 'update_tag_list {' . $ctag->name . '} not found. Delete it.', 5);
+                if (
+                    !$found &&
+                    $overwrite &&
+                    $ctv['user'] == 0
+                ) {
+                    debug_event(self::class, 'update_tag_list delete {' . $ctag->name . '}', 5);
                     $ctag->remove_map($object_type, $object_id, false);
+                    $change = true;
                 }
             }
         }
@@ -852,11 +875,13 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         // Look if we need to add some new tags
         foreach ($editedTags as $tv) {
             if ($tv != '') {
+                debug_event(self::class, 'update_tag_list add {' . $tv . '}', 5);
                 self::add($object_type, $object_id, $tv, false);
+                $change = true;
             }
         }
 
-        return true;
+        return $change;
     }
 
     /**

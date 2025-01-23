@@ -69,9 +69,9 @@ class Song extends database_object implements
 
     public int $catalog;
 
-    public int $album;
+    public int $album = 0;
 
-    public int $album_disk;
+    public int $album_disk = 0;
 
     public ?int $disk = null;
 
@@ -267,9 +267,6 @@ class Song extends database_object implements
 
         $info = $this->has_info($song_id);
         if ($info === []) {
-            $this->album      = 0;
-            $this->album_disk = 0;
-
             return;
         }
 
