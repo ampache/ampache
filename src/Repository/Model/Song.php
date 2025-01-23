@@ -262,9 +262,6 @@ class Song extends database_object implements
     public function __construct($song_id = 0)
     {
         if (!$song_id) {
-            $this->album      = 0;
-            $this->album_disk = 0;
-
             return;
         }
 
