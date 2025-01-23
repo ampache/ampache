@@ -3877,7 +3877,7 @@ abstract class Catalog extends database_object
     protected static function updateAlbumTags(int $album_id): void
     {
         $tags = self::getSongTags('album', $album_id);
-        Tag::update_tag_list(implode(',', $tags), 'artist', $album_id, true);
+        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
     }
 
     /**
