@@ -3426,6 +3426,7 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql = "DELETE FROM `album` WHERE `id` = ?";
             Dba::write($sql, [$row['id']]);
+            debug_event(self::class, 'clean_empty_albums deleted ' . $row['id'], 5);
         }
 
         // these files have missing albums so you can't verify them without updating from tags first
