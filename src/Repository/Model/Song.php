@@ -1111,6 +1111,13 @@ class Song extends database_object implements
                 // If it's a string thing
                 $mediaData    = self::clean_string_field_value($mediaData);
                 $newMediaData = self::clean_string_field_value($newMediaData);
+
+                // tag case isn't important
+                if ($key === 'tags') {
+                    $mediaData    = strtolower($mediaData);
+                    $newMediaData = strtolower($newMediaData);
+                }
+
                 if ($mediaData !== $newMediaData) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
