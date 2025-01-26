@@ -256,7 +256,7 @@ class Subsonic_Xml_Data
      */
     public static function addOpenSubsonicExtensions($xml, $name, $versions): void
     {
-        $xextension = self::addChildToResultXml($xml, 'opensubsonicextension');
+        $xextension = self::addChildToResultXml($xml, 'openSubsonicExtensions');
         $xextension->addAttribute('name', $name);
         foreach ($versions as $version) {
             $xextension->addChild('versions', (string)$version);
