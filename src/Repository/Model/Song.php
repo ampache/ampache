@@ -274,9 +274,9 @@ class Song extends database_object implements
             $this->$key = $value;
         }
 
-        $this->id          = (int)$song_id;
-        $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
-        $this->mime        = self::type_to_mime($this->type);
+        $this->id   = (int)$song_id;
+        $this->type = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
+        $this->mime = self::type_to_mime($this->type);
     }
 
     public function getId(): int
@@ -1024,9 +1024,6 @@ class Song extends database_object implements
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
-            'album_disk',
-            'album',
-            'artist',
             'comment',
             'composer',
             'lyrics',
