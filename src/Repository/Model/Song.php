@@ -1111,16 +1111,16 @@ class Song extends database_object implements
 
                 // tag case isn't important
                 if ($key === 'tags') {
-                    $mediaData    = strtolower($mediaData);
-                    $newMediaData = strtolower($newMediaData);
-                }
-
-                if ($mediaData !== $newMediaData) {
+                    if (strtolower($mediaData) !== strtolower($newMediaData)) {
+                        $array['change']        = true;
+                        $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
+                    }
+                } elseif ($mediaData !== $newMediaData) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
             } elseif ($newMediaData !== null) {
-                // in array of strings
+                // NOT in array of strings
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
