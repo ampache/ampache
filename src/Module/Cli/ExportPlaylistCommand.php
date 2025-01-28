@@ -33,6 +33,15 @@ final class ExportPlaylistCommand extends Command
 {
     private PlaylistExporterInterface $playlistExporter;
 
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct(
         PlaylistExporterInterface $playlistExporter
     ) {

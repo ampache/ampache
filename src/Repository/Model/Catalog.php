@@ -2403,8 +2403,10 @@ abstract class Catalog extends database_object
         // Update the tags for parent items (Songs -> Albums -> Artist)
         if ($libitem instanceof Album) {
             $genres = self::getSongTags('album', $libitem->id);
-            Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true);
-            if ($artist || $album || $tags || $maps) {
+            if (
+                Tag::update_tag_list(implode(',', $genres), 'album', $libitem->id, true) ||
+                $artist || $album || $tags || $maps
+            ) {
                 $artists = [];
                 // update the album artists
                 foreach ($albumRepository->getArtistMap($libitem, 'album') as $albumArtist_id) {
@@ -2949,6 +2951,7 @@ abstract class Catalog extends database_object
             // albums changes also require album_disk changes
             if (($song->album > 0 && $new_song->album) && $song->album != $new_song->album) {
                 self::migrate('album', $song->album, $new_song->album, $song->id);
+                $song->album = $new_song->album;
             }
             if (($song->album_disk > 0 && $new_song->album_disk) && $song->album_disk != $new_song->album_disk) {
                 self::migrate('album_disk', $song->album_disk, $new_song->album_disk, $song->id);
@@ -2980,11 +2983,16 @@ abstract class Catalog extends database_object
             }
         }
 
-        if ($map_change) {
+        $info['maps'] = $map_change;
+
+        if (
+            $info['change'] ||
+            $info['maps']
+        ) {
             $info['change'] = true;
-            $info['maps']   = true;
-            self::updateArtistTags($song->id);
+            self::updateAlbumTags($song->album);
             self::updateAlbumArtistTags($song->album);
+            self::updateArtistTags($song->id);
         }
 
         return $info;
@@ -3419,6 +3427,7 @@ abstract class Catalog extends database_object
         while ($row = Dba::fetch_assoc($db_results)) {
             $sql = "DELETE FROM `album` WHERE `id` = ?";
             Dba::write($sql, [$row['id']]);
+            debug_event(self::class, 'clean_empty_albums deleted ' . $row['id'], 5);
         }
 
         // these files have missing albums so you can't verify them without updating from tags first
@@ -3864,7 +3873,16 @@ abstract class Catalog extends database_object
     }
 
     /**
-     * Updates artist tags from given song id
+     * Updates album tags from given song's album id
+     */
+    protected static function updateAlbumTags(int $album_id): void
+    {
+        $tags = self::getSongTags('album', $album_id);
+        Tag::update_tag_list(implode(',', $tags), 'album', $album_id, true);
+    }
+
+    /**
+     * Updates artist tags from given song's album id
      */
     protected static function updateArtistTags(int $song_id): void
     {

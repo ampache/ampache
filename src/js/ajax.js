@@ -188,7 +188,8 @@ export function ajaxState(url, input) {
 // Iterate over a response and do any updates we received.
 export function processContents(data) {
     $(data).find("content").each(function () {
-        $("#" + $(this).attr("div")).html($(this).text());
+        // use id attribute selector as workaround for multiple identical IDs (e.g. rating)
+        $("[id=" + $(this).attr("div")).html($(this).text());
     });
 } // processContents
 

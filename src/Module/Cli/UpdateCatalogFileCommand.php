@@ -32,6 +32,15 @@ final class UpdateCatalogFileCommand extends Command
 {
     private UpdateSingleCatalogFileInterface $updateSingleCatalogFile;
 
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct(
         UpdateSingleCatalogFileInterface $updateSingleCatalogFile
     ) {

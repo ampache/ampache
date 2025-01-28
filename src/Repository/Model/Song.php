@@ -69,9 +69,9 @@ class Song extends database_object implements
 
     public int $catalog;
 
-    public int $album;
+    public int $album = 0;
 
-    public int $album_disk;
+    public int $album_disk = 0;
 
     public ?int $disk = null;
 
@@ -267,9 +267,6 @@ class Song extends database_object implements
 
         $info = $this->has_info($song_id);
         if ($info === []) {
-            $this->album      = 0;
-            $this->album_disk = 0;
-
             return;
         }
 
@@ -277,9 +274,9 @@ class Song extends database_object implements
             $this->$key = $value;
         }
 
-        $this->id          = (int)$song_id;
-        $this->type        = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
-        $this->mime        = self::type_to_mime($this->type);
+        $this->id   = (int)$song_id;
+        $this->type = strtolower(pathinfo((string)$this->file, PATHINFO_EXTENSION));
+        $this->mime = self::type_to_mime($this->type);
     }
 
     public function getId(): int
@@ -559,8 +556,8 @@ class Song extends database_object implements
 
         // Song data cache
         $sql = (AmpConfig::get('catalog_disable'))
-            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
-            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
+            ? "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' LEFT JOIN `catalog` ON `catalog`.`id` = `song`.`catalog` WHERE `song`.`id` IN $idlist AND `catalog`.`enabled` = '1' "
+            : "SELECT `song`.`id`, `song`.`file`, `song`.`catalog`, `song`.`album`, `song`.`album_disk`, `song`.`disk`, `song`.`year`, `song`.`artist`, `song`.`title`, `song`.`bitrate`, `song`.`rate`, `song`.`mode`, `song`.`size`, `song`.`time`, `song`.`track`, `song`.`mbid`, `song`.`played`, `song`.`enabled`, `song`.`update_time`, `song`.`addition_time`, `song`.`user_upload`, `song`.`license`, `song`.`composer`, `song`.`channels`, `song`.`total_count`, `song`.`total_skip`, `tag_map`.`tag_id` FROM `song` LEFT JOIN `tag_map` ON `tag_map`.`object_id`=`song`.`id` AND `tag_map`.`object_type`='song' WHERE `song`.`id` IN $idlist";
 
         $db_results = Dba::read($sql);
         while ($row = Dba::fetch_assoc($db_results)) {
@@ -1027,9 +1024,6 @@ class Song extends database_object implements
         // Remove some stuff we don't care about as this function only needs to check song information.
         unset($song->catalog, $song->played, $song->enabled, $song->addition_time, $song->update_time, $song->type);
         $string_array = [
-            'album_disk',
-            'album',
-            'artist',
             'comment',
             'composer',
             'lyrics',
@@ -1114,12 +1108,19 @@ class Song extends database_object implements
                 // If it's a string thing
                 $mediaData    = self::clean_string_field_value($mediaData);
                 $newMediaData = self::clean_string_field_value($newMediaData);
-                if ($mediaData !== $newMediaData) {
+
+                // tag case isn't important
+                if ($key === 'tags') {
+                    if (strtolower($mediaData) !== strtolower($newMediaData)) {
+                        $array['change']        = true;
+                        $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
+                    }
+                } elseif ($mediaData !== $newMediaData) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD: ' . $mediaData . ' --> ' . $newMediaData;
                 }
             } elseif ($newMediaData !== null) {
-                // in array of strings
+                // NOT in array of strings
                 if ($media->$key != $new_media->$key) {
                     $array['change']        = true;
                     $array['element'][$key] = 'OLD:' . $mediaData . ' --> ' . $newMediaData;
