@@ -163,7 +163,7 @@ echo implode(',', $solutions); ?>",
                 playlist = jplaylist.playlist;
             var pos = $(".jp-playlist-current").position().top + $(".jp-playlist").scrollTop();
             $(".jp-playlist").scrollTop(pos);
-            <?php if ($iframed && AmpConfig::get('webplayer_confirmclose')) { ?>
+            <?php if ($iframed && AmpConfig::get('webplayer_pausetabs')) { ?>
             localStorage.setItem('ampache-current-webplayer', jpuqid);
             <?php } ?>
 
