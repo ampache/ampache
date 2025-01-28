@@ -2991,8 +2991,7 @@ abstract class Catalog extends database_object
         ) {
             $info['change'] = true;
             self::updateAlbumTags($song->album);
-            self::updateAlbumArtistTags($song->album);
-            self::updateArtistTags($song->id);
+            self::updateArtistTags($song->album, $song->id);
         }
 
         return $info;
@@ -3884,20 +3883,10 @@ abstract class Catalog extends database_object
     /**
      * Updates artist tags from given song's album id
      */
-    protected static function updateArtistTags(int $song_id): void
+    protected static function updateArtistTags(int $album_id = 0, int $song_id = 0): void
     {
-        foreach (Song::get_parent_array($song_id) as $artist_id) {
-            $tags = self::getSongTags('artist', $artist_id);
-            Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
-        }
-    }
-
-    /**
-     * Updates artist tags from given song id
-     */
-    protected static function updateAlbumArtistTags(int $album_id): void
-    {
-        foreach (Song::get_parent_array($album_id, 'album') as $artist_id) {
+        $artists = array_merge(Song::get_parent_array($album_id, 'album'), Song::get_parent_array($song_id));
+        foreach ($artists as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
         }
