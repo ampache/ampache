@@ -32,6 +32,15 @@ final class AdminListUsersCommand extends Command
 {
     private UserRepositoryInterface $userRepository;
 
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct(
         UserRepositoryInterface $userRepository
     ) {

@@ -155,6 +155,12 @@ If you're a fan of [play.dogmazic.net](https://play.dogmazic.net/)? Donate to th
 
 Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGEMENTS.md).
 
+## Powered by
+
+[![PhpStorm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PhpStorm.png)](https://jb.gg/OpenSourceSupport)
+
+JetBrains have supported the project for many years now and their tools really do power Ampache development.
+
 ## Contact Us
 
 Hate it? Love it? Let us know! Dozens of people send ideas for amazing new features, report bugs and further develop Ampache actively. Be a part of Ampache with it's more than 10 years long history and get in touch with an awesome and friendly community!

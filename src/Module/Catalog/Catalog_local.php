@@ -633,6 +633,9 @@ class Catalog_local extends Catalog
             $this->count += $this->_verify_chunk($media_type, ($chunks - $chunk), 10000);
             $chunk++;
             $count++;
+            if ($media_type === 'song') {
+                Catalog::clean_empty_albums();
+            }
         }
         if ($media_type === 'song') {
             Album::update_table_counts();
@@ -692,24 +695,6 @@ class Catalog_local extends Catalog
                 /* HINT: filename (file path) */
                 AmpError::add('general', sprintf(T_("The file couldn't be read. Does it exist? %s"), $row['file']));
                 debug_event('local.catalog', $row['file'] . ' does not exist or is not readable', 5);
-                continue;
-            }
-
-            $file_time = filemtime($row['file']);
-            if ($file_time === false) {
-                debug_event('local.catalog', 'Unable to get filemtime for ' . $row['file'], 3);
-                continue;
-            }
-
-            // check the modification time on the file to see if it's worth checking the tags.
-            if (
-                $verify_by_time &&
-                (
-                    $this->last_update > $file_time ||
-                    (int)($row['min_update_time'] ?? 0) > $file_time
-                )
-            ) {
-                //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
                 continue;
             }
 

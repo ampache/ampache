@@ -1871,10 +1871,7 @@ final class VaInfo implements VaInfoInterface
         if ($matches != null) {
             // The first element is the full match text
             $matched = array_shift($matches);
-            $logger->debug(
-                $pattern . ' matched ' . $matched . ' on ' . $filepath,
-                [LegacyLogger::CONTEXT_TYPE => self::class]
-            );
+            //$logger->debug($pattern . ' matched ' . $matched . ' on ' . $filepath, [LegacyLogger::CONTEXT_TYPE => self::class]);
 
             // Iterate over what we found
             foreach ($matches as $key => $value) {

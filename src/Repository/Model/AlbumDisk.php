@@ -39,7 +39,7 @@ class AlbumDisk extends database_object implements library_item, CatalogItemInte
 
     public int $id = 0;
 
-    public int $album_id;
+    public int $album_id = 0;
 
     public int $disk;
 
