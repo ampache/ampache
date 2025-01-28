@@ -32,6 +32,15 @@ final class AddCatalogCommand extends Command
 {
     private AddCatalogInterface $addCatalog;
 
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct(
         AddCatalogInterface $addCatalog
     ) {

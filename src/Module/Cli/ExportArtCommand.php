@@ -41,6 +41,15 @@ final class ExportArtCommand extends Command
 
     private ContainerInterface $dic;
 
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct(
         LoggerInterface $logger,
         ArtExporterInterface $artExporter,
