@@ -698,12 +698,6 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            $file_time = filemtime($row['file']);
-            if ($file_time === false) {
-                debug_event('local.catalog', 'Unable to get filemtime for ' . $row['file'], 3);
-                continue;
-            }
-
             if (self::update_single_item($tableName, $row['id'], true)['change']) {
                 $changed++;
             }
