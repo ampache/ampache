@@ -3885,7 +3885,7 @@ abstract class Catalog extends database_object
      */
     protected static function updateArtistTags(int $album_id = 0, int $song_id = 0): void
     {
-        $artists = array_merge(Song::get_parent_array($album_id, 'album'), Song::get_parent_array($song_id));
+        $artists = array_unique(array_merge(Song::get_parent_array($album_id, 'album'), Song::get_parent_array($song_id)));
         foreach ($artists as $artist_id) {
             $tags = self::getSongTags('artist', $artist_id);
             Tag::update_tag_list(implode(',', $tags), 'artist', $artist_id, true);
