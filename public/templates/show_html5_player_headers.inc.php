@@ -587,7 +587,7 @@ if ($iframed) { ?>
         return null;
     }
     <?php } ?>
-    <?php if ($iframed && AmpConfig::get('webplayer_confirmclose') && !$isShare) { ?>
+    <?php if ($iframed && AmpConfig::get('webplayer_pausetabs') && !$isShare) { ?>
     window.addEventListener('storage', function (event) {
         if (event.key == 'ampache-current-webplayer') {
             // The latest used webplayer is not this player, pause song if playing
