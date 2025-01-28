@@ -1904,11 +1904,15 @@ class Song extends database_object implements
     public static function get_parent_array($object_id, $type = 'artist'): array
     {
         $results = [];
-        $sql     = ($type == 'album')
+        if (!$object_id) {
+            return $results;
+        }
+
+        $sql = ($type == 'album')
             ? "SELECT DISTINCT `object_id` FROM `album_map` WHERE `object_type` = 'album' AND `album_id` = ?;"
             : "SELECT DISTINCT `artist_id` AS `object_id` FROM `artist_map` WHERE `object_type` = 'song' AND `object_id` = ?;";
-        $db_results = Dba::read($sql, [$object_id]);
 
+        $db_results = Dba::read($sql, [$object_id]);
         while ($row = Dba::fetch_assoc($db_results)) {
             $results[] = (int)$row['object_id'];
         }
