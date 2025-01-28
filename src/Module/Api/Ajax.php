@@ -67,7 +67,8 @@ class Ajax
         if (in_array($source, $non_quoted)) {
             $source_txt = $source;
         } else {
-            $source_txt = "'#$source'";
+            // use id attribute selector as workaround for multiple identical IDs (e.g. rating)
+            $source_txt = "'[id=$source]'";
         }
 
         $observe   = "<script>";
