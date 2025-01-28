@@ -30,6 +30,15 @@ use Ampache\Repository\Model\Preference;
 
 final class AdminResetPreferencesCommand extends Command
 {
+    protected function defaults(): self
+    {
+        $this->option('-h, --help', T_('Help'))->on([$this, 'showHelp']);
+
+        $this->onExit(static fn ($exitCode = 0) => exit($exitCode));
+
+        return $this;
+    }
+
     public function __construct()
     {
         parent::__construct('admin:resetPreferences', T_('Reset preference values for users'));
