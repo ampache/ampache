@@ -6,12 +6,6 @@
 
 [Ampache Docker](https://hub.docker.com/repository/docker/ampache/ampache)
 
-## Powered by
-
-[![PhpStorm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PhpStorm.png)](https://jb.gg/OpenSourceSupport)
-
-JetBrains have supported the project for many years now and their tools really do power Ampache development.
-
 ## News
 
 Ampache7 is [here!](https://github.com/ampache/ampache/releases/)
@@ -160,6 +154,12 @@ If you're a fan of [play.dogmazic.net](https://play.dogmazic.net/)? Donate to th
 <img height="40" hspace="20" alt="Donate - Paypal" src="https://clipart-library.com/image_gallery2/PayPal-Donate-Button-PNG-Images.png"></a>
 
 Thanks to all those who have helped make Ampache [awesome](docs/ACKNOWLEDGEMENTS.md).
+
+## Powered by
+
+[![PhpStorm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PhpStorm.png)](https://jb.gg/OpenSourceSupport)
+
+JetBrains have supported the project for many years now and their tools really do power Ampache development.
 
 ## Contact Us
 
