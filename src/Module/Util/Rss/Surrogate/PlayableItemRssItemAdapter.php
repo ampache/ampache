@@ -109,7 +109,7 @@ final readonly class PlayableItemRssItemAdapter implements RssItemInterface
      */
     public function getRssLink(): string
     {
-        return $_SERVER['SCRIPT_URI'] . '?' . $_SERVER['QUERY_STRING'];
+        return ($_SERVER['SCRIPT_URI'] ?? '/rss.php') . '?' . $_SERVER['QUERY_STRING'];
     }
 
     /**
