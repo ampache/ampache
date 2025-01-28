@@ -209,10 +209,6 @@ final class AdminUpdateDatabaseCommand extends Command
                     sprintf(T_('Database version: %s'), $this->retrieveVersion()),
                     true
                 );
-
-                Song::clear_cache();
-                Artist::clear_cache();
-                Album::clear_cache();
             } else {
                 $interactor->info(
                     T_('No update needed'),
