@@ -29,10 +29,7 @@ use Ahc\Cli\Input\Command;
 use Ampache\Config\AmpConfig;
 use Ampache\Module\System\Dba;
 use Ampache\Module\System\Update;
-use Ampache\Repository\Model\Album;
-use Ampache\Repository\Model\Artist;
 use Ampache\Repository\Model\Preference;
-use Ampache\Repository\Model\Song;
 use Ampache\Repository\Model\UpdateInfoEnum;
 use Ampache\Repository\UpdateInfoRepositoryInterface;
 
