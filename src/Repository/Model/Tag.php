@@ -839,14 +839,14 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 //debug_event(self::class, 'update_tag_list ' . $object_type . ' current_tag ' . print_r($ctv, true), 5);
-                foreach ($editedTags as $tv) {
-                    if (strtolower((string)$ctag->name) === strtolower($tv)) {
+                foreach ($editedTags as $tag_name) {
+                    if (strtolower((string)$ctag->name) === strtolower($tag_name)) {
                         $found = true;
                         break;
                     }
 
                     // check if this thing has been renamed into something else
-                    $merged = self::construct_from_name($tv);
+                    $merged = self::construct_from_name($tag_name);
                     if ($merged->id && $merged->is_hidden && $merged->has_merge((string)$ctag->name)) {
                         $found = true;
                         break;
@@ -854,8 +854,8 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
                 }
 
                 if ($found) {
-                    //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tv, 5);
-                    if (($key = array_search($tv, $editedTags)) !== false) {
+                    //debug_event(self::class, 'update_tag_list ' . $object_type . ' matched {' . $ctag->id . '} to ' . $tag_name, 5);
+                    if (($key = array_search((string)$ctag->name, $editedTags)) !== false) {
                         unset($editedTags[$key]);
                     }
                 }
@@ -873,10 +873,10 @@ class Tag extends database_object implements library_item, GarbageCollectibleInt
         }
 
         // Look if we need to add some new tags
-        foreach ($editedTags as $tv) {
-            if ($tv != '') {
-                debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tv . '}', 5);
-                self::add($object_type, $object_id, $tv, false);
+        foreach ($editedTags as $tag_name) {
+            if ($tag_name != '') {
+                debug_event(self::class, 'update_tag_list ' . $object_type . ' add {' . $tag_name . '}', 5);
+                self::add($object_type, $object_id, $tag_name, false);
                 $change = true;
             }
         }
