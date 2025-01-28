@@ -2378,22 +2378,28 @@ abstract class Catalog extends database_object
             $artist = ($artist) || ($diff && array_key_exists('artist', $info['element']));
             $tags   = ($tags) || ($diff && array_key_exists('tags', $info['element']));
             $maps   = ($maps) || ($diff && array_key_exists('maps', $info));
+
             // don't echo useless info when using api
-            if (array_key_exists('change', $info) && $info['change'] && (!$api)) {
+            if ($api) {
+                continue;
+            }
+
+            if (array_key_exists('change', $info) && $info['change']) {
                 if ($diff && array_key_exists($type, $info['element'])) {
                     $element   = explode(' --> ', (string)$info['element'][$type]);
                     $return_id = (int)$element[1];
                 }
 
                 echo "<tr><td>" . $file . "</td><td>" . T_('Updated') . "</td></tr>\n";
-            } elseif (array_key_exists('error', $info) && $info['error'] && (!$api)) {
+            } elseif (array_key_exists('error', $info) && $info['error']) {
                 echo '<tr><td>' . $file . "</td><td>" . T_('Error') . "</td></tr>\n";
-            } elseif (!$api) {
+            } else {
                 echo '<tr><td>' . $file . "</td><td>" . T_('No Update Needed') . "</td></tr>\n";
             }
 
             flush();
         }
+
         if (!$api) {
             echo "</tbody></table>\n";
         }
@@ -4401,6 +4407,9 @@ abstract class Catalog extends database_object
             debug_event(self::class, sprintf('migrate %d %s: {%d} to {%d}', $song_id, $object_type, $old_object_id, $new_object_id), 4);
 
             Stats::migrate($object_type, $old_object_id, $new_object_id, $song_id);
+            // migrating affects song count
+            Dba::write("UPDATE `$object_type` SET `song_count` = `song_count` - 1 WHERE `id` = ? AND `song_count` > 0", [$old_object_id]);
+            Dba::write("UPDATE `$object_type` SET `song_count` = `song_count` + 1 WHERE `id` = ?", [$new_object_id]);
             Useractivity::migrate($object_type, $old_object_id, $new_object_id);
             Recommendation::migrate($object_type, $old_object_id);
             self::getShareRepository()->migrate($object_type, $old_object_id, $new_object_id);
