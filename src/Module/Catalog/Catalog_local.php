@@ -704,18 +704,6 @@ class Catalog_local extends Catalog
                 continue;
             }
 
-            // check the modification time on the file to see if it's worth checking the tags.
-            if (
-                $verify_by_time &&
-                (
-                    $this->last_update > $file_time ||
-                    (int)($row['min_update_time'] ?? 0) > $file_time
-                )
-            ) {
-                //debug_event('local.catalog', 'verify_by_time: skipping ' . $row['file'], 5);
-                continue;
-            }
-
             if (self::update_single_item($tableName, $row['id'], true)['change']) {
                 $changed++;
             }
